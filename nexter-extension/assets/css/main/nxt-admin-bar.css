@@ -1,0 +1,31 @@
+#wp-admin-bar-nxt_edit_template .ab-item.nxt-admin-sub-item {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    width: 180px
+}
+
+#wp-admin-bar-nxt_edit_template .nxt-admin-item-title {
+    white-space: nowrap;
+    -o-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    width: 100%;
+    text-transform: capitalize
+}
+
+#wp-admin-bar-nxt_edit_template .nxt-admin-item-type {
+    background: #6b6b6b;
+    font-size: 11px;
+    line-height: 11px;
+    margin-top: 6px;
+    padding: 4px 5px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    text-transform: capitalize
+}
+
+#wp-admin-bar-nxt_edit_template .nxt-edit-nexter {
+    background: #3a3c3e;
+    padding-top: 0
+}

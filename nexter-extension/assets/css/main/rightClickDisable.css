@@ -1,0 +1,67 @@
+body * :not(input):not(textarea){
+	user-select:none !important;
+	-khtml-user-select:none !important;
+	-ms-user-select: none !important;
+	-webkit-touch-callout: none !important;
+	-webkit-user-select: none !important;
+	-moz-user-select:none !important;
+}
+
+/************************/
+#nxt-right-click-disable-alert {
+	position: fixed;
+	display: inline-block;
+	visibility: hidden;
+	min-width: 250px;
+	margin-left: -125px;
+	background-color: #230ca495;
+	color: #fff;
+	text-align: center;
+	border-radius: 4px;
+	padding: 10px;
+	z-index: 999;
+	left: 50%;
+	bottom: 30px;
+	font-size: 17px;
+}
+#nxt-right-click-disable-alert.active {
+	visibility:visible;
+	-webkit-animation: nxt-fadein 0.5s,nxt-fadeout 0.5s 2.5s;
+	animation:fadein 0.5s,fadeout 0.5s 2.5s;
+}
+@-webkit-keyframes nxt-fadein {
+	from {
+		bottom:0;
+		opacity:0
+	} to {
+		bottom:30px;
+		opacity:1
+	}
+}
+@keyframes nxt-fadein {
+	from {
+		bottom:0;
+		opacity:0
+	} to {
+		bottom:30px;
+		opacity:1
+	}
+}
+@-webkit-keyframes nxt-fadeout {
+	from {
+		bottom:30px;
+		opacity:1
+	} to {
+		bottom:0;
+		opacity:0
+	}
+}
+@keyframes nxt-fadeout {
+	from {
+		bottom:30px;
+		opacity:1
+	} to {
+		bottom:0;
+		opacity:0
+	}
+}
