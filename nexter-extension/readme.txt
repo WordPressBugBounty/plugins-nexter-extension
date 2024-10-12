@@ -1,8 +1,8 @@
 === Nexter Extension ===
 Contributors: posimyththemes, nirmalkavaiya, sagarpatel124
 Tags : theme-options, nexter-wordpress-theme, nexter-extension, nexter-builder 
-Requires at least: 4.0
-Tested up to: 6.5
+Requires at least: 6.0
+Tested up to: 6.6.2
 Stable tag: 3.2.1
 Requires PHP: 5.6
 License: GPLv3
@@ -77,7 +77,7 @@ And if you're a Gutenberg user, then you can use The Plus Addons for Gutenberg, 
 ###🔍 Check our other Products
 <strong><a href="https://theplusaddons.com/">🥇 The Plus Addons for Elementor</a></strong> -  Nexter Theme works seamlessly with The Plus Addons for Elementor. Get 120+ unique Elementor widgets, Elementor templates and more.
 
-<strong><a href="http://theplusblocks.com/">🥇 The Plus Addons for Gutenberg</a></strong> - Nexter Theme works in sync with core Gutenberg, where you can install The Plus Addons for Gutenberg Blocks to get 80+ powerful & highly customizable blocks.
+<strong><a href="http://nexterwp.com/">🥇 Nexter Blocks</a></strong> - Nexter Theme works in sync with core Gutenberg, where you can install The Plus Addons for Gutenberg Blocks to get 80+ powerful & highly customizable blocks.
 
 == Installation ==
 
