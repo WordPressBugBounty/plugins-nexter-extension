@@ -47,6 +47,12 @@ if ( ! class_exists( 'Nexter_Gutenberg_Editor' ) ) {
 						$css_file->enqueue_post_css( $post_id );
 					}
 				}
+				if ( class_exists( 'Tpgb_Core_Init_Blocks' ) ) {
+					$css_file = Tpgb_Core_Init_Blocks::get_instance();
+					if ( !empty($css_file) && is_callable( array( $css_file, 'enqueue_post_css' ) ) ) {
+						$css_file->enqueue_post_css( $post_id );
+					}
+				}
 				
 				/*Ultimate Addon*/
 				if ( class_exists( 'UAGB_Post_Assets' ) ) {

@@ -2,8 +2,8 @@
 Contributors: posimyththemes, nirmalkavaiya, sagarpatel124
 Tags : theme-options, nexter-wordpress-theme, nexter-extension, nexter-builder 
 Requires at least: 6.0
-Tested up to: 6.6.2
-Stable tag: 3.2.1
+Tested up to: 6.7
+Stable tag: 3.2.2
 Requires PHP: 5.6
 License: GPLv3
 License URI: https://opensource.org/licenses/GPL-3.0
@@ -113,6 +113,9 @@ We Wanted to Include This in Theme Itself as This is a Part of Theme Itself. Wor
 You can report security bugs through the Patchstack Vulnerability Disclosure Program. The Patchstack team help validate, triage and handle any security vulnerabilities. [Report a security vulnerability.](https://patchstack.com/database/vdp/nexter-extension)
 
 == Changelog ==
+= 3.2.2 = 27 November 2024
+- Compatibility : Nexter Builder : Template Load Css Bug Fixed
+
 = 3.2.1 = 18 April 2024
 - Fix : Nexter Builder : Bug Fix
 

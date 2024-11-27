@@ -3,14 +3,15 @@
  * Plugin Name: Nexter Extension
  * Plugin URI: https://nexterwp.com
  * Description: Extension for Nexter Theme to unlock all FREE features. Keep this active to use access its all features
- * Version: 3.2.1
+ * Version: 3.2.2
  * Author: POSIMYTH
  * Author URI: https://posimyth.com
  * Text Domain: nexter-ext
  * Requires at least: 4.0
- * Tested up to: 6.5
+ * Tested up to: 6.7
  * Requires PHP: 5.6
- *
+ * License: GPLv3
+ * License URI: https://opensource.org/licenses/GPL-3.0
  * @package Nexter Extensions
  */
 if ( ! defined( 'ABSPATH' ) ) {
@@ -24,7 +25,7 @@ define( 'NEXTER_EXT_BASE', plugin_basename( NEXTER_EXT_FILE ) );
 define( 'NEXTER_EXT_DIR', plugin_dir_path( NEXTER_EXT_FILE ) );
 define( 'NEXTER_EXT_URL', plugins_url( '/', NEXTER_EXT_FILE ) );
 define( 'NEXTER_EXT_CPT', 'nxt_builder' );
-define( 'NEXTER_EXT_VER', '3.2.1' );
+define( 'NEXTER_EXT_VER', '3.2.2' );
 
 if(!defined('NXT_BUILD_POST')){
 	define( 'NXT_BUILD_POST', 'nxt_builder' );

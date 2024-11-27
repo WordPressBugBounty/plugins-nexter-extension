@@ -639,7 +639,12 @@ if ( ! class_exists( 'Nexter_Ext_Panel_Settings' ) ) {
             }
             if ( ! is_customize_preview() ) {
 				wp_enqueue_style( 'wp-color-picker' );
-				wp_enqueue_script( 'nexter-panel-setting', NEXTER_EXT_URL . 'assets/js/admin/nexter-panel-settings'. $minified .'.js', array('wp-util', 'updates','wp-color-picker'), NEXTER_EXT_VER, false );
+				global $pagenow;
+				$thirdjs = array('wp-util', 'wp-color-picker');
+				if(!empty($pagenow) && $pagenow === 'themes.php' && isset($_GET['page']) && $_GET['page'] === 'nexter_settings_welcome'){
+					$thirdjs = array_merge($thirdjs, ['updates']);
+				}
+				wp_enqueue_script( 'nexter-panel-setting', NEXTER_EXT_URL . 'assets/js/admin/nexter-panel-settings'. $minified .'.js', $thirdjs, NEXTER_EXT_VER, false );
 			}
             
             //nexter component CSS & JS
