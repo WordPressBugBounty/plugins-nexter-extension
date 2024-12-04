@@ -217,8 +217,9 @@ class CMB2_REST_Controller_Boxes extends CMB2_REST_Controller {
 			global $wp_scripts, $wp_styles;
 			$before_css = $wp_styles->queue;
 			$before_js = $wp_scripts->queue;
-
-			CMB2_JS::enqueue();
+			if(class_exists('CMB2_JS')){
+				CMB2_JS::enqueue();
+			}
 
 			$boxes_data['js_dependencies'] = array_values( array_diff( $wp_scripts->queue, $before_js ) );
 			$boxes_data['css_dependencies'] = array_values( array_diff( $wp_styles->queue, $before_css ) );

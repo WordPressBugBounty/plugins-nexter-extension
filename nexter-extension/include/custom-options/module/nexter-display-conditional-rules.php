@@ -965,7 +965,7 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 			if( !empty($posts) ){
 				foreach ( $posts as $post_data ) {
 					if(function_exists('pll_get_post')){
-						if(!pll_get_post( $post_data->ID )){
+						if(pll_get_post( $post_data->ID ) != $post_data->ID){
 							continue;
 						}
 					}

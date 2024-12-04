@@ -285,7 +285,9 @@ class CMB2_Hookup extends CMB2_Hookup_Base {
 		}
 
 		$hook = is_admin() ? 'admin_footer' : 'wp_footer';
-		add_action( $hook, array( 'CMB2_JS', 'enqueue' ), 8 );
+		if(class_exists('CMB2_JS')){
+			add_action( $hook, array( 'CMB2_JS', 'enqueue' ), 8 );
+		}
 
 		self::$js_registration_done = true;
 	}

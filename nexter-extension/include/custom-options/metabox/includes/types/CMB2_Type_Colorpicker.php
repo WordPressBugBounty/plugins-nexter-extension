@@ -113,7 +113,9 @@ class CMB2_Type_Colorpicker extends CMB2_Type_Text {
 	public static function dequeue_rgba_colorpicker_script() {
 		if ( wp_script_is( 'jw-cmb2-rgba-picker-js', 'enqueued' ) ) {
 			wp_dequeue_script( 'jw-cmb2-rgba-picker-js' );
-			CMB2_JS::register_colorpicker_alpha( true );
+			if(class_exists('CMB2_JS')){
+				CMB2_JS::register_colorpicker_alpha( true );
+			}
 		}
 	}
 

@@ -8,6 +8,7 @@
  * @license   GPL-2.0+
  * @link      https://cmb2.io
  */
+
 class CMB2_JS {
 
 	/**

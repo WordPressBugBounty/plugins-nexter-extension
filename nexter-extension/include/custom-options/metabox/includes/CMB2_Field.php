@@ -1257,8 +1257,9 @@ class CMB2_Field extends CMB2_Base {
 		foreach ( (array) $dependencies as $dependency ) {
 			$this->args['js_dependencies'][ $dependency ] = $dependency;
 		}
-
-		CMB2_JS::add_dependencies( $dependencies );
+		if(class_exists('CMB2_JS')){
+			CMB2_JS::add_dependencies( $dependencies );
+		}
 	}
 
 	/**
@@ -1267,11 +1268,11 @@ class CMB2_Field extends CMB2_Base {
 	 * @since 2.2.0
 	 */
 	public function register_js_data() {
-		if ( $this->group ) {
+		if ( $this->group && class_exists('CMB2_JS')) {
 			CMB2_JS::add_field_data( $this->group );
 		}
 
-		return CMB2_JS::add_field_data( $this );
+		return class_exists('CMB2_JS') ? CMB2_JS::add_field_data( $this ) : '';
 	}
 
 	/**
@@ -1411,7 +1412,7 @@ class CMB2_Field extends CMB2_Base {
 			: false;
 
 		// Repeatable fields require jQuery sortable library.
-		if ( ! empty( $args['repeatable'] ) ) {
+		if ( ! empty( $args['repeatable'] ) && class_exists('CMB2_JS')) {
 			CMB2_JS::add_dependencies( 'jquery-ui-sortable' );
 		}
 
