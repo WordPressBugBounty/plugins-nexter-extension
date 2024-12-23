@@ -53,6 +53,9 @@ if ( ! class_exists( 'Nexter_Ext_Panel_Settings' ) ) {
          * Nexter Builder Local
          */
         public function __construct() {
+            if (defined('NXT_PRO_EXT_VER') && !class_exists('Nexter_Pro_Ext_Activate') && version_compare( NXT_PRO_EXT_VER, '4.0.0', '<' )) {
+                require_once NEXTER_EXT_DIR . 'include/panel-settings/nexter-ext-library.php';
+            }
             if( is_admin() ){
                 $this->get_nxt_brand_name();
                 add_action('admin_menu', array( $this, 'nxt_add_menu_page' ));
