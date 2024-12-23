@@ -25,7 +25,10 @@ document.addEventListener('DOMContentLoaded', function () {
 						if(data[i].post_type=='nxt_builder'){
 							nexterList += '<li id="wp-admin-bar-'+data[i].id+'" class="nxt-admin-submenu nxt-admin-'+data[i].id+'">';
 								nexterList += '<a class="ab-item nxt-admin-sub-item" href="'+data[i].edit_url+'" >';
-								nexterList += '<span class="nxt-admin-item-title">'+data[i].title+'</span><span class="nxt-admin-item-type">'+type+'</span>';
+								nexterList += '<span class="nxt-admin-item-title">'+data[i].title+'</span>';
+                                if(type){
+                                    nexterList += '<span class="nxt-admin-item-type">'+type+'</span>';
+                                }
 							nexterList += '</a>';
 							nexterList += '</li>';
 						}else{

@@ -5,34 +5,6 @@
  */
 defined('ABSPATH') or die();
 
-function nexter_ext_get_post_type_list(){
-	$args = array(
-		'public'   => true,
-		'show_ui' => true
-	);	 
-	$post_types = get_post_types( $args, 'objects' );
-	
-	$options = array();
-	foreach ( $post_types  as $post_type ) {
-		
-		$exclude = array( 'elementor_library' );
-		if( TRUE === in_array( $post_type->name, $exclude ) ){
-			continue;
-		}
-		
-		$icon = NEXTER_EXT_URL.'assets/images/panel-icon/'.$post_type->name.'.svg';
-		$headers=get_headers($icon);
-
-		if($post_type->name != 'nxt_builder'){
-			$options[$post_type->name] =  [ 
-				'title' =>  $post_type->label,
-				'icon' => isset($headers[0]) && stripos($headers[0],"200 OK") ? $icon : NEXTER_EXT_URL.'assets/images/panel-icon/cpt.svg',
-			];
-		}
-	}
-	return $options;
-}
-
 class Nexter_Ext_Performance_Security_Settings {
     
     /**
@@ -40,15 +12,6 @@ class Nexter_Ext_Performance_Security_Settings {
      */
     public function __construct() {
 
-		// Advance Performance Ajax
-		add_action( 'wp_ajax_nexter_ext_advance_performance', [ $this, 'nexter_ext_advance_performance_ajax'] );
-
-		// Disble Comment Ajax
-		add_action( 'wp_ajax_nexter_ext_disable_comments', [ $this, 'nexter_ext_disable_comments_ajax'] );
-		
-		// Advance Security Ajax
-		add_action( 'wp_ajax_nexter_ext_advance_security', [ $this, 'nexter_ext_advance_security_ajax'] );
-		
 		// Nexter Site Performance
 		$extension_option = get_option( 'nexter_site_performance' );
 
@@ -77,8 +40,8 @@ class Nexter_Ext_Performance_Security_Settings {
 			if( in_array("disable_emoji_scripts",$extension_option) ){
 				remove_action( 'wp_head', 'print_emoji_detection_script', 7 );
 				remove_action( 'admin_print_scripts', 'print_emoji_detection_script' );
-				remove_action( 'wp_print_styles', 'print_emoji_styles' );
-				remove_action( 'admin_print_styles', 'print_emoji_styles' );
+				remove_action( 'wp_print_styles', 'wp_enqueue_emoji_styles' );
+				remove_action( 'admin_print_styles', 'wp_enqueue_emoji_styles' );
 				remove_filter( 'the_content_feed', 'wp_staticize_emoji' );
 				remove_filter( 'comment_text_rss', 'wp_staticize_emoji' ); 
 				remove_filter( 'wp_mail', 'wp_staticize_emoji_for_email' );
@@ -207,7 +170,7 @@ class Nexter_Ext_Performance_Security_Settings {
 				//Disable 403 for all comment feed requests
 				add_action('template_redirect', function(){
 					if(is_comment_feed()) {
-						wp_die( esc_html__('Comments are disabled.', 'nexter-ext'), '', array('response' => 403));
+						wp_die( esc_html__('Comments are disabled.', 'nexter-extension'), '', array('response' => 403));
 					}
 				}, 9);
 				
@@ -273,7 +236,7 @@ class Nexter_Ext_Performance_Security_Settings {
 						}
 					}
 					if($check_disabled) {
-						return new WP_Error('rest_authentication_error', __('Sorry, do not have permission REST API requests.', 'nexter-ext'), array('status' => 401));
+						return new WP_Error('rest_authentication_error', __('Sorry, do not have permission REST API requests.', 'nexter-extension'), array('status' => 401));
 					}
 					
 					// on logged-in requests
@@ -290,21 +253,39 @@ class Nexter_Ext_Performance_Security_Settings {
 	 * @return bool|void
 	 */
 	public static function toggle_wp_includes_folder_visiblity($state){
-		if(is_writable(ABSPATH . "wp-includes/index.php")){
-			return false;
+		if (!function_exists('wp_filesystem')) {
+			require_once ABSPATH . 'wp-admin/includes/file.php';
 		}
-		if($state){
-			$handle = fopen(ABSPATH . "wp-includes/index.php", "w");
-			if($handle){
-				fclose($handle);
-			}
-			else return false;
-		} else {
-			$res = unlink(ABSPATH . "wp-includes/index.php");
-			if($res)
-				return true;
-			else
+		
+		global $wp_filesystem;
+		
+		// Initialize the WordPress filesystem.
+		if (WP_Filesystem()) {
+			$file_path = ABSPATH . "wp-includes/index.php";
+		
+			if (!$wp_filesystem->is_writable($file_path)) {
 				return false;
+			}
+		
+			if ($state) {
+				// Create or open the file for writing.
+				$result = $wp_filesystem->put_contents($file_path, '', FS_CHMOD_FILE);
+				if ($result) {
+					return true;
+				} else {
+					return false;
+				}
+			} else {
+				// Delete the file.
+				$result = $wp_filesystem->delete($file_path);
+				if ($result) {
+					return true;
+				} else {
+					return false;
+				}
+			}
+		} else {
+			return false;
 		}
 	}
 
@@ -373,126 +354,6 @@ class Nexter_Ext_Performance_Security_Settings {
 		return $html;
 	}
 
-    /*
-	 * Nexter Disable Admin Settings
-	 * @since 1.1.0
-	 */
-	public function nexter_ext_advance_performance_ajax(){
-		check_ajax_referer( 'nexter_admin_nonce', 'nexter_nonce' );
-
-		if ( ! is_user_logged_in() || ! current_user_can( 'manage_options' ) ) {
-			wp_send_json_error(
-				array( 
-					'content' => __( 'Insufficient permissions.', 'nexter-ext' ),
-				)
-			);
-		}
-
-		$ext = ( isset( $_POST['extension_type'] ) ) ? sanitize_text_field( wp_unslash( $_POST['extension_type'] ) ) : '';
-		$extension_option = get_option( 'nexter_site_performance' );
-		if( !empty( $ext ) && $ext == 'advance-performance' ){
-		
-			$config_ext = [];
-			if( has_filter('nexter-extension-performance-option-config') ){
-				$config_data = apply_filters('nexter-extension-performance-option-config' , $config_ext);
-				if( !empty( $config_data ) && isset($config_data[$ext]) ){
-					$config_ext = $config_data[$ext];
-				}
-			}
-			
-			$output = '';
-			$output .= '<div class="nxt-ext-modal-content">';
-				$output .= '<div class="nxt-modal-title-wrap">';
-					$output .= '<div class="nxt-modal-title">'.(isset($config_ext['title']) ? wp_kses_post($config_ext['title']) : '').'</div>';
-					//$output .= '<div class="nxt-modal-desc">'.(isset($config_ext['title']) ? wp_kses_post($config_ext['description']) : '').'</div>';
-				$output .= '</div>';
-				$output .= '<div class="nxt-disable-admin-wrap">';
-
-					$icon_url = NEXTER_EXT_URL.'assets/images/panel-icon/';
-					$performance = [
-						'disable_emoji_scripts' => [
-							'title' => esc_html__( 'Disable Emojis Script', 'nexter-ext' ),
-							'desc' => esc_html__( "This helps you reduce extra HTTP requests for script 'wp-includes/js/wp-emoji-release.min.js'", 'nexter-ext' ),
-							'icon' => $icon_url.'disable-emojis-script.svg',
-						],
-						'disable_embeds' => [
-							'title' => esc_html__( 'Disable Embeds', 'nexter-ext' ),
-							'desc' => esc_html__( "This helps you reduce extra HTTP requests for script 'wp-embed.min.js', which is not required in most cases. As this, JS generates links previews.", 'nexter-ext' ),
-							'icon' => $icon_url.'disable-embeds.svg',
-						],
-						'disable_dashicons' => [
-							'title' => esc_html__( 'Disable Dashicons', 'nexter-ext' ),
-							'desc' => esc_html__( "This helps you reduce extra HTTP request for script 'dashicons.min.css' in frontend, which helps in fixing render blocking.", 'nexter-ext' ),
-							'icon' => $icon_url.'disable-dashicons.svg',
-						],
-						'disable_rsd_link' => [
-							'title' => esc_html__( 'Remove RSD Link', 'nexter-ext' ),
-							'desc' => esc_html__( "Helps you clean unnecessary codes from the WordPress header, RSD links aren't needed unless you publish your blog from other apps.", 'nexter-ext' ),
-							'icon' => $icon_url.'remove-rsd-link.svg',
-						],
-						'disable_wlwmanifest_link' => [
-							'title' => esc_html__( 'Remove wlwmanifest Link', 'nexter-ext' ),
-							'desc' => esc_html__( "Helps you clean unnecessary codes from the WordPress header, if you don't use Windows Live Writer, you can remove such links.", 'nexter-ext' ),
-							'icon' => $icon_url.'remove-wlw-link.svg',
-						],
-						'disable_shortlink' => [
-							'title' => esc_html__( 'Remove Shortlink', 'nexter-ext' ),
-							'desc' => esc_html__( 'This helps you remove unnecessary short link tags from the post/page URL.', 'nexter-ext' ),
-							'icon' => $icon_url.'remove-shortlink.svg',
-						],
-						'disable_rss_feeds' => [
-							'title' => esc_html__( 'Disable RSS Feeds', 'nexter-ext' ),
-							'desc' => esc_html__( 'RSS feeds are generated by WordPress by default to share your content updates with everyone. But not everyone uses WordPress for blogging or sharing content updates via RSS feeds. So, you can disable the RSS feeds to get rid of those extra codes.', 'nexter-ext' ),
-							'icon' => $icon_url.'disable-rss-feeds.svg',
-						],
-						'disable_rss_feed_link' => [
-							'title' => esc_html__( 'Remove RSS Feed Links', 'nexter-ext' ),
-							'desc' => esc_html__( "If you don't use your WordPress for blogging then you can remove the WordPress RSS feeds to get rid of those extra codes.", 'nexter-ext' ),
-							'icon' => $icon_url.'remove-rss-feed-links.svg',
-						],
-						'disable_self_pingbacks' => [
-							'title' => esc_html__( 'Disable Self Pingbacks', 'nexter-ext' ),
-							'desc' => esc_html__( 'Declutter your comment section by avoiding ping to the articles from your same site.', 'nexter-ext' ),
-							'icon' => $icon_url.'disable-self-pingbacks.svg',
-						],
-						'disable_pw_strength_meter' => [
-							'title' => esc_html__( 'Disable Password Strength Meter', 'nexter-ext' ),
-							'desc' => esc_html__( "WordPress adds force strong password scripts to make passwords tough to guess. Loading them on all the pages is unnecessary extra code, that's why using this feature you can load the scripts only where its required i.e. login, checkouts, account page etc", 'nexter-ext' ),
-							'icon' => $icon_url.'disable-pw-strength.svg',
-						],
-						'defer_css_js' => [
-							'title' => esc_html__( 'Defer CSS & JS', 'nexter-ext' ),
-							'desc' => esc_html__( "If you enable this option, Your JS and CSS will be loaded with Defer Attribute. It will make HTML render of page faster and help getting better scores in Google Page Speed", 'nexter-ext' ),
-							'icon' => $icon_url.'defer-css-js.svg',
-						],
-					];
-					foreach($performance as $option => $data){
-						$output .= '<div class="nxt-option-switcher">';
-							$output .= '<span class="nxt-extra-icon"><img src="'.esc_url($data['icon']).'" alt="'.esc_attr($option).'" /></span>';
-							$output .= '<span class="nxt-option-check-title">'.wp_kses_post($data['title']).'</span>';
-							$output .= '<span class="nxt-desc-icon">';
-								$output .= '<img src="'.esc_url( $icon_url.'desc-icon.svg').'" alt="'.esc_attr__('description','nexter-ext').'" /> ';
-								$output .= '<div class="nxt-tooltip '.( ('disable_emoji_scripts' == $option || 'disable_embeds' == $option) ? 'bottom' : '' ).'">'.wp_kses_post($data['desc']).'</div>';
-							$output .= '</span>';
-							$output .= '<span class="nxt-option-checkbox-label">';
-								$output .= '<input type="checkbox" class="cmb2-option cmb2-list" id="'.esc_attr($option).'" name="nxt-advance-performance[]" value="'.esc_attr($option).'" '.(!empty($extension_option) && in_array($option,$extension_option) ? "checked" : "" ).'/>';
-								$output .= '<label for="'.esc_attr($option).'"></label>';
-							$output .= '</span>';	
-						$output .= '</div>';
-					}
-				$output .= '</div>';
-				$output .= '<button type="button" class="nxt-save-advance-performance"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="#fff" stroke-width=".781" stroke-linejoin="round" xmlns:v="https://vecta.io/nano"><path d="M15.833 17.5H4.167c-.442 0-.866-.176-1.179-.488s-.488-.736-.488-1.179V4.167c0-.442.176-.866.488-1.179S3.725 2.5 4.167 2.5h9.167L17.5 6.667v9.167c0 .442-.176.866-.488 1.179s-.736.488-1.179.488z"/><path d="M14.167 17.5v-6.667H5.833V17.5m0-15v4.167H12.5" stroke-linecap="round"/></svg>'.esc_html__('Save','nexter-ext').'</button>';
-			$output .= '</div>';
-			
-			wp_send_json_success(
-				array(
-					'content'	=> $output,
-				)
-			);
-		}
-		wp_send_json_error();
-	}
-
 	/**
 	 * Disable Embeds 
 	 * @since 1.1.0
@@ -546,8 +407,17 @@ class Nexter_Ext_Performance_Security_Settings {
 		//Wp redirect to the proper URL
 		redirect_canonical();
 
-		//redirect failed url, show error message
-		wp_die(sprintf(__("No feed available, please visit the <a href='%s'>Home Page</a>!",'nexter-ext'), esc_url(home_url('/'))));
+		// Translators: %s is the URL of the Home Page.
+		wp_die(
+			sprintf(
+				esc_html__("No feed available, please visit the %s!", 'nexter-extension'),
+				sprintf(
+					'<a href="%s">%s</a>',
+					esc_url(home_url('/')),
+					esc_html__("Home Page", 'nexter-extension')
+				)
+			)
+		);
 	}
 
 	/**
@@ -562,85 +432,6 @@ class Nexter_Ext_Performance_Security_Settings {
 				unset($links[$l]);
 			}
 		}
-	}
-
-	/**
-	 * Comment Setting Pop up
-	 * @since 1.1.0
-	 */
-
-	public function nexter_ext_disable_comments_ajax(){
-		check_ajax_referer( 'nexter_admin_nonce', 'nexter_nonce' );
-		if ( ! is_user_logged_in() || ! current_user_can( 'manage_options' ) ) {
-			wp_send_json_error(
-				array( 
-					'content' => __( 'Insufficient permissions.', 'nexter-ext' ),
-				)
-			);
-		}
-		$ext = ( isset( $_POST['extension_type'] ) ) ? sanitize_text_field( wp_unslash( $_POST['extension_type'] ) ) : '';
-		$extension_option = get_option( 'nexter_site_performance' );
-		if( !empty( $ext ) && $ext == 'disable-comments' ){
-		
-			$config_ext = [];
-			if( has_filter('nexter-extension-performance-option-config') ){
-				$config_data = apply_filters('nexter-extension-performance-option-config' , $config_ext);
-				if( !empty( $config_data ) && isset($config_data[$ext]) ){
-					$config_ext = $config_data[$ext];
-				}
-			}
-			
-			$commentOpt = [
-				'' => esc_html__('Enabled' , 'nexter-ext'),
-				'all' => esc_html__('Disable Everywhere' , 'nexter-ext'),
-				'custom' => esc_html__('Disable Specific Post Type' , 'nexter-ext'),
-			];
-
-			$output = '';
-			$output .= '<div class="nxt-ext-modal-content">';
-				$output .= '<div class="nxt-modal-title-wrap">';
-					$output .= '<div class="nxt-modal-title">'.(isset($config_ext['title']) ? wp_kses_post($config_ext['title']) : '').'</div>';
-					//$output .= '<div class="nxt-modal-desc">'.(isset($config_ext['title']) ? wp_kses_post($config_ext['description']) : '').'</div>';
-				$output .= '</div>';
-				$output .= '<div class="nxt-comment-wrap">';
-					$output .= '<div class="nxt-comment-inner">';
-						$output .= '<label class="upload-font-label">'.esc_html__('Comments' , 'nexter-ext').'</label>';
-						$output .= '<select class="nxt-select-opt nxt-disable-comment nxt-mt-8">';
-							foreach($commentOpt as $key => $val){
-								$output .= '<option '.(!empty($extension_option) && isset($extension_option['disable_comments']) && $extension_option['disable_comments'] == $key ? 'selected' : '' ) .' value="'.esc_attr($key).'" >'.$val.'</option>';
-							}
-						$output .= '</select>';
-						
-						if( function_exists(('nexter_ext_get_post_type_list')) ){
-							$posttype = nexter_ext_get_post_type_list();
-						}
-						
-						
-						$output .= '<div class="nxt-comment-switcher '.(isset($extension_option['disable_comments']) && !empty($extension_option['disable_comments']) && $extension_option['disable_comments'] == 'custom' ? ' nxt-slide-down' : '').'">';
-							foreach($posttype as $option => $data){
-								$output .= '<div class="nxt-option-switcher">';
-									$output .= '<span class="nxt-extra-icon"><img src="'.esc_url($data['icon']).'" alt="'.esc_attr($option).'" /></span>';
-									$output .= '<span class="nxt-option-check-title">'.wp_kses_post($data['title']).'</span>';
-									$output .= '<span class="nxt-option-checkbox-label">';
-										$output .= '<input type="checkbox" class="cmb2-option cmb2-list" id="'.esc_attr($option).'" name="nxt-disable-comment[]" value="'.esc_attr($option).'" '.(!empty($extension_option) && isset($extension_option['disble_custom_post_comments']) && in_array($option,$extension_option['disble_custom_post_comments']) ? "checked" : "" ).'/>';
-										$output .= '<label for="'.esc_attr($option).'"></label>';
-									$output .= '</span>';	
-								$output .= '</div>';
-							}
-						$output .= '</div>';
-						
-					$output .= '</div>';
-				$output .= '</div>';
-				$output .= '<button type="button" class="nxt-save-comment"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="#fff" stroke-width=".781" stroke-linejoin="round"><path d="M15.833 17.5H4.167c-.442 0-.866-.176-1.179-.488s-.488-.736-.488-1.179V4.167c0-.442.176-.866.488-1.179S3.725 2.5 4.167 2.5h9.167L17.5 6.667v9.167c0 .442-.176.866-.488 1.179s-.736.488-1.179.488z"/><path d="M14.167 17.5v-6.667H5.833V17.5m0-15v4.167H12.5" stroke-linecap="round"/></svg>'.esc_html__('Save','nexter-ext').'</button>';
-			$output .= '</div>';
-
-			wp_send_json_success(
-				array(
-					'content'	=> $output,
-				)
-			);
-		}
-		wp_send_json_error();
 	}
 
 	/**
@@ -798,12 +589,12 @@ class Nexter_Ext_Performance_Security_Settings {
 
 		//Disable Comments Pages
 		if($pagenow == 'comment.php' || $pagenow == 'edit-comments.php') {
-			wp_die(esc_html__('Comments are disabled.', 'nexter-ext'), '', array('response' => 403));
+			wp_die(esc_html__('Comments are disabled.', 'nexter-extension'), '', array('response' => 403));
 		}
 
 		//Disable Discussion Page
 		if($pagenow == 'options-discussion.php') {
-			wp_die(esc_html__('Comments are disabled.', 'nexter-ext'), '', array('response' => 403));
+			wp_die(esc_html__('Comments are disabled.', 'nexter-extension'), '', array('response' => 403));
 		}
 		//Remove Discussion Menu Links
 		remove_submenu_page('options-general.php', 'options-discussion.php');
@@ -816,169 +607,6 @@ class Nexter_Ext_Performance_Security_Settings {
 
 	public function nxt_recent_comments_dashboard(){
 		remove_meta_box('dashboard_recent_comments', 'dashboard', 'normal');
-	}
-
-	/**
-	 * Advance Security Pop up
-	 * @since 1.1.0
-	 */
-
-	public function nexter_ext_advance_security_ajax(){
-		check_ajax_referer( 'nexter_admin_nonce', 'nexter_nonce' );
-		if ( ! is_user_logged_in() || ! current_user_can( 'manage_options' ) ) {
-			wp_send_json_error(
-				array( 
-					'content' => __( 'Insufficient permissions.', 'nexter-ext' ),
-				)
-			);
-		}
-		$ext = ( isset( $_POST['extension_type'] ) ) ? sanitize_text_field( wp_unslash( $_POST['extension_type'] ) ) : '';
-		$extension_option = get_option( 'nexter_site_security' );
-		if( !empty( $ext ) && $ext == 'advance-security' ){
-
-			$secu_ext = [];
-			if( has_filter('nexter-extension-security-option-config') ){
-				$sec_data = apply_filters('nexter-extension-security-option-config' , $secu_ext);
-				if( !empty( $sec_data ) && isset($sec_data[$ext]) ){
-					$secu_ext = $sec_data[$ext];
-				}
-			}
-
-			$output = '';
-			$output .= '<div class="nxt-ext-modal-content nxt-advance-security-wrap">';
-				$output .= '<div class="nxt-modal-title-wrap">';
-					$output .= '<div class="nxt-modal-title">'.(isset($secu_ext['title']) ? wp_kses_post($secu_ext['title']) : '').'</div>';
-					//$output .= '<div class="nxt-modal-desc">'.(isset($secu_ext['title']) ? wp_kses_post($secu_ext['description']) : '').'</div>';
-				$output .= '</div>';
-				$output .= '<div class="nxt-disable-admin-wrap">';
-
-				$icon_url = NEXTER_EXT_URL.'assets/images/panel-icon/';
-					$security = [
-						'disable_xml_rpc' => [
-							'title' => esc_html__('Disable XML-RPC', 'nexter-ext'),
-							'desc' => esc_html__("For security reasons, it's better to disable XML-RPC on your site, unless you publish content from WordPress mobile app or use Jetpack plugins.", 'nexter-ext'),
-							'icon' => $icon_url.'disable-xml.svg',
-						],
-						'disable_wp_version' => [
-							'title' => esc_html__('Hide WordPress Version', 'nexter-ext'),
-							'desc' => esc_html__("For better security, it's always safe to remove the WordPress version from your site header. This helps in hiding the WordPress version.", 'nexter-ext'),
-							'icon' => $icon_url.'disable-wp-version.svg',
-						],
-						'disable_rest_api' => [
-							'title' => esc_html__('REST API', 'nexter-ext'),
-							'desc' => esc_html__("For better security, it's always safe to disable Rest API when not needed. Some plugins like Gutenberg and Yoast SEO do require this to work properly. Hence, choosing Disable for Non-Admins will be the best option.", 'nexter-ext'),
-							'icon' => $icon_url.'disable-rest-api.svg',
-						],
-						'disable_rest_api_links' => [
-							'title' => esc_html__('Remove REST API Links', 'nexter-ext'),
-							'desc' => esc_html__('This helps you remove unnecessary REST API tags from endpoints.', 'nexter-ext'),
-							'icon' => $icon_url.'remove-rest-api-link.svg',
-						],
-						'disable_file_editor' => [
-							'title' => esc_html__('Disable File Editor', 'nexter-ext'),
-							'desc' => esc_html__("Prevents unauthorized modifications to your website's theme and plugin files by disabling the file editor within the WordPress dashboard.", 'nexter-ext'),
-							'icon' => $icon_url.'disable-file-editor.svg',
-						],
-						/* 'disable_wordpress_application_password' => [
-							'title' => esc_html__('Disable WordPress Application Password', 'nexter-ext'),
-							'desc' => esc_html__("Enhances security by disabling the creation of application-specific passwords in WordPress, reducing the risk of misuse.", 'nexter-ext'),
-							'icon' => $icon_url.'disable-wp-application-password.svg',
-						], */
-						/* 'redirect_user_enumeration' => [
-							'title' => esc_html__('Redirect User ID Enumeration', 'nexter-ext'),
-							'desc' => esc_html__("Safeguards against user enumeration attacks by automatically redirecting users to a secure page or custom URL when attempting to access your website using specific user IDs.", 'nexter-ext'),
-							'icon' => $icon_url.'redirect-userid-emuneration.svg',
-						], */
-						'remove_meta_generator' => [
-							'title' => esc_html__('Remove Meta Generator', 'nexter-ext'),
-							'desc' => esc_html__("Eliminates the meta generator tag from your website's HTML source code, thwarting potential attackers from identifying your WordPress version.", 'nexter-ext'),
-							'icon' => $icon_url.'remove-meta-generator.svg',
-						],
-						/* 'remove_css_version' => [
-							'title' => esc_html__('Remove CSS Version', 'nexter-ext'),
-							'desc' => esc_html__("Boosts security by removing version numbers from CSS files, reducing the likelihood of exploiting known vulnerabilities associated with specific CSS versions.", 'nexter-ext'),
-							'icon' => $icon_url.'remove-css-version.svg',
-						], */
-						/* 'remove_js_version' => [
-							'title' => esc_html__('Remove JS Version', 'nexter-ext'),
-							'desc' => esc_html__("Similar to the CSS version removal, this feature eliminates version numbers from JavaScript (JS) files, mitigating the risk of attacks targeting known JS vulnerabilities.", 'nexter-ext'),
-							'icon' => $icon_url.'remove-js-version.svg',
-						], */
-						/* 'hide_wp_include_folder' => [
-							'title' => esc_html__('Hide WordPress Include Folder', 'nexter-ext'),
-							'desc' => esc_html__("Safeguards your website's internal structure by hiding the WordPress include folder from public access, minimizing potential vulnerabilities.", 'nexter-ext'),
-							'icon' => $icon_url.'hide-wp-include-folder.svg',
-						], */
-						'xss_protection' => [
-							'title' => esc_html__('XSS Protection', 'nexter-ext'),
-							'desc' => esc_html__("Implements proactive measures against cross-site scripting (XSS) attacks, ensuring the integrity and security of your website's content.", 'nexter-ext'),
-							'icon' => $icon_url.'xss-protection.svg',
-						],
-						'secure_cookies' =>[
-							'title' => esc_html__('Secure Cookies', 'nexter-ext'),
-							'desc' => esc_html__("Strengthens security by enabling secure cookie settings, protecting user authentication data from unauthorized access or tampering.", 'nexter-ext'),
-							'icon' => $icon_url.'secure-cookies.svg',
-						],
-						'iframe_security' => [
-							'title' => esc_html__('iFrame Security', 'nexter-ext'),
-							'desc' => esc_html__("Enhances your website's security by implementing measures to control or restrict the usage of iFrames, mitigating the risk of click jacking or malicious content injection.", 'nexter-ext'),
-							'icon' => $icon_url.'iframe-security.svg',
-						],
-					];
-
-					$iframeOpt = [
-						'disabled' => esc_html__('Disabled' , 'nexter-ext'),
-						'sameorigin' => esc_html__('Same Origin' , 'nexter-ext'),
-						'deny' => esc_html__('Deny' , 'nexter-ext'),
-					];
-
-					$enableOpt = [
-						'' => esc_html__('Enabled' , 'nexter-ext'),
-						'non_admin' => esc_html__('Disable for Non-Admin' , 'nexter-ext'),
-						'logged_out' => esc_html__('Disable When Logged Out' , 'nexter-ext'),
-					];
-					foreach($security as $option => $data){
-						$output .= '<div class="nxt-option-switcher">';
-							$output .= '<span class="nxt-extra-icon"><img src="'.esc_url($data['icon']).'" alt="'.esc_attr($option).'" /></span>';
-							$output .= '<span class="nxt-option-check-title">'.wp_kses_post($data['title']).'</span>';
-							$output .= '<span class="nxt-desc-icon">';
-								$output .= '<img src="'.esc_url( $icon_url.'desc-icon.svg').'" alt="'.esc_attr__('description','nexter-ext').'" /> ';
-								$output .= '<div class="nxt-tooltip '.( ($option == 'disable_rest_api' || $option == 'hide_wp_include_folder' || $option == 'xss_protection' || $option == 'secure_cookies' || $option == 'iframe_security') ? 'top' : 'bottom').'">'.wp_kses_post($data['desc']).'</div>';
-							$output .= '</span>';
-							if( $option != 'disable_rest_api' && $option!= 'iframe_security' ){
-								$output .= '<span class="nxt-option-checkbox-label">';
-									$output .= '<input type="checkbox" class="cmb2-option cmb2-list" id="'.esc_attr($option).'" name="nxt-advance-security[]" value="'.esc_attr($option).'" '.( isset($extension_option) && !empty($extension_option) && in_array($option,$extension_option,true) ? "checked" : "" ).'/>';
-									$output .= '<label for="'.esc_attr($option).'"></label>';
-								$output .= '</span>';
-							}else{
-								if($option == 'iframe_security'){
-									$output .=  '<select class="nxt-select-opt nxt-iframe-security">';
-									foreach($iframeOpt as $key => $val){
-										$output .= '<option '.(!empty($extension_option) && isset($extension_option['iframe_security']) && $extension_option['iframe_security'] == $key ? 'selected' : '' ) .' value="'.esc_attr($key).'" >'.$val.'</option>';
-									}
-									$output .= '</select>';
-								}
-								if($option == 'disable_rest_api'){
-									$output .=  '<select class="nxt-select-opt nxt-disable-api">';
-										foreach($enableOpt as $key => $val){
-											$output .= '<option '.(!empty($extension_option) && isset($extension_option['disable_rest_api']) && $extension_option['disable_rest_api'] == $key ? 'selected' : '' ) .' value="'.esc_attr($key).'" >'.$val.'</option>';
-										}
-									$output .= '</select>';
-								}
-							}
-						$output .= '</div>';
-					}
-				$output .= '</div>';
-				$output .= '<button type="button" class="nxt-save-advance-security"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="#fff" stroke-width=".781" stroke-linejoin="round" xmlns:v="https://vecta.io/nano"><path d="M15.833 17.5H4.167c-.442 0-.866-.176-1.179-.488s-.488-.736-.488-1.179V4.167c0-.442.176-.866.488-1.179S3.725 2.5 4.167 2.5h9.167L17.5 6.667v9.167c0 .442-.176.866-.488 1.179s-.736.488-1.179.488z"/><path d="M14.167 17.5v-6.667H5.833V17.5m0-15v4.167H12.5" stroke-linecap="round"/></svg>'.esc_html__('Save','nexter-ext').'</button>';
-			$output .= '</div>';
-			
-			wp_send_json_success(
-				array(
-					'content'	=> $output,
-				)
-			);
-		}
-		wp_send_json_error();
 	}
 
 	/**

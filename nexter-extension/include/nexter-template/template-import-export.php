@@ -76,7 +76,7 @@ class Nexter_Builder_Import_Export {
 	 */
 	public function post_row_actions_builder_export_link( $actions, \WP_Post $post ) {
 		if ( self::check_current_screen_templates() ) {
-			$actions['nxt-export-template'] = sprintf( '<a href="%1$s">%2$s</a>', $this->get_export_link( $post->ID ), __( 'Export Template', 'nexter-ext' ) );
+			$actions['nxt-export-template'] = sprintf( '<a href="%1$s">%2$s</a>', $this->get_export_link( $post->ID ), __( 'Export Template', 'nexter-extension' ) );
 		}
 
 		return $actions;
@@ -243,16 +243,16 @@ class Nexter_Builder_Import_Export {
 		}
 		?>
 		<div id="nxt-hidden-area">
-			<a id="nxt-import-template-button" class="page-title-action"><?php echo esc_html__( 'Import Templates', 'nexter-ext' ); ?></a>
+			<a id="nxt-import-template-button" class="page-title-action nxt-btn-action"><?php echo esc_html__( 'Import Templates', 'nexter-extension' ); ?></a>
 			<div id="nxt-import-template-form" style="display:none;">
-				<div id="nxt-import-title"><?php echo esc_html__( 'Choose an Nexter Builder template XML file of Builder templates, and add them to the list of templates available in your builder.', 'nexter-ext' ); ?></div>
+				<div id="nxt-import-title"><?php echo esc_html__( 'Choose an Nexter Builder template XML file of Builder templates, and add them to the list of templates available in your builder.', 'nexter-extension' ); ?></div>
 				<form id="nxt-import-temp-form" method="post" action="<?php echo esc_url(admin_url( 'admin-ajax.php' )); ?>" enctype="multipart/form-data">
 					<input type="hidden" name="action" value="nxt_builder_import_actions">
 					<input type="hidden" name="nxt_action" value="import_template">
 					<input type="hidden" name="_nonce" value="<?php echo esc_attr(wp_create_nonce( 'nxt_ajax' )); ?>">
 					<fieldset id="nxt-import-template-inputs">
 						<input type="file" name="file" required>
-						<input type="submit" class="button" value="<?php echo esc_attr__( 'Import Now', 'nexter-ext' ); ?>">
+						<input type="submit" class="button" value="<?php echo esc_attr__( 'Import Now', 'nexter-extension' ); ?>">
 					</fieldset>
 				</form>
 			</div>

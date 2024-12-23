@@ -3,10 +3,10 @@
  * Plugin Name: Nexter Extension
  * Plugin URI: https://nexterwp.com
  * Description: Extension for Nexter Theme to unlock all FREE features. Keep this active to use access its all features
- * Version: 3.2.3
+ * Version: 4.0.0
  * Author: POSIMYTH
  * Author URI: https://posimyth.com
- * Text Domain: nexter-ext
+ * Text Domain: nexter-extension
  * Requires at least: 4.0
  * Tested up to: 6.7
  * Requires PHP: 5.6
@@ -25,7 +25,7 @@ define( 'NEXTER_EXT_BASE', plugin_basename( NEXTER_EXT_FILE ) );
 define( 'NEXTER_EXT_DIR', plugin_dir_path( NEXTER_EXT_FILE ) );
 define( 'NEXTER_EXT_URL', plugins_url( '/', NEXTER_EXT_FILE ) );
 define( 'NEXTER_EXT_CPT', 'nxt_builder' );
-define( 'NEXTER_EXT_VER', '3.2.3' );
+define( 'NEXTER_EXT_VER', '4.0.0' );
 
 if(!defined('NXT_BUILD_POST')){
 	define( 'NXT_BUILD_POST', 'nxt_builder' );
@@ -34,7 +34,7 @@ if(!defined('NXT_BUILD_POST')){
  * Nexter Extension Plugins Loaded
  */
 function nexter_extension_plugins_loaded() {
-	load_plugin_textdomain( 'nexter-ext', false, NEXTER_EXT_DIR . '/languages' );
+	load_plugin_textdomain( 'nexter-extension', false, NEXTER_EXT_DIR . '/languages' );
 	
 	if ( ! version_compare( PHP_VERSION, '5.6', '>=' ) ) {
 		add_action( 'admin_notices', 'nexter_ext_php_version_notice' );
@@ -50,7 +50,7 @@ require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-cust
  */
 function nexter_ext_php_version_notice() {
 	/* translators: %s: Php Required */
-	$message = sprintf( esc_html__( 'Nexter Extensions requires PHP version %s+, plugin is currently NOT RUNNING.', 'nexter-ext' ), '5.6' );
+	$message = sprintf( esc_html__( 'Nexter Extensions requires PHP version %s+, plugin is currently NOT RUNNING.', 'nexter-extension' ), '5.6' );
 	$html_message = sprintf( '<div class="error">%s</div>', wpautop( $message ) );
 	echo wp_kses_post( $html_message );
 }

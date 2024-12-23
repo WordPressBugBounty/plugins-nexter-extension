@@ -70,7 +70,8 @@ if ( ! class_exists( 'Nexter_Theme_Builder_Load' ) ) {
 			
 			$hook_layout = get_post_meta( $current_post_id, 'nxt-hooks-layout', true );
 			$hook_layout_pages = get_post_meta(  $current_post_id, 'nxt-hooks-layout-pages', true );
-			if( $hook_layout == 'pages' && $hook_layout_pages == 'singular'){
+			$hook_layout_sections = get_post_meta(  $current_post_id, 'nxt-hooks-layout-sections', true );
+			if( ($hook_layout == 'pages' && $hook_layout_pages == 'singular') || $hook_layout_sections == 'singular'){
 				$singular_preview_type = get_post_meta( $current_post_id, 'nxt-singular-preview-type', true );
 				$singular_preview_id = get_post_meta( $current_post_id, 'nxt-singular-preview-id', true );
 				if( !empty($singular_preview_type) && !empty($singular_preview_id)){
@@ -78,7 +79,7 @@ if ( ! class_exists( 'Nexter_Theme_Builder_Load' ) ) {
 					$NexterPreview['preview_type'] = $singular_preview_type; 
 					$NexterPreview['preview_id'] = $singular_preview_id; 
 				}
-			}else if($hook_layout == 'pages' && $hook_layout_pages == 'archives'){
+			}else if(($hook_layout == 'pages' && $hook_layout_pages == 'archives') || $hook_layout_sections == 'archives'){
 				$archive_preview_type = get_post_meta( $current_post_id, 'nxt-archive-preview-type', true );
 				$archive_preview_id = get_post_meta( $current_post_id, 'nxt-archive-preview-id', true );
 				if( !empty($archive_preview_type) && !empty($archive_preview_id)){

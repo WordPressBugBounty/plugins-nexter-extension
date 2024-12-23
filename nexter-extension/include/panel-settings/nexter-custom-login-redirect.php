@@ -144,7 +144,7 @@ function nxt_login_plugins_loaded(){
 	global $nexter_custom_login;
 	
 	if (! is_multisite() && ( strpos( $_SERVER['REQUEST_URI'], 'wp-signup' ) !== false || strpos( $_SERVER['REQUEST_URI'], 'wp-activate' ) !== false ) ) {
-		wp_die( esc_html__( 'This feature is not enabled.', 'nexter-ext' ) );
+		wp_die( esc_html__( 'This feature is not enabled.', 'nexter-extension' ) );
 	}
 	
 	$request_URI = parse_url( $_SERVER['REQUEST_URI'] );
@@ -234,6 +234,6 @@ function nxt_redirect_login_url() {
 		} 
 	}
 
-	$message = !empty($nxt_site_security['login_page_message']) ? $nxt_site_security['login_page_message'] : __('This has been disabled.', 'nexter-ext');
+	$message = !empty($nxt_site_security['login_page_message']) ? $nxt_site_security['login_page_message'] : __('This has been disabled.', 'nexter-extension');
 	wp_die($message, 403);
 }

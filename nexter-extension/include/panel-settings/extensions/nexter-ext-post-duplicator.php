@@ -44,10 +44,10 @@ if(!empty($extension_option) && isset($extension_option['wp-duplicate-post']) &&
 				$post_type = get_post_type_object( $post->post_type );
 				
 				/* translators: %s: singular name */
-				$label = sprintf( __( 'Duplicate %s', 'nexter-ext' ), $post_type->labels->singular_name );
+				$label = sprintf( __( 'Duplicate %s', 'nexter-extension' ), $post_type->labels->singular_name );
 				
 				// Create and Return Link
-				return '<a class="nxt-post-duplicate" href="" data-postid="'.esc_attr( $post->ID ).'">'.wp_kses_post( $label ).'</a><div class="nxt-dp-post-modal"><div class="nxt-post-modal-inner"><div class="nxt-post-dp-input-wrap"><input class="nxt-dp-post-input" type="number" min="1" value="1"/><span class="nxt-dp-post-total-text">: '.wp_kses_post($post_type->labels->singular_name).'(s)</span></div><a class="nxt-dp-post-btn" href="">'.esc_html__('Duplicate','nexter-ext').'</a></div></div>';
+				return '<a class="nxt-post-duplicate" href="" data-postid="'.esc_attr( $post->ID ).'">'.wp_kses_post( $label ).'</a><div class="nxt-dp-post-modal"><div class="nxt-post-modal-inner"><div class="nxt-post-dp-input-wrap"><input class="nxt-dp-post-input" type="number" min="1" value="1"/><span class="nxt-dp-post-total-text">: '.wp_kses_post($post_type->labels->singular_name).'(s)</span></div><a class="nxt-dp-post-btn" href="">'.esc_html__('Duplicate','nexter-extension').'</a></div></div>';
 	
 			}
 		}
@@ -116,7 +116,7 @@ if(!empty($extension_option) && isset($extension_option['wp-duplicate-post']) &&
 				}
 
 				// Change elements
-				$postfixText = isset( $settings['title'] ) ? sanitize_text_field( $settings['title'] ) : esc_html__( 'Copy', 'nexter-ext' );
+				$postfixText = isset( $settings['title'] ) ? sanitize_text_field( $settings['title'] ) : esc_html__( 'Copy', 'nexter-extension' );
 				$duplicate['post_title'] = wp_kses_post( $duplicate['post_title'] ).' '.wp_kses_post($postfixText).' #'.esc_html($p);
 				$duplicate['post_name'] = sanitize_title( $duplicate['post_name'].'-'.$settings['slug'] ).'-'.esc_html($p);
 				
@@ -129,10 +129,10 @@ if(!empty($extension_option) && isset($extension_option['wp-duplicate-post']) &&
 				$timestamp = ( $settings['timestamp'] == 'original_date' ) ? strtotime($duplicate['post_date']) : current_time('timestamp',0);
 				$timestamp_gmt = ( $settings['timestamp'] == 'original_date' ) ? strtotime($duplicate['post_date_gmt']) : current_time('timestamp',1);
 				
-				$duplicate['post_date'] = date('Y-m-d H:i:s', $timestamp);
-				$duplicate['post_date_gmt'] = date('Y-m-d H:i:s', $timestamp_gmt);
-				$duplicate['post_modified'] = date('Y-m-d H:i:s', current_time('timestamp',0));
-				$duplicate['post_modified_gmt'] = date('Y-m-d H:i:s', current_time('timestamp',1));
+				$duplicate['post_date'] = gmdate('Y-m-d H:i:s', $timestamp);
+				$duplicate['post_date_gmt'] = gmdate('Y-m-d H:i:s', $timestamp_gmt);
+				$duplicate['post_modified'] = gmdate('Y-m-d H:i:s', current_time('timestamp',0));
+				$duplicate['post_modified_gmt'] = gmdate('Y-m-d H:i:s', current_time('timestamp',1));
 				if ( $settings['post_author'] == 'current_author' ) {
 					$duplicate['post_author'] = get_current_user_id();
 				}
@@ -189,13 +189,13 @@ if(!empty($extension_option) && isset($extension_option['wp-duplicate-post']) &&
 		function nxt_duplicate_post_ajax() {
 			check_ajax_referer( 'nexter_admin_nonce', 'nexter_nonce' );
 			if ( ! is_user_logged_in() || ! current_user_can( 'edit_posts' ) ) {
-				wp_send_json_error( __('Insufficient permissions.','nexter-ext') );
+				wp_send_json_error( __('Insufficient permissions.','nexter-extension') );
 			}
 			
 			$original_id  = ( isset( $_POST['original_id'] ) ) ? sanitize_text_field( intval( $_POST['original_id'] ) ) : '';
 
 			if ( ! current_user_can( 'edit_post', $original_id ) ) {
-				wp_send_json_error( __('You do not have permission to duplicate this post.','nexter-ext') );
+				wp_send_json_error( __('You do not have permission to duplicate this post.','nexter-extension') );
 			}
 
 			$total  = ( isset( $_POST['total'] ) ) ? sanitize_text_field( intval( $_POST['total'] ) ) : '';
@@ -208,4 +208,3 @@ if(!empty($extension_option) && isset($extension_option['wp-duplicate-post']) &&
 		add_action( 'wp_ajax_nxt_duplicate_post', 'nxt_duplicate_post_ajax' );
 	}
 }
-?>

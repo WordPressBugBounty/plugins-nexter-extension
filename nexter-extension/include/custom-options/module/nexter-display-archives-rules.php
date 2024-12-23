@@ -59,7 +59,7 @@ class Nexter_Builders_Archives_Conditional_Rules {
 		public static function get_archives_options(array $data) {
 			
 			$options = array(
-				"all" => __("All",'nexter-ext'),
+				"all" => __("All",'nexter-extension'),
 			);
 			
 			$result = Nexter_Singular_Archives_Rules::nexter_ajax_singular_archives_filters($data);
@@ -108,7 +108,7 @@ class Nexter_Builders_Archives_Conditional_Rules {
 			}
 			
 			if(empty($data)){
-				return __('Empty Data','nexter-ext');
+				return __('Empty Data','nexter-extension');
 			}
 
 			$query_data = Nexter_Builder_Pages_Conditional::get_query_singular_archive_data( $data );
@@ -303,7 +303,7 @@ function nxt_get_type_archives_field( $field ) {
 			$query['rules'] = $value;				
 			$options = Nexter_Builders_Archives_Conditional_Rules::get_archives_options($query);
 		}else {
-			$options = array('all' => __('All','nexter-ext'));
+			$options = array('all' => __('All','nexter-extension'));
 		}
 		
 	}else{
@@ -312,7 +312,7 @@ function nxt_get_type_archives_field( $field ) {
 			$query['rules'] = 'all';
 			$options = Nexter_Builders_Archives_Conditional_Rules::get_archives_options($query);
 		}else{
-			$options = array('all' => __('All','nexter-ext'));
+			$options = array('all' => __('All','nexter-extension'));
 		}
 	}
 	
@@ -339,11 +339,11 @@ function nxt_get_type_archives_preview_id( $field ){
 			$query['rules'] = 'category';
 			$options = Nexter_Builders_Archives_Conditional_Rules::get_terms_by_taxonomy($query);
 		}else{
-			$options = array( 'all' => __( 'All','nexter-ext' ) );
+			$options = array( 'all' => __( 'All','nexter-extension' ) );
 		}
 	}
 	if( empty($options) ){
-		$options = array( 'all' => __( 'All','nexter-ext' ) );
+		$options = array( 'all' => __( 'All','nexter-extension' ) );
 	}
 	
 	return $options;
@@ -360,7 +360,7 @@ if( !class_exists('Nexter_All_Archive')){
 		}
 
 		public function get_type_label() {
-			return __( 'All Archives', 'nexter-ext' );
+			return __( 'All Archives', 'nexter-extension' );
 		}
 
 		public static function condition_check( $args ) {
@@ -410,7 +410,7 @@ if( !class_exists('Nexter_Post_Type_Archive')){
 		}
 		public function get_type_label() {
 			/* translators: %s: Archive */
-			return sprintf( __( 'Default %s Archive', 'nexter-ext' ), $this->post_type->label );
+			return sprintf( __( 'Default %s Archive', 'nexter-extension' ), $this->post_type->label );
 		}
 
 		public function register_post_type_conditions() {
@@ -529,7 +529,7 @@ if( (!defined('NXT_PRO_EXT_VER') && !class_exists('Nexter_Archives_First_Child_T
 
 		public function get_type_label() {
 			/* translators: %s: Taxonomy Label */
-			return sprintf( __( '%1$s : First Child %2$s', 'nexter-ext' ), $this->post_label, $this->taxonomy->labels->singular_name );
+			return sprintf( __( '%1$s : First Child %2$s', 'nexter-extension' ), $this->post_label, $this->taxonomy->labels->singular_name );
 		}
 		
 		public static function is_term_taxonomy($args) {
@@ -564,7 +564,7 @@ if( (!defined('NXT_PRO_EXT_VER') && !class_exists('Nexter_Archives_All_Child_Ter
 
 		public function get_type_label() {
 			/* translators: %s: Taxonomy Label */
-			return sprintf( __( '%1$s : All Child %2$s', 'nexter-ext' ), $this->post_label, $this->taxonomy->labels->singular_name );
+			return sprintf( __( '%1$s : All Child %2$s', 'nexter-extension' ), $this->post_label, $this->taxonomy->labels->singular_name );
 		}
 		
 		public static function condition_check( $args ) {

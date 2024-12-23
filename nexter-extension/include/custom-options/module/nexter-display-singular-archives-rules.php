@@ -57,7 +57,7 @@ class Nexter_Singular_Archives_Rules {
 		}
 		
 		if(empty($data)){
-			return __('Empty Data','nexter-ext');
+			return __('Empty Data','nexter-extension');
 		}
 
 		$query_data = Nexter_Builder_Pages_Conditional::get_query_singular_archive_data( $data );
@@ -264,7 +264,7 @@ if( (!defined('NXT_PRO_EXT_VER') && !class_exists('Nexter_Singular_Taxonomy')) |
 				$post_name = self::$post_type_data->label;
 			}
 			/* translators: %s: Taxonomy Label */
-			return sprintf( __( '%1$s : %2$s', 'nexter-ext' ), $post_name ,$this->taxonomy->labels->singular_name );
+			return sprintf( __( '%1$s : %2$s', 'nexter-extension' ), $post_name ,$this->taxonomy->labels->singular_name );
 		}
 		
 		public static function condition_check( $args ) {
@@ -311,7 +311,7 @@ if( (!defined('NXT_PRO_EXT_VER') && !class_exists('Nexter_Singular_Sub_Term')) |
 				$post_name = self::$post_type_data->label;
 			}
 			/* translators: %s: Taxonomy terms */
-			return sprintf( __( '%1$s : Child %2$s', 'nexter-ext' ), $post_name, $this->taxonomy_terms->labels->name );
+			return sprintf( __( '%1$s : Child %2$s', 'nexter-extension' ), $post_name, $this->taxonomy_terms->labels->name );
 		}
 		
 		public static function condition_check( $args ) {
@@ -343,7 +343,7 @@ if( (!defined('NXT_PRO_EXT_VER') && !class_exists('Nexter_Singular_Post_By_Autho
 
 		public function get_post_type_label() {
 			/* translators: %s: By Author */
-			return sprintf( __( '%s : By Author', 'nexter-ext' ), $this->post_type->label );
+			return sprintf( __( '%s : By Author', 'nexter-extension' ), $this->post_type->label );
 		}
 		
 		public static function condition_check( $args = null ) {
@@ -377,7 +377,7 @@ if( (!defined('NXT_PRO_EXT_VER') && !class_exists('Nexter_Author')) || (defined(
 		}
 
 		public function get_type_label() {
-			return __( 'Author Archive', 'nexter-ext' );
+			return __( 'Author Archive', 'nexter-extension' );
 		}
 
 		public static function condition_check( $args = null ) {
@@ -410,7 +410,7 @@ if( (!defined('NXT_PRO_EXT_VER') && !class_exists('Nexter_Date')) || (defined('N
 		}
 		
 		public function get_type_label() {
-			return __( 'Date Archive', 'nexter-ext' );
+			return __( 'Date Archive', 'nexter-extension' );
 		}
 
 		public static function condition_check( $args ) {
@@ -442,7 +442,7 @@ if( (!defined('NXT_PRO_EXT_VER') && !class_exists('Nexter_Search')) || (defined(
 		}
 		
 		public function get_type_label() {
-			return __( 'Search Results', 'nexter-ext' );
+			return __( 'Search Results', 'nexter-extension' );
 		}
 
 		public static function condition_check( $args ) {

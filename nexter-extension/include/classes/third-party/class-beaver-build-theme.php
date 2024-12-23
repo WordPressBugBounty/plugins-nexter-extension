@@ -75,52 +75,52 @@ if ( ! class_exists( 'Nexter_Beaver_Theme_Build' ) ) {
 
 			return array(
 				array(
-					'label' => esc_html__( 'Page', 'nexter' ),
+					'label' => esc_html__( 'Page', 'nexter-extension' ),
 					'hooks' => array(
-						'nxt_body_top'	=> esc_html__( 'Before Page', 'nexter' ),
-						'nxt_body_bottom'	=> esc_html__( 'After Page', 'nexter' ),
+						'nxt_body_top'	=> esc_html__( 'Before Page', 'nexter-extension' ),
+						'nxt_body_bottom'	=> esc_html__( 'After Page', 'nexter-extension' ),
 					),
 				),
 				array(
-					'label' => esc_html__( 'Header', 'nexter' ),
+					'label' => esc_html__( 'Header', 'nexter-extension' ),
 					'hooks' => array(
-						'nxt_header_before'	=> esc_html__( 'Header Before', 'nexter' ),
-						'nxt_header_after'	=> esc_html__( 'Header After', 'nexter' ),
+						'nxt_header_before'	=> esc_html__( 'Header Before', 'nexter-extension' ),
+						'nxt_header_after'	=> esc_html__( 'Header After', 'nexter-extension' ),
 					),
 				),
 				array(
-					'label' => esc_html__( 'Content', 'nexter' ),
+					'label' => esc_html__( 'Content', 'nexter-extension' ),
 					'hooks' => array(
-						'nxt_content_top'	=> esc_html__( 'Content Top', 'nexter' ),
-						'nxt_content_bottom'	=> esc_html__( 'Content Bottom', 'nexter' ),
+						'nxt_content_top'	=> esc_html__( 'Content Top', 'nexter-extension' ),
+						'nxt_content_bottom'	=> esc_html__( 'Content Bottom', 'nexter-extension' ),
 					),
 				),
 				array(
-					'label' => esc_html__( 'Content', 'nexter' ),
+					'label' => esc_html__( 'Content', 'nexter-extension' ),
 					'hooks' => array(
-						'nxt_content_top'	=> esc_html__( 'Content Top', 'nexter' ),
-						'nxt_content_bottom'	=> esc_html__( 'Content Bottom', 'nexter' ),
+						'nxt_content_top'	=> esc_html__( 'Content Top', 'nexter-extension' ),
+						'nxt_content_bottom'	=> esc_html__( 'Content Bottom', 'nexter-extension' ),
 					),
 				),
 				array(
-					'label' => esc_html__( 'Sidebar', 'nexter' ),
+					'label' => esc_html__( 'Sidebar', 'nexter-extension' ),
 					'hooks' => array(
-						'nxt_sidebars_before'	=> esc_html__( 'Sidebar Before', 'nexter' ),
-						'nxt_sidebars_after'	=> esc_html__( 'Sidebar After', 'nexter' ),
+						'nxt_sidebars_before'	=> esc_html__( 'Sidebar Before', 'nexter-extension' ),
+						'nxt_sidebars_after'	=> esc_html__( 'Sidebar After', 'nexter-extension' ),
 					),
 				),
 				array(
-					'label' => esc_html__( 'Footer', 'nexter' ),
+					'label' => esc_html__( 'Footer', 'nexter-extension' ),
 					'hooks' => array(
-						'nxt_footer_before'	=> esc_html__( 'Footer Before', 'nexter' ),
-						'nxt_footer_after'	=> esc_html__( 'Footer After', 'nexter' ),
+						'nxt_footer_before'	=> esc_html__( 'Footer Before', 'nexter-extension' ),
+						'nxt_footer_after'	=> esc_html__( 'Footer After', 'nexter-extension' ),
 					),
 				),
 				array(
-					'label' => esc_html__( 'Posts', 'nexter' ),
+					'label' => esc_html__( 'Posts', 'nexter-extension' ),
 					'hooks' => array(
-						'nxt_comments_before'	=> esc_html__( 'Comments Before', 'nexter' ),
-						'nxt_comments_after'	=> esc_html__( 'Comments After', 'nexter' ),
+						'nxt_comments_before'	=> esc_html__( 'Comments Before', 'nexter-extension' ),
+						'nxt_comments_after'	=> esc_html__( 'Comments After', 'nexter-extension' ),
 					),
 				),
 			);

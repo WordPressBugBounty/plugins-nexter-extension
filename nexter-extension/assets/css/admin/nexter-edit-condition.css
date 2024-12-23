@@ -1,0 +1,32 @@
+.editor-document-bar {
+    width: min(100%,400px);
+
+}
+.editor-header__center {
+    gap: 10px
+}
+#nexter-edit-condition {
+    border: 1px solid #1717CC;
+    padding: 5px 16px 5px 16px;
+    color: #1717CC;
+    font-size: 12px;
+    font-weight: 500;
+    border-radius: 5px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    cursor: pointer;
+    transition: 0.3s linear;
+}
+#nexter-edit-condition path {
+    transition: 0.3s linear;
+}
+#nexter-edit-condition:hover {
+    background-color: #1717CC;
+    color: #fff;
+}
+#nexter-edit-condition:hover path{
+    stroke: #fff;
+}

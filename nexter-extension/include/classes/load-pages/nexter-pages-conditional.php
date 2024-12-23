@@ -103,7 +103,7 @@ if ( ! class_exists( 'Nexter_Builder_Pages_Conditional' ) ) {
 				$post_id  = get_the_id();
 				$nxt_hooks_layout = get_post_meta( $post_id, 'nxt-hooks-layout', true );
 				$nxt_hooks_section = get_post_meta( $post_id, 'nxt-hooks-layout-sections', true );
-				if ( 'sections' === $nxt_hooks_layout ){
+				if ( 'sections' === $nxt_hooks_layout ||  !empty($nxt_hooks_section)){
 					if( 'header' === $nxt_hooks_section ){
 						remove_action( 'nexter_header', 'nexter_header_template' );
 						remove_filter( 'nexter_pages_hooks_template', array( $this, 'nexter_pages_hooks_template_content' ) );
@@ -149,12 +149,12 @@ if ( ! class_exists( 'Nexter_Builder_Pages_Conditional' ) ) {
 			global $post;
 
 			$post_id = get_the_id();
-			$nxt_hooks_layout = get_post_meta( $post_id, 'nxt-hooks-layout', true );
+			// $nxt_hooks_layout = get_post_meta( $post_id, 'nxt-hooks-layout', true );
 			$nxt_hooks_section = get_post_meta( $post_id, 'nxt-hooks-layout-sections', true );
 			
 			if ( NXT_BUILD_POST == $post->post_type ) {
 				
-				if ( 'sections' === $nxt_hooks_layout && ( 'header' === $nxt_hooks_section || 'footer' === $nxt_hooks_section) ) {
+				if ( ( 'header' === $nxt_hooks_section || 'footer' === $nxt_hooks_section) ) {
 					//Nexter 
 					$template = $this->get_template_path();
 
@@ -194,7 +194,8 @@ if ( ! class_exists( 'Nexter_Builder_Pages_Conditional' ) ) {
 				foreach ( self::$templates_ids as $post_id => $post_data ) {
 
 					$nxt_hooks_layout = get_post_meta( $post_id, 'nxt-hooks-layout', true );
-					if ( !empty($nxt_hooks_layout) && $nxt_hooks_layout!='none' && class_exists( 'Nexter_Builder_Compatibility' ) ) {
+					$nxt_hooks_section = get_post_meta( $post_id, 'nxt-hooks-layout-sections', true );
+					if ( ((!empty($nxt_hooks_layout) && $nxt_hooks_layout!='none') || !empty($nxt_hooks_section)) && class_exists( 'Nexter_Builder_Compatibility' ) ) {
 						$page_base_instance = Nexter_Builder_Compatibility::get_instance();
 						$post_id = apply_filters( 'wpml_object_id', $post_id, NXT_BUILD_POST, TRUE  );
 						$page_builder_instance = $page_base_instance->get_active_page_builder( $post_id );
@@ -266,8 +267,8 @@ if ( ! class_exists( 'Nexter_Builder_Pages_Conditional' ) ) {
 					if ( ($pagenow=='edit.php' && $post_type === NXT_BUILD_POST) || $post_type != NXT_BUILD_POST ) {
 						$nxt_hooks_layout = get_post_meta( $post_id, 'nxt-hooks-layout', true );
 						$pages = get_post_meta( $post_id, 'nxt-hooks-layout-pages', false );
-						
-						if( ( !empty( $nxt_layout ) && $nxt_hooks_layout == $nxt_layout ) && ( !empty( $sections_pages ) && $pages[0] == $sections_pages ) ){
+						$sections = get_post_meta( $post_id, 'nxt-hooks-layout-sections', false );						
+						if( ( (!empty( $nxt_layout ) && $nxt_hooks_layout == $nxt_layout ) && ( !empty( $sections_pages ) && !empty($pages) && isset($pages[0]) && $pages[0] == $sections_pages ) ) || ( !empty($sections) && !empty( $sections_pages )  && isset($sections[0]) && $sections[0] == $sections_pages )){
 							if(function_exists('pll_get_post')){
 								if(pll_get_post( $post_id ) != $post_id){
 									continue;

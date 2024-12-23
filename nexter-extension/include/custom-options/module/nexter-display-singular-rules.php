@@ -88,7 +88,7 @@ class Nexter_Builders_Singular_Conditional_Rules {
 		public static function get_singular_options(array $data) {
 			
 			$options = array(
-				"all" => __( "All", 'nexter-ext' ),
+				"all" => __( "All", 'nexter-extension' ),
 			);
 			
 			$result = Nexter_Singular_Archives_Rules::nexter_ajax_singular_archives_filters($data);
@@ -203,8 +203,8 @@ class Nexter_Builders_Singular_Conditional_Rules {
 			self::$load_conditions_rule = apply_filters( 'nexter_singular_load_condition', self::$load_conditions_rule );
 
 			self::$singular_conditions['front-page'] = [
-				'label' => __('Front Page','nexter-ext'),
-				'value' => [ 'front_page' => __('Front Page','nexter-ext'), ]
+				'label' => __('Front Page','nexter-extension'),
+				'value' => [ 'front_page' => __('Front Page','nexter-extension'), ]
 			];
 
 			foreach ( $post_types_list as $post_type => $post_label ) {
@@ -213,7 +213,7 @@ class Nexter_Builders_Singular_Conditional_Rules {
 					'post_type' => $post_type,
 				] );
 				
-				self::$singular_conditions[$post_type] = [ 'label' => $post_label, 'value' => [ $post_type => __( 'All ','nexter-ext' ).$post_label ] ];
+				self::$singular_conditions[$post_type] = [ 'label' => $post_label, 'value' => [ $post_type => __( 'All ','nexter-extension' ).$post_label ] ];
 
 				self::register_post_condition_instance($post_condition);
 				
@@ -307,7 +307,7 @@ if( !class_exists('Nxt_Front_Page') ){
 		}
 	
 		public function get_post_type_label() {
-			return __( 'Front Page', 'nexter-ext' );
+			return __( 'Front Page', 'nexter-extension' );
 		}
 	
 		public static function condition_check( $args = [] ) {

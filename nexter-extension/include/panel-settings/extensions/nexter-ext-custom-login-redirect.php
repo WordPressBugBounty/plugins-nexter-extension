@@ -27,11 +27,6 @@ class Nexter_Ext_Custom_Login_Redirect {
 
     public function __construct() {
         
-        // Ajax To Load Content
-        if( is_admin() ){
-	    	add_action( 'wp_ajax_nexter_ext_custom_login_redirect', [ $this, 'nexter_ext_custom_login_redirect_ajax'] );
-        }
-
         $this->cusloOption = get_option( 'nexter_site_security' );
         
         if( isset($this->cusloOption['custom_login_url']) && !empty($this->cusloOption['custom_login_url']) && !defined('WP_CLI') ){
@@ -53,95 +48,6 @@ class Nexter_Ext_Custom_Login_Redirect {
     }
     
     /**
-     * Nexter Custom Login Setting
-     * @since 1.1.0
-     */
-
-    public function nexter_ext_custom_login_redirect_ajax(){
-        check_ajax_referer( 'nexter_admin_nonce', 'nexter_nonce' );
-        if ( ! is_user_logged_in() || ! current_user_can( 'manage_options' ) ) {
-			wp_send_json_error(
-				array( 
-					'content' => __( 'Insufficient permissions.', 'nexter-ext' ),
-				)
-			);
-		}
-		$ext = ( isset( $_POST['extension_type'] ) ) ? sanitize_text_field( wp_unslash( $_POST['extension_type'] ) ) : '';
-		$exte_option = get_option( 'nexter_site_security' );
-
-        if( !empty( $ext ) && $ext == 'custom-login' ){
-            $secu_ext = [];
-            if( has_filter('nexter-extension-security-option-config') ){
-                $sec_data = apply_filters('nexter-extension-security-option-config' , $secu_ext);
-                if( !empty( $sec_data ) && isset($sec_data[$ext]) ){
-                    $secu_ext = $sec_data[$ext];
-                }
-            }
-
-            $loginbeha = [
-                'message' => esc_html__('Message (Default)' , 'nexter-ext'),
-                'home_page' => esc_html__('Home Page' , 'nexter-ext'),
-                '404_page' => esc_html__('404 Page Template' , 'nexter-ext'),
-            ];
-
-            $output = '';
-            $output .= '<div class="nxt-ext-modal-content">';
-                $output .= '<div class="nxt-modal-title-wrap">';
-                    $output .= '<div class="nxt-modal-title">'.(isset($secu_ext['title']) ? wp_kses_post($secu_ext['title']) : '').'</div>';
-                    //$output .= '<div class="nxt-modal-desc">'.(isset($secu_ext['title']) ? wp_kses_post($secu_ext['description']) : '').'</div>';
-                $output .= '</div>';
-                $output .= '<div class="nxt-custom-login-wrap">';
-                    $output .= '<div class="nxt-ctmlo-inner">';
-                        $output .= '<div class="nxt-recaptch-field">';
-                            $output .= '<label class="upload-font-label">'.esc_html__( 'Change WP Admin Login Path', 'nexter-ext' );
-                                $output .= '<span class="nxt-desc-icon" >';
-                                    $output .= '<img src="'.esc_url( NEXTER_EXT_URL.'assets/images/panel-icon/desc-icon.svg').'" alt="'.esc_html__( 'Change WP Admin Login Path', 'nexter-ext' ).'" /> ';
-                                    $output .= '<div class="nxt-tooltip">'.esc_html__( 'Hide your WordPress default WP-Admin URL path from public access.' , 'nexter-ext' ).'</div>';
-                                $output .= '</span>';
-                            $output .= '</label>';
-                            $output .= '<input type="text" class="nxt-recap-input" value="'.( isset($exte_option['custom_login_url']) && !empty($exte_option['custom_login_url']) ? $exte_option['custom_login_url'] : '' ).'" name="nxt-redirect-url" placeholder="'.esc_html('Please enter your custom path e.g. new-login-page','nexter-ext').'" required />';
-                        $output .= '</div>';
-                        
-                        $output .= '<div class="nxt-recaptch-field">';
-                            $output .= '<label class="upload-font-label">'.esc_html__( 'Login URL Behaviour', 'nexter-ext' );
-                                $output .= '<span class="nxt-desc-icon" >';
-                                    $output .= '<img src="'.esc_url( NEXTER_EXT_URL.'assets/images/panel-icon/desc-icon.svg').'" alt="'.esc_html__( 'Redirect Login URL', 'nexter-ext' ).'" /> ';
-                                    $output .= '<div class="nxt-tooltip">'.esc_html__( 'Redirect old WP-Admin path to different pages, after changing to your new URL.' , 'nexter-ext' ).'</div>';
-                                $output .= '</span>';
-                            $output .= '</label>';
-                            $output .=  '<select class="nxt-select-opt nxt-login-select">';
-									foreach($loginbeha as $key => $val){
-										$output .= '<option '.(isset($exte_option['disable_login_url_behavior']) && $exte_option['disable_login_url_behavior'] == $key ? 'selected' : '' ).' value="'.esc_attr($key).'" >'.$val.'</option>';
-									}
-							$output .= '</select>';
-                        $output .= '</div>';
-                        
-                      
-                        $output .= '<div class="nxt-recaptch-field '.(isset($exte_option['disable_login_url_behavior']) && !empty($exte_option['disable_login_url_behavior']) && $exte_option['disable_login_url_behavior'] == 'message' ? '' : (!isset($exte_option['disable_login_url_behavior']) && empty($exte_option['disable_login_url_behavior']) ? '' : ' nxt-hide' ) ).' ">';
-                            $output .= '<label class="upload-font-label">'.esc_html__( 'Custom Message', 'nexter-ext' );
-                                $output .= '<span class="nxt-desc-icon" >';
-                                    $output .= '<img src="'.esc_url( NEXTER_EXT_URL.'assets/images/panel-icon/desc-icon.svg').'" alt="'.esc_html__( 'Redirect Login URL', 'nexter-ext' ).'" /> ';
-                                    $output .= '<div class="nxt-tooltip">'.esc_html__( 'Add your custom message here, which will be shown when someone visits old WP-Admin path for login.' , 'nexter-ext' ).'</div>';
-                                $output .= '</span>';
-                            $output .= '</label>';
-                            $output .= '<textarea name="nxt-login-msg" class="nxt-text-area" placeholder="'.esc_html('Please Write Something Here...','nexter-ext').'" name="nxt-ctm-msg" rows="5">'.(isset($exte_option['login_page_message']) && !empty($exte_option['login_page_message']) ? $exte_option['login_page_message'] : 'Sorry the page you were looking for does not exist or is not available' ).'</textarea>';
-                        $output .= '</div>';
-                        
-                    $output .= '</div>';
-                $output .= '</div>';
-                $output .= '<button type="button" class="nxt-ctm-login" ><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="#fff" stroke-width=".781" stroke-linejoin="round" xmlns:v="https://vecta.io/nano"><path d="M15.833 17.5H4.167c-.442 0-.866-.176-1.179-.488s-.488-.736-.488-1.179V4.167c0-.442.176-.866.488-1.179S3.725 2.5 4.167 2.5h9.167L17.5 6.667v9.167c0 .442-.176.866-.488 1.179s-.736.488-1.179.488z"/><path d="M14.167 17.5v-6.667H5.833V17.5m0-15v4.167H12.5" stroke-linecap="round"/></svg>'.esc_html__('Save','nexter-ext').'</button>';
-            $output .= '</div>';
-
-            wp_send_json_success(
-				array(
-					'content'	=> $output,
-				)
-			);
-        }
-        wp_send_json_error();
-    }
-    
-    /**
      * Nexter Custom Login Load
      * @since 1.1.0
      */
@@ -150,7 +56,7 @@ class Nexter_Ext_Custom_Login_Redirect {
         global $pagenow;
         
         if ( !is_multisite() && ( strpos( $_SERVER['REQUEST_URI'], 'wp-signup' ) !== false || strpos( $_SERVER['REQUEST_URI'], 'wp-activate' ) !== false ) ) {
-            wp_die( esc_html__( 'This feature is not enabled.', 'nexter-ext' ) );
+            wp_die( esc_html__( 'This feature is not enabled.', 'nexter-extension' ) );
         }
 
         $request_URI = parse_url( $_SERVER['REQUEST_URI'] );
@@ -261,7 +167,7 @@ class Nexter_Ext_Custom_Login_Redirect {
             } 
         }
 
-        $message = !empty($this->cusloOption['login_page_message']) ? $this->cusloOption['login_page_message'] : esc_html__('This has been disabled.', 'nexter-ext');
+        $message = !empty($this->cusloOption['login_page_message']) ? esc_html($this->cusloOption['login_page_message']) : esc_html__('This has been disabled.', 'nexter-extension');
         wp_die($message, 403);
     }
 

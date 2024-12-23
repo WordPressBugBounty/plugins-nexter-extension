@@ -125,8 +125,8 @@ class WP_Import extends WP_Importer {
 	 */
 	function import_start( $file ) {
 		if ( ! is_file($file) ) {
-			echo '<p><strong>' . esc_html__( 'Sorry, there has been an error.', 'nexter-ext' ) . '</strong><br />';
-			echo esc_html__( 'The file does not exist, please try again.', 'nexter-ext' ) . '</p>';
+			echo '<p><strong>' . esc_html__( 'Sorry, there has been an error.', 'nexter-extension' ) . '</strong><br />';
+			echo esc_html__( 'The file does not exist, please try again.', 'nexter-extension' ) . '</p>';
 			$this->footer();
 			die();
 		}
@@ -134,7 +134,7 @@ class WP_Import extends WP_Importer {
 		$import_data = $this->parse( $file );
 
 		if ( is_wp_error( $import_data ) ) {
-			echo '<p><strong>' . esc_html__( 'Sorry, there has been an error.', 'nexter-ext' ) . '</strong><br />';
+			echo '<p><strong>' . esc_html__( 'Sorry, there has been an error.', 'nexter-extension' ) . '</strong><br />';
 			echo esc_html( $import_data->get_error_message() ) . '</p>';
 			$this->footer();
 			die();
@@ -169,8 +169,8 @@ class WP_Import extends WP_Importer {
 		wp_defer_term_counting( false );
 		wp_defer_comment_counting( false );
 
-		echo '<p>' . esc_html__( 'All done.', 'nexter-ext' ) . ' <a href="' . admin_url() . '">' . esc_html__( 'Have fun!', 'nexter-ext' ) . '</a>' . '</p>';
-		echo '<p>' . esc_html__( 'Remember to update the passwords and roles of imported users.', 'nexter-ext' ) . '</p>';
+		echo '<p>' . esc_html__( 'All done.', 'nexter-extension' ) . ' <a href="' . admin_url() . '">' . esc_html__( 'Have fun!', 'nexter-extension' ) . '</a>' . '</p>';
+		echo '<p>' . esc_html__( 'Remember to update the passwords and roles of imported users.', 'nexter-extension' ) . '</p>';
 
 		do_action( 'import_end' );
 	}
@@ -185,13 +185,13 @@ class WP_Import extends WP_Importer {
 		$file = wp_import_handle_upload();
 
 		if ( isset( $file['error'] ) ) {
-			echo '<p><strong>' . esc_html__( 'Sorry, there has been an error.', 'nexter-ext' ) . '</strong><br />';
+			echo '<p><strong>' . esc_html__( 'Sorry, there has been an error.', 'nexter-extension' ) . '</strong><br />';
 			echo esc_html( $file['error'] ) . '</p>';
 			return false;
 		} else if ( ! file_exists( $file['file'] ) ) {
-			echo '<p><strong>' . esc_html__( 'Sorry, there has been an error.', 'nexter-ext' ) . '</strong><br />';
+			echo '<p><strong>' . esc_html__( 'Sorry, there has been an error.', 'nexter-extension' ) . '</strong><br />';
 			/* translators: %s: export file */
-			printf( __( 'The export file could not be found at <code>%s</code>. It is likely that this was caused by a permissions problem.', 'nexter-ext' ), esc_html( $file['file'] ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			printf( __( 'The export file could not be found at <code>%s</code>. It is likely that this was caused by a permissions problem.', 'nexter-extension' ), esc_html( $file['file'] ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			echo '</p>';
 			return false;
 		}
@@ -199,7 +199,7 @@ class WP_Import extends WP_Importer {
 		$this->id = (int) $file['id'];
 		$import_data = $this->parse( $file['file'] );
 		if ( is_wp_error( $import_data ) ) {
-			echo '<p><strong>' . esc_html__( 'Sorry, there has been an error.', 'nexter-ext' ) . '</strong><br />';
+			echo '<p><strong>' . esc_html__( 'Sorry, there has been an error.', 'nexter-extension' ) . '</strong><br />';
 			echo esc_html( $import_data->get_error_message() ) . '</p>';
 			return false;
 		}
@@ -208,7 +208,7 @@ class WP_Import extends WP_Importer {
 		if ( $this->version > $this->max_wxr_version ) {
 			echo '<div class="error"><p><strong>';
 			/* translators: %s: version */
-			printf( __( 'This WXR file (version %s) may not be supported by this version of the importer. Please consider updating.', 'nexter-ext' ), esc_html($import_data['version']) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			printf( __( 'This WXR file (version %s) may not be supported by this version of the importer. Please consider updating.', 'nexter-extension' ), esc_html($import_data['version']) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			echo '</strong></p></div>';
 		}
 
@@ -234,7 +234,7 @@ class WP_Import extends WP_Importer {
 				$login = sanitize_user( $post['post_author'], true );
 				if ( empty( $login ) ) {
 					/* translators: %s: post author */
-					printf( __( 'Failed to import author %s. Their posts will be attributed to the current user.', 'nexter-ext' ), esc_html( $post['post_author'] ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+					printf( __( 'Failed to import author %s. Their posts will be attributed to the current user.', 'nexter-extension' ), esc_html( $post['post_author'] ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 					echo '<br />';
 					continue;
 				}
@@ -261,11 +261,11 @@ class WP_Import extends WP_Importer {
 	<input type="hidden" name="import_id" value="<?php echo $this->id; ?>" />
 
 <?php if ( ! empty( $this->authors ) ) : ?>
-	<h3><?php echo esc_html__( 'Assign Authors', 'nexter-ext' ); ?></h3>
-	<p><?php echo esc_html__( 'To make it easier for you to edit and save the imported content, you may want to reassign the author of the imported item to an existing user of this site. For example, you may want to import all the entries as <code>admin</code>s entries.', 'nexter-ext' ); ?></p>
+	<h3><?php echo esc_html__( 'Assign Authors', 'nexter-extension' ); ?></h3>
+	<p><?php echo esc_html__( 'To make it easier for you to edit and save the imported content, you may want to reassign the author of the imported item to an existing user of this site. For example, you may want to import all the entries as <code>admin</code>s entries.', 'nexter-extension' ); ?></p>
 <?php if ( $this->allow_create_users() ) : ?>
 	<p><?php /* translators: %s: user role */
-		printf( __( 'If a new user is created by WordPress, a new password will be randomly generated and the new user&#8217;s role will be set as %s. Manually changing the new user&#8217;s details will be necessary.', 'nexter-ext' ), esc_html( get_option('default_role') ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></p>
+		printf( __( 'If a new user is created by WordPress, a new password will be randomly generated and the new user&#8217;s role will be set as %s. Manually changing the new user&#8217;s details will be necessary.', 'nexter-extension' ), esc_html( get_option('default_role') ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></p>
 <?php endif; ?>
 	<ol id="authors">
 <?php foreach ( $this->authors as $author ) : ?>
@@ -275,14 +275,14 @@ class WP_Import extends WP_Importer {
 <?php endif; ?>
 
 <?php if ( $this->allow_fetch_attachments() ) : ?>
-	<h3><?php echo esc_html__( 'Import Attachments', 'nexter-ext' ); ?></h3>
+	<h3><?php echo esc_html__( 'Import Attachments', 'nexter-extension' ); ?></h3>
 	<p>
 		<input type="checkbox" value="1" name="fetch_attachments" id="import-attachments" />
-		<label for="import-attachments"><?php echo esc_html__( 'Download and import file attachments', 'nexter-ext' ); ?></label>
+		<label for="import-attachments"><?php echo esc_html__( 'Download and import file attachments', 'nexter-extension' ); ?></label>
 	</p>
 <?php endif; ?>
 
-	<p class="submit"><input type="submit" class="button" value="<?php esc_attr_e( 'Submit', 'nexter-ext' ); ?>" /></p>
+	<p class="submit"><input type="submit" class="button" value="<?php esc_attr_e( 'Submit', 'nexter-extension' ); ?>" /></p>
 </form>
 <?php
 	}
@@ -295,7 +295,7 @@ class WP_Import extends WP_Importer {
 	 * @param array $author Author information, e.g. login, display name, email
 	 */
 	function author_select( $n, $author ) {
-		echo esc_html__( 'Import author:', 'nexter-ext' );
+		echo esc_html__( 'Import author:', 'nexter-extension' );
 		echo ' <strong>' . esc_html( $author['author_display_name'] );
 		if ( $this->version != '1.0' ) echo ' (' . esc_html( $author['author_login'] ) . ')';
 		echo '</strong><br />';
@@ -306,10 +306,10 @@ class WP_Import extends WP_Importer {
 		$create_users = $this->allow_create_users();
 		if ( $create_users ) {
 			if ( $this->version != '1.0' ) {
-				echo esc_html__( 'or create new user with login name:', 'nexter-ext' );
+				echo esc_html__( 'or create new user with login name:', 'nexter-extension' );
 				$value = '';
 			} else {
-				echo esc_html__( 'as a new user:', 'nexter-ext' );
+				echo esc_html__( 'as a new user:', 'nexter-extension' );
 				$value = esc_attr( sanitize_user( $author['author_login'], true ) );
 			}
 
@@ -317,15 +317,15 @@ class WP_Import extends WP_Importer {
 		}
 
 		if ( ! $create_users && $this->version == '1.0' )
-			echo esc_html__( 'assign posts to an existing user:', 'nexter-ext' );
+			echo esc_html__( 'assign posts to an existing user:', 'nexter-extension' );
 		else
-			echo esc_html__( 'or assign posts to an existing user:', 'nexter-ext' );
+			echo esc_html__( 'or assign posts to an existing user:', 'nexter-extension' );
 			
 			echo ' ' .wp_dropdown_users( array(
 			'name'            => "user_map[$n]",
 			'id'              => 'imported_authors_' . $n,
 			'multi'           => true,
-			'show_option_all' => __( '- Select -', 'nexter-ext' ),
+			'show_option_all' => __( '- Select -', 'nexter-extension' ),
 			'show'            => 'display_name_with_login',
 			'echo'            => 0,
 		) );
@@ -379,7 +379,7 @@ class WP_Import extends WP_Importer {
 					$this->author_mapping[$santized_old_login] = $user_id;
 				} else {
 					/* translators: %s: author name */
-					printf( __( 'Failed to create new user for %s. Their posts will be attributed to the current user.', 'nexter-ext' ), esc_html($this->authors[$old_login]['author_display_name']) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+					printf( __( 'Failed to create new user for %s. Their posts will be attributed to the current user.', 'nexter-extension' ), esc_html($this->authors[$old_login]['author_display_name']) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 					if ( defined('IMPORT_DEBUG') && IMPORT_DEBUG )
 						echo ' ' . wp_kses_post($user_id->get_error_message());
 					echo '<br />';
@@ -432,7 +432,7 @@ class WP_Import extends WP_Importer {
 					$this->processed_terms[intval($cat['term_id'])] = $id;
 			} else {
 				/* translators: %s: category name */
-				printf( __( 'Failed to import category %s', 'nexter-ext' ), esc_html($cat['category_nicename']) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				printf( __( 'Failed to import category %s', 'nexter-extension' ), esc_html($cat['category_nicename']) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 				if ( defined('IMPORT_DEBUG') && IMPORT_DEBUG )
 					echo ': ' . wp_kses_post($id->get_error_message());
 				echo '<br />';
@@ -478,7 +478,7 @@ class WP_Import extends WP_Importer {
 					$this->processed_terms[intval($tag['term_id'])] = $id['term_id'];
 			} else {
 				/* translators: %s: tag name */
-				printf( __( 'Failed to import post tag %s', 'nexter-ext' ), esc_html($tag['tag_name']) );  // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				printf( __( 'Failed to import post tag %s', 'nexter-extension' ), esc_html($tag['tag_name']) );  // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 				if ( defined('IMPORT_DEBUG') && IMPORT_DEBUG )
 					echo ': ' . wp_kses_post($id->get_error_message());
 				echo '<br />';
@@ -534,7 +534,7 @@ class WP_Import extends WP_Importer {
 					$this->processed_terms[intval($term['term_id'])] = $id['term_id'];
 			} else {
 				/* translators: %s: taxonomy term name */
-				printf( __( 'Failed to import %1$s %2$s', 'nexter-ext' ), esc_html($term['term_taxonomy']), esc_html($term['term_name']) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				printf( __( 'Failed to import %1$s %2$s', 'nexter-extension' ), esc_html($term['term_taxonomy']), esc_html($term['term_name']) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 				if ( defined('IMPORT_DEBUG') && IMPORT_DEBUG )
 					echo ': ' . wp_kses_post($id->get_error_message());
 				echo '<br />';
@@ -628,7 +628,7 @@ class WP_Import extends WP_Importer {
 
 			if ( ! post_type_exists( $post['post_type'] ) ) {
 				/* translators: %s: post title post type */
-				printf( __( 'Failed to import &#8220;%s&#8221;: Invalid post type %s', 'nexter-ext' ),
+				printf( __( 'Failed to import &#8220;%s&#8221;: Invalid post type %s', 'nexter-extension' ),
 					esc_html($post['post_title']), esc_html($post['post_type']) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 				echo '<br />';
 				do_action( 'wp_import_post_exists', $post );
@@ -665,7 +665,7 @@ class WP_Import extends WP_Importer {
 			/*$post_exists = apply_filters( 'wp_import_existing_post', $post_exists, $post );
 
 			if ( $post_exists && get_post_type( $post_exists ) == $post['post_type'] ) {
-				printf( __('%s &#8220;%s&#8221; already exists.', 'nexter-ext'), $post_type_object->labels->singular_name, esc_html($post['post_title']) );
+				printf( __('%s &#8220;%s&#8221; already exists.', 'nexter-extension'), $post_type_object->labels->singular_name, esc_html($post['post_title']) );
 				
 				echo '<br />';
 				$comment_post_ID = $post_id = $post_exists;
@@ -729,7 +729,7 @@ class WP_Import extends WP_Importer {
 
 				if ( is_wp_error( $post_id ) ) {
 					/* translators: %s: post title */
-					printf( __( 'Failed to import %1$s &#8220;%2$s&#8221;', 'nexter-ext' ), $post_type_object->labels->singular_name, esc_html($post['post_title']) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+					printf( __( 'Failed to import %1$s &#8220;%2$s&#8221;', 'nexter-extension' ), $post_type_object->labels->singular_name, esc_html($post['post_title']) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 					if ( defined('IMPORT_DEBUG') && IMPORT_DEBUG )
 						echo ': ' . wp_kses_post($post_id->get_error_message());
 					echo '<br />';
@@ -763,7 +763,7 @@ class WP_Import extends WP_Importer {
 							do_action( 'wp_import_insert_term', $t, $term, $post_id, $post );
 						} else {
 							/* translators: %s: term name */
-							printf( __( 'Failed to import %1$s %2$s', 'nexter-ext' ), esc_html($taxonomy), esc_html($term['name']) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+							printf( __( 'Failed to import %1$s %2$s', 'nexter-extension' ), esc_html($taxonomy), esc_html($term['name']) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 							if ( defined('IMPORT_DEBUG') && IMPORT_DEBUG )
 								echo ': ' . wp_kses_post($t->get_error_message());
 							echo '<br />';
@@ -908,7 +908,7 @@ class WP_Import extends WP_Importer {
 
 		// no nav_menu term associated with this menu item
 		if ( ! $menu_slug ) {
-			echo esc_html__( 'Menu item skipped due to missing menu slug', 'nexter-ext' );
+			echo esc_html__( 'Menu item skipped due to missing menu slug', 'nexter-extension' );
 			echo '<br />';
 			return;
 		}
@@ -916,7 +916,7 @@ class WP_Import extends WP_Importer {
 		$menu_id = term_exists( $menu_slug, 'nav_menu' );
 		if ( ! $menu_id ) {
 			/* translators: %s: menu slug */
-			printf( __( 'Menu item skipped due to invalid menu slug: %s', 'nexter-ext' ), esc_html( $menu_slug ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			printf( __( 'Menu item skipped due to invalid menu slug: %s', 'nexter-extension' ), esc_html( $menu_slug ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			echo '<br />';
 			return;
 		} else {
@@ -981,7 +981,7 @@ class WP_Import extends WP_Importer {
 	function process_attachment( $post, $url ) {
 		if ( ! $this->fetch_attachments )
 			return new WP_Error( 'attachment_processing_error',
-				__( 'Fetching attachments is not enabled', 'nexter-ext' ) );
+				__( 'Fetching attachments is not enabled', 'nexter-extension' ) );
 
 		// if the URL is absolute, but does not contain address, then upload it assuming base_site_url
 		if ( preg_match( '|^/[\w\W]+$|', $url ) )
@@ -994,7 +994,7 @@ class WP_Import extends WP_Importer {
 		if ( $info = wp_check_filetype( $upload['file'] ) )
 			$post['post_mime_type'] = $info['type'];
 		else
-			return new WP_Error( 'attachment_processing_error', __('Invalid file type', 'nexter-ext') );
+			return new WP_Error( 'attachment_processing_error', __('Invalid file type', 'nexter-extension') );
 
 		$post['guid'] = $upload['url'];
 
@@ -1047,7 +1047,7 @@ class WP_Import extends WP_Importer {
 		// request failed
 		if ( ! $headers ) {
 			@unlink( $upload['file'] );
-			return new WP_Error( 'import_file_error', __('Remote server did not respond', 'nexter-ext') );
+			return new WP_Error( 'import_file_error', __('Remote server did not respond', 'nexter-extension') );
 		}
 
 		$remote_response_code = wp_remote_retrieve_response_code( $remote_response );
@@ -1055,25 +1055,25 @@ class WP_Import extends WP_Importer {
 		// make sure the fetch was successful
 		if ( $remote_response_code != '200' ) {
 			@unlink( $upload['file'] );
-			return new WP_Error( 'import_file_error', sprintf( __('Remote server returned error response %1$d %2$s', 'nexter-ext'), esc_html($remote_response_code), get_status_header_desc($remote_response_code) ) ); // phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment
+			return new WP_Error( 'import_file_error', sprintf( __('Remote server returned error response %1$d %2$s', 'nexter-extension'), esc_html($remote_response_code), get_status_header_desc($remote_response_code) ) ); // phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment
 		}
 
 		$filesize = (int) filesize( $upload['file'] );
 
 		if ( isset( $headers['content-length'] ) && $filesize != $headers['content-length'] ) {
 			@unlink( $upload['file'] );
-			return new WP_Error( 'import_file_error', __('Remote file is incorrect size', 'nexter-ext') );
+			return new WP_Error( 'import_file_error', __('Remote file is incorrect size', 'nexter-extension') );
 		}
 
 		if ( 0 == $filesize ) {
 			@unlink( $upload['file'] );
-			return new WP_Error( 'import_file_error', __('Zero size file downloaded', 'nexter-ext') );
+			return new WP_Error( 'import_file_error', __('Zero size file downloaded', 'nexter-extension') );
 		}
 
 		$max_size = (int) $this->max_attachment_size();
 		if ( ! empty( $max_size ) && $filesize > $max_size ) {
 			@unlink( $upload['file'] );
-			return new WP_Error( 'import_file_error', sprintf(__('Remote file is too large, limit is %s', 'nexter-ext'), size_format($max_size) ) ); // phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment
+			return new WP_Error( 'import_file_error', sprintf(__('Remote file is too large, limit is %s', 'nexter-extension'), size_format($max_size) ) ); // phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment
 		}
 
 		// keep track of the old and new urls so we can substitute them later
@@ -1176,7 +1176,7 @@ class WP_Import extends WP_Importer {
 	// Display import page title
 	function header() {
 		echo '<div class="wrap">';
-		echo '<h2>' . esc_html__( 'Import WordPress', 'nexter-ext' ) . '</h2>';
+		echo '<h2>' . esc_html__( 'Import WordPress', 'nexter-extension' ) . '</h2>';
 
 		$updates = get_plugin_updates();
 		$basename = plugin_basename(__FILE__);
@@ -1184,7 +1184,7 @@ class WP_Import extends WP_Importer {
 			$update = $updates[$basename];
 			echo '<div class="error"><p><strong>';
 			/* translators: %s: new version */
-			printf( __( 'A new version of this importer is available. Please update to version %s to ensure compatibility with newer export files.', 'nexter-ext' ), $update->update->new_version ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			printf( __( 'A new version of this importer is available. Please update to version %s to ensure compatibility with newer export files.', 'nexter-extension' ), $update->update->new_version ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			echo '</strong></p></div>';
 		}
 	}
@@ -1199,8 +1199,8 @@ class WP_Import extends WP_Importer {
 	 */
 	function greet() {
 		echo '<div class="narrow">';
-		echo '<p>'.esc_html__( 'Howdy! Upload your WordPress eXtended RSS (WXR) file and we&#8217;ll import the posts, pages, comments, custom fields, categories, and tags into this site.', 'nexter-ext' ).'</p>';
-		echo '<p>'.esc_html__( 'Choose a WXR (.xml) file to upload, then click Upload file and import.', 'nexter-ext' ).'</p>';
+		echo '<p>'.esc_html__( 'Howdy! Upload your WordPress eXtended RSS (WXR) file and we&#8217;ll import the posts, pages, comments, custom fields, categories, and tags into this site.', 'nexter-extension' ).'</p>';
+		echo '<p>'.esc_html__( 'Choose a WXR (.xml) file to upload, then click Upload file and import.', 'nexter-extension' ).'</p>';
 		wp_import_upload_form( 'admin.php?import=wordpress&amp;step=1' );
 		echo '</div>';
 	}

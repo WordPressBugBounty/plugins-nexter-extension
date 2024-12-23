@@ -1,12 +1,14 @@
 === Nexter Extension ===
 Contributors: posimyththemes, nirmalkavaiya, sagarpatel124
 Tags : theme-options, nexter-wordpress-theme, nexter-extension, nexter-builder 
-Requires at least: 6.0
+Requires at least: 4.0
 Tested up to: 6.7
-Stable tag: 3.2.3
+Stable tag: 4.0.0
 Requires PHP: 5.6
 License: GPLv3
 License URI: https://opensource.org/licenses/GPL-3.0
+
+Extension for Nexter Theme to unlock all FREE features. Keep this active to use access its all features
 
 == Description ==
 
@@ -77,7 +79,7 @@ And if you're a Gutenberg user, then you can use The Plus Addons for Gutenberg, 
 ###🔍 Check our other Products
 <strong><a href="https://theplusaddons.com/">🥇 The Plus Addons for Elementor</a></strong> -  Nexter Theme works seamlessly with The Plus Addons for Elementor. Get 120+ unique Elementor widgets, Elementor templates and more.
 
-<strong><a href="http://nexterwp.com/">🥇 Nexter Blocks</a></strong> - Nexter Theme works in sync with core Gutenberg, where you can install The Plus Addons for Gutenberg Blocks to get 80+ powerful & highly customizable blocks.
+<strong><a href="http://theplusblocks.com/">🥇 The Plus Addons for Gutenberg</a></strong> - Nexter Theme works in sync with core Gutenberg, where you can install The Plus Addons for Gutenberg Blocks to get 80+ powerful & highly customizable blocks.
 
 == Installation ==
 
@@ -113,12 +115,15 @@ We Wanted to Include This in Theme Itself as This is a Part of Theme Itself. Wor
 You can report security bugs through the Patchstack Vulnerability Disclosure Program. The Patchstack team help validate, triage and handle any security vulnerabilities. [Report a security vulnerability.](https://patchstack.com/database/vdp/nexter-extension)
 
 == Changelog ==
-= 3.2.3 = 04 December 2024
-- Compatibility : Nexter Builder : Polylang Translation Plugin 
-- Fix : Minor Bug Fix
- 
-= 3.2.2 = 27 November 2024
-- Compatibility : Nexter Builder : Template Load Css Bug Fixed
+= 4.0.0 = 23 December 2024
+- Important : Completely redesigned plugin dashboard with a brand-new UI/UX and intuitive navigation, rewritten from scratch for better performance.
+- New : Theme Builder : Added popup layout for Theme Builder with streamlined, modal-based editing.
+- New : Code Snippets : Decoupled code snippets from the builder for better performance and modularity.
+- New : Code Snippets : Revamped code snippet design with improved UX.
+- New : All Editor Controllers : Revamped controllers with new UI-UX and better performance.
+- Added : Option to self-host Google Fonts for better performance and privacy.
+- Added : Font Display : swap for improved font loading.
+- Added : Option to disable Google Fonts entirely.
 
 = 3.2.1 = 18 April 2024
 - Fix : Nexter Builder : Bug Fix

@@ -105,13 +105,13 @@ if ( ! class_exists( 'Nexter_Builder_Elementor_Documents' ) ) {
 			$documents_list = array(
 				'singular'    => array(
 					'slug'  => 'nxt_builder',
-					'name'  => __( 'Singular', 'nexter' ),
+					'name'  => __( 'Singular', 'nexter-extension' ),
 					'file'  => 'class-nxt-builder-ele-document-singular.php',
 					'class' => 'Nexter_Builder_Ele_Document',
 				),
 				'archives'   => array(
 					'slug'  => 'nxt_builder-archives',
-					'name'  => __( 'Archives', 'nexter' ),
+					'name'  => __( 'Archives', 'nexter-extension' ),
 					'file'  => 'class-nxt-builder-ele-document-archives.php',
 					'class' => 'Nexter_Builder_Ele_Archives_Document',
 				),
@@ -179,7 +179,8 @@ if ( ! class_exists( 'Nexter_Builder_Elementor_Documents' ) ) {
 			if ( get_post_type() == NXT_BUILD_POST ) {
 				$hook_layout = get_post_meta( $post_id, 'nxt-hooks-layout', true );
 				$hook_layout_pages = get_post_meta(  $post_id, 'nxt-hooks-layout-pages', true );
-				if( $hook_layout == 'pages' && $hook_layout_pages == 'singular'){
+				$hook_layout_sections = get_post_meta(  $post_id, 'nxt-hooks-layout-sections', true );
+				if( ($hook_layout == 'pages' && $hook_layout_pages == 'singular') || $hook_layout_sections == 'singular'){
 					$singular_preview_type = get_post_meta( $post_id, 'nxt-singular-preview-type', true );
 					$singular_preview_id = get_post_meta( $post_id, 'nxt-singular-preview-id', true );
 					if( !empty($singular_preview_type) && !empty($singular_preview_id)){
@@ -187,7 +188,7 @@ if ( ! class_exists( 'Nexter_Builder_Elementor_Documents' ) ) {
 						$NexterPreview['preview_type'] = $singular_preview_type; 
 						$NexterPreview['preview_id'] = $singular_preview_id; 
 					}
-				}else if($hook_layout == 'pages' && $hook_layout_pages == 'archives'){
+				}else if(($hook_layout == 'pages' && $hook_layout_pages == 'archives') || $hook_layout_sections == 'archives'){
 					$archive_preview_type = get_post_meta( $post_id, 'nxt-archive-preview-type', true );
 					$archive_preview_id = get_post_meta( $post_id, 'nxt-archive-preview-id', true );
 					if( !empty($archive_preview_type) && !empty($archive_preview_id)){

@@ -1,0 +1,1785 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-12-19 17:02+0530\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: nexter-extension.php:53
+#, php-format
+msgid ""
+"Nexter Extensions requires PHP version %s+, plugin is currently NOT RUNNING."
+msgstr ""
+
+#: include/class-nexter-load-ext.php:96
+msgid "Settings"
+msgstr ""
+
+#: include/class-nexter-load-ext.php:100
+msgid "Need Help?"
+msgstr ""
+
+#: include/class-nexter-load-ext.php:108
+msgid "Upgrade PRO"
+msgstr ""
+
+#: include/class-nexter-load-ext.php:124
+msgid "Official Site"
+msgstr ""
+
+#: include/class-nexter-load-ext.php:125
+msgid "Docs"
+msgstr ""
+
+#: include/class-nexter-load-ext.php:126
+msgid "Join Community"
+msgstr ""
+
+#: include/class-nexter-load-ext.php:127
+msgid "What's New?"
+msgstr ""
+
+#: include/class-nexter-load-ext.php:128
+msgid "Request Feature"
+msgstr ""
+
+#: include/class-nexter-load-ext.php:129
+msgid "Rate Plugin"
+msgstr ""
+
+#: include/class-nexter-load-ext.php:371
+msgid "Design Your Masterpiece With Nexter Pro !!!"
+msgstr ""
+
+#: include/class-nexter-load-ext.php:372
+msgid ""
+"Enhance your building experience by setting out with pro version of Nexter "
+"WP Theme. Check out why you should upgrade to pro?"
+msgstr ""
+
+#: include/class-nexter-load-ext.php:373
+msgid "Free vs Pro"
+msgstr ""
+
+#: include/class-nexter-load-ext.php:373
+msgid ". You are backed with our 60 Days Money-Back Guarantee."
+msgstr ""
+
+#: include/class-nexter-load-ext.php:374
+msgid "UPGRADE NOW"
+msgstr ""
+
+#: include/rollback.php:141
+msgid "Rollback versions not allowed"
+msgstr ""
+
+#: include/rollback.php:147
+msgid "Error, Try selecting another version."
+msgstr ""
+
+#: include/rollback.php:168 include/rollback.php:204
+msgid "Rollback to Previous Version"
+msgstr ""
+
+#: include/rollback.php:204
+msgid "Nexter Extension"
+msgstr ""
+
+#: include/classes/nexter-class-load.php:83
+msgid "Template List"
+msgstr ""
+
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:82
+msgid "Failed to load HTML. Check syntax."
+msgstr ""
+
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:146
+#: include/panel-settings/extensions/nexter-ext-replace-url.php:52
+#: include/panel-settings/extensions/nexter-ext-replace-url.php:102
+msgid "Only Admin can run this."
+msgstr ""
+
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:156
+msgid "Undefined Content ID"
+msgstr ""
+
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:217
+msgid ""
+"Unable to communicate back with site to check for fatal errors, so the PHP "
+"change was reverted. You will need to upload your PHP file change by some "
+"other means, such as by using SFTP."
+msgstr ""
+
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:241
+msgid "Something went wrong."
+msgstr ""
+
+#: include/classes/load-sections/nexter-sections-loader.php:113
+#: include/classes/load-sections/nexter-sections-loader.php:254
+#: include/custom-options/nexter-builder-condition.php:1058
+#: include/custom-options/nexter-builder-condition.php:1123
+#: include/custom-options/nexter-builder-condition.php:1171
+#: include/custom-options/nexter-builder-condition.php:1183
+#: include/custom-options/nexter-builder-condition.php:1752
+#: include/custom-options/nexter-builder-condition.php:1761
+#: include/custom-options/nexter-builder-condition.php:1784
+#: include/custom-options/nexter-builder-condition.php:1788
+#: include/custom-options/module/nexter-display-archives-rules.php:62
+#: include/custom-options/module/nexter-display-archives-rules.php:306
+#: include/custom-options/module/nexter-display-archives-rules.php:315
+#: include/custom-options/module/nexter-display-archives-rules.php:342
+#: include/custom-options/module/nexter-display-archives-rules.php:346
+#: include/custom-options/module/nexter-display-singular-rules.php:91
+msgid "All"
+msgstr ""
+
+#: include/classes/load-sections/nexter-sections-loader.php:116
+msgid "Sections"
+msgstr ""
+
+#: include/classes/load-sections/nexter-sections-loader.php:117
+#: include/classes/load-sections/nexter-sections-loader.php:174
+#: include/classes/third-party/class-beaver-build-theme.php:85
+#: include/custom-options/nexter-builder-condition.php:529
+msgid "Header"
+msgstr ""
+
+#: include/classes/load-sections/nexter-sections-loader.php:118
+#: include/classes/load-sections/nexter-sections-loader.php:176
+#: include/classes/third-party/class-beaver-build-theme.php:113
+#: include/custom-options/nexter-builder-condition.php:530
+msgid "Footer"
+msgstr ""
+
+#: include/classes/load-sections/nexter-sections-loader.php:119
+#: include/classes/load-sections/nexter-sections-loader.php:178
+#: include/custom-options/nexter-builder-condition.php:531
+msgid "Breadcrumb"
+msgstr ""
+
+#: include/classes/load-sections/nexter-sections-loader.php:120
+#: include/classes/load-sections/nexter-sections-loader.php:180
+#: include/custom-options/nexter-builder-condition.php:532
+msgid "Hooks"
+msgstr ""
+
+#: include/classes/load-sections/nexter-sections-loader.php:121
+msgid "Single"
+msgstr ""
+
+#: include/classes/load-sections/nexter-sections-loader.php:122
+msgid "Archive"
+msgstr ""
+
+#: include/classes/load-sections/nexter-sections-loader.php:123
+msgid "404"
+msgstr ""
+
+#: include/classes/load-sections/nexter-sections-loader.php:150
+#: include/custom-options/nexter-builder-condition.php:634
+msgid "Type"
+msgstr ""
+
+#: include/classes/load-sections/nexter-sections-loader.php:151
+msgid "Conditions"
+msgstr ""
+
+#: include/classes/load-sections/nexter-sections-loader.php:152
+msgid "Date"
+msgstr ""
+
+#: include/classes/load-sections/nexter-sections-loader.php:153
+msgid "Author"
+msgstr ""
+
+#: include/classes/load-sections/nexter-sections-loader.php:154
+msgid "Status"
+msgstr ""
+
+#: include/classes/load-sections/nexter-sections-loader.php:182
+#: include/custom-options/nexter-builder-condition.php:535
+msgid "Single Page"
+msgstr ""
+
+#: include/classes/load-sections/nexter-sections-loader.php:184
+#: include/custom-options/nexter-builder-condition.php:536
+msgid "Archive Page"
+msgstr ""
+
+#: include/classes/load-sections/nexter-sections-loader.php:186
+#: include/custom-options/nexter-builder-condition.php:537
+#: include/custom-options/nexter-builder-condition.php:1402
+#: include/custom-options/module/nexter-display-conditional-rules.php:154
+msgid "404 Page"
+msgstr ""
+
+#: include/classes/load-sections/nexter-sections-loader.php:195
+msgid "Snippet : "
+msgstr ""
+
+#: include/classes/load-sections/nexter-sections-loader.php:198
+#: include/classes/load-sections/nexter-sections-loader.php:201
+#: include/classes/load-sections/nexter-sections-loader.php:223
+#: include/classes/load-sections/nexter-sections-loader.php:284
+#: include/classes/load-sections/nexter-sections-loader.php:287
+#: include/classes/load-sections/nexter-sections-loader.php:301
+#: include/classes/load-sections/nexter-sections-loader.php:323
+msgid "None"
+msgstr ""
+
+#: include/classes/load-sections/nexter-sections-loader.php:248
+msgid "Display :"
+msgstr ""
+
+#: include/classes/load-sections/nexter-sections-loader.php:251
+#: include/classes/load-sections/nexter-sections-loader.php:255
+msgid "Rule :"
+msgstr ""
+
+#: include/classes/load-sections/nexter-sections-loader.php:259
+msgid "Type :"
+msgstr ""
+
+#: include/classes/load-sections/nexter-sections-loader.php:274
+msgid "Hooks : "
+msgstr ""
+
+#: include/classes/load-sections/nexter-sections-loader.php:281
+msgid "Actions : "
+msgstr ""
+
+#: include/classes/load-sections/nexter-sections-loader.php:306
+msgid "sections"
+msgstr ""
+
+#: include/classes/load-sections/nexter-sections-loader.php:308
+msgid "pages"
+msgstr ""
+
+#: include/classes/load-sections/nexter-sections-loader.php:356
+msgid "Display:"
+msgstr ""
+
+#: include/classes/load-sections/nexter-sections-loader.php:364
+msgid "Exclusion:"
+msgstr ""
+
+#: include/classes/load-sections/nexter-sections-loader.php:408
+msgid "Specific"
+msgstr ""
+
+#: include/classes/third-party/class-beaver-build-theme.php:78
+msgid "Page"
+msgstr ""
+
+#: include/classes/third-party/class-beaver-build-theme.php:80
+msgid "Before Page"
+msgstr ""
+
+#: include/classes/third-party/class-beaver-build-theme.php:81
+msgid "After Page"
+msgstr ""
+
+#: include/classes/third-party/class-beaver-build-theme.php:87
+#: include/custom-options/module/nexter-display-conditional-rules.php:564
+msgid "Header Before"
+msgstr ""
+
+#: include/classes/third-party/class-beaver-build-theme.php:88
+#: include/custom-options/module/nexter-display-conditional-rules.php:565
+msgid "Header After"
+msgstr ""
+
+#: include/classes/third-party/class-beaver-build-theme.php:92
+#: include/classes/third-party/class-beaver-build-theme.php:99
+msgid "Content"
+msgstr ""
+
+#: include/classes/third-party/class-beaver-build-theme.php:94
+#: include/classes/third-party/class-beaver-build-theme.php:101
+#: include/custom-options/module/nexter-display-conditional-rules.php:567
+msgid "Content Top"
+msgstr ""
+
+#: include/classes/third-party/class-beaver-build-theme.php:95
+#: include/classes/third-party/class-beaver-build-theme.php:102
+#: include/custom-options/module/nexter-display-conditional-rules.php:568
+msgid "Content Bottom"
+msgstr ""
+
+#: include/classes/third-party/class-beaver-build-theme.php:106
+msgid "Sidebar"
+msgstr ""
+
+#: include/classes/third-party/class-beaver-build-theme.php:108
+#: include/custom-options/module/nexter-display-conditional-rules.php:573
+msgid "Sidebar Before"
+msgstr ""
+
+#: include/classes/third-party/class-beaver-build-theme.php:109
+#: include/custom-options/module/nexter-display-conditional-rules.php:574
+msgid "Sidebar After"
+msgstr ""
+
+#: include/classes/third-party/class-beaver-build-theme.php:115
+#: include/custom-options/module/nexter-display-conditional-rules.php:576
+msgid "Footer Before"
+msgstr ""
+
+#: include/classes/third-party/class-beaver-build-theme.php:116
+#: include/custom-options/module/nexter-display-conditional-rules.php:577
+msgid "Footer After"
+msgstr ""
+
+#: include/classes/third-party/class-beaver-build-theme.php:120
+msgid "Posts"
+msgstr ""
+
+#: include/classes/third-party/class-beaver-build-theme.php:122
+#: include/custom-options/module/nexter-display-conditional-rules.php:570
+msgid "Comments Before"
+msgstr ""
+
+#: include/classes/third-party/class-beaver-build-theme.php:123
+#: include/custom-options/module/nexter-display-conditional-rules.php:571
+msgid "Comments After"
+msgstr ""
+
+#: include/classes/third-party/class-nexter-builder-documents.php:108
+msgid "Singular"
+msgstr ""
+
+#: include/classes/third-party/class-nexter-builder-documents.php:114
+msgid "Archives"
+msgstr ""
+
+#: include/classes/third-party/documents/class-nxt-builder-ele-document-archives.php:21
+msgid "Nexter Archives Template"
+msgstr ""
+
+#: include/classes/third-party/documents/class-nxt-builder-ele-document-singular.php:21
+msgid "Nexter Singular Template"
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:50
+#: include/custom-options/nexter-builder-condition.php:368
+#: include/custom-options/nexter-builder-condition.php:463
+msgid "Nonce verification failed"
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:53
+#: include/custom-options/nexter-builder-condition.php:371
+#: include/custom-options/nexter-builder-condition.php:466
+msgid "You do not have permission to perform this action"
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:498
+msgid "Are you sure?"
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:499
+msgid "Leaving the changes without saving the data cause unsaved material"
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:500
+msgid "Yes I want to leave"
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:521
+#: include/custom-options/nexter-builder-condition.php:742
+#: include/custom-options/nexter-builder-condition.php:868
+#: include/custom-options/nexter-builder-condition.php:1146
+#: include/custom-options/nexter-builder-condition.php:1206
+#: include/custom-options/nexter-builder-condition.php:1318
+#: include/panel-settings/nexter-ext-panel-settings.php:616
+#: include/panel-settings/nexter-ext-panel-settings.php:633
+#: include/panel-settings/nexter-ext-panel-settings.php:847
+#: include/panel-settings/extensions/nexter-ext-image-sizes.php:49
+#: include/panel-settings/extensions/nexter-ext-local-google-font.php:326
+#: include/panel-settings/extensions/nexter-ext-post-duplicator.php:192
+msgid "Insufficient permissions."
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:541
+#: include/custom-options/nexter-builder-condition.php:547
+msgid "Normal"
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:542
+msgid "Sticky"
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:543
+msgid "Normal + Sticky"
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:548
+msgid "Fixed"
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:549
+msgid "Zoom Out Effect"
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:589
+msgid "Create your New Templates"
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:590
+msgid "Start by selecting the template type & post source."
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:598
+msgid "Select Template"
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:600
+msgid "Select Type"
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:630
+msgid "Name of Template"
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:631
+msgid "Enter Template Name"
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:645
+msgid "Transparent Header"
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:655
+msgid "Footer Effects"
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:676
+msgid "Actions Hooks"
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:688
+msgid "Priority"
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:689
+msgid "10"
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:694
+msgid "Additional Settings"
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:695
+msgid "Close Settings"
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:696
+msgid ""
+"You can set your header effect from here or directly from your Navigation "
+"Menu block or widget."
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:703
+#: include/custom-options/nexter-builder-condition.php:826
+#: include/custom-options/nexter-builder-condition.php:920
+#: include/custom-options/nexter-builder-condition.php:1280
+msgid "Read How it Works"
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:708
+#: include/custom-options/nexter-builder-condition.php:712
+msgid "Next"
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:751
+#: include/custom-options/nexter-builder-condition.php:875
+#: include/custom-options/nexter-builder-condition.php:1215
+msgid "Save"
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:751
+#: include/custom-options/nexter-builder-condition.php:875
+#: include/custom-options/nexter-builder-condition.php:1215
+msgid "Create"
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:790
+#: include/custom-options/nexter-builder-condition.php:893
+#: include/custom-options/nexter-builder-condition.php:1235
+msgid "Set Display Conditions"
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:791
+#: include/custom-options/nexter-builder-condition.php:894
+#: include/custom-options/nexter-builder-condition.php:1236
+msgid "Select where you want to load the template"
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:811
+msgid "Include In"
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:817
+msgid "Exclude From"
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:832
+#: include/custom-options/nexter-builder-condition.php:928
+#: include/custom-options/nexter-builder-condition.php:1284
+msgid "Go Back"
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:953
+msgid "Preview Type"
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:963
+msgid "Preview ID"
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:998
+#: include/custom-options/nexter-builder-condition.php:1153
+msgid "Include"
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:999
+#: include/custom-options/nexter-builder-condition.php:1154
+msgid "Exclude"
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:1134
+msgid "Add Condition"
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:1256
+msgid "Disable Header"
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:1258
+msgid "Check this option to disable header."
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:1266
+msgid "Disable Footer"
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:1268
+msgid "Check this option to disable footer."
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:1364
+#: include/custom-options/module/nexter-display-conditional-rules.php:247
+#, php-format
+msgid "All %s"
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:1368
+#: include/custom-options/nexter-builder-condition.php:1375
+#: include/custom-options/module/nexter-display-conditional-rules.php:251
+#: include/custom-options/module/nexter-display-conditional-rules.php:258
+#, php-format
+msgid "All %s Archive"
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:1391
+#: include/custom-options/module/nexter-display-conditional-rules.php:141
+msgid "Entire Website"
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:1392
+#: include/custom-options/module/nexter-display-conditional-rules.php:142
+msgid "All Singulars"
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:1393
+#: include/custom-options/module/nexter-display-archives-rules.php:363
+#: include/custom-options/module/nexter-display-conditional-rules.php:143
+msgid "All Archives"
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:1397
+#: include/custom-options/module/nexter-display-conditional-rules.php:149
+#: include/custom-options/module/nexter-display-singular-rules.php:206
+#: include/custom-options/module/nexter-display-singular-rules.php:207
+#: include/custom-options/module/nexter-display-singular-rules.php:310
+msgid "Front Page"
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:1398
+#: include/custom-options/module/nexter-display-conditional-rules.php:150
+msgid "Blog / Posts Page"
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:1399
+#: include/custom-options/module/nexter-display-conditional-rules.php:151
+#: include/custom-options/module/nexter-display-singular-archives-rules.php:413
+msgid "Date Archive"
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:1400
+#: include/custom-options/module/nexter-display-conditional-rules.php:152
+#: include/custom-options/module/nexter-display-singular-archives-rules.php:380
+msgid "Author Archive"
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:1401
+#: include/custom-options/module/nexter-display-conditional-rules.php:153
+msgid "Search Page"
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:1405
+#: include/custom-options/module/nexter-display-conditional-rules.php:158
+msgid "WooCommerce Shop Page"
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:1409
+#: include/custom-options/module/nexter-display-conditional-rules.php:170
+msgid "Day of Week"
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:1413
+#: include/custom-options/module/nexter-display-conditional-rules.php:176
+msgid "Operating System"
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:1414
+#: include/custom-options/module/nexter-display-conditional-rules.php:177
+msgid "Browser"
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:1415
+#: include/custom-options/module/nexter-display-conditional-rules.php:178
+msgid "Login Status"
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:1416
+#: include/custom-options/module/nexter-display-conditional-rules.php:179
+msgid "User Roles"
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:1420
+#: include/custom-options/module/nexter-display-conditional-rules.php:225
+msgid "Particular Posts / Pages / Taxonomies, etc."
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:1489
+#: include/custom-options/module/nexter-display-conditional-rules.php:1491
+msgid "Monday"
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:1490
+#: include/custom-options/module/nexter-display-conditional-rules.php:1492
+msgid "Tuesday"
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:1491
+#: include/custom-options/module/nexter-display-conditional-rules.php:1493
+msgid "Wednesday"
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:1492
+#: include/custom-options/module/nexter-display-conditional-rules.php:1494
+msgid "Thursday"
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:1493
+#: include/custom-options/module/nexter-display-conditional-rules.php:1495
+msgid "Friday"
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:1494
+#: include/custom-options/module/nexter-display-conditional-rules.php:1496
+msgid "Saturday"
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:1495
+#: include/custom-options/module/nexter-display-conditional-rules.php:1497
+msgid "Sunday"
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:1498
+#: include/custom-options/module/nexter-display-conditional-rules.php:1503
+msgid "Windows"
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:1499
+#: include/custom-options/module/nexter-display-conditional-rules.php:1504
+msgid "OpenBSD"
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:1500
+#: include/custom-options/module/nexter-display-conditional-rules.php:1505
+msgid "SunOS"
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:1501
+#: include/custom-options/module/nexter-display-conditional-rules.php:1506
+msgid "Linux"
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:1502
+#: include/custom-options/nexter-builder-condition.php:1515
+#: include/custom-options/module/nexter-display-conditional-rules.php:1507
+#: include/custom-options/module/nexter-display-conditional-rules.php:1522
+msgid "Safari"
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:1503
+#: include/custom-options/module/nexter-display-conditional-rules.php:1508
+msgid "Mac OS"
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:1504
+#: include/custom-options/module/nexter-display-conditional-rules.php:1509
+msgid "QNX"
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:1505
+#: include/custom-options/module/nexter-display-conditional-rules.php:1510
+msgid "BeOS"
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:1506
+#: include/custom-options/module/nexter-display-conditional-rules.php:1511
+msgid "OS/2"
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:1507
+#: include/custom-options/module/nexter-display-conditional-rules.php:1512
+msgid "Search Bot"
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:1510
+#: include/custom-options/module/nexter-display-conditional-rules.php:1517
+msgid "Internet Explorer"
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:1511
+#: include/custom-options/module/nexter-display-conditional-rules.php:1518
+msgid "Mozilla Firefox"
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:1512
+#: include/custom-options/module/nexter-display-conditional-rules.php:1519
+msgid "Google Chrome"
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:1513
+#: include/custom-options/module/nexter-display-conditional-rules.php:1520
+msgid "Opera Mini"
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:1514
+#: include/custom-options/module/nexter-display-conditional-rules.php:1521
+msgid "Opera"
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:1518
+#: include/custom-options/module/nexter-display-conditional-rules.php:1527
+msgid "Logged In"
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:1519
+#: include/custom-options/module/nexter-display-conditional-rules.php:1528
+msgid "Logged Out"
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:1539
+msgid "Select Days"
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:1552
+msgid "Select Operating System"
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:1565
+msgid "Select Browser"
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:1578
+msgid "Select Login Status"
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:1591
+msgid "Select User Roles"
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:1604
+msgid "Specific Pages/Posts"
+msgstr ""
+
+#: include/custom-options/nexter-builder-condition.php:1690
+#: include/custom-options/module/nexter-display-conditional-rules.php:1573
+msgid "---Select---"
+msgstr ""
+
+#: include/custom-options/nexter-sections-settings.php:40
+msgid "Layout is : Code Snippet"
+msgstr ""
+
+#: include/custom-options/nexter-sections-settings.php:41
+msgid "Code Type is : "
+msgstr ""
+
+#: include/custom-options/nexter-sections-settings.php:44
+msgid " Code"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-archives-rules.php:111
+#: include/custom-options/module/nexter-display-singular-archives-rules.php:60
+msgid "Empty Data"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-archives-rules.php:413
+#, php-format
+msgid "Default %s Archive"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-archives-rules.php:532
+#, php-format
+msgid "%1$s : First Child %2$s"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-archives-rules.php:567
+#, php-format
+msgid "%1$s : All Child %2$s"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:139
+msgid "Standard"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:164
+msgid "Default Pages"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:168
+msgid "Date & Time"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:174
+msgid "Visitors Source"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:223
+msgid "Particular Posts/Pages/Taxonomies"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:553
+#: include/custom-options/module/nexter-display-conditional-rules.php:561
+msgid "Wp Head"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:554
+#: include/custom-options/module/nexter-display-conditional-rules.php:579
+msgid "Wp Footer"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:558
+msgid "Html Before"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:559
+msgid "Head Top"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:560
+msgid "Head Bottom"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:563
+msgid "Body Top"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:578
+msgid "Body Bottom"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:585
+msgid "Before Single Product"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:586
+msgid "Before Single Product Summary"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:587
+msgid "Single Product Summary"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:588
+msgid "Before Add To Cart Form"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:589
+msgid "Before Variations Form"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:590
+msgid "Before Add To Cart Button"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:591
+msgid "Before Single Variation"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:592
+msgid "Single Variation"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:593
+msgid "Before Add To Cart"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:594
+msgid "After Add To Cart"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:595
+msgid "After Single Variation"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:596
+msgid "After Add To Cart Button"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:597
+msgid "After Variation Form"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:598
+msgid "After Add To Cart Form"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:599
+msgid "Product Meta Start"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:600
+msgid "Product Meta End"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:601
+msgid "WooCommerce Share"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:602
+msgid "After Single Product Summary"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:603
+msgid "After Single Product"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:606
+msgid "Before Main Content"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:607
+msgid "Archive Description"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:608
+msgid "Before Shop Loop"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:609
+msgid "Before Shop Loop Item"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:610
+msgid "Before Shop Loop Item Title"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:611
+msgid "Shop Loop Item Title"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:612
+msgid "After Shop Loop Item Title"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:613
+msgid "After Shop Loop Item"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:614
+msgid "After Shop Loop"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:615
+msgid "After Main Content"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:619
+msgid "Account Navigation"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:620
+msgid "Before Account Navigation"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:621
+msgid "After Account Navigation"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:622
+msgid "Account Dashboard"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:623
+msgid "Before Account Orders Pagination"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:624
+msgid "Before Available Downloads"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:625
+msgid "After Available Downloads"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:626
+msgid "After Account Downloads"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:627
+msgid "Account Content"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:628
+msgid "Before Edit Account Address Form"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:629
+msgid "After Edit Account Address form"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:630
+msgid "Before Edit Account Form"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:631
+msgid "Edit Account Form Start"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:632
+msgid "Edit Account Form"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:633
+msgid "Edit Account Form End"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:634
+msgid "After Edit Account Form"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:636
+msgid "Before Checkout Form"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:637
+msgid "Checkout Before Customer Details"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:638
+msgid "Before Checkout Billing Form"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:639
+msgid "After Checkout Billing Form"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:640
+msgid "Before Checkout Shipping Form"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:641
+msgid "After Checkout Shipping Form"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:642
+msgid "Before Order Notes"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:643
+msgid "After Order Notes"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:644
+msgid "Checkout After Customer Details"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:645
+msgid "Checkout Before Order Review"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:646
+msgid "Review Order Before Cart Contents"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:647
+msgid "Review Order After Cart Contents"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:648
+msgid "Review Order Before Shipping"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:649
+msgid "Review Order After Shipping"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:650
+msgid "Review Order Before Order Total"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:651
+msgid "Review Order After Order Total"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:652
+msgid "Review Order Before Payment"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:653
+msgid "Review Order Before Submit"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:654
+msgid "Review Order After Submit"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:655
+msgid "Review Order After Payment"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:656
+msgid "Checkout After Order Review"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:657
+msgid "After Checkout Form"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:660
+msgid "Before Cart"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:661
+msgid "Before Cart Table"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:662
+msgid "Before Cart Contents"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:663
+msgid "Cart Contents"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:664
+msgid "Cart Coupon"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:665
+msgid "After Cart Contents"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:666
+msgid "After Cart Table"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:667
+msgid "Cart Collaterals"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:668
+msgid "Before Cart Totals"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:669
+msgid "Cart Totals Before Shipping"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:670
+msgid "Before Shipping Calculator"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:671
+msgid "After Shipping Calculator"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:672
+msgid "Cart Totals After Shipping"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:673
+msgid "Cart Totals Before Order Total"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:674
+msgid "Cart Totals After Order Total"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:675
+msgid "Proceed To Checkout"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:676
+msgid "After Cart Totals"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:677
+msgid "After Cart"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:1431
+msgid " archive page"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:1436
+msgid "All singulars  "
+msgstr ""
+
+#: include/custom-options/module/nexter-display-conditional-rules.php:1502
+msgid "iPhone"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-singular-archives-rules.php:267
+#, php-format
+msgid "%1$s : %2$s"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-singular-archives-rules.php:314
+#, php-format
+msgid "%1$s : Child %2$s"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-singular-archives-rules.php:346
+#, php-format
+msgid "%s : By Author"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-singular-archives-rules.php:445
+msgid "Search Results"
+msgstr ""
+
+#: include/custom-options/module/nexter-display-singular-rules.php:216
+msgid "All "
+msgstr ""
+
+#: include/nexter-template/nexter-builder-shortcode.php:55
+msgid "Shortcode"
+msgstr ""
+
+#: include/nexter-template/nexter-template-function.php:11
+#: include/panel-settings/nexter-ext-panel-settings.php:574
+#: include/panel-settings/nexter-ext-panel-settings.php:575
+msgid "Theme Builder"
+msgstr ""
+
+#: include/nexter-template/nexter-template-function.php:20
+msgid "Template Archives"
+msgstr ""
+
+#: include/nexter-template/nexter-template-function.php:21
+msgid "Template Attributes"
+msgstr ""
+
+#: include/nexter-template/nexter-template-function.php:22
+msgid "Parent Template:"
+msgstr ""
+
+#: include/nexter-template/nexter-template-function.php:24
+msgid "Add New Template"
+msgstr ""
+
+#: include/nexter-template/nexter-template-function.php:25
+msgid "Create New"
+msgstr ""
+
+#: include/nexter-template/nexter-template-function.php:26
+msgid "New Template"
+msgstr ""
+
+#: include/nexter-template/nexter-template-function.php:27
+msgid "Edit Template"
+msgstr ""
+
+#: include/nexter-template/nexter-template-function.php:28
+msgid "Update Template"
+msgstr ""
+
+#: include/nexter-template/nexter-template-function.php:29
+#: include/nexter-template/nexter-template-function.php:30
+msgid "View Template"
+msgstr ""
+
+#: include/nexter-template/nexter-template-function.php:31
+msgid "Search Template"
+msgstr ""
+
+#: include/nexter-template/nexter-template-function.php:32
+msgid "Not found"
+msgstr ""
+
+#: include/nexter-template/nexter-template-function.php:33
+msgid "Not found in Trash"
+msgstr ""
+
+#: include/nexter-template/nexter-template-function.php:34
+msgid "Featured Image"
+msgstr ""
+
+#: include/nexter-template/nexter-template-function.php:35
+msgid "Set featured image"
+msgstr ""
+
+#: include/nexter-template/nexter-template-function.php:36
+msgid "Remove featured image"
+msgstr ""
+
+#: include/nexter-template/nexter-template-function.php:37
+msgid "Use as featured image"
+msgstr ""
+
+#: include/nexter-template/nexter-template-function.php:38
+msgid "Insert into template"
+msgstr ""
+
+#: include/nexter-template/nexter-template-function.php:39
+msgid "Uploaded to this template"
+msgstr ""
+
+#: include/nexter-template/nexter-template-function.php:40
+msgid "Templates list"
+msgstr ""
+
+#: include/nexter-template/nexter-template-function.php:41
+msgid "Templates list navigation"
+msgstr ""
+
+#: include/nexter-template/nexter-template-function.php:42
+msgid "Filter templates list"
+msgstr ""
+
+#: include/nexter-template/nexter-template-function.php:45
+msgid "Post Type"
+msgstr ""
+
+#: include/nexter-template/nexter-template-function.php:46
+msgid "Post Type Description"
+msgstr ""
+
+#: include/nexter-template/template-import-export.php:79
+msgid "Export Template"
+msgstr ""
+
+#: include/nexter-template/template-import-export.php:246
+msgid "Import Templates"
+msgstr ""
+
+#: include/nexter-template/template-import-export.php:248
+msgid ""
+"Choose an Nexter Builder template XML file of Builder templates, and add "
+"them to the list of templates available in your builder."
+msgstr ""
+
+#: include/nexter-template/template-import-export.php:255
+msgid "Import Now"
+msgstr ""
+
+#: include/nexter-template/importer/class.wordpress-importer.php:128
+#: include/nexter-template/importer/class.wordpress-importer.php:137
+#: include/nexter-template/importer/class.wordpress-importer.php:188
+#: include/nexter-template/importer/class.wordpress-importer.php:192
+#: include/nexter-template/importer/class.wordpress-importer.php:202
+msgid "Sorry, there has been an error."
+msgstr ""
+
+#: include/nexter-template/importer/class.wordpress-importer.php:129
+msgid "The file does not exist, please try again."
+msgstr ""
+
+#: include/nexter-template/importer/class.wordpress-importer.php:172
+msgid "All done."
+msgstr ""
+
+#: include/nexter-template/importer/class.wordpress-importer.php:172
+msgid "Have fun!"
+msgstr ""
+
+#: include/nexter-template/importer/class.wordpress-importer.php:173
+msgid "Remember to update the passwords and roles of imported users."
+msgstr ""
+
+#: include/nexter-template/importer/class.wordpress-importer.php:194
+#, php-format
+msgid ""
+"The export file could not be found at <code>%s</code>. It is likely that "
+"this was caused by a permissions problem."
+msgstr ""
+
+#: include/nexter-template/importer/class.wordpress-importer.php:211
+#, php-format
+msgid ""
+"This WXR file (version %s) may not be supported by this version of the "
+"importer. Please consider updating."
+msgstr ""
+
+#: include/nexter-template/importer/class.wordpress-importer.php:237
+#, php-format
+msgid ""
+"Failed to import author %s. Their posts will be attributed to the current "
+"user."
+msgstr ""
+
+#: include/nexter-template/importer/class.wordpress-importer.php:264
+msgid "Assign Authors"
+msgstr ""
+
+#: include/nexter-template/importer/class.wordpress-importer.php:265
+msgid ""
+"To make it easier for you to edit and save the imported content, you may "
+"want to reassign the author of the imported item to an existing user of this "
+"site. For example, you may want to import all the entries as <code>admin</"
+"code>s entries."
+msgstr ""
+
+#: include/nexter-template/importer/class.wordpress-importer.php:268
+#, php-format
+msgid ""
+"If a new user is created by WordPress, a new password will be randomly "
+"generated and the new user&#8217;s role will be set as %s. Manually changing "
+"the new user&#8217;s details will be necessary."
+msgstr ""
+
+#: include/nexter-template/importer/class.wordpress-importer.php:278
+msgid "Import Attachments"
+msgstr ""
+
+#: include/nexter-template/importer/class.wordpress-importer.php:281
+msgid "Download and import file attachments"
+msgstr ""
+
+#: include/nexter-template/importer/class.wordpress-importer.php:285
+msgid "Submit"
+msgstr ""
+
+#: include/nexter-template/importer/class.wordpress-importer.php:298
+msgid "Import author:"
+msgstr ""
+
+#: include/nexter-template/importer/class.wordpress-importer.php:309
+msgid "or create new user with login name:"
+msgstr ""
+
+#: include/nexter-template/importer/class.wordpress-importer.php:312
+msgid "as a new user:"
+msgstr ""
+
+#: include/nexter-template/importer/class.wordpress-importer.php:320
+msgid "assign posts to an existing user:"
+msgstr ""
+
+#: include/nexter-template/importer/class.wordpress-importer.php:322
+msgid "or assign posts to an existing user:"
+msgstr ""
+
+#: include/nexter-template/importer/class.wordpress-importer.php:328
+msgid "- Select -"
+msgstr ""
+
+#: include/nexter-template/importer/class.wordpress-importer.php:382
+#, php-format
+msgid ""
+"Failed to create new user for %s. Their posts will be attributed to the "
+"current user."
+msgstr ""
+
+#: include/nexter-template/importer/class.wordpress-importer.php:435
+#, php-format
+msgid "Failed to import category %s"
+msgstr ""
+
+#: include/nexter-template/importer/class.wordpress-importer.php:481
+#, php-format
+msgid "Failed to import post tag %s"
+msgstr ""
+
+#: include/nexter-template/importer/class.wordpress-importer.php:537
+#: include/nexter-template/importer/class.wordpress-importer.php:766
+#, php-format
+msgid "Failed to import %1$s %2$s"
+msgstr ""
+
+#: include/nexter-template/importer/class.wordpress-importer.php:631
+#, php-format
+msgid "Failed to import &#8220;%s&#8221;: Invalid post type %s"
+msgstr ""
+
+#: include/nexter-template/importer/class.wordpress-importer.php:732
+#, php-format
+msgid "Failed to import %1$s &#8220;%2$s&#8221;"
+msgstr ""
+
+#: include/nexter-template/importer/class.wordpress-importer.php:911
+msgid "Menu item skipped due to missing menu slug"
+msgstr ""
+
+#: include/nexter-template/importer/class.wordpress-importer.php:919
+#, php-format
+msgid "Menu item skipped due to invalid menu slug: %s"
+msgstr ""
+
+#: include/nexter-template/importer/class.wordpress-importer.php:984
+msgid "Fetching attachments is not enabled"
+msgstr ""
+
+#: include/nexter-template/importer/class.wordpress-importer.php:997
+msgid "Invalid file type"
+msgstr ""
+
+#: include/nexter-template/importer/class.wordpress-importer.php:1050
+msgid "Remote server did not respond"
+msgstr ""
+
+#: include/nexter-template/importer/class.wordpress-importer.php:1058
+#, php-format
+msgid "Remote server returned error response %1$d %2$s"
+msgstr ""
+
+#: include/nexter-template/importer/class.wordpress-importer.php:1065
+msgid "Remote file is incorrect size"
+msgstr ""
+
+#: include/nexter-template/importer/class.wordpress-importer.php:1070
+msgid "Zero size file downloaded"
+msgstr ""
+
+#: include/nexter-template/importer/class.wordpress-importer.php:1076
+#, php-format
+msgid "Remote file is too large, limit is %s"
+msgstr ""
+
+#: include/nexter-template/importer/class.wordpress-importer.php:1179
+msgid "Import WordPress"
+msgstr ""
+
+#: include/nexter-template/importer/class.wordpress-importer.php:1187
+#, php-format
+msgid ""
+"A new version of this importer is available. Please update to version %s to "
+"ensure compatibility with newer export files."
+msgstr ""
+
+#: include/nexter-template/importer/class.wordpress-importer.php:1202
+msgid ""
+"Howdy! Upload your WordPress eXtended RSS (WXR) file and we&#8217;ll import "
+"the posts, pages, comments, custom fields, categories, and tags into this "
+"site."
+msgstr ""
+
+#: include/nexter-template/importer/class.wordpress-importer.php:1203
+msgid "Choose a WXR (.xml) file to upload, then click Upload file and import."
+msgstr ""
+
+#: include/nexter-template/importer/parsers.php:42
+#: include/nexter-template/importer/parsers.php:72
+#: include/nexter-template/importer/parsers.php:80
+msgid "There was an error when reading this WXR file"
+msgstr ""
+
+#: include/nexter-template/importer/parsers.php:43
+msgid ""
+"Details are shown above. The importer will now try again with a different "
+"parser..."
+msgstr ""
+
+#: include/nexter-template/importer/parsers.php:84
+#: include/nexter-template/importer/parsers.php:89
+#: include/nexter-template/importer/parsers.php:315
+#: include/nexter-template/importer/parsers.php:533
+msgid ""
+"This does not appear to be a WXR file, missing/invalid WXR version number"
+msgstr ""
+
+#: include/panel-settings/nexter-custom-login-redirect.php:147
+#: include/panel-settings/extensions/nexter-ext-custom-login-redirect.php:59
+msgid "This feature is not enabled."
+msgstr ""
+
+#: include/panel-settings/nexter-custom-login-redirect.php:237
+#: include/panel-settings/extensions/nexter-ext-custom-login-redirect.php:170
+msgid "This has been disabled."
+msgstr ""
+
+#: include/panel-settings/nexter-ext-panel-settings.php:415
+#: include/panel-settings/nexter-ext-panel-settings.php:418
+msgid "Nexter Settings"
+msgstr ""
+
+#: include/panel-settings/nexter-ext-panel-settings.php:565
+#: include/panel-settings/nexter-ext-panel-settings.php:566
+msgid "Dashboard"
+msgstr ""
+
+#: include/panel-settings/nexter-ext-panel-settings.php:581
+#: include/panel-settings/nexter-ext-panel-settings.php:582
+msgid "Code Snippets"
+msgstr ""
+
+#: include/panel-settings/nexter-ext-panel-settings.php:646
+msgid "server not found.."
+msgstr ""
+
+#: include/panel-settings/nexter-ext-panel-settings.php:673
+msgid "Activated"
+msgstr ""
+
+#: include/panel-settings/nexter-ext-panel-settings.php:673
+msgid "DeActivate"
+msgstr ""
+
+#: include/panel-settings/nexter-ext-panel-settings.php:706
+#, php-format
+msgid "(%s MB)"
+msgstr ""
+
+#: include/panel-settings/nexter-ext-panel-settings.php:762
+msgid "You are not allowed to do this action"
+msgstr ""
+
+#: include/panel-settings/nexter-ext-panel-settings.php:885
+msgid "Failed to retrieve plugin information."
+msgstr ""
+
+#: include/panel-settings/extensions/nexter-ext-adobe-font.php:25
+#: include/panel-settings/extensions/nexter-ext-custom-upload-font.php:17
+msgid "Custom Fonts"
+msgstr ""
+
+#: include/panel-settings/extensions/nexter-ext-google-captcha.php:154
+msgid "Authentication failed."
+msgstr ""
+
+#: include/panel-settings/extensions/nexter-ext-google-captcha.php:202
+msgid "Response is empty"
+msgstr ""
+
+#: include/panel-settings/extensions/nexter-ext-google-captcha.php:244
+msgid "Secret Key is missing."
+msgstr ""
+
+#: include/panel-settings/extensions/nexter-ext-google-captcha.php:245
+msgid "Secret Key is invalid."
+msgstr ""
+
+#: include/panel-settings/extensions/nexter-ext-google-captcha.php:245
+msgid "Check your domain configurations"
+msgstr ""
+
+#: include/panel-settings/extensions/nexter-ext-google-captcha.php:245
+msgid "and enter it again"
+msgstr ""
+
+#: include/panel-settings/extensions/nexter-ext-google-captcha.php:247
+msgid "You have entered an incorrect reCAPTCHA value."
+msgstr ""
+
+#: include/panel-settings/extensions/nexter-ext-google-captcha.php:248
+msgid ""
+"More than one reCAPTCHA has been found in the current form. Please remove "
+"all unnecessary reCAPTCHA fields to make it work properly."
+msgstr ""
+
+#: include/panel-settings/extensions/nexter-ext-google-captcha.php:249
+msgid "User response is invalid"
+msgstr ""
+
+#: include/panel-settings/extensions/nexter-ext-google-captcha.php:250
+msgid "reCaptcha v3 test failed"
+msgstr ""
+
+#: include/panel-settings/extensions/nexter-ext-google-captcha.php:251
+msgid "User response is missing."
+msgstr ""
+
+#: include/panel-settings/extensions/nexter-ext-google-captcha.php:252
+msgid "You have entered incorrect  secret key."
+msgstr ""
+
+#: include/panel-settings/extensions/nexter-ext-google-captcha.php:416
+msgid "Error"
+msgstr ""
+
+#: include/panel-settings/extensions/nexter-ext-google-captcha.php:416
+msgid "Click the BACK button on your browser and try again."
+msgstr ""
+
+#: include/panel-settings/extensions/nexter-ext-local-google-font.php:58
+msgid "Local Google Fonts"
+msgstr ""
+
+#: include/panel-settings/extensions/nexter-ext-local-google-font.php:333
+msgid "Local fonts cleared."
+msgstr ""
+
+#: include/panel-settings/extensions/nexter-ext-performance-security-settings.php:173
+#: include/panel-settings/extensions/nexter-ext-performance-security-settings.php:592
+#: include/panel-settings/extensions/nexter-ext-performance-security-settings.php:597
+msgid "Comments are disabled."
+msgstr ""
+
+#: include/panel-settings/extensions/nexter-ext-performance-security-settings.php:239
+msgid "Sorry, do not have permission REST API requests."
+msgstr ""
+
+#: include/panel-settings/extensions/nexter-ext-performance-security-settings.php:413
+#, php-format
+msgid "No feed available, please visit the %s!"
+msgstr ""
+
+#: include/panel-settings/extensions/nexter-ext-performance-security-settings.php:417
+msgid "Home Page"
+msgstr ""
+
+#: include/panel-settings/extensions/nexter-ext-post-duplicator.php:47
+#, php-format
+msgid "Duplicate %s"
+msgstr ""
+
+#: include/panel-settings/extensions/nexter-ext-post-duplicator.php:50
+msgid "Duplicate"
+msgstr ""
+
+#: include/panel-settings/extensions/nexter-ext-post-duplicator.php:119
+msgid "Copy"
+msgstr ""
+
+#: include/panel-settings/extensions/nexter-ext-post-duplicator.php:198
+msgid "You do not have permission to duplicate this post."
+msgstr ""
+
+#: include/panel-settings/extensions/nexter-ext-replace-url.php:25
+msgid "The \"OLD\" and \"NEW\" URLs must be different"
+msgstr ""
+
+#: include/panel-settings/extensions/nexter-ext-replace-url.php:38
+#: include/panel-settings/extensions/nexter-ext-replace-url.php:88
+msgid "Select any table before replace"
+msgstr ""

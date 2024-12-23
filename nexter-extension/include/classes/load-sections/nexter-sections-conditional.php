@@ -62,7 +62,8 @@ if ( ! class_exists( 'Nexter_Builder_Sections_Conditional' ) ) {
 			if(!empty(self::$sections_ids)){
 				foreach ( self::$sections_ids as $post_id => $post_data ) {
 					$nxt_hooks_layout = get_post_meta( $post_id, 'nxt-hooks-layout', true );
-					if ( !empty($nxt_hooks_layout) && $nxt_hooks_layout!='none' && class_exists( 'Nexter_Builder_Compatibility' ) ) {
+					$hook_layout_sections = get_post_meta(  $post_id, 'nxt-hooks-layout-sections', true );
+					if ( ((!empty($nxt_hooks_layout) && $nxt_hooks_layout!='none') || !empty($hook_layout_sections)) && class_exists( 'Nexter_Builder_Compatibility' ) ) {
 						$page_base_instance = Nexter_Builder_Compatibility::get_instance();
 						$post_id = apply_filters( 'wpml_object_id', $post_id, NXT_BUILD_POST, TRUE  );
 						$page_builder_instance = $page_base_instance->get_active_page_builder( $post_id );
@@ -155,16 +156,14 @@ if ( ! class_exists( 'Nexter_Builder_Sections_Conditional' ) ) {
 		public static function nexter_sections_condition_hooks($nxt_layout='', $sections_pages='' ) {
 			$get_result=array();
 			if( !empty(self::$sections_ids) ) {
-				
 				foreach ( self::$sections_ids as $post_id => $post_data ) {
-					$post_type = get_post_type();
-					
+					$post_type = get_post_type();					
 					if ( NXT_BUILD_POST != $post_type ) {
 						$nxt_hooks_layout   = get_post_meta( $post_id, 'nxt-hooks-layout', true );
-						
-						if( !empty( $nxt_layout ) && !empty($nxt_hooks_layout) && $nxt_hooks_layout == $nxt_layout && !empty( $sections_pages )){
-							if('sections' === $nxt_hooks_layout){
-								$sections   = get_post_meta( $post_id, 'nxt-hooks-layout-sections', false );
+						$sections   = get_post_meta( $post_id, 'nxt-hooks-layout-sections', false );
+
+						if( (!empty( $nxt_layout ) && !empty($nxt_hooks_layout) && $nxt_hooks_layout == $nxt_layout && !empty( $sections_pages )) || !empty($sections)){
+							if(('sections' === $nxt_hooks_layout) || (!empty($sections) && empty($nxt_hooks_layout) && $nxt_hooks_layout != 'page' )){
 								if(!empty($sections) && $sections[0] == $sections_pages){
 									$get_result[] = $post_id;
 								}
@@ -192,7 +191,12 @@ if ( ! class_exists( 'Nexter_Builder_Sections_Conditional' ) ) {
 		 * Nexter Builder Conditional get template content
 		 */
 		public function get_action_content( $post_id ) {
-
+			if(function_exists('pll_get_post')){	
+				$translated_post_id = pll_get_post($post_id, pll_current_language());
+				if($post_id != $translated_post_id){
+					return;
+				}
+			}
 			$action = get_post_meta( $post_id, 'nxt-display-hooks-action', true );
 			
 			// Exclude div wrapper if selected hook is from below list.

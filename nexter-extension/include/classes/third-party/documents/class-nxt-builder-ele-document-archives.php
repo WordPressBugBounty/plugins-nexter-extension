@@ -18,7 +18,7 @@ class Nexter_Builder_Ele_Archives_Document extends Nexter_Builder_Ele_Document_B
 	}
 
 	public static function get_title() {
-		return esc_html__( 'Nexter Archives Template', 'nexter' );
+		return esc_html__( 'Nexter Archives Template', 'nexter-extension' );
 	}
 	
 	public function get_wp_preview_url() {

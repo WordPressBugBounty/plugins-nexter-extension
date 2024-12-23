@@ -79,7 +79,7 @@ class Nexter_Builder_Pages_Loader {
 					
 					$get_condition = '';
 					
-					if ( isset(self::$condition_rule[$rule]) ) {
+					if ( !empty(self::$condition_rule) && isset(self::$condition_rule) && isset(self::$condition_rule[$rule]) ) {
 					
 						$check_condition_rule = self::$condition_rule[$rule];
 						

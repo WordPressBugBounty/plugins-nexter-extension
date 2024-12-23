@@ -5,15 +5,16 @@ if( !function_exists('nxt_replace_url')){
 		$user = wp_get_current_user();
 		$allowed_roles = array( 'administrator' );
 		if ( !empty($user) && isset($user->roles) && array_intersect( $allowed_roles, $user->roles ) ) {
-			$from = ( isset($_POST['from']) && !empty( $_POST['from'] ) ) ? sanitize_text_field($_POST['from']) : '';
-			$to = ( isset($_POST['to']) && !empty( $_POST['to'] ) ) ? sanitize_text_field($_POST['to']) : '';
+			$from = ( isset($_POST['from']) && !empty( $_POST['from'] ) ) ? sanitize_text_field( wp_unslash($_POST['from']) ) : '';
+			$to = ( isset($_POST['to']) && !empty( $_POST['to'] ) ) ? sanitize_text_field( wp_unslash($_POST['to']) ) : '';
 			
 			$case = ( isset($_POST['case']) && !empty( $_POST['case'] ) ) ? sanitize_text_field( wp_unslash($_POST['case']) ) : '';
 			$guidV = ( isset($_POST['guid']) && !empty( $_POST['guid'] ) ) ? sanitize_text_field( wp_unslash($_POST['guid']) ) : '';
-			$limitV = ( isset($_POST['limit']) && !empty( $_POST['limit'] ) ) ? sanitize_text_field($_POST['limit']) : 20000;
+			$limitV = ( isset($_POST['limit']) && !empty( $_POST['limit'] ) ) ? sanitize_text_field( wp_unslash($_POST['limit']) ) : 20000;
 
-			$selTables = ( isset( $_POST['tables'] ) ) ? wp_unslash( $_POST['tables'] ) : '';
+			$selTables = isset( $_POST['tables'] ) ? wp_unslash(  $_POST['tables'] ) : [];
 			$selTables =  (array) json_decode($selTables);
+			$selTables = is_array( $selTables ) ? array_map( 'sanitize_text_field', $selTables ) : [];
 
 			$from = trim( $from ); $to = trim( $to );
 
@@ -21,7 +22,7 @@ if( !function_exists('nxt_replace_url')){
 				wp_send_json_error(
 					array(
 						'success' => false,
-						'message' => __( 'The "OLD" and "NEW" URLs must be different', 'nexter-ext' ),
+						'message' => __( 'The "OLD" and "NEW" URLs must be different', 'nexter-extension' ),
 					)
 				);
 			}
@@ -34,7 +35,7 @@ if( !function_exists('nxt_replace_url')){
 				wp_send_json_error(
 					array(
 						'success' => false,
-						'message' => __( 'Select any table before replace', 'nexter-ext' ),
+						'message' => __( 'Select any table before replace', 'nexter-extension' ),
 					)
 				);
 			}
@@ -48,7 +49,7 @@ if( !function_exists('nxt_replace_url')){
 			wp_send_json_error(
 				array(
 					'success' => false,
-					'message' => __( 'Only Admin can run this.', 'nexter-ext' ),
+					'message' => __( 'Only Admin can run this.', 'nexter-extension' ),
 				)
 			);
 		}
@@ -63,8 +64,8 @@ if( !function_exists('nxt_replace_confirm_url')){
 		$user = wp_get_current_user();
 		$allowed_roles = array( 'administrator' );
 		if ( !empty($user) && isset($user->roles) && array_intersect( $allowed_roles, $user->roles ) ) {
-			$from = !empty( $_POST['from'] ) ? sanitize_text_field($_POST['from']) : '';
-			$to = !empty( $_POST['to'] ) ? sanitize_text_field($_POST['to']) : '';
+			$from = !empty( $_POST['from'] ) ? sanitize_text_field( wp_unslash($_POST['from']) ) : '';
+			$to = !empty( $_POST['to'] ) ? sanitize_text_field( wp_unslash($_POST['to']) ) : '';
 			
 			$case = ( isset($_POST['case']) && !empty( $_POST['case'] ) ) ? sanitize_text_field( wp_unslash($_POST['case']) ) : '';
 			$guidV = ( isset($_POST['guid']) && !empty( $_POST['guid'] ) ) ? sanitize_text_field( wp_unslash($_POST['guid']) ) : '';
@@ -73,8 +74,9 @@ if( !function_exists('nxt_replace_confirm_url')){
 			$from = trim( $from ); $to = trim( $to );
 		
 			$rows_affected = 0;
-			$selTables = ( isset( $_POST['tables'] ) ) ? wp_unslash( $_POST['tables'] ) : '';
+			$selTables = isset( $_POST['tables'] ) ? wp_unslash(  $_POST['tables'] ) : [];
 			$selTables =  (array) json_decode($selTables);
+			$selTables = is_array( $selTables ) ? array_map( 'sanitize_text_field', $selTables ) : [];
 		
 			if(!empty($selTables)){
 				$replaceValue = true;
@@ -83,7 +85,7 @@ if( !function_exists('nxt_replace_confirm_url')){
 				wp_send_json_error(
 					array(
 						'success' => false,
-						'message' => __( 'Select any table before replace', 'nexter-ext' ),
+						'message' => __( 'Select any table before replace', 'nexter-extension' ),
 					)
 				);
 			}
@@ -97,7 +99,7 @@ if( !function_exists('nxt_replace_confirm_url')){
 			wp_send_json_error(
 				array(
 					'success' => false,
-					'message' => __( 'Only Admin can run this.', 'nexter-ext' ),
+					'message' => __( 'Only Admin can run this.', 'nexter-extension' ),
 				)
 			);
 		}
@@ -242,4 +244,3 @@ if( !function_exists('nxt_search_replace')){
 		return $changes;
 	}
 }
-?>

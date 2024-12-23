@@ -112,7 +112,7 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 			$get_data = get_option($option);
 			if( $get_data === false ){
 				$value = ['saved' => strtotime('now'), 'singular_updated' => '','archives_updated' => '','sections_updated' => ''];
-				add_option( $option, $value, false );
+				add_option( $option, $value );
 			}else if(!empty($get_data)){
 				$get_data['saved'] = strtotime('now');
 				update_option( $option, $get_data, false );
@@ -136,47 +136,47 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 
 			$options = array(
 				'standard'	=> array(
-					'label' => __( 'Standard', 'nexter-ext' ),
+					'label' => __( 'Standard', 'nexter-extension' ),
 					'value' => array(
-						'standard-universal'	=> __( 'Entire Website', 'nexter-ext' ),
-						'standard-singulars'	=> __( 'All Singulars', 'nexter-ext' ),
-						'standard-archives'		=> __( 'All Archives', 'nexter-ext' ),
+						'standard-universal'	=> __( 'Entire Website', 'nexter-extension' ),
+						'standard-singulars'	=> __( 'All Singulars', 'nexter-extension' ),
+						'standard-archives'		=> __( 'All Archives', 'nexter-extension' ),
 					),
 				),
 			);
 
 			$default_pages = [
-				'default-front'  => __( 'Front Page', 'nexter-ext' ),
-				'default-blog'   => __( 'Blog / Posts Page', 'nexter-ext' ),
-				'default-date'   => __( 'Date Archive', 'nexter-ext' ),
-				'default-author' => __( 'Author Archive', 'nexter-ext' ),
-				'default-search' => __( 'Search Page', 'nexter-ext' ),
-				'default-404'    => __( '404 Page', 'nexter-ext' ),
+				'default-front'  => __( 'Front Page', 'nexter-extension' ),
+				'default-blog'   => __( 'Blog / Posts Page', 'nexter-extension' ),
+				'default-date'   => __( 'Date Archive', 'nexter-extension' ),
+				'default-author' => __( 'Author Archive', 'nexter-extension' ),
+				'default-search' => __( 'Search Page', 'nexter-extension' ),
+				'default-404'    => __( '404 Page', 'nexter-extension' ),
 			];
 	
 			if ( class_exists( 'WooCommerce' ) ) {
-				$default_pages['default-woo-shop'] = __( 'WooCommerce Shop Page', 'nexter-ext' );
+				$default_pages['default-woo-shop'] = __( 'WooCommerce Shop Page', 'nexter-extension' );
 			}
 			
 			//Spacial Pages, Date/Time, Visitors Source Options
 			$advaced_location = [
 				'default-pages' => [
-					'label' => __( 'Default Pages', 'nexter-ext' ),
+					'label' => __( 'Default Pages', 'nexter-extension' ),
 					'value' => $default_pages,
 				],
 				'date-and-time' => [
-					'label' => __( 'Date & Time', 'nexter-ext' ),
+					'label' => __( 'Date & Time', 'nexter-extension' ),
 					'value' => [
-						'set-day'	=> __( 'Day of Week', 'nexter-ext' ),
+						'set-day'	=> __( 'Day of Week', 'nexter-extension' ),
 					],
 				],
 				'visitors-source' => [
-					'label' => __( 'Visitors Source', 'nexter-ext' ),
+					'label' => __( 'Visitors Source', 'nexter-extension' ),
 					'value' => [
-						'os'		=> __( 'Operating System', 'nexter-ext' ),
-						'browser'	=> __( 'Browser', 'nexter-ext' ),
-						'login-status'	=> __( 'Login Status', 'nexter-ext' ),
-						'user-roles'	=> __( 'User Roles', 'nexter-ext' ),
+						'os'		=> __( 'Operating System', 'nexter-extension' ),
+						'browser'	=> __( 'Browser', 'nexter-extension' ),
+						'login-status'	=> __( 'Login Status', 'nexter-extension' ),
+						'user-roles'	=> __( 'User Roles', 'nexter-extension' ),
 					],
 				],
 			];
@@ -220,9 +220,9 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 
 			$specific_post = array(
 				'particular-post' => array(
-					'label' => __( 'Particular Posts/Pages/Taxonomies', 'nexter-ext' ),
+					'label' => __( 'Particular Posts/Pages/Taxonomies', 'nexter-extension' ),
 					'value' => array(
-						'particular-post' => __( 'Particular Posts / Pages / Taxonomies, etc.', 'nexter-ext' ),
+						'particular-post' => __( 'Particular Posts / Pages / Taxonomies, etc.', 'nexter-extension' ),
 					),
 				),
 			);
@@ -244,18 +244,18 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 			$options = array();
 
 			/* translators: %s: Post Label*/
-			$options[ $post_name . '|entire' ]	= sprintf( __( 'All %s', 'nexter-ext' ), $post_label );
+			$options[ $post_name . '|entire' ]	= sprintf( __( 'All %s', 'nexter-extension' ), $post_label );
 
 			if ( $post_key != 'pages' ) {
 				/* translators: %s: Archive Post Label */
-				$options[ $post_name . '|entire|archive' ] = sprintf( __( 'All %s Archive', 'nexter-ext' ), $post_label );
+				$options[ $post_name . '|entire|archive' ] = sprintf( __( 'All %s Archive', 'nexter-extension' ), $post_label );
 			}
 			
 			if ( in_array( $post_type->name, $taxonomy->object_type ) ) {
 				$taxo_name  = $taxonomy->name;
 				$taxo_label = ucwords( $taxonomy->label );
 				/* translators: %s: Taxonomy Label */
-				$options[ $post_name . '|entire|tax-archive|' . $taxo_name ] = sprintf( __( 'All %s Archive', 'nexter-ext' ), $taxo_label );
+				$options[ $post_name . '|entire|tax-archive|' . $taxo_name ] = sprintf( __( 'All %s Archive', 'nexter-extension' ), $taxo_label );
 			}
 
 			$post_output['key'] = $post_key;
@@ -314,10 +314,16 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 			$display           = false;
 
 			if ( isset( $conditions ) && is_array( $conditions ) && ! empty( $conditions ) ) {
-			
+				
 				foreach ( $conditions as $key => $condition ) {
-
-					if ( !is_array($condition) && strrpos( $condition, 'entire' ) !== false ) {
+					
+					if(is_array($condition) && isset($condition['value'])){
+						if(strrpos( $condition['value'], 'entire' ) !== false){
+							$check_cond = 'entire';
+						}else{
+							$check_cond = $condition['value'];
+						}
+					}else if ( !is_array($condition) && strrpos( $condition, 'entire' ) !== false ) {
 						$check_cond = 'entire';
 					} else {
 						$check_cond = $condition;
@@ -439,7 +445,7 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 			if( !empty($set_day) ){
 				$display = false;
 				foreach ( $set_day as $value ) {
-					if ( $value === date( 'w' ) ) {
+					if ( $value === gmdate( 'w' ) ) {
 						$display = true;
 						break;
 					}
@@ -544,131 +550,131 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 		public static function get_sections_hooks_options() {
 			if(defined('HELLO_ELEMENTOR_VERSION')){
 				$hooks = array(
-					'wp_head'				=> __( 'Wp Head', 'nexter-ext' ),
-					'wp_footer'				=> __( 'Wp Footer', 'nexter-ext' ),
+					'wp_head'				=> __( 'Wp Head', 'nexter-extension' ),
+					'wp_footer'				=> __( 'Wp Footer', 'nexter-extension' ),
 				);
 			}else{
 				$hooks = array(
-					'nxt_html_before'		=> __( 'Html Before', 'nexter-ext' ),
-					'nxt_head_top'			=> __( 'Head Top', 'nexter-ext' ),
-					'nxt_head_bottom'		=> __( 'Head Bottom', 'nexter-ext' ),
-					'wp_head'				=> __( 'Wp Head', 'nexter-ext' ),
+					'nxt_html_before'		=> __( 'Html Before', 'nexter-extension' ),
+					'nxt_head_top'			=> __( 'Head Top', 'nexter-extension' ),
+					'nxt_head_bottom'		=> __( 'Head Bottom', 'nexter-extension' ),
+					'wp_head'				=> __( 'Wp Head', 'nexter-extension' ),
 			
-					'nxt_body_top'			=> __( 'Body Top', 'nexter-ext' ),
-					'nxt_header_before'		=> __( 'Header Before', 'nexter-ext' ),
-					'nxt_header_after'		=> __( 'Header After', 'nexter-ext' ),
+					'nxt_body_top'			=> __( 'Body Top', 'nexter-extension' ),
+					'nxt_header_before'		=> __( 'Header Before', 'nexter-extension' ),
+					'nxt_header_after'		=> __( 'Header After', 'nexter-extension' ),
 				
-					'nxt_content_top'		=> __( 'Content Top', 'nexter-ext' ),
-					'nxt_content_bottom'	=> __( 'Content Bottom', 'nexter-ext' ),
+					'nxt_content_top'		=> __( 'Content Top', 'nexter-extension' ),
+					'nxt_content_bottom'	=> __( 'Content Bottom', 'nexter-extension' ),
 				
-					'nxt_comments_before'	=> __( 'Comments Before', 'nexter-ext' ),
-					'nxt_comments_after'	=> __( 'Comments After', 'nexter-ext' ),
+					'nxt_comments_before'	=> __( 'Comments Before', 'nexter-extension' ),
+					'nxt_comments_after'	=> __( 'Comments After', 'nexter-extension' ),
 				
-					'nxt_sidebars_before'	=> __( 'Sidebar Before', 'nexter-ext' ),
-					'nxt_sidebars_after'	=> __( 'Sidebar After', 'nexter-ext' ),
+					'nxt_sidebars_before'	=> __( 'Sidebar Before', 'nexter-extension' ),
+					'nxt_sidebars_after'	=> __( 'Sidebar After', 'nexter-extension' ),
 			
-					'nxt_footer_before'		=> __( 'Footer Before', 'nexter-ext' ),
-					'nxt_footer_after'		=> __( 'Footer After', 'nexter-ext' ),
-					'nxt_body_bottom'		=> __( 'Body Bottom', 'nexter-ext' ),
-					'wp_footer'				=> __( 'Wp Footer', 'nexter-ext' ),
+					'nxt_footer_before'		=> __( 'Footer Before', 'nexter-extension' ),
+					'nxt_footer_after'		=> __( 'Footer After', 'nexter-extension' ),
+					'nxt_body_bottom'		=> __( 'Body Bottom', 'nexter-extension' ),
+					'wp_footer'				=> __( 'Wp Footer', 'nexter-extension' ),
 				);
 			}
 
 			if(class_exists('WooCommerce')){
 				//Single Product Hooks
-				$hooks['woocommerce_before_single_product'] = __('Before Single Product','nexter-ext');
-				$hooks['woocommerce_before_single_product_summary'] = __('Before Single Product Summary','nexter-ext');
-				$hooks['woocommerce_single_product_summary'] = __('Single Product Summary','nexter-ext');
-				$hooks['woocommerce_before_add_to_cart_form'] = __('Before Add To Cart Form','nexter-ext');
-				$hooks['woocommerce_before_variations_form'] = __('Before Variations Form','nexter-ext');
-				$hooks['woocommerce_before_add_to_cart_button'] = __('Before Add To Cart Button','nexter-ext');
-				$hooks['woocommerce_before_single_variation'] = __('Before Single Variation','nexter-ext');
-				$hooks['woocommerce_single_variation'] = __('Single Variation','nexter-ext');
-				$hooks['woocommerce_before_add_to_cart_quantity'] = __('Before Add To Cart','nexter-ext');
-				$hooks['woocommerce_after_add_to_cart_quantity'] = __('After Add To Cart','nexter-ext');
-				$hooks['woocommerce_after_single_variation'] = __('After Single Variation','nexter-ext');
-				$hooks['woocommerce_after_add_to_cart_button'] = __('After Add To Cart Button','nexter-ext');
-				$hooks['woocommerce_after_variations_form'] = __('After Variation Form','nexter-ext');
-				$hooks['woocommerce_after_add_to_cart_form'] = __('After Add To Cart Form','nexter-ext');
-				$hooks['woocommerce_product_meta_start'] = __('Product Meta Start','nexter-ext');
-				$hooks['woocommerce_product_meta_end'] = __('Product Meta End','nexter-ext');
-				$hooks['woocommerce_share'] = __('WooCommerce Share','nexter-ext');
-				$hooks['woocommerce_after_single_product_summary'] = __('After Single Product Summary','nexter-ext');
-				$hooks['woocommerce_after_single_product'] = __('After Single Product','nexter-ext');
+				$hooks['woocommerce_before_single_product'] = __('Before Single Product','nexter-extension');
+				$hooks['woocommerce_before_single_product_summary'] = __('Before Single Product Summary','nexter-extension');
+				$hooks['woocommerce_single_product_summary'] = __('Single Product Summary','nexter-extension');
+				$hooks['woocommerce_before_add_to_cart_form'] = __('Before Add To Cart Form','nexter-extension');
+				$hooks['woocommerce_before_variations_form'] = __('Before Variations Form','nexter-extension');
+				$hooks['woocommerce_before_add_to_cart_button'] = __('Before Add To Cart Button','nexter-extension');
+				$hooks['woocommerce_before_single_variation'] = __('Before Single Variation','nexter-extension');
+				$hooks['woocommerce_single_variation'] = __('Single Variation','nexter-extension');
+				$hooks['woocommerce_before_add_to_cart_quantity'] = __('Before Add To Cart','nexter-extension');
+				$hooks['woocommerce_after_add_to_cart_quantity'] = __('After Add To Cart','nexter-extension');
+				$hooks['woocommerce_after_single_variation'] = __('After Single Variation','nexter-extension');
+				$hooks['woocommerce_after_add_to_cart_button'] = __('After Add To Cart Button','nexter-extension');
+				$hooks['woocommerce_after_variations_form'] = __('After Variation Form','nexter-extension');
+				$hooks['woocommerce_after_add_to_cart_form'] = __('After Add To Cart Form','nexter-extension');
+				$hooks['woocommerce_product_meta_start'] = __('Product Meta Start','nexter-extension');
+				$hooks['woocommerce_product_meta_end'] = __('Product Meta End','nexter-extension');
+				$hooks['woocommerce_share'] = __('WooCommerce Share','nexter-extension');
+				$hooks['woocommerce_after_single_product_summary'] = __('After Single Product Summary','nexter-extension');
+				$hooks['woocommerce_after_single_product'] = __('After Single Product','nexter-extension');
 
 				//archive pages hooks
-				$hooks['woocommerce_before_main_content'] = __('Before Main Content','nexter-ext');
-				$hooks['woocommerce_archive_description'] = __('Archive Description','nexter-ext');
-				$hooks['woocommerce_before_shop_loop'] = __('Before Shop Loop','nexter-ext');
-				$hooks['woocommerce_before_shop_loop_item'] = __('Before Shop Loop Item','nexter-ext');
-				$hooks['woocommerce_before_shop_loop_item_title'] = __('Before Shop Loop Item Title','nexter-ext');
-				$hooks['woocommerce_shop_loop_item_title'] = __('Shop Loop Item Title','nexter-ext');
-				$hooks['woocommerce_after_shop_loop_item_title'] = __('After Shop Loop Item Title','nexter-ext');
-				$hooks['woocommerce_after_shop_loop_item'] = __('After Shop Loop Item','nexter-ext');
-				$hooks['woocommerce_after_shop_loop'] = __('After Shop Loop','nexter-ext');
-				$hooks['woocommerce_after_main_content'] = __('After Main Content','nexter-ext');
+				$hooks['woocommerce_before_main_content'] = __('Before Main Content','nexter-extension');
+				$hooks['woocommerce_archive_description'] = __('Archive Description','nexter-extension');
+				$hooks['woocommerce_before_shop_loop'] = __('Before Shop Loop','nexter-extension');
+				$hooks['woocommerce_before_shop_loop_item'] = __('Before Shop Loop Item','nexter-extension');
+				$hooks['woocommerce_before_shop_loop_item_title'] = __('Before Shop Loop Item Title','nexter-extension');
+				$hooks['woocommerce_shop_loop_item_title'] = __('Shop Loop Item Title','nexter-extension');
+				$hooks['woocommerce_after_shop_loop_item_title'] = __('After Shop Loop Item Title','nexter-extension');
+				$hooks['woocommerce_after_shop_loop_item'] = __('After Shop Loop Item','nexter-extension');
+				$hooks['woocommerce_after_shop_loop'] = __('After Shop Loop','nexter-extension');
+				$hooks['woocommerce_after_main_content'] = __('After Main Content','nexter-extension');
 
 
 				//My Account Page hooks for logged in Users
-				$hooks['woocommerce_account_navigation'] = __('Account Navigation','nexter-ext');
-				$hooks['woocommerce_before_account_navigation'] = __('Before Account Navigation','nexter-ext');
-				$hooks['woocommerce_after_account_navigation'] = __('After Account Navigation','nexter-ext');
-				$hooks['woocommerce_account_dashboard'] = __('Account Dashboard','nexter-ext');
-				$hooks['woocommerce_before_account_orders_pagination'] = __('Before Account Orders Pagination','nexter-ext');
-				$hooks['woocommerce_before_available_downloads'] = __('Before Available Downloads','nexter-ext');
-				$hooks['woocommerce_after_available_downloads'] = __('After Available Downloads','nexter-ext');
-				$hooks['woocommerce_after_account_downloads'] = __('After Account Downloads','nexter-ext');
-				$hooks['woocommerce_account_content'] = __('Account Content','nexter-ext');
-				$hooks['woocommerce_before_edit_account_address_form'] = __('Before Edit Account Address Form','nexter-ext');
-				$hooks['woocommerce_after_edit_account_address_form'] = __('After Edit Account Address form','nexter-ext');
-				$hooks['woocommerce_before_edit_account_form'] = __('Before Edit Account Form','nexter-ext');
-				$hooks['woocommerce_edit_account_form_start'] = __('Edit Account Form Start','nexter-ext');
-				$hooks['woocommerce_edit_account_form'] = __('Edit Account Form','nexter-ext');
-				$hooks['woocommerce_edit_account_form_end'] = __('Edit Account Form End','nexter-ext');
-				$hooks['woocommerce_after_edit_account_form'] = __('After Edit Account Form','nexter-ext');
+				$hooks['woocommerce_account_navigation'] = __('Account Navigation','nexter-extension');
+				$hooks['woocommerce_before_account_navigation'] = __('Before Account Navigation','nexter-extension');
+				$hooks['woocommerce_after_account_navigation'] = __('After Account Navigation','nexter-extension');
+				$hooks['woocommerce_account_dashboard'] = __('Account Dashboard','nexter-extension');
+				$hooks['woocommerce_before_account_orders_pagination'] = __('Before Account Orders Pagination','nexter-extension');
+				$hooks['woocommerce_before_available_downloads'] = __('Before Available Downloads','nexter-extension');
+				$hooks['woocommerce_after_available_downloads'] = __('After Available Downloads','nexter-extension');
+				$hooks['woocommerce_after_account_downloads'] = __('After Account Downloads','nexter-extension');
+				$hooks['woocommerce_account_content'] = __('Account Content','nexter-extension');
+				$hooks['woocommerce_before_edit_account_address_form'] = __('Before Edit Account Address Form','nexter-extension');
+				$hooks['woocommerce_after_edit_account_address_form'] = __('After Edit Account Address form','nexter-extension');
+				$hooks['woocommerce_before_edit_account_form'] = __('Before Edit Account Form','nexter-extension');
+				$hooks['woocommerce_edit_account_form_start'] = __('Edit Account Form Start','nexter-extension');
+				$hooks['woocommerce_edit_account_form'] = __('Edit Account Form','nexter-extension');
+				$hooks['woocommerce_edit_account_form_end'] = __('Edit Account Form End','nexter-extension');
+				$hooks['woocommerce_after_edit_account_form'] = __('After Edit Account Form','nexter-extension');
 				//Checkout Page Hooks
-				$hooks['woocommerce_before_checkout_form'] = __('Before Checkout Form','nexter-ext');
-				$hooks['woocommerce_checkout_before_customer_details'] = __('Checkout Before Customer Details','nexter-ext');
-				$hooks['woocommerce_before_checkout_billing_form'] = __('Before Checkout Billing Form','nexter-ext');
-				$hooks['woocommerce_after_checkout_billing_form'] = __('After Checkout Billing Form','nexter-ext');
-				$hooks['woocommerce_before_checkout_shipping_form'] = __('Before Checkout Shipping Form','nexter-ext');
-				$hooks['woocommerce_after_checkout_shipping_form'] = __('After Checkout Shipping Form','nexter-ext');
-				$hooks['woocommerce_before_order_notes'] = __('Before Order Notes','nexter-ext');
-				$hooks['woocommerce_after_order_notes'] = __('After Order Notes','nexter-ext');
-				$hooks['woocommerce_checkout_after_customer_details'] = __('Checkout After Customer Details','nexter-ext');
-				$hooks['woocommerce_checkout_before_order_review'] = __('Checkout Before Order Review','nexter-ext');
-				$hooks['woocommerce_review_order_before_cart_contents'] = __('Review Order Before Cart Contents','nexter-ext');
-				$hooks['woocommerce_review_order_after_cart_contents'] = __('Review Order After Cart Contents','nexter-ext');
-				$hooks['woocommerce_review_order_before_shipping'] = __('Review Order Before Shipping','nexter-ext');
-				$hooks['woocommerce_review_order_after_shipping'] = __('Review Order After Shipping','nexter-ext');
-				$hooks['woocommerce_review_order_before_order_total'] = __('Review Order Before Order Total','nexter-ext');
-				$hooks['woocommerce_review_order_after_order_total'] = __('Review Order After Order Total','nexter-ext');
-				$hooks['woocommerce_review_order_before_payment'] = __('Review Order Before Payment','nexter-ext');
-				$hooks['woocommerce_review_order_before_submit'] = __('Review Order Before Submit','nexter-ext');
-				$hooks['woocommerce_review_order_after_submit'] = __('Review Order After Submit','nexter-ext');
-				$hooks['woocommerce_review_order_after_payment'] = __('Review Order After Payment','nexter-ext');
-				$hooks['woocommerce_checkout_after_order_review'] = __('Checkout After Order Review','nexter-ext');
-				$hooks['woocommerce_after_checkout_form'] = __('After Checkout Form','nexter-ext');
+				$hooks['woocommerce_before_checkout_form'] = __('Before Checkout Form','nexter-extension');
+				$hooks['woocommerce_checkout_before_customer_details'] = __('Checkout Before Customer Details','nexter-extension');
+				$hooks['woocommerce_before_checkout_billing_form'] = __('Before Checkout Billing Form','nexter-extension');
+				$hooks['woocommerce_after_checkout_billing_form'] = __('After Checkout Billing Form','nexter-extension');
+				$hooks['woocommerce_before_checkout_shipping_form'] = __('Before Checkout Shipping Form','nexter-extension');
+				$hooks['woocommerce_after_checkout_shipping_form'] = __('After Checkout Shipping Form','nexter-extension');
+				$hooks['woocommerce_before_order_notes'] = __('Before Order Notes','nexter-extension');
+				$hooks['woocommerce_after_order_notes'] = __('After Order Notes','nexter-extension');
+				$hooks['woocommerce_checkout_after_customer_details'] = __('Checkout After Customer Details','nexter-extension');
+				$hooks['woocommerce_checkout_before_order_review'] = __('Checkout Before Order Review','nexter-extension');
+				$hooks['woocommerce_review_order_before_cart_contents'] = __('Review Order Before Cart Contents','nexter-extension');
+				$hooks['woocommerce_review_order_after_cart_contents'] = __('Review Order After Cart Contents','nexter-extension');
+				$hooks['woocommerce_review_order_before_shipping'] = __('Review Order Before Shipping','nexter-extension');
+				$hooks['woocommerce_review_order_after_shipping'] = __('Review Order After Shipping','nexter-extension');
+				$hooks['woocommerce_review_order_before_order_total'] = __('Review Order Before Order Total','nexter-extension');
+				$hooks['woocommerce_review_order_after_order_total'] = __('Review Order After Order Total','nexter-extension');
+				$hooks['woocommerce_review_order_before_payment'] = __('Review Order Before Payment','nexter-extension');
+				$hooks['woocommerce_review_order_before_submit'] = __('Review Order Before Submit','nexter-extension');
+				$hooks['woocommerce_review_order_after_submit'] = __('Review Order After Submit','nexter-extension');
+				$hooks['woocommerce_review_order_after_payment'] = __('Review Order After Payment','nexter-extension');
+				$hooks['woocommerce_checkout_after_order_review'] = __('Checkout After Order Review','nexter-extension');
+				$hooks['woocommerce_after_checkout_form'] = __('After Checkout Form','nexter-extension');
 
 				//Cart Page Hooks
-				$hooks['woocommerce_before_cart'] = __('Before Cart','nexter-ext');
-				$hooks['woocommerce_before_cart_table'] = __('Before Cart Table','nexter-ext');
-				$hooks['woocommerce_before_cart_contents'] = __('Before Cart Contents','nexter-ext');
-				$hooks['woocommerce_cart_contents'] = __('Cart Contents','nexter-ext');
-				$hooks['woocommerce_cart_coupon'] = __('Cart Coupon','nexter-ext');
-				$hooks['woocommerce_after_cart_contents'] = __('After Cart Contents','nexter-ext');
-				$hooks['woocommerce_after_cart_table'] = __('After Cart Table','nexter-ext');
-				$hooks['woocommerce_cart_collaterals'] = __('Cart Collaterals','nexter-ext');
-				$hooks['woocommerce_before_cart_totals'] = __('Before Cart Totals','nexter-ext');
-				$hooks['woocommerce_cart_totals_before_shipping'] = __('Cart Totals Before Shipping','nexter-ext');
-				$hooks['woocommerce_before_shipping_calculator'] = __('Before Shipping Calculator','nexter-ext');
-				$hooks['woocommerce_after_shipping_calculator'] = __('After Shipping Calculator','nexter-ext');
-				$hooks['woocommerce_cart_totals_after_shipping'] = __('Cart Totals After Shipping','nexter-ext');
-				$hooks['woocommerce_cart_totals_before_order_total'] = __('Cart Totals Before Order Total','nexter-ext');
-				$hooks['woocommerce_cart_totals_after_order_total'] = __('Cart Totals After Order Total','nexter-ext');
-				$hooks['woocommerce_proceed_to_checkout'] = __('Proceed To Checkout','nexter-ext');
-				$hooks['woocommerce_after_cart_totals'] = __('After Cart Totals','nexter-ext');
-				$hooks['woocommerce_after_cart'] = __('After Cart','nexter-ext');
+				$hooks['woocommerce_before_cart'] = __('Before Cart','nexter-extension');
+				$hooks['woocommerce_before_cart_table'] = __('Before Cart Table','nexter-extension');
+				$hooks['woocommerce_before_cart_contents'] = __('Before Cart Contents','nexter-extension');
+				$hooks['woocommerce_cart_contents'] = __('Cart Contents','nexter-extension');
+				$hooks['woocommerce_cart_coupon'] = __('Cart Coupon','nexter-extension');
+				$hooks['woocommerce_after_cart_contents'] = __('After Cart Contents','nexter-extension');
+				$hooks['woocommerce_after_cart_table'] = __('After Cart Table','nexter-extension');
+				$hooks['woocommerce_cart_collaterals'] = __('Cart Collaterals','nexter-extension');
+				$hooks['woocommerce_before_cart_totals'] = __('Before Cart Totals','nexter-extension');
+				$hooks['woocommerce_cart_totals_before_shipping'] = __('Cart Totals Before Shipping','nexter-extension');
+				$hooks['woocommerce_before_shipping_calculator'] = __('Before Shipping Calculator','nexter-extension');
+				$hooks['woocommerce_after_shipping_calculator'] = __('After Shipping Calculator','nexter-extension');
+				$hooks['woocommerce_cart_totals_after_shipping'] = __('Cart Totals After Shipping','nexter-extension');
+				$hooks['woocommerce_cart_totals_before_order_total'] = __('Cart Totals Before Order Total','nexter-extension');
+				$hooks['woocommerce_cart_totals_after_order_total'] = __('Cart Totals After Order Total','nexter-extension');
+				$hooks['woocommerce_proceed_to_checkout'] = __('Proceed To Checkout','nexter-extension');
+				$hooks['woocommerce_after_cart_totals'] = __('After Cart Totals','nexter-extension');
+				$hooks['woocommerce_after_cart'] = __('After Cart','nexter-extension');
 			}
 
 			return apply_filters( 'nexter_sections_hooks_list', $hooks );
@@ -762,7 +768,7 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 			$get_data = get_option( $nxt_option );
 			if( $get_data === false ){
 				$get_data = ['saved' => strtotime('now'), 'singular_updated' => '','archives_updated' => '','sections_updated' => ''];
-				add_option( $nxt_option, $get_data, false );
+				add_option( $nxt_option, $get_data );
 			}
 
 			if(!empty($get_data) && isset($get_data['saved']) && isset($get_data['singular_updated']) && $get_data['saved'] !== $get_data['singular_updated']){
@@ -773,8 +779,13 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 				$posts  = $wpdb->get_results( $sql1 );	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 	
 				foreach ( $posts as $post_data ) {
+					$getPostStatus = get_post_meta($post_data->ID , 'nxt_build_status', true);
+					if($getPostStatus==0 && $getPostStatus!=''){
+						continue;
+					}
 					$get_layout_type = get_post_meta( $post_data->ID , 'nxt-hooks-layout-pages', false );
-					if(!empty($get_layout_type) && !empty($get_layout_type[0]) && 'singular' == $get_layout_type[0]){
+					$hook_layout_sections = get_post_meta(  $post_data->ID, 'nxt-hooks-layout-sections', false );
+					if((!empty($get_layout_type) && !empty($get_layout_type[0]) && 'singular' == $get_layout_type[0]) || (!empty($hook_layout_sections) && !empty($hook_layout_sections[0]) && 'singular' == $hook_layout_sections[0])){
 						self::$current_singular_data[ $type ][ $post_data->ID ] = array(
 							'id'       => $post_data->ID,
 							'template_group' => maybe_unserialize( $post_data->meta_value ),
@@ -787,7 +798,7 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 			}else if( isset($get_data[ 'singular' ]) && !empty($get_data[ 'singular' ])){
 				self::$current_singular_data[ $type ] = $get_data[ 'singular' ];
 			}
-			
+
 			return apply_filters( 'nexter_get_singluar_posts_by_conditions', self::$current_singular_data[ $type ], $type );
 		}
 		
@@ -808,17 +819,18 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 
 			$current_page_type_name_archive = $this->get_check_current_page_type_name('archive');
 
+			
 			self::$current_archive_data[ $type ] = array();
-
+			
 			$options['current_post_id'] = self::$current_archive_data['ID'];
-
+			
 			$archive_group = isset( $options['archive_group'] ) ? esc_sql( $options['archive_group'] ) : '';
 
 			$nxt_option = 'nxt-build-get-data';
 			$get_data = get_option( $nxt_option );
 			if( $get_data === false ){
 				$get_data = ['saved' => strtotime('now'), 'singular_updated' => '','archives_updated' => '','sections_updated' => ''];
-				add_option( $nxt_option, $get_data, false );
+				add_option( $nxt_option, $get_data );
 			}
 			
 			if(!empty($get_data) && isset($get_data['saved']) && isset($get_data['archives_updated']) && $get_data['saved'] !== $get_data['archives_updated']){
@@ -829,8 +841,15 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 				$posts  = $wpdb->get_results( $sql2 );	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
 				foreach ( $posts as $post_data ) {
+
+					$getPostStatus = get_post_meta($post_data->ID , 'nxt_build_status', true);
+					if($getPostStatus==0 && $getPostStatus!=''){
+						continue;
+					}
+	
 					$get_layout_type = get_post_meta( $post_data->ID , 'nxt-hooks-layout-pages', false );
-					if( !empty($get_layout_type) && !empty($get_layout_type[0]) && 'archives' == $get_layout_type[0]){
+					$hook_layout_sections = get_post_meta( $post_data->ID, 'nxt-hooks-layout-sections', false );
+					if( (!empty($get_layout_type) && !empty($get_layout_type[0]) && 'archives' == $get_layout_type[0]) || (!empty($hook_layout_sections) && !empty($hook_layout_sections[0]) && 'archives' == $hook_layout_sections[0])){
 						self::$current_archive_data[ $type ][ $post_data->ID ] = array(
 							'id'       => $post_data->ID,
 							'template_group' => maybe_unserialize( $post_data->meta_value ),
@@ -845,7 +864,7 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 			}else if( isset($get_data[ 'archives' ]) && !empty($get_data[ 'archives' ])){
 				self::$current_archive_data[ $type ] = $get_data[ 'archives' ];
 			}
-			
+						
 			return apply_filters( 'nexter_get_archive_posts_by_conditions', self::$current_archive_data[ $type ], $type );
 		}
 		
@@ -956,19 +975,28 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 				$current_post_id = get_the_id();
 			}
 			
-			$sqlquery = "SELECT p.ID, pm.meta_value FROM {$wpdb->postmeta} as pm INNER JOIN {$wpdb->posts} as p ON pm.post_id = p.ID WHERE (pm.meta_key = %s OR pm.meta_key = 'nxt-hooks-layout-pages') AND p.post_type = %s AND p.post_status = 'publish' AND ( {$join_meta} ) ORDER BY p.post_date DESC";
+			$sqlquery = "SELECT p.ID, pm.meta_value FROM {$wpdb->postmeta} as pm INNER JOIN {$wpdb->posts} as p ON pm.post_id = p.ID WHERE (pm.meta_key = %s OR pm.meta_key = 'nxt-hooks-layout-pages' OR pm.meta_key = 'nxt-hooks-layout-sections') AND p.post_type = %s AND p.post_status = 'publish' AND ( {$join_meta} ) ORDER BY p.post_date DESC";
 			
+			if($type==='nxt-code-snippet'){
+				$sqlquery = "SELECT p.ID, pm.meta_value FROM {$wpdb->postmeta} as pm INNER JOIN {$wpdb->posts} as p ON pm.post_id = p.ID WHERE (pm.meta_key = %s) AND p.post_type = %s AND p.post_status = 'publish' AND ( {$join_meta} ) ORDER BY p.post_date DESC";
+			}
 			$sql3 = $wpdb->prepare( $sqlquery , $location, $type );	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 			
 			$posts  = $wpdb->get_results( $sql3 );	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-			
+
 			if( !empty($posts) ){
 				foreach ( $posts as $post_data ) {
+					
+            		$getPostStatus = get_post_meta($post_data->ID , 'nxt_build_status', true);
+					if($getPostStatus==0 && $getPostStatus!=''){
+						continue;
+					}
 					if(function_exists('pll_get_post')){
 						if(pll_get_post( $post_data->ID ) != $post_data->ID){
 							continue;
 						}
 					}
+					
 					$priority = 0;
 
 					$specific_value=[];
@@ -991,7 +1019,14 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 					if(!is_admin() && !empty($post_meta_value) && is_array($post_meta_value)){
 						$check_condition = false;
 						//standard match
-						$standard_value = preg_grep('/^standard-/i', $post_meta_value);
+
+						if( $type == 'nxt-code-snippet' ){
+							$post_col = array_column($post_meta_value, 'value');
+							$standard_value = preg_grep('/^standard-/i', $post_col);
+						}else{
+							$standard_value = preg_grep('/^standard-/i', $post_meta_value);
+						}
+						
 						if(!empty($standard_value)){
 							$priority = 5;
 							$check_condition = true;
@@ -999,8 +1034,13 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 						
 						//post type match
 						if ( is_object( $queried_object ) && isset($queried_object->post_type)) {
-							$match_value = '/^'.$queried_object->post_type.'|entire$/i';
-							$post_type_match = preg_grep($match_value, $post_meta_value);
+							$match_value = '/^'.$queried_object->post_type.'\|entire$/i';
+							if( $type == 'nxt-code-snippet' ){
+								$post_col = array_column($post_meta_value, 'value');
+								$post_type_match = preg_grep($match_value, $post_col);
+							}else{
+								$post_type_match = preg_grep($match_value, $post_meta_value);
+							}
 							if(!empty($post_type_match)){
 								$priority = 10;
 								$check_condition = true;
@@ -1010,8 +1050,13 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 						//archive post type
 						$archive_post_type = get_post_type();
 						if((is_tax() || is_category() || is_tag()) && !empty($archive_post_type) && isset($queried_object->taxonomy)){
-							$match_value = '/^'.$archive_post_type.'|entire|tax-archive|'.$queried_object->taxonomy.'$/i';
-							$post_type_match = preg_grep($match_value, $post_meta_value);
+							$match_value = '/^'.$archive_post_type.'\|entire|tax-archive|'.$queried_object->taxonomy.'$/i';
+							if( $type == 'nxt-code-snippet' ){
+								$post_col = array_column($post_meta_value, 'value');
+								$post_type_match = preg_grep($match_value, $post_col);
+							}else{
+								$post_type_match = preg_grep($match_value, $post_meta_value);
+							}
 							if(!empty($post_type_match)){
 								$priority = 15;
 								$check_condition = true;
@@ -1019,12 +1064,25 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 						}
 
 						//pages match
-						$check_value = preg_grep('/^default-/i', $post_meta_value);
+						if( $type == 'nxt-code-snippet' ){
+							$post_col = array_column($post_meta_value, 'value');
+							$check_value = preg_grep('/^default-/i', $post_col);
+						}else{
+							$check_value = preg_grep('/^default-/i', $post_meta_value);
+						}
+						
 						if(!empty($check_value)){
 							$priority = 15;
 							$check_condition = true;
 						}
 						
+						$code_condition = [];
+						$get_sub_field = [];
+						if(isset($post_meta_value[0]) && isset($post_meta_value[0]['value'])){
+							$code_condition = array_column($post_meta_value, 'value');
+							$get_sub_field = get_post_meta( $post_data->ID, 'nxt-in-sub-rule', true );
+						}
+
 						//Particular Posts/Pages Match
 						if(!empty($post_meta_value) && in_array('particular-post',$post_meta_value) ){
 						
@@ -1074,11 +1132,61 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 							}else{
 								$display_specific = false;
 							}
+						}else if(!empty($code_condition) && in_array('particular-post',$code_condition) && !empty($get_sub_field) && isset($get_sub_field['specific'])){
+							$specific_value = array_column($get_sub_field['specific'], 'value');
+							
+							if(is_object( $queried_object )){
+								if(!empty($specific_value) && isset($queried_object->ID)){
+									
+									$match = '/post-'.$queried_object->ID.'$/i';
+									$check_value = preg_grep($match, $specific_value);
+									$post_type_match =[];
+									if ( is_object( $queried_object ) && isset($queried_object->post_type)) {
+										$match_value = '/^'.$queried_object->post_type.'|entire$\/i/';
+										$post_type_match = preg_grep($match_value, $code_condition);
+									}
+
+									if(isset($queried_object->post_type)){
+										$taxonomies = get_object_taxonomies( $queried_object->post_type );
+										$terms = wp_get_post_terms( $queried_object->ID, $taxonomies );
+										if(!empty($terms)){
+											foreach ( $terms as $key => $term ) {
+												if(in_array("taxonomy-{$term->term_id}-singular-{$term->taxonomy}", $specific_value)){
+													$check_value = true;
+												}
+											}
+										}
+									}
+									
+									if($check_value || $post_type_match){
+										$priority = 20;
+										$display_specific = true;
+									}else{
+										$display_specific = false;
+									}
+								}else if(!empty($specific_value) && isset($queried_object->term_id)){
+									$match = '/taxonomy-'.$queried_object->term_id.'$/i';
+									$check_value = preg_grep($match, $specific_value);
+									if($check_value){
+										$priority = 20;
+										$display_specific = true;
+									}else{
+										$display_specific = false;
+									}
+								}else{
+									$display_specific = false;
+								}
+							}else{
+								$display_specific = false;
+							}
 						}
 
-						//Date & Time (Day/Time/Date)						
+						//Date & Time (Day/Time/Date)
 						if(!empty($post_meta_value) && in_array('set-day',$post_meta_value)){
 							$set_day   = get_post_meta( $post_data->ID, 'nxt-hooks-layout-set-day', true );
+							$check_day = self::check_condition_set_day( $set_day, $check_day );
+						}else if(!empty($code_condition) && in_array('set-day',$code_condition) && !empty($get_sub_field) && isset($get_sub_field['set-day'])){
+							$set_day = array_column($get_sub_field['set-day'], 'value');
 							$check_day = self::check_condition_set_day( $set_day, $check_day );
 						}
 						
@@ -1086,11 +1194,17 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 						if(!empty($post_meta_value) && in_array('os',$post_meta_value)) {
 							$set_os  = get_post_meta( $post_data->ID, 'nxt-hooks-layout-os', true );
 							$check_os = self::check_condition_os($set_os, $check_os);
+						}else if(!empty($code_condition) && in_array('os',$code_condition) && !empty($get_sub_field) && isset($get_sub_field['os'])){
+							$set_os  = array_column($get_sub_field['os'], 'value');
+							$check_os = self::check_condition_os($set_os, $check_os);
 						}
-						
+
 						//Browser
 						if(!empty($post_meta_value) && in_array('browser',$post_meta_value)){
 							$set_browser  = get_post_meta( $post_data->ID, 'nxt-hooks-layout-browser', true );
+							$check_browser = self::check_condition_browser($set_browser, $check_browser );
+						}else if(!empty($code_condition) && in_array('browser',$code_condition) && !empty($get_sub_field) && isset($get_sub_field['browser'])){
+							$set_browser = array_column($get_sub_field['browser'], 'value');
 							$check_browser = self::check_condition_browser($set_browser, $check_browser );
 						}
 						
@@ -1098,11 +1212,17 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 						if(!empty($post_meta_value) && in_array('login-status',$post_meta_value)){
 							$set_login_status  = get_post_meta( $post_data->ID, 'nxt-hooks-layout-login-status', true );
 							$check_login_status = self::check_condition_login_status($set_login_status, $check_login_status );
+						}else if(!empty($code_condition) && in_array('login-status',$code_condition) && !empty($get_sub_field) && isset($get_sub_field['login-status'])){
+							$set_login_status = array_column($get_sub_field['login-status'], 'value');
+							$check_login_status = self::check_condition_login_status($set_login_status, $check_login_status );
 						}
 						
 						//User Roles
 						if(!empty($post_meta_value) && in_array('user-roles',$post_meta_value)){
 							$set_user_roles  = get_post_meta( $post_data->ID, 'nxt-hooks-layout-user-roles', true );
+							$check_user_roles = self::check_condition_user_roles($set_user_roles, $check_user_roles );
+						}else if(!empty($code_condition) && in_array('user-roles',$code_condition) && !empty($get_sub_field) && isset($get_sub_field['user-roles'])){
+							$set_user_roles = array_column($get_sub_field['user-roles'], 'value');
 							$check_user_roles = self::check_condition_user_roles($set_user_roles, $check_user_roles );
 						}
 
@@ -1111,18 +1231,20 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 						}
 					}
 					
-					self::$current_load_page_data[ $type ][ $post_data->ID ] = array(
-						'id'       => $post_data->ID,
-						'location' => maybe_unserialize( $post_data->meta_value ),
-						'specific'	=> ($specific_value) ? $specific_value : [],
-						'set-day'	=> ($set_day) ? $set_day : [],
-						'os'		=> ($set_os) ? $set_os : [],
-						'browser'	=> ($set_browser) ? $set_browser : [],
-						'login-status'	=> ($set_login_status) ? $set_login_status : [],
-						'user-roles'	=> ($set_user_roles) ? $set_user_roles : [],
-						'priority' => ($priority) ? $priority : 0,
-						'condition' => ($display_specific) ? $display_specific : 0,
-					);
+					if(!empty($check_day) && !empty($check_os) && !empty($check_browser) && !empty($check_login_status) && !empty($check_user_roles) && !empty($display_specific)){
+						self::$current_load_page_data[ $type ][ $post_data->ID ] = array(
+							'id'       => $post_data->ID,
+							'location' => maybe_unserialize( $post_data->meta_value ),
+							'specific'	=> ($specific_value) ? $specific_value : [],
+							'set-day'	=> ($set_day) ? $set_day : [],
+							'os'		=> ($set_os) ? $set_os : [],
+							'browser'	=> ($set_browser) ? $set_browser : [],
+							'login-status'	=> ($set_login_status) ? $set_login_status : [],
+							'user-roles'	=> ($set_user_roles) ? $set_user_roles : [],
+							'priority' => ($priority) ? $priority : 0,
+							'condition' => ($display_specific) ? $display_specific : 0,
+						);
+					}
 					
 					if( defined('NXT_PRO_EXT_VER') && version_compare( NXT_PRO_EXT_VER, '2.0.4', '>' ) ){
 						self::$current_load_page_data = apply_filters('nexter_advanced_section_current_page_conditions', self::$current_load_page_data, $type, $post_data, $priority);
@@ -1152,16 +1274,30 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 
 				$exclusion_rules = get_post_meta( $c_post_id, $exclusion, true );
 				if( !empty($exclusion_rules) && !empty($c_post_id)){
-					if( !empty($exclusion_rules) && in_array('particular-post',$exclusion_rules) ){
-						$exclusion_rules['specific']   = get_post_meta( $c_post_id, 'nxt-hooks-layout-exclude-specific', true );
+					$code_condition = [];
+					$get_sub_field = [];
+					if(isset($exclusion_rules[0]) && isset($exclusion_rules[0]['value'])){
+						$code_condition = array_column($exclusion_rules, 'value');
+						$get_sub_field = get_post_meta( $c_post_id, 'nxt-ex-sub-rule', true );
 					}
+					
+					if(!empty($code_condition) && in_array('particular-post',$code_condition) && !empty($get_sub_field) && isset($get_sub_field['specific'])){
+						$exclusion_rules['specific'] = array_column($get_sub_field['specific'], 'value');
+					}else if( !empty($exclusion_rules) && in_array('particular-post',$exclusion_rules) ){
+						$exclusion_rules['specific'] = get_post_meta( $c_post_id, 'nxt-hooks-layout-exclude-specific', true );
+					}
+
 					$exclude_array = [ 'set-day', 'os', 'browser', 'login-status', 'user-roles' ];
+					
 					foreach ($exclude_array as $exclude) {
-						if( !empty($exclusion_rules) && in_array($exclude, $exclusion_rules) ){
+						if(!empty($code_condition) && !empty($get_sub_field) && isset($get_sub_field[$exclude]) ){
+							$exclusion_rules[$exclude] = array_column($get_sub_field[$exclude], 'value');
+						}else if( !empty($exclusion_rules) && in_array($exclude, $exclusion_rules) ){
 							$exclusion_rules[$exclude]   = get_post_meta( $c_post_id, 'nxt-hooks-layout-exclude-'.$exclude, true );
 						}
 					}
 				}
+				
 				$exclusion_rules = apply_filters( 'nexter_advanced_section_exclude_condition', $exclusion_rules, $c_post_id );
 				
 				$exclude_id = $this->check_layout_display_inc_exc_rules( $current_post_id, $exclusion_rules );
@@ -1292,12 +1428,12 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 
 						$data[] = array(
 							'id'   => 'taxonomy-' . $term->term_id,
-							'text' => $term->name . __( ' archive page', 'nexter-ext' ),
+							'text' => $term->name . __( ' archive page', 'nexter-extension' ),
 						);
 
 						$data[] = array(
 							'id'   => 'taxonomy-' . $term->term_id . '-singular-' . $taxonomy->name,
-							'text' => __( 'All singulars  ', 'nexter-ext' ) . $term->name,
+							'text' => __( 'All singulars  ', 'nexter-extension' ) . $term->name,
 						);
 
 					}
@@ -1352,44 +1488,44 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 			if(!empty($rule)){
 				if($rule == 'set-day'){
 					$options_list = array(
-						'1' => __( 'Monday', 'nexter-ext' ),
-						'2' => __( 'Tuesday', 'nexter-ext' ),
-						'3' => __( 'Wednesday', 'nexter-ext' ),
-						'4' => __( 'Thursday', 'nexter-ext' ),
-						'5' => __( 'Friday', 'nexter-ext' ),
-						'6' => __( 'Saturday', 'nexter-ext' ),
-						'7' => __( 'Sunday', 'nexter-ext' ),
+						'1' => __( 'Monday', 'nexter-extension' ),
+						'2' => __( 'Tuesday', 'nexter-extension' ),
+						'3' => __( 'Wednesday', 'nexter-extension' ),
+						'4' => __( 'Thursday', 'nexter-extension' ),
+						'5' => __( 'Friday', 'nexter-extension' ),
+						'6' => __( 'Saturday', 'nexter-extension' ),
+						'7' => __( 'Sunday', 'nexter-extension' ),
 					);
 				}
 				if($rule == 'os'){
 					$options_list = array(
-						'iphone' 		=> __( 'iPhone', 'nexter-ext' ),
-						'windows' 		=> __( 'Windows', 'nexter-ext' ), 
-						'open_bsd'		=> __( 'OpenBSD', 'nexter-ext' ), 
-						'sun_os'    	=> __( 'SunOS', 'nexter-ext' ), 
-						'linux'     	=> __( 'Linux', 'nexter-ext' ), 
-						'safari'    	=> __( 'Safari', 'nexter-ext' ), 
-						'mac_os'    	=> __( 'Mac OS', 'nexter-ext' ), 
-						'qnx'       	=> __( 'QNX', 'nexter-ext' ), 
-						'beos'      	=> __( 'BeOS', 'nexter-ext' ), 
-						'os2'       	=> __( 'OS/2', 'nexter-ext' ), 
-						'search_bot'	=> __( 'Search Bot', 'nexter-ext' ), 
+						'iphone' 		=> __( 'iPhone', 'nexter-extension' ),
+						'windows' 		=> __( 'Windows', 'nexter-extension' ), 
+						'open_bsd'		=> __( 'OpenBSD', 'nexter-extension' ), 
+						'sun_os'    	=> __( 'SunOS', 'nexter-extension' ), 
+						'linux'     	=> __( 'Linux', 'nexter-extension' ), 
+						'safari'    	=> __( 'Safari', 'nexter-extension' ), 
+						'mac_os'    	=> __( 'Mac OS', 'nexter-extension' ), 
+						'qnx'       	=> __( 'QNX', 'nexter-extension' ), 
+						'beos'      	=> __( 'BeOS', 'nexter-extension' ), 
+						'os2'       	=> __( 'OS/2', 'nexter-extension' ), 
+						'search_bot'	=> __( 'Search Bot', 'nexter-extension' ), 
 					);
 				}
 				if($rule == 'browser'){
 					$options_list = array(
-						'ie'			=> __( 'Internet Explorer', 'nexter-ext' ),
-						'firefox'		=> __( 'Mozilla Firefox', 'nexter-ext' ),
-						'chrome'		=> __( 'Google Chrome', 'nexter-ext' ),
-						'opera_mini'	=> __( 'Opera Mini', 'nexter-ext' ),
-						'opera'			=> __( 'Opera', 'nexter-ext' ),
-						'safari'		=> __( 'Safari', 'nexter-ext' ),
+						'ie'			=> __( 'Internet Explorer', 'nexter-extension' ),
+						'firefox'		=> __( 'Mozilla Firefox', 'nexter-extension' ),
+						'chrome'		=> __( 'Google Chrome', 'nexter-extension' ),
+						'opera_mini'	=> __( 'Opera Mini', 'nexter-extension' ),
+						'opera'			=> __( 'Opera', 'nexter-extension' ),
+						'safari'		=> __( 'Safari', 'nexter-extension' ),
 					);
 				}
 				if($rule == 'login-status'){
 					$options_list = array(
-						'logged-in'			=> __( 'Logged In', 'nexter-ext' ),
-						'logged-out'		=> __( 'Logged Out', 'nexter-ext' ),
+						'logged-in'			=> __( 'Logged In', 'nexter-extension' ),
+						'logged-out'		=> __( 'Logged Out', 'nexter-extension' ),
 					);
 				}
 				if($rule == 'user-roles'){
@@ -1416,9 +1552,11 @@ Nexter_Builder_Display_Conditional_Rules::get_instance();
 /**
  * Get Specific Posts Query Display Rules
  */
-function nexter_get_posts_query_specific( $field ){
-	$specific_id = $field->args('id');
-	$specific_value = get_post_meta( get_the_ID(), $specific_id, true );
+function nexter_get_posts_query_specific( $post_id = 0, $meta_key = '' ){
+	$specific_value = 'none';
+	if(!empty($meta_key) && !empty($post_id)){
+		$specific_value = get_post_meta( get_the_ID(), $meta_key, true );
+	}
 	
 	$data_query = Nexter_Builder_Display_Conditional_Rules::nexter_get_particular_posts_query();
 	
@@ -1432,7 +1570,7 @@ function nexter_get_posts_query_specific( $field ){
 			}
 		}
 	}else{		
-		$options['none'] = esc_html__('---Select---', 'nexter-ext');
+		$options['none'] = esc_html__('---Select---', 'nexter-extension');
 	}
 	
 	return $options;

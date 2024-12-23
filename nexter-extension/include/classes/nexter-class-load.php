@@ -80,7 +80,7 @@ if ( ! class_exists( 'Nexter_Class_Load' ) ) {
 				'meta'	=> array(
 					'class' => 'nxt_edit_template',
 				),
-				'title' => esc_html__( 'Template List', 'nexter-ext' ),
+				'title' => esc_html__( 'Template List', 'nexter-extension' ),
 				
 			] );
 		}
@@ -144,7 +144,7 @@ if ( ! class_exists( 'Nexter_Class_Load' ) ) {
 				'admin-bar',
 				null,
 				[ 'nxt-admin-bar' ],
-				false,
+				NEXTER_EXT_VER,
 				true
 			);
 			
@@ -164,7 +164,6 @@ if ( ! class_exists( 'Nexter_Class_Load' ) ) {
 							$template_list[$post_id]['post_type_name'] = ($post_type_obj && isset($post_type_obj->labels) && isset($post_type_obj->labels->singular_name)) ? $post_type_obj->labels->singular_name : '';
 							
 							if($posts->post_type==='nxt_builder'){
-							
 								if ( get_post_meta( $post_id, 'nxt-hooks-layout', true ) ){
 									$layout = get_post_meta( $post_id, 'nxt-hooks-layout', true );
 									$type = '';
@@ -179,6 +178,11 @@ if ( ! class_exists( 'Nexter_Class_Load' ) ) {
 									}
 									if(isset($template_list[$post_id])){
 										$template_list[$post_id]['nexter_layout'] = $layout;
+										$template_list[$post_id]['nexter_type'] = $type;
+									}
+								}else if(get_post_meta( $post_id, 'nxt-hooks-layout-sections', true )){
+									$type = get_post_meta( $post_id, 'nxt-hooks-layout-sections', true );
+									if(isset($template_list[$post_id])){
 										$template_list[$post_id]['nexter_type'] = $type;
 									}
 								}

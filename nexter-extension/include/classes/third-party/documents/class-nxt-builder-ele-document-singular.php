@@ -18,7 +18,7 @@ class Nexter_Builder_Ele_Document extends Nexter_Builder_Ele_Document_Base {
 	}
 
 	public static function get_title() {
-		return esc_html__( 'Nexter Singular Template', 'nexter' );
+		return esc_html__( 'Nexter Singular Template', 'nexter-extension' );
 	}
 	
 	public function get_wp_preview_url() {
