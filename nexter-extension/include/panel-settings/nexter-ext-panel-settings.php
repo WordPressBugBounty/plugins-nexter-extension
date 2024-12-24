@@ -477,7 +477,9 @@ if ( ! class_exists( 'Nexter_Ext_Panel_Settings' ) ) {
 			}
             
             wp_enqueue_style( 'nxt-panel-settings', NEXTER_EXT_URL .'assets/css/admin/nexter-admin'. $minified .'.css', array(), NEXTER_EXT_VER );
-            if ( 'post-new.php' != $hook_suffix && 'post.php' != $hook_suffix && NXT_BUILD_POST == get_post_type()) {
+            
+            // if ( 'post-new.php' != $hook_suffix && 'post.php' != $hook_suffix && NXT_BUILD_POST == get_post_type()) {
+            if (( 'post-new.php' != $hook_suffix && 'post.php' != $hook_suffix && 'edit.php' == $hook_suffix ) && (( isset( $_GET['post_type'] ) && 'nxt_builder' == $_GET['post_type'] ) || ( defined( 'NXT_BUILD_POST' ) && NXT_BUILD_POST == get_post_type() ))){
                 wp_enqueue_style( 'nexter-select-css', NEXTER_EXT_URL .'assets/css/extra/select2'. $minified .'.css', array(), NEXTER_EXT_VER );
 			    wp_enqueue_script( 'nexter-select-js', NEXTER_EXT_URL . 'assets/js/extra/select2'. $minified .'.js', array(), NEXTER_EXT_VER, false );
             }
