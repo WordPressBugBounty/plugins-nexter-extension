@@ -115,24 +115,23 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 		 * @since 1.0.4
 		 */
 		public function nexter_code_php_snippets_execute( $code, $catch_output = true ) {
-
 			if ( empty( $code ) ) {
 				return false;
 			}
 			$code = html_entity_decode(htmlspecialchars_decode($code));
-
+			
 			if ( $catch_output ) {
 				ob_start();
 			}
+
 			// @codingStandardsIgnoreStart
-			
 			$result = eval( $code );
 			// @codingStandardsIgnoreEnd
 			
 			if ( $catch_output ) {
 				ob_end_clean();
 			}
-
+			
 			return $result;
 		}
 		
@@ -401,7 +400,7 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 
 				$get_data = get_option($cache_option);
 				if( $get_data === false ){
-					$value = ['saved' => strtotime('now'), 'singular_updated' => '','archives_updated' => '','sections_updated' => ''];
+					$value = ['saved' => strtotime('now'), 'singular_updated' => '','archives_updated' => '','sections_updated' => '','code_updated' => ''];
 					add_option( $cache_option, $value );
 				}else if(!empty($get_data)){
 					$get_data['saved'] = strtotime('now');
@@ -492,9 +491,9 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 					}
 				}
 
-				$status = isset($_POST['status']) ? filter_var(wp_unslash($_POST['status']), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) : false;
+				$status = isset($_POST['status']) ? rest_sanitize_boolean(wp_unslash($_POST['status'])) : false;
 				if(isset($status)){
-					$status = !empty($submit_error_log) ? 0 : 1;
+					$status = !empty($submit_error_log) ? 0 : $status;
 					update_post_meta( $post_id , 'nxt-code-status', $status ? 1 : 0 );
 				}
 
@@ -658,6 +657,13 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 				if ($post && $post->post_type === self::$snippet_type) {
 					$get_status = get_post_meta($post_id, 'nxt-code-status', true);
 					update_post_meta($post_id, 'nxt-code-status', !$get_status);
+					
+					$cache_option = 'nxt-build-get-data';
+					$get_data = get_option($cache_option);
+					if(!empty($get_data)){
+						$get_data['saved'] = strtotime('now');
+						update_option( $cache_option, $get_data, false );
+					}
 
 					wp_send_json_success(['status' => !$get_status, 'message' => 'Updated Status Successfully']);
 				} else {
@@ -846,12 +852,12 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 			$get_data = get_option( $nxt_option );
 			
 			if( $get_data === false ){
-				$get_data = ['saved' => strtotime('now'), 'singular_updated' => '','archives_updated' => '','sections_updated' => ''];
+				$get_data = ['saved' => strtotime('now'), 'singular_updated' => '','archives_updated' => '','sections_updated' => '','code_updated' => ''];
 				add_option( $nxt_option, $get_data );
 			}
-			
+
 			$posts = [];
-			if(!empty($get_data) && isset($get_data['saved']) && isset($get_data['sections_updated']) && $get_data['saved'] !== $get_data['sections_updated']){
+			if(!empty($get_data) && isset($get_data['saved']) && ((isset($get_data['code_updated']) && $get_data['saved'] !== $get_data['code_updated'])) || !isset($get_data['code_updated'])){
 				
 				$sqlquery = "SELECT p.ID, pm.meta_value FROM {$wpdb->postmeta} as pm INNER JOIN {$wpdb->posts} as p ON pm.post_id = p.ID WHERE (pm.meta_key = %s) AND p.post_type = %s AND p.post_status = 'publish' AND ( {$join_meta} ) ORDER BY p.post_date DESC";
 				
@@ -859,27 +865,31 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 				
 				$posts  = $wpdb->get_results( $sql3 ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
-				$get_data['sections_updated'] = $get_data['saved'];
+				$get_data['code_updated'] = $get_data['saved'];
 				$get_data[ 'code_snippet' ] = $posts;
 				update_option( $nxt_option, $get_data );
 
 			}else if( isset($get_data[ 'code_snippet' ]) && !empty($get_data[ 'code_snippet' ])){
 				$posts = $get_data[ 'code_snippet' ];
 			}
+			
 			$php_snippet_filter = apply_filters('nexter_php_codesnippet_execute',true);
 			if( !empty($posts) && !empty($php_snippet_filter)){
 				foreach ( $posts as $post_data ) {
-
+					
 					$get_layout_type = get_post_meta( $post_data->ID , $code_snippet, false );
 					
 					if(!empty($get_layout_type) && !empty($get_layout_type[0]) && 'php' == $get_layout_type[0]){
 						$post_id = isset($post_data->ID) ? $post_data->ID : '';
+						
 						if(!empty($post_id)){
+							$code_status = get_post_meta( $post_id, 'nxt-code-status', true );
+							
 							$authorID = get_post_field( 'post_author', $post_id );
 							$theAuthorDataRoles = get_userdata($authorID);
 							$theRolesAuthor = isset($theAuthorDataRoles->roles) ? $theAuthorDataRoles->roles : [];
 							
-							if ( in_array( 'administrator', $theRolesAuthor ) ) {
+							if ( in_array( 'administrator', $theRolesAuthor ) && !empty($code_status)) {
 								$php_code = get_post_meta( $post_id, 'nxt-php-code', true );
 								$code_execute = get_post_meta( $post_id, 'nxt-code-execute', true );
 								$code_hidden_execute = get_post_meta( $post_id, 'nxt-code-php-hidden-execute', true );
