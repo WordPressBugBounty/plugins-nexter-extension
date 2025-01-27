@@ -574,7 +574,7 @@ if ( ! class_exists( 'Nexter_Ext_Panel_Settings' ) ) {
                 'nexter_welcome'
             );
 
-            if(defined('NXT_VERSION') || defined('HELLO_ELEMENTOR_VERSION')){
+            if(defined('NXT_VERSION') || defined('HELLO_ELEMENTOR_VERSION') || defined('ASTRA_THEME_VERSION') || defined('GENERATE_VERSION') || defined('OCEANWP_THEME_VERSION') || defined('KADENCE_VERSION') || function_exists('blocksy_get_wp_theme') || defined('NEVE_VERSION')){
                 add_submenu_page(
                     'nexter_welcome',
                     __( 'Theme Builder', 'nexter-extension' ),

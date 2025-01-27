@@ -118,6 +118,7 @@ body.post-php .nxt-ext-setting-pop, body.post-php .nxt-ext-setting-pop:after {
 .post-type-nxt_builder .nxt-post-status-wrap label:active::after, .nxt-trans-header-inner label:active::after {
     height: 14px;
     width: 20px;
+    left: 15px !important;
 }
 
 .nxt-ext-pop-inner {
@@ -186,7 +187,7 @@ body.post-php .nxt-ext-setting-pop, body.post-php .nxt-ext-setting-pop:after {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 20px 0;
+    padding: 15px 0 50px;
     gap: 7px;
 }
 .nxt-temp-heading .temp-head-title {
@@ -220,7 +221,7 @@ body.post-php .nxt-ext-setting-pop, body.post-php .nxt-ext-setting-pop:after {
     padding: 50px 30px ;
 } */
 .nxt-common-cnt-wrap {
-    max-height: 300px;
+    max-height: 255px;
     overflow-y: auto;
     padding-right: 12px;
 }
@@ -448,7 +449,9 @@ a.nxt-temp-info:hover::before {
 .temp-action-btn:hover, .temp-next-button:hover, a.temp-create-btn:hover {
     color: #fff;
 }
-
+.nxt-hide.temp-action-btn {
+    display: none;
+}
 .nxt-footer-smart-bgcolor {
     display: none;
     align-items: center;
@@ -906,6 +909,7 @@ th.sortable a span, th.sorted a span {
     line-height: 15px;
     color: #040404;
     border: 1px solid #D9D9D9;
+    background: #F0F0F0;
     padding: 6px 12px;
     border-radius: 5px;
     box-shadow: 0px 2px 0px 0px #00000004;

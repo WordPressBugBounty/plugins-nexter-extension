@@ -19,6 +19,8 @@ if ( ! class_exists( 'Nexter_Builder_Sections_Conditional' ) ) {
 		 * Conditional Sections
 		 */
 		 public static $sections_ids =array();
+
+		 public static $section_get_type = [];
 		
 		/**
 		 *  Initiator
@@ -63,6 +65,15 @@ if ( ! class_exists( 'Nexter_Builder_Sections_Conditional' ) ) {
 				foreach ( self::$sections_ids as $post_id => $post_data ) {
 					$nxt_hooks_layout = get_post_meta( $post_id, 'nxt-hooks-layout', true );
 					$hook_layout_sections = get_post_meta(  $post_id, 'nxt-hooks-layout-sections', true );
+					$pages = [];
+					if(!empty($nxt_hooks_layout) && $nxt_hooks_layout=='pages'){
+						$pages = get_post_meta( $post_id, 'nxt-hooks-layout-pages', false );
+						if(!empty($pages) && in_array('page-404',$pages) && !is_404()){
+							continue;
+						}
+					}else if($hook_layout_sections=='page-404' && !is_404()){
+						continue;
+					}
 					if ( ((!empty($nxt_hooks_layout) && $nxt_hooks_layout!='none') || !empty($hook_layout_sections)) && class_exists( 'Nexter_Builder_Compatibility' ) ) {
 						$page_base_instance = Nexter_Builder_Compatibility::get_instance();
 						$post_id = apply_filters( 'wpml_object_id', $post_id, NXT_BUILD_POST, TRUE  );
@@ -154,6 +165,11 @@ if ( ! class_exists( 'Nexter_Builder_Sections_Conditional' ) ) {
 		 * @since 1.0.4
 		 */
 		public static function nexter_sections_condition_hooks($nxt_layout='', $sections_pages='' ) {
+			
+			if(!empty($sections_pages) && isset(self::$section_get_type[$sections_pages])){
+				return self::$section_get_type[$sections_pages];
+			}
+			
 			$get_result=array();
 			if( !empty(self::$sections_ids) ) {
 				foreach ( self::$sections_ids as $post_id => $post_data ) {
@@ -182,6 +198,10 @@ if ( ! class_exists( 'Nexter_Builder_Sections_Conditional' ) ) {
 						
 					}
 				}
+			}
+
+			if(!empty($sections_pages) && !isset(self::$section_get_type[$sections_pages])){
+				self::$section_get_type[$sections_pages] = $get_result;
 			}
 			
 			return $get_result;

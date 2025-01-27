@@ -170,21 +170,7 @@ if (!class_exists('Nexter_Builder_Hooks_Loader')) {
 				$layout = get_post_meta($post_id, 'nxt-hooks-layout-sections', true);
 				$sections_pages = '';
 				$nxt_type = (!empty($layout)) ? $layout : '';
-				if( $layout === 'header' ) {
-					$sections_pages = __('Header', 'nexter-extension');
-				}else if( $layout === 'footer' ){
-					$sections_pages = __('Footer', 'nexter-extension');
-				}else if( $layout === 'breadcrumb' ){
-					$sections_pages = __('Breadcrumb', 'nexter-extension');
-				}else if( $layout === 'hooks' ){
-					$sections_pages = __('Hooks', 'nexter-extension');
-				}else if( $layout === 'singular' ){
-					$sections_pages = __('Single Page', 'nexter-extension');
-				}else if( $layout === 'archives' ){
-					$sections_pages = __('Archive Page', 'nexter-extension');
-				}else if( $layout === 'page-404' ){
-					$sections_pages = __('404 Page', 'nexter-extension');
-				}else if(!empty($old_layout)){
+				if(!empty($old_layout)){
 					if($old_layout == 'sections'){
 						$sections_pages = get_post_meta($post_id, 'nxt-hooks-layout-sections', true);
 						$nxt_type = 'sections';
@@ -197,6 +183,22 @@ if (!class_exists('Nexter_Builder_Hooks_Loader')) {
 					}else{
 						$sections_pages = __('None', 'nexter-extension');
 					}
+				}else if( $layout === 'header' ) {
+					$sections_pages = __('Header', 'nexter-extension');
+				}else if( $layout === 'footer' ){
+					$sections_pages = __('Footer', 'nexter-extension');
+				}else if( $layout === 'breadcrumb' ){
+					$sections_pages = __('Breadcrumb', 'nexter-extension');
+				}else if( $layout === 'hooks' ){
+					$sections_pages = __('Hooks', 'nexter-extension');
+				}else if( $layout === 'singular' ){
+					$sections_pages = __('Singular', 'nexter-extension');
+				}else if( $layout === 'archives' ){
+					$sections_pages = __('Archive', 'nexter-extension');
+				}else if( $layout === 'page-404' ){
+					$sections_pages = __('404 Page', 'nexter-extension');
+				}else if( $layout === 'section' ){
+					$sections_pages = __('Section', 'nexter-extension');
 				}else{
 					$sections_pages = __('None', 'nexter-extension');
 				}
@@ -309,11 +311,13 @@ if (!class_exists('Nexter_Builder_Hooks_Loader')) {
 					}
 					$selectSType = $layout;
 				}
-
-				printf('<button class="nexter-conditions-action" data-post="'.esc_attr($post_id).'" data-type="'.esc_attr($selectType).'" data-subtype="'.esc_attr($selectSType).'">
-				<svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg" class="nexter-conditions-action-svg">
-					<path d="M8.42293 1.377C8.30181 1.2564 8.158 1.161 7.99981 1.09629C7.84161 1.03159 7.67216 0.998873 7.50125 1.00003C7.33034 1.00119 7.16135 1.0362 7.00404 1.10304C6.84673 1.16987 6.70423 1.26722 6.58476 1.38945L1.42936 6.54484L0.800049 8.99988L3.25508 8.37021L8.41048 3.21481C8.53274 3.0954 8.63012 2.95293 8.69698 2.79565C8.76384 2.63837 8.79886 2.4694 8.80002 2.2985C8.80118 2.12761 8.76845 1.95817 8.70372 1.8C8.63899 1.64183 8.54356 1.49806 8.42293 1.377V1.377Z" stroke-linecap="round" stroke-linejoin="round"/>
-				</svg>'.esc_attr("Edit", "nexter-extension").'</button>', 'nexter-extension');
+				if($selectType !='none' && $selectSType!='' && $selectSType!='none' && $selectSType!='section'){
+					printf('<button class="nexter-conditions-action" data-post="'.esc_attr($post_id).'" data-type="'.esc_attr($selectType).'" data-subtype="'.esc_attr($selectSType).'">
+					<svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg" class="nexter-conditions-action-svg">
+						<path d="M8.42293 1.377C8.30181 1.2564 8.158 1.161 7.99981 1.09629C7.84161 1.03159 7.67216 0.998873 7.50125 1.00003C7.33034 1.00119 7.16135 1.0362 7.00404 1.10304C6.84673 1.16987 6.70423 1.26722 6.58476 1.38945L1.42936 6.54484L0.800049 8.99988L3.25508 8.37021L8.41048 3.21481C8.53274 3.0954 8.63012 2.95293 8.69698 2.79565C8.76384 2.63837 8.79886 2.4694 8.80002 2.2985C8.80118 2.12761 8.76845 1.95817 8.70372 1.8C8.63899 1.64183 8.54356 1.49806 8.42293 1.377V1.377Z" stroke-linecap="round" stroke-linejoin="round"/>
+					</svg>'.esc_attr("Edit", "nexter-extension").'</button>', 'nexter-extension');
+				}
+				
 			} elseif ($column == 'author') {
 
 				printf('<div class="author-row-text-add" data-content="%s"></div>
@@ -324,21 +328,23 @@ if (!class_exists('Nexter_Builder_Hooks_Loader')) {
 				);
 
 			} elseif ($column == 'status') {
-
-				$meta_key = 'nxt_build_status';
-            	$getPostStatus = get_post_meta($post_id, $meta_key, true);
-				$check = 'checked';
-				if(!empty($getPostStatus)){
+				$sections_layout = get_post_meta($post_id, 'nxt-hooks-layout-sections', true);
+				if($sections_layout!='' && $sections_layout != 'section'){
+					$meta_key = 'nxt_build_status';
+					$getPostStatus = get_post_meta($post_id, $meta_key, true);
 					$check = 'checked';
-				}else if($getPostStatus==0){
-					$check = '';
+					if(!empty($getPostStatus)){
+						$check = 'checked';
+					}else if($getPostStatus==0){
+						$check = '';
+					}
+	
+					printf('<div class="nxt-post-status-wrap">
+								<input type="checkbox" class="nxt-post-status" name="nxt-post-'.esc_attr($post_id).'" id="nxt-post-'.esc_attr($post_id).'" value="'.esc_attr($post_id).'" '.$check.'> 
+							<label for="nxt-post-'.esc_attr($post_id).'"></label>
+							</div>', 'nexter-extension');
+	
 				}
-
-				printf('<div class="nxt-post-status-wrap">
-							<input type="checkbox" class="nxt-post-status" name="nxt-post-'.esc_attr($post_id).'" id="nxt-post-'.esc_attr($post_id).'" value="'.esc_attr($post_id).'" '.$check.'> 
-						<label for="nxt-post-'.esc_attr($post_id).'"></label>
-						</div>', 'nexter-extension');
-
 			}
 		}
 
@@ -353,7 +359,7 @@ if (!class_exists('Nexter_Builder_Hooks_Loader')) {
 				$sections_include = get_post_meta($post_id, 'nxt-add-display-rule', true);
 				if (!empty($sections_include)) {
 					$output .= '<div class="nxt-sections-add-display-wrap">';
-					$output .= '<strong>' . esc_html__('Display:', 'nexter-extension') . ' </strong>';
+					$output .= '<strong>' . esc_html__('Display :', 'nexter-extension') . ' </strong>';
 					$output .= $this->nxt_column_sections_rules($sections_include, $post_id, 'include');
 					$output .= '</div>';
 				}
@@ -361,7 +367,7 @@ if (!class_exists('Nexter_Builder_Hooks_Loader')) {
 				$sections_exclude = get_post_meta($post_id, 'nxt-exclude-display-rule', true);
 				if (!empty($sections_exclude)) {
 					$output .= '<div class="nxt-sections-excluse-display-wrap">';
-					$output .= '<strong>' . esc_html__('Exclusion:', 'nexter-extension') . ' </strong>';
+					$output .= '<strong>' . esc_html__('Exclusion :', 'nexter-extension') . ' </strong>';
 					$output .= $this->nxt_column_sections_rules($sections_exclude, $post_id, 'exclude');
 					$output .= '</div>';
 				}

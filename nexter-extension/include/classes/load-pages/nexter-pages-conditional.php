@@ -42,7 +42,7 @@ if ( ! class_exists( 'Nexter_Builder_Pages_Conditional' ) ) {
 		public function __construct() {
 			add_action( 'wp', [ $this, 'nexter_load_templates_ids' ], 1 ); //Load Documents IDs
 			add_action( 'wp', [ $this, 'nexter_builder_template' ], 1 ); //Load Documents IDs
-			add_filter( 'nexter_pages_hooks_template', [ $this, 'nexter_pages_hooks_template_content' ] ); 
+			add_filter( 'nexter_pages_hooks_template', [ $this, 'nexter_pages_hooks_template_content' ] );
 			add_filter( 'template_include', [ $this, 'load_template_include' ], 15 ); 
 			add_action( 'wp_enqueue_scripts', array( $this, 'load_pages_enqueue_styles' ) );
 			add_filter( 'single_template', array( $this, 'load_nxt_builder_template' ) );
@@ -70,7 +70,6 @@ if ( ! class_exists( 'Nexter_Builder_Pages_Conditional' ) ) {
 			$pages_loader = new Nexter_Builder_Pages_Loader();
 			
 			self::$templates_ids = $pages_loader->get_templates_ids_for_location($singular_archives);
-
 		}
 		
 		/* Template Build Load Content
@@ -224,6 +223,11 @@ if ( ! class_exists( 'Nexter_Builder_Pages_Conditional' ) ) {
 			
 			if ( self::$location === 'singular' || self::$location === 'archives' ) {
 				if(!empty(self::$templates_ids)){
+					//Astra theme
+					if(defined('ASTRA_THEME_VERSION')){
+						remove_action( 'astra_template_parts_content', array( \Astra_Loop::get_instance(), 'template_parts_post' ) );
+					}
+					
 					$template = $this->get_template_path();
 				}
 			}
@@ -258,7 +262,6 @@ if ( ! class_exists( 'Nexter_Builder_Pages_Conditional' ) ) {
 				);
 				$result = Nexter_Builder_Display_Conditional_Rules::get_instance()->get_templates_by_archives_conditions( NXT_BUILD_POST, $option );
 			}
-			
 			$get_result=array();
 			global $pagenow;
 			if( !empty($result) ) {

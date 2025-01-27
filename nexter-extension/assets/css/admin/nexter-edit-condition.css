@@ -19,6 +19,7 @@
     gap: 5px;
     cursor: pointer;
     transition: 0.3s linear;
+    text-wrap: nowrap;
 }
 #nexter-edit-condition path {
     transition: 0.3s linear;
@@ -29,4 +30,7 @@
 }
 #nexter-edit-condition:hover path{
     stroke: #fff;
+}
+#nexter-edit-condition.nxt-hide {
+    display: none;
 }

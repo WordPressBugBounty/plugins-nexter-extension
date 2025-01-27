@@ -46,8 +46,12 @@ if ( ! class_exists( 'Nexter_Extensions_Load' ) ) {
 				add_action( 'admin_notices', array( $this, 'nexter_extension_pro_load_notice' ) );
 				add_action( 'wp_ajax_nexter_ext_pro_dismiss_notice', array( $this, 'nexter_ext_pro_dismiss_notice_ajax' ) );
 			}
-			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts_admin' ) );
-			
+
+			/* add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts_admin' ) );
+			if ( class_exists( '\Elementor\Plugin' )) {
+				add_action( 'elementor/editor/before_enqueue_scripts', array( $this, 'nxt_elementor_wdk_preset_script' ) );
+			} */
+
 			add_action( 'wpml_loaded', array( $this, 'nxt_wpml_compatibility' ) );
 
 			
@@ -141,10 +145,12 @@ if ( ! class_exists( 'Nexter_Extensions_Load' ) ) {
 		 * Template(Builder) Load
 		 */
 		public function nexter_builder_post_type() {
-			if(defined('NXT_VERSION') || defined('HELLO_ELEMENTOR_VERSION')){
+			if(defined('NXT_VERSION') || defined('HELLO_ELEMENTOR_VERSION') || defined('ASTRA_THEME_VERSION') || defined('GENERATE_VERSION') || defined('OCEANWP_THEME_VERSION') || defined('KADENCE_VERSION') || function_exists('blocksy_get_wp_theme') || defined('NEVE_VERSION')){
 				$template_uri = NEXTER_EXT_DIR . 'include/nexter-template/';
+				if ( ! post_type_exists( 'nxt_builder' ) ) {
+					require_once $template_uri . 'nexter-template-function.php';
+				}
 				
-				require_once $template_uri . 'nexter-template-function.php';
 				require_once $template_uri . 'template-import-export.php';
 				require_once $template_uri . 'nexter-builder-shortcode.php';
 
@@ -215,8 +221,14 @@ if ( ! class_exists( 'Nexter_Extensions_Load' ) ) {
 				if(is_admin() && isset( $_GET['action'] ) && $_GET['action'] == 'edit'){
 					wp_enqueue_style( 'nexter-select-css', NEXTER_EXT_URL .'assets/css/extra/select2.min.css', array(), NEXTER_EXT_VER );
 			    	wp_enqueue_script( 'nexter-select-js', NEXTER_EXT_URL . 'assets/js/extra/select2.min.js', array(), NEXTER_EXT_VER, false );
+					//Editor Theme Builder Conditional
 					wp_enqueue_style( 'nexter-ext-edit-condition-css', NEXTER_EXT_URL .'assets/css/admin/nexter-edit-condition.min.css', array(), NEXTER_EXT_VER );
 					wp_enqueue_script( 'nexter-ext-edit-condition-js', NEXTER_EXT_URL .'assets/js/admin/nexter-edit-condition.min.js', array(), NEXTER_EXT_VER, true );
+
+					//wdesignkit Preset
+					//wp_enqueue_style( 'nexter-ext-wdk-preset', NEXTER_EXT_URL .'assets/css/admin/nxt-wdk-preset.css', array(), NEXTER_EXT_VER );
+					//wp_enqueue_script( 'nexter-ext-wdk-preset', NEXTER_EXT_URL .'assets/js/admin/nxt-wdk-preset.js', array( 'react', 'react-dom','wp-i18n', 'wp-dom-ready', 'wp-element','wp-components', 'wp-block-editor', 'wp-editor' ), NEXTER_EXT_VER, true );
+
 				}
 				
 				$js_url = NEXTER_EXT_URL .'assets/js/admin/codemirror/';
@@ -501,6 +513,37 @@ if ( ! class_exists( 'Nexter_Extensions_Load' ) ) {
 			}
 			return $allcaps;
 		}
+
+		/*
+		 * Wdesignkit Preset Load templates Elementor Builder
+		 */
+		public function nxt_elementor_wdk_preset_script( $hook_suffix ){
+			if(\Elementor\Plugin::$instance->editor->is_edit_mode() && get_post_type() == 'nxt_builder' ){
+
+				$wdkPlugin = false;
+				include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+            	$pluginslist = get_plugins();
+
+				if ( isset( $pluginslist[ 'wdesignkit/wdesignkit.php' ] ) && !empty( $pluginslist[ 'wdesignkit/wdesignkit.php' ] ) ) {
+					if( is_plugin_active('wdesignkit/wdesignkit.php') ){
+						$wdkPlugin = true;
+					}
+				}
+
+				wp_enqueue_style( 'nexter-ele-wdkit-preset', NEXTER_EXT_URL .'assets/css/admin/nxt-wdk-preset.css', array(), NEXTER_EXT_VER );
+				wp_enqueue_script( 'nexter-ele-wdkit-preset', NEXTER_EXT_URL .'assets/js/admin/nxt-ele-wdk-preset.js', array( 'jquery','elementor-common' ), NEXTER_EXT_VER, true );
+				
+				wp_localize_script(
+					'nexter-ele-wdkit-preset',
+					'nxt_ele_wdkit',
+					array(
+						'ajax_url'    => admin_url( 'admin-ajax.php' ),
+						'ajax_nonce' => wp_create_nonce('nexter_admin_nonce'),
+						'wdkPlugin' => $wdkPlugin,
+					)
+				);
+			}
+		}
 	}
 }
 
@@ -508,11 +551,12 @@ Nexter_Extensions_Load::get_instance();
 if( ! function_exists('nexter_content_load') ){
 	
 	function nexter_content_load( $post_id ) {
-				
+		
 		if(!empty( $post_id ) && $post_id != 'none' ){
 			$post_id = apply_filters( 'wpml_object_id', $post_id, NXT_BUILD_POST, TRUE  );
 			$page_builder_base_instance = Nexter_Builder_Compatibility::get_instance();
 			$page_builder_instance = $page_builder_base_instance->get_active_page_builder( $post_id );
+			
 			$page_builder_instance->render_content( $post_id );
 		}
 	}

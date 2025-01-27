@@ -38,7 +38,7 @@ class Nexter_Builder_Pages_Loader {
 		if ( isset( self::$template_cache[ $type ] ) ) {
 			return self::$template_cache[ $type ];
 		}
-
+		
 		$templates_ids = $this->get_templates_ids( $type );
 		
 		self::$template_cache[ $type ] = $templates_ids;
@@ -61,7 +61,7 @@ class Nexter_Builder_Pages_Loader {
 			if($singular_archive == 'archives'){
 				self::$condition_rule = Nexter_Builders_Archives_Conditional_Rules::$load_conditions_rule;
 			}
-			
+
 			foreach ( $pages_conditions as $template_id => $conditions ) {
 				
 				foreach( $conditions['template_group'] as $key => $condition ){
@@ -76,7 +76,6 @@ class Nexter_Builder_Pages_Loader {
 						$rule = isset($condition['nxt-archive-conditional-rule']) ? $condition['nxt-archive-conditional-rule'] : '';
 						$type = isset($condition['nxt-archive-conditional-type']) ? $condition['nxt-archive-conditional-type'] : [];
 					}
-					
 					$get_condition = '';
 					
 					if ( !empty(self::$condition_rule) && isset(self::$condition_rule) && isset(self::$condition_rule[$rule]) ) {
@@ -109,8 +108,10 @@ class Nexter_Builder_Pages_Loader {
 						}
 					}
 					
-					if ( isset(self::$condition_rule[$rule]) && !empty($rule) && !empty($type) ) {
-							
+					if ( isset(self::$condition_rule[$rule]) && !empty($rule) ) {
+						if( empty( $type ) ){
+							$type = ['all'];
+						}
 						foreach ($type as $key => $value ){
 							if($value == 'all'){
 								$value = '';
@@ -166,7 +167,7 @@ class Nexter_Builder_Pages_Loader {
 		foreach ( $excludes_ids as $exclude_id ) {
 			unset( $priority_cond[ $exclude_id ] );
 		}
-	
+		
 		asort( $priority_cond );
 		
 		return $priority_cond;			

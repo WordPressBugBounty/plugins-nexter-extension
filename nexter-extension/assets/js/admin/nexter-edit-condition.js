@@ -9,7 +9,7 @@
 
                     const editCondition = document.createElement("div");
                     editCondition.classList.add("nexter-edit-condition-wrap");
-                    const htmlData = '<button id="nexter-edit-condition" title="Edit Condition">'+svgIcon+'Edit Condition</button>';
+                    const htmlData = '<button id="nexter-edit-condition" title="Edit Condition" class="nxt-hide">'+svgIcon+'Edit Condition</button>';
                     if( headerToolBar instanceof HTMLElement ){
                         headerToolBar.insertAdjacentHTML( 'beforeend', htmlData );
                     }
@@ -26,9 +26,12 @@
                             if (request.status >= 200 && request.status < 400) {
                                 const response = JSON.parse(request.response);
                                 if (response) {
-                                    editConditionButton.setAttribute('data-post', post_id);
-                                    editConditionButton.setAttribute('data-type', response.type);
-                                    editConditionButton.setAttribute('data-subtype', response.subtype);
+                                    if(response.subtype!='section'){
+                                        editConditionButton.classList.remove('nxt-hide')
+                                        editConditionButton.setAttribute('data-post', post_id);
+                                        editConditionButton.setAttribute('data-type', response.type);
+                                        editConditionButton.setAttribute('data-subtype', response.subtype);
+                                    }
                                 }
                             }
                         }
@@ -39,6 +42,11 @@
                         editConditionButton.addEventListener('click', (e)=>{
                             builder.nextOpenCondition(e, '', 'edit');
                         })
+                    }
+
+
+                    if(!headerToolBar.querySelector('#nexter-wdk-preset')){
+
                     }
                 }
             }

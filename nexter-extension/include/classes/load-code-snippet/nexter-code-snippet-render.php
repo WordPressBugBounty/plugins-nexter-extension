@@ -273,7 +273,15 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 				'exclusion' => 'nxt-exclude-display-rule',
 			];
 
-			self::$snippet_ids = Nexter_Builder_Display_Conditional_Rules::get_instance()->get_templates_by_sections_conditions( self::$snippet_type, $options );
+			$check_posts = get_posts([
+				'post_type'      => self::$snippet_type,
+				'posts_per_page' => 1,
+				'fields'         => 'ids',
+			]);
+			
+			if (!empty($check_posts)) {
+				self::$snippet_ids = Nexter_Builder_Display_Conditional_Rules::get_instance()->get_templates_by_sections_conditions( self::$snippet_type, $options );
+			}
 		}
 
 		/**
@@ -330,6 +338,7 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 					'htmlHooks' => class_exists('Nexter_Builder_Display_Conditional_Rules') ? Nexter_Builder_Display_Conditional_Rules::get_sections_hooks_options() : [],
 					'in_ex_option' => class_exists('Nexter_Builder_Display_Conditional_Rules') ? Nexter_Builder_Display_Conditional_Rules::get_location_rules_options() : [],
 					'user_role' => class_exists('Nexter_Builder_Display_Conditional_Rules') ?Nexter_Builder_Display_Conditional_Rules::get_others_location_sub_options('user-roles') : [],
+					'isactivate' => (defined('NXT_PRO_EXT') && class_exists('Nexter_Pro_Ext_Activate')) ? Nexter_Pro_Ext_Activate::get_instance()->nexter_activate_status() : ''
 				)
 			);
 		}
@@ -721,15 +730,18 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 		public static function nexter_code_snippets_css_js() {
 			//new Snippet
 			$css_actions = self::get_snippets_ids_list( 'css' );
+			
 			if( !empty( $css_actions ) ){
 				foreach ( $css_actions as $post_id) {
 					$post_type = get_post_type();
 
 					if ( self::$snippet_type != $post_type ) {
 						$css_code = get_post_meta( $post_id, 'nxt-css-code', true );
-						//$css_code_execute = get_post_meta( $post_id, 'nxt-code-snippet-secure-executed', true );
-						if(!empty($css_code) ){ // && ( empty($css_code_execute) || (!empty($css_code_execute) && $css_code_execute=='yes') )
-							wp_add_inline_style( 'nexter-style', wp_specialchars_decode($css_code) );
+						if(!empty($css_code) ){
+							wp_register_style( 'nxt-snippet-css', false );
+    						wp_enqueue_style( 'nxt-snippet-css' );
+
+							wp_add_inline_style( 'nxt-snippet-css', wp_specialchars_decode($css_code) );
 						}
 					}
 				}
@@ -742,8 +754,7 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 
 					if ( self::$snippet_type != $post_type ) {
 						$javascript_code = get_post_meta( $post_id, 'nxt-javascript-code', true );
-						//$js_code_execute = get_post_meta( $post_id, 'nxt-code-snippet-secure-executed', true );
-						if(!empty($javascript_code) ){ // && ( empty($js_code_execute) || (!empty($js_code_execute) && $js_code_execute=='yes' ) )
+						if(!empty($javascript_code) ){
 							wp_add_inline_script( 'jquery', html_entity_decode($javascript_code, ENT_QUOTES) );
 						}
 					}
@@ -760,7 +771,10 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 						$old_css_code = get_post_meta( $post_id, 'nxt-code-css-snippet', true );
 						$old_css_code_execute = get_post_meta( $post_id, 'nxt-code-snippet-secure-executed', true );
 						if(!empty($old_css_code) && ( empty($old_css_code_execute) || (!empty($old_css_code_execute) && $old_css_code_execute=='yes') ) ){
-							wp_add_inline_style( 'nexter-style', wp_specialchars_decode($old_css_code) );
+							wp_register_style( 'nxt-snippet-css', false );
+    						wp_enqueue_style( 'nxt-snippet-css' );
+
+							wp_add_inline_style( 'nxt-snippet-css', wp_specialchars_decode($old_css_code) );
 						}
 					}
 				}
@@ -796,17 +810,14 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 					
 						$hook_action = get_post_meta( $post_id, 'nxt-code-html-hooks', true );
 						$hook_priority = get_post_meta( $post_id, 'nxt-code-hooks-priority', true );
-						/* $html_code_execute = get_post_meta( $post_id, 'nxt-code-snippet-secure-executed', true );
-						if( empty($html_code_execute) || ( !empty($html_code_execute) && $html_code_execute=='yes' ) ){ */
-							add_action(
-								$hook_action,
-								function() use ( $post_id ) {
-									$html_code = get_post_meta( $post_id, 'nxt-htmlmixed-code', true );
-									echo $html_code;
-								},
-								$hook_priority
-							);
-						//}
+						add_action(
+							$hook_action,
+							function() use ( $post_id ) {
+								$html_code = get_post_meta( $post_id, 'nxt-htmlmixed-code', true );
+								echo $html_code;
+							},
+							$hook_priority
+						);
 					}
 				}
 			}

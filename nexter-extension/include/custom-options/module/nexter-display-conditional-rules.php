@@ -548,12 +548,177 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 		 * Sections Hooks List Options
 		 */
 		public static function get_sections_hooks_options() {
-			if(defined('HELLO_ELEMENTOR_VERSION')){
+			$hooks = array(
+				'wp_head'				=> __( 'Wp Head', 'nexter-extension' ),
+				'wp_footer'				=> __( 'Wp Footer', 'nexter-extension' ),
+			);
+			if(defined('ASTRA_THEME_VERSION')){
 				$hooks = array(
+					'astra_html_before'				=> __( 'Html Before', 'nexter-extension' ),
+					'astra_head_top'				=> __( 'Head Top', 'nexter-extension' ),
+					'astra_head_bottom'				=> __( 'Head Bottom', 'nexter-extension' ),
 					'wp_head'				=> __( 'Wp Head', 'nexter-extension' ),
+
+					'astra_body_top'			=> __( 'Body Top', 'nexter-extension' ),
+					'astra_header_before'		=> __( 'Header Before', 'nexter-extension' ),
+					'astra_header_after'		=> __( 'Header After', 'nexter-extension' ),
+
+					'astra_content_before'		=> __( 'Content Before', 'nexter-extension' ),
+					'astra_content_top'		=> __( 'Content Top', 'nexter-extension' ),
+					'astra_content_bottom'		=> __( 'Content Bottom', 'nexter-extension' ),
+					'astra_content_after'	=> __( 'Content After', 'nexter-extension' ),
+
+					'astra_footer_before'		=> __( 'Footer Before', 'nexter-extension' ),
+					'astra_footer_after'		=> __( 'Footer After', 'nexter-extension' ),
+					'astra_body_bottom'		=> __( 'Body Bottom', 'nexter-extension' ),
 					'wp_footer'				=> __( 'Wp Footer', 'nexter-extension' ),
 				);
-			}else{
+			}else if( defined('GENERATE_VERSION') ){
+				$hooks = array(
+					'wp_head'				=> __( 'Wp Head', 'nexter-extension' ),
+					'generate_before_header'	=> __( 'Header Before', 'nexter-extension' ),
+					'generate_after_header'	=> __( 'Header After', 'nexter-extension' ),
+
+					'generate_inside_site_container'	=> __( 'Site Container Inside', 'nexter-extension' ),
+					'generate_inside_container'	=> __( 'Container Inside', 'nexter-extension' ),
+
+					'generate_before_main_content'	=> __( 'Main Content Before', 'nexter-extension' ),
+					'generate_before_do_template_part'	=> __( 'Template Part Before', 'nexter-extension' ),
+					'generate_before_content'	=> __( 'Content Before', 'nexter-extension' ),
+					'generate_before_page_title'	=> __( 'Page Title Before', 'nexter-extension' ),
+					'generate_after_page_title'	=> __( 'Page Title After', 'nexter-extension' ),
+					'generate_after_content'	=> __( 'Content After', 'nexter-extension' ),
+					'generate_after_do_template_part'	=> __( 'Template Part After', 'nexter-extension' ),
+					'generate_after_main_content'	=> __( 'Main Content After', 'nexter-extension' ),
+					'generate_before_right_sidebar_content'	=> __( 'Sidebar Content Before', 'nexter-extension' ),
+					'generate_after_right_sidebar_content'	=> __( 'Sidebar Content After', 'nexter-extension' ),
+
+					'generate_before_footer'	=> __( 'Footer Before', 'nexter-extension' ),
+					'generate_before_footer_content'	=> __( 'Footer Content Before', 'nexter-extension' ),
+					'generate_before_copyright'	=> __( 'Copyright Before', 'nexter-extension' ),
+					'generate_credits'	=> __( 'Footer Info', 'nexter-extension' ),
+					'generate_after_footer_content'	=> __( 'Footer Content After', 'nexter-extension' ),
+					'generate_after_footer'	=> __( 'Footer After', 'nexter-extension' ),
+					'wp_footer'				=> __( 'Wp Footer', 'nexter-extension' ),
+				);
+			}else if(defined('OCEANWP_THEME_VERSION')){
+				$hooks = array(
+					'wp_head'				=> __( 'Wp Head', 'nexter-extension' ),
+					'ocean_before_wrap'		=> __( 'Body Start Wrap', 'nexter-extension' ),
+					'ocean_after_wrap'		=> __( 'Body End Wrap', 'nexter-extension' ),
+
+					'ocean_top_bar'		=> __( 'Header Top Bar', 'nexter-extension' ),
+					'ocean_before_main'		=> __( 'Content Before Main', 'nexter-extension' ),
+					'ocean_before_content_wrap'		=> __( 'Content Before Wrap', 'nexter-extension' ),
+					'ocean_before_content'		=> __( 'Content Before', 'nexter-extension' ),
+					'ocean_before_content_inner '		=> __( 'Content Before Inner', 'nexter-extension' ),
+					'ocean_before_page_entry'		=> __( 'Content Page Before', 'nexter-extension' ),
+					'ocean_after_page_entry'		=> __( 'Content Page After', 'nexter-extension' ),
+					'ocean_after_content_inner'		=> __( 'Content After Inner', 'nexter-extension' ),
+					'ocean_after_content'		=> __( 'Content After', 'nexter-extension' ),
+					'ocean_after_content_wrap'		=> __( 'Content After Wrap', 'nexter-extension' ),
+					'ocean_after_main'		=> __( 'Content After Main', 'nexter-extension' ),
+
+					'ocean_before_footer'		=> __( 'Footer Before', 'nexter-extension' ),
+					'ocean_before_footer_inner'		=> __( 'Footer Before Inner', 'nexter-extension' ),
+					'ocean_after_footer_inner'		=> __( 'Footer After Inner', 'nexter-extension' ),
+					'ocean_after_footer'		=> __( 'Footer After', 'nexter-extension' ),
+
+					'ocean_before_primary'		=> __( 'Content Primary Before', 'nexter-extension' ),
+					'ocean_after_primary'		=> __( 'Content Primary After', 'nexter-extension' ),
+
+					'ocean_before_sidebar'		=> __( 'Sidebar Before', 'nexter-extension' ),
+					'ocean_after_sidebar'		=> __( 'Content After', 'nexter-extension' ),
+
+					'ocean_before_footer_widgets_inner'		=> __( 'Footer Before Widgets Inner', 'nexter-extension' ),
+					'ocean_after_footer_widgets_inner'		=> __( 'Footer After Widgets Inner', 'nexter-extension' ),
+					'ocean_before_footer_bottom'		=> __( 'Footer Before Bottom', 'nexter-extension' ),
+					'ocean_before_footer_bottom_inner'		=> __( 'Footer Before Bottom Inner', 'nexter-extension' ),
+					'ocean_after_footer_bottom_inner'		=> __( 'Footer After Bottom Inner', 'nexter-extension' ),
+					'ocean_after_footer_bottom'		=> __( 'Footer After Bottom', 'nexter-extension' ),
+					'wp_footer'				=> __( 'Wp Footer', 'nexter-extension' ),
+				);
+			}else if(defined('KADENCE_VERSION')){
+				$hooks = array(
+					'wp_head'				=> __( 'Wp Head', 'nexter-extension' ),
+					'kadence_before_wrapper'		=> __( 'Body Top', 'nexter-extension' ),
+					'kadence_before_header'				=> __( 'Header Before', 'nexter-extension' ),
+					'kadence_after_header'		=> __( 'Header After', 'nexter-extension' ),
+
+					'kadence_hero_header'			=> __( 'Header Hero', 'nexter-extension' ),
+					'kadence_before_main_content'		=> __( 'Main Content Before', 'nexter-extension' ),
+					
+					'kadence_single_content'		=> __( 'Content Before', 'nexter-extension' ),
+					'kadence_single_before_inner_content'		=> __( 'Inner Content Before', 'nexter-extension' ),
+					'kadence_single_before_entry_header'		=> __( 'Content Entry Header Before', 'nexter-extension' ),
+					'kadence_entry_header'	=> __( 'Content Entry Header', 'nexter-extension' ),
+					'kadence_single_before_entry_title'	=> __( 'Content Before Entry Title', 'nexter-extension' ),
+					'kadence_single_after_entry_title'	=> __( 'Content After Entry Title', 'nexter-extension' ),
+					'kadence_single_after_entry_header'	=> __( 'Content Entry Header After', 'nexter-extension' ),
+
+					'kadence_single_before_entry_content'	=> __( 'Content Entry Before', 'nexter-extension' ),
+					'kadence_single_after_entry_content'	=> __( 'Content Entry After', 'nexter-extension' ),
+					'kadence_single_after_inner_content'	=> __( 'Inner Content After', 'nexter-extension' ),
+					'kadence_single_after_content'	=> __( 'Content After', 'nexter-extension' ),
+					'kadence_after_main_content'	=> __( 'Main Content After', 'nexter-extension' ),
+
+					'kadence_before_footer'		=> __( 'Footer Before', 'nexter-extension' ),
+					'kadence_after_footer'		=> __( 'Footer After', 'nexter-extension' ),
+					'kadence_after_wrapper'		=> __( 'Body Bottom', 'nexter-extension' ),
+					'wp_footer'				=> __( 'Wp Footer', 'nexter-extension' ),
+				);
+			}else if( function_exists('blocksy_get_wp_theme') ){
+				$hooks = array(
+					'blocksy:head:start'			=> __( 'Head Top', 'nexter-extension' ),
+					'blocksy:head:end'		=> __( 'Head Bottom', 'nexter-extension' ),
+					'wp_head'				=> __( 'Wp Head', 'nexter-extension' ),
+			
+					'blocksy:header:before'	=> __( 'Header Before', 'nexter-extension' ),
+					'blocksy:header:after'	=> __( 'Header After', 'nexter-extension' ),
+				
+					'blocksy:content:before'		=> __( 'Content Before', 'nexter-extension' ),
+					'blocksy:content:top'		=> __( 'Content Top', 'nexter-extension' ),
+					'blocksy:content:bottom'	=> __( 'Content Bottom', 'nexter-extension' ),
+					'blocksy:content:after'	=> __( 'Content After', 'nexter-extension' ),
+					
+					'blocksy:hero:before'	=> __( 'Sidebar Before', 'nexter-extension' ),
+					'blocksy:hero:after'	=> __( 'Sidebar After', 'nexter-extension' ),
+			
+					'blocksy:footer:before'		=> __( 'Footer Before', 'nexter-extension' ),
+					'blocksy:footer:after'		=> __( 'Footer After', 'nexter-extension' ),
+					'wp_footer'				=> __( 'Wp Footer', 'nexter-extension' ),
+				);
+			}else if( defined('NEVE_VERSION') ){
+				$hooks = array(
+					'neve_html_start_before'		=> __( 'Html Before', 'nexter-extension' ),
+					'neve_head_start_after'			=> __( 'Head Top', 'nexter-extension' ),
+					'neve_head_end_before'		=> __( 'Head Bottom', 'nexter-extension' ),
+					'wp_head'				=> __( 'Wp Head', 'nexter-extension' ),
+			
+					'neve_body_start_after'			=> __( 'Body Top', 'nexter-extension' ),
+					'neve_before_header_wrapper_hook'		=> __( 'Header Wrap Before', 'nexter-extension' ),
+					'neve_before_header_hook'		=> __( 'Header Before', 'nexter-extension' ),
+					'neve_after_header_hook'		=> __( 'Header After', 'nexter-extension' ),
+					'neve_after_header_wrapper_hook'		=> __( 'Header Wrap After', 'nexter-extension' ),
+				
+					'neve_before_primary'		=> __( 'Content Primary Before', 'nexter-extension' ),
+					'neve_before_page_header'		=> __( 'Page Before Header', 'nexter-extension' ),
+					'neve_page_header'	=> __( 'Page Header', 'nexter-extension' ),
+					'neve_before_content'	=> __( 'Content Before', 'nexter-extension' ),
+					'neve_after_content'	=> __( 'Content After', 'nexter-extension' ),
+					'neve_after_primary'	=> __( 'Content Primary After', 'nexter-extension' ),
+				
+					'neve_before_page_comments'	=> __( 'Comments Before', 'nexter-extension' ),
+					'neve_do_pagination'	=> __( 'Pagination', 'nexter-extension' ),
+				
+					'neve_do_sidebar'	=> __( 'Sidebar', 'nexter-extension' ),
+			
+					'neve_before_footer_hook'		=> __( 'Footer Before', 'nexter-extension' ),
+					'neve_after_footer_hook'		=> __( 'Footer After', 'nexter-extension' ),
+					'neve_body_end_before'		=> __( 'Body Bottom', 'nexter-extension' ),
+					'wp_footer'				=> __( 'Wp Footer', 'nexter-extension' ),
+				);
+			}else if( defined('NXT_VERSION') ){
 				$hooks = array(
 					'nxt_html_before'		=> __( 'Html Before', 'nexter-extension' ),
 					'nxt_head_top'			=> __( 'Head Top', 'nexter-extension' ),
@@ -579,6 +744,8 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 					'wp_footer'				=> __( 'Wp Footer', 'nexter-extension' ),
 				);
 			}
+
+			$hooks = apply_filters( 'nexter_sections_hooks_list', $hooks );
 
 			if(class_exists('WooCommerce')){
 				//Single Product Hooks
@@ -677,7 +844,7 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 				$hooks['woocommerce_after_cart'] = __('After Cart','nexter-extension');
 			}
 
-			return apply_filters( 'nexter_sections_hooks_list', $hooks );
+			return $hooks;
 		}
 		
 		/**
@@ -775,9 +942,9 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 				$sqlquery = "SELECT p.ID, pm.meta_value FROM {$wpdb->postmeta} as pm INNER JOIN {$wpdb->posts} as p ON pm.post_id = p.ID WHERE (pm.meta_key = %s) AND p.post_type = %s AND p.post_status = 'publish' ORDER BY p.post_date DESC";
 			
 				$sql1 = $wpdb->prepare( $sqlquery , $singular_group, $type ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-			
+				
 				$posts  = $wpdb->get_results( $sql1 );	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-	
+				
 				foreach ( $posts as $post_data ) {
 					$getPostStatus = get_post_meta($post_data->ID , 'nxt_build_status', true);
 					if($getPostStatus==0 && $getPostStatus!=''){
@@ -825,7 +992,7 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 			$options['current_post_id'] = self::$current_archive_data['ID'];
 			
 			$archive_group = isset( $options['archive_group'] ) ? esc_sql( $options['archive_group'] ) : '';
-
+			
 			$nxt_option = 'nxt-build-get-data';
 			$get_data = get_option( $nxt_option );
 			if( $get_data === false ){
@@ -864,7 +1031,6 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 			}else if( isset($get_data[ 'archives' ]) && !empty($get_data[ 'archives' ])){
 				self::$current_archive_data[ $type ] = $get_data[ 'archives' ];
 			}
-						
 			return apply_filters( 'nexter_get_archive_posts_by_conditions', self::$current_archive_data[ $type ], $type );
 		}
 		
@@ -897,26 +1063,27 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 			$location = isset( $option['location'] ) ? esc_sql( $option['location'] ) : '';
 
 			/* global posts / specific posts */
-			$join_meta = "pm.meta_value LIKE '%\"standard-universal\"%'";
+			$join_meta = '';
+			//$join_meta = "pm.meta_value LIKE '%\"standard-universal\"%'";
 			
 			if( !empty( $current_page_type_name ) ){
 				
-				$join_meta .= " OR pm.meta_value LIKE '%\"particular-post\"%'";
+				//$join_meta .= " OR pm.meta_value LIKE '%\"particular-post\"%'";
 				
-				if( $current_page_type_name == 'is_home' ){
-					$join_meta .= " OR pm.meta_value LIKE '%\"default-blog\"%'";
-				}else if( $current_page_type_name == 'is_front_page' ){
-					$current_id      = esc_sql( get_the_id() );
+				//if( $current_page_type_name == 'is_home' ){
+				//	$join_meta .= " OR pm.meta_value LIKE '%\"default-blog\"%'";
+				//}else if( $current_page_type_name == 'is_front_page' ){
+					/* $current_id      = esc_sql( get_the_id() );
 					$join_meta      .= " OR pm.meta_value LIKE '%\"post-{$current_id}\"%'";
 					$join_meta      .= " OR pm.meta_value LIKE '%\"default-front\"%'";
-					$join_meta      .= " OR pm.meta_value LIKE '%\"{$current_post_type}|entire\"%'";
+					$join_meta      .= " OR pm.meta_value LIKE '%\"{$current_post_type}|entire\"%'"; */
 					
-				}else if( $current_page_type_name == 'is_404' ){
-					$join_meta .= " OR pm.meta_value LIKE '%\default-404\%' OR pm.meta_value LIKE '%page-404%'";
-				}else if( $current_page_type_name == 'is_search' ){
-					$join_meta .= " OR pm.meta_value LIKE '%\"default-search\"%'";
-				}else if( $current_page_type_name == 'is_singular' ){
-					$current_id      = esc_sql( get_the_id() );
+				//}else if( $current_page_type_name == 'is_404' ){
+					//$join_meta .= " OR pm.meta_value LIKE '%\default-404\%' OR pm.meta_value LIKE '%page-404%'";
+				//}else if( $current_page_type_name == 'is_search' ){
+					//$join_meta .= " OR pm.meta_value LIKE '%\"default-search\"%'";
+				//}else if( $current_page_type_name == 'is_singular' ){
+					/* $current_id      = esc_sql( get_the_id() );
 					$join_meta      .= " OR pm.meta_value LIKE '%\"standard-singulars\"%'";
 					$join_meta      .= " OR pm.meta_value LIKE '%\"{$current_post_type}|entire\"%'";
 					$join_meta      .= " OR pm.meta_value LIKE '%\"post-{$current_id}\"%'";
@@ -935,10 +1102,10 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 
 					foreach ( $terms as $key => $term ) {
 						$join_meta .= " OR pm.meta_value LIKE '%\"taxonomy-{$term->term_id}-singular-{$term->taxonomy}\"%'";
-					}
+					} */
 					
-				}else if( $current_page_type_name == 'is_archive' || $current_page_type_name == 'is_tax' || $current_page_type_name == 'is_date' || $current_page_type_name == 'is_author' ){
-					$join_meta .= " OR pm.meta_value LIKE '%\"standard-archives\"%'";
+				//}else if( $current_page_type_name == 'is_archive' || $current_page_type_name == 'is_tax' || $current_page_type_name == 'is_date' || $current_page_type_name == 'is_author' ){
+					/* $join_meta .= " OR pm.meta_value LIKE '%\"standard-archives\"%'";
 					$join_meta .= " OR pm.meta_value LIKE '%\"{$current_post_type}|entire|archive\"%'";
 
 					if ( $current_page_type_name == 'is_tax' && ( is_category() || is_tag() || is_tax() ) ) {
@@ -950,12 +1117,11 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 						$join_meta .= " OR pm.meta_value LIKE '%\"default-date\"%'";
 					} else if ( $current_page_type_name == 'is_author' ) {
 						$join_meta .= " OR pm.meta_value LIKE '%\"default-author\"%'";
-					}
+					} */
 					
-				}else if( $current_page_type_name == 'is_shop_page' ){
-					$join_meta .= " OR pm.meta_value LIKE '%\"default-woo-shop\"%'";
-				}
-
+				//}else if( $current_page_type_name == 'is_shop_page' ){
+					//$join_meta .= " OR pm.meta_value LIKE '%\"default-woo-shop\"%'";
+				//}
 				if(has_filter( 'nexter_advanced_sections_query_meta' )){
 					$join_meta .= apply_filters('nexter_advanced_sections_query_meta', $current_page_type_name );
 				}
@@ -975,27 +1141,73 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 				$current_post_id = get_the_id();
 			}
 			
-			$sqlquery = "SELECT p.ID, pm.meta_value FROM {$wpdb->postmeta} as pm INNER JOIN {$wpdb->posts} as p ON pm.post_id = p.ID WHERE (pm.meta_key = %s OR pm.meta_key = 'nxt-hooks-layout-pages' OR pm.meta_key = 'nxt-hooks-layout-sections') AND p.post_type = %s AND p.post_status = 'publish' AND ( {$join_meta} ) ORDER BY p.post_date DESC";
-			
-			if($type==='nxt-code-snippet'){
-				$sqlquery = "SELECT p.ID, pm.meta_value FROM {$wpdb->postmeta} as pm INNER JOIN {$wpdb->posts} as p ON pm.post_id = p.ID WHERE (pm.meta_key = %s) AND p.post_type = %s AND p.post_status = 'publish' AND ( {$join_meta} ) ORDER BY p.post_date DESC";
-			}
-			$sql3 = $wpdb->prepare( $sqlquery , $location, $type );	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-			
-			$posts  = $wpdb->get_results( $sql3 );	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+			//$sqlquery = "SELECT p.ID, pm.meta_value FROM {$wpdb->postmeta} as pm INNER JOIN {$wpdb->posts} as p ON pm.post_id = p.ID WHERE (pm.meta_key = %s OR pm.meta_key = 'nxt-hooks-layout-pages' OR pm.meta_key = 'nxt-hooks-layout-sections') AND p.post_type = %s AND p.post_status = 'publish' AND ( {$join_meta} ) ORDER BY p.post_date DESC";
 
+			if( !empty($join_meta) ){
+				$join_meta = "AND ( {$join_meta} )";
+			}
+
+			$nxt_option = 'nxt-build-get-data';
+			$get_data = get_option( $nxt_option );
+			if( $get_data === false ){
+				$get_data = ['saved' => strtotime('now'), 'singular_updated' => '','archives_updated' => '','sections_updated' => '', "{$type}_entire" => ''];
+				add_option( $nxt_option, $get_data );
+			}
+			
+			if(!empty($get_data) && isset($get_data['saved']) && (!isset($get_data["{$type}_entire"]) || (isset($get_data["{$type}_entire"]) && $get_data['saved'] !== $get_data["{$type}_entire"]))){
+
+				$sqlquery = "SELECT p.ID, pm.meta_value FROM {$wpdb->postmeta} as pm INNER JOIN {$wpdb->posts} as p ON pm.post_id = p.ID WHERE (pm.meta_key = %s OR 
+         (pm.meta_key = 'nxt-hooks-layout-pages' AND pm.meta_value = 'page-404') OR (pm.meta_key = 'nxt-hooks-layout-sections' AND pm.meta_value = 'page-404')
+      ) AND p.post_type = %s AND p.post_status = 'publish' {$join_meta} ORDER BY p.post_date DESC";
+			
+				if($type==='nxt-code-snippet'){
+					$sqlquery = "SELECT p.ID, pm.meta_value FROM {$wpdb->postmeta} as pm INNER JOIN {$wpdb->posts} as p ON pm.post_id = p.ID WHERE (pm.meta_key = %s) AND p.post_type = %s AND p.post_status = 'publish' {$join_meta} ORDER BY p.post_date DESC";
+				}
+
+				$sql3 = $wpdb->prepare( $sqlquery , $location, $type );	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+				
+				$posts  = $wpdb->get_results( $sql3 );	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+				
+				$get_data["{$type}_entire"] = $get_data['saved'];
+				$get_data[ "{$type}_data" ] = $posts;
+				update_option( $nxt_option, $get_data );
+			}else if( isset($get_data[ "{$type}_data" ]) && !empty($get_data[ "{$type}_data" ])){
+				$posts = $get_data[ "{$type}_data" ];
+			}
+			
 			if( !empty($posts) ){
 				foreach ( $posts as $post_data ) {
 					
-            		$getPostStatus = get_post_meta($post_data->ID , 'nxt_build_status', true);
-					if($getPostStatus==0 && $getPostStatus!=''){
+					$old_layout = get_post_meta($post_data->ID, 'nxt-hooks-layout', true);
+					
+					$selectSType = '';
+					if(!empty($old_layout)){
+						$selectType = $old_layout;
+						if($old_layout == 'sections'){
+							$selectSType = get_post_meta($post_data->ID, 'nxt-hooks-layout-sections', true);
+						}else if($old_layout == 'pages'){
+							$selectSType = get_post_meta($post_data->ID, 'nxt-hooks-layout-pages', true);
+						}else if($old_layout == 'code_snippet'){
+							$selectSType = get_post_meta($post_data->ID, 'nxt-hooks-layout-code-snippet', true);
+						}else{
+							$selectSType = get_post_meta($post_data->ID, 'nxt-hooks-layout-sections', true);
+						}
+					}else if(empty($old_layout)){
+						$selectSType = get_post_meta($post_data->ID, 'nxt-hooks-layout-sections', true);
+					}
+					
+					$getPostStatus = get_post_meta($post_data->ID , 'nxt_build_status', true);
+					if($getPostStatus==0 && $getPostStatus!='' || (!empty($old_layout) && $old_layout=='none') || (!empty($selectSType) && $selectSType=='none')){
 						continue;
 					}
+					
 					if(function_exists('pll_get_post')){
 						if(pll_get_post( $post_data->ID ) != $post_data->ID){
 							continue;
 						}
 					}
+					
+					$post_meta_value = maybe_unserialize( $post_data->meta_value );
 					
 					$priority = 0;
 
@@ -1014,12 +1226,87 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 					
 					$display_specific = true;
 
-					$post_meta_value = maybe_unserialize( $post_data->meta_value );
-					
 					if(!is_admin() && !empty($post_meta_value) && is_array($post_meta_value)){
 						$check_condition = false;
-						//standard match
 
+						/* if(in_array('standard-universal', $post_meta_value, true)){
+							$check_condition = true;
+						} */
+						if( $current_page_type_name == 'is_home' ){
+							if (in_array('default-blog', $post_meta_value, true)) {
+								$check_condition = true;
+							}
+						}else if( $current_page_type_name == 'is_front_page' ){
+							$current_id = esc_sql( get_the_id() );
+							$conditions = [
+								"{$current_post_type}|entire",
+								"default-front",
+								"post-{$current_id}"
+							];
+							foreach ($conditions as $condition) {
+								if (in_array($condition, $post_meta_value, true)) {
+									$check_condition = true;
+									break;
+								}
+							}
+								
+						}else if( $current_page_type_name == 'is_404' ){
+							$conditions = [
+								'default-404',
+								'page-404'
+							];
+							foreach ($conditions as $condition) {
+								if (in_array($condition, $post_meta_value, true)) {
+									$check_condition = true;
+									break;
+								}
+							}
+						}else if( $current_page_type_name == 'is_search' ){
+							if (in_array('default-search', $post_meta_value, true)) {
+								$check_condition = true;
+							}
+						}else if( $current_page_type_name == 'is_singular' ){
+							$current_id      = esc_sql( get_the_id() );
+							$conditions = [
+								//'standard-singulars',
+								"{$current_post_type}|entire",
+								"post-{$current_id}"
+							];
+	
+							foreach ($conditions as $condition) {
+								if (in_array($condition, $post_meta_value, true)) {
+									$check_condition = true;
+									break;
+								}
+							}
+						}else if( $current_page_type_name == 'is_archive' || $current_page_type_name == 'is_tax' || $current_page_type_name == 'is_date' || $current_page_type_name == 'is_author' ){
+							$conditions = [
+								//'standard-archives',
+								"{$current_post_type}|entire|archive",
+							];
+							foreach ($conditions as $condition) {
+								if (in_array($condition, $post_meta_value, true)) {
+									$check_condition = true;
+									break;
+								}
+							}
+	
+							if ( $current_page_type_name == 'is_date' ) {
+								if (in_array('default-date', $post_meta_value, true)) {
+									$check_condition = true;
+								}
+							} else if ( $current_page_type_name == 'is_author' ) {
+								if (in_array('default-author', $post_meta_value, true)) {
+									$check_condition = true;
+								}
+							}
+						}else if( $current_page_type_name == 'is_shop_page' ){
+							if (in_array('default-woo-shop', $post_meta_value, true)) {
+								$check_condition = true;
+							}
+						}
+
+						//standard match
 						if( $type == 'nxt-code-snippet' ){
 							$post_col = array_column($post_meta_value, 'value');
 							$standard_value = preg_grep('/^standard-/i', $post_col);
@@ -1102,6 +1389,7 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 									if(isset($queried_object->post_type)){
 										$taxonomies = get_object_taxonomies( $queried_object->post_type );
 										$terms = wp_get_post_terms( $queried_object->ID, $taxonomies );
+										
 										if(!empty($terms)){
 											foreach ( $terms as $key => $term ) {
 												if(in_array("taxonomy-{$term->term_id}-singular-{$term->taxonomy}", $specific_value)){
@@ -1252,7 +1540,7 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 					
 				}
 			}
-			
+
 			self::$current_load_page_data[$type]  = $this->array_sort_by_priority(self::$current_load_page_data[$type], 'priority', SORT_DESC);
 			
 			$option['current_post_id'] = $current_post_id;

@@ -43,12 +43,30 @@ if ( ! class_exists( 'Nexter_Class_Load' ) ) {
 		function theme_after_setup() {
 			$include_uri = NEXTER_EXT_DIR . 'include/classes/';
 			//pages load
-			if(defined('NXT_VERSION') || defined('HELLO_ELEMENTOR_VERSION')){
+			if(defined('NXT_VERSION') || defined('HELLO_ELEMENTOR_VERSION') || defined('ASTRA_THEME_VERSION') || defined('GENERATE_VERSION') || defined('OCEANWP_THEME_VERSION') || defined('KADENCE_VERSION') || function_exists('blocksy_get_wp_theme') || defined('NEVE_VERSION')){
 				
 				require_once $include_uri . 'nexter-class-singular-archives.php';
 			
 				//sections load
 				if(!is_admin()){
+					if(defined('ASTRA_THEME_VERSION')){
+						require_once $include_uri . 'load-sections/theme/nxt-astra-comp.php';	
+					}
+					if(defined('GENERATE_VERSION')){
+						require_once $include_uri . 'load-sections/theme/nxt-generatepress-comp.php';
+					}
+					if(defined('OCEANWP_THEME_VERSION')){
+						require_once $include_uri . 'load-sections/theme/nxt-oceanwp-comp.php';
+					}
+					if(defined('KADENCE_VERSION')){
+						require_once $include_uri . 'load-sections/theme/nxt-kadence-comp.php';
+					}
+					if(function_exists('blocksy_get_wp_theme')){
+						require_once $include_uri . 'load-sections/theme/nxt-blocksy-comp.php';
+					}
+					if( defined('NEVE_VERSION') ){
+						require_once $include_uri . 'load-sections/theme/nxt-neve-comp.php';
+					}
 					require_once $include_uri . 'load-sections/nexter-header-extra.php';
 					require_once $include_uri . 'load-sections/nexter-breadcrumb-extra.php';
 					require_once $include_uri . 'load-sections/nexter-footer-extra.php';

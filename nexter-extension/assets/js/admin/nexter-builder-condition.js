@@ -63,13 +63,15 @@ class NexterBuilder {
         this.statusBtn = document.querySelectorAll('.status.column-status');
         this.statusBtn.forEach((btn) => {
             let statusInput = btn.querySelector('.nxt-post-status');
-            statusInput.addEventListener('change', (e) => {
-                e.preventDefault();
-                let post_id = e.currentTarget.value;
-                let check = (e.currentTarget.checked) ? 1 : 0;
-                let action = 'action=nexter_ext_status&nexter_nonce=' + nexter_admin_config.ajax_nonce+'&post_id='+post_id+'&check='+check;
-                this.nxtBuilderCommon(action, false);
-            });
+            if(statusInput){
+                statusInput.addEventListener('change', (e) => {
+                    e.preventDefault();
+                    let post_id = e.currentTarget.value;
+                    let check = (e.currentTarget.checked) ? 1 : 0;
+                    let action = 'action=nexter_ext_status&nexter_nonce=' + nexter_admin_config.ajax_nonce+'&post_id='+post_id+'&check='+check;
+                    this.nxtBuilderCommon(action, false);
+                });
+            }
         });
     }
 
@@ -131,12 +133,7 @@ class NexterBuilder {
     }
 
     getPopupHTML() {
-        return `<div class="nxt-ext-setting-pop nxt-builder-settings-popup">
-                <div class="nxt-ext-pop-inner">
-                    <button class="ext-close-button">×</button>
-                    <div class="spinner"></div>
-                </div>
-            </div>`;
+        return `<div class="nxt-ext-setting-pop nxt-builder-settings-popup"><div class="nxt-ext-pop-inner"><button class="ext-close-button">×</button><div class="spinner"></div></div></div>`;
     }
 
     nxt_ext_close_pop(ell){
@@ -288,11 +285,11 @@ class NexterBuilder {
                                 if(getSel.value == 'header' || getSel.value == 'footer' || getSel.value == 'hooks'){
                                     if(at.currentTarget.classList.contains('active')){
                                         at.currentTarget.classList.remove('active');
-                                        if(getSel.value == 'header'){
+                                        if(getSel.value == 'header' && headerSec){
                                             headerSec.classList.remove('active');
-                                        }else if(getSel.value == 'footer'){
+                                        }else if(getSel.value == 'footer' && footerSec){
                                             footerSec.classList.remove('active');
-                                        }else if(getSel.value == 'hooks'){
+                                        }else if(getSel.value == 'hooks' && hooksSec){
                                             hooksSec.classList.remove('active');
                                         }
 
@@ -305,11 +302,11 @@ class NexterBuilder {
 
                                     }else{
                                         at.currentTarget.classList.add('active')
-                                        if(getSel.value == 'header'){
+                                        if(getSel.value == 'header' && headerSec){
                                             headerSec.classList.add('active');
-                                        }else if(getSel.value == 'footer'){
+                                        }else if(getSel.value == 'footer' && footerSec){
                                             footerSec.classList.add('active');
-                                        }else if(getSel.value == 'hooks'){
+                                        }else if(getSel.value == 'hooks' && hooksSec){
                                             hooksSec.classList.add('active');
                                         }
 
@@ -351,8 +348,38 @@ class NexterBuilder {
                         if(getSel){
                             getSel.addEventListener('change', (e)=>{
                                 getSel.style = "";
+                                if(e.currentTarget.value == 'section'){
+                                    /* const hiddenField = document.createElement('input');
+                                        hiddenField.type = 'hidden';
+                                        hiddenField.name = 'action';
+                                        hiddenField.id = 'nxt_section_action';
+                                        hiddenField.value = 'nexter_ext_save_template'; 
+                                        form.appendChild(hiddenField); */
+                                        let getAction = popEle.querySelector('.temp-action-btn');
+                                        if(getAction){
+                                            getAction.classList.add('nxt-hide');
+                                        }
+                                        let getbtnAction = popEle.querySelector('.nxt-temp-action');
+                                        if(getbtnAction){
+                                            getbtnAction.insertAdjacentHTML('beforeend', '<div class="nxt-action-btn-wrap"><input type="hidden" name="action" value="nexter_ext_save_template" id="nxt_section_action" /><input type="hidden" name="nonce" value="'+NexterConfig.hiddennonce+'" /><button type="submit" class="temp-create-btn">Create</button></div>');
+                                        }
+                                        form.setAttribute('action', NexterConfig.adminPostUrl);
+                                }else{
+                                    let btn_wrap = document.querySelector('.nxt-action-btn-wrap');
+                                    btn_wrap.remove()
+                                    let getAction = popEle.querySelector('.temp-action-btn');
+                                    if(getAction){
+                                        getAction.classList.remove('nxt-hide');
+                                    }
+                                    form.removeAttribute('action', NexterConfig.adminPostUrl);
+                                }
+                                
                                 if(e.currentTarget.value == 'header' || e.currentTarget.value == 'footer' || e.currentTarget.value == 'hooks'){
-                                    addToggle.parentElement.classList.add('visible');
+                                    if((e.currentTarget.value == 'header' && headerSec) || (e.currentTarget.value == 'footer' && footerSec) || (e.currentTarget.value == 'hooks' && hooksSec)){
+                                        addToggle.parentElement.classList.add('visible');
+                                    }else if(e.currentTarget.value == 'header' && headerSec==null || (e.currentTarget.value == 'footer' && footerSec==null) || (e.currentTarget.value == 'hooks' && hooksSec==null)){
+                                        addToggle.parentElement.classList.remove('visible')
+                                    }
 
                                     if(e.currentTarget.value == 'header' && nxtClose){
                                         let acc = false;
@@ -371,23 +398,29 @@ class NexterBuilder {
                                             }
                                         })
                                     }
-                                }else{
+                                }else if((e.currentTarget.value == 'header' && headerSec) || (e.currentTarget.value == 'footer' && footerSec) || (e.currentTarget.value == 'hooks' && hooksSec)){
                                     addToggle.parentElement.classList.remove('visible')
                                 }
-                                if(e.currentTarget.value == 'header' && addToggle.classList.contains('active')){
-                                    headerSec.classList.add('active');
-                                }else{
-                                    headerSec.classList.remove('active');
+                                if(headerSec){
+                                    if(e.currentTarget.value == 'header' && addToggle.classList.contains('active')){
+                                        headerSec.classList.add('active');
+                                    }else{
+                                        headerSec.classList.remove('active');
+                                    }
                                 }
-                                if(e.currentTarget.value == 'footer' && addToggle.classList.contains('active')){
-                                    footerSec.classList.add('active');
-                                }else{
-                                    footerSec.classList.remove('active');
+                                if(footerSec){
+                                    if(e.currentTarget.value == 'footer' && addToggle.classList.contains('active')){
+                                        footerSec.classList.add('active');
+                                    }else{
+                                        footerSec.classList.remove('active');
+                                    }
                                 }
-                                if(e.currentTarget.value == 'hooks' && addToggle.classList.contains('active')){
-                                    hooksSec.classList.add('active');
-                                }else{
-                                    hooksSec.classList.remove('active');
+                                if(hooksSec){
+                                    if(e.currentTarget.value == 'hooks' && addToggle.classList.contains('active')){
+                                        hooksSec.classList.add('active');
+                                    }else{
+                                        hooksSec.classList.remove('active');
+                                    }
                                 }
                             })
                         }
@@ -756,6 +789,8 @@ class NexterBuilder {
                                         }else{
                                             action = 'action=nexter_ext_pages_condition_popup&nexter_nonce=' + nexter_admin_config.ajax_nonce+'&'+queryString+'&type=new';
                                         }
+                                    }else if(getSel.value == 'section'){
+                                        action = 'action=nexter_ext_sections_condition_popup&nexter_nonce=' + nexter_admin_config.ajax_nonce+'&'+queryString+'&type=new';
                                     }
                                     this.nxtBuilderCommon(action, true);
                                 }else{

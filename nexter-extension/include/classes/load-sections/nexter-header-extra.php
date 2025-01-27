@@ -26,12 +26,11 @@ if( ! function_exists('get_nexter_header_sections') ){
 function nexter_ext_render_header() {
 	?>
 		<header id="masthead" itemscope="itemscope" itemtype="https://schema.org/WPHeader">
-			<p class="main-title hide" itemprop="headline"><a href="<?php echo bloginfo( 'url' ); ?>" title="<?php echo esc_attr( get_bloginfo( 'name', 'display' ) ); ?>" rel="home"><?php bloginfo( 'name' ); ?></a></p>
+			<p class="main-title hide" itemprop="headline" style="display:none"><a href="<?php echo bloginfo( 'url' ); ?>" title="<?php echo esc_attr( get_bloginfo( 'name', 'display' ) ); ?>" rel="home"><?php bloginfo( 'name' ); ?></a></p>
 			<?php do_action('nexter_normal_header_content'); ?>
 		</header>
 	<?php
 }
-
 
 /**
  * Get Normal Header Content
@@ -81,58 +80,43 @@ if( ! function_exists('nexter_sticky_header_content_load') ){
 }
 
 /*
- * Transparent Header Classes
+ * Transparent Header & Sticky Header Classes
  *
  * @since 1.0.0
  */
-if( ! function_exists( 'nexter_transparent_header_classes' ) ){
-	function nexter_transparent_header_classes( $classes ){
+if ( ! function_exists( 'nexter_header_transparent_sticky_classes' ) ) {
+	function nexter_header_transparent_sticky_classes( $classes ) {
+
+		$sections = Nexter_Builder_Sections_Conditional::nexter_sections_condition_hooks( 'sections', 'header' );
 		
-		$sections_transparent = Nexter_Builder_Sections_Conditional::nexter_sections_condition_hooks( 'sections', 'header' );
-		
-		$display = false;
-		
-		if( !empty( $sections_transparent ) ){
-			foreach ( $sections_transparent as $post_id ) {
-				$transparent  = get_post_meta( $post_id, 'nxt-transparent-header', true );
-				if( $transparent != '' && $transparent == 'on' ){
-					$display = true;
+		$transparent_display = false;
+		$sticky_display      = false;
+
+		if ( ! empty( $sections ) ) {
+			foreach ( $sections as $post_id ) {
+				// Check for Transparent Header
+				$transparent = get_post_meta( $post_id, 'nxt-transparent-header', true );
+				if ( ! empty( $transparent ) && $transparent == 'on' ) {
+					$transparent_display = true;
+				}
+
+				// Check for Sticky Header
+				$sticky = get_post_meta( $post_id, 'nxt-normal-sticky-header', true );
+				if ( ! empty( $sticky ) && ( $sticky == 'sticky' || $sticky == 'both' ) ) {
+					$sticky_display = true;
 				}
 			}
 		}
-		
-		if($display){
+
+		// Add appropriate classes
+		if ( $transparent_display ) {
 			$classes[] = 'nxt-trans-overlay';
 		}
-		return $classes;
-	}
-	add_filter( 'nexter_header_class', 'nexter_transparent_header_classes', 10, 1 );
-}
-
-/*
- * Sticky Header Classes
- *
- * @since 1.0.5
- */
-if( ! function_exists( 'nexter_sticky_header_classes' ) ){
-	function nexter_sticky_header_classes( $classes ){
-		
-		$sections = Nexter_Builder_Sections_Conditional::nexter_sections_condition_hooks( 'sections', 'header' );
-		$display = false;
-		
-		if( !empty( $sections ) ){
-			foreach ( $sections as $post_id ) {
-				$sticky  = get_post_meta( $post_id, 'nxt-normal-sticky-header', true );
-				if(!empty($sticky) && ($sticky == 'sticky' || $sticky == 'both') ){
-					$display = true;
-				}
-			}
-		}
-		
-		if($display){
+		if ( $sticky_display ) {
 			$classes[] = 'nxt-sticky';
 		}
+
 		return $classes;
 	}
-	add_filter( 'nexter_header_class', 'nexter_sticky_header_classes', 10, 1 );
+	add_filter( 'nexter_header_class', 'nexter_header_transparent_sticky_classes', 10, 1 );
 }

@@ -190,7 +190,7 @@ class Nexter_Ext_Local_Google_Font_New {
     
         // Create fonts nxt_assets directory if it doesn't exist
         if (!$wp_filesystem->is_dir($directory)) {
-            $wp_filesystem->mkdir($directory, FS_CHMOD_DIR);
+            wp_mkdir_p($directory);
         }
     
         // Match Google Fonts links in the HTML
