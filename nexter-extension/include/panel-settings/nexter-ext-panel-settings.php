@@ -376,6 +376,20 @@ if ( ! class_exists( 'Nexter_Ext_Panel_Settings' ) ) {
                 wp_send_json_success();
             }else if(!empty( $ext ) && $ext==='white-label' && !empty($wpWLSet)){
                 $whiteLabelData =  (array) json_decode($wpWLSet);
+                if( !empty($whiteLabelData) && isset($whiteLabelData['theme_screenshot_id']) && !empty($whiteLabelData['theme_screenshot_id']) && isset($whiteLabelData['theme_screenshot'])){
+                    $fileName = basename(get_attached_file($whiteLabelData['theme_screenshot_id']));
+                    $filepathname = basename($whiteLabelData['theme_screenshot']);
+                    if(!empty($fileName) && !empty($filepathname)){
+                        $filetype = wp_check_filetype($fileName);
+                        $filepathtype = wp_check_filetype($filepathname);
+                        if(!empty($filetype) && isset($filetype['type']) && !empty($filepathtype) && isset($filepathtype['type'])){
+                            if(!(strpos($filetype['type'], 'image') !== false) || !(strpos($filepathtype['type'], 'image') !== false)) {
+                                $whiteLabelData['theme_screenshot'] = '';
+                                $whiteLabelData['theme_screenshot_id'] = '';
+                            }
+                        }
+                    }
+                }
                 if( !empty($whiteLabelData) && isset($whiteLabelData['theme_logo_id']) && !empty($whiteLabelData['theme_logo_id']) && isset($whiteLabelData['theme_logo'])){
                     $fileName = basename(get_attached_file($whiteLabelData['theme_logo_id']));
                     $filepathname = basename($whiteLabelData['theme_logo']);

@@ -47,8 +47,8 @@ if ( ! class_exists( 'Nexter_Extensions_Load' ) ) {
 				add_action( 'wp_ajax_nexter_ext_pro_dismiss_notice', array( $this, 'nexter_ext_pro_dismiss_notice_ajax' ) );
 			}
 
-			/* add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts_admin' ) );
-			if ( class_exists( '\Elementor\Plugin' )) {
+			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts_admin' ) );
+			/*if ( class_exists( '\Elementor\Plugin' )) {
 				add_action( 'elementor/editor/before_enqueue_scripts', array( $this, 'nxt_elementor_wdk_preset_script' ) );
 			} */
 
@@ -128,7 +128,7 @@ if ( ! class_exists( 'Nexter_Extensions_Load' ) ) {
 					'official-site' => '<a href="'.esc_url('https://nexterwp.com/').'" target="_blank" rel="noopener noreferrer">'.esc_html__( 'Official Site', 'nexter-extension' ).'</a>',
 					'docs' => '<a href="'.esc_url('https://docs.posimyth.com/nexterwp').'" target="_blank" rel="noopener noreferrer" style="color:green;">'.esc_html__( 'Docs', 'nexter-extension' ).'</a>',
 					'join-community' => '<a href="'.esc_url('https://www.facebook.com/groups/139678088029161/').'" target="_blank" rel="noopener noreferrer">'.esc_html__( 'Join Community', 'nexter-extension' ).'</a>',
-					'whats-new' => '<a href="'.esc_url('https://roadmap.nexterwp.com/updates?filter=Free+Theme').'" target="_blank" rel="noopener noreferrer" style="color: orange;">'.esc_html__( 'What\'s New?', 'nexter-extension' ).'</a>',
+					'whats-new' => '<a href="'.esc_url('https://roadmap.nexterwp.com/updates?filter=Nexter+Extension+-+FREE').'" target="_blank" rel="noopener noreferrer" style="color: orange;">'.esc_html__( 'What\'s New?', 'nexter-extension' ).'</a>',
 					'req-feature' => '<a href="'.esc_url('https://roadmap.nexterwp.com/boards/feature-requests').'" target="_blank" rel="noopener noreferrer">'.esc_html__( 'Request Feature', 'nexter-extension' ).'</a>',
 					'rate-theme' => '<a href="'.esc_url('https://wordpress.org/support/plugin/nexter-extension/reviews/?filter=5').'" target="_blank" rel="noopener noreferrer">'.esc_html__( 'Rate Plugin', 'nexter-extension' ).'</a>'
 				);

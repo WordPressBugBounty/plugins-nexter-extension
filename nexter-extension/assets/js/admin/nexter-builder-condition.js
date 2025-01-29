@@ -366,7 +366,9 @@ class NexterBuilder {
                                         form.setAttribute('action', NexterConfig.adminPostUrl);
                                 }else{
                                     let btn_wrap = document.querySelector('.nxt-action-btn-wrap');
-                                    btn_wrap.remove()
+                                    if(btn_wrap){
+                                        btn_wrap.remove()
+                                    }
                                     let getAction = popEle.querySelector('.temp-action-btn');
                                     if(getAction){
                                         getAction.classList.remove('nxt-hide');

@@ -1224,7 +1224,7 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 					$check_login_status = true;
 					$check_user_roles = true;
 					
-					$display_specific = true;
+					$display_specific = false;
 
 					if(!is_admin() && !empty($post_meta_value) && is_array($post_meta_value)){
 						$check_condition = false;
@@ -1232,6 +1232,7 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 						/* if(in_array('standard-universal', $post_meta_value, true)){
 							$check_condition = true;
 						} */
+					
 						if( $current_page_type_name == 'is_home' ){
 							if (in_array('default-blog', $post_meta_value, true)) {
 								$check_condition = true;
@@ -1245,6 +1246,7 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 							];
 							foreach ($conditions as $condition) {
 								if (in_array($condition, $post_meta_value, true)) {
+									
 									$check_condition = true;
 									break;
 								}
@@ -1305,7 +1307,7 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 								$check_condition = true;
 							}
 						}
-
+						
 						//standard match
 						if( $type == 'nxt-code-snippet' ){
 							$post_col = array_column($post_meta_value, 'value');
@@ -1313,6 +1315,7 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 						}else{
 							$standard_value = preg_grep('/^standard-/i', $post_meta_value);
 						}
+						
 						
 						if(!empty($standard_value)){
 							$priority = 5;
@@ -1349,20 +1352,18 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 								$check_condition = true;
 							}
 						}
-
+						
 						//pages match
 						if( $type == 'nxt-code-snippet' ){
 							$post_col = array_column($post_meta_value, 'value');
 							$check_value = preg_grep('/^default-/i', $post_col);
-						}else{
-							$check_value = preg_grep('/^default-/i', $post_meta_value);
 						}
 						
 						if(!empty($check_value)){
 							$priority = 15;
 							$check_condition = true;
 						}
-						
+
 						$code_condition = [];
 						$get_sub_field = [];
 						if(isset($post_meta_value[0]) && isset($post_meta_value[0]['value'])){
@@ -1445,7 +1446,6 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 											}
 										}
 									}
-									
 									if($check_value || $post_type_match){
 										$priority = 20;
 										$display_specific = true;
@@ -1468,7 +1468,7 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 								$display_specific = false;
 							}
 						}
-
+						
 						//Date & Time (Day/Time/Date)
 						if(!empty($post_meta_value) && in_array('set-day',$post_meta_value)){
 							$set_day   = get_post_meta( $post_data->ID, 'nxt-hooks-layout-set-day', true );
@@ -1513,7 +1513,7 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 							$set_user_roles = array_column($get_sub_field['user-roles'], 'value');
 							$check_user_roles = self::check_condition_user_roles($set_user_roles, $check_user_roles );
 						}
-
+						
 						if($display_specific || $check_condition){
 							$display_specific = true;
 						}
