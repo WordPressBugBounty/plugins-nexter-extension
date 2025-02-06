@@ -1232,10 +1232,18 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 						/* if(in_array('standard-universal', $post_meta_value, true)){
 							$check_condition = true;
 						} */
+						$code_meta_value = [];
+						if( $type == 'nxt-code-snippet' ){
+							$code_meta_value = array_column($post_meta_value, 'value');
+						}
 					
 						if( $current_page_type_name == 'is_home' ){
 							if (in_array('default-blog', $post_meta_value, true)) {
 								$check_condition = true;
+								$priority = 15;
+							}else if (in_array('default-blog', $code_meta_value, true)) {
+								$check_condition = true;
+								$priority = 15;
 							}
 						}else if( $current_page_type_name == 'is_front_page' ){
 							$current_id = esc_sql( get_the_id() );
@@ -1246,7 +1254,9 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 							];
 							foreach ($conditions as $condition) {
 								if (in_array($condition, $post_meta_value, true)) {
-									
+									$check_condition = true;
+									break;
+								}else if (in_array($condition, $code_meta_value, true)) {
 									$check_condition = true;
 									break;
 								}
@@ -1261,11 +1271,18 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 								if (in_array($condition, $post_meta_value, true)) {
 									$check_condition = true;
 									break;
+								}else if (in_array($condition, $code_meta_value, true)) {
+									$check_condition = true;
+									break;
 								}
 							}
 						}else if( $current_page_type_name == 'is_search' ){
 							if (in_array('default-search', $post_meta_value, true)) {
 								$check_condition = true;
+								$priority = 15;
+							}else if (in_array('default-search', $code_meta_value, true)) {
+								$check_condition = true;
+								$priority = 15;
 							}
 						}else if( $current_page_type_name == 'is_singular' ){
 							$current_id      = esc_sql( get_the_id() );
@@ -1279,6 +1296,9 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 								if (in_array($condition, $post_meta_value, true)) {
 									$check_condition = true;
 									break;
+								}else if (in_array($condition, $code_meta_value, true)) {
+									$check_condition = true;
+									break;
 								}
 							}
 						}else if( $current_page_type_name == 'is_archive' || $current_page_type_name == 'is_tax' || $current_page_type_name == 'is_date' || $current_page_type_name == 'is_author' ){
@@ -1290,21 +1310,36 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 								if (in_array($condition, $post_meta_value, true)) {
 									$check_condition = true;
 									break;
+								}else if (in_array($condition, $code_meta_value, true)) {
+									$check_condition = true;
+									break;
 								}
 							}
 	
 							if ( $current_page_type_name == 'is_date' ) {
 								if (in_array('default-date', $post_meta_value, true)) {
 									$check_condition = true;
+									$priority = 15;
+								}else if (in_array('default-date', $code_meta_value, true)) {
+									$check_condition = true;
+									$priority = 15;
 								}
 							} else if ( $current_page_type_name == 'is_author' ) {
 								if (in_array('default-author', $post_meta_value, true)) {
 									$check_condition = true;
+									$priority = 15;
+								}else if (in_array('default-author', $code_meta_value, true)) {
+									$check_condition = true;
+									$priority = 15;
 								}
 							}
 						}else if( $current_page_type_name == 'is_shop_page' ){
 							if (in_array('default-woo-shop', $post_meta_value, true)) {
 								$check_condition = true;
+								$priority = 15;
+							}else if (in_array('default-woo-shop', $code_meta_value, true)) {
+								$check_condition = true;
+								$priority = 15;
 							}
 						}
 						
@@ -1353,16 +1388,6 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 							}
 						}
 						
-						//pages match
-						if( $type == 'nxt-code-snippet' ){
-							$post_col = array_column($post_meta_value, 'value');
-							$check_value = preg_grep('/^default-/i', $post_col);
-						}
-						
-						if(!empty($check_value)){
-							$priority = 15;
-							$check_condition = true;
-						}
 
 						$code_condition = [];
 						$get_sub_field = [];

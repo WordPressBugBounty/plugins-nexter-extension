@@ -3,7 +3,7 @@ Contributors: posimyththemes, nirmalkavaiya, sagarpatel124
 Tags : theme-options, nexter-wordpress-theme, nexter-extension, nexter-builder 
 Requires at least: 4.0
 Tested up to: 6.7
-Stable tag: 4.0.4
+Stable tag: 4.0.6
 Requires PHP: 5.6
 License: GPLv3
 License URI: https://opensource.org/licenses/GPL-3.0
@@ -115,7 +115,17 @@ We Wanted to Include This in Theme Itself as This is a Part of Theme Itself. Wor
 You can report security bugs through the Patchstack Vulnerability Disclosure Program. The Patchstack team help validate, triage and handle any security vulnerabilities. [Report a security vulnerability.](https://patchstack.com/database/vdp/nexter-extension)
 
 == Changelog ==
-= 4.0.4 = 27 January 2024
+= 4.0.6 = 06 February 2025
+- Fixed : Plugin Page : What's News Update Link changelog.
+- Fixed : Code Snippets : Conditional Frontend Load Template Bug Fixed.
+- Fixed : Bug Fixed & Improvements.
+
+= 4.0.5 = 29 January 2025
+- Fixed : Plugin Page : What's News Update Link changelog.
+- Fixed : Theme Builder : Hooks Conditional Load Template Frontend Bug Fixed.
+- Fixed : Bug Fixed & Improvements.
+
+= 4.0.4 = 27 January 2025
 - Compatibility : Theme Builder templates (Header, Footer, Singular, Archives, 404 Page, Hooks, etc.) with: 
 	* Astra Theme, Hello Elementor Theme, GeneratePress Theme, OceanWP Theme, Kadence Theme, Blocksy Theme,Neve Theme etc..
 	* Enhanced support for Code Snippets across themes: Astra, Hello Elementor, GeneratePress, OceanWP, Kadence, Blocksy, Neve, and others. 
