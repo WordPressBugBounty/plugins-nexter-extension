@@ -753,6 +753,7 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 				$hooks['woocommerce_before_single_product_summary'] = __('Before Single Product Summary','nexter-extension');
 				$hooks['woocommerce_single_product_summary'] = __('Single Product Summary','nexter-extension');
 				$hooks['woocommerce_before_add_to_cart_form'] = __('Before Add To Cart Form','nexter-extension');
+				$hooks['woocommerce_template_single_price'] = __('Single Product Price','nexter-extension');
 				$hooks['woocommerce_before_variations_form'] = __('Before Variations Form','nexter-extension');
 				$hooks['woocommerce_before_add_to_cart_button'] = __('Before Add To Cart Button','nexter-extension');
 				$hooks['woocommerce_before_single_variation'] = __('Before Single Variation','nexter-extension');
@@ -764,6 +765,7 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 				$hooks['woocommerce_after_variations_form'] = __('After Variation Form','nexter-extension');
 				$hooks['woocommerce_after_add_to_cart_form'] = __('After Add To Cart Form','nexter-extension');
 				$hooks['woocommerce_product_meta_start'] = __('Product Meta Start','nexter-extension');
+				$hooks['woocommerce_template_single_meta'] = __('Product Meta (SKU, category, tags)','nexter-extension');
 				$hooks['woocommerce_product_meta_end'] = __('Product Meta End','nexter-extension');
 				$hooks['woocommerce_share'] = __('WooCommerce Share','nexter-extension');
 				$hooks['woocommerce_after_single_product_summary'] = __('After Single Product Summary','nexter-extension');
@@ -1079,7 +1081,7 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 					$join_meta      .= " OR pm.meta_value LIKE '%\"{$current_post_type}|entire\"%'"; */
 					
 				//}else if( $current_page_type_name == 'is_404' ){
-					//$join_meta .= " OR pm.meta_value LIKE '%\default-404\%' OR pm.meta_value LIKE '%page-404%'";
+				//	$join_meta .= " pm.meta_value LIKE '%\default-404\%' OR pm.meta_value LIKE '%page-404%'";
 				//}else if( $current_page_type_name == 'is_search' ){
 					//$join_meta .= " OR pm.meta_value LIKE '%\"default-search\"%'";
 				//}else if( $current_page_type_name == 'is_singular' ){
@@ -1175,6 +1177,7 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 				$posts = $get_data[ "{$type}_data" ];
 			}
 			
+			
 			if( !empty($posts) ){
 				foreach ( $posts as $post_data ) {
 					
@@ -1225,6 +1228,9 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 					$check_user_roles = true;
 					
 					$display_specific = false;
+					if(!is_array($post_meta_value)){
+						$post_meta_value = (array) $post_meta_value;
+					}
 
 					if(!is_admin() && !empty($post_meta_value) && is_array($post_meta_value)){
 						$check_condition = false;
@@ -1236,7 +1242,7 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 						if( $type == 'nxt-code-snippet' ){
 							$code_meta_value = array_column($post_meta_value, 'value');
 						}
-					
+						
 						if( $current_page_type_name == 'is_home' ){
 							if (in_array('default-blog', $post_meta_value, true)) {
 								$check_condition = true;
@@ -1263,6 +1269,7 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 							}
 								
 						}else if( $current_page_type_name == 'is_404' ){
+							
 							$conditions = [
 								'default-404',
 								'page-404'
