@@ -25,7 +25,9 @@ document.addEventListener('DOMContentLoaded', (event) => {
 			var request = new XMLHttpRequest();
 
 			request.open('POST', ajaxurl, true);
-			request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded;');
+			//request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded;');
+			request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        	request.setRequestHeader('Accept', 'application/json');
 			request.onload = function () {
 				
 			};

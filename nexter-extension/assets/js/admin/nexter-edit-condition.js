@@ -21,7 +21,9 @@
 
                         const request = new XMLHttpRequest();
                         request.open('POST', nexter_admin_config.ajaxurl, true);
-                        request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded;');
+                        //request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded;');
+                        request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        		        request.setRequestHeader('Accept', 'application/json');
                         request.onload = () => {
                             if (request.status >= 200 && request.status < 400) {
                                 const response = JSON.parse(request.response);

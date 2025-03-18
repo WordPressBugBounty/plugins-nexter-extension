@@ -17,6 +17,7 @@ if ( !class_exists( 'Nexter_Pro_Ext_Activate' ) ) {
 		    $licence_nonce = 'nexter_admin_nonce' ,
 		    $valid_url = 'https://store.posimyth.com',
 			$item_name = 'Nexter WordPress Theme',
+			$item_id = 99121,
 		    $license_page = 'nexter_welcome';
 
 		const nexter_activate = 'nexter_activate';
@@ -71,7 +72,8 @@ if ( !class_exists( 'Nexter_Pro_Ext_Activate' ) ) {
 				$api_params = array(
 					'edd_action' => 'activate_license',
 					'license' => $license,
-					'item_name' => self::$item_name,
+					//'item_name' => self::$item_name,
+					'item_id' => self::$item_id,
 					'url' => home_url()
 				);
 				

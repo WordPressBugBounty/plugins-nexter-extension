@@ -35,6 +35,55 @@ class Nexter_Ext_Performance_Security_Settings {
 			}, 99 );
 		}
 
+		if(isset($nxt_security_option) && !empty($nxt_security_option) && in_array('user_register_date_time',$nxt_security_option)){
+			add_filter( 'manage_users_columns', function( $columns ){
+				$columns['nxt_registered_date'] = __( 'Registered', 'nexter-extension' );
+				return $columns;
+			} );
+
+            add_filter('manage_users_custom_column',function( $output, $column_name, $user_id ){
+				
+				if ( 'nxt_registered_date' === $column_name ) {
+					$user = get_userdata( $user_id );
+       				$user_registered_date = strtotime( $user->user_registered );
+					$date_format = get_option('date_format', 'F j, Y');
+        			$time_format = get_option('time_format', 'g:i a');
+					
+					$output = function_exists('wp_date') ? wp_date("$date_format $time_format", $user_registered_date) : date_i18n("$date_format $time_format", $user_registered_date);
+				}
+				return $output;
+			}, 10, 3);
+		}
+
+		if(isset($nxt_security_option) && !empty($nxt_security_option) && in_array('user_last_login_display',$nxt_security_option)){
+			//Update Last Login
+			add_action( 'wp_login', function ( $user_login ){
+				$user = get_user_by( 'login', $user_login );
+				if ( is_object( $user ) ) {
+					if ( property_exists( $user, 'ID' ) ) {
+						update_user_meta( $user->ID, 'nxt_last_login_on', time() );
+					}
+				}
+			}, 3, 1 );
+			//Column
+			add_filter( 'manage_users_columns', function( $columns ) {
+				$columns['nxt_last_login_on'] = __( 'Last Login', 'nexter-extension' );
+				return $columns;
+			} );
+			add_filter('manage_users_custom_column', function( $output, $column_name, $user_id ) {
+				if ($column_name === 'nxt_last_login_on') {
+					$nxt_last_login_on = (int) get_user_meta($user_id, 'nxt_last_login_on', true);
+					if (!empty($nxt_last_login_on)) {
+						$format = get_option('date_format', 'F j, Y') . ' ' . get_option('time_format', 'g:i a');
+						$output = function_exists('wp_date') ? wp_date($format, $nxt_last_login_on) : date_i18n($format, $nxt_last_login_on);
+					} else {
+						$output = __('Never', 'nexter-extension');
+					}
+				}
+				return $output;
+			}, 10, 3 );
+		}
+		
 		if( !empty($extension_option) ){
 			/*Disable Emojis Scripts*/
 			if( in_array("disable_emoji_scripts",$extension_option) ){

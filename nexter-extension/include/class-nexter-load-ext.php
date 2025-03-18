@@ -48,7 +48,7 @@ if ( ! class_exists( 'Nexter_Extensions_Load' ) ) {
 			}
 
 			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts_admin' ) );
-			/*if ( class_exists( '\Elementor\Plugin' )) {
+			/* if ( class_exists( '\Elementor\Plugin' )) {
 				add_action( 'elementor/editor/before_enqueue_scripts', array( $this, 'nxt_elementor_wdk_preset_script' ) );
 			} */
 
@@ -388,8 +388,8 @@ if ( ! class_exists( 'Nexter_Extensions_Load' ) ) {
 		 * Nexter Extension Pro Load Notice
 		 */
 		public function nexter_extension_pro_load_notice() {
-			$admin_notice = '<h4 class="nxt-notice-head">' . esc_html__( 'Design Your Masterpiece With Nexter Pro !!!', 'nexter-extension' ) . '</h4>';
-			$admin_notice .= '<p>' . esc_html__( 'Enhance your building experience by setting out with pro version of Nexter WP Theme. Check out why you should upgrade to pro?', 'nexter-extension' );
+			$admin_notice = '<h4 class="nxt-notice-head">' . esc_html__( 'Design Your Masterpiece With Nexter Extension Pro !!!', 'nexter-extension' ) . '</h4>';
+			$admin_notice .= '<p>' . esc_html__( 'Enhance your building experience by setting out with pro version of Nexter Extension. Check out why you should upgrade to pro?', 'nexter-extension' );
 			$admin_notice .= sprintf( ' <a href="%s" target="_blank" rel="noopener noreferrer" >%s</a>', esc_url('https://nexterwp.com/free-vs-pro-compare/'), esc_html__( 'Free vs Pro', 'nexter-extension' ) ) . esc_html__('. You are backed with our 60 Days Money-Back Guarantee.', 'nexter-extension' ).'.</p>';
 			$admin_notice .= '<p>' . sprintf( '<a href="%s" target="_blank" rel="noopener noreferrer" class="button-primary">%s</a>', esc_url('https://nexterwp.com/pricing/'), esc_html__( 'UPGRADE NOW', 'nexter-extension' ) ) . '</p>';
 			echo '<div class="notice notice-info nexter-pro-ext-notice is-dismissible">'.wp_kses_post($admin_notice).'</div>';

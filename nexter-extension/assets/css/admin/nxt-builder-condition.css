@@ -221,7 +221,7 @@ body.post-php .nxt-ext-setting-pop, body.post-php .nxt-ext-setting-pop:after {
     padding: 50px 30px ;
 } */
 .nxt-common-cnt-wrap {
-    max-height: 255px;
+    max-height: 245px;
     overflow-y: auto;
     padding-right: 12px;
 }

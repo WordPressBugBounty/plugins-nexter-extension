@@ -150,7 +150,9 @@ class NexterBuilder {
     sendRequest(popEle, action) {
         const request = new XMLHttpRequest();
         request.open('POST', nexter_admin_config.ajaxurl, true);
-        request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded;');
+        request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        request.setRequestHeader('Accept', 'application/json');
+        // request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded;');
         request.onload = () => {
 
             if(popEle){

@@ -310,7 +310,12 @@ if ( ! class_exists( 'Nexter_Ext_Panel_Settings' ) ) {
                             if(false !== array_search('xss_protection', $get_option)){
                                 unset($get_option[array_search('xss_protection' , $get_option)]);
                             }
-
+                            if(false !== array_search('user_last_login_display', $get_option)){
+                                unset($get_option[array_search('user_last_login_display' , $get_option)]);
+                            }
+                            if(false !== array_search('user_register_date_time', $get_option)){
+                                unset($get_option[array_search('user_register_date_time' , $get_option)]);
+                            }
                             $get_option = self::nexter_ext_object_convert_to_array($get_option);
                             $securData = self::nexter_ext_object_convert_to_array($securData);
                             $newArr = array_merge($get_option,$securData);

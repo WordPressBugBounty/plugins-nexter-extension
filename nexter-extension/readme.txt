@@ -2,8 +2,8 @@
 Contributors: posimyththemes, nirmalkavaiya, sagarpatel124
 Tags : two factor authentication, security, header footer builder, elementor, code snippet, page speed, theme builder
 Requires at least: 4.0
-Tested up to: 6.7
-Stable tag: 4.0.7
+Tested up to: 6.7.2
+Stable tag: 4.0.8
 Requires PHP: 5.6
 License: GPLv3
 License URI: https://opensource.org/licenses/GPL-3.0
@@ -168,6 +168,12 @@ We Wanted to Include This in Theme Itself as This is a Part of Theme Itself. Wor
 You can report security bugs through the Patchstack Vulnerability Disclosure Program. The Patchstack team help validate, triage and handle any security vulnerabilities. [Report a security vulnerability.](https://patchstack.com/database/vdp/nexter-extension)
 
 == Changelog ==
+= 4.0.8 = 10 March 2025
+- Added : Advanced Security :  Last Login Date & Time : Track user last login date and time and display it in the users list table.
+- Added : Advanced Security :  Registration Date & Time : Show user registration date and time in the users list table.
+- Fixed : Theme Builder : Security Ajax Issued JS Bug Fixed
+- Fixed : Bug Fixed & Improvements.
+
 = 4.0.7 = 18 February 2025
 - Fixed : Theme Builder : Resolved 404 Page Conditional Loading Bug
 
