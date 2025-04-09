@@ -38,7 +38,7 @@ if ( ! class_exists( 'Nexter_Builder_Sections_Conditional' ) ) {
 		public function __construct() {
 			if(!is_admin()){
 				add_action( 'wp', array( $this, 'get_sections_ids' ), 1 );
-				if(defined('HELLO_ELEMENTOR_VERSION')){
+				if(!defined('ASTRA_THEME_VERSION') && !defined('GENERATE_VERSION') && !defined('OCEANWP_THEME_VERSION') && !defined('KADENCE_VERSION') && !function_exists('blocksy_get_wp_theme') && !defined('NEVE_VERSION') && !defined('NXT_VERSION')){
 					add_action( 'wp', array( $this, 'theme_hooks' ) );
 				}
 			}

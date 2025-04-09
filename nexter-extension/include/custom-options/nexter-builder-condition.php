@@ -428,7 +428,7 @@ if ( ! class_exists( 'Nexter_Builder_Condition' ) ) {
             }
 
             $theme_comp_option = true;
-            if(defined('ASTRA_THEME_VERSION') || defined('GENERATE_VERSION') || defined('OCEANWP_THEME_VERSION') || defined('KADENCE_VERSION') || function_exists('blocksy_get_wp_theme') || defined('NEVE_VERSION')){
+            if(!defined('NXT_VERSION')){
                 $theme_comp_option = false;
                 if(!empty($selectedLayout) && ($selectedLayout == 'header' || $selectedLayout == 'footer')){
                     $accActive = '';

@@ -1,175 +1,269 @@
-=== Nexter Extension ===
+=== Nexter Extension - Site Enhancements Toolkit ===
 Contributors: posimyththemes, nirmalkavaiya, sagarpatel124
-Tags : two factor authentication, security, header footer builder, elementor, code snippet, page speed, theme builder
+Tags : security, elementor, theme-builder, pagespeed, code snippet
 Requires at least: 4.0
 Tested up to: 6.7.2
-Stable tag: 4.0.9
+Stable tag: 4.1.0
 Requires PHP: 5.6
 License: GPLv3
 License URI: https://opensource.org/licenses/GPL-3.0
 
+Replace 50+ WordPress Plugins with just this WordPress plugin, with Free Elementor & Gutenberg Theme Builder & More
+
 == Description ==
 
-<strong>[Nexter Extension](https://nexterwp.com/nexter-extension?utm_source=wordpress&utm_medium=readmepage&utm_campaign=nexterextension)</strong> is our vision is to make the core of the WordPress more modern and user-friendly. This will provide you with all the necessary features to make your website building experience remarkable.
+<strong>[Nexter Extension](
+https://nexterwp.com/nexter-extension?utm_source=wordpress&utm_medium=readmepage&utm_campaign=nexterextension)</strong> is our vision is to make the core of WordPress more modern and user-friendly with ultimate WordPress Site Enhancement & Asset Tune up Settings to Extend you WP like never before.
+
+One WordPress Plugins will replace more than 50 WordPress plugins for you.
 
 <strong> Quick Navigation Links</strong>
 
-[ 🌐 Visit Website](https://nexterwp.com/nexter-extension?utm_source=wordpress&utm_medium=readmepage&utm_campaign=nexterextension) | [ 📹 Video Tutorials](https://www.youtube.com/c/POSIMYTHInnovations/?sub_confirmation=1)| [ 📑 Documentations](https://nexterwp.com/docs?utm_source=wordpress&utm_medium=readmepage&utm_campaign=nexterextension) | [ 🛣️ Roadmap](https://roadmap.nexterwp.com/) | [ 👥 Join Community](https://www.facebook.com/groups/nexterwpcommunity/) |[ 🤝 Free Support](https://wordpress.org/support/plugin/nexter-extension/) | [ ⭐ Premium Support](https://store.posimyth.com/helpdesk/?utm_source=wordpress&utm_medium=readmepage&utm_campaign=nexterextension)
+[Visit Website](
+https://nexterwp.com/nexter-extension?utm_source=wordpress&utm_medium=readmepage&utm_campaign=nexterextension) | [Complete Feature List](
+https://nexterwp.com/nexter-extension/features/?utm_source=wordpress&utm_medium=readmepage&utm_campaign=nexterextension)
+ |[ Video Tutorials](
+https://www.youtube.com/c/POSIMYTHInnovations/?sub_confirmation=1)| [Documentations](
+) | [Roadmap](
+https://roadmap.nexterwp.com/) | [ Join Community](
+https://www.facebook.com/groups/nexterwpcommunity/) |[ Free Support](
+https://wordpress.org/support/plugin/nexter-extension/) | [Premium Support](
+https://store.posimyth.com/helpdesk/?utm_source=wordpress&utm_medium=readmepage&utm_campaign=nexterextension) | [AI Chat (Instant Answers)](http://nexterwp.com/chat?utm_source=wordpress&utm_medium=readmepage&utm_campaign=nexterextension) | [Compare Free vs Pro](
+https://nexterwp.com/free-vs-pro/#Nexter-Extension?utm_source=wordpress&utm_medium=readmepage&utm_campaign=nexterextension)
 
-💪 GET TO KNOW EVERYTHING ABOUT NEXTER IN 2 MINS [WATCH NOW](https://youtu.be/zUuMIx0Ulzo)
-https://youtu.be/zUuMIx0Ulzo
+## 👑 Exclusive Features of NEXTER Extension Site Enhancement Toolkit
 
-<strong>[SEE DETAILED FEATURE LIST](https://nexterwp.com/nexter-extension/features?utm_source=wordpress&utm_medium=readmepage&utm_campaign=nexterextension/)</strong>
+=== 1. Elementor Theme Builder & WordPress Gutenberg Block Theme Builder (FREE)===
+- **Header Builder** -   Create fully customized and responsive headers using your preferred editor.
 
-★★★★★
-> “Great Job guys, we have replaced all our client sites with Nexter Theme, just because of it light build.
-> We always wanted a theme which has less bloated code but gives us the important feature required to build a complete website from scratch. This is the perfect match, more like Elementor Hello Theme on Steroid. We never imagined that even Gutenberg could even get such Theme Builder like popular Page Builders.
->Keep going, I have a lot of expectations for you all, have been an avid user of The Plus Addons for Elementor, and now this combined it’s once for all solution for our client projects. Truly a Theme Build for the Future of WordPress” - [arswebmedia](https://wordpress.org/support/topic/finally-my-search-for-fastest-wordpress-theme-ends/)
+- **Footer Builder** -  Design unique and responsive footers seamlessly with your chosen editor.
 
-### 👑 Exclusive Features of NEXTER Extenion FREE & PRO
+- **Breadcrumbs Bar** - Enhance site navigation and SEO with a customizable breadcrumbs bar.
 
-=== 1. Theme Builder for Elementor & Gutenberg ===
-**Advanced Header Builder**<br>
-Get rid of the limited Header customizer. Use Elementor Widgets or Blocks to create a fully customized menu.<br>
+- **404 Page** -  Transform error pages into engaging experiences with personalized 404 designs.
 
-**Advanced Footer Builder**<br>
-Create any footer layout you want with no layout restrictions. Design your footer using Elementor Widgets or Blocks.<br>
+- **Single Pages** - Create tailored single post layouts for diverse content types.
 
-**Breadcrumbs Bar**<br>
-Help users navigate your website with a breadcrumb bar that displays their path.<br>
+- **Archive Pages** - Develop organized and visually appealing archive pages for your content.
 
-**404 Page**<br>
-Turn a "Page Not Found" error into an opportunity. Customize your 404 error page with branding and helpful content.<br>
+- **Display Rules for Theme Builder** - Control the visibility of theme elements based on specific conditions.
 
-**Single Pages**<br>
-Create custom single pages for CPT, blog posts, or WooCommerce product pages.<br>
+=== 2. Code Snippets - Insert Header & Footer Custom Code ===
+- **PHP, HTML, CSS, and JavaScript Snippets** - Add and manage various code types to customize your WordPress site.
 
-**Archive Pages**<br>
-Build custom listing pages for posts, CPTs, or WooCommerce products.<br>
+- **Active and Inactive Code Management** - Enable or disable snippets as needed for better control over site functionality.
 
-**Display Rules for Theme Builder**<br>
-Control where and how your theme builder sections appear on your site.<br>
+- **Conditional Frontend & Backend Code Loading** - Load snippets conditionally based on specific criteria to optimize performance.
 
-**Action & Filter Hooks**<br>
-Fine-tune website behavior with developer-friendly action and filter hooks.<br>
+- **Tagging & Adding Notes** - Organize snippets with tags and notes for easy identification and management.
 
-**Works with:**<br>
-Nexter Theme, Hello Elementor, Astra, GeneratePress, OceanWP, Kadence, Blocksy, Neve.<br>
+- **Works with All WordPress Themes  - Code Snippets are fully compatible with any WordPress theme, offering seamless integration and complete flexibility.
 
-=== 2. Code Snippets ===
-**Add HTML, CSS, JS & PHP Code**<br>
-Insert and manage code snippets site-wide effortlessly.<br>
+=== 3. Extra Utilities for Site Enhancement & Tune ups ===
+- **Adobe Fonts Integration** - Seamlessly connect with Adobe Fonts to access a vast library of premium typefaces for your WordPress site.
 
-**Conditional Code Load**<br>
-Optimize performance by loading specific code snippets only when required.<br>
+- **Custom Font Uploads** - Upload and apply custom fonts directly to your website, ensuring brand consistency and unique typography.
 
-**Smart Code Error Handling**<br>
-Prevents site crashes by detecting and stopping faulty code snippets.<br>
+- **Admin Interface Customization** - Tailor your WordPress dashboard by hiding or disabling specific elements for a streamlined experience.
 
-=== 3. Extra Options ===
-**Adobe Fonts**<br>
-Connect with Adobe Cloud Fonts to access a vast library of stylish fonts.<br>
+  - **Hide Frontend Admin Bar** - Remove the admin toolbar from the frontend for non-administrative users to maintain a clean site appearance. 
 
-**Custom Upload Fonts**<br>
-Upload and use custom fonts to maintain brand consistency.<br>
+  - **Hide Themes Update Notifications** - Suppress theme update alerts in the admin panel to minimize distractions.
 
-**Disable Admin Settings**<br>
-Simplify the WordPress dashboard by hiding unnecessary admin settings and notifications.<br>
+  - **Hide Plugin Update Notifications** - Conceal plugin update messages to keep the dashboard uncluttered. 
 
-**Replace Text & URL**<br>
-Bulk replace text or URLs across your website in one go.<br>
+  - **Hide Core Update Notifications** - Disable notifications about WordPress core updates to focus on essential tasks.
 
-**Duplicate Post**<br>
-Clone posts and pages with a single click while maintaining the layout.<br>
+  - **Hide Admin Notices** - Remove generic admin notices to maintain a clean and focused dashboard environment. 
 
-**Regenerate Thumbnails**<br>
-Ensure images display correctly by regenerating thumbnail sizes.<br>
+  - **Remove 'PHP Update Required' Notice** - Eliminate the PHP update warning to reduce unnecessary alerts.  
 
-**Branded WP Admin**<br>
-Customize your WP Admin login page with your brand's logo and colors.<br>
+  - **Remove Welcome Panel** - Permanently hide the default WordPress welcome panel for a more streamlined dashboard. 
 
-=== 4. Performance ===
-**Advanced Performance**<br>
-Optimize speed by removing unnecessary assets and applying performance tweaks.<br>
+- **Bulk Text & URL Replacement** - Efficiently replace text or URLs across your entire website in one operation, saving time and reducing errors.
 
-**Disable Comments**<br>
-Stop spam links by disabling comments where they aren’t needed.<br>
+- **Post Duplication** - Clone posts and pages effortlessly, preserving layouts and content structure for quick content replication.
 
-**Disable Image Sizes**<br>
-Save server resources by disabling unused image sizes.<br>
+- **Thumbnail Regeneration** - Regenerate image thumbnails to ensure proper display and consistency across different devices and screen sizes.
 
-**Register Custom Image Sizes**<br>
-Create custom image sizes tailored to your design needs.<br>
+- **Branded Admin Interface** - Customize your WordPress admin login page with your brand's logo and colors, enhancing the backend experience.
 
-**Disable Icons**<br>
-Boost performance by turning off unused Elementor icons.<br>
+=== 4. Performance & Asset Tune ups for Page Speed ===
+- **Advanced Performance** - Optimize your site's speed by removing unnecessary assets and applying performance tweaks.
 
-**Google Fonts**<br>
-Self-host Google Fonts, enable Display Swap, or disable them entirely to load system fonts instead.<br>
+  - **Disable Emojis Script** - Prevent the loading of emoji-related scripts to reduce HTTP requests and improve load times.
 
-=== 5. Security ===
-**Advanced Security**<br>
-Protect your website with powerful security measures.<br>
+  - **Disable Embeds** - Stop the loading of embed scripts used for embedding content from other sites, reducing unnecessary resource usage.
 
-**Captcha**<br>
-Add Google reCAPTCHA or Cloudflare Turnstile to login, register, password reset, WooCommerce checkout, and forms.<br>
+  - **Disable Dashicons** - Prevent the loading of Dashicons on the frontend when not required, reducing CSS file requests.
 
-**Content Protection**<br>
-Prevent unauthorized content copying to safeguard intellectual property.<br>
+  - **Remove RSD Link** - Eliminate the Really Simple Discovery (RSD) link from your site's header when not using external editing tools.
 
-**Custom Login URL**<br>
-Secure your site by hiding the default WP-Admin login URL.<br>
+  - **Remove wlwmanifest Link** - Remove the Windows Live Writer manifest link from your site's header if not utilizing this feature.
 
-**2-Factor Authentication (2FA)**<br>
-Add an extra layer of protection with email or time-based OTP authentication.<br>
+  - **Remove Shortlink** - Delete the shortlink tag from your site's header when using pretty permalinks.
 
-**Login Email Notifications**<br>
-Get email alerts for login activities to monitor unauthorized access.<br>
+  - **Disable RSS Feeds** - Turn off RSS feeds if your site doesn't utilize them, reducing unnecessary feed-related resources.
 
-###**Recommended Addons**  : 
+  - **Remove RSS Feed Links** - Remove RSS feed links from your site's header to declutter and optimize performance.
 
-**If you're using Elementor Page Builder, then install [The Plus Addons for Elementor](https://wordpress.org/plugins/the-plus-addons-for-elementor-page-builder/)** 
+  - **Disable Self Ping backs** - Stop self-ping backs when linking to your content, reducing unnecessary server requests.
 
-**For default WordPress Gutenberg Block Editor, install [Nexter Blocks](https://wordpress.org/plugins/the-plus-addons-for-block-editor/)** 
+  - **Disable Password Strength Meter** - Prevent the loading of the password strength meter script on unnecessary pages, improving load times.
 
-<strong>[GET NEXTER NOW](https://nexterwp.com/pricing/?utm_source=wordpress&utm_medium=readmepage&utm_campaign=nexterextension)</strong>
+  - **Defer CSS & JS** - Defer the loading of CSS and JavaScript files to prioritize the rendering of critical content, enhancing perceived load speed.
 
-<p><strong>If this Plugin adds value to your business, please share your valuable review ⭐️ ⭐️ ⭐️ ⭐️ ⭐️ to encourage for future improvement.<br>❤️ Thank you <a href="https://wordpress.org/support/plugin/nexter-extension/reviews/?filter=5">👉 ADD 5 STAR</a> </strong></p>
+- **Disable Comments** - Stop spam links by disabling comments where they aren’t needed.
+
+- **Disable Image Sizes** - Save server resources by disabling unused image sizes.
+
+- **Register Custom Image Sizes** - Create custom image sizes tailored to your design needs.
+
+- **Disable Icons** - Boost performance by turning off unused Elementor icons, Font Awesome Icons
+
+- **Self-Host Google Fonts** - Host Google Fonts locally on your server to enhance load times and comply with privacy regulations. This approach reduces external HTTP requests, leading to faster page speeds and improved GDPR compliance. 
+
+  - **Display Swap for Google Fonts** - Implement the 'font-display: swap' property to ensure text remains visible during font loading, enhancing user experience and performance.
+
+  - **Disable Google Fonts** - Provide the option to disable Google Fonts entirely, allowing the use of system fonts for improved speed and privacy.
+
+=== 5. Security Hardening for WordPress ===
+
+- **Advanced Security** - Implement robust measures to safeguard your website.
+
+  - **Disable XML-RPC** - Prevent unauthorized remote access by disabling the XML-RPC protocol.
+
+  - **Hide WordPress Version** - Conceal your WordPress version to deter targeted attacks.
+
+  - **Remove REST API Links** - Limit exposure by removing REST API links from your site's header.
+
+  - **Disable File Editor** - Prevent unauthorized code edits by disabling the built-in file editor.
+
+  - **Remove Meta Generator** - Eliminate meta generator tags to obscure CMS details.
+
+  - **XSS Protection** - Guard against Cross-Site Scripting attacks by sanitizing inputs.
+
+  - **iFrame Security** - Prevent clickjacking by restricting iframe embedding.
+
+  - **Secure Cookies** - Enhance session security by enforcing secure cookie attributes.
+
+  - **Last Login Date & Time** - Track user activity with last login timestamps.
+
+  - **Registration Date & Time** - Monitor new user registrations with date and time records.
+
+  - **Captcha Spam Protection** - Integrate Google reCAPTCHA or Cloudflare Turnstile *(Coming Soon)* for enhanced form security.
+
+  - **Login Form** - Add CAPTCHA to the login page to deter automated attacks.
+
+  - **Register Form** - Implement CAPTCHA during user registration to prevent spam accounts.
+
+  - **Password Reset Form** - Secure the password reset process with CAPTCHA verification.
+
+  - **Comments Form** - Reduce spam by adding CAPTCHA to comment submissions.
+
+  - **WooCommerce Pages *(Coming Soon)*** - Protect checkout and account pages with CAPTCHA challenges.
+
+  - **Content Protection** - Prevent unauthorized copying of your site's content.
+
+  - **Disable Right Click** - Restrict right-click functionality to deter content theft.
+
+  - **Disable Text Selection** - Prevent users from highlighting and copying text.
+
+  - **Disable Dragging** - Stop dragging of images and other elements.
+
+  - **Disable Search Hotkeys** - Block keyboard shortcuts used for searching.
+
+  - **Disable Developer Console** - Impede access to browser developer tools.
+
+  - **Disable Copy-Paste (Ctrl+C, Ctrl+V)** - Restrict common copy-paste actions.
+
+And many more
+
+  - **Change WP Admin Login URL** - Secure your admin area by customizing the login path with redirect & message options.
+
+  - **2-Factor Authentication (2FA)** - Add an extra security layer with two-step verification.
+
+  - **Permission-Based Implementation** - Assign 2FA requirements based on user roles.
+
+  - **Custom Email Editor** - Personalize 2FA email notifications.
+
+  - **Login Email Notifications *PRO*** - Stay informed about login activities via email alerts.
+
+  - **User-Type Specific Notifications** - Configure alerts based on user roles.
+
+  - **Custom Email Content** - Tailor the content of login notification emails.
+
+
+<strong>[GET NEXTER Extension Pro](
+https://nexterwp.com/pricing/?utm_source=wordpress&utm_medium=readmepage&utm_campaign=nexterextension)</strong>
 
 ###🔍 Check our other Products
-<strong><a href="https://theplusaddons.com/?utm_source=wordpress&utm_medium=readmepage&utm_campaign=nexterextension">🥇 The Plus Addons for Elementor</a></strong> -  Nexter Extension works seamlessly with The Plus Addons for Elementor. Get 120+ unique Elementor widgets, Elementor templates and more. Which gives it a Free Elementor Theme Builder
+<strong><a href="
+https://theplusaddons.com/?utm_source=wordpress&utm_medium=readmepage&utm_campaign=nexterextension">🥇 The Plus Addons for Elementor</a></strong> -  Nexter Extension works seamlessly with The Plus Addons for Elementor. Get 120+ unique Elementor widgets, Elementor templates, and more. Which gives it a Free Elementor Theme Builder.
 
-<strong><a href="https://nexterwp.com/nexter-blocks/?utm_source=wordpress&utm_medium=readmepage&utm_campaign=nexterextension">🥇 Nexter Blocks</a></strong> - Nexter Theme works in sync with core Gutenberg, you can install Nexter Blocks to get 90+ powerful & highly customizable blocks.
+<strong><a href="
+https://nexterwp.com/nexter-blocks/?utm_source=wordpress&utm_medium=readmepage&utm_campaign=nexterextension">🥇 Nexter Blocks</a></strong> - Nexter Theme works in sync with core Gutenberg, you can install Nexter Blocks to get 90+ powerful & highly customizable blocks.
 
-<strong>[🥇 NexterWP Theme](https://nexterwp.com/nexter-theme/?utm_source=wordpress&utm_medium=readmepage&utm_campaign=nexterextension)</strong> - Best & Lightest Starter Theme for WordPress & Elementor
+<strong>[🥇 NexterWP Theme](
+https://nexterwp.com/nexter-theme/?utm_source=wordpress&utm_medium=readmepage&utm_campaign=nexterextension)</strong> - Best & Lightest Starter Theme for WordPress & Elementor
 
-<strong>[🥇 UiChemy - Figma to WordPress Convertor](https://uichemy.com/?utm_source=wordpress&utm_medium=readmepage&utm_campaign=nexterextension)</strong> - Convert your Figma Templates In Live Elementor Website using our [FREE Figma Plugin.](https://www.figma.com/community/plugin/1265873702834050352/)
+<strong>[🥇 UiChemy - Figma to WordPress Convertor](
+https://uichemy.com/?utm_source=wordpress&utm_medium=readmepage&utm_campaign=nexterextension)</strong> - Convert your Figma Templates In Live Elementor Website using our [FREE Figma Plugin.](
+https://www.figma.com/community/plugin/1265873702834050352/)
 
-<strong>[🥇WDesignKit](https://wdesignkit.com/?utm_source=wordpress&utm_medium=readmepage&utm_campaign=nexterextension)</strong> - 1000+ WordPress Templates, Elementor & Gutenberg Widget Builder, Widget to Block Convertor, Cloud Storage & more.
+<strong>[🥇WDesignKit](
+https://wdesignkit.com/?utm_source=wordpress&utm_medium=readmepage&utm_campaign=nexterextension)</strong> - 1000+ WordPress Templates, Elementor & Gutenberg Widget Builder, Widget to Block Convertor, Cloud Storage & more.
 
-== Installation ==
 <h3>☑️ 4 Easy Steps for Installation </h3>
 1. Go to <strong>‘Plugins’</strong> option in your dashboard and select <strong>'Add New'</strong>
-2. Search for <strong>'Nexter Extension'</strong> and install it
-3. Now after installation you will be prompted to install Nexter Theme after which click on Install
-5. Congratulation, Now your site is ready to use all the powers of Nexter.
+2. Search for <strong>'Nexter Extension'</strong> and Install it
+3. Congratulations, now your site is ready to use all the powers of Nexter.
 Get ready to explore a new side of WordPress
-<h3>👉 <a href="https://youtu.be/Zjbgre6IWlE"> Watch this Quick Installation Video Guide </a></h3>
-== Screenshots ==
-== Frequently Asked Questions ==
-= Will This Work With All Themes? =
-No, it won’t. Nexter Builder is specifically developed for Nexter WordPress Theme but also supports other popular themes like Hello Elementor, Astra, GeneratePress, OceanWP, Kadence, Blocksy, and Neve.
-= Why Did We Make This Plugin Separately? =
-We Wanted to Include All These Features in Nexter Theme Itself, as They’re Our Primary Concern & Concept for Nexter WordPress Theme. But Respecting Rules & Regulations of WordPress Platform and Theme Submission Protocols, We Found a Way to Continue Serving High-Quality Products by Appending Nexter Extensions to Theme Package.
-Only If You Want to Geek Out : 
-We Wanted to Include This in Theme Itself as This is a Part of Theme Itself. WordPress Have Considered Functions Like Register_post_type() in Plugin Territory, So We Couldn't Include That in the Theme. They Did This With Purpose, You May [Read It Here](https://developer.wordpress.org/reference/functions/register_post_type/#more-information).
+<h3>👉 <a href="
+"> Watch this Quick Installation Video Guide </a></h3>
 
-= How can I report security bugs?
-You can report security bugs through the Patchstack Vulnerability Disclosure Program. The Patchstack team help validate, triage and handle any security vulnerabilities. [Report a security vulnerability.](https://patchstack.com/database/vdp/nexter-extension)
+== Frequently Asked Questions ==
+= Will Nexter Builder Work With All Themes? =
+Nexter Builder is designed to work best with the Nexter WordPress Theme. However, its Code Snippets feature is compatible with all WordPress themes, so you can use that functionality regardless of the theme you're using.
+
+= How Does Nexter Builder Impact Website Performance? =
+Nexter Builder is designed with performance in mind, utilizing pure Vanilla JS without jQuery dependencies and smart optimized CSS and JS loading to ensure minimal impact on your site's speed. 
+
+= Is Nexter Builder Compatible With Other Page Builders? =
+Yes, Nexter Builder is compatible with major page builders like Elementor and Gutenberg, allowing you to create custom templates seamlessly. 
+
+= Why Is This Plugin Offered Separately from the Nexter Theme? =
+
+To adhere to WordPress's theme submission guidelines, we provide certain functionalities as a separate plugin. These guidelines specify that features like custom post types and other advanced functionalities fall within the “plugin territory” and should not be included within themes. By offering these features through the Nexter Extensions plugin, we ensure compliance with these standards while delivering a high-quality, feature-rich experience for our users.
+
+For those interested in the specifics, WordPress considers functions like `register_post_type()` to be within the plugin domain. This approach maintains a clear separation between a theme's presentation layer and additional functionalities, promoting better modularity and user choice. You can read more about this in the [WordPress Developer Resources](
+https://developer.wordpress.org/plugins/wordpress-org/detailed-plugin-guidelines/). 
+
+
+= How can I report security bugs? =
+You can report security bugs through the Patchstack Vulnerability Disclosure Program. The Patchstack team helps validate, triage and handle any security vulnerabilities. [Report a security vulnerability.](
+https://patchstack.com/database/vdp/nexter-extension)
+
+== Screenshots ==
+
+1. Introducing the WordPress Plugin Killer – Replace 50+ Plugins with One Solution  
+2. Nexter Theme Customizer – Full Design Control with Global Styling & Advanced Settings  
+3. Nexter Theme Builder – Create Custom Headers, Footers, & Layouts Without Coding  
+4. Performance Optimization – Boost Speed by Disabling Unused Assets & Scripts  
+5. Advanced Security Suite – Secure Login, Disable XML-RPC, Hide WP Admin & More  
+6. Admin Dashboard Enhancements – Hide Notices, Customize UI & Improve Workflow  
+7. Extra Site Utilities – Custom Fonts, Post Duplicator, Bulk URL Replace & More
 
 == Changelog ==
+
+### View Complete List of Changelog from [here](https://roadmap.nexterwp.com/updates?filter=Nexter+Extension+-+FREE)  
+
+= 4.1.0 = 09 April 2025
+- Updated : Theme Builder : All WP Themes Compatibility
+- Fixed : Bug Fixed & Improvements
+
 = 4.0.9 = 09 April 2025
-- Updated : Code Snippet : All Theme Compatibility
+- Updated : Code Snippet : All WP Themes Compatibility
 - Fixed : Bug Fixed & Improvements.
 
 
@@ -288,99 +382,3 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 - Improved : Performance by optimizing CSS & JS
 - Update : Ability to use standalone Without Nexter Theme
 - Fix : Switch Button Bug Fix Plugin Compatibility
-
-= 2.0.4 = 01 December 2022
-- Compatibility : WPML Compatibility Improvements and Bugs Fixed
-
-= 2.0.3 = 28 Nov 2022
-- Compatibility : WPML : Nexter Builder Templates
-
-= 2.0.2 = 17 Nov 2022
-- Compatibility : WordPress 6.1.1
-- Compatibility : Elementor 3.8.1
-- Compatibility : Gutenberg 14.5.2
-- Improvements : Minor Improvements and Bug Fixes
-
-= 2.0.1 = 03 Sept 2022
-- Fix : Nexter Builder : Php Code Snippet bug fix
-- Fix : Nexter Builder : Javascript Code Snippet bug fix
-- Fix : Admin Login Page 404 page redirect bug fix
-- Fix : Comment template bug fix
-
-= 2.0.0 = 29 June 2022
-- Added : Post/Page Duplicator : Post Author | Post Date | Post Status | Post Prefix | Post Slug Customization Options.
-- Added : Post/Page Duplicator : Duplicate Copies Number option
-- Added : Google reCAPTCHA : Version 2 | Version 2 (Invisible) | Version 3
-- Added : Google reCAPTCHA : Login Form | Registration Form | Reset Password Form | Comments Form
-- Added : Google reCAPTCHA : Light & Dark Theme Options
-- Added : Site Replace URL : Use for URL or Text content
-- Added : Site Replace URL : Case Sensitive Option
-- Added : Adobe font kit Integration
-- Added : Local Google font Integration
-- Added : Custom Font Upload : Simple Font Option
-- Added : Custom Font Upload : Variable Font Option
-- Added : Disable Admin Settings : Remove Welcome Panel
-- Added : Disable Admin Settings : Hide Admin Notice
-- Added : Disable Admin Settings : Hide Core Update Notifications
-- Added : Disable Admin Settings : Remove ‘PHP Update Required’ Notice
-- Added : Disable Admin Settings : Hide Plugin Update Notifications
-- Added : Disable Admin Settings : Hide Themes Update Notifications
-- Added : Disable Admin Settings : Hide Frontend Admin Bar
-- Added : Year & Copyright Shortcode : [nxt-copyright] for Copyright Symbol
-- Added : Year & Copyright Shortcode : [nxt-year] for Current Year
-- Added : Year & Copyright Shortcode : [nxt-year format='d-m-Y'] for Current Date in required Format
-- Added : System Info Download or Copy in Nexter Dashboard
-- Improved : New Nexter Dashboard Design
-- Fixes : Multiple Bug Fixes & Improvements
-
-= 1.0.10 = 20 April 2022
-- Update : Nexter Builder : Archive Pages : Default Post Type Archive option added
-- Fix: WP_User_Query compatibility with WP 5.9
-
-= 1.0.9 = 05 April 2022
-- Fix : Nexter Settings : Performance : PHP Bug
-
-= 1.0.8 = 12 Jan 2022
-- Fix : jQuery Free Bug Fix
-
-= 1.0.7 = 24 Nov 2021
-- Added : Nexter Builder Template List per page on Admin Bar for easy edit access
-- Added : Nexter Settings : Performance : Disable Emojis Script
-- Added : Nexter Settings : Performance : Disable Embeds
-- Added : Nexter Settings : Performance : Disable Dashicons
-- Added : Nexter Settings : Performance : Remove RSD Link
-- Added : Nexter Settings : Performance : Remove wlwmanifest Link
-- Added : Nexter Settings : Performance : Remove Shortlink
-- Added : Nexter Settings : Performance : Disable RSS Feeds
-- Added : Nexter Settings : Performance : Remove RSS Feed Links
-- Added : Nexter Settings : Performance : Disable Self Pingbacks
-- Added : Nexter Settings : Performance : Disable Comments, Disable Comments Post Type Wise
-- Added : Nexter Settings : Performance : Disable Password Strength Meter
-- Added : Nexter Settings : Security : Disable XML-RPC
-- Added : Nexter Settings : Security : Disable WP Version Generator
-- Added : Nexter Settings : Security : Disable REST API
-- Added : Nexter Settings : Security : Remove REST API Links
-- Added : Nexter Settings : Security : Redirect WP Login URL
-- Fix : Compatibility : Rank Math SEO Plugin CSS Conflict Bug
-
-= 1.0.6 = 29 Sep 2021
-- Fix : Header Bug
-
-= 1.0.5 = 27 Sep 2021
-- Added : Nexter Builder : Header Sticky Options
-- Update : Code Snippet : User Role permission "unfiltered_html" required for Code Execution
-
-= 1.0.4 = 22 Sep 2021
-- Added : Nexter Builder : Code Snippets (PHP, HTML, CSS, JavaScript)
-
-= 1.0.3 =
-- Fix : Bug Fix and Improvement
-
-= 1.0.2 =
-- Fix : Bug Fix
-
-= 1.0.1 =
-- Added : Nexter Builder Preview Options in Templates
-
-= 1.0.0 =
-- Initial Release

@@ -213,7 +213,7 @@ if ( ! class_exists( 'Nexter_Builder_Pages_Conditional' ) ) {
 		 */
 		public function load_template_include( $template ) {
 			
-			if ( defined('HELLO_ELEMENTOR_VERSION') && self::$location === 'singular' && is_404()){
+			if ( !defined('ASTRA_THEME_VERSION') && !defined('GENERATE_VERSION') && !defined('OCEANWP_THEME_VERSION') && !defined('KADENCE_VERSION') && !function_exists('blocksy_get_wp_theme') && !defined('NEVE_VERSION') && !defined('NXT_VERSION') && self::$location === 'singular' && is_404()){
 				return $this->get_template_path();
 			}
 			//is empty documents default

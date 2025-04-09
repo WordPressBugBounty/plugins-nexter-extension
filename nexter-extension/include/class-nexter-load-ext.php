@@ -145,7 +145,7 @@ if ( ! class_exists( 'Nexter_Extensions_Load' ) ) {
 		 * Template(Builder) Load
 		 */
 		public function nexter_builder_post_type() {
-			if(defined('NXT_VERSION') || defined('HELLO_ELEMENTOR_VERSION') || defined('ASTRA_THEME_VERSION') || defined('GENERATE_VERSION') || defined('OCEANWP_THEME_VERSION') || defined('KADENCE_VERSION') || function_exists('blocksy_get_wp_theme') || defined('NEVE_VERSION')){
+			//if(defined('NXT_VERSION') || defined('HELLO_ELEMENTOR_VERSION') || defined('ASTRA_THEME_VERSION') || defined('GENERATE_VERSION') || defined('OCEANWP_THEME_VERSION') || defined('KADENCE_VERSION') || function_exists('blocksy_get_wp_theme') || defined('NEVE_VERSION')){
 				$template_uri = NEXTER_EXT_DIR . 'include/nexter-template/';
 				if ( ! post_type_exists( 'nxt_builder' ) ) {
 					require_once $template_uri . 'nexter-template-function.php';
@@ -155,7 +155,7 @@ if ( ! class_exists( 'Nexter_Extensions_Load' ) ) {
 				require_once $template_uri . 'nexter-builder-shortcode.php';
 
 				require_once NEXTER_EXT_DIR . 'include/custom-options/module/nexter-display-sections-hooks.php';
-			}
+			//}
 		}
 
 		/*

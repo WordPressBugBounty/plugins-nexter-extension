@@ -98,7 +98,7 @@ if ( ! function_exists( 'nexter_ext_404_page_content_load' ) ) {
 	}
 	
 	add_action( 'nexter_404_page_content', 'nexter_ext_404_page_content_load' );
-	if(defined('HELLO_ELEMENTOR_VERSION')){
+	if(!defined('ASTRA_THEME_VERSION') && !defined('GENERATE_VERSION') && !defined('OCEANWP_THEME_VERSION') && !defined('KADENCE_VERSION') && !function_exists('blocksy_get_wp_theme') && !defined('NEVE_VERSION') && !defined('NXT_VERSION')){
 		add_action( 'nexter_pages_hooks_template', 'nexter_ext_404_page_content_load' );
 	}
 }
