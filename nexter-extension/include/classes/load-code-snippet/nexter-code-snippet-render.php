@@ -728,6 +728,8 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 		 * Nexter Builder Code Snippets Css/Js Enqueue
 		 */
 		public static function nexter_code_snippets_css_js() {
+			wp_register_script( 'nxt-snippet-js', false );
+            wp_enqueue_script( 'nxt-snippet-js' );
 			//new Snippet
 			$css_actions = self::get_snippets_ids_list( 'css' );
 			
@@ -755,7 +757,7 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 					if ( self::$snippet_type != $post_type ) {
 						$javascript_code = get_post_meta( $post_id, 'nxt-javascript-code', true );
 						if(!empty($javascript_code) ){
-							wp_add_inline_script( 'jquery', html_entity_decode($javascript_code, ENT_QUOTES) );
+							wp_add_inline_script( 'nxt-snippet-js', html_entity_decode($javascript_code, ENT_QUOTES) );
 						}
 					}
 				}
@@ -788,7 +790,7 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 						$old_js_code = get_post_meta( $post_id, 'nxt-code-javascript-snippet', true );
 						$old_js_code_execute = get_post_meta( $post_id, 'nxt-code-snippet-secure-executed', true );
 						if(!empty($old_js_code) && ( empty($old_js_code_execute) || (!empty($old_js_code_execute) && $old_js_code_execute=='yes' ) ) ){
-							wp_add_inline_script( 'jquery', html_entity_decode($old_js_code, ENT_QUOTES) );
+							wp_add_inline_script( 'nxt-snippet-js', html_entity_decode($old_js_code, ENT_QUOTES) );
 						}
 					}
 				}

@@ -1308,6 +1308,12 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 									break;
 								}
 							}
+
+							if ( $type === 'nxt-code-snippet' && !$check_condition && in_array( 'standard-universal', $code_meta_value, true ) || in_array( 'default-front', $code_meta_value, true )) {
+								$check_condition = true;
+								// break;
+							}
+							
 						}else if( $current_page_type_name == 'is_archive' || $current_page_type_name == 'is_tax' || $current_page_type_name == 'is_date' || $current_page_type_name == 'is_author' ){
 							$conditions = [
 								//'standard-archives',

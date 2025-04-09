@@ -74,8 +74,12 @@ if ( ! class_exists( 'Nexter_Builder_Compatibility' ) ) {
 						return Nexter_Beaver_Builder::get_instance();
 					}
 				}
-				
-			$has_rest_support = $wp_post_types[ NXT_BUILD_POST ]->show_in_rest;
+			
+			$has_rest_support = false;
+			if (defined('NXT_BUILD_POST') && isset($wp_post_types[NXT_BUILD_POST])) {
+				$has_rest_support = $wp_post_types[NXT_BUILD_POST]->show_in_rest;
+			}
+			
 			
 			if ( $has_rest_support ) {
 				return new Nexter_Gutenberg_Editor();

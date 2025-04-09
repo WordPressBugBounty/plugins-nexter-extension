@@ -74,10 +74,10 @@ if ( ! class_exists( 'Nexter_Class_Load' ) ) {
 				}else{
 					require_once $include_uri . 'load-sections/nexter-sections-loader.php';
 				}
-				require_once $include_uri . 'load-sections/nexter-sections-conditional.php';
-
-				require_once $include_uri . 'load-code-snippet/nexter-code-snippet-render.php';
+				
 			}
+			require_once $include_uri . 'load-sections/nexter-sections-conditional.php';
+			require_once $include_uri . 'load-code-snippet/nexter-code-snippet-render.php';
 		}
 		
 		/*

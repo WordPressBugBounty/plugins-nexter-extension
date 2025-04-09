@@ -601,16 +601,16 @@ if ( ! class_exists( 'Nexter_Ext_Panel_Settings' ) ) {
                     'manage_options',
                     'edit.php?post_type=nxt_builder'
                 );
-                add_submenu_page(
-                    'nexter_welcome',
-                    __( 'Code Snippets', 'nexter-extension' ),
-                    __( 'Code Snippets', 'nexter-extension' ),
-                    'manage_options',
-                    'nxt_code_snippets',
-                    array($this, 'nexter_code_snippet_display'),
-                );
+                
             }
-            
+            add_submenu_page(
+                'nexter_welcome',
+                __( 'Code Snippets', 'nexter-extension' ),
+                __( 'Code Snippets', 'nexter-extension' ),
+                'manage_options',
+                'nxt_code_snippets',
+                array($this, 'nexter_code_snippet_display'),
+            );
         }
 
         /**

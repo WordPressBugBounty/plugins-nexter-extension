@@ -238,6 +238,7 @@ if (!class_exists('Nexter_Builder_Hooks_Loader')) {
 										$include = isset($action['nxt-singular-include-exclude']) ? $action['nxt-singular-include-exclude'] : '';
 										$rule = isset($action['nxt-singular-conditional-rule']) ? $action['nxt-singular-conditional-rule'] : '';
 										$type = isset($action['nxt-singular-conditional-type']) ? $action['nxt-singular-conditional-type'] : [];
+
 									}
 									if ($page_name == 'archives') {
 										$include = isset($action['nxt-archive-include-exclude']) ? $action['nxt-archive-include-exclude'] : '';
@@ -245,6 +246,35 @@ if (!class_exists('Nexter_Builder_Hooks_Loader')) {
 										$type = isset($action['nxt-archive-conditional-type']) ? $action['nxt-archive-conditional-type'] : [];
 									}
 
+									if(!empty($rule) && !empty($type) && is_array($type)){
+										$update_type = [];
+										foreach ( $type as $item ) {
+											if ( $item === 'all' ) {
+												$update_type[] = esc_html__('All','nexter-extension');
+											}elseif( str_contains($rule, 'by_author') ){
+												$author = get_user_by( 'ID', $item );
+            									if ( $author ) {
+													$update_type[] = $author->display_name;
+												}else{
+													$update_type[] = $item;
+												}
+											}elseif( str_contains($rule, 'child') || str_contains($rule, 'category') || str_contains($rule, 'tag') ){
+												$term = get_term( $item );
+												if ( ! is_wp_error( $term ) ) {
+													$update_type[] = $term->name;
+												}else{
+													$update_type[] = $item;
+												}
+											} else if ( get_post_status( $item ) ) {
+												// It's a post ID
+												$update_type[] = get_the_title( $item ) ;
+											} else {
+												$update_type[] = $item;
+											}
+										}
+										$type = $update_type;
+									}
+									
 									if (!empty($include)) {
 										echo '<div class="nxt-sections-add-display-wrap">';
 										echo '<strong>' . esc_html__('Display :', 'nexter-extension') . ' </strong>' . esc_html($include);
