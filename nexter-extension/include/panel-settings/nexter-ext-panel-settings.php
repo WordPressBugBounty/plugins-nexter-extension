@@ -435,10 +435,10 @@ if ( ! class_exists( 'Nexter_Ext_Panel_Settings' ) ) {
         public function get_nxt_brand_name(){
             if(defined('NXT_PRO_EXT')){
                 $options = get_option( 'nexter_white_label' );
-                $this->setting_name = (!empty($options['brand_name'])) ? $options['brand_name'] : esc_html__('Nexter Settings', 'nexter-extension');
+                $this->setting_name = (!empty($options['brand_name'])) ? $options['brand_name'] : esc_html__('Nexter Extension', 'nexter-extension');
                 $this->setting_logo = (!empty($options['theme_logo'])) ? $options['theme_logo'] : esc_url(NEXTER_EXT_URL . 'dashboard/assets/svg/navbox/nexter_logo.svg');
             }else{
-                $this->setting_name = esc_html__('Nexter Settings', 'nexter-extension');
+                $this->setting_name = esc_html__('Nexter Extension', 'nexter-extension');
                 $this->setting_logo = esc_url(NEXTER_EXT_URL . 'dashboard/assets/svg/navbox/nexter_logo.svg');
             }
         }

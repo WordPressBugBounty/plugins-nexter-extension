@@ -3,7 +3,7 @@ Contributors: posimyththemes, nirmalkavaiya, sagarpatel124
 Tags : security, elementor, theme-builder, pagespeed, code snippet
 Requires at least: 4.0
 Tested up to: 6.7.2
-Stable tag: 4.1.0
+Stable tag: 4.1.1
 Requires PHP: 5.6
 License: GPLv3
 License URI: https://opensource.org/licenses/GPL-3.0
@@ -257,6 +257,11 @@ https://patchstack.com/database/vdp/nexter-extension)
 == Changelog ==
 
 ### View Complete List of Changelog from [here](https://roadmap.nexterwp.com/updates?filter=Nexter+Extension+-+FREE)  
+
+= 4.1.1 = 11 April 2025
+- Updated : Code Snippet : Initial Data Import 5 Snippet
+- Updated : Nexter Settings : Menu Name Change to Nexter Extension
+- Fixed : Bug Fixed & Improvements
 
 = 4.1.0 = 09 April 2025
 - Updated : Theme Builder : All WP Themes Compatibility
