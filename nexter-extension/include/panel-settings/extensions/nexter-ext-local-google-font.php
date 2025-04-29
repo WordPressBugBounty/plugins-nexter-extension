@@ -52,8 +52,8 @@ class Nexter_Ext_Local_Google_Font_New {
 				return $groups;
 			}
 
-			unset($groups['googlefonts']);
-			unset($groups['earlyaccess']);
+			//unset($groups['googlefonts']);
+			//unset($groups['earlyaccess']);
 
 			$groups['nexter-local-google-fonts'] = __('Local Google Fonts', 'nexter-extension');
 

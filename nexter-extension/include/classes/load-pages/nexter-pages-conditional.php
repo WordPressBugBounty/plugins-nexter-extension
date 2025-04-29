@@ -153,12 +153,12 @@ if ( ! class_exists( 'Nexter_Builder_Pages_Conditional' ) ) {
 			
 			if ( NXT_BUILD_POST == $post->post_type ) {
 				
-				if ( ( 'header' === $nxt_hooks_section || 'footer' === $nxt_hooks_section) ) {
+				//if ( ( 'header' === $nxt_hooks_section || 'footer' === $nxt_hooks_section) ) {
 					//Nexter 
 					$template = $this->get_template_path();
 
 					//Hello Elementor 
-					if(defined('HELLO_ELEMENTOR_VERSION') && defined('ELEMENTOR_PATH')){
+					if(!defined('NXT_VERSION') && defined('ELEMENTOR_PATH')){
 						$ele_2_0_canvas = ELEMENTOR_PATH . '/modules/page-templates/templates/canvas.php';
 		
 						if ( file_exists( $ele_2_0_canvas ) ) {
@@ -167,8 +167,7 @@ if ( ! class_exists( 'Nexter_Builder_Pages_Conditional' ) ) {
 							return ELEMENTOR_PATH . '/includes/page-templates/canvas.php';
 						}
 					}
-				}
-
+				//}
 				
 			}
 			
