@@ -157,7 +157,7 @@ if ( ! class_exists( 'Nexter_Builder_Pages_Conditional' ) ) {
 					//Nexter 
 					$template = $this->get_template_path();
 
-					//Hello Elementor 
+					//All Theme Elementor 
 					if(!defined('NXT_VERSION') && defined('ELEMENTOR_PATH')){
 						$ele_2_0_canvas = ELEMENTOR_PATH . '/modules/page-templates/templates/canvas.php';
 		
@@ -211,8 +211,19 @@ if ( ! class_exists( 'Nexter_Builder_Pages_Conditional' ) ) {
 		 *
 		 */
 		public function load_template_include( $template ) {
+			$sec_ids = [];
+			if(class_exists('Nexter_Builder_Sections_Conditional')){
+				$section_ids = Nexter_Builder_Sections_Conditional::get_instance();
+				$sec_ids = $section_ids::load_sections_id();
+			}
 			
-			if ( !defined('ASTRA_THEME_VERSION') && !defined('GENERATE_VERSION') && !defined('OCEANWP_THEME_VERSION') && !defined('KADENCE_VERSION') && !function_exists('blocksy_get_wp_theme') && !defined('NEVE_VERSION') && !defined('NXT_VERSION') && self::$location === 'singular' && is_404()){
+			if(!empty($sec_ids)){
+				$found = array_filter($sec_ids, fn($item) => in_array('page-404', [$item['location']]));
+			}else{
+				$found = false;
+			}
+
+			if ( !defined('ASTRA_THEME_VERSION') && !defined('GENERATE_VERSION') && !defined('OCEANWP_THEME_VERSION') && !defined('KADENCE_VERSION') && !function_exists('blocksy_get_wp_theme') && !defined('NEVE_VERSION') && !defined('NXT_VERSION') && self::$location === 'singular' && is_404() && !empty($found)){
 				return $this->get_template_path();
 			}
 			//is empty documents default

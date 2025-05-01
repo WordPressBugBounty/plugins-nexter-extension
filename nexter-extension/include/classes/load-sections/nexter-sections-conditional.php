@@ -57,6 +57,12 @@ if ( ! class_exists( 'Nexter_Builder_Sections_Conditional' ) ) {
 			self::$sections_ids = Nexter_Builder_Display_Conditional_Rules::get_instance()->get_templates_by_sections_conditions( NXT_BUILD_POST, $options );
 		}
 		
+		public static function load_sections_id(){
+			if(isset(self::$sections_ids) && !empty(self::$sections_ids)){
+				return self::$sections_ids;
+			}
+		}
+		
 		/**
 		 * Load Hooks Enqueue Styles
 		 */

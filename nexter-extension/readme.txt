@@ -2,8 +2,8 @@
 Contributors: posimyththemes, nirmalkavaiya, sagarpatel124
 Tags : security, elementor, theme-builder, pagespeed, code snippet
 Requires at least: 4.0
-Tested up to: 6.8.0
-Stable tag: 4.1.2
+Tested up to: 6.8.1
+Stable tag: 4.1.3
 Requires PHP: 5.6
 License: GPLv3
 License URI: https://opensource.org/licenses/GPL-3.0
@@ -257,6 +257,10 @@ https://patchstack.com/database/vdp/nexter-extension)
 == Changelog ==
 
 ### View Complete List of Changelog from [here](https://roadmap.nexterwp.com/updates?filter=Nexter+Extension+-+FREE)  
+
+= 4.1.3 = 01 May 2025
+- Fixed : Theme Builder : 404 Page Template Bug Fixed
+- Fixed : Bug Fixed & Improvements
 
 = 4.1.2 = 29 April 2025
 - Fixed : Theme Builder : Editing Templates in Theme Builder using Elementor Bug Fixed 
