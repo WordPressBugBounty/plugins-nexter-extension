@@ -3,7 +3,7 @@ Contributors: posimyththemes, nirmalkavaiya, sagarpatel124
 Tags : security, elementor, theme-builder, pagespeed, code snippet
 Requires at least: 4.0
 Tested up to: 6.8.1
-Stable tag: 4.1.3
+Stable tag: 4.2.0
 Requires PHP: 5.6
 License: GPLv3
 License URI: https://opensource.org/licenses/GPL-3.0
@@ -23,7 +23,7 @@ One WordPress Plugins will replace more than 50 WordPress plugins for you.
 https://nexterwp.com/nexter-extension?utm_source=wordpress&utm_medium=readmepage&utm_campaign=nexterextension) | [Complete Feature List](
 https://nexterwp.com/nexter-extension/features/?utm_source=wordpress&utm_medium=readmepage&utm_campaign=nexterextension)
  |[ Video Tutorials](
-https://www.youtube.com/c/POSIMYTHInnovations/?sub_confirmation=1)| [Documentations](
+https://www.youtube.com/c/POSIMYTHInnovations/?sub_confirmation=1)| [Documentations](https://nexterwp.com/docs?utm_source=wordpress&utm_medium=readmepage&utm_campaign=nexterextension
 ) | [Roadmap](
 https://roadmap.nexterwp.com/) | [ Join Community](
 https://www.facebook.com/groups/nexterwpcommunity/) |[ Free Support](
@@ -49,6 +49,7 @@ https://nexterwp.com/free-vs-pro/#Nexter-Extension?utm_source=wordpress&utm_medi
 - **Display Rules for Theme Builder** - Control the visibility of theme elements based on specific conditions.
 
 === 2. Code Snippets - Insert Header & Footer Custom Code ===
+
 - **PHP, HTML, CSS, and JavaScript Snippets** - Add and manage various code types to customize your WordPress site.
 
 - **Active and Inactive Code Management** - Enable or disable snippets as needed for better control over site functionality.
@@ -57,28 +58,27 @@ https://nexterwp.com/free-vs-pro/#Nexter-Extension?utm_source=wordpress&utm_medi
 
 - **Tagging & Adding Notes** - Organize snippets with tags and notes for easy identification and management.
 
-- **Works with All WordPress Themes  - Code Snippets are fully compatible with any WordPress theme, offering seamless integration and complete flexibility.
+- **Works with All WordPress Themes** - Code Snippets are fully compatible with any WordPress theme, offering seamless integration and complete flexibility.
 
 === 3. Extra Utilities for Site Enhancement & Tune ups ===
+
+- **Replace Media *(PRO)*** -  Swap existing media files without changing their URL.  
+
+- **Disable Gutenberg** - Turn off the Gutenberg editor and use your preferred editor instead.
+ 
+- **Public Preview for Drafts *(PRO)*** - Share a preview link of your draft without publishing it.  
+
+- **Rollback Manager** - Go back to a previous version of the plugin if something breaks.  
+
+- **Redirect 404 *(FREEMIUM)*** - Free users can redirect broken links (404 pages) to the homepage. Pro users can redirect broken links to a custom page URL.  
+
+- **Content Post Order** - Change the display order of posts without using extra plugins.  
+
+- **Custom User Avatar *(PRO)*** - Set a custom default avatar without using Gravatar.  
+
 - **Adobe Fonts Integration** - Seamlessly connect with Adobe Fonts to access a vast library of premium typefaces for your WordPress site.
 
 - **Custom Font Uploads** - Upload and apply custom fonts directly to your website, ensuring brand consistency and unique typography.
-
-- **Admin Interface Customization** - Tailor your WordPress dashboard by hiding or disabling specific elements for a streamlined experience.
-
-  - **Hide Frontend Admin Bar** - Remove the admin toolbar from the frontend for non-administrative users to maintain a clean site appearance. 
-
-  - **Hide Themes Update Notifications** - Suppress theme update alerts in the admin panel to minimize distractions.
-
-  - **Hide Plugin Update Notifications** - Conceal plugin update messages to keep the dashboard uncluttered. 
-
-  - **Hide Core Update Notifications** - Disable notifications about WordPress core updates to focus on essential tasks.
-
-  - **Hide Admin Notices** - Remove generic admin notices to maintain a clean and focused dashboard environment. 
-
-  - **Remove 'PHP Update Required' Notice** - Eliminate the PHP update warning to reduce unnecessary alerts.  
-
-  - **Remove Welcome Panel** - Permanently hide the default WordPress welcome panel for a more streamlined dashboard. 
 
 - **Bulk Text & URL Replacement** - Efficiently replace text or URLs across your entire website in one operation, saving time and reducing errors.
 
@@ -86,32 +86,32 @@ https://nexterwp.com/free-vs-pro/#Nexter-Extension?utm_source=wordpress&utm_medi
 
 - **Thumbnail Regeneration** - Regenerate image thumbnails to ensure proper display and consistency across different devices and screen sizes.
 
-- **Branded Admin Interface** - Customize your WordPress admin login page with your brand's logo and colors, enhancing the backend experience.
 
 === 4. Performance & Asset Tune ups for Page Speed ===
+
 - **Advanced Performance** - Optimize your site's speed by removing unnecessary assets and applying performance tweaks.
 
-  - **Disable Emojis Script** - Prevent the loading of emoji-related scripts to reduce HTTP requests and improve load times.
+ - **Disable Emojis Script**
 
-  - **Disable Embeds** - Stop the loading of embed scripts used for embedding content from other sites, reducing unnecessary resource usage.
+ - **Disable Embeds**
 
-  - **Disable Dashicons** - Prevent the loading of Dashicons on the frontend when not required, reducing CSS file requests.
+ - **Disable Dashicons**
 
-  - **Remove RSD Link** - Eliminate the Really Simple Discovery (RSD) link from your site's header when not using external editing tools.
+ - **Remove RSD Link**
 
-  - **Remove wlwmanifest Link** - Remove the Windows Live Writer manifest link from your site's header if not utilizing this feature.
+ - **Remove wlwmanifest Link**
 
-  - **Remove Shortlink** - Delete the shortlink tag from your site's header when using pretty permalinks.
+ - **Remove Shortlink**
 
-  - **Disable RSS Feeds** - Turn off RSS feeds if your site doesn't utilize them, reducing unnecessary feed-related resources.
+ - **Disable RSS Feeds**
 
-  - **Remove RSS Feed Links** - Remove RSS feed links from your site's header to declutter and optimize performance.
+ - **Remove RSS Feed Links**
 
-  - **Disable Self Ping backs** - Stop self-ping backs when linking to your content, reducing unnecessary server requests.
+ - **Disable Self Ping backs**
 
-  - **Disable Password Strength Meter** - Prevent the loading of the password strength meter script on unnecessary pages, improving load times.
+ - **Disable Password Strength Meter**
 
-  - **Defer CSS & JS** - Defer the loading of CSS and JavaScript files to prioritize the rendering of critical content, enhancing perceived load speed.
+ - **Defer CSS & JS**
 
 - **Disable Comments** - Stop spam links by disabling comments where they aren’t needed.
 
@@ -121,83 +121,152 @@ https://nexterwp.com/free-vs-pro/#Nexter-Extension?utm_source=wordpress&utm_medi
 
 - **Disable Icons** - Boost performance by turning off unused Elementor icons, Font Awesome Icons
 
+- **Heartbeat Control** - Reduce server load by managing how often WordPress runs background tasks.
+
+- **Revisions Control**- Limit or disable post revisions to keep your site database clean and fast.
+
 - **Self-Host Google Fonts** - Host Google Fonts locally on your server to enhance load times and comply with privacy regulations. This approach reduces external HTTP requests, leading to faster page speeds and improved GDPR compliance. 
 
-  - **Display Swap for Google Fonts** - Implement the 'font-display: swap' property to ensure text remains visible during font loading, enhancing user experience and performance.
-
-  - **Disable Google Fonts** - Provide the option to disable Google Fonts entirely, allowing the use of system fonts for improved speed and privacy.
 
 === 5. Security Hardening for WordPress ===
 
 - **Advanced Security** - Implement robust measures to safeguard your website.
 
-  - **Disable XML-RPC** - Prevent unauthorized remote access by disabling the XML-RPC protocol.
+ - **Disable XML-RPC** 
 
-  - **Hide WordPress Version** - Conceal your WordPress version to deter targeted attacks.
+ - **Hide WordPress Version** 
 
-  - **Remove REST API Links** - Limit exposure by removing REST API links from your site's header.
+ - **Remove REST API Links** 
 
-  - **Disable File Editor** - Prevent unauthorized code edits by disabling the built-in file editor.
+ - **Disable File Editor** 
 
-  - **Remove Meta Generator** - Eliminate meta generator tags to obscure CMS details.
+ - **Remove Meta Generator**
 
-  - **XSS Protection** - Guard against Cross-Site Scripting attacks by sanitizing inputs.
+ - **XSS Protection**
 
-  - **iFrame Security** - Prevent clickjacking by restricting iframe embedding.
+ - **iFrame Security**
 
-  - **Secure Cookies** - Enhance session security by enforcing secure cookie attributes.
+ - **Secure Cookies**
 
-  - **Last Login Date & Time** - Track user activity with last login timestamps.
+ - **Last Login Date & Time**
 
-  - **Registration Date & Time** - Monitor new user registrations with date and time records.
+ - **Registration Date & Time**
+ 
+  - **Hide Email from Spam Bots*(PRO)***
 
-  - **Captcha Spam Protection** - Integrate Google reCAPTCHA or Cloudflare Turnstile *(Coming Soon)* for enhanced form security.
+  - **Hide Author URLs for Security*(PRO)***
 
-  - **Login Form** - Add CAPTCHA to the login page to deter automated attacks.
+  
 
-  - **Register Form** - Implement CAPTCHA during user registration to prevent spam accounts.
+- **Captcha Spam Protection** - Integrate Google reCAPTCHA or Cloudflare Turnstile *(Coming Soon)* for enhanced form security.
 
-  - **Password Reset Form** - Secure the password reset process with CAPTCHA verification.
+ - **Login Form**
 
-  - **Comments Form** - Reduce spam by adding CAPTCHA to comment submissions.
+ - **Register Form**
 
-  - **WooCommerce Pages *(Coming Soon)*** - Protect checkout and account pages with CAPTCHA challenges.
+ - **Password Reset Form**
 
-  - **Content Protection** - Prevent unauthorized copying of your site's content.
+ - **Comments Form**
 
-  - **Disable Right Click** - Restrict right-click functionality to deter content theft.
+ - **WooCommerce Pages *(Coming Soon)***
 
-  - **Disable Text Selection** - Prevent users from highlighting and copying text.
+ - **Content Protection *(PRO)*** - Prevent unauthorized copying of your site's content.  
 
-  - **Disable Dragging** - Stop dragging of images and other elements.
+     - **Disable Right Click** - Restrict right-click functionality to deter content theft.
 
-  - **Disable Search Hotkeys** - Block keyboard shortcuts used for searching.
+     - **Disable Text Selection** - Prevent users from highlighting and copying text.
 
-  - **Disable Developer Console** - Impede access to browser developer tools.
+     - **Disable Dragging** - Stop dragging of images and other elements.
 
-  - **Disable Copy-Paste (Ctrl+C, Ctrl+V)** - Restrict common copy-paste actions.
+     - **Disable Search Hotkeys** - Block keyboard shortcuts used for searching.
 
-And many more
+     - **Disable Developer Console** - Impede access to browser developer tools.
 
-  - **Change WP Admin Login URL** - Secure your admin area by customizing the login path with redirect & message options.
+     - **Disable Copy-Paste (Ctrl+C, Ctrl+V)** - Restrict common copy-paste actions.
 
-  - **2-Factor Authentication (2FA)** - Add an extra security layer with two-step verification.
+- **Change WP Admin Login URL** - Secure your admin area by customizing the login path with redirect & message options.
 
-  - **Permission-Based Implementation** - Assign 2FA requirements based on user roles.
+- **2-Factor Authentication (2FA) *(PRO)*** - Add an extra security layer with two-step verification.  
 
-  - **Custom Email Editor** - Personalize 2FA email notifications.
+ - **Permission-Based Implementation** - Assign 2FA requirements based on user roles.
 
-  - **Login Email Notifications *PRO*** - Stay informed about login activities via email alerts.
+ - **Custom Email Editor** - Personalize 2FA email notifications.
 
-  - **User-Type Specific Notifications** - Configure alerts based on user roles.
+- **Login Email Notifications *(PRO)*** - Stay informed about login activities via email alerts.
 
-  - **Custom Email Content** - Tailor the content of login notification emails.
+
+
+ - **User-Type Specific Notifications** - Configure alerts based on user roles.
+
+ - **Custom Email Content** - Tailor the content of login notification emails.
+
+- **SVG Upload** - Allow specific user roles to upload secure, sanitized SVG files for flexible and safe media management. 
+=== 6.  Admin Interface for Dashboard Customization & Cleanup ===
+
+- **Branded Admin Interface *(PRO)*** - Customize your WordPress admin login page with your brand's logo and colors, enhancing the backend experience.  
+
+- **Wider Admin Menu** - Easily adjust the WordPress admin menu width to accommodate longer or custom menu items. 
+
+- **Display Active Plugins First *(PRO)*** - Show all active plugins at the top of the list for quicker access.  
+ 
+- **User Profile Clean *(PRO)*** -  Hide extra fields in user profiles for a simpler and cleaner layout. 
+ 
+- **Disable Admin Settings** - Easily turn off individual WordPress admin notifications and widgets to streamline your dashboard experience.
+
+     - **Hide Frontend Admin Bar**
+
+     - **Hide Themes Update Notification**
+
+     - **Hide Plugin Update Notification**
+
+     - **Hide Core Update Notification**
+
+     - **Hide Admin Notice**
+
+     - **Remove 'PHP Update Required' Notice**
+
+     - **Remove Welcome Panel**
+
+     - **Disable Dashboard Activity**
+
+     - **Disable "At a Glance" Widget**
+
+     - **Disable Quick Draft Widget**
+
+     - **Disable Site Health Status**
+
+     - **Disable WooCommerce Setup**
+
+     - **Disable WordPress Events and News**
+- **Clean Admin Bar** - Customize and declutter the WordPress admin bar by removing unnecessary elements for a cleaner interface.
+
+  - **Remove WordPress Logo/Menu**
+
+  - **Remove Home Icon and Site Name**
+
+  - **Remove Customize Menu**
+
+  - **Remove Updates Counter/Link**
+
+  - **Remove Comments Counter/Link**
+
+  - **Remove New Content Menu**
+
+  - **Remove "Howdy"**
+
+  - **Remove the Help Tab and Drawer**
+
+  
+  
+
+
 
 
 <strong>[GET NEXTER Extension Pro](
 https://nexterwp.com/pricing/?utm_source=wordpress&utm_medium=readmepage&utm_campaign=nexterextension)</strong>
 
 ###🔍 Check our other Products
+
 <strong><a href="
 https://theplusaddons.com/?utm_source=wordpress&utm_medium=readmepage&utm_campaign=nexterextension">🥇 The Plus Addons for Elementor</a></strong> -  Nexter Extension works seamlessly with The Plus Addons for Elementor. Get 120+ unique Elementor widgets, Elementor templates, and more. Which gives it a Free Elementor Theme Builder.
 
@@ -213,6 +282,8 @@ https://www.figma.com/community/plugin/1265873702834050352/)
 
 <strong>[🥇WDesignKit](
 https://wdesignkit.com/?utm_source=wordpress&utm_medium=readmepage&utm_campaign=nexterextension)</strong> - 1000+ WordPress Templates, Elementor & Gutenberg Widget Builder, Widget to Block Convertor, Cloud Storage & more.
+
+== Installation ==
 
 <h3>☑️ 4 Easy Steps for Installation </h3>
 1. Go to <strong>‘Plugins’</strong> option in your dashboard and select <strong>'Add New'</strong>
@@ -258,14 +329,34 @@ https://patchstack.com/database/vdp/nexter-extension)
 
 ### View Complete List of Changelog from [here](https://roadmap.nexterwp.com/updates?filter=Nexter+Extension+-+FREE)  
 
-= 4.1.3 = 01 May 2025
-- Fixed : Theme Builder : 404 Page Template Bug Fixed
+= 4.2.0 = 28 May 2025
+– Added : Utilities : Content Post Order 
+– Added : Utilities : Disable Gutenberg
+- Added : Utilities : Redirect 404
+- Added : Utilities : Rollback Manager
+- Added : Advanced Performance : Media Library Infinite Scrolling
+- Added : Performance : Revision Control
+- Added : Performance : Heartbeat Control
+- Added : Security : SVG Upload
+- Added : Admin Interface : Disable Admin Settings
+    Dashboard Activity
+    At a Glance
+    Quick Draft
+    Site Health Status
+    WooCommerce Setup
+    WordPress Events and News
+- Added : Admin Interface : Clean Admin Bar
+- Added : Admin Interface : Wider Admin Menu
 - Fixed : Bug Fixed & Improvements
 
+= 4.1.3 = 01 May 2025
+– Fixed : Theme Builder : 404 Page Template Bug Fixed
+– Fixed : Bug Fixed & Improvements
+
 = 4.1.2 = 29 April 2025
-- Fixed : Theme Builder : Editing Templates in Theme Builder using Elementor Bug Fixed 
-- Fixed : Local Google Font : Elementor disable Google Font Bug Fixed
-- Fixed : Bug Fixed & Improvements
+– Fixed : Theme Builder : Editing Templates in Theme Builder using Elementor Bug Fixed
+– Fixed : Local Google Font : Elementor disable Google Font Bug Fixed
+– Fixed : Bug Fixed & Improvements
 
 = 4.1.1 = 11 April 2025
 - Updated : Code Snippet : Initial Data Import 5 Snippet

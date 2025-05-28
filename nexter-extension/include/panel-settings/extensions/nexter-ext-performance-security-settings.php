@@ -119,6 +119,12 @@ class Nexter_Ext_Performance_Security_Settings {
 			if( in_array("disable_embeds",$extension_option) ){
 				add_action('init',  [ $this, 'nxt_disable_embeds' ], 9999);
 			}
+			
+			/*Disable Embeds*/
+			if( in_array("media_infinite_scroll",$extension_option) ){
+				
+				add_filter( 'media_library_infinite_scrolling', '__return_true' );
+			}
 
 			/*Disable DashIcons*/
 			if( in_array("disable_dashicons",$extension_option)  ){
@@ -231,6 +237,15 @@ class Nexter_Ext_Performance_Security_Settings {
 				
 			}
 			
+			//Revision Control
+			if( isset($extension_option['post-revision-control']) && !empty($extension_option['post-revision-control']['switch']) ){
+				require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-post-revision-control.php';
+			}
+
+			//Heartbeat Control
+			if( isset($extension_option['heartbeat-control']) && !empty($extension_option['heartbeat-control']['switch']) ){
+				require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-heartbeat-control.php';
+			}
 		}
 		
 		if( isset($nxt_security_option) && !empty($nxt_security_option)){
@@ -293,7 +308,14 @@ class Nexter_Ext_Performance_Security_Settings {
 					
 				}, 20);
 			}
+
+			//SVG Upload
+			$svg_data = (array) $nxt_security_option;
+			if(isset($svg_data['svg-upload']) && !empty($svg_data['svg-upload']['switch']) && !empty($svg_data['svg-upload']['values'])){
+				require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-svg-upload.php';
+			}
 		}
+
     }
 
 	/**

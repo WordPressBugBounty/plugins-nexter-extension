@@ -557,7 +557,7 @@ if ( ! class_exists( 'Nexter_Builder_Condition' ) ) {
                         $output .= '</div>';
                     $output .= '</div>';
                     $output .= '<div class="nxt-temp-action">';
-                        $output .= '<a href="'.esc_url('https://nexterwp.com/help/nexter-theme/theme-builder-classic-theme/').'" class="nxt-temp-info" target="_blank">';
+                        $output .= '<a href="'.esc_url('https://nexterwp.com/help/nexter-theme/theme-builder-classic-theme/').'" class="nxt-temp-info" target="_blank" rel="noopener noreferrer">';
                             $output .= __( "Read How it Works", "nexter-extension" );
                         $output .= '</a>';
 
@@ -680,7 +680,7 @@ if ( ! class_exists( 'Nexter_Builder_Condition' ) ) {
                     $output .= '</div>';
 
                     $output .= '<div class="nxt-temp-action">';
-                        $output .= '<a href="'.esc_url('https://nexterwp.com/help/nexter-theme/theme-builder-classic-theme/').'" class="nxt-temp-info" target="_blank">';
+                        $output .= '<a href="'.esc_url('https://nexterwp.com/help/nexter-theme/theme-builder-classic-theme/').'" class="nxt-temp-info" target="_blank" rel="noopener noreferrer">';
                             $output .= __( "Read How it Works", "nexter-extension" );
                         $output .= '</a>';
                         // $output .= '<button type="submit" class="temp-create-btn">'.$btnText.'</button>';
@@ -781,7 +781,7 @@ if ( ! class_exists( 'Nexter_Builder_Condition' ) ) {
                     $output .= '</div>';
 
                     $output .= '<div class="nxt-temp-action">';
-                        $output .= '<a href="'.esc_url('https://nexterwp.com/help/nexter-theme/theme-builder-classic-theme/').'" class="nxt-temp-info" target="_blank">';
+                        $output .= '<a href="'.esc_url('https://nexterwp.com/help/nexter-theme/theme-builder-classic-theme/').'" class="nxt-temp-info" target="_blank" rel="noopener noreferrer">';
                             $output .= __( "Read How it Works", "nexter-extension" );
                         $output .= '</a>';
                         // $output .= '<button type="submit" class="temp-create-btn">';
@@ -1150,7 +1150,7 @@ if ( ! class_exists( 'Nexter_Builder_Condition' ) ) {
                     $output .= '</div>';
 
                     $output .= '<div class="nxt-temp-action">';
-                        $output .= '<a href="'.esc_url('https://nexterwp.com/help/nexter-theme/theme-builder-classic-theme/').'" class="nxt-temp-info" target="_blank">';
+                        $output .= '<a href="'.esc_url('https://nexterwp.com/help/nexter-theme/theme-builder-classic-theme/').'" class="nxt-temp-info" target="_blank" rel="noopener noreferrer">';
                             $output .= __( "Read How it Works", "nexter-extension" );
                         $output .= '</a>';
                         $output .= '<div class="nxt-action-btn-wrap">';

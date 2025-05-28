@@ -278,6 +278,25 @@
 }
 /*skip link end*/
 
+.toplevel_page_nexter_welcome.nxt-ext-admin-notice-active> a .wp-menu-name::after{
+    content: '1';
+    background: #ca2222;
+    color: #fff;
+    border-radius: 50%;
+    position: absolute;
+    top: -8px;
+    right: 1px;
+    width: 18px;
+    font-size: 12px;
+    height: 18px;
+    text-align: center;
+    line-height: 17px;
+}
+.toplevel_page_nexter_welcome.nxt-ext-admin-notice-active > a,.toplevel_page_nexter_welcome.nxt-ext-admin-notice-active:hover > a{
+    background: #162d9e !important;
+    color: #f0f0f1 !important;
+}
+
 /*tablet responsive start*/
 @media (min-width: 768px) and (max-width: 1024px){ 
 	

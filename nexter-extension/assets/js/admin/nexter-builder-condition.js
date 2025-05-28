@@ -10,13 +10,22 @@ class NexterBuilder {
         if(this.actionBtn){
             this.actionBtn.forEach((btn) => {
                 if(!btn.classList.contains('nxt-btn-action')){
+                    // Disable left-click default and run custom function
                     btn.addEventListener('click', (e) => {
                         e.preventDefault();
                         let action = 'action=nexter_ext_temp_popup&nexter_nonce=' + nexter_admin_config.ajax_nonce;
                         this.nxtBuilderCommon(action, true);
                     });
+                    // Disable right-click context menu
                     btn.addEventListener('contextmenu', (event) => {
                         event.preventDefault();
+                    });
+
+                    // Disable middle-click (mouse scroll click)
+                    btn.addEventListener('auxclick', (e) => {
+                        if (e.button === 1) {
+                            e.preventDefault();
+                        }
                     });
                 }
             });

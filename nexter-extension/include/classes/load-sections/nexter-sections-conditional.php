@@ -55,6 +55,7 @@ if ( ! class_exists( 'Nexter_Builder_Sections_Conditional' ) ) {
 			];
 
 			self::$sections_ids = Nexter_Builder_Display_Conditional_Rules::get_instance()->get_templates_by_sections_conditions( NXT_BUILD_POST, $options );
+			
 		}
 		
 		public static function load_sections_id(){
@@ -62,7 +63,7 @@ if ( ! class_exists( 'Nexter_Builder_Sections_Conditional' ) ) {
 				return self::$sections_ids;
 			}
 		}
-		
+
 		/**
 		 * Load Hooks Enqueue Styles
 		 */
@@ -113,6 +114,7 @@ if ( ! class_exists( 'Nexter_Builder_Sections_Conditional' ) ) {
 			$breadcrumb_ids = self::nexter_sections_condition_hooks( 'sections', 'breadcrumb' );
 			
 			if(!empty($header_id) || !empty($breadcrumb_ids)){
+				
 				// Replace header.php template.
 				add_action( 'get_header', [ $this, 'header_template_override' ], 9 );
 				if(!empty($header_id)){

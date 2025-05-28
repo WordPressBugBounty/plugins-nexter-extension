@@ -126,7 +126,7 @@ if ( ! class_exists( 'Nexter_Extensions_Load' ) ) {
 			if ( strpos( $plugin_file, NEXTER_EXT_BASE ) !== false && current_user_can( 'manage_options' ) && !apply_filters('nexter_remove_branding',false) ) {
 				$new_links = array(
 					'official-site' => '<a href="'.esc_url('https://nexterwp.com/').'" target="_blank" rel="noopener noreferrer">'.esc_html__( 'Official Site', 'nexter-extension' ).'</a>',
-					'docs' => '<a href="'.esc_url('https://docs.posimyth.com/nexterwp').'" target="_blank" rel="noopener noreferrer" style="color:green;">'.esc_html__( 'Docs', 'nexter-extension' ).'</a>',
+					'docs' => '<a href="'.esc_url('https://nexterwp.com/help/nexter-extension/').'" target="_blank" rel="noopener noreferrer" style="color:green;">'.esc_html__( 'Docs', 'nexter-extension' ).'</a>',
 					'join-community' => '<a href="'.esc_url('https://www.facebook.com/groups/139678088029161/').'" target="_blank" rel="noopener noreferrer">'.esc_html__( 'Join Community', 'nexter-extension' ).'</a>',
 					'whats-new' => '<a href="'.esc_url('https://roadmap.nexterwp.com/updates?filter=Nexter+Extension+-+FREE').'" target="_blank" rel="noopener noreferrer" style="color: orange;">'.esc_html__( 'What\'s New?', 'nexter-extension' ).'</a>',
 					'req-feature' => '<a href="'.esc_url('https://roadmap.nexterwp.com/boards/feature-requests').'" target="_blank" rel="noopener noreferrer">'.esc_html__( 'Request Feature', 'nexter-extension' ).'</a>',
@@ -175,6 +175,7 @@ if ( ! class_exists( 'Nexter_Extensions_Load' ) ) {
 			require_once NEXTER_EXT_DIR . 'include/rollback.php';
 			require_once NEXTER_EXT_DIR . 'include/classes/nexter-class-load.php';
 			require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/custom-fields/nxt-custom-fields.php';
+			require_once NEXTER_EXT_DIR . 'include/panel-settings/nxt-deactive.php';
 
 			if ( ! class_exists( 'Nexter_Builder_Compatibility' ) ) {
 				$include_uri = NEXTER_EXT_DIR . 'include/classes/';

@@ -34,6 +34,11 @@ if ( ! class_exists( 'Nexter_Class_Load' ) ) {
 				//admin bar enqueue scripts
 				add_action( 'wp_footer', [ $this, 'admin_bar_enqueue_scripts' ] );
 			}
+			add_action('init', function() {
+				if (has_action('wp_footer', 'wp_print_speculation_rules')) {
+					remove_action('wp_footer', 'wp_print_speculation_rules');
+				}
+			});
 		}
 		
 		/**
@@ -121,7 +126,7 @@ if ( ! class_exists( 'Nexter_Class_Load' ) ) {
 			if(has_filter('nexter_template_load_ids')) {
 				$post_ids = apply_filters('nexter_template_load_ids', $post_ids);
 			}
-			
+
 			/*The Plus Template Blocks load*/
 			if(class_exists('Tpgb_Library')){
 				$tpgb_libraby = Tpgb_Library::get_instance();

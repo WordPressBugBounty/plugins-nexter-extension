@@ -13,6 +13,7 @@ class Nexter_Ext_Extra_Settings {
     public function __construct() {
 		
 		$extension_option = get_option( 'nexter_extra_ext_options' );
+		
 		if( !empty($extension_option)){
 			//Adobe Font
 			if( isset($extension_option['adobe-font']) && !empty($extension_option['adobe-font']['switch']) ){
@@ -29,6 +30,36 @@ class Nexter_Ext_Extra_Settings {
 			//Disable Admin Settings
 			if( isset($extension_option['disable-admin-setting']) && !empty($extension_option['disable-admin-setting']['switch']) ){
 				require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-disable-admin-settings.php';
+			}
+
+			//Content Post Order
+			if( isset($extension_option['content-post-order']) && !empty($extension_option['content-post-order']['switch'])){
+				require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-content-post-order.php';
+			}
+
+			//Clean-Up Admin Bar
+			if( isset($extension_option['clean-up-admin-bar']) && !empty($extension_option['clean-up-admin-bar']['switch']) ){
+				require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-clean-up-admin-bar.php';
+			}
+
+			//Wilder Admin Menu Width
+			if( isset($extension_option['wider-admin-menu']) && !empty($extension_option['wider-admin-menu']['switch']) ){
+				require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-wider-admin-menu.php';
+			}
+			
+			//Disable Gutenberg
+			if( isset($extension_option['disable-gutenberg']) && !empty($extension_option['disable-gutenberg']['switch'])){
+				require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-disable-gutenberg.php';
+			}
+
+			//Redirect 404 Page
+			if( isset($extension_option['redirect-404-page']) && !empty($extension_option['redirect-404-page']['switch']) && !defined( 'NXT_PRO_EXT' ) ){
+				require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-redirect-404-page.php';
+			}
+			
+			//Rollback Manager
+			if( isset($extension_option['rollback-manager']) && !empty($extension_option['rollback-manager']['switch']) ){
+				require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-rollback-manager.php';
 			}
 		}
 		
@@ -75,5 +106,6 @@ class Nexter_Ext_Extra_Settings {
 		
 		return $mimes;
 	}
+
 }
 new Nexter_Ext_Extra_Settings();

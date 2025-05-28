@@ -29,3 +29,35 @@
     background: #3a3c3e;
     padding-top: 0
 }
+
+
+
+#wpadminbar .nxt-admin-snippet-type {
+	position: relative;
+}
+
+#wpadminbar .nxt-admin-snippet-type > .ab-submenu {
+	display: none;
+	position: absolute;
+	left: 100%;
+	top: 0;
+	z-index: 99999;
+	background: #23282d; /* matches admin bar */
+	min-width: 180px;
+}
+
+#wpadminbar .nxt-admin-snippet-type:hover > .ab-submenu {
+	display: block;
+}
+
+#wpadminbar .nxt-admin-snippet-type > a.ab-item::after {
+	content: "▶";
+	float: right;
+	margin-left: 6px;
+	font-size: 11px;
+	opacity: 0.7;
+}
+#wpadminbar .nxt-admin-snippet-type .nxt-admin-submenu .nxt-admin-sub-item {
+    display: flex;
+    align-items: center;
+}

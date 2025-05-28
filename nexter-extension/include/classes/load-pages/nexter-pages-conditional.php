@@ -168,6 +168,7 @@ if ( ! class_exists( 'Nexter_Builder_Pages_Conditional' ) ) {
 						}
 					}
 				//}
+
 				
 			}
 			
@@ -222,10 +223,11 @@ if ( ! class_exists( 'Nexter_Builder_Pages_Conditional' ) ) {
 			}else{
 				$found = false;
 			}
-
+			
 			if ( !defined('ASTRA_THEME_VERSION') && !defined('GENERATE_VERSION') && !defined('OCEANWP_THEME_VERSION') && !defined('KADENCE_VERSION') && !function_exists('blocksy_get_wp_theme') && !defined('NEVE_VERSION') && !defined('NXT_VERSION') && self::$location === 'singular' && is_404() && !empty($found)){
 				return $this->get_template_path();
 			}
+			
 			//is empty documents default
 			if( empty(self::$templates_ids) ){
 				return $template; //default template

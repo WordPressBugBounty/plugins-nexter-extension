@@ -11,6 +11,7 @@ defined('ABSPATH') or die();
      * Constructor
      */
     public function __construct() {
+		
 		$extension_option = get_option( 'nexter_extra_ext_options' );
 
 		if(!empty($extension_option) && isset($extension_option['disable-admin-setting']) && !empty($extension_option['disable-admin-setting']['switch']) && !empty($extension_option['disable-admin-setting']['values']) ){
@@ -53,6 +54,34 @@ defined('ABSPATH') or die();
 						remove_action('welcome_panel', 'wp_welcome_panel');
 					});
 				}
+
+				add_action('wp_dashboard_setup', function () use ($disable_values) {
+					global $wp_meta_boxes;
+				
+					$widgets_to_disable = [
+						'disable_dashboard_activity'    => 'dashboard_activity',
+						'disable_dashboard_right_now'   => 'dashboard_right_now',
+						'disable_dashboard_quick_press'  => 'dashboard_quick_press',
+						'disable_dashboard_site_health'  => 'dashboard_site_health',
+						'disable_dashboard_primary'      => 'dashboard_primary',
+						'disable_wc_dashboard_status'    => 'woocommerce_dashboard_status',
+						'disable_wc_recent_reviews'      => 'woocommerce_dashboard_recent_reviews',
+						'disable_wc_admin_setup'         => 'wc_admin_dashboard_setup',
+					];
+
+					foreach ($widgets_to_disable as $key => $widget_id) {
+						if (in_array($key, $disable_values, true)) {
+							foreach (['normal', 'side'] as $context) {
+								if (isset($wp_meta_boxes['dashboard'][$context]['core'][$widget_id])) {
+									unset($wp_meta_boxes['dashboard'][$context]['core'][$widget_id]);
+								}else if(isset($wp_meta_boxes['dashboard'][$context]['high'][$widget_id])){
+									unset($wp_meta_boxes['dashboard'][$context]['high'][$widget_id]);
+								}
+							}
+						}
+					}
+				}, PHP_INT_MAX);
+
 				if(in_array("remove_php_up_notice",$disable_values)){
 					remove_action( 'admin_notices', 'update_nag', 3 );
 

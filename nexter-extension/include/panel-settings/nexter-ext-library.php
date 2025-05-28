@@ -239,15 +239,15 @@ if ( !class_exists( 'Nexter_Pro_Ext_Activate' ) ) {
 		public function nexter_extension_pro_activate_notice() {
 			$status = $this->nexter_activate_status();
 			if( empty( $status ) ) {
-				$admin_notice = '<h4 class="nxt-notice-head">' . esc_html__( 'Activate Nexter Pro !!!', 'nexter-extension' ) . '</h4>';
-				$admin_notice .= '<p>' . esc_html__( 'You’re Just One Step Away From Having Fun While Crafting Websites. Paste Your Licence Key for Nexter WP Here and Get Inspired With Other People Who Build With Us. Visit', 'nexter-extension' );
-				$admin_notice .= sprintf( ' <a href="%s" target="_blank">%s</a>', esc_url('https://store.posimyth.com/'), esc_html__( 'POSIMYTH Store', 'nexter-extension' ) ) . esc_html__(' to Generate Your Licence Key.', 'nexter-extension' ).'</p>';
+				$admin_notice = '<h4 class="nxt-notice-head">' . esc_html__( 'Activate Nexter Extension Pro !!!', 'nexter-extension' ) . '</h4>';
+				$admin_notice .= '<p>' . esc_html__( 'You’re Just One Step Away From Having Fun While Crafting Websites. Paste Your Licence Key for Nexter Extension Here and Get Inspired With Other People Who Build With Us. Visit', 'nexter-extension' );
+				$admin_notice .= sprintf( ' <a href="%s" target="_blank" rel="noopener noreferrer">%s</a>', esc_url('https://store.posimyth.com/'), esc_html__( 'POSIMYTH Store', 'nexter-extension' ) ) . esc_html__(' to Generate Your Licence Key.', 'nexter-extension' ).'</p>';
 				$admin_notice .= '<p>' . sprintf( '<a href="%s" class="button-primary">%s</a>', admin_url( 'admin.php?page=nexter_welcome#/activate_PRO' ) , esc_html__( 'I’ve Got a Licence Key', 'nexter-extension' ) ) . '</p>';
 				echo '<div class="notice notice-errors nexter-pro-ext-notice">'.wp_kses_post($admin_notice).'</div>';
 			}else if(!empty($status) && $status=='expired'){
-				$admin_notice = '<h4 class="nxt-notice-head">' . esc_html__( 'Your Nexter Pro Licence is Expired !!!', 'nexter-extension' ) . '</h4>';
+				$admin_notice = '<h4 class="nxt-notice-head">' . esc_html__( 'Your Nexter Extension Pro Licence is Expired !!!', 'nexter-extension' ) . '</h4>';
 				$admin_notice .= '<p>' . esc_html__( 'Seems Like Your Licence Key for Nexter WP is Expired. Visit', 'nexter-extension' );
-				$admin_notice .= sprintf( ' <a href="%s" target="_blank">%s</a>', esc_url('https://store.posimyth.com/'), esc_html__( 'POSIMYTH Store', 'nexter-extension' ) ) . esc_html__(' to Pay Invoices / Change Payment Methods / Manage Your Subscriptions. Please Don’t Hesitate to Reach Us at', 'nexter-extension' ). sprintf( ' <a href="%s" target="_blank">%s</a>', esc_url('https://posimyth.ticksy.com/'), esc_html__( 'Nexter Support', 'nexter-extension' ) ). esc_html__(' if You Have an Issue Regarding Our Products.','nexter-extension').'</p>';
+				$admin_notice .= sprintf( ' <a href="%s" target="_blank" rel="noopener noreferrer">%s</a>', esc_url('https://store.posimyth.com/'), esc_html__( 'POSIMYTH Store', 'nexter-extension' ) ) . esc_html__(' to Pay Invoices / Change Payment Methods / Manage Your Subscriptions. Please Don’t Hesitate to Reach Us at', 'nexter-extension' ). sprintf( ' <a href="%s" target="_blank" rel="noopener noreferrer">%s</a>', esc_url('https://posimyth.ticksy.com/'), esc_html__( 'Nexter Support', 'nexter-extension' ) ). esc_html__(' if You Have an Issue Regarding Our Products.','nexter-extension').'</p>';
 				$admin_notice .= '<p>' . sprintf( '<a href="%s" class="button-primary">%s</a>', admin_url( 'admin.php?page=nexter_welcome#/activate_PRO' ) , esc_html__( 'I’ve Got a Licence Key', 'nexter-extension' ) ) . '</p>';
 				echo '<div class="notice notice-warning nexter-pro-ext-notice">'.wp_kses_post($admin_notice).'</div>';
 			}
@@ -293,7 +293,7 @@ if ( !class_exists( 'Nexter_Pro_Ext_Activate' ) ) {
 				case 'missing' :
 					$message = '<div style="display: flex;align-items: center;column-gap: 5px;">'. $redsvg.'<h4 class="tpgb-notice-head">'. __( "It's Time to Enter Licence Key",'nexter-extension' ).'</h4> </div>';
 					/* translators: %s: store tpgb */
-					$text_msg = sprintf( __( 'You’re Just One Step Away From Having Fun While Crafting Websites. Paste Your Licence Key for Nexter WP Here and Get Inspired With Other People Who Build With Us. Visit <a href="%s" target="_blank">POSIMYTH Store</a> to Update Your Licence Key / Manage Payments / Pay Invoices.', 'nexter-extension' ), esc_url('https://store.posimyth.com/') );
+					$text_msg = sprintf( __( 'You’re Just One Step Away From Having Fun While Crafting Websites. Paste Your Licence Key for Nexter WP Here and Get Inspired With Other People Who Build With Us. Visit <a href="%s" target="_blank" rel="noopener noreferrer">POSIMYTH Store</a> to Update Your Licence Key / Manage Payments / Pay Invoices.', 'nexter-extension' ), esc_url('https://store.posimyth.com/') );
 					$message .= '<p>' . $text_msg . '</p>';
 					break;
 
@@ -302,7 +302,7 @@ if ( !class_exists( 'Nexter_Pro_Ext_Activate' ) ) {
 					// Translators: Message shown when a typo is found in the license key.
 					$message = '<div style="display: flex;align-items: center;column-gap: 5px;">'. $redsvg.'<h4 class="tpgb-notice-head">'. __( 'Typo in Licence Key is Unacceptable !','nexter-extension' ).'</h4> </div>';
 					// Translators: %s is the POSIMYTH Store URL.
-					$text_msg = sprintf( __( 'We Can’t Find Licence Key You Just Entered in Any of Our Lists. Make Sure You Are Not Adding Any White Spaces With It. If You\'re Having This Issue Repeatedly, Visit  <a href="%s" target="_blank">POSIMYTH Store</a> to Confirm Your Licence Key.', 'nexter-extension' ), esc_url('https://store.posimyth.com/') );
+					$text_msg = sprintf( __( 'We Can’t Find Licence Key You Just Entered in Any of Our Lists. Make Sure You Are Not Adding Any White Spaces With It. If You\'re Having This Issue Repeatedly, Visit  <a href="%s" target="_blank" rel="noopener noreferrer">POSIMYTH Store</a> to Confirm Your Licence Key.', 'nexter-extension' ), esc_url('https://store.posimyth.com/') );
 					$message .= '<p>' . $text_msg . '</p>';
 					break;
 
@@ -310,7 +310,7 @@ if ( !class_exists( 'Nexter_Pro_Ext_Activate' ) ) {
 					// Translators: %s is the product name the license key belongs to.
 					$message = '<div style="display: flex;align-items: center;column-gap: 5px;">'. $redsvg.'<h4 class="tpgb-notice-head">'. __( "This License Key Belongs to Some Other Product",'nexter-extension' ).'</h4> </div>';
 					// Translators: %s is the URL for the POSIMYTH Store.
-					$text_msg = sprintf( __( 'It Appears That Licence Key You Entered Belongs to Some Other Product from Our Product Collection. In Layman Terms, You Dialed a Wrong Number. Visit <a href="%s" target="_blank">POSIMYTH Store</a> and Verify Your Licence Key for Nexter WP.', 'nexter-extension' ), esc_url('https://store.posimyth.com/') );
+					$text_msg = sprintf( __( 'It Appears That Licence Key You Entered Belongs to Some Other Product from Our Product Collection. In Layman Terms, You Dialed a Wrong Number. Visit <a href="%s" target="_blank" rel="noopener noreferrer">POSIMYTH Store</a> and Verify Your Licence Key for Nexter WP.', 'nexter-extension' ), esc_url('https://store.posimyth.com/') );
 					$message .= '<p>' . $text_msg . '</p>';
 					break;
 
@@ -318,7 +318,7 @@ if ( !class_exists( 'Nexter_Pro_Ext_Activate' ) ) {
 					// Translators: Message shown when a user needs to order more items.
 					$message = '<div style="display: flex;align-items: center;column-gap: 5px;">'. $redsvg.'<h4 class="tpgb-notice-head">'. __( "You Should’ve Ordered More !!!",'nexter-extension' ).'</h4> </div>';
 					// Translators: %s is the URL for the POSIMYTH Store.
-					$text_msg = sprintf( __( 'Unfortunately, Your Activation Quota for Active / Running Websites Built With Nexter WP  is Over. Like What You’re Using ? Visit <a href="%s" target="_blank">POSIMYTH Store</a> to Upgrade Your Existing Plan and Allow Your Creativity to Bloom.', 'nexter-extension' ), esc_url('https://store.posimyth.com/') );
+					$text_msg = sprintf( __( 'Unfortunately, Your Activation Quota for Active / Running Websites Built With Nexter WP  is Over. Like What You’re Using ? Visit <a href="%s" target="_blank" rel="noopener noreferrer">POSIMYTH Store</a> to Upgrade Your Existing Plan and Allow Your Creativity to Bloom.', 'nexter-extension' ), esc_url('https://store.posimyth.com/') );
 					$message .= '<p>' . $text_msg . '</p>';
 					break;
 
