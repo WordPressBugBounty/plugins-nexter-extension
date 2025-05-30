@@ -1357,6 +1357,7 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 						}
 						
 						//standard match
+						$standard_value = '';
 						if( $type == 'nxt-code-snippet' ){
 							$post_col = array_column($post_meta_value, 'value');
 							$standard_value = preg_grep('/^standard-/i', $post_col);

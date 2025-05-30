@@ -3,7 +3,7 @@ Contributors: posimyththemes, nirmalkavaiya, sagarpatel124
 Tags : security, elementor, theme-builder, pagespeed, code snippet
 Requires at least: 4.0
 Tested up to: 6.8.1
-Stable tag: 4.2.0
+Stable tag: 4.2.1
 Requires PHP: 5.6
 License: GPLv3
 License URI: https://opensource.org/licenses/GPL-3.0
@@ -327,7 +327,10 @@ https://patchstack.com/database/vdp/nexter-extension)
 
 == Changelog ==
 
-### View Complete List of Changelog from [here](https://roadmap.nexterwp.com/updates?filter=Nexter+Extension+-+FREE)  
+### View Complete List of Changelog from [here](https://roadmap.nexterwp.com/updates?filter=Nexter+Extension+-+FREE) 
+ 
+= 4.2.1 = 30 May 2025
+- Fixed : Theme Builder : Conditional Bug Fixed
 
 = 4.2.0 = 28 May 2025
 – Added : Utilities : Content Post Order 
@@ -339,12 +342,12 @@ https://patchstack.com/database/vdp/nexter-extension)
 - Added : Performance : Heartbeat Control
 - Added : Security : SVG Upload
 - Added : Admin Interface : Disable Admin Settings
-    Dashboard Activity
-    At a Glance
-    Quick Draft
-    Site Health Status
-    WooCommerce Setup
-    WordPress Events and News
+  --Dashboard Activity
+  --At a Glance
+  --Quick Draft
+  --Site Health Status
+  --WooCommerce Setup
+  --WordPress Events and News
 - Added : Admin Interface : Clean Admin Bar
 - Added : Admin Interface : Wider Admin Menu
 - Fixed : Bug Fixed & Improvements
