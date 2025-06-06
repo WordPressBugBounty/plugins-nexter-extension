@@ -181,6 +181,7 @@ if ( ! class_exists( 'Nexter_Extensions_Load' ) ) {
 				$include_uri = NEXTER_EXT_DIR . 'include/classes/';
 				require_once $include_uri . 'third-party/class-builder-compatibility.php';
 				require_once $include_uri . 'third-party/class-nxt-theme-builder-load.php';
+				require_once $include_uri . 'third-party/class-bricks.php';
 				require_once $include_uri . 'third-party/class-elementor.php';
 				require_once $include_uri . 'third-party/class-elementor-pro.php';
 				require_once $include_uri . 'third-party/class-gutenberg.php';

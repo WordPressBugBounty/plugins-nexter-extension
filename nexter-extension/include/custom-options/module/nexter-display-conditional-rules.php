@@ -1365,7 +1365,6 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 							$standard_value = preg_grep('/^standard-/i', $post_meta_value);
 						}
 						
-						
 						if(!empty($standard_value)){
 							$priority = 5;
 							$check_condition = true;

@@ -14,9 +14,6 @@ defined('ABSPATH') or die();
      */
     public function __construct() {
         $this->nxt_get_post_order_settings();
-        if ( !class_exists( 'Classic_Editor' ) ) {
-            //require_once ASENHA_PATH . 'includes/empty-class-classic-editor.php';
-        }
         add_action( 'admin_init', [$this, 'disable_gutenberg_for_post_types_admin'] );
         add_action( 'admin_print_styles', [$this, 'safari_18_fix'] );
         

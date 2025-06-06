@@ -3,7 +3,7 @@ Contributors: posimyththemes, nirmalkavaiya, sagarpatel124
 Tags : security, elementor, theme-builder, pagespeed, code snippet
 Requires at least: 4.0
 Tested up to: 6.8.1
-Stable tag: 4.2.1
+Stable tag: 4.2.2
 Requires PHP: 5.6
 License: GPLv3
 License URI: https://opensource.org/licenses/GPL-3.0
@@ -329,6 +329,11 @@ https://patchstack.com/database/vdp/nexter-extension)
 
 ### View Complete List of Changelog from [here](https://roadmap.nexterwp.com/updates?filter=Nexter+Extension+-+FREE) 
  
+= 4.2.2 = 06 June 2025
+- Compatibility : Bricks Builder : Theme Builder Compatibility
+- Fixed : Advanced Security : bug Fix.
+- Fixed : Bug Fixed & Improvements
+
 = 4.2.1 = 30 May 2025
 - Fixed : Theme Builder : Conditional Bug Fixed
 
@@ -470,7 +475,7 @@ https://patchstack.com/database/vdp/nexter-extension)
 - Fix : PHP Variable Bug Fix 
 
 = 3.0.1 = 10 August 2023
-- Compatibility : Wordpress 6.3
+- Compatibility : WordPress 6.3
 - Compatibility : ACF : Select2 conflict JS Bug Fix
 - Update : Nexter Builder : Layout Section Header/Footer Template Elementor Editor Bug Fix
 

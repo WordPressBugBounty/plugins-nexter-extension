@@ -63,6 +63,10 @@ if ( ! class_exists( 'Nexter_Builder_Compatibility' ) ) {
 					return Nexter_Visual_Composer_Builder::get_instance();
 				}
 				
+				if(! empty( get_post_meta( $post_id, '_bricks_template_type', true ) ) && class_exists( 'Bricks\Frontend' )){
+					return Nexter_Bricks_Builder::get_instance();
+				}
+				
 				//Activate Elementor
 				if ( class_exists( '\Elementor\Plugin' ) && $this->check_elementor_build($post_id) ) {
 					return Nexter_Elementor_Builder::get_instance();

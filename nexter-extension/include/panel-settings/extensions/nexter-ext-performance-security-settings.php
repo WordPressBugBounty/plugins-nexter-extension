@@ -310,13 +310,23 @@ class Nexter_Ext_Performance_Security_Settings {
 			}
 
 			//SVG Upload
-			$svg_data = (array) $nxt_security_option;
+			$svg_data = $this->nxt_convert_object_to_array($nxt_security_option);
 			if(isset($svg_data['svg-upload']) && !empty($svg_data['svg-upload']['switch']) && !empty($svg_data['svg-upload']['values'])){
 				require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-svg-upload.php';
 			}
 		}
 
     }
+
+	public function nxt_convert_object_to_array($data) {
+		if (is_object($data)) {
+			$data = get_object_vars($data);
+		}
+		if (is_array($data)) {
+			return array_map([$this, 'nxt_convert_object_to_array'], $data);
+		}
+		return $data;
+	}
 
 	/**
 	 * @param $state
