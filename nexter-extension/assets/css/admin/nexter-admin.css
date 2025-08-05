@@ -297,6 +297,57 @@
     color: #f0f0f1 !important;
 }
 
+/* Admin License Notice */
+.nexter-license-activate {
+	display: flex;
+	align-items: flex-start;
+	gap: 16px;
+	padding: 20px;
+}
+
+.nexter-license-content h2 {
+	margin: 0;
+	font-size: 16px;
+	font-weight: 600;
+	color: #1c1c1c;
+}
+
+.nexter-license-content p {
+	margin: 8px 0;
+	color: #5e5e5e;
+	font-size: 12px;
+}
+
+.nxt-nobtn-primary {
+	background-color: #1717CC;
+	color: #fff;
+	border: none;
+	box-shadow: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 18px;
+    text-decoration: none;
+    display: inline-flex
+}
+.nxt-nobtn-primary:hover {
+    background-color: #1717CC;
+    color: #fff;
+}
+.nxt-nobtn-primary:focus {
+    box-shadow: none;
+    outline: none;
+    color: #fff;
+}
+.nxt-notice-wrap .notice-dismiss:focus {
+    box-shadow: none;
+    outline: none;
+}
+.nxt-notice-wrap{
+    border-left-color: #1717CC;
+}
+
 /*tablet responsive start*/
 @media (min-width: 768px) and (max-width: 1024px){ 
 	

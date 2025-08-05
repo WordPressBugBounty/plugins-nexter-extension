@@ -34,4 +34,23 @@ document.addEventListener('DOMContentLoaded', (event) => {
 			request.send('action=nexter_ext_pro_dismiss_notice');
 		});
 	}
+
+	setTimeout(function () {
+    const notices = document.querySelectorAll('.nxt-notice-wrap');
+        notices.forEach(function (notice) {
+            const dismissBtn = notice.querySelector('.notice-dismiss');
+            const noticeId = notice.getAttribute('data-notice-id');
+            if (dismissBtn && noticeId) {
+                dismissBtn.addEventListener('click', function () {
+                    const xhr = new XMLHttpRequest();
+                    const formData = new FormData();
+                    formData.append('action', 'nexter_ext_dismiss_notice');
+                    formData.append('notice_id', noticeId);
+                    formData.append('nonce', nexter_admin_config.ajax_nonce);
+                    xhr.open('POST', ajaxurl, true);
+                    xhr.send(formData);
+                });
+            }
+        });
+    }, 100);
 });
