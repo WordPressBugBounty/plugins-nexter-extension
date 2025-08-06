@@ -613,6 +613,17 @@ if ( ! class_exists( 'Nexter_Ext_Panel_Settings' ) ) {
             if ( isset( $pluginslist[ 'wdesignkit/wdesignkit.php' ] ) && !empty( $pluginslist[ 'wdesignkit/wdesignkit.php' ] ) ) {
                 if( is_plugin_active('wdesignkit/wdesignkit.php') ){
                     $wdkPlugin = true;
+                    // Get WDesignKit version
+                    $wdkVersion = '1.0.0'; // Default version
+                    if (defined('WDKIT_VERSION')) {
+                        $wdkVersion = WDKIT_VERSION;
+                    } else {
+                        // Try to get version from plugin data
+                        $plugin_data = get_plugin_data(WP_PLUGIN_DIR . '/wdesignkit/wdesignkit.php');
+                        if (isset($plugin_data['Version'])) {
+                            $wdkVersion = $plugin_data['Version'];
+                        }
+                    }
                 }
             }
 
@@ -678,6 +689,7 @@ if ( ! class_exists( 'Nexter_Ext_Panel_Settings' ) ) {
                 'nexterBlock' => $nxtPlugin,
                 'tpaeAddon' => $tpaePlugin,
                 'wdkPlugin' => $wdkPlugin,
+                'wdkVersion' => isset($wdkVersion) ? $wdkVersion : '1.0.0',
                 'uichemy' => $uichemyPlugin,
                 'rollbacVer' => NxtExt_Rollback::get_rollback_versions(),
                 'rollbackUrl' => $rollback_url,
