@@ -58,6 +58,26 @@ function nxt_ext_builder_post_type() {
 		$singular_preview_id = get_post_meta(get_the_ID(), 'nxt-singular-preview-id', true);
 		$archives_preview_type = get_post_meta(get_the_ID(), 'nxt-singular-preview-type', true);
 		$archives_preview_id = get_post_meta(get_the_ID(), 'nxt-singular-preview-id', true);
+
+		$old_layout = get_post_meta(get_the_ID(), 'nxt-hooks-layout', true);
+        $layout = get_post_meta(get_the_ID(), 'nxt-hooks-layout-sections', true);
+        $layoutType = '';
+
+        if(!empty($old_layout)){
+            if($old_layout == 'sections'){
+                $layoutType = get_post_meta(get_the_ID(), 'nxt-hooks-layout-sections', true);
+            }else if($old_layout == 'pages'){
+                $layoutType = get_post_meta(get_the_ID(), 'nxt-hooks-layout-pages', true);
+            }else if( !empty($layout)){
+                $layoutType = $layout;
+            }
+        }else if( !empty($layout)){
+			$layoutType = $layout;
+        }
+
+		if(!empty($layoutType)){
+			echo '<input type="hidden" id="nxt-layout-type" name="nxt-layout-type" value="'.esc_attr($layoutType).'">';
+		}
 		if(!empty($singular_preview_type)){
 			echo '<input type="hidden" id="nxt-singular-preview-type" name="nxt-singular-preview-type" value="'.esc_attr($singular_preview_type).'">';
 		}

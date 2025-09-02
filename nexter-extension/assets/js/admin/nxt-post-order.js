@@ -39,9 +39,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     paged: paged,
                     nonce: nxtContentPostOrder.nonce
                 };
-                console.log(queryString);
                 
- 
                 // Send AJAX request
                 fetch(ajaxurl, {
                     method: 'POST',

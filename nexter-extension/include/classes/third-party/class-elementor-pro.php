@@ -77,9 +77,21 @@ if ( ! class_exists( 'Nexter_Elementor_Pro_Builder' ) ) {
 		 * @since 1.0.14
 		 */
 		public function nxt_do_header(){
-			$header_location = Module::instance()->get_locations_manager()->do_location( 'header' );
-			if ( $header_location ) {
+			if ( class_exists( 'Nexter_Pro_Maintenance_Mode' ) ) {
+				$nexter_maintenance = \Nexter_Pro_Maintenance_Mode::check_maintenance_header_footer();
+			} else {
+				$nexter_maintenance = false;
+			}
+
+			$elementor_maintenance = get_option( 'elementor_maintenance_mode_mode' ) === 'maintenance' && !is_user_logged_in();
+
+			if ( $nexter_maintenance || $elementor_maintenance ) {
 				remove_action( 'nexter_header', 'nexter_header_template' );
+			}else{
+				$header_location = Module::instance()->get_locations_manager()->do_location( 'header' );
+				if ( $header_location ) {
+					remove_action( 'nexter_header', 'nexter_header_template' );
+				}
 			}
 		}
 		
@@ -88,9 +100,21 @@ if ( ! class_exists( 'Nexter_Elementor_Pro_Builder' ) ) {
 		 * @since 1.0.14
 		 */
 		public function nxt_do_footer(){
-			$footer_location = Module::instance()->get_locations_manager()->do_location( 'footer' );
-			if ( $footer_location ) {
+			if ( class_exists( 'Nexter_Pro_Maintenance_Mode' ) ) {
+				$nexter_maintenance = \Nexter_Pro_Maintenance_Mode::check_maintenance_header_footer();
+			} else {
+				$nexter_maintenance = false;
+			}
+
+			$elementor_maintenance = get_option( 'elementor_maintenance_mode_mode' ) === 'maintenance' && !is_user_logged_in();
+
+			if ( $nexter_maintenance || $elementor_maintenance ) {
 				remove_action( 'nexter_footer', 'nexter_footer_template' );
+			}else{
+				$footer_location = Module::instance()->get_locations_manager()->do_location( 'footer' );
+				if ( $footer_location ) {
+					remove_action( 'nexter_footer', 'nexter_footer_template' );
+				}
 			}
 		}
 		

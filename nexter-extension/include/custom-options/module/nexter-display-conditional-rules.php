@@ -334,7 +334,18 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 							$display = true;
 						}else if( $check_cond == 'entire' ){
 						
-							$condition_data = explode( '|', $condition );
+							// Fix: Handle array condition properly before explode
+							$condition_value = $condition;
+							if (is_array($condition) && isset($condition['value'])) {
+								$condition_value = $condition['value'];
+							}
+							
+							// Ensure we have a string before using explode
+							if (!is_string($condition_value)) {
+								continue; // Skip this condition if it's not a string
+							}
+							
+							$condition_data = explode( '|', $condition_value );
 
 							$post_type     = isset( $condition_data[0] ) ? $condition_data[0] : false;
 							$archive  = isset( $condition_data[2] ) ? $condition_data[2] : false;
@@ -1357,13 +1368,13 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 						}
 						
 						//standard match
-						$standard_value = '';
 						if( $type == 'nxt-code-snippet' ){
 							$post_col = array_column($post_meta_value, 'value');
 							$standard_value = preg_grep('/^standard-/i', $post_col);
 						}else if(in_array('standard-universal', $post_meta_value, true)){
 							$standard_value = preg_grep('/^standard-/i', $post_meta_value);
 						}
+						
 						
 						if(!empty($standard_value)){
 							$priority = 5;
@@ -1874,6 +1885,1575 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 			return  apply_filters( 'nexter_other_location_sub_options', $options_list );
 		}
 
+		/**
+		 * Evaluate Dynamic Conditional Logic conditions
+		 * 
+		 * @param array $smart_conditions The dynamic conditional logic data
+		 * @return bool Whether the conditions are met
+		 * @since 1.0.0
+		 */
+		public static function evaluate_smart_conditional_logic( $smart_conditions = [] ) {
+			// If not enabled or no conditions, return true (no restrictions)
+			if ( empty( $smart_conditions ) || ! isset( $smart_conditions['enabled'] ) || ! $smart_conditions['enabled'] ) {
+				return true;
+			}
+
+			// If enabled but no conditions array, return true
+			if ( ! isset( $smart_conditions['conditions'] ) || empty( $smart_conditions['conditions'] ) ) {
+				return true;
+			}
+
+			$groups = $smart_conditions['conditions'];
+			$group_results = [];
+
+			// Evaluate each group (OR logic between groups)
+			foreach ( $groups as $group ) {
+				if ( ! isset( $group['conditions'] ) || empty( $group['conditions'] ) ) {
+					continue;
+				}
+
+				$condition_results = [];
+
+				// Evaluate each condition in the group (AND logic within group)
+				foreach ( $group['conditions'] as $condition ) {
+					$field = isset( $condition['field'] ) ? $condition['field'] : '';
+					$operator = isset( $condition['operator'] ) ? $condition['operator'] : 'is';
+					$value = isset( $condition['value'] ) ? $condition['value'] : [];
+
+					// Ensure value is an array for consistency
+					if ( ! is_array( $value ) ) {
+						$value = [ $value ];
+					}
+
+					$condition_result = self::evaluate_single_condition( $field, $operator, $value );
+					$condition_results[] = $condition_result;
+				}
+
+				// All conditions in a group must be true (AND logic)
+				$group_result = ! in_array( false, $condition_results, true );
+				$group_results[] = $group_result;
+			}
+
+			// At least one group must be true (OR logic between groups)
+			return in_array( true, $group_results, true );
+		}
+
+		/**
+		 * Check if snippet should display based on conditional logic
+		 * Uses either old system OR new Smart Conditional Logic, never both
+		 * 
+		 * @param int $post_id Snippet post ID
+		 * @return bool Whether snippet should be displayed
+		 * @since 1.0.0
+		 */
+		public static function should_display_snippet($post_id) {
+			// First check if snippet uses new Smart Conditional Logic
+			$smart_conditions = get_post_meta($post_id, 'nxt-smart-conditional-logic', true);
+			
+			if (!empty($smart_conditions) && isset($smart_conditions['enabled']) && $smart_conditions['enabled']) {
+				// Use new Smart Conditional Logic system
+				return self::evaluate_smart_conditional_logic($smart_conditions);
+			}
+			
+					// Fall back to old Display Rules system
+		$include_conditions = get_post_meta($post_id, 'nxt-add-display-rule', true);
+		$exclude_conditions = get_post_meta($post_id, 'nxt-exclude-display-rule', true);
+		
+				return self::check_legacy_display_rules($post_id, $include_conditions, $exclude_conditions);
+	}
+
+	/**
+	 * Check legacy display rules (old system)
+	 * 
+	 * @param int $post_id Snippet post ID
+	 * @param array $include_conditions Include conditions
+	 * @param array $exclude_conditions Exclude conditions
+	 * @return bool Whether snippet should be displayed
+	 */
+	public static function check_legacy_display_rules($post_id, $include_conditions = [], $exclude_conditions = []) {
+		$instance = self::get_instance();
+		
+		// Check include conditions - if any include condition matches, snippet can be shown
+		$include_result = true; // Default to true if no include conditions
+		if (!empty($include_conditions)) {
+			$include_result = $instance->check_layout_display_inc_exc_rules($post_id, $include_conditions);
+		}
+		
+		// Check exclude conditions - if any exclude condition matches, snippet should be hidden
+		$exclude_result = false; // Default to false (don't exclude) if no exclude conditions
+		if (!empty($exclude_conditions)) {
+			$exclude_result = $instance->check_layout_display_inc_exc_rules($post_id, $exclude_conditions);
+		}
+		
+		// Show snippet if include conditions are met AND exclude conditions are not met
+		return $include_result && !$exclude_result;
+	}
+
+	/**
+	 * Migrate old display rules to Smart Conditional Logic format
+		 * 
+		 * @param int $post_id Snippet post ID
+		 * @return array|false Migrated Smart Conditional Logic format or false if no migration needed
+		 */
+		public static function migrate_old_conditions_to_smart_logic( $post_id ) {
+			// Check if already migrated
+			$is_migrated = get_post_meta( $post_id, 'nxt-conditions-migrated', true );
+			if ( $is_migrated ) {
+				return false;
+			}
+			
+			// Get old display rules
+			$include_rules = get_post_meta( $post_id, 'nxt-add-display-rule', true );
+			$exclude_rules = get_post_meta( $post_id, 'nxt-exclude-display-rule', true );
+			$in_sub_rules = get_post_meta( $post_id, 'nxt-in-sub-rule', true );
+			$ex_sub_rules = get_post_meta( $post_id, 'nxt-ex-sub-rule', true );
+			
+			// If no old rules exist, no migration needed
+			if ( empty( $include_rules ) && empty( $exclude_rules ) && 
+				 empty( $in_sub_rules ) && empty( $ex_sub_rules ) ) {
+				return false;
+			}
+			
+			$migrated_conditions = [
+				'enabled' => true,
+				'conditions' => []
+			];
+			
+			$group_id = 1;
+			
+			// Migrate include rules (positive conditions)
+			if ( ! empty( $include_rules ) ) {
+				$include_group = self::convert_display_rules_to_conditions( $include_rules, $in_sub_rules, 'include' );
+				if ( ! empty( $include_group ) ) {
+					$migrated_conditions['conditions'][] = [
+						'id' => $group_id++,
+						'conditions' => $include_group
+					];
+				}
+			}
+			
+			// Migrate exclude rules (negative conditions) - create separate group with inverted logic
+			if ( ! empty( $exclude_rules ) ) {
+				$exclude_group = self::convert_display_rules_to_conditions( $exclude_rules, $ex_sub_rules, 'exclude' );
+				if ( ! empty( $exclude_group ) ) {
+					$migrated_conditions['conditions'][] = [
+						'id' => $group_id++,
+						'conditions' => $exclude_group
+					];
+				}
+			}
+			
+			return $migrated_conditions;
+		}
+
+		/**
+		 * Convert old display rules format to Smart Conditional Logic conditions format
+		 * 
+		 * @param array $rules Old display rules
+		 * @param array $sub_rules Sub-field rules
+		 * @param string $type 'include' or 'exclude'
+		 * @return array Converted conditions
+		 */
+		private static function convert_display_rules_to_conditions( $rules, $sub_rules, $type ) {
+			$conditions = [];
+			$condition_id = 1;
+			
+			foreach ( $rules as $rule ) {
+				$field_mapping = self::get_old_to_new_field_mapping();
+				$old_field = $rule;
+				
+				// Map old field to new field
+				if ( isset( $field_mapping[ $old_field ] ) ) {
+					$new_field = $field_mapping[ $old_field ];
+					$operator = ( $type === 'exclude' ) ? 'is_not' : 'is';
+					
+					// Get sub-field values if they exist
+					$values = [];
+					if ( ! empty( $sub_rules ) && isset( $sub_rules[ $old_field ] ) ) {
+						$values = is_array( $sub_rules[ $old_field ] ) ? $sub_rules[ $old_field ] : [ $sub_rules[ $old_field ] ];
+					}
+					
+					$conditions[] = [
+						'id' => $condition_id++,
+						'field' => $new_field,
+						'operator' => $operator,
+						'value' => $values
+					];
+				}
+			}
+			
+			return $conditions;
+		}
+
+		/**
+		 * Get mapping from old display rule fields to new Smart Conditional Logic fields
+		 * 
+		 * @return array Field mapping
+		 */
+		private static function get_old_to_new_field_mapping() {
+			return [
+				'page_type' => 'page_type',
+				'post_type' => 'post_type',
+				'taxonomy_page' => 'taxonomy_page',
+				'taxonomy_type' => 'taxonomy_type',
+				'particular-post' => 'particular-post',
+				'page_template' => 'page_template',
+				'user-roles' => 'user-roles',
+				'login-status' => 'login-status',
+				'set-day' => 'set-day',
+				'date' => 'date',
+				'date_time' => 'date_time',
+				'current_time' => 'current_time',
+				'author' => 'author',
+				'wc_page' => 'wc_page',
+				'wc_customer_orders' => 'wc_customer_orders',
+				'wc_customer_spent' => 'wc_customer_spent',
+				'wc_cart_total' => 'wc_cart_total',
+				'wc_product_in_cart' => 'wc_product_in_cart',
+				'edd_page' => 'edd_page',
+				'mp_page' => 'mp_page',
+				'mp_user' => 'mp_user',
+
+			];
+		}
+
+		/**
+		 * Mark snippet as migrated to prevent re-migration
+		 * 
+		 * @param int $post_id Snippet post ID
+		 */
+		public static function mark_snippet_as_migrated( $post_id ) {
+			update_post_meta( $post_id, 'nxt-conditions-migrated', true );
+		}
+
+			/**
+			 * * Evaluate a single Dynamic Conditional Logic condition
+			 * 
+			 * @param string $field The condition field
+			 * @param string $operator The condition operator
+			 * @param array $values The condition values
+			 * @return bool Whether the condition is met
+			 * @since 1.0.0
+			 */
+			private static function evaluate_single_condition( $field, $operator, $values ) {
+				// Handle ALL conditions through their respective methods
+				switch ( $field ) {
+				case 'login-status':
+					return self::evaluate_logged_in_condition( $operator, $values );
+				
+				case 'user-roles':
+					return self::evaluate_user_role_condition( $operator, $values );
+				
+				case 'browser':
+					return self::evaluate_browser_type_condition( $operator, $values );
+				
+				case 'os':
+					return self::evaluate_operating_system_condition( $operator, $values );
+				
+				case 'set-day':
+					return self::evaluate_day_of_week_condition( $operator, $values );
+				
+				case 'page_type':
+					return self::evaluate_page_type_condition( $operator, $values );
+				
+				case 'post_type':
+					return self::evaluate_post_type_condition( $operator, $values );
+				
+				case 'taxonomy_type':
+					return self::evaluate_taxonomy_type_condition( $operator, $values );
+				
+				case 'particular-post':
+					return self::evaluate_specific_post_condition( $operator, $values );
+				
+				case 'taxonomy_page':
+					return self::evaluate_taxonomy_page_condition( $operator, $values );
+				
+				// Pro field cases
+				case 'user_meta':
+					return self::evaluate_user_meta_condition( $operator, $values );
+				
+				case 'device_type':
+					return self::evaluate_device_type_condition( $operator, $values );
+				
+				case 'cookie_name':
+					return self::evaluate_cookie_name_condition( $operator, $values );
+				
+				case 'cookie_value':
+					return self::evaluate_cookie_value_condition( $operator, $values );
+				
+				case 'country':
+					return self::evaluate_country_condition( $operator, $values );
+				
+				case 'continent':
+					return self::evaluate_continent_condition( $operator, $values );
+				
+				case 'session':
+					return self::evaluate_session_condition( $operator, $values );
+				
+				case 'taxonomy_term':
+					return self::evaluate_taxonomy_term_condition( $operator, $values );
+				
+				case 'page_url':
+					return self::evaluate_page_url_condition( $operator, $values );
+				
+				case 'post_meta':
+					return self::evaluate_post_meta_condition( $operator, $values );
+				
+				case 'post_status':
+					return self::evaluate_post_status_condition( $operator, $values );
+				
+				case 'page_template':
+					return self::evaluate_page_template_condition( $operator, $values );
+				
+				case 'author':
+					return self::evaluate_author_condition( $operator, $values );
+				
+				case 'url_path':
+					return self::evaluate_url_path_condition( $operator, $values );
+				
+				case 'http_referrer':
+					return self::evaluate_http_referrer_condition( $operator, $values );
+				
+				case 'user_agent':
+					return self::evaluate_user_agent_condition( $operator, $values );
+				
+				case 'query_string':
+					return self::evaluate_query_string_condition( $operator, $values );
+				
+				case 'date':
+					return self::evaluate_date_condition( $operator, $values );
+				
+				case 'date_time':
+					return self::evaluate_date_time_condition( $operator, $values );
+				
+				case 'current_time':
+					return self::evaluate_time_condition( $operator, $values );
+				
+				case 'snippet_loaded':
+					return self::evaluate_snippet_loaded_condition( $operator, $values );
+				
+				case 'ip_address':
+					return self::evaluate_ip_address_condition( $operator, $values );
+				
+				// WooCommerce and other eCommerce conditions
+				case 'wc_page':
+			return self::evaluate_wc_page_condition( $operator, $values );
+		
+		case 'wc_customer_orders':
+			return self::evaluate_wc_customer_orders_condition( $operator, $values );
+		
+		case 'wc_customer_spent':
+			return self::evaluate_wc_customer_spent_condition( $operator, $values );
+		
+		case 'wc_cart_total':
+			return self::evaluate_wc_cart_total_condition( $operator, $values );
+		
+		case 'wc_product_in_cart':
+			return self::evaluate_wc_product_in_cart_condition( $operator, $values );
+		
+		case 'edd_page':
+			return self::evaluate_edd_page_condition( $operator, $values );
+		
+		case 'mp_page':
+			return self::evaluate_mp_page_condition( $operator, $values );
+		
+		case 'mp_user':
+			return self::evaluate_mp_user_condition( $operator, $values );
+	
+	// Add more field evaluations as needed
+	default:
+		// For unknown fields, return true to avoid breaking existing setups
+		return true;
+	}
+	}
+
+		/**
+		 * Evaluate logged in condition
+		 */
+		private static function evaluate_logged_in_condition( $operator, $values ) {
+			$is_logged_in = is_user_logged_in();
+			
+			foreach ( $values as $value_obj ) {
+				$value = isset( $value_obj['value'] ) ? $value_obj['value'] : $value_obj;
+				
+				// Handle different possible values for login status
+				$expected_login_state = false;
+				if ( $value === 'logged-in' || $value === 'logged_in' || $value === 'true' || $value === true || $value === 'login' ) {
+					$expected_login_state = true;
+				} elseif ( $value === 'logged-out' || $value === 'logged_out' || $value === 'false' || $value === false || $value === 'logout' ) {
+					$expected_login_state = false;
+				}
+				
+				$condition_met = ( $is_logged_in === $expected_login_state );
+				
+				if ( $operator === 'is' && $condition_met ) {
+					return true;
+				} elseif ( $operator === 'is_not' && ! $condition_met ) {
+					return true;
+				}
+			}
+			
+			// If we reach here for "is_not", it means all values were checked and none matched the condition
+			// This is correct behavior for the "is" operator (none matched, so return false)
+			// But for "is_not", we should actually return false here (none matched, but we want to negate that)
+			return false;
+		}
+
+		/**
+		 * Evaluate user role condition
+		 */
+		private static function evaluate_user_role_condition( $operator, $values ) {
+			if ( ! is_user_logged_in() ) {
+				return $operator === 'is_not';
+			}
+
+			$user = wp_get_current_user();
+			$user_roles = $user->roles;
+
+			// Handle different operators
+			switch ( $operator ) {
+				case 'is':
+					// User must have at least one of the specified roles
+					foreach ( $values as $value_obj ) {
+						$role = isset( $value_obj['value'] ) ? $value_obj['value'] : $value_obj;
+						if ( in_array( $role, $user_roles, true ) ) {
+							return true;
+						}
+					}
+					return false;
+
+				case 'is_not':
+					// User must NOT have ANY of the specified roles
+					foreach ( $values as $value_obj ) {
+						$role = isset( $value_obj['value'] ) ? $value_obj['value'] : $value_obj;
+						if ( in_array( $role, $user_roles, true ) ) {
+							return false; // User has one of the forbidden roles
+						}
+					}
+					return true; // User has none of the forbidden roles
+
+				default:
+					return false;
+			}
+		}
+
+		/**
+		 * Evaluate user meta condition - Pro feature
+		 */
+		private static function evaluate_user_meta_condition( $operator, $values ) {
+			// Check if code snippets are enabled
+			$get_opt = get_option('nexter_extra_ext_options');
+			$code_snippets_enabled = true;
+
+			if (isset($get_opt['code-snippets']) && isset($get_opt['code-snippets']['switch'])) {
+				$code_snippets_enabled = !empty($get_opt['code-snippets']['switch']);
+			}
+			
+			if (!$code_snippets_enabled) {
+				return false;
+			}
+			
+			// Use filter to route to Pro plugin if available
+			$condition_data = array( 'operator' => $operator, 'values' => $values );
+			return apply_filters( 'nexter_evaluate_pro_condition', false, 'user_meta', $condition_data );
+		}
+
+		/**
+		 * Evaluate IP address condition - Pro feature
+		 */
+		private static function evaluate_ip_address_condition( $operator, $values ) {
+			// Check if code snippets are enabled
+			$get_opt = get_option('nexter_extra_ext_options');
+			$code_snippets_enabled = true;
+
+			if (isset($get_opt['code-snippets']) && isset($get_opt['code-snippets']['switch'])) {
+				$code_snippets_enabled = !empty($get_opt['code-snippets']['switch']);
+			}
+			
+			if (!$code_snippets_enabled) {
+				return false;
+			}
+			
+			// Use filter to route to Pro plugin if available
+			$condition_data = array( 'operator' => $operator, 'values' => $values );
+			return apply_filters( 'nexter_evaluate_pro_condition', false, 'ip_address', $condition_data );
+		}
+
+		/**
+		 * Get the user's real IP address
+		 * 
+		 * @return string The user's IP address
+		 */
+		private static function get_user_ip_address() {
+			// Priority order for IP detection - improved for hosted environments
+			$ip_headers = [
+				'HTTP_CF_CONNECTING_IP',     // Cloudflare
+				'HTTP_CLIENT_IP',            // Shared Internet/Proxy
+				'HTTP_X_REAL_IP',            // Nginx proxy
+				'HTTP_X_FORWARDED_FOR',      // Standard proxy header
+				'HTTP_X_FORWARDED',          // Alternative proxy header
+				'HTTP_X_CLUSTER_CLIENT_IP',  // Cluster environments
+				'HTTP_FORWARDED_FOR',        // Alternative forwarded header
+				'HTTP_FORWARDED',            // RFC 7239
+				'REMOTE_ADDR'                // Direct connection
+			];
+
+			foreach ( $ip_headers as $header ) {
+				if ( ! empty( $_SERVER[ $header ] ) ) {
+					$ip_list = $_SERVER[ $header ];
+					
+					// Handle comma-separated IP lists (X-Forwarded-For can contain multiple IPs)
+					if ( strpos( $ip_list, ',' ) !== false ) {
+						$ips = array_map( 'trim', explode( ',', $ip_list ) );
+					} else {
+						$ips = [ trim( $ip_list ) ];
+					}
+					
+					// Return the first valid public IP
+					foreach ( $ips as $ip ) {
+						if ( filter_var( $ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE ) ) {
+							return $ip;
+						}
+					}
+				}
+			}
+
+			// Fallback: return REMOTE_ADDR even if it's private (for local development)
+			return isset( $_SERVER['REMOTE_ADDR'] ) ? $_SERVER['REMOTE_ADDR'] : '';
+		}
+
+		/**
+		 * Check if an IP address is within a CIDR range
+		 * 
+		 * @param string $ip The IP address to check
+		 * @param string $cidr The CIDR range (e.g., 192.168.1.0/24)
+		 * @return bool Whether the IP is in the range
+		 */
+		private static function ip_in_cidr_range( $ip, $cidr ) {
+			list( $subnet, $mask ) = explode( '/', $cidr );
+			
+			// Convert IP addresses to long integers
+			$ip_long = ip2long( $ip );
+			$subnet_long = ip2long( $subnet );
+			
+			if ( $ip_long === false || $subnet_long === false ) {
+				return false;
+			}
+			
+			// Calculate the network mask
+			$mask = (int) $mask;
+			if ( $mask < 0 || $mask > 32 ) {
+				return false;
+			}
+			
+			$mask_long = ( 0xFFFFFFFF << ( 32 - $mask ) ) & 0xFFFFFFFF;
+			
+			// Check if the IP is in the subnet
+			return ( $ip_long & $mask_long ) === ( $subnet_long & $mask_long );
+		}
+
+		/**
+		 * Evaluate URL path condition
+		 * 
+		 * @param string $operator The condition operator
+		 * @param array $values The condition values (URL paths to match)
+		 * @return bool Whether the condition is met
+		 */
+		private static function evaluate_url_path_condition( $operator, $values ) {
+			// Use filter to route to Pro plugin if available
+			$condition_data = array( 'operator' => $operator, 'values' => $values );
+			return apply_filters( 'nexter_evaluate_pro_condition', false, 'url_path', $condition_data );
+		}
+
+		private static function evaluate_http_referrer_condition( $operator, $values ) {
+			// Use filter to route to Pro plugin if available
+			$condition_data = array( 'operator' => $operator, 'values' => $values );
+			return apply_filters( 'nexter_evaluate_pro_condition', false, 'http_referrer', $condition_data );
+		}
+
+		private static function evaluate_device_type_condition( $operator, $values ) {
+			// Use filter to route to Pro plugin if available
+			$condition_data = array( 'operator' => $operator, 'values' => $values );
+			return apply_filters( 'nexter_evaluate_pro_condition', false, 'device_type', $condition_data );
+		}
+
+		/**
+		 * Evaluate browser type condition
+		 */
+		private static function evaluate_browser_type_condition( $operator, $values ) {
+			$user_agent = isset( $_SERVER['HTTP_USER_AGENT'] ) ? $_SERVER['HTTP_USER_AGENT'] : '';
+			
+			// Handle different operators
+			switch ( $operator ) {
+				case 'is':
+					// User must be using at least one of the specified browsers
+					foreach ( $values as $value_obj ) {
+						$browser = isset( $value_obj['value'] ) ? $value_obj['value'] : $value_obj;
+						if ( self::detect_browser_type( $user_agent, $browser ) ) {
+							return true;
+						}
+					}
+					return false;
+
+				case 'is_not':
+					// User must NOT be using ANY of the specified browsers
+					foreach ( $values as $value_obj ) {
+						$browser = isset( $value_obj['value'] ) ? $value_obj['value'] : $value_obj;
+						if ( self::detect_browser_type( $user_agent, $browser ) ) {
+							return false; // User is using one of the forbidden browsers
+						}
+					}
+					return true; // User is not using any of the forbidden browsers
+
+				default:
+					return false;
+			}
+		}
+
+		/**
+		 * Enhanced browser detection with proper precedence
+		 */
+		private static function detect_browser_type( $user_agent, $target_browser ) {
+			// Convert to lowercase for case-insensitive matching
+			$ua = strtolower( $user_agent );
+			
+			// Browser detection with proper precedence (most specific first)
+			switch ( $target_browser ) {
+				case 'edge':
+					// Microsoft Edge (Chromium-based) - must check before Chrome
+					return ( strpos( $ua, 'edg/' ) !== false || strpos( $ua, 'edge/' ) !== false );
+					
+				case 'opera':
+					// Opera - must check before Chrome (Opera uses Chrome engine)
+					return ( strpos( $ua, 'opera' ) !== false || strpos( $ua, 'opr/' ) !== false );
+					
+				case 'opera_mini':
+					// Opera Mini
+					return ( strpos( $ua, 'opera mini' ) !== false );
+					
+				case 'brave':
+					// Brave Browser
+					return ( strpos( $ua, 'brave' ) !== false );
+					
+				case 'vivaldi':
+					// Vivaldi Browser
+					return ( strpos( $ua, 'vivaldi' ) !== false );
+					
+				case 'samsung':
+					// Samsung Internet
+					return ( strpos( $ua, 'samsungbrowser' ) !== false );
+					
+				case 'firefox':
+					// Firefox - check for Firefox but exclude other Mozilla-based browsers
+					return ( strpos( $ua, 'firefox' ) !== false && strpos( $ua, 'seamonkey' ) === false );
+					
+				case 'safari':
+					// Safari - must check after other WebKit browsers, exclude Chrome-based browsers
+					return ( strpos( $ua, 'safari' ) !== false && 
+							strpos( $ua, 'chrome' ) === false && 
+							strpos( $ua, 'chromium' ) === false &&
+							strpos( $ua, 'edg' ) === false &&
+							strpos( $ua, 'opr' ) === false &&
+							strpos( $ua, 'vivaldi' ) === false );
+					
+				case 'chrome':
+					// Chrome - check after other Chrome-based browsers have been excluded
+					return ( strpos( $ua, 'chrome' ) !== false && 
+							strpos( $ua, 'edg' ) === false &&
+							strpos( $ua, 'opr' ) === false &&
+							strpos( $ua, 'vivaldi' ) === false &&
+							strpos( $ua, 'brave' ) === false &&
+							strpos( $ua, 'samsungbrowser' ) === false );
+					
+				case 'ie':
+					// Internet Explorer (all versions)
+					return ( strpos( $ua, 'msie' ) !== false || strpos( $ua, 'trident' ) !== false );
+					
+				default:
+					return false;
+			}
+		}
+
+		/**
+		 * Evaluate operating system condition
+		 */
+		private static function evaluate_operating_system_condition( $operator, $values ) {
+			$user_agent = isset( $_SERVER['HTTP_USER_AGENT'] ) ? $_SERVER['HTTP_USER_AGENT'] : '';
+			
+			// Handle different operators
+			switch ( $operator ) {
+				case 'is':
+					// User must be using at least one of the specified operating systems
+					foreach ( $values as $value_obj ) {
+						$os = isset( $value_obj['value'] ) ? $value_obj['value'] : $value_obj;
+						
+						if ( isset( self::$os_list[ $os ] ) ) {
+							if ( (bool) preg_match( '@' . self::$os_list[ $os ] . '@', $user_agent ) ) {
+								return true;
+							}
+						}
+					}
+					return false;
+
+				case 'is_not':
+					// User must NOT be using ANY of the specified operating systems
+					foreach ( $values as $value_obj ) {
+						$os = isset( $value_obj['value'] ) ? $value_obj['value'] : $value_obj;
+						
+						if ( isset( self::$os_list[ $os ] ) ) {
+							if ( (bool) preg_match( '@' . self::$os_list[ $os ] . '@', $user_agent ) ) {
+								return false; // User is using one of the forbidden operating systems
+							}
+						}
+					}
+					return true; // User is not using any of the forbidden operating systems
+
+				default:
+					return false;
+			}
+		}
+
+		private static function evaluate_user_agent_condition( $operator, $values ) {
+			// Use filter to route to Pro plugin if available
+			$condition_data = array( 'operator' => $operator, 'values' => $values );
+			return apply_filters( 'nexter_evaluate_pro_condition', false, 'user_agent', $condition_data );
+		}
+
+		private static function evaluate_query_string_condition( $operator, $values ) {
+			// Use filter to route to Pro plugin if available
+			$condition_data = array( 'operator' => $operator, 'values' => $values );
+			return apply_filters( 'nexter_evaluate_pro_condition', false, 'query_string', $condition_data );
+		}
+
+		/**
+		 * Evaluate day of week condition
+		 */
+		private static function evaluate_day_of_week_condition( $operator, $values ) {
+			$current_day = gmdate( 'w' ); // 0 = Sunday, 1 = Monday, etc.
+			// Convert to 1-7 format where 1 = Monday
+			$current_day = ( $current_day == 0 ) ? 7 : $current_day;
+			
+			if ( $operator === 'is' ) {
+				// Return true if ANY value matches the current day
+				foreach ( $values as $value_obj ) {
+					$day = isset( $value_obj['value'] ) ? $value_obj['value'] : $value_obj;
+					
+					if ( $current_day == $day ) {
+						return true;
+					}
+				}
+				return false;
+			} 
+			else if ( $operator === 'is_not' ) {
+				// Return true only if NONE of the values match the current day
+				foreach ( $values as $value_obj ) {
+					$day = isset( $value_obj['value'] ) ? $value_obj['value'] : $value_obj;
+					
+					if ( $current_day == $day ) {
+						return false; // Found a match, so condition fails
+					}
+				}
+				return true; // No matches found, so condition passes
+			}
+			
+			return false;
+		}
+
+		/**
+		 * Evaluate page type condition
+		 */
+		private static function evaluate_page_type_condition( $operator, $values ) {
+			// Handle different operators
+			switch ( $operator ) {
+				case 'is':
+					// Current page must match at least one of the specified page types
+					foreach ( $values as $value_obj ) {
+						$page_type = isset( $value_obj['value'] ) ? $value_obj['value'] : $value_obj;
+						
+						$condition_met = false;
+						switch ( $page_type ) {
+							case 'front_page':
+								$condition_met = is_front_page();
+								break;
+							case 'blog_page':
+								$condition_met = is_home();
+								break;
+							case 'search_page':
+								$condition_met = is_search();
+								break;
+							case '404_page':
+								$condition_met = is_404();
+								break;
+							case 'author_page':
+								$condition_met = is_author();
+								break;
+							case 'date_page':
+								$condition_met = is_date();
+								break;
+							case 'singular':
+								$condition_met = is_singular();
+								break;
+							case 'archive':
+								$condition_met = is_archive();
+								break;
+							case 'universal':
+								$condition_met = true; // Always true for entire website
+								break;
+						}
+						
+						if ( $condition_met ) {
+							return true;
+						}
+					}
+					return false;
+
+				case 'is_not':
+					// Current page must NOT match ANY of the specified page types
+					foreach ( $values as $value_obj ) {
+						$page_type = isset( $value_obj['value'] ) ? $value_obj['value'] : $value_obj;
+						
+						$condition_met = false;
+						switch ( $page_type ) {
+							case 'front_page':
+								$condition_met = is_front_page();
+								break;
+							case 'blog_page':
+								$condition_met = is_home();
+								break;
+							case 'search_page':
+								$condition_met = is_search();
+								break;
+							case '404_page':
+								$condition_met = is_404();
+								break;
+							case 'author_page':
+								$condition_met = is_author();
+								break;
+							case 'date_page':
+								$condition_met = is_date();
+								break;
+							case 'singular':
+								$condition_met = is_singular();
+								break;
+							case 'archive':
+								$condition_met = is_archive();
+								break;
+							case 'universal':
+								$condition_met = true; // Always true for entire website
+								break;
+						}
+						
+						if ( $condition_met ) {
+							return false; // Current page matches one of the forbidden page types
+						}
+					}
+					return true; // Current page doesn't match any of the forbidden page types
+
+				default:
+					return false;
+			}
+		}
+
+			/**
+	 * Evaluate post type condition
+	 */
+	private static function evaluate_post_type_condition( $operator, $values ) {
+		$current_post_type = get_post_type();
+		
+		if ( $operator === 'is' ) {
+			// Return true if ANY value matches the current post type
+			foreach ( $values as $value_obj ) {
+				$post_type = isset( $value_obj['value'] ) ? $value_obj['value'] : $value_obj;
+				if ( $current_post_type === $post_type ) {
+					return true;
+				}
+			}
+			return false;
+		} 
+		else if ( $operator === 'is_not' ) {
+			// Return true only if NONE of the values match the current post type
+			foreach ( $values as $value_obj ) {
+				$post_type = isset( $value_obj['value'] ) ? $value_obj['value'] : $value_obj;
+				if ( $current_post_type === $post_type ) {
+					return false; // Found a match, so condition fails
+				}
+			}
+			return true; // No matches found, so condition passes
+		}
+		
+		return false;
+	}
+
+			/**
+	 * Evaluate taxonomy type condition
+	 */
+	private static function evaluate_taxonomy_type_condition( $operator, $values ) {
+		$queried_object = get_queried_object();
+		$current_taxonomy = isset( $queried_object->taxonomy ) ? $queried_object->taxonomy : '';
+		
+		if ( $operator === 'is' ) {
+			// Return true if ANY value matches the current taxonomy
+			foreach ( $values as $value_obj ) {
+				$taxonomy = isset( $value_obj['value'] ) ? $value_obj['value'] : $value_obj;
+				
+				$condition_met = false;
+				if ( is_tax( $taxonomy ) || is_category( $taxonomy ) || is_tag( $taxonomy ) ) {
+					$condition_met = true;
+				} elseif ( isset( $queried_object->taxonomy ) && $queried_object->taxonomy === $taxonomy ) {
+					$condition_met = true;
+				}
+				
+				if ( $condition_met ) {
+					return true;
+				}
+			}
+			return false;
+		} 
+		else if ( $operator === 'is_not' ) {
+			// Return true only if NONE of the values match the current taxonomy
+			foreach ( $values as $value_obj ) {
+				$taxonomy = isset( $value_obj['value'] ) ? $value_obj['value'] : $value_obj;
+				
+				$condition_met = false;
+				if ( is_tax( $taxonomy ) || is_category( $taxonomy ) || is_tag( $taxonomy ) ) {
+					$condition_met = true;
+				} elseif ( isset( $queried_object->taxonomy ) && $queried_object->taxonomy === $taxonomy ) {
+					$condition_met = true;
+				}
+				
+				if ( $condition_met ) {
+					return false; // Found a match, so condition fails
+				}
+			}
+			return true; // No matches found, so condition passes
+		}
+		
+		return false;
+	}
+
+		/**
+		 * Evaluate specific post condition
+		 */
+		private static function evaluate_specific_post_condition( $operator, $values ) {
+			$current_post_id = get_the_ID();
+			if ( ! $current_post_id ) {
+				return $operator === 'is_not';
+			}
+			
+			foreach ( $values as $value_obj ) {
+				$post_id = isset( $value_obj['value'] ) ? $value_obj['value'] : $value_obj;
+				
+				// Handle different ID formats (post-123, taxonomy-456, etc.)
+				if ( is_string( $post_id ) && strpos( $post_id, 'post-' ) === 0 ) {
+					$post_id = (int) str_replace( 'post-', '', $post_id );
+				}
+				
+				$condition_met = ( $current_post_id == $post_id );
+				
+				if ( $operator === 'is' && $condition_met ) {
+					return true;
+				} elseif ( $operator === 'is_not' && ! $condition_met ) {
+					return true;
+				}
+			}
+			
+			// Fix is_not operator logic - if we got here with "is_not", we checked all values and none were not equal
+			// So for "is_not", this should return false
+			return false;
+		}
+
+		/**
+		 * Evaluate page template condition - Pro feature
+		 */
+		private static function evaluate_page_template_condition( $operator, $values ) {
+			// Use filter to route to Pro plugin if available
+			$condition_data = array( 'operator' => $operator, 'values' => $values );
+			return apply_filters( 'nexter_evaluate_pro_condition', false, 'page_template', $condition_data );
+		}
+
+		/**
+		 * Evaluate WooCommerce page condition
+		 */
+		private static function evaluate_wc_page_condition( $operator, $values ) {
+			// Special handling for 'is_not' operator
+			if ($operator === 'is_not') {
+				// For "is_not", return false if ANY value matches
+				foreach ( $values as $value_obj ) {
+					$page_type = isset( $value_obj['value'] ) ? $value_obj['value'] : $value_obj;
+					
+					$condition_met = false;
+					switch ( $page_type ) {
+						case 'shop':
+							$condition_met = function_exists( 'is_shop' ) && is_shop();
+							break;
+						case 'cart':
+							$condition_met = function_exists( 'is_cart' ) && is_cart();
+							break;
+						case 'checkout':
+							$condition_met = function_exists( 'is_checkout' ) && is_checkout();
+							break;
+						case 'account':
+							$condition_met = function_exists( 'is_account_page' ) && is_account_page();
+							break;
+						case 'product':
+							$condition_met = function_exists( 'is_product' ) && is_product();
+							break;
+						case 'product_category':
+							$condition_met = function_exists( 'is_product_category' ) && is_product_category();
+							break;
+						case 'product_tag':
+							$condition_met = function_exists( 'is_product_tag' ) && is_product_tag();
+							break;
+					}
+					
+					if ($condition_met) {
+						return false; // Found a match, so "is_not" should be false
+					}
+				}
+				return true; // No matches found, so "is_not" is true
+			}
+			
+			// Handle 'is' operator - standard way
+			foreach ( $values as $value_obj ) {
+				$page_type = isset( $value_obj['value'] ) ? $value_obj['value'] : $value_obj;
+				
+				$condition_met = false;
+				switch ( $page_type ) {
+					case 'shop':
+						$condition_met = function_exists( 'is_shop' ) && is_shop();
+						break;
+					case 'cart':
+						$condition_met = function_exists( 'is_cart' ) && is_cart();
+						break;
+					case 'checkout':
+						$condition_met = function_exists( 'is_checkout' ) && is_checkout();
+						break;
+					case 'account':
+						$condition_met = function_exists( 'is_account_page' ) && is_account_page();
+						break;
+					case 'product':
+						$condition_met = function_exists( 'is_product' ) && is_product();
+						break;
+					case 'product_category':
+						$condition_met = function_exists( 'is_product_category' ) && is_product_category();
+						break;
+					case 'product_tag':
+						$condition_met = function_exists( 'is_product_tag' ) && is_product_tag();
+						break;
+				}
+				
+				if ($condition_met) {
+					return true; // Found a match for 'is' operator
+				}
+			}
+			
+			return false; // No matches found for 'is' operator
+		}
+
+		private static function evaluate_date_condition( $operator, $values ) {
+			// Use filter to route to Pro plugin if available
+			$condition_data = array( 'operator' => $operator, 'values' => $values );
+			return apply_filters( 'nexter_evaluate_pro_condition', false, 'date', $condition_data );
+		}
+
+		private static function evaluate_date_time_condition( $operator, $values ) {
+			// Use filter to route to Pro plugin if available
+			$condition_data = array( 'operator' => $operator, 'values' => $values );
+			return apply_filters( 'nexter_evaluate_pro_condition', false, 'date_time', $condition_data );
+		}
+
+		private static function evaluate_snippet_loaded_condition( $operator, $values ) {
+			// Use filter to route to Pro plugin if available
+			$condition_data = array( 'operator' => $operator, 'values' => $values );
+			return apply_filters( 'nexter_evaluate_pro_condition', false, 'snippet_loaded', $condition_data );
+		}
+
+		private static function evaluate_time_condition( $operator, $values ) {
+			// Use filter to route to Pro plugin if available
+			$condition_data = array( 'operator' => $operator, 'values' => $values );
+			return apply_filters( 'nexter_evaluate_pro_condition', false, 'current_time', $condition_data );
+		}
+
+		private static function evaluate_country_condition( $operator, $values ) {
+			// Check if code snippets are enabled
+			$get_opt = get_option('nexter_extra_ext_options');
+			$code_snippets_enabled = true;
+
+			if (isset($get_opt['code-snippets']) && isset($get_opt['code-snippets']['switch'])) {
+				$code_snippets_enabled = !empty($get_opt['code-snippets']['switch']);
+			}
+			
+			if (!$code_snippets_enabled) {
+				return false;
+			}
+			
+			// Use filter to route to Pro plugin if available
+			$condition_data = array( 'operator' => $operator, 'values' => $values );
+			return apply_filters( 'nexter_evaluate_pro_condition', false, 'country', $condition_data );
+		}
+		
+		private static function evaluate_continent_condition( $operator, $values ) {
+			// Use filter to route to Pro plugin if available
+			$condition_data = array( 'operator' => $operator, 'values' => $values );
+			return apply_filters( 'nexter_evaluate_pro_condition', false, 'continent', $condition_data );
+		}
+
+		private static function evaluate_cookie_name_condition( $operator, $values ) {
+			// Use filter to route to Pro plugin if available
+			$condition_data = array( 'operator' => $operator, 'values' => $values );
+			return apply_filters( 'nexter_evaluate_pro_condition', false, 'cookie_name', $condition_data );
+		}
+
+		private static function evaluate_cookie_value_condition( $operator, $values ) {
+			// Use filter to route to Pro plugin if available
+			$condition_data = array( 'operator' => $operator, 'values' => $values );
+			return apply_filters( 'nexter_evaluate_pro_condition', false, 'cookie_value', $condition_data );
+		}
+
+		private static function evaluate_session_condition( $operator, $values ) {
+			// Use filter to route to Pro plugin if available
+			$condition_data = array( 'operator' => $operator, 'values' => $values );
+			return apply_filters( 'nexter_evaluate_pro_condition', false, 'session', $condition_data );
+		}
+
+		private static function evaluate_page_url_condition( $operator, $values ) {
+			// Use filter to route to Pro plugin if available
+			$condition_data = array( 'operator' => $operator, 'values' => $values );
+			return apply_filters( 'nexter_evaluate_pro_condition', false, 'page_url', $condition_data );
+		}
+
+		private static function evaluate_author_condition( $operator, $values ) {
+			// Use filter to route to Pro plugin if available
+			$condition_data = array( 'operator' => $operator, 'values' => $values );
+			return apply_filters( 'nexter_evaluate_pro_condition', false, 'author', $condition_data );
+		}
+
+		private static function evaluate_post_meta_condition( $operator, $values ) {
+			// Use filter to route to Pro plugin if available
+			$condition_data = array( 'operator' => $operator, 'values' => $values );
+			return apply_filters( 'nexter_evaluate_pro_condition', false, 'post_meta', $condition_data );
+		}
+
+		private static function evaluate_post_status_condition( $operator, $values ) {
+			// Use filter to route to Pro plugin if available
+			$condition_data = array( 'operator' => $operator, 'values' => $values );
+			return apply_filters( 'nexter_evaluate_pro_condition', false, 'post_status', $condition_data );
+		}
+
+		/**
+		 * Evaluate taxonomy page condition
+		 * Check if current page is a specific taxonomy archive page
+		 */
+		private static function evaluate_taxonomy_page_condition( $operator, $values ) {
+			// For "is" operator: return true if ANY value matches
+			// For "is_not" operator: return false if ANY value matches (must check all values)
+			
+			if ($operator === 'is') {
+				// For "is" operator, return true if ANY value matches
+				foreach ( $values as $value_obj ) {
+					$taxonomy = isset( $value_obj['value'] ) ? $value_obj['value'] : $value_obj;
+					
+					$condition_met = false;
+					
+					// Handle different taxonomy types correctly
+					switch ( $taxonomy ) {
+						case 'tag':
+							$condition_met = is_tag();
+							break;
+						case 'category':
+							$condition_met = is_category();
+							break;
+						case 'post_format':
+							$condition_met = is_tax('post_format');
+							break;
+						case 'product_cat':
+							$condition_met = function_exists('is_product_category') && is_product_category();
+							break;
+						case 'product_tag':
+							$condition_met = function_exists('is_product_tag') && is_product_tag();
+							break;
+						case 'download_category':
+							$condition_met = is_tax('download_category');
+							break;
+						case 'download_tag':
+							$condition_met = is_tax('download_tag');
+							break;
+						case 'any_custom_taxonomy':
+							// Check if it's any taxonomy archive, excluding built-in taxonomies
+							$built_in = ['category', 'post_tag', 'post_format'];
+							$condition_met = is_tax() && !is_category() && !is_tag();
+							break;
+						default:
+							// Handle any specific custom taxonomy
+							$condition_met = is_tax( $taxonomy );
+							break;
+					}
+					
+					if ($condition_met) {
+						return true; // Found a match for "is" operator
+					}
+				}
+				
+				return false; // No matches found for "is" operator
+			} 
+			else if ($operator === 'is_not') {
+				// For "is_not" operator, return false if ANY value matches
+				foreach ( $values as $value_obj ) {
+					$taxonomy = isset( $value_obj['value'] ) ? $value_obj['value'] : $value_obj;
+					
+					$condition_met = false;
+					
+					// Handle different taxonomy types correctly
+					switch ( $taxonomy ) {
+						case 'tag':
+							$condition_met = is_tag();
+							break;
+						case 'category':
+							$condition_met = is_category();
+							break;
+						case 'post_format':
+							$condition_met = is_tax('post_format');
+							break;
+						case 'product_cat':
+							$condition_met = function_exists('is_product_category') && is_product_category();
+							break;
+						case 'product_tag':
+							$condition_met = function_exists('is_product_tag') && is_product_tag();
+							break;
+						case 'download_category':
+							$condition_met = is_tax('download_category');
+							break;
+						case 'download_tag':
+							$condition_met = is_tax('download_tag');
+							break;
+						case 'any_custom_taxonomy':
+							// Check if it's any taxonomy archive, excluding built-in taxonomies
+							$built_in = ['category', 'post_tag', 'post_format'];
+							$condition_met = is_tax() && !is_category() && !is_tag();
+							break;
+						default:
+							// Handle any specific custom taxonomy
+							$condition_met = is_tax( $taxonomy );
+							break;
+					}
+					
+					if ($condition_met) {
+						return false; // Found a match, so "is_not" should fail
+					}
+				}
+				
+				return true; // No matches found, so "is_not" passes
+			}
+			
+			return false; // Default case
+		}
+
+		private static function evaluate_taxonomy_term_condition( $operator, $values ) {
+			// Use filter to route to Pro plugin if available
+			$condition_data = array( 'operator' => $operator, 'values' => $values );
+			return apply_filters( 'nexter_evaluate_pro_condition', false, 'taxonomy_term', $condition_data );
+		}
+
+		/**
+		 * Evaluate WooCommerce Customer Orders Condition
+		 */
+		private static function evaluate_wc_customer_orders_condition( $operator, $values ) {
+			if ( ! class_exists( 'WooCommerce' ) || ! is_user_logged_in() ) {
+				return false;
+			}
+
+			$customer_id = get_current_user_id();
+			$order_count = wc_get_customer_order_count( $customer_id );
+			
+			foreach ( $values as $value_obj ) {
+				$value = isset( $value_obj['value'] ) ? $value_obj['value'] : $value_obj;
+				$value = intval( $value );
+
+				switch ( $operator ) {
+					case 'is':
+						if ( $order_count != $value ) {
+							return false;
+						}
+						break;
+					case 'is_not':
+						if ( $order_count == $value ) {
+							return false;
+						}
+						break;
+					case 'greater_than':
+						if ( $order_count <= $value ) {
+							return false;
+						}
+						break;
+					case 'less_than':
+						if ( $order_count >= $value ) {
+							return false;
+						}
+						break;
+				}
+			}
+
+			return true;
+		}
+
+		/**
+		 * Evaluate WooCommerce Customer Total Spent Condition
+		 */
+		private static function evaluate_wc_customer_spent_condition( $operator, $values ) {
+			if ( ! class_exists( 'WooCommerce' ) || ! is_user_logged_in() ) {
+				return false;
+			}
+
+			$customer_id = get_current_user_id();
+			$total_spent = wc_get_customer_total_spent( $customer_id );
+			
+			foreach ( $values as $value_obj ) {
+				$value = isset( $value_obj['value'] ) ? $value_obj['value'] : $value_obj;
+				$value = floatval( $value );
+
+				switch ( $operator ) {
+					case 'is':
+						if ( $total_spent != $value ) {
+							return false;
+						}
+						break;
+					case 'is_not':
+						if ( $total_spent == $value ) {
+							return false;
+						}
+						break;
+					case 'greater_than':
+						if ( $total_spent <= $value ) {
+							return false;
+						}
+						break;
+					case 'less_than':
+						if ( $total_spent >= $value ) {
+							return false;
+						}
+						break;
+				}
+			}
+
+			return true;
+		}
+
+		/**
+		 * Evaluate WooCommerce Cart Total Condition
+		 */
+		private static function evaluate_wc_cart_total_condition( $operator, $values ) {
+			if ( ! class_exists( 'WooCommerce' ) ) {
+				return false;
+			}
+
+			$cart = WC()->cart;
+			if ( ! $cart ) {
+				return false;
+			}
+
+			$cart_total = $cart->get_cart_contents_total();
+			
+			foreach ( $values as $value_obj ) {
+				$value = isset( $value_obj['value'] ) ? $value_obj['value'] : $value_obj;
+				$value = floatval( $value );
+
+				switch ( $operator ) {
+					case 'is':
+						if ( $cart_total != $value ) {
+							return false;
+						}
+						break;
+					case 'is_not':
+						if ( $cart_total == $value ) {
+							return false;
+						}
+						break;
+					case 'greater_than':
+						if ( $cart_total <= $value ) {
+							return false;
+						}
+						break;
+					case 'less_than':
+						if ( $cart_total >= $value ) {
+							return false;
+						}
+						break;
+				}
+			}
+
+			return true;
+		}
+
+		/**
+		 * Evaluate WooCommerce Product in Cart Condition
+		 */
+		private static function evaluate_wc_product_in_cart_condition( $operator, $values ) {
+			if ( ! class_exists( 'WooCommerce' ) ) {
+				return false;
+			}
+
+			$cart = WC()->cart;
+			if ( ! $cart ) {
+				return false;
+			}
+
+			$cart_contents = $cart->get_cart();
+			
+			foreach ( $values as $value_obj ) {
+				// Extract the actual product ID, removing 'post-' prefix if present
+				$value = isset( $value_obj['value'] ) ? $value_obj['value'] : $value_obj;
+				$value = is_string( $value ) ? str_replace( 'post-', '', $value ) : $value;
+				
+				$found = false;
+				foreach ( $cart_contents as $cart_item ) {
+					// Check both product_id and variation_id
+					if ( $cart_item['product_id'] == $value || $cart_item['variation_id'] == $value ) {
+						$found = true;
+						break;
+					}
+				}
+
+				if ( $operator === 'is' && ! $found ) {
+					return false;
+				}
+				if ( $operator === 'is_not' && $found ) {
+					return false;
+				}
+			}
+
+			return true;
+		}
+
+		/**
+		 * Evaluate Easy Digital Downloads Page Condition
+		 */
+		private static function evaluate_edd_page_condition( $operator, $values ) {
+			if ( ! function_exists( 'edd_is_checkout' ) ) {
+				return false;
+			}
+
+			$found_match = false;
+			foreach ( $values as $value_obj ) {
+				$value = isset( $value_obj['value'] ) ? $value_obj['value'] : $value_obj;
+
+				$is_match = false;
+				switch ( $value ) {
+					case 'checkout':
+						$is_match = edd_is_checkout();
+						break;
+					case 'purchase_history':
+						$is_match = edd_is_purchase_history_page();
+						break;
+					case 'download':
+						$is_match = is_singular( 'download' );
+						break;
+					case 'download_category':
+						$is_match = is_tax( 'download_category' );
+						break;
+					case 'download_tag':
+						$is_match = is_tax( 'download_tag' );
+						break;
+				}
+
+				if ( $is_match ) {
+					$found_match = true;
+				}
+			}
+
+			// For 'is' operator: return true if any value matches (OR logic)
+			// For 'is_not' operator: return true if no values match (AND logic for negation)
+			if ( $operator === 'is' ) {
+				return $found_match;
+			} else {
+				return ! $found_match;
+			}
+		}
+
+		/**
+		 * Evaluate MemberPress Page Condition
+		 */
+		private static function evaluate_mp_page_condition( $operator, $values ) {
+			if ( ! class_exists( 'MeprOptions' ) ) {
+				return false;
+			}
+
+			$mepr_options = MeprOptions::fetch();
+			$login_page_id     = $mepr_options->login_page_id;
+			$account_page_id   = $mepr_options->account_page_id;
+			$thank_you_page_id = $mepr_options->thankyou_page_id;
+
+			$current_page_id = get_queried_object_id();
+			$current_page_type = '';
+
+			// Determine current page type based on page ID
+			if ( $current_page_id == $login_page_id ) {
+				$current_page_type = 'login';
+			}
+			elseif ( $current_page_id == $account_page_id ) {
+				$current_page_type = 'account';
+			}
+			elseif ( $current_page_id == $thank_you_page_id ) {
+				$current_page_type = 'thank_you';
+			}
+
+			// For 'is' operator: return true if ANY value matches
+			if ( $operator === 'is' ) {
+				$any_match = false;
+				foreach ( $values as $value_obj ) {
+					$value = isset( $value_obj['value'] ) ? $value_obj['value'] : $value_obj;
+									
+					if ( $current_page_type === $value ) {
+						$any_match = true;
+						break;
+					}
+				}
+				return $any_match;
+			}
+			
+			// For 'is_not' operator: return true if NO value matches
+			if ( $operator === 'is_not' ) {
+				foreach ( $values as $value_obj ) {
+					$value = isset( $value_obj['value'] ) ? $value_obj['value'] : $value_obj;
+					
+					if ( $current_page_type === $value ) {
+						return false; // Found a match, so condition fails
+					}
+				}
+				return true; // No matches found, so condition passes
+			}
+
+			return true;
+		}
+
+		/**
+		 * Evaluate MemberPress User Condition
+		 */
+		private static function evaluate_mp_user_condition( $operator, $values ) {
+			if ( ! class_exists( 'MeprUser' ) || ! is_user_logged_in() ) {
+				return false;
+			}
+
+			$user_id = get_current_user_id();
+			$mepr_user = new MeprUser( $user_id );
+
+			foreach ( $values as $value_obj ) {
+				$value = isset( $value_obj['value'] ) ? $value_obj['value'] : $value_obj;
+				$membership_id = intval( $value );
+
+				// Check if user has active subscription for this membership
+				$active_memberships = $mepr_user->active_product_subscriptions();
+				$is_match = in_array( $membership_id, $active_memberships );
+
+				if ( $operator === 'is' && ! $is_match ) {
+					return false;
+				}
+				if ( $operator === 'is_not' && $is_match ) {
+					return false;
+				}
+			}
+
+			return true;
+		}	
 	}
 }
 

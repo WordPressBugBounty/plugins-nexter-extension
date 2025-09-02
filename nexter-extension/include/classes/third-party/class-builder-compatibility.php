@@ -53,8 +53,25 @@ if ( ! class_exists( 'Nexter_Builder_Compatibility' ) ) {
 				array_push($this->template_post_ids, $post_id);
 
 				if ( function_exists( 'ultimate_post' ) ) {
-					ultimate_post()->register_scripts_common();
-					ultimate_post()->set_css_style($post_id);
+					$ultp = ultimate_post();
+
+					// Common method across versions (if it exists)
+					if ( method_exists( $ultp, 'register_scripts_common' ) ) {
+						$ultp->register_scripts_common();
+					}
+
+					// If old version defines set_css_style()
+					if ( method_exists( $ultp, 'set_css_style' ) ) {
+						$ultp->set_css_style( $post_id );
+					}
+					// Otherwise, if new version has enqueue_styles()
+					elseif ( method_exists( $ultp, 'enqueue_styles' ) ) {
+						$ultp->enqueue_styles();
+					}
+					// As a fallback, possibly enqueue scripts common
+					elseif ( method_exists( $ultp, 'enqueue_scripts_common' ) ) {
+						$ultp->enqueue_scripts_common();
+					}
 				}
 				
 				//Activate Visual Composer

@@ -2,8 +2,8 @@
 Contributors: posimyththemes, nirmalkavaiya, sagarpatel124
 Tags : security, elementor, theme-builder, pagespeed, code snippet
 Requires at least: 4.0
-Tested up to: 6.8.1
-Stable tag: 4.2.4
+Tested up to: 6.8.2
+Stable tag: 4.3.0
 Requires PHP: 5.6
 License: GPLv3
 License URI: https://opensource.org/licenses/GPL-3.0
@@ -58,6 +58,45 @@ https://nexterwp.com/free-vs-pro/#Nexter-Extension?utm_source=wordpress&utm_medi
 
 - **Tagging & Adding Notes** - Organize snippets with tags and notes for easy identification and management.
 
+- **Placement Method** (PRO) -  Choose how code snippets are loaded.
+
+  - **Automatic Placement** - Default behavior that inserts snippets automatically.
+
+    - **CSS Selector Targeting**  
+  Insert content before, after, or inside specific HTML elements using a selector.
+
+   - **Content-Based Insertion**  
+  Insert snippets after X number of words or at specific content percentages.
+
+  - **Advanced Content Manipulation**  
+  Fine-tune snippet placement with both percentage-based and word-count-based logic.
+
+
+  - **Insert via Shortcode**  - Manually place snippets anywhere using a generated shortcode.
+
+  - **User-Defined Shortcode**  
+  Define a unique name for each shortcode to avoid conflicts and improve clarity.
+
+  - **Shortcode Parameters**  
+  Add multiple custom attributes to shortcodes using a repeater field.
+
+ - **Shortcode Usage Locations**  
+  Easily find all locations where a shortcode is used across the website.
+
+- **Scheduling** (PRO)  - Control snippet visibility with start and end time scheduling.
+
+
+
+- **Dynamic Conditional Logic** (PRO)  - 22+ powerful conditions to precisely target when and where snippets appear.
+
+- **Code Compression** – Compress CSS, JavaScript, and HTML output to improve site performance.
+
+- **Import/Export** – Enables easy snippet management across sites with built-in import and export functionality.
+
+
+
+
+
 - **Works with All WordPress Themes** - Code Snippets are fully compatible with any WordPress theme, offering seamless integration and complete flexibility.
 
 === 3. Extra Utilities for Site Enhancement & Tune ups ===
@@ -85,6 +124,15 @@ https://nexterwp.com/free-vs-pro/#Nexter-Extension?utm_source=wordpress&utm_medi
 - **Post Duplication** - Clone posts and pages effortlessly, preserving layouts and content structure for quick content replication.
 
 - **Thumbnail Regeneration** - Regenerate image thumbnails to ensure proper display and consistency across different devices and screen sizes.
+
+- **SMTP Email** - Send emails using Gmail SMTP, Mailgun, SendGrid, or any custom SMTP server to ensure reliable email deliverability across your WordPress site.
+
+- **Taxonomy (Term) Order*(PRO)*** -  Manually reorder categories, tags, or custom taxonomies using drag-and-drop for better control over term display on the frontend.
+
+- **WP Debug Mode: Developer Mode True/False** - Toggle WordPress debug mode on or off with a single click to display error logs and warnings during development.
+
+- **Admin Role Switcher** - Easily switch between WordPress user roles (like Admin, Editor, Subscriber) without logging out perfect for testing user access and permissions.
+
 
 
 === 4. Performance & Asset Tune ups for Page Speed ===
@@ -127,6 +175,7 @@ https://nexterwp.com/free-vs-pro/#Nexter-Extension?utm_source=wordpress&utm_medi
 
 - **Self-Host Google Fonts** - Host Google Fonts locally on your server to enhance load times and comply with privacy regulations. This approach reduces external HTTP requests, leading to faster page speeds and improved GDPR compliance. 
 
+- **Image Upload Optimization*(Freemium)*** - Automatically convert uploaded images to WebP format to reduce file size and improve page load speed.
 
 === 5. Security Hardening for WordPress ===
 
@@ -156,9 +205,9 @@ https://nexterwp.com/free-vs-pro/#Nexter-Extension?utm_source=wordpress&utm_medi
 
   - **Hide Author URLs for Security*(PRO)***
 
-  
+  - **Hide Telephone Secure Spam Bots*(PRO)***
 
-- **Captcha Spam Protection** - Integrate Google reCAPTCHA or Cloudflare Turnstile *(Coming Soon)* for enhanced form security.
+- **Captcha Spam Protection** - Integrate Google reCAPTCHA or Cloudflare Turnstile for enhanced form security.
 
  - **Login Form**
 
@@ -167,6 +216,8 @@ https://nexterwp.com/free-vs-pro/#Nexter-Extension?utm_source=wordpress&utm_medi
  - **Password Reset Form**
 
  - **Comments Form**
+
+ - **Cloudflare Turnstile**
 
  - **WooCommerce Pages *(Coming Soon)***
 
@@ -194,13 +245,15 @@ https://nexterwp.com/free-vs-pro/#Nexter-Extension?utm_source=wordpress&utm_medi
 
 - **Login Email Notifications *(PRO)*** - Stay informed about login activities via email alerts.
 
-
-
  - **User-Type Specific Notifications** - Configure alerts based on user roles.
 
  - **Custom Email Content** - Tailor the content of login notification emails.
 
 - **SVG Upload** - Allow specific user roles to upload secure, sanitized SVG files for flexible and safe media management. 
+
+- **Limit Login Attempts (Freemium)** -  Protect your WordPress site from brute-force attacks by limiting failed login attempts and blocking suspicious IPs after a threshold.
+
+
 === 6.  Admin Interface for Dashboard Customization & Cleanup ===
 
 - **Branded Admin Interface *(PRO)*** - Customize your WordPress admin login page with your brand's logo and colors, enhancing the backend experience.  
@@ -238,6 +291,7 @@ https://nexterwp.com/free-vs-pro/#Nexter-Extension?utm_source=wordpress&utm_medi
      - **Disable WooCommerce Setup**
 
      - **Disable WordPress Events and News**
+    
 - **Clean Admin Bar** - Customize and declutter the WordPress admin bar by removing unnecessary elements for a cleaner interface.
 
   - **Remove WordPress Logo/Menu**
@@ -256,11 +310,12 @@ https://nexterwp.com/free-vs-pro/#Nexter-Extension?utm_source=wordpress&utm_medi
 
   - **Remove the Help Tab and Drawer**
 
-  
-  
+- **Elementor Ad-Free** - Hide all Elementor upgrade banners, ads, and clutter from the editor interface for a cleaner, distraction-free experience.
 
+- **Admin Menu Organizer*(PRO)*** -  Reorder, rename, or hide admin menu items to simplify the backend experience — great for clients and custom dashboards.
 
-
+=== 7.  Import/Export: Theme Customizer & Extension Settings ===
+Quickly export or import your WordPress Customizer settings and plugin configurations — useful for backups or moving between sites.
 
 <strong>[GET NEXTER Extension Pro](
 https://nexterwp.com/pricing/?utm_source=wordpress&utm_medium=readmepage&utm_campaign=nexterextension)</strong>
@@ -329,12 +384,33 @@ https://patchstack.com/database/vdp/nexter-extension)
 
 ### View Complete List of Changelog from [here](https://roadmap.nexterwp.com/updates?filter=Nexter+Extension+-+FREE) 
 
-= 4.2.4 = 06 August 2025
-- Fixed : Bug Fixed & Improvements
-
-= 4.2.3 = 04 August 2025
-- Update : Admin Notice Improved
-- Fixed : Bug Fixed & Improvements
+= 4.3.0 = 02 September 2025
+- Added : Utilities : SMTP Email (Beta) : Gmail SMTP and Custom SMTP Connection
+- Added : Extra Option : Import/Export : Theme Customizer (Free) and Extension Settings (Pro)
+- Added : Utilities : Admin Role Switcher
+- Added : Performance : Image Upload Optimization
+- Added : Utilities : WP Debug Mode : Developer Mode True/False
+- Added : Admin Interface : Elementor Ad-Free
+- Added : Security : Limit Login Attempts (Freemium)
+- Added : Security : Captcha (Beta) : Cloudflare Turnstile
+- Code Snippets
+  -- Important: Completely redesigned with a brand-new UI/UX for better user experience.
+  -- Enhanced Location Targeting:
+    --- Site-wide placement options (All Pages, Frontend Only, Admin Only)
+    --- Global Header/Body/Footer areas
+    --- Improved page-specific targeting
+  -- Enhanced Conditional Logic:
+    --- Improved User Conditions: Enhanced login status and user role conditions with better UI
+    --- Enhanced Device Detection: Improved OS and browser detection with more options
+    --- Enhanced Time Conditions: Better day of week scheduling interface
+    --- Enhanced Page Targeting: Improved specific page/post targeting with search functionality
+    --- New Logic Structure: AND/OR logic groups for complex condition combinations
+  -- Real-time Validation: Live code validation with error reporting and Enhanced PHP code validation and execution safety
+  -- eCommerce Integration: WooCommerce, Easy Digital Downloads, and MemberPress location support (when plugins are active)
+  -- Code Compression: Built-in compression for CSS, JavaScript, and HTML output
+  -- Import/Export: Enhanced snippet management with import/export functionality
+- Compatibility : Theme Builder : Ultimate PostX  Plugin Function Exits Bug Fixed
+- Fixed : Disable Comments : Bug Fixed Select "Disable Everywhere" Disable Admin Menu bug Fixed
 
 = 4.2.2 = 06 June 2025
 - Compatibility : Bricks Builder : Theme Builder Compatibility
@@ -386,7 +462,6 @@ https://patchstack.com/database/vdp/nexter-extension)
 - Updated : Code Snippet : All WP Themes Compatibility
 - Fixed : Bug Fixed & Improvements.
 
-
 = 4.0.8 = 10 March 2025
 - Added : Advanced Security :  Last Login Date & Time : Track user last login date and time and display it in the users list table.
 - Added : Advanced Security :  Registration Date & Time : Show user registration date and time in the users list table.
@@ -434,71 +509,3 @@ https://patchstack.com/database/vdp/nexter-extension)
 - Added : Option to self-host Google Fonts for better performance and privacy.
 - Added : Font Display : swap for improved font loading.
 - Added : Option to disable Google Fonts entirely.
-
-= 3.2.1 = 18 April 2024
-- Fix : Nexter Builder : Bug Fix
-
-= 3.2.0 = 18 April 2024
-- Compatibility : Hello Elementor Theme : Nexter Builder Template
-- Performance : Query Optimize and Improve Code
-- Fix : Minor Bug Fix
-
-= 3.1.5 = 01 April 2024
-- Security : Nexter Security : Disable XML-RPC option Bug Fixed
-- Fix : Nexter Builder : Particular Posts Sections Layout all Singular taxonomy Bug Fixed
-- Improvement : Optimize Code and Improve
-
-= 3.1.4 = 21 March 2024
-- Fix : Advanced Security : Bug Fixed and improvement code
-
-= 3.1.3 = 22 February 2024
-- Fix : Advanced Security : Bug Fix for Enable REST API
-
-= 3.1.2 = 20 February 2024
-- Fix: Nexter Builder - Selecting Template for Specific Post/Taxonomy
-
-= 3.1.1 = 06 February 2024
-- Security : Bug Fix and Improvements
-
-= 3.1.0 = 30 November 2023
-- Added : Security : Two Factor Authentication Login Enable
-
-= 3.0.6 = 21 November 2023
-- Fix : Local Google Font : Loading Issued Block Editor @font_face Bug Fixed
-- Fix : Extra Options : Custom Fonts Upload Bug Fix
-
-= 3.0.5 = 03 October 2023
-- Fix : Settings : Performance and Security : Options Bug Fix
-- Improvements : Improvements and Bug Fixes
-
-= 3.0.4 = 21 August 2023
-- Fix : Advanced Security : Header XSS Protection Bug Fix
-- Fix : Nexter Builder : Display Rules Condition Bug Fix
-
-= 3.0.3 = 18 August 2023
-- Fix : Rank Math SEO Plugin Bug Fix
-
-= 3.0.2 = 10 August 2023
-- Fix : PHP Variable Bug Fix 
-
-= 3.0.1 = 10 August 2023
-- Compatibility : WordPress 6.3
-- Compatibility : ACF : Select2 conflict JS Bug Fix
-- Update : Nexter Builder : Layout Section Header/Footer Template Elementor Editor Bug Fix
-
-= 3.0.0 = 25 July 2023
-- Added : Beta : Extra Options : Regenerate Thumbnails
-- Added : Performance : Disable Image Sizes
-- Added : Performance : Register Custom Image Sizes
-- Added : Performance : Disable Elementor Icons
-- Added : Advanced Performance : Defer CSS & JS
-- Added : Advanced Performance : Defer CSS & JS
-- Added : Advanced Security : Disable File Editor
-- Added : Advanced Security : Remove Meta Generator
-- Added : Advanced Security : XSS Protection
-- Added : Advanced Security : Secure Cookies
-- Added : Advanced Security : iFrame Security
-- Update : Nexter Builder Added
-- Improved : Performance by optimizing CSS & JS
-- Update : Ability to use standalone Without Nexter Theme
-- Fix : Switch Button Bug Fix Plugin Compatibility

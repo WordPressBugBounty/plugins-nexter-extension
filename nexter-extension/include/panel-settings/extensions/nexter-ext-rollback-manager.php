@@ -63,7 +63,7 @@ defined('ABSPATH') or die();
 
     public static function rb_plugin_theme_script(){
         wp_enqueue_style( 'nxt_rollback', NEXTER_EXT_URL . 'assets/css/admin/nxt-rollback.css', array(), NEXTER_EXT_VER );
-        wp_enqueue_script( 'nxt_rollback', NEXTER_EXT_URL . 'assets/js/admin/nxt-rollback.js', array(), NEXTER_EXT_VER );
+        wp_enqueue_script( 'nxt_rollback', NEXTER_EXT_URL . 'assets/js/admin/nxt-rollback.js', array(), NEXTER_EXT_VER, true );
         wp_enqueue_script( 'updates' );
 
         wp_localize_script(
@@ -283,6 +283,7 @@ defined('ABSPATH') or die();
 
         if ( empty( $this->versions ) ) {
             $error_msg = sprintf(
+                // Translators: %s is the rollback type (e.g., plugin or theme) author.
                 __( 'It appears there are no versions to select. This is likely due to the %s author not using tags for their versions and only committing new releases to the repository trunk.', 'nexter-extension' ),
                 esc_html( $type )
             );
@@ -322,7 +323,7 @@ defined('ABSPATH') or die();
 
         // Handle optional current_version.
         if ( ! empty( $_GET['current_version'] ) ) {
-            $version_parts    = explode( ' ', sanitize_text_field( $_GET['current_version'] ) );
+            $version_parts    = explode( ' ', sanitize_text_field( wp_unslash($_GET['current_version']) ) );
             $current_version  = $version_parts[0];
             do_action( 'nxt_current_version', $current_version );
         }
@@ -332,7 +333,7 @@ defined('ABSPATH') or die();
         $plugin_file_path = WP_PLUGIN_DIR . '/' . sanitize_text_field( $_GET['plugin_file'] );
 
         if ( ! file_exists( $plugin_file_path ) ) {
-            wp_die( __( 'The referenced plugin does not exist.', 'nexter-extension' ) );
+            wp_die( esc_html__( 'The referenced plugin does not exist.', 'nexter-extension' ) );
         }
 
         $plugin_basename = plugin_basename( $plugin_file_path );
@@ -362,8 +363,11 @@ defined('ABSPATH') or die();
                 }
             }
 
-            // Set the menu text with the appropriate URL.
-            $menutxt = sprintf( __( '<a href="%s">Rollback Manager</a>', 'nexter-extension' ), $current_url );
+            $menutxt = sprintf(
+                // Translators: %s is the current URL linking to the Rollback Manager page.
+                __( '<a href="%s">Rollback Manager</a>', 'nexter-extension' ),
+                $current_url
+            );
 
             // Add the submenu page.
             add_submenu_page(
@@ -383,7 +387,7 @@ defined('ABSPATH') or die();
     public function render_html() {
         // Permissions check
         if ( ! current_user_can( 'update_plugins' ) ) {
-            wp_die( __( 'You do not have sufficient permissions to perform rollbacks for this site.', 'nexter-extension' ) );
+            wp_die( esc_html__( 'You do not have sufficient permissions to perform rollbacks for this site.', 'nexter-extension' ) );
         }
 
         // Include necessary class for plugin upgrader

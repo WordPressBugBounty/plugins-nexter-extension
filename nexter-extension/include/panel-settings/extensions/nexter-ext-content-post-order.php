@@ -83,8 +83,9 @@ defined('ABSPATH') or die();
         
         $post_type  =  isset($_POST['post_type']) ? preg_replace( '/[^a-zA-Z0-9_\-]/', '', sanitize_text_field( wp_unslash( $_POST['post_type'] ) ) ) : '';
         $paged      =  isset($_POST['paged']) ? filter_var ( sanitize_text_field( wp_unslash( $_POST['paged'] ) ), FILTER_SANITIZE_NUMBER_INT) : 1;
-       
-        parse_str( sanitize_text_field( wp_unslash( $_POST['order'] ) ) , $order_data );
+        
+        $order_ = isset($_POST['order']) ? sanitize_text_field( wp_unslash( $_POST['order'] ) ) : '';
+        parse_str( $order_ , $order_data );
                     
         if ( empty( $order_data['post'] ) || ! is_array( $order_data['post'] ) ) {
             wp_send_json_error( 'Invalid order data.' );

@@ -54,7 +54,7 @@ if( ! function_exists('nexter_builders_register_post')){
 			'hierarchical'          => false,
 			'public'                => true,
 			'show_ui'               => true,
-			'show_in_menu'          => 20,
+			'show_in_menu'          => 'nexter_welcome',
 			'show_in_admin_bar'     => true,
 			'show_in_nav_menus'     => true,
 			'can_export'            => true,

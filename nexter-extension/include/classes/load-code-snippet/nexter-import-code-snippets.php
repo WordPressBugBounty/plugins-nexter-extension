@@ -34,10 +34,28 @@ if ( ! class_exists( 'Nexter_Code_Snippets_Import_Data' ) ) {
 		 *  Constructor
 		 */
 		public function __construct() {
-			add_action( 'init', array( $this, 'import_data_code_snippet' ) );
+			// Hook later in the init process to ensure WordPress is fully loaded
+			add_action( 'init', array( $this, 'maybe_import_data_code_snippet' ), 20 );
 		}
 
-		public function import_data_code_snippet(){
+		/**
+		 * Check if we need to import snippets and handle the import
+		 */
+		public function maybe_import_data_code_snippet() {
+			// Check if snippets have already been imported
+			if ( get_option( 'nexter_snippets_imported' ) ) {
+				return;
+			}
+
+			// Ensure we're in a WordPress context
+			if ( ! function_exists( 'wp_insert_post' ) ) {
+				return;
+			}
+
+			$this->import_data_code_snippet();
+		}
+
+		public function import_data_code_snippet() {
 			$default_data = array(
 				array(
 					'title' => esc_html__( 'Disable Emojis for Faster Loading', 'nexter-extension' ),
@@ -81,12 +99,12 @@ if ( ! class_exists( 'Nexter_Code_Snippets_Import_Data' ) ) {
 				),
 			);
 
+			// Mark as imported before processing to prevent duplicate imports
+			update_option( 'nexter_snippets_imported', true );
+
 			foreach ( $default_data as $snippet ) {
 				$this->import_snippet( $snippet );
 			}
-			
-			// Mark as imported
-			update_option( 'nexter_snippets_imported', true );
 		}
 
 		/**

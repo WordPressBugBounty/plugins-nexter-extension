@@ -33,29 +33,29 @@ defined('ABSPATH') or die();
 		?>
 		<style>
 			#wpcontent, #wpfooter {
-				<?php echo $margin; ?>: <?php echo $width; ?>;
+				<?php echo esc_attr( $margin ); ?>: <?php echo esc_attr( $width ); ?>;
 			}
 			#adminmenuback, #adminmenuwrap, #adminmenu, #adminmenu .wp-submenu {
-				width: <?php echo $width; ?>;
+				width: <?php echo esc_attr( $width ); ?>;
 			}
 			#adminmenu .wp-submenu {
-				<?php echo $pos; ?>: <?php echo $width; ?>;
+				<?php echo esc_attr( $pos ); ?>: <?php echo esc_attr( $width ); ?>;
 			}
 			#adminmenu .wp-not-current-submenu .wp-submenu,
 			.folded #adminmenu .wp-has-current-submenu .wp-submenu {
-				min-width: <?php echo $width; ?>;
+				min-width: <?php echo esc_attr( $width ); ?>;
 			}
 			@media (min-width: 960px) {
 				.woocommerce-layout__header,
 				#e-admin-top-bar-root {
-					width: calc(100% - <?php echo $width; ?>);
+					width: calc(100% - <?php echo esc_attr( $width ); ?>);
 				}
 			}
 			.auto-fold .interface-interface-skeleton {
-				<?php echo $pos; ?>: <?php echo $width; ?>;
+				<?php echo esc_attr( $pos ); ?>: <?php echo esc_attr( $width ); ?>;
 			}
 			.fb-header-nav {
-				width: calc(100% - <?php echo $width; ?>) !important;
+				width: calc(100% - <?php echo esc_attr( $width ); ?>) !important;
 			}
 		</style>
 		<?php

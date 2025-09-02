@@ -110,4 +110,30 @@ if( ! function_exists( 'nexter_footer_render_style' ) ) {
 		return $theme_css;
 	}
 	add_filter( 'nxt_render_theme_css', 'nexter_footer_render_style' );
- }
+}
+
+/**
+ * Enqueue Footer Style JS
+ */
+function nexter_footer_load_scripts() {
+	$sections_footer = Nexter_Builder_Sections_Conditional::nexter_sections_condition_hooks( 'sections', 'footer' );
+		
+	if( !empty($sections_footer) ){
+	
+		$sections_style = [];
+		foreach ( $sections_footer as $post_id ) {
+			$sections_style []= get_post_meta( $post_id, 'nxt-hooks-footer-style', true );
+		}
+
+		if ( ! empty( $sections_style ) && array_intersect( $sections_style, ['fixed', 'smart'] ) ) {
+			wp_enqueue_script(
+				'nexter-ext-footer',
+				NEXTER_EXT_URL . 'assets/js/main/nexter-footer.min.js',
+				[],
+				NEXTER_EXT_VER,
+				true
+			);
+		}
+	}
+}
+add_action( 'wp_enqueue_scripts', 'nexter_footer_load_scripts' );

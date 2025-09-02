@@ -18,25 +18,24 @@ document.addEventListener('DOMContentLoaded', (event) => {
 			})
 		}
 	}
-	var nexterProNotice = document.querySelector(".nexter-pro-ext-notice");
-	if( nexterProNotice ){
-		nexterProNotice.addEventListener('click', function(){
-			
-			var request = new XMLHttpRequest();
-
-			request.open('POST', ajaxurl, true);
-			//request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded;');
-			request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-        	request.setRequestHeader('Accept', 'application/json');
-			request.onload = function () {
-				
-			};
-			request.send('action=nexter_ext_pro_dismiss_notice');
-		});
-	}
+	var nexterProNotice = document.querySelector('.nxt-notice-wrap[data-notice-id="nexter_block_show_pro"]');
+    if (nexterProNotice) {
+        setTimeout(function () {
+        var dismissBtn = nexterProNotice.querySelector('.notice-dismiss');
+        if (dismissBtn) {
+            dismissBtn.addEventListener('click', function () {
+                var request = new XMLHttpRequest();
+                request.open('POST', ajaxurl, true);
+                request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                request.setRequestHeader('Accept', 'application/json');
+                request.send('action=nexter_ext_pro_dismiss_notice');
+            });
+        }
+        }, 500);
+    }
 
 	setTimeout(function () {
-    const notices = document.querySelectorAll('.nxt-notice-wrap');
+    	const notices = document.querySelectorAll('.nxt-notice-wrap');
         notices.forEach(function (notice) {
             const dismissBtn = notice.querySelector('.notice-dismiss');
             const noticeId = notice.getAttribute('data-notice-id');
@@ -46,11 +45,10 @@ document.addEventListener('DOMContentLoaded', (event) => {
                     const formData = new FormData();
                     formData.append('action', 'nexter_ext_dismiss_notice');
                     formData.append('notice_id', noticeId);
-                    formData.append('nonce', nexter_admin_config.ajax_nonce);
                     xhr.open('POST', ajaxurl, true);
                     xhr.send(formData);
                 });
             }
         });
-    }, 100);
+    }, 500);
 });

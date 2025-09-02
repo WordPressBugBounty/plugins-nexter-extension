@@ -1066,6 +1066,7 @@ if ( ! class_exists( 'Nexter_Builder_Condition' ) ) {
             wp_send_json_success(
                 array(
                     'content'	=> $output,
+                    'nxtData' => Nexter_Builders_Archives_Conditional_Rules::$Nexter_Archives_Config,
                 )
             );
         }

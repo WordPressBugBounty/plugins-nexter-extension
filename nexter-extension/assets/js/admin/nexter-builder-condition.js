@@ -490,6 +490,20 @@ class NexterBuilder {
                                         const responsenew = JSON.parse(requestNew.response);
                                         e.target.insertAdjacentHTML('beforebegin', responsenew.data.content);
 
+                                        if (
+                                        responsenew.data.nxtData &&
+                                        typeof responsenew.data.nxtData === 'object'
+                                        ) {
+                                            // Convert array to object if it's still an array
+                                            if (Array.isArray(NexterConfig.nxt_archives)) {
+                                                NexterConfig.nxt_archives = {};
+                                            }
+
+                                            // Merge the new data into the object
+                                            Object.assign(NexterConfig.nxt_archives, responsenew.data.nxtData);
+                                            nxt_configold = NexterConfig
+                                        }
+
                                         jQuery('.nxt-single-archive-post').select2({dropdownCssClass: 'nxt-builder-select'});
 
                                         setTimeout(()=>{
@@ -620,7 +634,7 @@ class NexterBuilder {
                             var nxt_config = JSON.parse(JSON.stringify(NexterConfig));
                             data.data = JSON.stringify(nxt_config.nxt_archives[data.rules]);
                             
-                            if ($this != undefined && nxt_config.nxt_archives[$this].condition_type!='' && nxt_config.nxt_archives[$this].condition_type!=undefined && nxt_config.nxt_archives[$this].condition_type == 'yes') {
+                            if ($this != undefined && nxt_config.nxt_archives[$this]?.condition_type!='' && nxt_config.nxt_archives[$this]?.condition_type!=undefined && nxt_config.nxt_archives[$this]?.condition_type == 'yes') {
                                 jQuery.ajax({
                                     type: "POST",
                                     url: ajaxurl,
@@ -949,7 +963,7 @@ class NexterBuilder {
         if(getArchiveRule){
             let getArchiveType = ele.querySelector('.nxt-single-archive-post')
             let selVal = getArchiveRule.value;
-            if (selVal != undefined && nxt_configold.nxt_archives[selVal].condition_type!='' && nxt_configold.nxt_archives[selVal].condition_type!=undefined && nxt_configold.nxt_archives[selVal].condition_type == 'yes') {
+            if (selVal != undefined && nxt_configold?.nxt_archives[selVal]?.condition_type!='' && nxt_configold?.nxt_archives[selVal]?.condition_type!=undefined && nxt_configold?.nxt_archives[selVal]?.condition_type == 'yes') {
                 /* Do Nothing */
             }else{
                 getArchiveType.style.display = 'none';

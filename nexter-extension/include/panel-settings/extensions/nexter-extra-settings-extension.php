@@ -13,7 +13,8 @@ class Nexter_Ext_Extra_Settings {
     public function __construct() {
 		
 		$extension_option = get_option( 'nexter_extra_ext_options' );
-		
+		$security_option = get_option( 'nexter_site_security' );
+
 		if( !empty($extension_option)){
 			//Adobe Font
 			if( isset($extension_option['adobe-font']) && !empty($extension_option['adobe-font']['switch']) ){
@@ -61,12 +62,55 @@ class Nexter_Ext_Extra_Settings {
 			if( isset($extension_option['rollback-manager']) && !empty($extension_option['rollback-manager']['switch']) ){
 				require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-rollback-manager.php';
 			}
+
+			//SMTP Email
+			if( isset($extension_option['smtp-email']) && !empty($extension_option['smtp-email']['switch']) ){
+				require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-smtp-email.php';
+			}
+
+			//View Admin Switcher
+			if( isset($extension_option['view-admin-role']) && !empty($extension_option['view-admin-role']['switch']) ){
+				require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-view-admin-role.php';
+			}
+
+			//Elementor AdFree
+			if( isset($extension_option['elementor-adfree']) && !empty($extension_option['elementor-adfree']['switch']) && class_exists( '\Elementor\Plugin' )){
+				require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-elementor-adfree.php';
+			}
+
+			//WP Debug Mode
+			if( isset($extension_option['wp-debug-mode']) && !empty($extension_option['wp-debug-mode']['switch'])){
+				require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-wp-debug-mode.php';
+			}
+
 		}
 		
+
 		require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-post-duplicator.php';
 		require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-replace-url.php';
-		require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-google-captcha.php';
+		if(!empty($security_option)){
+			if( isset($security_option['captcha-security']) && !empty($security_option['captcha-security']['switch']) && isset( $security_option['captcha-security']['values'] ) &&  !empty( $security_option['captcha-security']['values'] ) ){
+				
+				$captcha_type = (isset($security_option['captcha-security']['values']['captcha_type']) && !empty($security_option['captcha-security']['values']['captcha_type'])) ? $security_option['captcha-security']['values']['captcha_type'] : 'google';
 
+				switch ($captcha_type) {
+					case 'google':
+						require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-google-captcha.php';
+						break;
+
+					case 'cloudflare':
+						require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-cloudflare-captcha.php';
+						break;
+				}
+			}
+		}
+
+		if(!empty($security_option)){
+			$sec_opt = $this->convert_object_to_array($security_option);
+			if( isset($sec_opt['limit-login-attempt']) && !empty($sec_opt['limit-login-attempt']['switch']) ){
+				require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-limit-login-attempt.php';
+			}
+		}
 		require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-performance-security-settings.php';
 		require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-image-sizes.php';
 		if(class_exists( '\Elementor\Plugin' ) ){
@@ -105,6 +149,16 @@ class Nexter_Ext_Extra_Settings {
 		$mimes['woff2'] = 'font/woff2|application/octet-stream|font/x-woff2';
 		
 		return $mimes;
+	}
+
+	public function convert_object_to_array($data) {
+		if (is_object($data)) {
+			$data = (array) $data;
+		}
+		if (is_array($data)) {
+			return array_map([$this, 'convert_object_to_array'], $data);
+		}
+		return $data;
 	}
 
 }

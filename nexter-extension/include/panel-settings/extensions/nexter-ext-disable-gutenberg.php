@@ -49,9 +49,9 @@ defined('ABSPATH') or die();
         if ( 'edit.php' === $pagenow ) {
             $post_type = $typenow;
         } elseif ( 'post.php' === $pagenow ) {
-            $post_type = ( isset( $_GET['post'] ) ? get_post_type( $_GET['post'] ) : 'post' );
+            $post_type = ( isset( $_GET['post'] ) ? get_post_type( sanitize_text_field(wp_unslash($_GET['post'])) ) : 'post' );
         } elseif ( 'post-new.php' === $pagenow ) {
-            $post_type = ( isset( $_GET['post_type'] ) ? $_GET['post_type'] : 'post' );
+            $post_type = ( isset( $_GET['post_type'] ) ? sanitize_text_field(wp_unslash($_GET['post_type'])) : 'post' );
         }
         
         if (!$post_type) return;

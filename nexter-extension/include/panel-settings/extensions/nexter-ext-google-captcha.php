@@ -40,7 +40,6 @@ if( ( isset( $option['captcha-security']['switch'] ) && !empty( $option['captcha
 /**
  * display recaptcha 
  */
-
 if ( ! function_exists( 'nxt_login_display' ) ) {
     function nxt_login_display(){
         global $reoption;
@@ -53,7 +52,6 @@ if ( ! function_exists( 'nxt_login_display' ) ) {
 /**
  * display recaptcha 
  */
-
 if ( ! function_exists( 'nxt_recaptch_render' ) ) {
     function nxt_recaptch_render($reData){
         $output = '';
@@ -272,10 +270,11 @@ if ( ! function_exists( 'nxttch_get_error_message' ) ) {
 
 if ( ! function_exists( 'nxt_get_recpt_respo' ) ) {
 	function nxt_get_recpt_respo( $key, $serip ) {
+        $recaptcha_response = isset( $_POST["g-recaptcha-response"] ) ? stripslashes( sanitize_text_field( wp_unslash( $_POST["g-recaptcha-response"] ) ) ) : '';
 		$args = array(
 			'body' => array(
 				'secret'   => $key,
-				'response' => isset( $_POST["g-recaptcha-response"] ) ? stripslashes( sanitize_text_field( $_POST["g-recaptcha-response"] ) ) : '',
+				'response' => $recaptcha_response,
 				'remoteip' => $serip,
 			),
 			'sslverify' => false

@@ -143,7 +143,7 @@ function nxt_login_plugins_loaded(){
 	global $pagenow;
 	global $nexter_custom_login;
 	
-	if (! is_multisite() && ( strpos( $_SERVER['REQUEST_URI'], 'wp-signup' ) !== false || strpos( $_SERVER['REQUEST_URI'], 'wp-activate' ) !== false ) ) {
+	if (! is_multisite() && isset($_SERVER['REQUEST_URI']) && ( strpos( $_SERVER['REQUEST_URI'], 'wp-signup' ) !== false || strpos( $_SERVER['REQUEST_URI'], 'wp-activate' ) !== false ) ) {
 		wp_die( esc_html__( 'This feature is not enabled.', 'nexter-extension' ) );
 	}
 	

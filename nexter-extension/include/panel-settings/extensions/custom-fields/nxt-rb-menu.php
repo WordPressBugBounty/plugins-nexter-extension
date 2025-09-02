@@ -35,6 +35,7 @@ $plugins         = get_plugins();
       <?php
          if ( ! empty( $type ) ) {
             printf(
+               // Translators: %s is the capitalized rollback type (e.g., Plugin or Theme).
                esc_html__( '%s Rollback', 'nexter-extension' ),
                esc_html( ucfirst( $type ) )
             );
@@ -69,12 +70,16 @@ $plugins         = get_plugins();
                <label class="label label-default">
                   <?php
                   echo apply_filters(
-                        'nxt_ext_rollback_description',
-                        sprintf(
-                           esc_html__( 'You currently have version %1$s installed of %2$s. We strongly recommend you create a complete backup before proceeding.', 'nexter-extension' ),
-                           '<span class="current-version">' . esc_html( $current_version ) . '</span>',
-                           '<span class="rollback-name">' . esc_html( $rollback_name ) . '</span>'
-                        )
+                     'nxt_ext_rollback_description',
+                     sprintf(
+                        // Translators: %1$s is the current version, %2$s is the rollback item name.
+                        esc_html__(
+                           'You currently have version %1$s installed of %2$s. We strongly recommend you create a complete backup before proceeding.',
+                           'nexter-extension'
+                        ),
+                        '<span class="current-version">' . esc_html( $current_version ) . '</span>',
+                        '<span class="rollback-name">' . esc_html( $rollback_name ) . '</span>'
+                     )
                   );
                   ?>
                </label>

@@ -246,6 +246,11 @@ class Nexter_Ext_Performance_Security_Settings {
 			if( isset($extension_option['heartbeat-control']) && !empty($extension_option['heartbeat-control']['switch']) ){
 				require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-heartbeat-control.php';
 			}
+
+			// Image Upload Optimization
+			if( isset($extension_option['image-upload-optimize']) && !empty($extension_option['image-upload-optimize']['switch'])){
+				require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-image-upload-optimize.php';
+			}
 		}
 		
 		if( isset($nxt_security_option) && !empty($nxt_security_option)){
@@ -266,6 +271,8 @@ class Nexter_Ext_Performance_Security_Settings {
 				add_filter('the_generator', function(){
 					return '';
 				});
+				add_filter('style_loader_src', [ $this ,'remove_wp_version_from_src'], 9999);
+				add_filter('script_loader_src', [ $this ,'remove_wp_version_from_src'], 9999);
 			}
 
 			if( in_array( 'disable_rest_api_links' , $nxt_security_option ) ){
@@ -317,6 +324,17 @@ class Nexter_Ext_Performance_Security_Settings {
 		}
 
     }
+
+	/*
+	 * Remove URL script/style version wordpress
+	 * @since V4.3.0
+	 * */
+	public function remove_wp_version_from_src($src) {
+		if (strpos($src, 'ver=' . get_bloginfo('version')) !== false) {
+			$src = remove_query_arg('ver', $src);
+		}
+		return $src;
+	}
 
 	public function nxt_convert_object_to_array($data) {
 		if (is_object($data)) {
@@ -488,17 +506,21 @@ class Nexter_Ext_Performance_Security_Settings {
 		//Wp redirect to the proper URL
 		redirect_canonical();
 
-		// Translators: %s is the URL of the Home Page.
 		wp_die(
 			sprintf(
-				esc_html__("No feed available, please visit the %s!", 'nexter-extension'),
+				// Translators: %s is the anchor tag linking to the Home Page.
+				esc_html__(
+					'No feed available, please visit the %s!',
+					'nexter-extension'
+				),
 				sprintf(
 					'<a href="%s">%s</a>',
 					esc_url(home_url('/')),
-					esc_html__("Home Page", 'nexter-extension')
+					esc_html__('Home Page', 'nexter-extension')
 				)
 			)
 		);
+
 	}
 
 	/**
@@ -597,8 +619,7 @@ class Nexter_Ext_Performance_Security_Settings {
 		}, 20, 2);
 	
 		if(is_admin()) {
-			
-			if(!empty($nxt_site_performance['disable_comments']) && $nxt_site_performance['disable_comments'] === 'all'){
+			if(!empty($extension_option['disable_comments']) && $extension_option['disable_comments'] === 'all'){
 			
 				//Remove Menu Links And Disable Admin Pages 
 				add_action('admin_menu', [ $this, 'nxt_admin_menu_comments'], 9999);
@@ -630,7 +651,7 @@ class Nexter_Ext_Performance_Security_Settings {
 			
 			add_action('template_redirect', [ $this ,'nxt_comment_template'] );
 			
-			if(!empty($nxt_site_performance['disable_comments']) && $nxt_site_performance['disable_comments'] === 'all'){
+			if(!empty($extension_option['disable_comments']) && $extension_option['disable_comments'] === 'all'){
 				//Disable the Comments Feed Link
 				add_filter('feed_links_show_comments_feed', '__return_false');
 			}

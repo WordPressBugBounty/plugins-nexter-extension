@@ -33,19 +33,22 @@ if ( ! class_exists( 'Nexter_Extensions_Load' ) ) {
 			add_action( 'after_setup_theme', [ $this, 'nexter_builder_post_type' ] );
 			$this->include_custom_options();
 			add_action( 'after_setup_theme', [ $this, 'theme_after_setup' ] );
-			if ( is_admin() ) {
+
+			$nexter_white_label = get_option('nexter_white_label');
+            if( is_admin() && ( empty($nexter_white_label) || ( !empty($nexter_white_label['nxt_help_link']) && $nexter_white_label['nxt_help_link'] !== 'on') ) ) {
 				add_filter( 'plugin_action_links_' . NEXTER_EXT_BASE, array( $this, 'add_settings_pro_link' ) );
-				add_filter( 'plugin_row_meta', array( $this, 'add_extra_links_plugin_row_meta' ), 10, 2 );
 			}
 
-			if((!isset($_GET['test_code']) || empty($_GET['test_code']))){
-				$this->nexter_code_php_snippets_actions();
+			if( is_admin() ){
+				add_filter( 'plugin_row_meta', array( $this, 'add_extra_links_plugin_row_meta' ), 10, 2 );
 			}
 
 			if( !defined( 'NXT_PRO_EXT' ) && empty( get_option( 'nexter-ext-pro-load-notice' ) ) ) {
 				add_action( 'admin_notices', array( $this, 'nexter_extension_pro_load_notice' ) );
 				add_action( 'wp_ajax_nexter_ext_pro_dismiss_notice', array( $this, 'nexter_ext_pro_dismiss_notice_ajax' ) );
 			}
+			add_action( 'wp_ajax_nexter_ext_dismiss_notice', array( $this, 'nexter_ext_dismiss_notice_data' ) );
+			
 
 			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts_admin' ) );
 			/* if ( class_exists( '\Elementor\Plugin' )) {
@@ -75,6 +78,45 @@ if ( ! class_exists( 'Nexter_Extensions_Load' ) ) {
 							return $required_caps;
 					}, 10, 4
 				);
+
+				add_filter('rank_math/sitemap/post_type_exclude', function ($exclude, $post_type) {
+					if ($post_type === 'nxt_builder') {
+						$exclude = true;
+					}
+					return $exclude;
+				}, 10, 2);
+				
+				// Remove from XML sitemap
+				add_filter( 'rank_math/sitemap/post_types', function( $post_types ) {
+					if ( isset( $post_types['nxt_builder'] ) ) {
+						unset( $post_types['nxt_builder'] ); // Force remove from XML sitemap
+					}
+					return $post_types;
+				}, 99 );
+
+				// Remove from HTML sitemap
+				add_filter( 'rank_math/sitemap/html/post_types', function( $post_types ) {
+					if ( isset( $post_types['nxt_builder'] ) ) {
+						unset( $post_types['nxt_builder'] ); // Force remove from HTML sitemap
+					}
+					return $post_types;
+				}, 20 );
+
+				
+				add_filter('wp_sitemaps_post_types', function ($post_types) {
+					if ( isset( $post_types['nxt_builder'] ) ) {
+						unset( $post_types['nxt_builder'] ); // Force remove from HTML sitemap
+					}
+					return $post_types;
+				});
+
+				//Yoast SEO
+				add_filter('wpseo_sitemap_exclude_post_type', function ($excluded, $post_type) {
+					if ($post_type === 'nxt_builder') {
+						return true;
+					}
+					return $excluded;
+				}, 10, 2);
 			}
 			
 		}
@@ -122,8 +164,9 @@ if ( ! class_exists( 'Nexter_Extensions_Load' ) ) {
 		 * @since 1.1.0
 		 */
 		public function add_extra_links_plugin_row_meta( $plugin_meta, $plugin_file ) {
- 
-			if ( strpos( $plugin_file, NEXTER_EXT_BASE ) !== false && current_user_can( 'manage_options' ) && !apply_filters('nexter_remove_branding',false) ) {
+			$nexter_white_label = get_option('nexter_white_label');
+
+			if ( strpos( $plugin_file, NEXTER_EXT_BASE ) !== false && current_user_can( 'manage_options' ) && !apply_filters('nexter_remove_branding',false) && ( empty($nexter_white_label) || ( !empty($nexter_white_label['nxt_help_link']) && $nexter_white_label['nxt_help_link'] !== 'on') ) ) {
 				$new_links = array(
 					'official-site' => '<a href="'.esc_url('https://nexterwp.com/').'" target="_blank" rel="noopener noreferrer">'.esc_html__( 'Official Site', 'nexter-extension' ).'</a>',
 					'docs' => '<a href="'.esc_url('https://nexterwp.com/help/nexter-extension/').'" target="_blank" rel="noopener noreferrer" style="color:green;">'.esc_html__( 'Docs', 'nexter-extension' ).'</a>',
@@ -137,7 +180,15 @@ if ( ! class_exists( 'Nexter_Extensions_Load' ) ) {
 			}else if(strpos( $plugin_file, NEXTER_EXT_BASE ) !== false && current_user_can( 'manage_options' ) && apply_filters('nexter_remove_branding',false)){
 				unset($plugin_meta[2]);
 			}
-			 
+			
+			if(strpos( $plugin_file, NEXTER_EXT_BASE ) !== false && current_user_can( 'manage_options' ) && isset($nexter_white_label['nxt_help_link']) && !empty($nexter_white_label['nxt_help_link']) && $nexter_white_label['nxt_help_link'] == 'on' ){
+                foreach ( $plugin_meta as $key => $meta ) {
+					if ( stripos( $meta, 'View details' ) !== false ) {
+						unset( $plugin_meta[ $key ] );
+					}
+				}
+            }
+
 			return $plugin_meta;
 		}
 
@@ -176,6 +227,7 @@ if ( ! class_exists( 'Nexter_Extensions_Load' ) ) {
 			require_once NEXTER_EXT_DIR . 'include/classes/nexter-class-load.php';
 			require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/custom-fields/nxt-custom-fields.php';
 			require_once NEXTER_EXT_DIR . 'include/panel-settings/nxt-deactive.php';
+			require_once NEXTER_EXT_DIR . 'include/panel-settings/nexter-whats-new.php';
 
 			if ( ! class_exists( 'Nexter_Builder_Compatibility' ) ) {
 				$include_uri = NEXTER_EXT_DIR . 'include/classes/';
@@ -390,11 +442,38 @@ if ( ! class_exists( 'Nexter_Extensions_Load' ) ) {
 		 * Nexter Extension Pro Load Notice
 		 */
 		public function nexter_extension_pro_load_notice() {
-			$admin_notice = '<h4 class="nxt-notice-head">' . esc_html__( 'Design Your Masterpiece With Nexter Extension Pro !!!', 'nexter-extension' ) . '</h4>';
-			$admin_notice .= '<p>' . esc_html__( 'Enhance your building experience by setting out with pro version of Nexter Extension. Check out why you should upgrade to pro?', 'nexter-extension' );
-			$admin_notice .= sprintf( ' <a href="%s" target="_blank" rel="noopener noreferrer" >%s</a>', esc_url('https://nexterwp.com/free-vs-pro-compare/'), esc_html__( 'Free vs Pro', 'nexter-extension' ) ) . esc_html__('. You are backed with our 60 Days Money-Back Guarantee.', 'nexter-extension' ).'.</p>';
-			$admin_notice .= '<p>' . sprintf( '<a href="%s" target="_blank" rel="noopener noreferrer" class="button-primary">%s</a>', esc_url('https://nexterwp.com/pricing/'), esc_html__( 'UPGRADE NOW', 'nexter-extension' ) ) . '</p>';
-			echo '<div class="notice notice-info nexter-pro-ext-notice is-dismissible">'.wp_kses_post($admin_notice).'</div>';
+			// Only show for admins
+            if ( ! current_user_can( 'manage_options' ) ) {
+                return;
+            }
+
+			$nxtData = get_option( 'nexter-ext-install-data' );
+            if ( ! is_array( $nxtData ) || empty( $nxtData['install-date'] ) ) {
+                return;
+            }
+        
+            // Convert from d-m-Y to timestamp
+            $inTime = strtotime( $nxtData['install-date'] );
+           
+            if ( ! $inTime ) {
+                return;
+            }
+            
+            $dayCount = floor( ( current_time( 'timestamp' ) - $inTime ) / DAY_IN_SECONDS );
+            // Show after 2 days
+            //if ( $dayCount >= 2 ) {
+				echo '<div class="notice notice-info is-dismissible nxt-notice-wrap" data-notice-id="nexter_block_show_pro">';
+					echo '<div class="nexter-license-activate">';
+                        echo '<div class="nexter-license-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"><rect width="24" height="24" fill="#1717CC" rx="5"/><path fill="#fff" d="M12.605 17.374c.026 0 .038.013.039.038.102 0 .192.014.27.04.025 0 .05.012.076.037.128.077.23.167.307.27v.038c0 .026.013.051.039.077v.038a.63.63 0 0 1 .038.193l-.038 1.882h-2.652v-2.613h1.921Zm.308-13.414c.128 0 .23.038.308.115a.259.259 0 0 1 .115.23V15.26c.025.153-.052.295-.23.423a.872.872 0 0 1-.578.192h-1.844V3.96h2.23Z"/></svg></div>';
+                        echo '<div class="nexter-license-content">';
+                            echo '<h2>' . esc_html__( 'Replace 50+ WordPress Plugins with Nexter Extension Pro', 'nexter-extension' ) . '</h2>';
+                            echo '<p>' . esc_html__( 'Nexter Extension free options cover the basics, but Pro takes it further with features like Login Protection, 2-Factor Authentication, Branded WP Admin & More.', 'nexter-extension' ) . '</p>';
+                            echo '<a href="' . esc_url('https://nexterwp.com/pricing/?utm_source=wpbackend&utm_medium=admin&utm_campaign=pluginpage') . '" target="_blank" rel="noopener noreferrer" class="nxt-nobtn-primary">' . esc_html__( 'Upgrade Now', 'nexter-extension' ) . '</a>';
+                            echo '<a href="' . esc_url('https://nexterwp.com/free-vs-pro/?utm_source=wpbackend&utm_medium=admin&utm_campaign=pluginpage') . '" target="_blank" rel="noopener noreferrer" class="nxt-nobtn-secondary">' . esc_html__( 'Compare Free vs Pro', 'nexter-extension' ) . '</a>';
+                        echo '</div>';
+                    echo '</div>';
+                echo '</div>';
+			//}
 		}
 
 		/**
@@ -402,6 +481,16 @@ if ( ! class_exists( 'Nexter_Extensions_Load' ) ) {
 		 */
 		public function nexter_ext_pro_dismiss_notice_ajax(){
 			update_option( 'nexter-ext-pro-load-notice', 1 );
+		}
+
+		public function nexter_ext_dismiss_notice_data(){
+			if ( ! empty($_POST['notice_id']) ) {
+                $notice_id = sanitize_text_field($_POST['notice_id']);
+                update_option($notice_id . '_dismissed', true);
+                wp_send_json_success(['dismissed' => $notice_id]);
+            } else {
+                wp_send_json_error('Invalid Notice ID');
+            }
 		}
 		
 		/*
@@ -466,7 +555,7 @@ if ( ! class_exists( 'Nexter_Extensions_Load' ) ) {
 											$error_code = $this->nexter_code_php_snippets_execute($php_code);
 										}else if(is_admin() && $code_execute=='admin'){
 											$error_code = $this->nexter_code_php_snippets_execute($php_code);
-										}else if(! is_admin() && $code_execute=='front-end'){
+										}else if(! is_admin() && $code_execute=='front-end' && !$this->is_elementor_edit_or_preview_mode()){
 											$error_code = $this->nexter_code_php_snippets_execute($php_code);
 										}
 									}
@@ -505,6 +594,25 @@ if ( ! class_exists( 'Nexter_Extensions_Load' ) ) {
 			return $result;
 		}
 
+		/**
+		 * Check if current page is in Elementor edit or preview mode
+		 * This prevents frontend_only snippets from running in Elementor editor or preview
+		 */
+		private function is_elementor_edit_or_preview_mode() {
+			if (class_exists('\\Elementor\\Plugin')) {
+				$plugin = \Elementor\Plugin::$instance;
+				if ((isset($plugin->editor) && method_exists($plugin->editor, 'is_edit_mode') && $plugin->editor->is_edit_mode()) ||
+					(isset($plugin->preview) && method_exists($plugin->preview, 'is_preview_mode') && $plugin->preview->is_preview_mode())) {
+					return true;
+				}
+			}
+			if ((isset($_GET['elementor-preview']) && $_GET['elementor-preview']) ||
+				(isset($_GET['elementor']) && $_GET['elementor'])) {
+				return true;
+			}
+			return false;
+		}
+		
 		/*
 		 * Remove Capability for the Editor role
 		 * @since 2.0.4
@@ -526,11 +634,23 @@ if ( ! class_exists( 'Nexter_Extensions_Load' ) ) {
 				include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
             	$pluginslist = get_plugins();
 
+				$wdkVersion = '';
 				if ( isset( $pluginslist[ 'wdesignkit/wdesignkit.php' ] ) && !empty( $pluginslist[ 'wdesignkit/wdesignkit.php' ] ) ) {
-					if( is_plugin_active('wdesignkit/wdesignkit.php') ){
-						$wdkPlugin = true;
-					}
-				}
+                if( is_plugin_active('wdesignkit/wdesignkit.php') ){
+                    $wdkPlugin = true;
+                    // Get WDesignKit version
+                    $wdkVersion = '1.0.0'; // Default version
+                    if (defined('WDKIT_VERSION')) {
+                        $wdkVersion = WDKIT_VERSION;
+                    } else {
+                        // Try to get version from plugin data
+                        $plugin_data = get_plugin_data(WP_PLUGIN_DIR . '/wdesignkit/wdesignkit.php');
+                        if (isset($plugin_data['Version'])) {
+                            $wdkVersion = $plugin_data['Version'];
+                        }
+                    }
+                }
+            }
 
 				wp_enqueue_style( 'nexter-ele-wdkit-preset', NEXTER_EXT_URL .'assets/css/admin/nxt-wdk-preset.css', array(), NEXTER_EXT_VER );
 				wp_enqueue_script( 'nexter-ele-wdkit-preset', NEXTER_EXT_URL .'assets/js/admin/nxt-ele-wdk-preset.js', array( 'jquery','elementor-common' ), NEXTER_EXT_VER, true );
@@ -542,6 +662,7 @@ if ( ! class_exists( 'Nexter_Extensions_Load' ) ) {
 						'ajax_url'    => admin_url( 'admin-ajax.php' ),
 						'ajax_nonce' => wp_create_nonce('nexter_admin_nonce'),
 						'wdkPlugin' => $wdkPlugin,
+						'wdkVersion' => isset($wdkVersion) ? $wdkVersion : '1.0.0',
 					)
 				);
 			}

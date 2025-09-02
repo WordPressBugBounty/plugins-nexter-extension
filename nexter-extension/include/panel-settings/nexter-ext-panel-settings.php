@@ -73,6 +73,10 @@ if ( ! class_exists( 'Nexter_Ext_Panel_Settings' ) ) {
                 // Add Extra attr to script tag
                 add_filter( 'script_loader_tag', [ $this,'nxt_async_attribute' ], 10, 2 );
                 add_action('admin_footer', array($this, 'nxt_link_in_new_tab'));
+
+                //export Theme customize data
+                add_action( 'admin_init', [ $this, 'nxt_customizer_export_data' ] );
+                add_action('wp_ajax_nxt_import_customizer_data', [ $this, 'nxt_customizer_import_data' ]);
             }
         }
 
@@ -91,22 +95,26 @@ if ( ! class_exists( 'Nexter_Ext_Panel_Settings' ) ) {
          * @since 4.2.0
          */
         public function nxt_ext_new_update_notice_callback(){
-            $get_option = get_option( 'nxt_ext_menu_notice_count' );
-            if ( get_option( 'nxt_ext_menu_notice_count' ) < NEXTER_EXT_NOTICE_FLAG ) {
-                update_option( 'nxt_ext_menu_notice_count', NEXTER_EXT_NOTICE_FLAG, false );
+             $data = get_option( 'nxt_ext_menu_notice_count', [] );
+            if ( ! is_array( $data ) ) {
+                $data = [];
             }
+            $flag = isset( $data['notice_flag'] ) ? intval( $data['notice_flag'] ) : 1;
+            $data['menu_notice_count'] = $flag;
+            update_option( 'nxt_ext_menu_notice_count', $data );
         }
 
         public function nxt_link_in_new_tab(){
+            if ( ! $this->nxt_ext_notice_should_show() ) {
+                return;
+            }
             ?>
             <script type="text/javascript">
                 document.addEventListener('DOMContentLoaded', function() {
-                    <?php if( $this->nxt_ext_notice_should_show() ) { ?>
-                        var menuItem = document.querySelector('.toplevel_page_nexter_welcome.menu-top');
-                        if (menuItem) {
-                            menuItem.classList.add('nxt-ext-admin-notice-active');
-                        }
-                    <?php } ?>
+                    var menuItem = document.querySelector('.toplevel_page_nexter_welcome.menu-top');
+                    if (menuItem) {
+                        menuItem.classList.add('nxt-ext-admin-notice-active');
+                    }
                 });
             </script>
             <?php
@@ -117,9 +125,17 @@ if ( ! class_exists( 'Nexter_Ext_Panel_Settings' ) ) {
          * @since 4.2.0
          */
         public function nxt_ext_notice_should_show(){
-            return ( get_option( 'nxt_ext_menu_notice_count' ) < NEXTER_EXT_NOTICE_FLAG );
+            $data = get_option( 'nxt_ext_menu_notice_count', [] );
+            if ( ! is_array( $data ) ) {
+                return false;
+            }
+
+            $menu_count = isset( $data['menu_notice_count'] ) ? intval( $data['menu_notice_count'] ) : 0;
+            $flag       = isset( $data['notice_flag'] ) ? intval( $data['notice_flag'] ) : 1;
+
+            return $menu_count < $flag;
         }
-        
+
         /*
         * Save Nexter Extension Data
         * @since 1.1.0
@@ -138,11 +154,14 @@ if ( ! class_exists( 'Nexter_Ext_Panel_Settings' ) ) {
             $adminMenuWidth = ( isset( $_POST['adminMenuWidth'] ) ) ? sanitize_text_field(wp_unslash( $_POST['adminMenuWidth'] ) ) : '';
             $revisionControl = ( isset( $_POST['revisionControl'] ) ) ? (wp_unslash( $_POST['revisionControl'] ) ) : '';
             $heartbeatOpt = ( isset( $_POST['heartbeatOpt'] ) ) ? (wp_unslash( $_POST['heartbeatOpt'] ) ) : '';
+            $imageUploadOpt = ( isset( $_POST['imageUploadOpt'] ) ) ? (wp_unslash( $_POST['imageUploadOpt'] ) ) : '';
             $cleanUserProfile = ( isset( $_POST['cleanUserProfile'] ) ) ? (wp_unslash( $_POST['cleanUserProfile'] ) ) : '';
+            $elementorAdFree = ( isset( $_POST['elementorAdFree'] ) ) ? (wp_unslash( $_POST['elementorAdFree'] ) ) : '';
             $recapData = ( isset( $_POST['recapData'] ) ) ? wp_unslash( $_POST['recapData'] ) : '';
             $wpDisableSet = ( isset( $_POST['wpDisableSet'] ) ) ? wp_unslash( $_POST['wpDisableSet'] ) : '';
             $svgUploadRoles = ( isset( $_POST['svgUploadRoles'] ) ) ? wp_unslash( $_POST['svgUploadRoles'] ) : '';
-           
+            $limitLogin = ( isset( $_POST['limitLogin'] ) ) ? wp_unslash( $_POST['limitLogin'] ) : '';
+
             $wpEmailNotiSet = ( isset( $_POST['wpEmailNotiSet'] ) ) ? wp_unslash( $_POST['wpEmailNotiSet'] ) : '';
             $captchaSetting = ( isset( $_POST['captchaSetting'] ) ) ? wp_unslash( $_POST['captchaSetting'] ) : '';
             $wpLoginWL = ( isset( $_POST['wpLoginWL'] ) ) ? wp_unslash( $_POST['wpLoginWL'] ) : '';
@@ -153,6 +172,7 @@ if ( ! class_exists( 'Nexter_Ext_Panel_Settings' ) ) {
             $post_types = ( isset( $_POST['post_types'] ) ) ? wp_unslash( $_POST['post_types'] ) : '';
             $disable_gutenberg_posts = ( isset( $_POST['disable_gutenberg_posts'] ) ) ? wp_unslash( $_POST['disable_gutenberg_posts'] ) : '';
             $preview_drafts = ( isset( $_POST['preview_drafts'] ) ) ? wp_unslash( $_POST['preview_drafts'] ) : '';
+            $taxonomy_order = ( isset( $_POST['taxonomy_order'] ) ) ? wp_unslash( $_POST['taxonomy_order'] ) : '';
             $redirect_404 = ( isset( $_POST['redirect_404'] ) ) ? sanitize_text_field( wp_unslash( $_POST['redirect_404'] ) )  : '';
             $wpWLSet = ( isset( $_POST['wpWLSet'] ) ) ? wp_unslash( $_POST['wpWLSet'] ) : '';
             $securData = ( isset( $_POST['securData'] ) ) ? wp_unslash( $_POST['securData'] ) : '';
@@ -163,7 +183,6 @@ if ( ! class_exists( 'Nexter_Ext_Panel_Settings' ) ) {
             $ele_icons = ( isset( $_POST['ele_icons'] ) ) ? wp_unslash( $_POST['ele_icons'] ) : '';
             $disabled_image_sizes = get_option('nexter_disabled_images');
             $editoropt = ( isset( $_POST['editoropt'] ) ) ? sanitize_text_field(wp_unslash( $_POST['editoropt'] ) ) : '';
-
             if(!empty($ext) && $ext==='disabled-image-sizes'){
                 //Convert $image_size to Array
                 $image_size = explode(",",$image_size);
@@ -243,6 +262,12 @@ if ( ! class_exists( 'Nexter_Ext_Panel_Settings' ) ) {
                     update_option( $option_page, $get_option );
                 }
                 wp_send_json_success();
+            }else if(!empty( $ext ) && $ext==='elementor-adfree' && !empty($elementorAdFree)){
+                if( !empty( $get_option ) && isset($get_option[ $ext ]) ){
+                    $get_option[ $ext ]['values'] = json_decode($elementorAdFree);
+                    update_option( $option_page, $get_option );
+                }
+                wp_send_json_success();
             }else if( !empty( $ext ) && $ext==='google-recaptcha' && !empty($recapData)){
                 if( !empty( $get_option ) && isset($get_option[ $ext ]) ){
                     $get_option[ $ext ]['values'] = json_decode($recapData, true);
@@ -259,7 +284,7 @@ if ( ! class_exists( 'Nexter_Ext_Panel_Settings' ) ) {
                     update_option( $option_page, $get_option );
                 }
                 wp_send_json_success();
-            }else if( !empty( $ext ) && ( $ext==='advance-performance' && !empty($performance) ) || ($ext==='disable-comments' && !empty($commdata) ) || ($ext==='google-fonts' && !empty($googlefonts) ) || ($ext==='post-revision-control' && !empty($revisionControl) ) || ($ext==='heartbeat-control' && !empty($heartbeatOpt) ) ){
+            }else if( !empty( $ext ) && ( $ext==='advance-performance' && !empty($performance) ) || ($ext==='disable-comments' && !empty($commdata) ) || ($ext==='google-fonts' && !empty($googlefonts) ) || ($ext==='post-revision-control' && !empty($revisionControl) ) || ($ext==='heartbeat-control' && !empty($heartbeatOpt) ) || ($ext==='image-upload-optimize' && !empty($imageUploadOpt) ) ){
                 $advanceData =  json_decode($performance);
                 $disableComm = (array) json_decode($commdata);
 
@@ -309,17 +334,23 @@ if ( ! class_exists( 'Nexter_Ext_Panel_Settings' ) ) {
                                 $get_option[ $ext ]['values'] = json_decode($revisionControl);
                                 $new = $get_option;
                             }
+                        }else if($ext==='image-upload-optimize' && !empty($imageUploadOpt)){
+                            if( !empty( $get_option ) && isset($get_option[ $ext ]) ){
+                                $get_option[ $ext ]['values'] = json_decode($imageUploadOpt);
+                                $new = $get_option;
+                            }
                         }
                         update_option( $perforoption, $new );
                     }
                 }
                 wp_send_json_success();
-            }else if( !empty( $ext ) && ( $ext==='advance-security' && !empty($securData) ) || ( $ext==='custom-login' && !empty($nxtctmLogin) ) || ( $ext==='wp-right-click-disable' && !empty($wpDisableSet) ) || ($ext==='email-login-notification' && !empty($wpEmailNotiSet)) || ($ext==='2-fac-authentication' ) || ($ext==='captcha-security' && !empty($captchaSetting)) || ($ext==='svg-upload' && !empty($svgUploadRoles))){
+            }else if( !empty( $ext ) && ( $ext==='advance-security' && !empty($securData) ) || ( $ext==='custom-login' && !empty($nxtctmLogin) ) || ( $ext==='wp-right-click-disable' && !empty($wpDisableSet) ) || ($ext==='email-login-notification' && !empty($wpEmailNotiSet)) || ($ext==='2-fac-authentication' ) || ($ext==='captcha-security' && !empty($captchaSetting)) || ($ext==='svg-upload' && !empty($svgUploadRoles)) || ($ext==='limit-login-attempt' && !empty($limitLogin)) ){
                 
                 $securData = (array) json_decode($securData);
                 $nxtctmLogin = (array) json_decode($nxtctmLogin);
                 $disrightclick = (array) json_decode($wpDisableSet,true);
                 $svg_upload_roles = (array) json_decode($svgUploadRoles,true);
+                $limit_login_attempt = (array) json_decode($limitLogin,true);
                 $emailNotiSet = (array) json_decode($wpEmailNotiSet);
                 $captchaSetting = (array) json_decode($captchaSetting);
                 
@@ -350,12 +381,15 @@ if ( ! class_exists( 'Nexter_Ext_Panel_Settings' ) ) {
                         $svg_upload_val[ $ext ]['values'] = $svg_upload_roles;
                         $svg_upload_val[ $ext ]['switch'] = true;
                         update_option( $secr_opt, $svg_upload_val );
+                    }else if(!empty($limit_login_attempt)){
+                        $svg_upload_val[ $ext ]['values'] = $limit_login_attempt;
+                        $svg_upload_val[ $ext ]['switch'] = true;
+                        update_option( $secr_opt, $svg_upload_val );
                     }
-
                 }else{
                     
                     $get_option = get_option($secr_opt);
-                    
+                    $new_sec = $get_option;
                     if(!empty($get_option)){
                         if($ext==='advance-security'){
 
@@ -413,6 +447,9 @@ if ( ! class_exists( 'Nexter_Ext_Panel_Settings' ) ) {
                             if(false !== array_search('obfuscator_author_slug', $get_option)){
                                 unset($get_option[array_search('obfuscator_author_slug' , $get_option)]);
                             }
+                            if(false !== array_search('hide_telephone_secure', $get_option)){
+                                unset($get_option[array_search('hide_telephone_secure' , $get_option)]);
+                            }
                             $get_option = self::nexter_ext_object_convert_to_array($get_option);
                             $securData = self::nexter_ext_object_convert_to_array($securData);
                             $newArr = array_merge($get_option,$securData);
@@ -443,32 +480,36 @@ if ( ! class_exists( 'Nexter_Ext_Panel_Settings' ) ) {
                             }
                             $newdata = [];
                             if(class_exists('Nexter_Ext_Right_Click_Disable')){
-                                $newdata[ $ext ]['values'] = $disrightclick;
-                                $newdata[ $ext ]['css'] = Nexter_Ext_Right_Click_Disable::nxtrClickCSSGenerate($disrightclick);
+                                $get_option[ $ext ]['values'] = $disrightclick;
+                                $get_option[ $ext ]['css'] = Nexter_Ext_Right_Click_Disable::nxtrClickCSSGenerate($disrightclick);
                             }
-                            $newArr = array_merge($get_option,$newdata);
+                            $newArr = $get_option;
                         }else if($ext==='email-login-notification'){
-                            $newdata[ $ext ]['values'] =  $emailNotiSet;
-                            $newdata[ $ext ]['switch'] =  true;
-                            $newArr = array_merge($get_option,$newdata);
+                            $get_option[ $ext ]['values'] =  $emailNotiSet;
+                            $get_option[ $ext ]['switch'] =  true;
+                            $newArr = $get_option;
                         }else if($ext==='svg-upload'){
-                            $newdata[ $ext ]['values'] =  $svg_upload_roles;
-                            $newdata[ $ext ]['switch'] =  true;
-                            $newArr = array_merge($get_option,$newdata);
+                            $get_option[ $ext ]['values'] =  $svg_upload_roles;
+                            $get_option[ $ext ]['switch'] =  true;
+                            $newArr = $get_option;
                         }else if($ext === '2-fac-authentication'){
 	                        $allowed_2fa_roles = ( isset( $_POST['allowed_2fa_roles'] ) ) ? wp_unslash( $_POST['allowed_2fa_roles'] ) : '';
 	                        $allowed_2fa_roles = json_decode($allowed_2fa_roles, true);
 	                        $email_customisation = array();
                             $email_customisation['subject'] = ( isset( $_POST["customEmailSubject"] ) ) ? sanitize_text_field( wp_unslash( $_POST['customEmailSubject'] ) ) : '';
-                            $email_customisation['body'] = ( isset( $_POST["customEmailBody"] ) ) ? sanitize_textarea_field( ( $_POST['customEmailBody'] ) ) : '';
-                            $temp_roles[$ext]['values']['allowed_2fa_roles'] = $allowed_2fa_roles;
-                            $temp_roles[$ext]['values']['email_customisations'] = $email_customisation;
-                            $temp_roles[$ext]['switch'] = true;
-                            $newArr = array_merge($get_option,$temp_roles);
+                            $email_customisation['body'] = ( isset( $_POST["customEmailBody"] ) ) ? sanitize_textarea_field( wp_unslash( $_POST['customEmailBody'] ) ) : '';
+                            $get_option[$ext]['values']['allowed_2fa_roles'] = $allowed_2fa_roles;
+                            $get_option[$ext]['values']['email_customisations'] = $email_customisation;
+                            $get_option[$ext]['switch'] = true;
+                            $newArr = $get_option;
                         }else if($ext==='captcha-security'){
-                            $newdata[ $ext ]['values'] = $captchaSetting;
-                            $newdata[ $ext ]['switch'] = true;
-                            $newArr = array_merge($get_option,$newdata);
+                            $get_option[ $ext ]['values'] = $captchaSetting;
+                            $get_option[ $ext ]['switch'] = true;
+                            $newArr = $get_option;
+                        }else if($ext==='limit-login-attempt'){
+                            $get_option[ $ext ]['values'] = $limit_login_attempt;
+                            $get_option[ $ext ]['switch'] = true;
+                            $newArr = $get_option;
                         }
                         update_option( $secr_opt, $newArr );
                     }
@@ -495,6 +536,12 @@ if ( ! class_exists( 'Nexter_Ext_Panel_Settings' ) ) {
             }else if( !empty( $ext ) && $ext==='public-preview-drafts' && !empty($preview_drafts)){
                 if( !empty( $get_option ) && isset($get_option[ $ext ])){
                     $get_option[ $ext ]['values'] = json_decode($preview_drafts);
+                    update_option( $option_page, $get_option );
+                }
+                wp_send_json_success();
+            }else if( !empty( $ext ) && $ext==='taxonomy-order' && !empty($taxonomy_order)){
+                if( !empty( $get_option ) && isset($get_option[ $ext ])){
+                    $get_option[ $ext ]['values'] = json_decode($taxonomy_order);
                     update_option( $option_page, $get_option );
                 }
                 wp_send_json_success();
@@ -658,6 +705,23 @@ if ( ! class_exists( 'Nexter_Ext_Panel_Settings' ) ) {
 
 			wp_enqueue_script( 'nexter-ext-dashscript', NEXTER_EXT_URL . 'dashboard/build/index.js', array( 'react', 'react-dom','wp-i18n', 'wp-dom-ready', 'wp-element','wp-components', 'wp-block-editor', 'wp-editor' ), NEXTER_EXT_VER, true );
 
+            // Attach JavaScript translations
+            wp_set_script_translations(
+                'nexter-ext-dashscript',  // Handle must match enqueue
+                'nexter-extension',                 // Your text domain
+                NEXTER_EXT_DIR . 'languages'
+            );
+            
+            if ( is_multisite() ) {
+				$main_site_id = get_main_site_id();
+				$licence_key = get_blog_option( $main_site_id, 'nexter_activate', [] );
+				if(empty($licence_key)){
+					$licence_key = get_option('nexter_activate');
+				}
+			}else{
+				$licence_key = get_option('nexter_activate');
+			}
+
             $dashData = [
                 'userData' => [
                     'userName' => esc_html($user->display_name),
@@ -683,6 +747,7 @@ if ( ! class_exists( 'Nexter_Ext_Panel_Settings' ) ) {
                 'nxtGoogleFonts' => get_option('nexter_google_fonts'),
                 'nxtTables' => self::nexter_replace_url_tables_and_size(),
                 'post_list' => self::nexter_ext_get_post_type_list(),
+                'taxonomy_list' => $this->nexter_get_taxonomy_list(),
                 'wpVersion' => get_bloginfo('version'),
                 'pluginVer' => NEXTER_EXT_VER,
                 'pluginpath' => NEXTER_EXT_URL,
@@ -695,11 +760,16 @@ if ( ! class_exists( 'Nexter_Ext_Panel_Settings' ) ) {
                 'rollbackUrl' => $rollback_url,
                 'whiteLabel' => get_option('nexter_white_label'),
                 'keyActmsg' => (defined('NXT_PRO_EXT') && class_exists('Nexter_Pro_Ext_Activate')) ? Nexter_Pro_Ext_Activate::nexter_ext_pro_activate_msg() : '',
-                'nxtactivateKey' => get_option('nexter_activate'),
+                'nxtactivateKey' => $licence_key,
                 'activePlan' => (defined('NXT_PRO_EXT') && class_exists('Nexter_Pro_Ext_Activate')) ? Nexter_Pro_Ext_Activate::nexter_get_activate_plan() : '',
                 'roles' => self::nexter_ext_get_users_roles(),
                 'showSidebar' => $this->nxt_ext_notice_should_show(),
             ];
+
+            $current_user_username = '';
+            if (!empty($user) && isset($user->user_login) && !empty($user->user_login)) {
+                $current_user_username = $user->user_login;
+            }
 
 			wp_localize_script(
 				'nexter-ext-dashscript',
@@ -709,8 +779,13 @@ if ( ! class_exists( 'Nexter_Ext_Panel_Settings' ) ) {
 					'nxtex_url' => NEXTER_EXT_URL . 'dashboard/',
 					'ajax_url'    => admin_url( 'admin-ajax.php' ),
                     'ajax_nonce' => wp_create_nonce('nexter_admin_nonce'),
+                    'smtp_url' => admin_url('admin.php?page=nexter-smtp-settings'),
+                    'smtp_state' => wp_create_nonce('gmail_oauth'),
+                    'gmail_auth_check_nonce' => wp_create_nonce('gmail_auth_check'),
                     'pro' => defined('NXT_PRO_EXT_VER'),
-                    'dashData' => $dashData
+                    'dashData' => $dashData,
+                    'site_url' => site_url(),
+                    'username' => $current_user_username,
 				)
 			);
 
@@ -737,24 +812,38 @@ if ( ! class_exists( 'Nexter_Ext_Panel_Settings' ) ) {
                 'nexter_welcome'
             );
 
-            //if(defined('NXT_VERSION') || defined('HELLO_ELEMENTOR_VERSION') || defined('ASTRA_THEME_VERSION') || defined('GENERATE_VERSION') || defined('OCEANWP_THEME_VERSION') || defined('KADENCE_VERSION') || function_exists('blocksy_get_wp_theme') || defined('NEVE_VERSION')){
+            // Check if code snippets are enabled before adding the menu
+            $get_opt = get_option('nexter_extra_ext_options');
+            $code_snippets_enabled = true;
+
+            if (isset($get_opt['code-snippets']) && isset($get_opt['code-snippets']['switch'])) {
+                $code_snippets_enabled = !empty($get_opt['code-snippets']['switch']);
+            }
+            
+            if ($code_snippets_enabled) {
                 add_submenu_page(
                     'nexter_welcome',
-                    __( 'Theme Builder', 'nexter-extension' ),
-                    __( 'Theme Builder', 'nexter-extension' ),
+                    __( 'Code Snippets', 'nexter-extension' ),
+                    __( 'Code Snippets', 'nexter-extension' ),
                     'manage_options',
-                    'edit.php?post_type=nxt_builder'
+                    'nxt_code_snippets',
+                    array($this, 'nexter_code_snippet_display'),
                 );
-                
-            //}
-            add_submenu_page(
-                'nexter_welcome',
-                __( 'Code Snippets', 'nexter-extension' ),
-                __( 'Code Snippets', 'nexter-extension' ),
-                'manage_options',
-                'nxt_code_snippets',
-                array($this, 'nexter_code_snippet_display'),
-            );
+            }
+            
+            global $submenu;
+            if (isset($submenu['nexter_welcome'])) {
+                // Find the Dashboard submenu
+                foreach ($submenu['nexter_welcome'] as $key => $item) {
+                    if ($item[2] === 'nexter_welcome') {
+                        $dashboard_item = $item;
+                        unset($submenu['nexter_welcome'][$key]);
+                        // Prepend Dashboard manually
+                        array_unshift($submenu['nexter_welcome'], $dashboard_item);
+                        break;
+                    }
+                }
+            }
         }
 
         /**
@@ -808,45 +897,51 @@ if ( ! class_exists( 'Nexter_Ext_Panel_Settings' ) ) {
             self::nxt_extra_active_deactive($type, 'deactive');
         }
 
-        public static function nxt_extra_active_deactive( $data = '', $switch = ''){
-            
-            if( empty( $data ) && empty($switch) ){
-                wp_send_json_error(
-                    array( 
-                        'content' => __( 'server not found..', 'nexter-extension' ),
-                    )
-                );
-            }else if( !empty( $data ) && !empty( $switch ) ){
+        public static function nxt_extra_active_deactive( $data = '', $switch = '' ) {
 
-                $option_page = '';
-                if($data=='email-login-notification' || $data=='2-fac-authentication' || $data == 'captcha-security' ||  $data == 'svg-upload'){
-                    $option_page = 'nexter_site_security';
-                }else if($data == 'heartbeat-control' || $data == 'post-revision-control'){
-                    $option_page = 'nexter_site_performance';
-                }else{
-                    $option_page = 'nexter_extra_ext_options';
-                }
-                if ( FALSE === get_option($option_page) ){
-                    $default_value = [ 
-                        $data => [
-                            'switch' => ($switch=='active') ? true : false,
-                        ],
-                    ];
-                    add_option($option_page,$default_value);
-                }else{
-                    $get_option = get_option($option_page);
-                    if( !empty( $get_option ) ){
-                        $get_option[ $data ]['switch'] = ($switch=='active') ? true : false;
-                        update_option( $option_page, $get_option );
-                    }
-                }
-                wp_send_json_success(
-                    array(
-                        'content'	=> ($switch=='active') ? __( 'Activated', 'nexter-extension' ) : __( 'DeActivate', 'nexter-extension' ),
-                    )
-                );
+            if ( empty( $data ) || empty( $switch ) ) {
+                wp_send_json_error([
+                    'content' => __( 'Server not found.', 'nexter-extension' ),
+                ]);
             }
+
+            $security_keys   = [ 'email-login-notification', '2-fac-authentication', 'captcha-security', 'svg-upload', 'limit-login-attempt' ];
+            $performance_keys = [ 'heartbeat-control', 'post-revision-control', 'image-upload-optimize' ];
+
+            if ( in_array( $data, $security_keys, true ) ) {
+                $option_page = 'nexter_site_security';
+            } elseif ( in_array( $data, $performance_keys, true ) ) {
+                $option_page = 'nexter_site_performance';
+            } else {
+                $option_page = 'nexter_extra_ext_options';
+            }
+
+            $is_active = ( $switch === 'active' );
+
+            $option = get_option( $option_page, [] );
+
+            if ( isset( $option[ $data ] ) && is_object( $option[ $data ] ) ) {
+                $option[ $data ] = (array) $option[ $data ];
+            }
+
+            $option[ $data ]['switch'] = $is_active;
+
+            update_option( $option_page, $option );
+
+            // Special handling for wp-debug-mode
+            if ( $data === 'wp-debug-mode' && $option_page === 'nexter_extra_ext_options' ) {
+                if ( $is_active ) {
+                    require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/custom-fields/nxt-debug-mode-active.php';
+                } else {
+                    require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/custom-fields/nxt-debug-mode-deactive.php';
+                }
+            }
+
+            wp_send_json_success([
+                'content' => $is_active ? __( 'Activated', 'nexter-extension' ) : __( 'DeActivated', 'nexter-extension' ),
+            ]);
         }
+
 
         /*
          * Nexter WP Replace URL Settings
@@ -897,7 +992,6 @@ if ( ! class_exists( 'Nexter_Ext_Panel_Settings' ) ) {
             return $tag;
         }
 
-
         /**
          * Get Post List
          */
@@ -921,6 +1015,33 @@ if ( ! class_exists( 'Nexter_Ext_Panel_Settings' ) ) {
                 }
             }
             return $options;
+        }
+        /*
+         * Taxonomy Listout
+         * */
+        public function nexter_get_taxonomy_list(){
+            $post_types = $this->nexter_ext_get_post_type_list();
+            $taxonomies = array();
+            if ( is_array( $post_types ) ) {
+				foreach ( $post_types as $post_type_slug => $post_type_label ) {
+
+					$post_type_taxonomies = get_object_taxonomies( $post_type_slug );
+					
+
+					// Get the hierarchical taxonomies for the post type
+					foreach ( $post_type_taxonomies as $key => $taxonomy_name ) {
+		                $taxonomy_info = get_taxonomy( $taxonomy_name );
+
+		                if ( empty( $taxonomy_info->show_in_menu ) ||  $taxonomy_info->show_in_menu !== TRUE ) {
+		                    unset( $post_type_taxonomies[$key] );
+		                } else {
+		                	$taxonomies[$post_type_slug][$taxonomy_name] = $taxonomy_info->label;
+		                }
+		            }
+                }
+            }
+
+            return $taxonomies;
         }
 
         /**
@@ -1019,7 +1140,7 @@ if ( ! class_exists( 'Nexter_Ext_Panel_Settings' ) ) {
                 wp_send_json_error( array( 'content' => __( 'Insufficient permissions.', 'nexter-extension' ) ) );
             }
     
-            $plu_slug = ( isset( $_POST['slug'] ) && !empty( $_POST['slug'] ) ) ? sanitize_text_field( $_POST['slug'] ) : '';
+            $plu_slug = ( isset( $_POST['slug'] ) && !empty( $_POST['slug'] ) ) ? sanitize_text_field( wp_unslash($_POST['slug']) ) : '';
 
             $phpFileName = $plu_slug;
             if(!empty($plu_slug) && $plu_slug == 'the-plus-addons-for-elementor-page-builder'){
@@ -1133,6 +1254,101 @@ if ( ! class_exists( 'Nexter_Ext_Panel_Settings' ) ) {
             }
             wp_send_json (['type'=> $selectType, 'subtype'=> $selectSType]);
         }
+
+        /*
+         * Export Customizer Data Theme Options
+         * @since 4.3.0
+         * */
+        public function nxt_customizer_export_data(){
+            if ( ! current_user_can( 'manage_options' ) ) {
+                return;
+            }
+
+            if ( ! isset( $_POST['nexter_export_cust_nonce'] ) ||
+                ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nexter_export_cust_nonce'] ) ), 'nexter_admin_nonce' ) ) {
+                return;
+            }
+
+            if ( empty( $_POST['nxt_customizer_export_action'] ) || $_POST['nxt_customizer_export_action'] !== 'nxt_export_cust' ) {
+                return;
+            }
+
+            // Get Customizer options
+            $customizer_options = class_exists('Nexter_Customizer_Options') ? Nexter_Customizer_Options::get_options() : [];
+
+            $customizer_options = apply_filters( 'nexter_customizer_export_data', $customizer_options );
+            nocache_headers();
+            
+            header( 'Content-Type: application/json; charset=utf-8' );
+            header( 'Content-Disposition: attachment; filename=nexter-customizer-export-' . gmdate( 'm-d-Y' ) . '.json' );
+            header( 'Expires: 0' );
+            echo wp_json_encode( $customizer_options );
+            die();
+        }
+
+        /*
+         * Import Customizer Data Theme Options
+         * @since 4.3.0
+         * */
+        public function nxt_customizer_import_data(){
+            if ( ! current_user_can( 'manage_options' ) ) {
+                wp_send_json_error(esc_html__( 'Not a permission', 'nexter-extension' ));
+            }
+
+            if ( ! isset( $_POST['nexter_import_cust_nonce'] ) ||
+                ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nexter_import_cust_nonce'] ) ), 'nexter_admin_nonce' ) ) {
+                wp_send_json_error( esc_html__( 'Security check failed', 'nexter-extension' ) );
+            }
+
+            // Check file upload
+            if (! isset( $_FILES['nxt_import_file'] ) ||
+                ! isset( $_FILES['nxt_import_file']['error'] ) ||
+                $_FILES['nxt_import_file']['error'] !== UPLOAD_ERR_OK) {
+                wp_send_json_error(esc_html__( 'File Import failed', 'nexter-extension' ));
+            }
+            
+            $filename = isset( $_FILES['nxt_import_file']['name'] )
+    ? sanitize_file_name( wp_unslash( $_FILES['nxt_import_file']['name'] ) )
+    : '';
+
+            if ( empty( $filename ) ) {
+                wp_send_json_error(esc_html__( 'File Import failed', 'nexter-extension' ));
+            }
+            
+            $file_extension  = explode( '.', $filename );
+            $extension = end( $file_extension );
+
+            if ( $extension !== 'json' ) {
+                wp_send_json_error( esc_html__( 'Valid .json file extension', 'nexter-extension' ) );
+            }
+
+            $nxt_import_file = isset( $_FILES['nxt_import_file']['tmp_name'] ) ? sanitize_text_field( wp_unslash( $_FILES['nxt_import_file']['tmp_name'] ) ) : '';
+
+            if ( empty( $nxt_import_file ) ) {
+                wp_send_json_error( esc_html__( 'Please upload a file', 'nexter-extension' ) );
+            }
+
+            global $wp_filesystem;
+            if ( empty( $wp_filesystem ) ) {
+                require_once ABSPATH . '/wp-admin/includes/file.php';
+                WP_Filesystem();
+            }
+            
+            $get_contants = $wp_filesystem->get_contents( $nxt_import_file );
+            $customizer_options      = json_decode( $get_contants, 1 );
+
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                wp_send_json_error(esc_html__( 'Invalid JSON format', 'nexter-extension' ));
+            }
+
+            if ( !empty( $customizer_options ) && defined('NXT_VERSION')) {
+                update_option( 'nxt-theme-options', $customizer_options );
+                wp_send_json_success(esc_html__( 'Customizer settings imported successfully', 'nexter-extension' ));
+            }
+
+            wp_send_json_error(esc_html__( 'No valid settings found in the file', 'nexter-extension' ));
+        }
+
     }
 }
 
