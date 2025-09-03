@@ -18,15 +18,17 @@ if ( ! class_exists( 'Nexter_Gutenberg_Editor' ) ) {
 		public function render_content( $post_id ) {
 
 			$output       = '';
-			$current_post = get_post( $post_id, OBJECT );
-			
-			if ( has_blocks( $current_post ) ) {
-				$blocks = parse_blocks( $current_post->post_content );
-				foreach ( $blocks as $block ) {
-					$output .= render_block( $block );
+			if(!empty($post_id) && $post_id != 'none'){
+				$current_post = get_post( $post_id, OBJECT );
+				
+				if ( has_blocks( $current_post ) ) {
+					$blocks = parse_blocks( $current_post->post_content );
+					foreach ( $blocks as $block ) {
+						$output .= render_block( $block );
+					}
+				} else {
+					$output = $current_post->post_content;
 				}
-			} else {
-				$output = $current_post->post_content;
 			}
 
 			ob_start();

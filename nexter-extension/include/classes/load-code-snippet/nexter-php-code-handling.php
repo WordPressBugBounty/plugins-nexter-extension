@@ -581,7 +581,7 @@ class Nexter_Builder_Code_Snippets_Executor {
         }
         
         // Check if line ends with semicolon or closing brace
-        if (!preg_match('/[;}]\s*$/', $line) && !empty($line)) {
+        if (preg_match('/^\s*(echo|print|return(?!\s+function)|\$\w+\s*=(?!\s*(function|\[)))/i', $line)) {
             // Check if this is a complete statement that needs a semicolon
             // More specific pattern to avoid false positives with function calls
             if (preg_match('/^\s*(echo|print|return|\$\w+\s*=)/i', $line)) {
