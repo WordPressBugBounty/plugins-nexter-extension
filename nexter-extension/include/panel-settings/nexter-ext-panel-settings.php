@@ -588,10 +588,16 @@ if ( ! class_exists( 'Nexter_Ext_Panel_Settings' ) ) {
                 }
                 wp_send_json_success();
             }else if(!empty( $ext ) && $ext==='code-snippets' && isset($editoropt)){
+                
                 if( !empty( $get_option ) ){
                     $get_option[ $ext ]['values'] = (array) json_decode($editoropt);
-                    update_option( $option_page, $get_option );
+                }else{
+                    if ( ! is_array( $get_option ) ) {
+                        $get_option = [];
+                    }
+                    $get_option[ $ext ]['values'] = (array) json_decode($editoropt);
                 }
+                update_option( $option_page, $get_option );
                 wp_send_json_success();
             }
 

@@ -1305,7 +1305,7 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 						}else if( $current_page_type_name == 'is_singular' ){
 							$current_id      = esc_sql( get_the_id() );
 							$conditions = [
-								'standard-singulars',
+							//	'standard-singulars',
 								"{$current_post_type}|entire",
 								"post-{$current_id}"
 							];
@@ -1327,7 +1327,7 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 							
 						}else if( $current_page_type_name == 'is_archive' || $current_page_type_name == 'is_tax' || $current_page_type_name == 'is_date' || $current_page_type_name == 'is_author' ){
 							$conditions = [
-								'standard-archives',
+							//	'standard-archives',
 								"{$current_post_type}|entire|archive",
 							];
 							foreach ($conditions as $condition) {
@@ -1371,7 +1371,7 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 						if( $type == 'nxt-code-snippet' ){
 							$post_col = array_column($post_meta_value, 'value');
 							$standard_value = preg_grep('/^standard-/i', $post_col);
-						}else if(in_array('standard-universal', $post_meta_value, true)){
+						}else{
 							$standard_value = preg_grep('/^standard-/i', $post_meta_value);
 						}
 						

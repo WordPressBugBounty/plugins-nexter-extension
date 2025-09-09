@@ -41,6 +41,7 @@ if ( ! class_exists( 'Nexter_Extensions_Load' ) ) {
 
 			if( is_admin() ){
 				add_filter( 'plugin_row_meta', array( $this, 'add_extra_links_plugin_row_meta' ), 10, 2 );
+				add_action( 'admin_head', [ $this, 'nxt_set_snippet_editor_height' ], 99 );
 			}
 
 			if( !defined( 'NXT_PRO_EXT' ) && empty( get_option( 'nexter-ext-pro-load-notice' ) ) ) {
@@ -438,6 +439,33 @@ if ( ! class_exists( 'Nexter_Extensions_Load' ) ) {
 
 		}
 		
+		/**
+		 * Set Code Snippet Editor Height
+		 */
+		public function nxt_set_snippet_editor_height(){
+			// Check if code snippets are enabled
+			$get_opt = get_option('nexter_extra_ext_options');
+			$code_snippets_enabled = true;
+
+			if (isset($get_opt['code-snippets']) && isset($get_opt['code-snippets']['switch'])) {
+				$code_snippets_enabled = !empty($get_opt['code-snippets']['switch']);
+			}
+			
+			if(!$code_snippets_enabled) {
+				return;
+			}
+			
+			if(!empty($get_opt) && !empty($get_opt['code-snippets']) && !empty($get_opt['code-snippets']['values'])){
+				$editor_options = $get_opt['code-snippets']['values'];
+				
+				if(!empty($editor_options['autoheight'])){
+					echo '<style>.nexter-extension_page_nxt_code_snippets .CodeMirror { height: auto; }</style>';
+				}else{
+					echo '<style>.nexter-extension_page_nxt_code_snippets .CodeMirror { height: ' . esc_attr($editor_options['editorheight']) . 'px; }</style>';
+				}
+			}
+		}
+
 		/**
 		 * Nexter Extension Pro Load Notice
 		 */

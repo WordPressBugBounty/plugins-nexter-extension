@@ -300,7 +300,7 @@ if ( ! class_exists( 'Nexter_Class_Load' ) ) {
 			];
 			
 			// Only add snippets to admin bar if Admin Bar Info toggle is enabled
-			if(defined('NXT_PRO_EXT') && $adminbar_enabled){
+			if($adminbar_enabled){
 				$nxt_template['nxt_edit_snippet'] = $snippets_lists;
 			}
 			$scripts = 'var NexterAdminBar = '. wp_json_encode($nxt_template);

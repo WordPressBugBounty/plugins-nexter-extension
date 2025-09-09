@@ -38,6 +38,8 @@ if ( ! class_exists( 'Nexter_Builder_Condition' ) ) {
 
                     add_action('admin_post_nexter_ext_save_template',[$this,'nexter_ext_add_template_form_data']);
                     add_action('admin_post_nopriv_nexter_ext_save_template',[$this,'nexter_ext_add_template_form_data']);
+                    // Register hook so other plugins can trigger it
+                    add_action( 'nxt_update_builder_status', array( $this, 'update_builder_status' ), 10, 1 );
                 }
             }
 		}
@@ -327,8 +329,6 @@ if ( ! class_exists( 'Nexter_Builder_Condition' ) ) {
             }
         }
         
-
-
         /**
          * Nexter Builder Save Warning Popup
          * Start
@@ -346,7 +346,6 @@ if ( ! class_exists( 'Nexter_Builder_Condition' ) ) {
 
            return $output;
         }
-
         /**
          * Nexter Builder Save Warning Popup
          * End
@@ -1676,6 +1675,36 @@ if ( ! class_exists( 'Nexter_Builder_Condition' ) ) {
             return $options;
         }
 
+        /**
+         * Update 'nxt_build_status' meta key to 0
+         * for all or specific 'nxt_builder' posts.
+         *
+         * @param array|string $args Optional. Can be 'all' or an array of post IDs.
+         */
+        public function update_builder_status( $args = 'all' ) {
+            $post_ids = array();
+
+            if ( $args === 'all' ) {
+                // Get all posts of type nxt_builder
+                $posts = get_posts( array(
+                    'post_type'      => 'nxt_builder',
+                    'post_status'    => 'any',
+                    'posts_per_page' => -1,
+                    'fields'         => 'ids',
+                ) );
+
+                $post_ids = $posts;
+            } elseif ( is_array( $args ) ) {
+                // Use provided IDs (ensure integers)
+                $post_ids = array_map( 'intval', $args );
+            }
+
+            if ( ! empty( $post_ids ) ) {
+                foreach ( $post_ids as $post_id ) {
+                    update_post_meta( $post_id, 'nxt_build_status', 0 );
+                }
+            }
+        }
 	}
 }
 

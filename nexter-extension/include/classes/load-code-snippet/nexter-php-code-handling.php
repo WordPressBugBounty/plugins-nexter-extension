@@ -37,12 +37,6 @@ class Nexter_Builder_Code_Snippets_Executor {
             $this->nexter_deactivate_snippet($post_id, 'Dangerous function detected in code.');
             return false;
         }
-        
-        // Additional suspicious pattern checks
-        if (preg_match_all('/(base64_decode|error_reporting|ini_set|eval)\s*\(/i', $code, $matches) && count($matches[0]) > 3) {
-            $this->nexter_deactivate_snippet($post_id, 'Multiple suspicious functions detected.');
-            return false;
-        }
 
         $error = null;
         $result = false;
@@ -58,17 +52,11 @@ class Nexter_Builder_Code_Snippets_Executor {
 
             // Extract shortcode attributes as variables if provided (with security validation)
             if (!empty($attributes) && is_array($attributes)) {
-                // Blacklist of dangerous variable names
-                $forbidden_vars = [
-                    '_POST', '_GET', '_COOKIE', '_SESSION', '_SERVER', '_ENV', '_FILES',
-                    'GLOBALS', 'wp_query', 'wpdb', 'current_user', 'wp_roles'
-                ];
                 
                 foreach ($attributes as $key => $value) {
                     if (is_string($key) && !empty($key)) {
                         // Security: Validate variable name format and check blacklist
                         if (preg_match('/^[a-zA-Z_][a-zA-Z0-9_]*$/', $key) && 
-                            !in_array($key, $forbidden_vars) && 
                             strpos($key, '_') !== 0 && 
                             strlen($key) <= 50) {
                             // Use variable variables to set dynamic variable names
@@ -85,7 +73,7 @@ class Nexter_Builder_Code_Snippets_Executor {
                 // Security: Only echo output if it's safe and not in sensitive contexts
                 if (!defined('DOING_AJAX') || !DOING_AJAX) {
                     // Additional security: Check if we should allow output
-                    if ($this->is_output_safe($output) && !$this->is_sensitive_context()) {
+                    if (!$this->is_sensitive_context()) {
                         echo $output;
                     }
                 }
@@ -144,60 +132,19 @@ class Nexter_Builder_Code_Snippets_Executor {
     }
 
     protected function is_code_not_allowed( $code ) {
-        // Comprehensive list of dangerous functions
-        $dangerous_functions = [
-            // Code execution
-            'eval', 'assert', 'create_function', 'call_user_func', 'call_user_func_array',
-            // System commands
-            'system', 'exec', 'passthru', 'shell_exec', 'popen', 'proc_open', 'proc_close',
-            // File operations that could be dangerous
-            'file_get_contents', 'file_put_contents', 'fopen', 'fwrite', 'fputs',
-            // Network functions
-            'dns_get_record', 'gethostbyname', 'fsockopen', 'curl_exec', 'curl_init',
-            // Obfuscation
-            'base64_decode', 'str_rot13', 'convert_uudecode',
-            // Dangerous globals manipulation
-            'extract', 'parse_str', 'import_request_variables',
-            // Include/require with variables (potential LFI)
-            'include_once', 'require_once'
-        ];
-        
-        // Check for dangerous functions with word boundaries
-        $pattern = '/\b(' . implode('|', array_map('preg_quote', $dangerous_functions)) . ')\s*\(/i';
-        
-        // Also check for variable functions like $func()
-        $var_function_pattern = '/\$[a-zA-Z_][a-zA-Z0-9_]*\s*\(/';
-        
-        return preg_match($pattern, $code) || preg_match($var_function_pattern, $code);
-    }
-
-    /**
-     * Check if output is safe to echo
-     */
-    protected function is_output_safe($output) {
-        if (empty($output)) {
-            return true;
-        }
-        
-        // Check for potentially dangerous content
-        $dangerous_patterns = [
-            '/<script[^>]*>/i',           // Script tags
-            '/javascript:/i',             // Javascript protocols
-            '/on\w+\s*=/i',              // Event handlers (onclick, onload, etc)
-            '/<iframe[^>]*>/i',          // Iframes
-            '/<object[^>]*>/i',          // Objects
-            '/<embed[^>]*>/i',           // Embeds
-            '/data:.*base64/i',          // Data URLs with base64
-            '/vbscript:/i',              // VBScript
-        ];
-        
-        foreach ($dangerous_patterns as $pattern) {
-            if (preg_match($pattern, $output)) {
-                return false;
+        // Check for specific functions and count occurrences
+        if ( preg_match_all( '/(base64_decode|error_reporting|ini_set|eval)\s*\(/i', $code, $matches ) ) {
+            if ( count( $matches[0] ) > 5 ) {
+                return true;
             }
         }
-        
-        return true;
+
+        // Check for 'dns_get_record'
+        if ( preg_match( '/dns_get_record\s*\(/i', $code ) ) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -422,19 +369,6 @@ class Nexter_Builder_Code_Snippets_Executor {
             ];
         }
         
-        // Check for missing semicolons (only if no other major errors on this line)
-        if (empty($errors)) {
-            $semicolon_error = $this->check_missing_semicolon($line, $line_number, $lines, $current_index);
-            if (is_wp_error($semicolon_error)) {
-                $errors[] = [
-                    'line' => $line_number,
-                    'type' => 'missing_semicolon',
-                    'message' => $semicolon_error->get_error_message(),
-                    'code' => $line
-                ];
-            }
-        }
-        
         // Check for unquoted identifiers (only if no typos found)
         if (empty($errors)) {
             $unquoted_error = $this->check_unquoted_identifier($line, $line_number);
@@ -565,42 +499,6 @@ class Nexter_Builder_Code_Snippets_Executor {
                         $line
                     )
                 );
-            }
-        }
-        
-        return true;
-    }
-
-    /**
-     * Check for missing semicolons
-     */
-    private function check_missing_semicolon($line, $line_number, $lines, $current_index) {
-        // Skip lines that don't need semicolons
-        if (preg_match('/^\s*(if|else|for|while|foreach|function|class|switch|case|default|try|catch|finally|\{|\}|\/\/|\/\*|\*|#)/', $line)) {
-            return true;
-        }
-        
-        // Check if line ends with semicolon or closing brace
-        if (preg_match('/^\s*(echo|print|return(?!\s+function)|\$\w+\s*=(?!\s*(function|\[)))/i', $line)) {
-            // Check if this is a complete statement that needs a semicolon
-            // More specific pattern to avoid false positives with function calls
-            if (preg_match('/^\s*(echo|print|return|\$\w+\s*=)/i', $line)) {
-                // Look ahead to see if next line exists and starts with a statement
-                if (isset($lines[$current_index + 1])) {
-                    $next_line = trim($lines[$current_index + 1]);
-                    if (!empty($next_line) && !preg_match('/^\s*[\)}]/', $next_line)) {
-                        return new WP_Error(
-                            'syntax_error',
-                            sprintf(
-                                "Syntax Error: Missing semicolon on line %d\n\nLine %d: %s\n\n💡 Help: Most PHP statements should end with a semicolon (;).\nCorrect format: %s;",
-                                $line_number,
-                                $line_number,
-                                $line,
-                                $line
-                            )
-                        );
-                    }
-                }
             }
         }
         

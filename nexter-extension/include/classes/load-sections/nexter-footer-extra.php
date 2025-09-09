@@ -97,8 +97,24 @@ if( ! function_exists( 'nexter_footer_render_style' ) ) {
 				$sections_style= get_post_meta( $post_id, 'nxt-hooks-footer-style', true );
 				$smart_bgcolor= get_post_meta( $post_id, 'nxt-hooks-footer-smart-bgcolor', true );
 				if(!empty($smart_bgcolor) && !empty($sections_style) && $sections_style=='smart'){
+					$style['.smart-footer.off-preview #content.site-content']  = [
+						'transform' => 'scale(.93) translateY(30px)',
+					];
+					$style['.smart-footer #content.site-content']  = [
+						'transform-origin' => '50% bottom',
+						'transition' => 'all 0.5s cubic-bezier(0,0,.2,1)',
+						'overflow' => 'hidden',
+					];
 					$style['.smart-footer.off-preview']  = [
-						'background' => esc_attr($smart_bgcolor)
+						'background' => (!empty($smart_bgcolor) ? $smart_bgcolor : '#000'),
+					];
+				}else if(!empty($sections_style) && $sections_style=='fixed'){
+					$style['#nxt-footer.w-fixed']  = [
+						'position' => 'fixed',
+						'z-index' => 0,
+						'right' => 0,
+						'bottom' => 0,
+						'left' => 0,
 					];
 				}
 			}

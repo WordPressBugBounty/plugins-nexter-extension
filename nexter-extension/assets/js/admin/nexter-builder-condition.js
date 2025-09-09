@@ -375,6 +375,7 @@ class NexterBuilder {
                                             getbtnAction.insertAdjacentHTML('beforeend', '<div class="nxt-action-btn-wrap"><input type="hidden" name="action" value="nexter_ext_save_template" id="nxt_section_action" /><input type="hidden" name="nonce" value="'+NexterConfig.hiddennonce+'" /><button type="submit" class="temp-create-btn">Create</button></div>');
                                         }
                                         form.setAttribute('action', NexterConfig.adminPostUrl);
+                                        addToggle.parentElement.classList.remove('visible')
                                 }else{
                                     let btn_wrap = document.querySelector('.nxt-action-btn-wrap');
                                     if(btn_wrap){
@@ -412,6 +413,8 @@ class NexterBuilder {
                                         })
                                     }
                                 }else if((e.currentTarget.value == 'header' && headerSec) || (e.currentTarget.value == 'footer' && footerSec) || (e.currentTarget.value == 'hooks' && hooksSec)){
+                                    addToggle.parentElement.classList.remove('visible')
+                                }else if(addToggle.parentElement.classList.contains('visible')){
                                     addToggle.parentElement.classList.remove('visible')
                                 }
                                 if(headerSec){

@@ -480,7 +480,7 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
                 'nexter-extension',	// Your text domain
                 NEXTER_EXT_DIR . 'languages'
             );
-			// wp_enqueue_script( 'nxt-code-snippet', NEXTER_EXT_URL . 'code-snippets/build/index.js', array( 'react', 'react-dom', 'react-jsx-runtime', 'wp-dom-ready', 'wp-element','lodash' ), NEXTER_EXT_VER, true );
+			//wp_enqueue_script( 'nxt-code-snippet', NEXTER_EXT_URL . 'code-snippets/build/index.js', array( 'react', 'react-dom', 'react-jsx-runtime', 'wp-dom-ready', 'wp-element','lodash' ), NEXTER_EXT_VER, true );
 
 			if ( ! function_exists( 'get_editable_roles' ) ) {
 				require_once ABSPATH . 'wp-admin/includes/user.php';
@@ -506,6 +506,7 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 					'post_types' => $post_types_data,
 					'taxonomies' => $taxonomies_data,
 					'page_templates' => $page_templates_data,
+					'whiteLabel' => get_option('nexter_white_label'),
 					'isactivate' => (defined('NXT_PRO_EXT') && class_exists('Nexter_Pro_Ext_Activate')) ? Nexter_Pro_Ext_Activate::get_instance()->nexter_activate_status() : '',
 					'is_pro' => (defined('NXT_PRO_EXT')) ? true : false,
 					'ecommerce_plugins' => array(

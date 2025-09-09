@@ -127,10 +127,17 @@ if ( ! function_exists( 'nexter_header_transparent_sticky_classes' ) ) {
 function nexter_header_sticky_load_scripts() {
 	$sections = Nexter_Builder_Sections_Conditional::nexter_sections_condition_hooks( 'sections', 'header' );
 	
+	$transparent_display = false;
 	$sticky_display	= false;
 
 	if ( ! empty( $sections ) ) {
 		foreach ( $sections as $post_id ) {
+			// Check for Transparent Header
+			$transparent = get_post_meta( $post_id, 'nxt-transparent-header', true );
+			if ( ! empty( $transparent ) && $transparent == 'on' ) {
+				$transparent_display = true;
+			}
+			
 			// Check for Sticky Header
 			$sticky = get_post_meta( $post_id, 'nxt-normal-sticky-header', true );
 			if ( ! empty( $sticky ) && ( $sticky == 'sticky' || $sticky == 'both' ) ) {
@@ -139,7 +146,55 @@ function nexter_header_sticky_load_scripts() {
 		}
 	}
 
+	$header_css = '';
+	if ( $transparent_display ) {
+		$header_css .= '#nxt-header.nxt-trans-overlay {
+			position: absolute;
+			z-index: 10;
+			top: 0;
+			right: 0;
+			left: 0;
+			display: block;
+			width: 100%;
+		}
+		.admin-bar #nxt-header.nxt-trans-overlay {
+			top: 32px;
+		}';
+	}
 	if ( ! empty( $sticky_display ) ) {
+		$header_css .= '.nxt-stick-header-height {
+			position: relative;
+			display: block;
+			width: 100%;
+		}
+		#nxt-header.normal-fixed-sticky .nxt-normal-header {
+			position: fixed;
+			z-index: 10;
+			top: 0;
+			right: 0;
+			left: 0;
+			width: 100%;
+		}
+		#nxt-header .nxt-sticky-header {
+			position: fixed;
+			z-index: 10;
+			top: -100%;
+			right: 0;
+			left: 0;
+			width: 100%;
+			transition: all .7s ease-in-out;
+		}
+		#nxt-header.fixed-sticky .nxt-sticky-header {
+			top: 0;
+		}
+		.admin-bar #nxt-header.normal-fixed-sticky .nxt-normal-header, .admin-bar #nxt-header.fixed-sticky .nxt-sticky-header {
+			top: 32px;
+		}';
+
+		if(function_exists('nexter_minify_css_generate')){
+			wp_add_inline_style( 'nexter-style', nexter_minify_css_generate($header_css) );
+		}
+
 		wp_enqueue_script(
 			'nexter-ext-sticky',
 			NEXTER_EXT_URL . 'assets/js/main/nexter-sticky.min.js',
