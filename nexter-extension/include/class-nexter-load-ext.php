@@ -45,7 +45,10 @@ if ( ! class_exists( 'Nexter_Extensions_Load' ) ) {
 			}
 
 			if( !defined( 'NXT_PRO_EXT' ) && empty( get_option( 'nexter-ext-pro-load-notice' ) ) ) {
-				add_action( 'admin_notices', array( $this, 'nexter_extension_pro_load_notice' ) );
+				global $pagenow;
+				if(!empty( $pagenow ) && ! ( $pagenow == 'update.php' && isset($_GET['action']) && ($_GET['action'] === 'install-plugin' || $_GET['action'] === 'upgrade-plugin' ))){
+					add_action( 'admin_notices', array( $this, 'nexter_extension_pro_load_notice' ) );
+				}
 				add_action( 'wp_ajax_nexter_ext_pro_dismiss_notice', array( $this, 'nexter_ext_pro_dismiss_notice_ajax' ) );
 			}
 			add_action( 'wp_ajax_nexter_ext_dismiss_notice', array( $this, 'nexter_ext_dismiss_notice_data' ) );
@@ -197,17 +200,15 @@ if ( ! class_exists( 'Nexter_Extensions_Load' ) ) {
 		 * Template(Builder) Load
 		 */
 		public function nexter_builder_post_type() {
-			//if(defined('NXT_VERSION') || defined('HELLO_ELEMENTOR_VERSION') || defined('ASTRA_THEME_VERSION') || defined('GENERATE_VERSION') || defined('OCEANWP_THEME_VERSION') || defined('KADENCE_VERSION') || function_exists('blocksy_get_wp_theme') || defined('NEVE_VERSION')){
-				$template_uri = NEXTER_EXT_DIR . 'include/nexter-template/';
-				if ( ! post_type_exists( 'nxt_builder' ) ) {
-					require_once $template_uri . 'nexter-template-function.php';
-				}
-				
-				require_once $template_uri . 'template-import-export.php';
-				require_once $template_uri . 'nexter-builder-shortcode.php';
+			$template_uri = NEXTER_EXT_DIR . 'include/nexter-template/';
+			if ( ! post_type_exists( 'nxt_builder' ) ) {
+				require_once $template_uri . 'nexter-template-function.php';
+			}
+			
+			require_once $template_uri . 'template-import-export.php';
+			require_once $template_uri . 'nexter-builder-shortcode.php';
 
-				require_once NEXTER_EXT_DIR . 'include/custom-options/module/nexter-display-sections-hooks.php';
-			//}
+			require_once NEXTER_EXT_DIR . 'include/custom-options/module/nexter-display-sections-hooks.php';
 		}
 
 		/*

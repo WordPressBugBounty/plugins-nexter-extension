@@ -3,7 +3,7 @@ Contributors: posimyththemes, nirmalkavaiya, sagarpatel124
 Tags : security, elementor, theme-builder, pagespeed, code snippet
 Requires at least: 4.0
 Tested up to: 6.8.2
-Stable tag: 4.3.2
+Stable tag: 4.3.3
 Requires PHP: 5.6
 License: GPLv3
 License URI: https://opensource.org/licenses/GPL-3.0
@@ -384,7 +384,10 @@ https://patchstack.com/database/vdp/nexter-extension)
 
 ### View Complete List of Changelog from [here](https://roadmap.nexterwp.com/updates?filter=Nexter+Extension+-+FREE) 
 
-= 4.3.2 = 09 September 2025
+= 4.3.3 = 10 September 2025
+- Fixed : Theme Builder : Bug Fixed
+
+= 4.3.2 = 05 September 2025
 - Fixed : Code Snippet : Minor Bug Fixed and Improvements
 - Fixed : Theme Builder : Exclude Query Bug Fixed
 - Fixed : Minor Fixes and Improvements

@@ -260,7 +260,7 @@ if (!class_exists('Nexter_Builder_Hooks_Loader')) {
 												}
 											}elseif( str_contains($rule, 'child') || str_contains($rule, 'category') || str_contains($rule, 'tag') ){
 												$term = get_term( $item );
-												if ( ! is_wp_error( $term ) ) {
+												if ( $term && ! is_wp_error( $term ) && $term instanceof WP_Term ) {
 													$update_type[] = $term->name;
 												}else{
 													$update_type[] = $item;
@@ -441,6 +441,7 @@ if (!class_exists('Nexter_Builder_Hooks_Loader')) {
 				}
 
 				if (!empty($include_exclude) && !empty($specific_value) && is_array($specific_value)) {
+					$specific_value = array_filter($specific_value);
 					$output .= wp_kses_post('</br><strong>' . esc_html__('Specific', 'nexter-extension') . ' ' . ucwords($include_exclude) . ': </strong> ' . implode(', ', $specific_value));
 				}
 			}
