@@ -116,7 +116,16 @@ if ( ! class_exists( 'Nexter_Code_Snippets_Import_Data' ) ) {
 			}
 
 			// Prevent duplicate by title
-			$existing = get_page_by_title( $snippet['title'], OBJECT, self::$snippet_type );
+			$existing = get_posts( array(
+				'post_type'              => self::$snippet_type, 
+				'title'                  => $snippet['title'],
+				'post_status'            => 'any',               
+				'numberposts'            => 1,
+				'fields'                 => 'ids',               
+				'update_post_term_cache' => false,
+				'update_post_meta_cache' => false,
+			) );
+			
 			if ( $existing ) {
 				return;
 			}

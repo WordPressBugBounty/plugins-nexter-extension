@@ -93,7 +93,10 @@ class Nexter_Ext_Extra_Settings {
 				
 				$captcha_type = (isset($security_option['captcha-security']['values']['captcha_type']) && !empty($security_option['captcha-security']['values']['captcha_type'])) ? $security_option['captcha-security']['values']['captcha_type'] : 'google';
 
-				switch ($captcha_type) {
+				$reoption = $security_option['captcha-security']['values'];
+
+				if( ( $captcha_type == 'google' && ( isset($reoption['siteKey']) && !empty($reoption['siteKey'] ) ) && ( isset($reoption['secretKey']) && !empty($reoption['secretKey'] ) ) && ( ( isset($reoption['formType']) && !empty($reoption['formType']) ) ))  || ( $captcha_type == 'cloudflare' && ( isset($reoption['turnSiteKey']) && !empty($reoption['turnSiteKey'] ) ) && ( isset($reoption['turnSecretKey']) && !empty($reoption['turnSecretKey'] ) ) && ( ( isset($reoption['formType']) && !empty($reoption['formType']) ) ))){
+					switch ($captcha_type) {
 					case 'google':
 						require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-google-captcha.php';
 						break;
@@ -101,6 +104,7 @@ class Nexter_Ext_Extra_Settings {
 					case 'cloudflare':
 						require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-cloudflare-captcha.php';
 						break;
+					}
 				}
 			}
 		}
