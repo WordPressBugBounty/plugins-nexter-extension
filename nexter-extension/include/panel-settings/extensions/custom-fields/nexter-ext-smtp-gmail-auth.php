@@ -32,6 +32,7 @@ if (file_exists(NEXTER_EXT_DIR . 'vendor/autoload.php')) {
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 use League\OAuth2\Client\Provider\Google;
+use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use PHPMailer\PHPMailer\OAuth;
 
 // Configure WordPress to use SMTP with OAuth
@@ -68,10 +69,8 @@ add_action('phpmailer_init', function (PHPMailer $phpmailer) {
             'clientSecret' => $smtp['gsecret_key'],
         ]);
 
-        $accessToken = $provider->getAccessToken('refresh_token', [
-            'refresh_token' => $smtp['refresh_token'],
-        ]);
-
+        // PHPMailer's OAuth class will handle token refresh automatically
+        // No need to call getAccessToken() manually here
         $phpmailer->setOAuth(new \PHPMailer\PHPMailer\OAuth([
             'provider'     => $provider,
             'clientId'     => $smtp['gclient_id'],
@@ -82,6 +81,9 @@ add_action('phpmailer_init', function (PHPMailer $phpmailer) {
 
         $phpmailer->setFrom($smtp['email'], $smtp['name'] ?? get_bloginfo('name'));
 
+    } catch (IdentityProviderException $e) {
+        error_log('SMTP OAuth: IdentityProviderException - ' . $e->getMessage());
+        // Don't break email sending if OAuth fails - let PHPMailer handle it
     } catch (Exception $e) {
         error_log('SMTP OAuth: Exception - ' . $e->getMessage());
     }

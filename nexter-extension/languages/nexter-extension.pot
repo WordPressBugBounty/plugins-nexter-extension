@@ -1,24 +1,24 @@
-# Copyright (C) 2025 POSIMYTH
+# Copyright (C) 2026 POSIMYTH
 # This file is distributed under the GPLv3.
 msgid ""
 msgstr ""
-"Project-Id-Version: Nexter Extension 4.3.0\n"
+"Project-Id-Version: Nexter Extension 4.5.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/nexter-extension\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-09-01T10:00:08+00:00\n"
+"POT-Creation-Date: 2026-01-23T10:13:04+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.11.0\n"
+"X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: nexter-extension\n"
 
 #. Plugin Name of the plugin
 #: nexter-extension.php
-#: include/panel-settings/nexter-ext-panel-settings.php:616
-#: include/panel-settings/nexter-ext-panel-settings.php:619
 #: include/rollback.php:204
+#: assets/js/admin/index.js:1
+#: dashboard/build/index.js:1
 msgid "Nexter Extension"
 msgstr ""
 
@@ -42,190 +42,551 @@ msgstr ""
 msgid "https://posimyth.com"
 msgstr ""
 
-#: include/class-nexter-load-ext.php:142
+#: include/class-nexter-load-ext.php:161
+#: assets/js/admin/index.js:1
+#: dashboard/build/index.js:1
 msgid "Settings"
 msgstr ""
 
-#: include/class-nexter-load-ext.php:146
+#: include/class-nexter-load-ext.php:165
 #: dashboard/build/index.js:1
 msgid "Need Help?"
 msgstr ""
 
-#: include/class-nexter-load-ext.php:154
+#: include/class-nexter-load-ext.php:173
 #: assets/js/admin/index.js:1
 msgid "Upgrade PRO"
 msgstr ""
 
-#: include/class-nexter-load-ext.php:171
+#: include/class-nexter-load-ext.php:190
 msgid "Official Site"
 msgstr ""
 
-#: include/class-nexter-load-ext.php:172
+#: include/class-nexter-load-ext.php:191
 msgid "Docs"
 msgstr ""
 
-#: include/class-nexter-load-ext.php:173
+#: include/class-nexter-load-ext.php:192
 #: dashboard/build/index.js:1
 msgid "Join Community"
 msgstr ""
 
-#: include/class-nexter-load-ext.php:174
+#: include/class-nexter-load-ext.php:193
 #: dashboard/build/index.js:1
 msgid "What's New?"
 msgstr ""
 
-#: include/class-nexter-load-ext.php:175
+#: include/class-nexter-load-ext.php:194
 #: dashboard/build/index.js:1
 msgid "Request Feature"
 msgstr ""
 
-#: include/class-nexter-load-ext.php:176
+#: include/class-nexter-load-ext.php:195
 msgid "Rate Plugin"
 msgstr ""
 
-#: include/class-nexter-load-ext.php:469
+#: include/class-nexter-load-ext.php:482
+msgid "Upgrade to Nexter Pro to Unlock 1000+ Templates, 90+ Blocks & 50+ Extensions"
+msgstr ""
+
+#: include/class-nexter-load-ext.php:483
+msgid "A single suite to design faster, reduce plugins, and keep your site lightweight."
+msgstr ""
+
+#: include/class-nexter-load-ext.php:485
 msgid "Replace 50+ WordPress Plugins with Nexter Extension Pro"
 msgstr ""
 
-#: include/class-nexter-load-ext.php:470
+#: include/class-nexter-load-ext.php:486
 msgid "Nexter Extension free options cover the basics, but Pro takes it further with features like Login Protection, 2-Factor Authentication, Branded WP Admin & More."
 msgstr ""
 
-#: include/class-nexter-load-ext.php:471
+#: include/class-nexter-load-ext.php:495
 #: assets/js/admin/index.js:1
 #: dashboard/build/index.js:1
+#: theme-builder/build/index.js:1
 msgid "Upgrade Now"
 msgstr ""
 
-#: include/class-nexter-load-ext.php:472
+#: include/class-nexter-load-ext.php:496
 msgid "Compare Free vs Pro"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:304
-msgid "Nexter Snippets"
+#: include/class-nexter-load-ext.php:512
+msgid "To continue using all latest features smoothly, please update Nexter Blocks to version 4.6.0 or higher."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:350
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:369
 msgid "Failed to load HTML. Check syntax."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:622
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:558
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:616
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:665
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:871
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1282
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1572
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1621
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1821
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1929
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1984
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2052
+#: include/custom-options/nexter-builder-condition.php:504
+#: include/custom-options/nexter-builder-condition.php:740
+#: include/custom-options/nexter-builder-condition.php:873
+#: include/custom-options/nexter-builder-condition.php:1160
+#: include/custom-options/nexter-builder-condition.php:1221
+#: include/custom-options/nexter-builder-condition.php:1341
+#: include/custom-options/nexter-builder-condition.php:1384
+#: include/panel-settings/extensions/nexter-ext-image-sizes.php:49
+#: include/panel-settings/extensions/nexter-ext-local-google-font.php:374
+#: include/panel-settings/extensions/nexter-ext-post-duplicator.php:199
+#: include/panel-settings/extensions/nexter-ext-replace-url.php:21
+#: include/panel-settings/extensions/nexter-ext-replace-url.php:109
+#: include/panel-settings/extensions/nexter-ext-rollback-manager.php:190
+#: include/panel-settings/extensions/nexter-ext-svg-upload.php:329
+#: include/panel-settings/nexter-ext-panel-settings.php:1094
+#: include/panel-settings/nexter-ext-panel-settings.php:1111
+#: include/panel-settings/nexter-ext-panel-settings.php:1359
+#: include/panel-settings/nexter-ext-panel-settings.php:1463
+#: include/panel-settings/nexter-ext-panel-settings.php:1595
+#: include/panel-settings/nexter-ext-panel-settings.php:1633
+#: include/panel-settings/nexter-ext-panel-settings.php:1651
+msgid "Insufficient permissions."
+msgstr ""
+
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:651
 #: assets/js/admin/index.js:1
 msgid "Authors"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:730
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:777
 #: assets/js/admin/index.js:1
 msgid "Default Template"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-import-code-snippets.php:61
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:879
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1330
+msgid "Enter Name Snippet"
+msgstr ""
+
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:894
+msgid "File already exists. Please try a different name."
+msgstr ""
+
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:908
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1345
+msgid "Please remove <?php from the beginning of the code"
+msgstr ""
+
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:920
+msgid "Failed to create snippet file."
+msgstr ""
+
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:934
+msgid "Snippet Created Successfully."
+msgstr ""
+
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:942
+msgid "Missing required fields."
+msgstr ""
+
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1159
+msgid "Snippet has been disabled for safety"
+msgstr ""
+
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1161
+msgid "Check the line numbers and suggestions above. Snippet is disabled until fixed."
+msgstr ""
+
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1317
+msgid "Storage directory not available."
+msgstr ""
+
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1323
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1968
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2037
+msgid "Snippet ID does not exist."
+msgstr ""
+
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1355
+msgid "Snippet Updated Successfully."
+msgstr ""
+
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1357
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2034
+msgid "Failed to update snippet file."
+msgstr ""
+
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1360
+msgid "File-based storage not available"
+msgstr ""
+
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1363
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1972
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1975
+msgid "Invalid Snippet ID"
+msgstr ""
+
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1640
+msgid "Invalid snippet ID."
+msgstr ""
+
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1718
+msgid "No valid snippets found to export."
+msgstr ""
+
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1761
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1865
+msgid "Unknown snippet"
+msgstr ""
+
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1765
+msgid "Snippet name is required"
+msgstr ""
+
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1770
+msgid "Untitled snippet"
+msgstr ""
+
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1779
+msgid "File based storage not available"
+msgstr ""
+
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1784
+msgid "Storage directory not available"
+msgstr ""
+
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1826
+msgid "No file uploaded or file upload error."
+msgstr ""
+
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1833
+msgid "Empty or unreadable file."
+msgstr ""
+
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1839
+msgid "Invalid snippet file."
+msgstr ""
+
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1882
+msgid "No snippets were imported."
+msgstr ""
+
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1889
+msgid "Snippet imported successfully."
+msgstr ""
+
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1892
+#, php-format
+msgid "%d snippet imported successfully."
+msgid_plural "%d snippets imported successfully."
+msgstr[0] ""
+msgstr[1] ""
+
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1902
+#, php-format
+msgid "%d snippet failed."
+msgid_plural "%d snippets failed."
+msgstr[0] ""
+msgstr[1] ""
+
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1943
+msgid "Snippet deleted successfully"
+msgstr ""
+
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1945
+msgid "Failed to delete Snippet"
+msgstr ""
+
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1948
+msgid "You do not have permission to delete this snippet"
+msgstr ""
+
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1951
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2001
+msgid "Invalid post or post type"
+msgstr ""
+
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1966
+msgid "Snippet deleted successfully."
+msgstr ""
+
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1999
+msgid "Updated Status Successfully"
+msgstr ""
+
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2032
+msgid "Updated Status Successfully."
+msgstr ""
+
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2040
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2043
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2123
+msgid "Invalid post ID"
+msgstr ""
+
+#: include/classes/load-code-snippet/nexter-import-code-snippets.php:190
 msgid "Disable Emojis for Faster Loading"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-import-code-snippets.php:65
+#: include/classes/load-code-snippet/nexter-import-code-snippets.php:194
 msgid "Disable WordPress emoji scripts to improve page speed."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-import-code-snippets.php:69
+#: include/classes/load-code-snippet/nexter-import-code-snippets.php:198
 msgid "Add Google Analytics Tracking Code"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-import-code-snippets.php:73
+#: include/classes/load-code-snippet/nexter-import-code-snippets.php:202
 msgid "Insert Google Analytics script directly without extra plugins."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-import-code-snippets.php:77
+#: include/classes/load-code-snippet/nexter-import-code-snippets.php:206
 msgid "Limit Post Revisions to Optimize Database"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-import-code-snippets.php:81
+#: include/classes/load-code-snippet/nexter-import-code-snippets.php:210
 msgid "Restrict number of saved post revisions to reduce database size."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-import-code-snippets.php:85
+#: include/classes/load-code-snippet/nexter-import-code-snippets.php:214
 msgid "Customize Login Logo Link URL"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-import-code-snippets.php:89
+#: include/classes/load-code-snippet/nexter-import-code-snippets.php:218
 msgid "Change WordPress login logo URL to your site homepage."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-import-code-snippets.php:93
+#: include/classes/load-code-snippet/nexter-import-code-snippets.php:222
 msgid "Disable Gutenberg Editor (Use Classic Editor)"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-import-code-snippets.php:97
+#: include/classes/load-code-snippet/nexter-import-code-snippets.php:226
 msgid "Disable Gutenberg block editor and enable classic editor experience."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-php-snippet-validator-loopback.php:26
-#: include/panel-settings/extensions/nexter-ext-replace-url.php:52
-#: include/panel-settings/extensions/nexter-ext-replace-url.php:102
-msgid "Only Admin can run this."
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:49
+msgid "Dangerous code detected."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-php-snippet-validator-loopback.php:34
-msgid "Undefined Content ID"
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:51
+msgid "Permission Violation: File operations on restricted directories are not allowed."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-php-snippet-validator-loopback.php:87
-msgid "Unable to communicate back with site to check for fatal errors, so the PHP change was reverted. You will need to upload your PHP file change by some other means, such as by using SFTP."
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:53
+msgid "Infinite loop detected in code."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-php-snippet-validator-loopback.php:102
-msgid "Something went wrong."
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:106
+#, php-format
+msgid "Parse error: %s on line %d"
+msgstr ""
+
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:119
+#, php-format
+msgid "Exception: %s on line %d"
+msgstr ""
+
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:127
+#, php-format
+msgid "Fatal error: %s on line %d"
+msgstr ""
+
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:466
+#, php-format
+msgid "Functions already exist: %s"
+msgstr ""
+
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:503
+msgid "Empty code provided"
+msgstr ""
+
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:504
+msgid "No PHP code provided"
+msgstr ""
+
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:518
+#, php-format
+msgid "Syntax error detected: %s"
+msgstr ""
+
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:529
+#, php-format
+msgid "Execution error detected: %s"
+msgstr ""
+
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:676
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:687
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:712
+#, php-format
+msgid "Syntax Error: Unknown function '%s' on line %d"
+msgstr ""
+
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:761
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:772
+#, php-format
+msgid "Syntax Error: Unterminated string on line %d"
+msgstr ""
+
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:794
+#, php-format
+msgid "Syntax Error: Unexpected identifier on line %d"
+msgstr ""
+
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:829
+msgid "Unknown syntax error"
+msgstr ""
+
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:880
+msgid "CPU-intensive busy-wait loop detected"
+msgstr ""
+
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:886
+msgid "Infinite loop detected"
+msgstr ""
+
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:897
+#, php-format
+msgid "Recursive hook detected: %s"
+msgstr ""
+
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:987
+msgid "Headers already sent error detected"
+msgstr ""
+
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:1000
+msgid "Code execution timeout"
+msgstr ""
+
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:1068
+#, php-format
+msgid "Runtime Exception on line %d: %s"
+msgstr ""
+
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:1236
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:1244
+msgid "Warning"
+msgstr ""
+
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:1238
+msgid "Fatal Error"
+msgstr ""
+
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:1240
+msgid "Exception"
+msgstr ""
+
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:1242
+#: assets/js/admin/index.js:1
+msgid "Notice"
+msgstr ""
+
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:1248
+#, php-format
+msgid "%s on line %d: %s"
+msgstr ""
+
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:1250
+msgid "unknown"
+msgstr ""
+
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:1259
+#, php-format
+msgid "Found %d execution error:"
+msgid_plural "Found %d execution errors:"
+msgstr[0] ""
+msgstr[1] ""
+
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:1283
+#, php-format
+msgid "Parse Error on line %d: %s"
+msgstr ""
+
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:1300
+#, php-format
+msgid "Fatal Error on line %d: %s"
+msgstr ""
+
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:1441
+#, php-format
+msgid "Output on line %d ('%s') appears before redirect/header call on line %d ('%s')"
+msgstr ""
+
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:1460
+#, php-format
+msgid "Syntax Error on line %d: %s"
+msgstr ""
+
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:1480
+#, php-format
+msgid "Found %d syntax error:"
+msgid_plural "Found %d syntax errors:"
+msgstr[0] ""
+msgstr[1] ""
+
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:1487
+#, php-format
+msgid "Line %d: %s"
 msgstr ""
 
 #: include/classes/load-sections/nexter-sections-loader.php:113
-#: include/classes/load-sections/nexter-sections-loader.php:253
-#: include/classes/load-sections/nexter-sections-loader.php:286
-#: include/custom-options/module/nexter-display-archives-rules.php:62
-#: include/custom-options/module/nexter-display-archives-rules.php:306
-#: include/custom-options/module/nexter-display-archives-rules.php:315
-#: include/custom-options/module/nexter-display-archives-rules.php:342
-#: include/custom-options/module/nexter-display-archives-rules.php:346
-#: include/custom-options/module/nexter-display-singular-rules.php:91
-#: include/custom-options/nexter-builder-condition.php:932
-#: include/custom-options/nexter-builder-condition.php:997
-#: include/custom-options/nexter-builder-condition.php:1045
-#: include/custom-options/nexter-builder-condition.php:1057
-#: include/custom-options/nexter-builder-condition.php:1637
-#: include/custom-options/nexter-builder-condition.php:1646
-#: include/custom-options/nexter-builder-condition.php:1669
-#: include/custom-options/nexter-builder-condition.php:1673
+#: include/classes/load-sections/nexter-sections-loader.php:252
+#: include/classes/load-sections/nexter-sections-loader.php:285
+#: include/custom-options/module/nexter-display-archives-rules.php:66
+#: include/custom-options/module/nexter-display-archives-rules.php:309
+#: include/custom-options/module/nexter-display-archives-rules.php:318
+#: include/custom-options/module/nexter-display-archives-rules.php:345
+#: include/custom-options/module/nexter-display-archives-rules.php:349
+#: include/custom-options/module/nexter-display-singular-rules.php:95
+#: include/custom-options/nexter-builder-condition.php:1072
+#: include/custom-options/nexter-builder-condition.php:1137
+#: include/custom-options/nexter-builder-condition.php:1185
+#: include/custom-options/nexter-builder-condition.php:1197
+#: include/custom-options/nexter-builder-condition.php:1826
+#: include/custom-options/nexter-builder-condition.php:1835
+#: include/custom-options/nexter-builder-condition.php:1858
+#: include/custom-options/nexter-builder-condition.php:1862
+#: dashboard/build/index.js:1
 msgid "All"
 msgstr ""
 
 #: include/classes/load-sections/nexter-sections-loader.php:116
-#: include/custom-options/nexter-builder-condition.php:376
+#: include/custom-options/nexter-builder-condition.php:516
 msgid "Sections"
 msgstr ""
 
 #: include/classes/load-sections/nexter-sections-loader.php:117
 #: include/classes/load-sections/nexter-sections-loader.php:187
 #: include/classes/third-party/class-beaver-build-theme.php:85
-#: include/custom-options/nexter-builder-condition.php:372
+#: include/custom-options/nexter-builder-condition.php:112
+#: include/custom-options/nexter-builder-condition.php:512
+#: theme-builder/build/index.js:1
 msgid "Header"
 msgstr ""
 
 #: include/classes/load-sections/nexter-sections-loader.php:118
 #: include/classes/load-sections/nexter-sections-loader.php:189
 #: include/classes/third-party/class-beaver-build-theme.php:113
-#: include/custom-options/nexter-builder-condition.php:373
+#: include/custom-options/nexter-builder-condition.php:114
+#: include/custom-options/nexter-builder-condition.php:513
 #: dashboard/build/index.js:1
+#: theme-builder/build/index.js:1
 msgid "Footer"
 msgstr ""
 
 #: include/classes/load-sections/nexter-sections-loader.php:119
 #: include/classes/load-sections/nexter-sections-loader.php:191
-#: include/custom-options/nexter-builder-condition.php:374
+#: include/custom-options/nexter-builder-condition.php:116
+#: include/custom-options/nexter-builder-condition.php:514
 msgid "Breadcrumb"
 msgstr ""
 
 #: include/classes/load-sections/nexter-sections-loader.php:120
 #: include/classes/load-sections/nexter-sections-loader.php:193
-#: include/custom-options/nexter-builder-condition.php:375
+#: include/custom-options/nexter-builder-condition.php:118
+#: include/custom-options/nexter-builder-condition.php:515
+#: theme-builder/build/index.js:1
 msgid "Hooks"
 msgstr ""
 
@@ -235,6 +596,7 @@ msgstr ""
 
 #: include/classes/load-sections/nexter-sections-loader.php:122
 #: include/classes/load-sections/nexter-sections-loader.php:197
+#: include/custom-options/nexter-builder-condition.php:122
 #: assets/js/admin/index.js:1
 msgid "Archive"
 msgstr ""
@@ -244,7 +606,7 @@ msgid "404"
 msgstr ""
 
 #: include/classes/load-sections/nexter-sections-loader.php:150
-#: include/custom-options/nexter-builder-condition.php:488
+#: include/custom-options/nexter-builder-condition.php:628
 #: assets/js/admin/index.js:1
 #: dashboard/build/index.js:1
 msgid "Type"
@@ -269,74 +631,72 @@ msgid "Status"
 msgstr ""
 
 #: include/classes/load-sections/nexter-sections-loader.php:181
+#: include/custom-options/nexter-builder-condition.php:105
 msgid "Snippet : "
 msgstr ""
 
 #: include/classes/load-sections/nexter-sections-loader.php:184
 #: include/classes/load-sections/nexter-sections-loader.php:203
 #: include/classes/load-sections/nexter-sections-loader.php:225
-#: include/classes/load-sections/nexter-sections-loader.php:316
-#: include/classes/load-sections/nexter-sections-loader.php:319
-#: include/classes/load-sections/nexter-sections-loader.php:333
-#: include/classes/load-sections/nexter-sections-loader.php:357
-#: include/panel-settings/nexter-ext-panel-settings.php:1243
+#: include/classes/load-sections/nexter-sections-loader.php:315
+#: include/classes/load-sections/nexter-sections-loader.php:318
+#: include/classes/load-sections/nexter-sections-loader.php:332
+#: include/classes/load-sections/nexter-sections-loader.php:356
+#: include/custom-options/nexter-builder-condition.php:108
+#: include/custom-options/nexter-builder-condition.php:128
+#: include/panel-settings/nexter-ext-panel-settings.php:1479
 #: dashboard/build/index.js:1
 msgid "None"
 msgstr ""
 
 #: include/classes/load-sections/nexter-sections-loader.php:195
 #: include/classes/third-party/class-nexter-builder-documents.php:108
-#: include/custom-options/nexter-builder-condition.php:379
+#: include/custom-options/nexter-builder-condition.php:120
+#: include/custom-options/nexter-builder-condition.php:519
 #: assets/js/admin/index.js:1
 msgid "Singular"
 msgstr ""
 
 #: include/classes/load-sections/nexter-sections-loader.php:199
 #: include/custom-options/module/nexter-display-conditional-rules.php:154
-#: include/custom-options/nexter-builder-condition.php:381
-#: include/custom-options/nexter-builder-condition.php:1285
+#: include/custom-options/nexter-builder-condition.php:124
+#: include/custom-options/nexter-builder-condition.php:521
+#: include/custom-options/nexter-builder-condition.php:1475
 #: assets/js/admin/index.js:1
 #: dashboard/build/index.js:1
+#: theme-builder/build/index.js:1
 msgid "404 Page"
 msgstr ""
 
 #: include/classes/load-sections/nexter-sections-loader.php:201
+#: include/custom-options/nexter-builder-condition.php:126
+#: theme-builder/build/index.js:1
 msgid "Section"
 msgstr ""
 
-#: include/classes/load-sections/nexter-sections-loader.php:280
-#: include/classes/load-sections/nexter-sections-loader.php:392
+#: include/classes/load-sections/nexter-sections-loader.php:279
+#: include/classes/load-sections/nexter-sections-loader.php:391
 msgid "Display :"
 msgstr ""
 
-#: include/classes/load-sections/nexter-sections-loader.php:283
-#: include/classes/load-sections/nexter-sections-loader.php:287
+#: include/classes/load-sections/nexter-sections-loader.php:282
+#: include/classes/load-sections/nexter-sections-loader.php:286
 msgid "Rule :"
 msgstr ""
 
-#: include/classes/load-sections/nexter-sections-loader.php:291
+#: include/classes/load-sections/nexter-sections-loader.php:290
 msgid "Type :"
 msgstr ""
 
-#: include/classes/load-sections/nexter-sections-loader.php:306
+#: include/classes/load-sections/nexter-sections-loader.php:305
 msgid "Hooks : "
 msgstr ""
 
-#: include/classes/load-sections/nexter-sections-loader.php:313
+#: include/classes/load-sections/nexter-sections-loader.php:312
 msgid "Actions : "
 msgstr ""
 
-#: include/classes/load-sections/nexter-sections-loader.php:338
-#: include/panel-settings/nexter-ext-panel-settings.php:1248
-msgid "sections"
-msgstr ""
-
-#: include/classes/load-sections/nexter-sections-loader.php:340
-#: include/panel-settings/nexter-ext-panel-settings.php:1250
-msgid "pages"
-msgstr ""
-
-#: include/classes/load-sections/nexter-sections-loader.php:400
+#: include/classes/load-sections/nexter-sections-loader.php:399
 msgid "Exclusion :"
 msgstr ""
 
@@ -344,11 +704,11 @@ msgstr ""
 msgid "Specific"
 msgstr ""
 
-#: include/classes/nexter-class-load.php:119
+#: include/classes/nexter-class-load.php:118
 msgid "Template List"
 msgstr ""
 
-#: include/classes/nexter-class-load.php:127
+#: include/classes/nexter-class-load.php:126
 msgid "Snippets List"
 msgstr ""
 
@@ -386,6 +746,7 @@ msgstr ""
 
 #: include/classes/third-party/class-beaver-build-theme.php:92
 #: include/classes/third-party/class-beaver-build-theme.php:99
+#: assets/js/admin/index.js:1
 msgid "Content"
 msgstr ""
 
@@ -462,7 +823,7 @@ msgid "Comments After"
 msgstr ""
 
 #: include/classes/third-party/class-nexter-builder-documents.php:114
-#: include/custom-options/nexter-builder-condition.php:380
+#: include/custom-options/nexter-builder-condition.php:520
 msgid "Archives"
 msgstr ""
 
@@ -474,31 +835,34 @@ msgstr ""
 msgid "Nexter Singular Template"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-archives-rules.php:111
-#: include/custom-options/module/nexter-display-singular-archives-rules.php:60
+#: include/custom-options/module/nexter-display-archives-rules.php:115
+#: include/custom-options/module/nexter-display-singular-archives-rules.php:62
 msgid "Empty Data"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-archives-rules.php:363
+#: include/custom-options/module/nexter-display-archives-rules.php:366
 #: include/custom-options/module/nexter-display-conditional-rules.php:143
-#: include/custom-options/nexter-builder-condition.php:1276
+#: include/custom-options/nexter-builder-condition.php:1466
 msgid "All Archives"
 msgstr ""
 
 #. translators: %s: Archive
-#: include/custom-options/module/nexter-display-archives-rules.php:413
+#: include/custom-options/module/nexter-display-archives-rules.php:416
+#, php-format
 msgid "Default %s Archive"
 msgstr ""
 
 #. translators: %s: Taxonomy Label
-#: include/custom-options/module/nexter-display-archives-rules.php:532
+#: include/custom-options/module/nexter-display-archives-rules.php:535
+#, php-format
 msgid "%1$s : First Child %2$s"
 msgstr ""
 
 #. translators: %s: Taxonomy Label
 #. translators: %s: Taxonomy terms
-#: include/custom-options/module/nexter-display-archives-rules.php:567
-#: include/custom-options/module/nexter-display-singular-archives-rules.php:314
+#: include/custom-options/module/nexter-display-archives-rules.php:570
+#: include/custom-options/module/nexter-display-singular-archives-rules.php:316
+#, php-format
 msgid "%1$s : Child %2$s"
 msgstr ""
 
@@ -507,51 +871,51 @@ msgid "Standard"
 msgstr ""
 
 #: include/custom-options/module/nexter-display-conditional-rules.php:141
-#: include/custom-options/nexter-builder-condition.php:1274
+#: include/custom-options/nexter-builder-condition.php:1464
 #: assets/js/admin/index.js:1
 msgid "Entire Website"
 msgstr ""
 
 #: include/custom-options/module/nexter-display-conditional-rules.php:142
-#: include/custom-options/nexter-builder-condition.php:1275
+#: include/custom-options/nexter-builder-condition.php:1465
 msgid "All Singulars"
 msgstr ""
 
 #: include/custom-options/module/nexter-display-conditional-rules.php:149
-#: include/custom-options/module/nexter-display-singular-rules.php:206
-#: include/custom-options/module/nexter-display-singular-rules.php:207
-#: include/custom-options/module/nexter-display-singular-rules.php:310
-#: include/custom-options/nexter-builder-condition.php:1280
+#: include/custom-options/module/nexter-display-singular-rules.php:221
+#: include/custom-options/module/nexter-display-singular-rules.php:222
+#: include/custom-options/module/nexter-display-singular-rules.php:325
+#: include/custom-options/nexter-builder-condition.php:1470
 #: assets/js/admin/index.js:1
 msgid "Front Page"
 msgstr ""
 
 #: include/custom-options/module/nexter-display-conditional-rules.php:150
-#: include/custom-options/nexter-builder-condition.php:1281
+#: include/custom-options/nexter-builder-condition.php:1471
 msgid "Blog / Posts Page"
 msgstr ""
 
 #: include/custom-options/module/nexter-display-conditional-rules.php:151
-#: include/custom-options/module/nexter-display-singular-archives-rules.php:413
-#: include/custom-options/nexter-builder-condition.php:1282
+#: include/custom-options/module/nexter-display-singular-archives-rules.php:415
+#: include/custom-options/nexter-builder-condition.php:1472
 #: assets/js/admin/index.js:1
 msgid "Date Archive"
 msgstr ""
 
 #: include/custom-options/module/nexter-display-conditional-rules.php:152
-#: include/custom-options/module/nexter-display-singular-archives-rules.php:380
-#: include/custom-options/nexter-builder-condition.php:1283
+#: include/custom-options/module/nexter-display-singular-archives-rules.php:382
+#: include/custom-options/nexter-builder-condition.php:1473
 msgid "Author Archive"
 msgstr ""
 
 #: include/custom-options/module/nexter-display-conditional-rules.php:153
-#: include/custom-options/nexter-builder-condition.php:1284
+#: include/custom-options/nexter-builder-condition.php:1474
 #: assets/js/admin/index.js:1
 msgid "Search Page"
 msgstr ""
 
 #: include/custom-options/module/nexter-display-conditional-rules.php:158
-#: include/custom-options/nexter-builder-condition.php:1288
+#: include/custom-options/nexter-builder-condition.php:1478
 msgid "WooCommerce Shop Page"
 msgstr ""
 
@@ -564,7 +928,7 @@ msgid "Date & Time"
 msgstr ""
 
 #: include/custom-options/module/nexter-display-conditional-rules.php:170
-#: include/custom-options/nexter-builder-condition.php:1292
+#: include/custom-options/nexter-builder-condition.php:1482
 msgid "Day of Week"
 msgstr ""
 
@@ -573,22 +937,22 @@ msgid "Visitors Source"
 msgstr ""
 
 #: include/custom-options/module/nexter-display-conditional-rules.php:176
-#: include/custom-options/nexter-builder-condition.php:1296
+#: include/custom-options/nexter-builder-condition.php:1486
 msgid "Operating System"
 msgstr ""
 
 #: include/custom-options/module/nexter-display-conditional-rules.php:177
-#: include/custom-options/nexter-builder-condition.php:1297
+#: include/custom-options/nexter-builder-condition.php:1487
 msgid "Browser"
 msgstr ""
 
 #: include/custom-options/module/nexter-display-conditional-rules.php:178
-#: include/custom-options/nexter-builder-condition.php:1298
+#: include/custom-options/nexter-builder-condition.php:1488
 msgid "Login Status"
 msgstr ""
 
 #: include/custom-options/module/nexter-display-conditional-rules.php:179
-#: include/custom-options/nexter-builder-condition.php:1299
+#: include/custom-options/nexter-builder-condition.php:1489
 msgid "User Roles"
 msgstr ""
 
@@ -597,13 +961,14 @@ msgid "Particular Posts/Pages/Taxonomies"
 msgstr ""
 
 #: include/custom-options/module/nexter-display-conditional-rules.php:225
-#: include/custom-options/nexter-builder-condition.php:1303
+#: include/custom-options/nexter-builder-condition.php:1493
 msgid "Particular Posts / Pages / Taxonomies, etc."
 msgstr ""
 
 #. translators: %s: Post Label
 #: include/custom-options/module/nexter-display-conditional-rules.php:247
-#: include/custom-options/nexter-builder-condition.php:1247
+#: include/custom-options/nexter-builder-condition.php:1437
+#, php-format
 msgid "All %s"
 msgstr ""
 
@@ -611,8 +976,9 @@ msgstr ""
 #. translators: %s: Taxonomy Label
 #: include/custom-options/module/nexter-display-conditional-rules.php:251
 #: include/custom-options/module/nexter-display-conditional-rules.php:258
-#: include/custom-options/nexter-builder-condition.php:1251
-#: include/custom-options/nexter-builder-condition.php:1258
+#: include/custom-options/nexter-builder-condition.php:1441
+#: include/custom-options/nexter-builder-condition.php:1448
+#, php-format
 msgid "All %s Archive"
 msgstr ""
 
@@ -1247,422 +1613,411 @@ msgstr ""
 msgid "After Cart"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:1772
+#: include/custom-options/module/nexter-display-conditional-rules.php:1773
 msgid " archive page"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:1777
+#: include/custom-options/module/nexter-display-conditional-rules.php:1778
 msgid "All singulars  "
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:1832
-#: include/custom-options/nexter-builder-condition.php:1372
+#: include/custom-options/module/nexter-display-conditional-rules.php:1833
+#: include/custom-options/nexter-builder-condition.php:1562
 #: assets/js/admin/index.js:1
 msgid "Monday"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:1833
-#: include/custom-options/nexter-builder-condition.php:1373
+#: include/custom-options/module/nexter-display-conditional-rules.php:1834
+#: include/custom-options/nexter-builder-condition.php:1563
 #: assets/js/admin/index.js:1
 msgid "Tuesday"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:1834
-#: include/custom-options/nexter-builder-condition.php:1374
+#: include/custom-options/module/nexter-display-conditional-rules.php:1835
+#: include/custom-options/nexter-builder-condition.php:1564
 #: assets/js/admin/index.js:1
 msgid "Wednesday"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:1835
-#: include/custom-options/nexter-builder-condition.php:1375
+#: include/custom-options/module/nexter-display-conditional-rules.php:1836
+#: include/custom-options/nexter-builder-condition.php:1565
 #: assets/js/admin/index.js:1
 msgid "Thursday"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:1836
-#: include/custom-options/nexter-builder-condition.php:1376
+#: include/custom-options/module/nexter-display-conditional-rules.php:1837
+#: include/custom-options/nexter-builder-condition.php:1566
 #: assets/js/admin/index.js:1
 msgid "Friday"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:1837
-#: include/custom-options/nexter-builder-condition.php:1377
+#: include/custom-options/module/nexter-display-conditional-rules.php:1838
+#: include/custom-options/nexter-builder-condition.php:1567
 #: assets/js/admin/index.js:1
 msgid "Saturday"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:1838
-#: include/custom-options/nexter-builder-condition.php:1378
+#: include/custom-options/module/nexter-display-conditional-rules.php:1839
+#: include/custom-options/nexter-builder-condition.php:1568
 #: assets/js/admin/index.js:1
 msgid "Sunday"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:1843
+#: include/custom-options/module/nexter-display-conditional-rules.php:1844
 #: assets/js/admin/index.js:1
 msgid "iPhone"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:1844
-#: include/custom-options/nexter-builder-condition.php:1381
+#: include/custom-options/module/nexter-display-conditional-rules.php:1845
+#: include/custom-options/nexter-builder-condition.php:1571
 #: assets/js/admin/index.js:1
 msgid "Windows"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:1845
-#: include/custom-options/nexter-builder-condition.php:1382
+#: include/custom-options/module/nexter-display-conditional-rules.php:1846
+#: include/custom-options/nexter-builder-condition.php:1572
 #: assets/js/admin/index.js:1
 msgid "OpenBSD"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:1846
-#: include/custom-options/nexter-builder-condition.php:1383
+#: include/custom-options/module/nexter-display-conditional-rules.php:1847
+#: include/custom-options/nexter-builder-condition.php:1573
 #: assets/js/admin/index.js:1
 msgid "SunOS"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:1847
-#: include/custom-options/nexter-builder-condition.php:1384
+#: include/custom-options/module/nexter-display-conditional-rules.php:1848
+#: include/custom-options/nexter-builder-condition.php:1574
 #: assets/js/admin/index.js:1
 msgid "Linux"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:1848
-#: include/custom-options/module/nexter-display-conditional-rules.php:1863
-#: include/custom-options/nexter-builder-condition.php:1385
-#: include/custom-options/nexter-builder-condition.php:1398
+#: include/custom-options/module/nexter-display-conditional-rules.php:1849
+#: include/custom-options/module/nexter-display-conditional-rules.php:1864
+#: include/custom-options/nexter-builder-condition.php:1575
+#: include/custom-options/nexter-builder-condition.php:1588
 #: assets/js/admin/index.js:1
 msgid "Safari"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:1849
-#: include/custom-options/nexter-builder-condition.php:1386
+#: include/custom-options/module/nexter-display-conditional-rules.php:1850
+#: include/custom-options/nexter-builder-condition.php:1576
 #: assets/js/admin/index.js:1
 msgid "Mac OS"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:1850
-#: include/custom-options/nexter-builder-condition.php:1387
+#: include/custom-options/module/nexter-display-conditional-rules.php:1851
+#: include/custom-options/nexter-builder-condition.php:1577
 #: assets/js/admin/index.js:1
 msgid "QNX"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:1851
-#: include/custom-options/nexter-builder-condition.php:1388
+#: include/custom-options/module/nexter-display-conditional-rules.php:1852
+#: include/custom-options/nexter-builder-condition.php:1578
 #: assets/js/admin/index.js:1
 msgid "BeOS"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:1852
-#: include/custom-options/nexter-builder-condition.php:1389
+#: include/custom-options/module/nexter-display-conditional-rules.php:1853
+#: include/custom-options/nexter-builder-condition.php:1579
 #: assets/js/admin/index.js:1
 msgid "OS/2"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:1853
-#: include/custom-options/nexter-builder-condition.php:1390
+#: include/custom-options/module/nexter-display-conditional-rules.php:1854
+#: include/custom-options/nexter-builder-condition.php:1580
 #: assets/js/admin/index.js:1
 msgid "Search Bot"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:1858
-#: include/custom-options/nexter-builder-condition.php:1393
+#: include/custom-options/module/nexter-display-conditional-rules.php:1859
+#: include/custom-options/nexter-builder-condition.php:1583
 #: assets/js/admin/index.js:1
 msgid "Internet Explorer"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:1859
-#: include/custom-options/nexter-builder-condition.php:1394
+#: include/custom-options/module/nexter-display-conditional-rules.php:1860
+#: include/custom-options/nexter-builder-condition.php:1584
 #: assets/js/admin/index.js:1
 msgid "Mozilla Firefox"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:1860
-#: include/custom-options/nexter-builder-condition.php:1395
+#: include/custom-options/module/nexter-display-conditional-rules.php:1861
+#: include/custom-options/nexter-builder-condition.php:1585
 #: assets/js/admin/index.js:1
 msgid "Google Chrome"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:1861
-#: include/custom-options/nexter-builder-condition.php:1396
+#: include/custom-options/module/nexter-display-conditional-rules.php:1862
+#: include/custom-options/nexter-builder-condition.php:1586
 #: assets/js/admin/index.js:1
 msgid "Opera Mini"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:1862
-#: include/custom-options/nexter-builder-condition.php:1397
+#: include/custom-options/module/nexter-display-conditional-rules.php:1863
+#: include/custom-options/nexter-builder-condition.php:1587
 #: assets/js/admin/index.js:1
 msgid "Opera"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:1868
-#: include/custom-options/nexter-builder-condition.php:1401
+#: include/custom-options/module/nexter-display-conditional-rules.php:1869
+#: include/custom-options/nexter-builder-condition.php:1591
 #: assets/js/admin/index.js:1
 msgid "Logged In"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:1869
-#: include/custom-options/nexter-builder-condition.php:1402
+#: include/custom-options/module/nexter-display-conditional-rules.php:1870
+#: include/custom-options/nexter-builder-condition.php:1592
 #: assets/js/admin/index.js:1
 msgid "Logged Out"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:3483
-#: include/custom-options/nexter-builder-condition.php:1575
+#: include/custom-options/module/nexter-display-conditional-rules.php:3492
+#: include/custom-options/nexter-builder-condition.php:1764
 msgid "---Select---"
 msgstr ""
 
 #. translators: %s: Taxonomy Label
-#: include/custom-options/module/nexter-display-singular-archives-rules.php:267
+#: include/custom-options/module/nexter-display-singular-archives-rules.php:269
+#, php-format
 msgid "%1$s : %2$s"
 msgstr ""
 
 #. translators: %s: By Author
-#: include/custom-options/module/nexter-display-singular-archives-rules.php:346
+#: include/custom-options/module/nexter-display-singular-archives-rules.php:348
+#, php-format
 msgid "%s : By Author"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-singular-archives-rules.php:445
+#: include/custom-options/module/nexter-display-singular-archives-rules.php:447
 msgid "Search Results"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-singular-rules.php:216
+#: include/custom-options/module/nexter-display-singular-rules.php:231
 msgid "All "
 msgstr ""
 
-#: include/custom-options/nexter-builder-condition.php:48
-#: include/custom-options/nexter-builder-condition.php:195
-#: include/custom-options/nexter-builder-condition.php:306
+#: include/custom-options/nexter-builder-condition.php:191
+#: include/custom-options/nexter-builder-condition.php:338
+#: include/custom-options/nexter-builder-condition.php:449
 msgid "Nonce verification failed"
 msgstr ""
 
-#: include/custom-options/nexter-builder-condition.php:51
-#: include/custom-options/nexter-builder-condition.php:198
-#: include/custom-options/nexter-builder-condition.php:309
+#: include/custom-options/nexter-builder-condition.php:194
+#: include/custom-options/nexter-builder-condition.php:341
+#: include/custom-options/nexter-builder-condition.php:452
 msgid "You do not have permission to perform this action"
 msgstr ""
 
-#: include/custom-options/nexter-builder-condition.php:341
+#: include/custom-options/nexter-builder-condition.php:482
 msgid "Are you sure?"
 msgstr ""
 
-#: include/custom-options/nexter-builder-condition.php:342
+#: include/custom-options/nexter-builder-condition.php:483
 msgid "Leaving the changes without saving the data cause unsaved material"
 msgstr ""
 
-#: include/custom-options/nexter-builder-condition.php:343
+#: include/custom-options/nexter-builder-condition.php:484
 msgid "Yes I want to leave"
 msgstr ""
 
-#: include/custom-options/nexter-builder-condition.php:364
-#: include/custom-options/nexter-builder-condition.php:600
-#: include/custom-options/nexter-builder-condition.php:733
-#: include/custom-options/nexter-builder-condition.php:1020
-#: include/custom-options/nexter-builder-condition.php:1081
-#: include/custom-options/nexter-builder-condition.php:1201
-#: include/panel-settings/extensions/nexter-ext-image-sizes.php:49
-#: include/panel-settings/extensions/nexter-ext-local-google-font.php:326
-#: include/panel-settings/extensions/nexter-ext-post-duplicator.php:192
-#: include/panel-settings/nexter-ext-panel-settings.php:875
-#: include/panel-settings/nexter-ext-panel-settings.php:892
-#: include/panel-settings/nexter-ext-panel-settings.php:1140
-#: include/panel-settings/nexter-ext-panel-settings.php:1227
-msgid "Insufficient permissions."
-msgstr ""
-
-#: include/custom-options/nexter-builder-condition.php:385
-#: include/custom-options/nexter-builder-condition.php:391
+#: include/custom-options/nexter-builder-condition.php:525
+#: include/custom-options/nexter-builder-condition.php:531
 #: dashboard/build/index.js:1
 msgid "Normal"
 msgstr ""
 
-#: include/custom-options/nexter-builder-condition.php:386
+#: include/custom-options/nexter-builder-condition.php:526
 msgid "Sticky"
 msgstr ""
 
-#: include/custom-options/nexter-builder-condition.php:387
+#: include/custom-options/nexter-builder-condition.php:527
 msgid "Normal + Sticky"
 msgstr ""
 
-#: include/custom-options/nexter-builder-condition.php:392
+#: include/custom-options/nexter-builder-condition.php:532
 #: dashboard/build/index.js:1
 msgid "Fixed"
 msgstr ""
 
-#: include/custom-options/nexter-builder-condition.php:393
+#: include/custom-options/nexter-builder-condition.php:533
 msgid "Zoom Out Effect"
 msgstr ""
 
-#: include/custom-options/nexter-builder-condition.php:441
+#: include/custom-options/nexter-builder-condition.php:581
 msgid "Create your New Templates"
 msgstr ""
 
-#: include/custom-options/nexter-builder-condition.php:442
+#: include/custom-options/nexter-builder-condition.php:582
 msgid "Start by selecting the template type & post source."
 msgstr ""
 
-#: include/custom-options/nexter-builder-condition.php:450
+#: include/custom-options/nexter-builder-condition.php:590
+#: dashboard/build/index.js:1
 msgid "Select Template"
 msgstr ""
 
-#: include/custom-options/nexter-builder-condition.php:452
+#: include/custom-options/nexter-builder-condition.php:592
 msgid "Select Type"
 msgstr ""
 
-#: include/custom-options/nexter-builder-condition.php:482
+#: include/custom-options/nexter-builder-condition.php:622
 msgid "Name of Template"
 msgstr ""
 
-#: include/custom-options/nexter-builder-condition.php:483
+#: include/custom-options/nexter-builder-condition.php:623
 msgid "Enter Template Name"
 msgstr ""
 
-#: include/custom-options/nexter-builder-condition.php:499
+#: include/custom-options/nexter-builder-condition.php:639
 msgid "Transparent Header"
 msgstr ""
 
-#: include/custom-options/nexter-builder-condition.php:510
+#: include/custom-options/nexter-builder-condition.php:650
 msgid "Footer Effects"
 msgstr ""
 
-#: include/custom-options/nexter-builder-condition.php:533
+#: include/custom-options/nexter-builder-condition.php:673
 msgid "Actions Hooks"
 msgstr ""
 
-#: include/custom-options/nexter-builder-condition.php:545
+#: include/custom-options/nexter-builder-condition.php:685
 #: assets/js/admin/index.js:1
 msgid "Priority"
 msgstr ""
 
-#: include/custom-options/nexter-builder-condition.php:546
+#: include/custom-options/nexter-builder-condition.php:686
 msgid "10"
 msgstr ""
 
-#: include/custom-options/nexter-builder-condition.php:552
+#: include/custom-options/nexter-builder-condition.php:692
 msgid "Additional Settings"
 msgstr ""
 
-#: include/custom-options/nexter-builder-condition.php:553
+#: include/custom-options/nexter-builder-condition.php:693
 msgid "Close Settings"
 msgstr ""
 
-#: include/custom-options/nexter-builder-condition.php:554
+#: include/custom-options/nexter-builder-condition.php:694
 msgid "You can set your header effect from here or directly from your Navigation Menu block or widget."
 msgstr ""
 
-#: include/custom-options/nexter-builder-condition.php:561
-#: include/custom-options/nexter-builder-condition.php:684
-#: include/custom-options/nexter-builder-condition.php:785
-#: include/custom-options/nexter-builder-condition.php:1155
+#: include/custom-options/nexter-builder-condition.php:701
+#: include/custom-options/nexter-builder-condition.php:824
+#: include/custom-options/nexter-builder-condition.php:925
+#: include/custom-options/nexter-builder-condition.php:1295
 #: include/panel-settings/extensions/custom-fields/nxt-rb-menu.php:104
+#: assets/js/admin/index.js:1
 #: dashboard/build/index.js:1
 msgid "Read How it Works"
 msgstr ""
 
-#: include/custom-options/nexter-builder-condition.php:566
-#: include/custom-options/nexter-builder-condition.php:570
+#: include/custom-options/nexter-builder-condition.php:706
+#: include/custom-options/nexter-builder-condition.php:710
 #: dashboard/build/index.js:1
 msgid "Next"
 msgstr ""
 
-#: include/custom-options/nexter-builder-condition.php:609
-#: include/custom-options/nexter-builder-condition.php:740
-#: include/custom-options/nexter-builder-condition.php:1090
+#: include/custom-options/nexter-builder-condition.php:749
+#: include/custom-options/nexter-builder-condition.php:880
+#: include/custom-options/nexter-builder-condition.php:1230
+#: assets/js/admin/index.js:1
 #: dashboard/build/index.js:1
 msgid "Save"
 msgstr ""
 
-#: include/custom-options/nexter-builder-condition.php:609
-#: include/custom-options/nexter-builder-condition.php:740
-#: include/custom-options/nexter-builder-condition.php:1090
+#: include/custom-options/nexter-builder-condition.php:749
+#: include/custom-options/nexter-builder-condition.php:880
+#: include/custom-options/nexter-builder-condition.php:1230
 #: assets/js/admin/index.js:1
 msgid "Create"
 msgstr ""
 
-#: include/custom-options/nexter-builder-condition.php:648
-#: include/custom-options/nexter-builder-condition.php:758
-#: include/custom-options/nexter-builder-condition.php:1110
+#: include/custom-options/nexter-builder-condition.php:788
+#: include/custom-options/nexter-builder-condition.php:898
+#: include/custom-options/nexter-builder-condition.php:1250
 msgid "Set Display Conditions"
 msgstr ""
 
-#: include/custom-options/nexter-builder-condition.php:649
-#: include/custom-options/nexter-builder-condition.php:759
-#: include/custom-options/nexter-builder-condition.php:1111
+#: include/custom-options/nexter-builder-condition.php:789
+#: include/custom-options/nexter-builder-condition.php:899
+#: include/custom-options/nexter-builder-condition.php:1251
 msgid "Select where you want to load the template"
 msgstr ""
 
-#: include/custom-options/nexter-builder-condition.php:669
+#: include/custom-options/nexter-builder-condition.php:809
 msgid "Include In"
 msgstr ""
 
-#: include/custom-options/nexter-builder-condition.php:675
+#: include/custom-options/nexter-builder-condition.php:815
 msgid "Exclude From"
 msgstr ""
 
-#: include/custom-options/nexter-builder-condition.php:690
-#: include/custom-options/nexter-builder-condition.php:794
-#: include/custom-options/nexter-builder-condition.php:1160
+#: include/custom-options/nexter-builder-condition.php:830
+#: include/custom-options/nexter-builder-condition.php:934
+#: include/custom-options/nexter-builder-condition.php:1300
 msgid "Go Back"
 msgstr ""
 
-#: include/custom-options/nexter-builder-condition.php:827
+#: include/custom-options/nexter-builder-condition.php:967
 msgid "Preview Type"
 msgstr ""
 
-#: include/custom-options/nexter-builder-condition.php:837
+#: include/custom-options/nexter-builder-condition.php:977
 msgid "Preview ID"
 msgstr ""
 
-#: include/custom-options/nexter-builder-condition.php:872
-#: include/custom-options/nexter-builder-condition.php:1027
+#: include/custom-options/nexter-builder-condition.php:1012
+#: include/custom-options/nexter-builder-condition.php:1167
 msgid "Include"
 msgstr ""
 
-#: include/custom-options/nexter-builder-condition.php:873
-#: include/custom-options/nexter-builder-condition.php:1028
+#: include/custom-options/nexter-builder-condition.php:1013
+#: include/custom-options/nexter-builder-condition.php:1168
 msgid "Exclude"
 msgstr ""
 
-#: include/custom-options/nexter-builder-condition.php:1008
+#: include/custom-options/nexter-builder-condition.php:1148
 msgid "Add Condition"
 msgstr ""
 
-#: include/custom-options/nexter-builder-condition.php:1131
+#: include/custom-options/nexter-builder-condition.php:1271
 msgid "Disable Header"
 msgstr ""
 
-#: include/custom-options/nexter-builder-condition.php:1133
+#: include/custom-options/nexter-builder-condition.php:1273
 msgid "Check this option to disable header."
 msgstr ""
 
-#: include/custom-options/nexter-builder-condition.php:1141
+#: include/custom-options/nexter-builder-condition.php:1281
 msgid "Disable Footer"
 msgstr ""
 
-#: include/custom-options/nexter-builder-condition.php:1143
+#: include/custom-options/nexter-builder-condition.php:1283
 msgid "Check this option to disable footer."
 msgstr ""
 
-#: include/custom-options/nexter-builder-condition.php:1422
+#: include/custom-options/nexter-builder-condition.php:1612
 msgid "Select Days"
 msgstr ""
 
-#: include/custom-options/nexter-builder-condition.php:1435
+#: include/custom-options/nexter-builder-condition.php:1625
 msgid "Select Operating System"
 msgstr ""
 
-#: include/custom-options/nexter-builder-condition.php:1448
+#: include/custom-options/nexter-builder-condition.php:1638
 msgid "Select Browser"
 msgstr ""
 
-#: include/custom-options/nexter-builder-condition.php:1461
+#: include/custom-options/nexter-builder-condition.php:1651
 msgid "Select Login Status"
 msgstr ""
 
-#: include/custom-options/nexter-builder-condition.php:1474
+#: include/custom-options/nexter-builder-condition.php:1664
 msgid "Select User Roles"
 msgstr ""
 
-#: include/custom-options/nexter-builder-condition.php:1487
+#: include/custom-options/nexter-builder-condition.php:1677
 msgid "Specific Pages/Posts"
 msgstr ""
 
@@ -1704,16 +2059,19 @@ msgstr ""
 
 #. translators: %s: export file
 #: include/nexter-template/importer/class.wordpress-importer.php:194
+#, php-format
 msgid "The export file could not be found at <code>%s</code>. It is likely that this was caused by a permissions problem."
 msgstr ""
 
 #. translators: %s: version
 #: include/nexter-template/importer/class.wordpress-importer.php:211
+#, php-format
 msgid "This WXR file (version %s) may not be supported by this version of the importer. Please consider updating."
 msgstr ""
 
 #. translators: %s: post author
 #: include/nexter-template/importer/class.wordpress-importer.php:237
+#, php-format
 msgid "Failed to import author %s. Their posts will be attributed to the current user."
 msgstr ""
 
@@ -1727,6 +2085,7 @@ msgstr ""
 
 #. translators: %s: user role
 #: include/nexter-template/importer/class.wordpress-importer.php:268
+#, php-format
 msgid "If a new user is created by WordPress, a new password will be randomly generated and the new user&#8217;s role will be set as %s. Manually changing the new user&#8217;s details will be necessary."
 msgstr ""
 
@@ -1768,16 +2127,19 @@ msgstr ""
 
 #. translators: %s: author name
 #: include/nexter-template/importer/class.wordpress-importer.php:382
+#, php-format
 msgid "Failed to create new user for %s. Their posts will be attributed to the current user."
 msgstr ""
 
 #. translators: %s: category name
 #: include/nexter-template/importer/class.wordpress-importer.php:435
+#, php-format
 msgid "Failed to import category %s"
 msgstr ""
 
 #. translators: %s: tag name
 #: include/nexter-template/importer/class.wordpress-importer.php:481
+#, php-format
 msgid "Failed to import post tag %s"
 msgstr ""
 
@@ -1785,16 +2147,19 @@ msgstr ""
 #. translators: %s: term name
 #: include/nexter-template/importer/class.wordpress-importer.php:537
 #: include/nexter-template/importer/class.wordpress-importer.php:766
+#, php-format
 msgid "Failed to import %1$s %2$s"
 msgstr ""
 
 #. translators: %s: post title post type
 #: include/nexter-template/importer/class.wordpress-importer.php:631
+#, php-format
 msgid "Failed to import &#8220;%1$s&#8221;: Invalid post type %2$s"
 msgstr ""
 
 #. translators: %s: post title
 #: include/nexter-template/importer/class.wordpress-importer.php:732
+#, php-format
 msgid "Failed to import %1$s &#8220;%2$s&#8221;"
 msgstr ""
 
@@ -1804,6 +2169,7 @@ msgstr ""
 
 #. translators: %s: menu slug
 #: include/nexter-template/importer/class.wordpress-importer.php:919
+#, php-format
 msgid "Menu item skipped due to invalid menu slug: %s"
 msgstr ""
 
@@ -1820,6 +2186,7 @@ msgid "Remote server did not respond"
 msgstr ""
 
 #: include/nexter-template/importer/class.wordpress-importer.php:1058
+#, php-format
 msgid "Remote server returned error response %1$d %2$s"
 msgstr ""
 
@@ -1832,6 +2199,7 @@ msgid "Zero size file downloaded"
 msgstr ""
 
 #: include/nexter-template/importer/class.wordpress-importer.php:1076
+#, php-format
 msgid "Remote file is too large, limit is %s"
 msgstr ""
 
@@ -1841,6 +2209,7 @@ msgstr ""
 
 #. translators: %s: new version
 #: include/nexter-template/importer/class.wordpress-importer.php:1187
+#, php-format
 msgid "A new version of this importer is available. Please update to version %s to ensure compatibility with newer export files."
 msgstr ""
 
@@ -1869,125 +2238,149 @@ msgstr ""
 msgid "This does not appear to be a WXR file, missing/invalid WXR version number"
 msgstr ""
 
-#: include/nexter-template/nexter-builder-shortcode.php:55
+#: include/nexter-template/nexter-builder-shortcode.php:56
 #: assets/js/admin/index.js:1
 msgid "Shortcode"
 msgstr ""
 
 #: include/nexter-template/nexter-template-function.php:16
-#: dashboard/build/index.js:1
-msgid "Theme Builder"
-msgstr ""
-
-#: include/nexter-template/nexter-template-function.php:25
 msgid "Template Archives"
 msgstr ""
 
-#: include/nexter-template/nexter-template-function.php:26
+#: include/nexter-template/nexter-template-function.php:17
 msgid "Template Attributes"
 msgstr ""
 
-#: include/nexter-template/nexter-template-function.php:27
+#: include/nexter-template/nexter-template-function.php:18
 msgid "Parent Template:"
 msgstr ""
 
-#: include/nexter-template/nexter-template-function.php:29
+#: include/nexter-template/nexter-template-function.php:20
 msgid "Add New Template"
 msgstr ""
 
-#: include/nexter-template/nexter-template-function.php:30
+#: include/nexter-template/nexter-template-function.php:21
 #: assets/js/admin/index.js:1
 msgid "Create New"
 msgstr ""
 
-#: include/nexter-template/nexter-template-function.php:31
+#: include/nexter-template/nexter-template-function.php:22
 msgid "New Template"
 msgstr ""
 
-#: include/nexter-template/nexter-template-function.php:32
+#: include/nexter-template/nexter-template-function.php:23
 msgid "Edit Template"
 msgstr ""
 
-#: include/nexter-template/nexter-template-function.php:33
+#: include/nexter-template/nexter-template-function.php:24
 msgid "Update Template"
 msgstr ""
 
-#: include/nexter-template/nexter-template-function.php:34
-#: include/nexter-template/nexter-template-function.php:35
+#: include/nexter-template/nexter-template-function.php:25
+#: include/nexter-template/nexter-template-function.php:26
 msgid "View Template"
 msgstr ""
 
-#: include/nexter-template/nexter-template-function.php:36
+#: include/nexter-template/nexter-template-function.php:27
 msgid "Search Template"
 msgstr ""
 
-#: include/nexter-template/nexter-template-function.php:37
+#: include/nexter-template/nexter-template-function.php:28
 msgid "Not found"
 msgstr ""
 
-#: include/nexter-template/nexter-template-function.php:38
+#: include/nexter-template/nexter-template-function.php:29
 msgid "Not found in Trash"
 msgstr ""
 
-#: include/nexter-template/nexter-template-function.php:39
+#: include/nexter-template/nexter-template-function.php:30
 msgid "Featured Image"
 msgstr ""
 
-#: include/nexter-template/nexter-template-function.php:40
+#: include/nexter-template/nexter-template-function.php:31
 msgid "Set featured image"
 msgstr ""
 
-#: include/nexter-template/nexter-template-function.php:41
+#: include/nexter-template/nexter-template-function.php:32
 msgid "Remove featured image"
 msgstr ""
 
-#: include/nexter-template/nexter-template-function.php:42
+#: include/nexter-template/nexter-template-function.php:33
 msgid "Use as featured image"
 msgstr ""
 
-#: include/nexter-template/nexter-template-function.php:43
+#: include/nexter-template/nexter-template-function.php:34
 msgid "Insert into template"
 msgstr ""
 
-#: include/nexter-template/nexter-template-function.php:44
+#: include/nexter-template/nexter-template-function.php:35
 msgid "Uploaded to this template"
 msgstr ""
 
-#: include/nexter-template/nexter-template-function.php:45
+#: include/nexter-template/nexter-template-function.php:36
 msgid "Templates list"
 msgstr ""
 
-#: include/nexter-template/nexter-template-function.php:46
+#: include/nexter-template/nexter-template-function.php:37
 msgid "Templates list navigation"
 msgstr ""
 
-#: include/nexter-template/nexter-template-function.php:47
+#: include/nexter-template/nexter-template-function.php:38
 msgid "Filter templates list"
 msgstr ""
 
-#: include/nexter-template/nexter-template-function.php:50
+#: include/nexter-template/nexter-template-function.php:42
 msgid "Post Type"
 msgstr ""
 
-#: include/nexter-template/nexter-template-function.php:51
+#: include/nexter-template/nexter-template-function.php:43
 msgid "Post Type Description"
 msgstr ""
 
 #: include/nexter-template/template-import-export.php:79
+#: assets/js/admin/index.js:1
 msgid "Export Template"
 msgstr ""
 
-#: include/nexter-template/template-import-export.php:246
+#: include/nexter-template/template-import-export.php:140
+msgid "Imported Successfully"
+msgstr ""
+
+#: include/nexter-template/template-import-export.php:253
+msgid "Theme Logo"
+msgstr ""
+
+#: include/nexter-template/template-import-export.php:259
+msgid "Choose a Nexter Builder template XML file of Builder templates, and add them to the list of templates available in your builder."
+msgstr ""
+
+#: include/nexter-template/template-import-export.php:266
+#: assets/js/admin/index.js:1
+msgid "Import Now"
+msgstr ""
+
+#: include/nexter-template/template-import-export.php:271
+#: include/panel-settings/nexter-ext-panel-settings.php:977
+#: include/panel-settings/nexter-ext-panel-settings.php:978
+#: include/panel-settings/nexter-ext-panel-settings.php:986
+#: include/panel-settings/nexter-ext-panel-settings.php:987
+#: dashboard/build/index.js:1
+#: theme-builder/build/index.js:1
+msgid "Theme Builder"
+msgstr ""
+
+#: include/nexter-template/template-import-export.php:272
+#: theme-builder/build/index.js:1
 msgid "Import Templates"
 msgstr ""
 
-#: include/nexter-template/template-import-export.php:248
-msgid "Choose an Nexter Builder template XML file of Builder templates, and add them to the list of templates available in your builder."
+#: include/nexter-template/template-import-export.php:276
+#: theme-builder/build/index.js:1
+msgid "Import Pre-Designed Section"
 msgstr ""
 
-#: include/nexter-template/template-import-export.php:255
-#: assets/js/admin/index.js:1
-msgid "Import Now"
+#: include/nexter-template/template-import-export.php:285
+msgid "Switch to grid view"
 msgstr ""
 
 #: include/panel-settings/extensions/custom-fields/nxt-rb-action.php:67
@@ -2005,6 +2398,7 @@ msgstr ""
 
 #. Translators: %s is the capitalized rollback type (e.g., Plugin or Theme).
 #: include/panel-settings/extensions/custom-fields/nxt-rb-menu.php:39
+#, php-format
 msgid "%s Rollback"
 msgstr ""
 
@@ -2014,6 +2408,7 @@ msgstr ""
 
 #. Translators: %1$s is the current version, %2$s is the rollback item name.
 #: include/panel-settings/extensions/custom-fields/nxt-rb-menu.php:76
+#, php-format
 msgid "You currently have version %1$s installed of %2$s. We strongly recommend you create a complete backup before proceeding."
 msgstr ""
 
@@ -2021,7 +2416,7 @@ msgstr ""
 #: include/panel-settings/extensions/nexter-ext-rollback-manager.php:73
 #: include/panel-settings/extensions/nexter-ext-rollback-manager.php:108
 #: include/panel-settings/extensions/nexter-ext-rollback-manager.php:151
-#: include/panel-settings/extensions/nexter-ext-rollback-manager.php:375
+#: include/panel-settings/extensions/nexter-ext-rollback-manager.php:402
 #: dashboard/build/index.js:1
 msgid "Rollback"
 msgstr ""
@@ -2055,6 +2450,7 @@ msgid "Cancel"
 msgstr ""
 
 #: include/panel-settings/extensions/custom-fields/nxt-rb-menu.php:156
+#: dashboard/build/index.js:1
 msgid "Continue"
 msgstr ""
 
@@ -2075,115 +2471,142 @@ msgstr ""
 msgid "Custom Fonts"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-cloudflare-captcha.php:291
-#: include/panel-settings/extensions/nexter-ext-cloudflare-captcha.php:318
-#: include/panel-settings/extensions/nexter-ext-cloudflare-captcha.php:353
-#: include/panel-settings/extensions/nexter-ext-cloudflare-captcha.php:373
-#: include/panel-settings/extensions/nexter-ext-cloudflare-captcha.php:398
+#: include/panel-settings/extensions/nexter-ext-cloudflare-captcha.php:492
+#: include/panel-settings/extensions/nexter-ext-cloudflare-captcha.php:519
+#: include/panel-settings/extensions/nexter-ext-cloudflare-captcha.php:554
+#: include/panel-settings/extensions/nexter-ext-cloudflare-captcha.php:574
+#: include/panel-settings/extensions/nexter-ext-cloudflare-captcha.php:599
+#: include/panel-settings/extensions/nexter-ext-cloudflare-captcha.php:663
+#: include/panel-settings/extensions/nexter-ext-cloudflare-captcha.php:671
+#: include/panel-settings/extensions/nexter-ext-cloudflare-captcha.php:719
+#: include/panel-settings/extensions/nexter-ext-cloudflare-captcha.php:727
+#: include/panel-settings/extensions/nexter-ext-cloudflare-captcha.php:752
+#: include/panel-settings/extensions/nexter-ext-cloudflare-captcha.php:760
+#: include/panel-settings/extensions/nexter-ext-cloudflare-captcha.php:787
+#: include/panel-settings/extensions/nexter-ext-cloudflare-captcha.php:795
+#: include/panel-settings/extensions/nexter-ext-cloudflare-captcha.php:822
+#: include/panel-settings/extensions/nexter-ext-cloudflare-captcha.php:830
 msgid "Please verify that you are human."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-cloudflare-captcha.php:374
+#: include/panel-settings/extensions/nexter-ext-cloudflare-captcha.php:575
 msgid "Comment Blocked"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-cloudflare-captcha.php:391
+#: include/panel-settings/extensions/nexter-ext-cloudflare-captcha.php:592
 msgid "Invalid CAPTCHA validation response format."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-cloudflare-captcha.php:401
+#: include/panel-settings/extensions/nexter-ext-cloudflare-captcha.php:602
 msgid "Cloudflare Turnstile validated successfully."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-custom-login-redirect.php:59
-#: include/panel-settings/nexter-custom-login-redirect.php:147
+#: include/panel-settings/extensions/nexter-ext-content-post-order.php:139
+msgid "Re-Order"
+msgstr ""
+
+#: include/panel-settings/extensions/nexter-ext-content-post-order.php:267
+#, php-format
+msgid "Too many items. Maximum %d items allowed."
+msgstr ""
+
+#: include/panel-settings/extensions/nexter-ext-content-post-order.php:316
+#: include/panel-settings/extensions/nexter-ext-content-post-order.php:354
+msgid "Too many items to process at once."
+msgstr ""
+
+#: include/panel-settings/extensions/nexter-ext-custom-login-redirect.php:67
 msgid "This feature is not enabled."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-custom-login-redirect.php:170
-#: include/panel-settings/nexter-custom-login-redirect.php:237
+#: include/panel-settings/extensions/nexter-ext-custom-login-redirect.php:191
 msgid "This has been disabled."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-google-captcha.php:152
-msgid "Authentication failed."
+#: include/panel-settings/extensions/nexter-ext-custom-login-redirect.php:192
+#: include/panel-settings/extensions/nexter-ext-performance-security-settings.php:813
+msgid "Forbidden"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-google-captcha.php:200
+#: include/panel-settings/extensions/nexter-ext-google-captcha.php:366
 msgid "Response is empty"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-google-captcha.php:242
+#: include/panel-settings/extensions/nexter-ext-google-captcha.php:414
 msgid "Secret Key is missing."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-google-captcha.php:243
+#: include/panel-settings/extensions/nexter-ext-google-captcha.php:417
 msgid "Secret Key is invalid."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-google-captcha.php:243
+#: include/panel-settings/extensions/nexter-ext-google-captcha.php:418
 msgid "Check your domain configurations"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-google-captcha.php:243
+#: include/panel-settings/extensions/nexter-ext-google-captcha.php:419
 msgid "and enter it again"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-google-captcha.php:245
+#: include/panel-settings/extensions/nexter-ext-google-captcha.php:421
 msgid "You have entered an incorrect reCAPTCHA value."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-google-captcha.php:246
+#: include/panel-settings/extensions/nexter-ext-google-captcha.php:422
 msgid "More than one reCAPTCHA has been found in the current form. Please remove all unnecessary reCAPTCHA fields to make it work properly."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-google-captcha.php:247
+#: include/panel-settings/extensions/nexter-ext-google-captcha.php:423
 msgid "User response is invalid"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-google-captcha.php:248
+#: include/panel-settings/extensions/nexter-ext-google-captcha.php:424
 msgid "reCaptcha v3 test failed"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-google-captcha.php:249
+#: include/panel-settings/extensions/nexter-ext-google-captcha.php:425
 msgid "User response is missing."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-google-captcha.php:250
-msgid "You have entered incorrect  secret key."
+#: include/panel-settings/extensions/nexter-ext-google-captcha.php:426
+msgid "You have entered incorrect secret key."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-google-captcha.php:415
+#: include/panel-settings/extensions/nexter-ext-google-captcha.php:521
+msgid "Authentication failed."
+msgstr ""
+
+#: include/panel-settings/extensions/nexter-ext-google-captcha.php:623
 msgid "Error"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-google-captcha.php:415
+#: include/panel-settings/extensions/nexter-ext-google-captcha.php:625
 msgid "Click the BACK button on your browser and try again."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-limit-login-attempt.php:259
-#: include/panel-settings/extensions/nexter-ext-limit-login-attempt.php:352
+#: include/panel-settings/extensions/nexter-ext-limit-login-attempt.php:264
+#: include/panel-settings/extensions/nexter-ext-limit-login-attempt.php:357
 msgid "Error:"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-limit-login-attempt.php:260
-#: include/panel-settings/extensions/nexter-ext-limit-login-attempt.php:353
+#: include/panel-settings/extensions/nexter-ext-limit-login-attempt.php:265
+#: include/panel-settings/extensions/nexter-ext-limit-login-attempt.php:358
 msgid "Invalid username/email or incorrect password."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-limit-login-attempt.php:539
+#: include/panel-settings/extensions/nexter-ext-limit-login-attempt.php:544
 msgid "Unauthorized access."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-limit-login-attempt.php:546
+#: include/panel-settings/extensions/nexter-ext-limit-login-attempt.php:551
 msgid "Table not found."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-local-google-font.php:58
+#: include/panel-settings/extensions/nexter-ext-local-google-font.php:61
 msgid "Local Google Fonts"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-local-google-font.php:333
+#: include/panel-settings/extensions/nexter-ext-local-google-font.php:381
 msgid "Local fonts cleared."
 msgstr ""
 
@@ -2211,84 +2634,118 @@ msgstr ""
 msgid "Reset to Default"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-performance-security-settings.php:40
+#: include/panel-settings/extensions/nexter-ext-performance-security-settings.php:48
 msgid "Registered"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-performance-security-settings.php:70
+#: include/panel-settings/extensions/nexter-ext-performance-security-settings.php:78
 msgid "Last Login"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-performance-security-settings.php:80
+#: include/panel-settings/extensions/nexter-ext-performance-security-settings.php:88
 msgid "Never"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-performance-security-settings.php:228
-#: include/panel-settings/extensions/nexter-ext-performance-security-settings.php:694
-#: include/panel-settings/extensions/nexter-ext-performance-security-settings.php:699
+#: include/panel-settings/extensions/nexter-ext-performance-security-settings.php:243
+#: include/panel-settings/extensions/nexter-ext-performance-security-settings.php:768
+#: include/panel-settings/extensions/nexter-ext-performance-security-settings.php:773
 msgid "Comments are disabled."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-performance-security-settings.php:310
+#: include/panel-settings/extensions/nexter-ext-performance-security-settings.php:330
 msgid "Sorry, do not have permission REST API requests."
 msgstr ""
 
 #. Translators: %s is the anchor tag linking to the Home Page.
-#: include/panel-settings/extensions/nexter-ext-performance-security-settings.php:512
+#: include/panel-settings/extensions/nexter-ext-performance-security-settings.php:546
+#, php-format
 msgid "No feed available, please visit the %s!"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-performance-security-settings.php:519
+#: include/panel-settings/extensions/nexter-ext-performance-security-settings.php:553
 #: dashboard/build/index.js:1
 msgid "Home Page"
 msgstr ""
 
-#. translators: %s: singular name
-#: include/panel-settings/extensions/nexter-ext-post-duplicator.php:47
-msgid "Duplicate %s"
+#: include/panel-settings/extensions/nexter-ext-performance-security-settings.php:813
+msgid "XML-RPC is disabled."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-post-duplicator.php:50
+#: include/panel-settings/extensions/nexter-ext-post-duplicator.php:48
 msgid "Duplicate"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-post-duplicator.php:119
+#: include/panel-settings/extensions/nexter-ext-post-duplicator.php:116
 msgid "Copy"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-post-duplicator.php:198
+#: include/panel-settings/extensions/nexter-ext-post-duplicator.php:205
 msgid "You do not have permission to duplicate this post."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-replace-url.php:25
+#: include/panel-settings/extensions/nexter-ext-replace-url.php:9
+#: include/panel-settings/extensions/nexter-ext-replace-url.php:97
+msgid "Authentication required."
+msgstr ""
+
+#: include/panel-settings/extensions/nexter-ext-replace-url.php:53
 msgid "The \"OLD\" and \"NEW\" URLs must be different"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-replace-url.php:38
-#: include/panel-settings/extensions/nexter-ext-replace-url.php:88
+#: include/panel-settings/extensions/nexter-ext-replace-url.php:66
+#: include/panel-settings/extensions/nexter-ext-replace-url.php:145
 msgid "Select any table before replace"
+msgstr ""
+
+#: include/panel-settings/extensions/nexter-ext-replace-url.php:80
+#: include/panel-settings/extensions/nexter-ext-replace-url.php:159
+msgid "Only Admin can run this."
 msgstr ""
 
 #: include/panel-settings/extensions/nexter-ext-rollback-manager.php:74
 msgid "No Rollback Available: This is a non-WordPress.org theme."
 msgstr ""
 
+#: include/panel-settings/extensions/nexter-ext-rollback-manager.php:196
+msgid "Invalid theme slug."
+msgstr ""
+
+#: include/panel-settings/extensions/nexter-ext-rollback-manager.php:203
+msgid "Failed to check theme."
+msgstr ""
+
 #. Translators: %s is the rollback type (e.g., plugin or theme) author.
-#: include/panel-settings/extensions/nexter-ext-rollback-manager.php:287
+#: include/panel-settings/extensions/nexter-ext-rollback-manager.php:298
+#, php-format
 msgid "It appears there are no versions to select. This is likely due to the %s author not using tags for their versions and only committing new releases to the repository trunk."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-rollback-manager.php:336
+#: include/panel-settings/extensions/nexter-ext-rollback-manager.php:337
+#: include/panel-settings/extensions/nexter-ext-rollback-manager.php:422
+msgid "Security check failed."
+msgstr ""
+
+#: include/panel-settings/extensions/nexter-ext-rollback-manager.php:355
 msgid "The referenced plugin does not exist."
 msgstr ""
 
+#: include/panel-settings/extensions/nexter-ext-rollback-manager.php:363
+msgid "Invalid plugin path."
+msgstr ""
+
 #. Translators: %s is the current URL linking to the Rollback Manager page.
-#: include/panel-settings/extensions/nexter-ext-rollback-manager.php:368
+#: include/panel-settings/extensions/nexter-ext-rollback-manager.php:395
+#, php-format
 msgid "<a href=\"%s\">Rollback Manager</a>"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-rollback-manager.php:390
+#: include/panel-settings/extensions/nexter-ext-rollback-manager.php:417
 msgid "You do not have sufficient permissions to perform rollbacks for this site."
+msgstr ""
+
+#: include/panel-settings/extensions/nexter-ext-rollback-manager.php:450
+#: include/panel-settings/extensions/nexter-ext-rollback-manager.php:460
+msgid "Invalid version format."
 msgstr ""
 
 #: include/panel-settings/extensions/nexter-ext-smtp-email.php:29
@@ -2305,91 +2762,140 @@ msgid "Failed to process authorization"
 msgstr ""
 
 #: include/panel-settings/extensions/nexter-ext-smtp-email.php:107
-#: include/panel-settings/extensions/nexter-ext-smtp-email.php:150
-#: include/panel-settings/extensions/nexter-ext-smtp-email.php:223
-#: include/panel-settings/extensions/nexter-ext-smtp-email.php:249
-#: include/panel-settings/extensions/nexter-ext-smtp-email.php:271
+#: include/panel-settings/extensions/nexter-ext-smtp-email.php:151
+#: include/panel-settings/extensions/nexter-ext-smtp-email.php:230
+#: include/panel-settings/extensions/nexter-ext-smtp-email.php:256
+#: include/panel-settings/extensions/nexter-ext-smtp-email.php:331
 msgid "Unauthorized access"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-smtp-email.php:133
+#: include/panel-settings/extensions/nexter-ext-smtp-email.php:134
 msgid "OAuth redirect cannot run on localhost. Please use a live or staging domain."
 msgstr ""
 
 #. translators: 1: Required PHP version, 2: Current version
-#: include/panel-settings/extensions/nexter-ext-smtp-email.php:139
-#: include/panel-settings/extensions/nexter-ext-smtp-email.php:228
+#: include/panel-settings/extensions/nexter-ext-smtp-email.php:140
+#: include/panel-settings/extensions/nexter-ext-smtp-email.php:235
+#, php-format
 msgid "The Nexter Extension SMTP integration requires PHP version %1$s or higher. You are using %2$s."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-smtp-email.php:159
+#: include/panel-settings/extensions/nexter-ext-smtp-email.php:161
+msgid "Invalid authorization code format."
+msgstr ""
+
+#: include/panel-settings/extensions/nexter-ext-smtp-email.php:166
 msgid "Invalid OAuth state"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-smtp-email.php:163
+#: include/panel-settings/extensions/nexter-ext-smtp-email.php:170
 msgid "Invalid OAuth nonce"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-smtp-email.php:167
+#: include/panel-settings/extensions/nexter-ext-smtp-email.php:174
 msgid "Missing authorization code"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-smtp-email.php:176
+#: include/panel-settings/extensions/nexter-ext-smtp-email.php:183
 msgid "Missing Client ID or Secret"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-smtp-email.php:191
+#: include/panel-settings/extensions/nexter-ext-smtp-email.php:198
 msgid "Token request failed: "
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-smtp-email.php:196
+#: include/panel-settings/extensions/nexter-ext-smtp-email.php:203
 msgid "Access token not found in response"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-smtp-email.php:217
-#: include/panel-settings/extensions/nexter-ext-smtp-email.php:239
+#: include/panel-settings/extensions/nexter-ext-smtp-email.php:224
+#: include/panel-settings/extensions/nexter-ext-smtp-email.php:246
 msgid "Successfully authorized with Gmail!"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-smtp-email.php:241
+#: include/panel-settings/extensions/nexter-ext-smtp-email.php:248
 msgid "Authorization failed: Unable to verify token."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-smtp-email.php:254
+#: include/panel-settings/extensions/nexter-ext-smtp-email.php:261
 msgid "Please Enter a valid Email ID to send the test mail."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-smtp-email.php:256
+#: include/panel-settings/extensions/nexter-ext-smtp-email.php:269
+msgid "SMTP is not enabled. Please enable SMTP first."
+msgstr ""
+
+#: include/panel-settings/extensions/nexter-ext-smtp-email.php:275
+msgid "SMTP is not configured. Please configure SMTP settings first."
+msgstr ""
+
+#: include/panel-settings/extensions/nexter-ext-smtp-email.php:282
+msgid "SMTP connection not verified. Please test the connection first."
+msgstr ""
+
+#: include/panel-settings/extensions/nexter-ext-smtp-email.php:287
+msgid "Custom SMTP Test Email"
+msgstr ""
+
+#: include/panel-settings/extensions/nexter-ext-smtp-email.php:288
 msgid "Gmail SMTP Test Email"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-smtp-email.php:261
+#: include/panel-settings/extensions/nexter-ext-smtp-email.php:317
 msgid "Test email sent successfully!"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-smtp-email.php:263
-msgid "Failed to send test email: "
-msgstr ""
-
-#: include/panel-settings/extensions/nexter-ext-smtp-email.php:312
-msgid "Please Select SMTP Type Custom."
+#: include/panel-settings/extensions/nexter-ext-smtp-email.php:321
+msgid "Unknown error occurred while sending email. Please check your SMTP settings and server logs."
 msgstr ""
 
 #: include/panel-settings/extensions/nexter-ext-smtp-email.php:323
+msgid "Failed to send test email: "
+msgstr ""
+
+#: include/panel-settings/extensions/nexter-ext-smtp-email.php:341
+msgid "Invalid JSON data."
+msgstr ""
+
+#: include/panel-settings/extensions/nexter-ext-smtp-email.php:378
+msgid "Please Select SMTP Type Custom."
+msgstr ""
+
+#: include/panel-settings/extensions/nexter-ext-smtp-email.php:389
 msgid "Invalid From Email address."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-smtp-email.php:344
-#: include/panel-settings/extensions/nexter-ext-smtp-email.php:360
+#: include/panel-settings/extensions/nexter-ext-smtp-email.php:410
+#: include/panel-settings/extensions/nexter-ext-smtp-email.php:426
 msgid "SMTP Connection failed."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-smtp-email.php:358
+#: include/panel-settings/extensions/nexter-ext-smtp-email.php:424
 msgid "SMTP Connection successful."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-svg-upload.php:127
+#: include/panel-settings/extensions/nexter-ext-svg-upload.php:123
+msgid "Invalid file upload."
+msgstr ""
+
+#: include/panel-settings/extensions/nexter-ext-svg-upload.php:134
+msgid "File size exceeds maximum allowed size."
+msgstr ""
+
+#: include/panel-settings/extensions/nexter-ext-svg-upload.php:142
+msgid "Failed to read file."
+msgstr ""
+
+#: include/panel-settings/extensions/nexter-ext-svg-upload.php:150
 msgid "SVG could not be sanitized and was not uploaded for security reasons."
+msgstr ""
+
+#: include/panel-settings/extensions/nexter-ext-svg-upload.php:338
+msgid "Invalid attachment."
+msgstr ""
+
+#: include/panel-settings/extensions/nexter-ext-svg-upload.php:344
+msgid "Missing attachment ID."
 msgstr ""
 
 #: include/panel-settings/extensions/nexter-ext-view-admin-role.php:51
@@ -2404,7 +2910,7 @@ msgstr ""
 msgid "Administrator"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-view-admin-role.php:289
+#: include/panel-settings/extensions/nexter-ext-view-admin-role.php:294
 msgid "Switch back to Administrator"
 msgstr ""
 
@@ -2418,6 +2924,7 @@ msgstr ""
 
 #. Translators: %s is the WP_DEBUG constant.
 #: include/panel-settings/extensions/nexter-ext-wp-debug-mode.php:46
+#, php-format
 msgid "%s is disabled, even though WP Debug Mode module is active. Maybe the configuration file was edited manually after module activation."
 msgstr ""
 
@@ -2449,6 +2956,7 @@ msgstr ""
 
 #. translators: %s: item name
 #: include/panel-settings/nexter-ext-library.php:128
+#, php-format
 msgid "This appears to be an invalid license key for %s."
 msgstr ""
 
@@ -2508,6 +3016,7 @@ msgstr ""
 
 #. Translators: %1$s is the POSIMYTH Store URL, %2$s is the Nexter Support URL.
 #: include/panel-settings/nexter-ext-library.php:270
+#, php-format
 msgid "Seems Like Your Licence Key for Nexter WP is Expired. Visit %1$s to Pay Invoices / Change Payment Methods / Manage Your Subscriptions. Please Don’t Hesitate to Reach Us at %2$s if You Have an Issue Regarding Our Products."
 msgstr ""
 
@@ -2522,6 +3031,7 @@ msgstr ""
 
 #. translators: %1$s: POSIMYTH Store URL, %2$s: Nexter Support URL
 #: include/panel-settings/nexter-ext-library.php:286
+#, php-format
 msgid "Your Licence Key for Nexter WP is Revoked for Some Reason. Visit %1$s to Update Your Licence Key / Manage Payments / Pay Invoices. Reach Out to Us at %2$s for Queries Regarding Our Products."
 msgstr ""
 
@@ -2531,6 +3041,7 @@ msgstr ""
 
 #. translators: %s: store tpgb
 #: include/panel-settings/nexter-ext-library.php:296
+#, php-format
 msgid "You’re Just One Step Away From Having Fun While Crafting Websites. Paste Your Licence Key for Nexter WP Here and Get Inspired With Other People Who Build With Us. Visit <a href=\"%s\" target=\"_blank\" rel=\"noopener noreferrer\">POSIMYTH Store</a> to Update Your Licence Key / Manage Payments / Pay Invoices."
 msgstr ""
 
@@ -2541,6 +3052,7 @@ msgstr ""
 
 #. Translators: %s is the POSIMYTH Store URL.
 #: include/panel-settings/nexter-ext-library.php:305
+#, php-format
 msgid "We Can’t Find Licence Key You Just Entered in Any of Our Lists. Make Sure You Are Not Adding Any White Spaces With It. If You're Having This Issue Repeatedly, Visit  <a href=\"%s\" target=\"_blank\" rel=\"noopener noreferrer\">POSIMYTH Store</a> to Confirm Your Licence Key."
 msgstr ""
 
@@ -2551,6 +3063,7 @@ msgstr ""
 
 #. Translators: %s is the URL for the POSIMYTH Store.
 #: include/panel-settings/nexter-ext-library.php:313
+#, php-format
 msgid "It Appears That Licence Key You Entered Belongs to Some Other Product from Our Product Collection. In Layman Terms, You Dialed a Wrong Number. Visit <a href=\"%s\" target=\"_blank\" rel=\"noopener noreferrer\">POSIMYTH Store</a> and Verify Your Licence Key for Nexter WP."
 msgstr ""
 
@@ -2561,79 +3074,127 @@ msgstr ""
 
 #. Translators: %s is the URL for the POSIMYTH Store.
 #: include/panel-settings/nexter-ext-library.php:321
+#, php-format
 msgid "Unfortunately, Your Activation Quota for Active / Running Websites Built With Nexter WP  is Over. Like What You’re Using ? Visit <a href=\"%s\" target=\"_blank\" rel=\"noopener noreferrer\">POSIMYTH Store</a> to Upgrade Your Existing Plan and Allow Your Creativity to Bloom."
 msgstr ""
 
-#: include/panel-settings/nexter-ext-panel-settings.php:809
-#: include/panel-settings/nexter-ext-panel-settings.php:810
+#: include/panel-settings/nexter-ext-panel-settings.php:662
+#: include/panel-settings/nexter-ext-panel-settings.php:665
+msgid "Nexter"
+msgstr ""
+
+#: include/panel-settings/nexter-ext-panel-settings.php:949
+#: include/panel-settings/nexter-ext-panel-settings.php:950
 #: dashboard/build/index.js:1
 msgid "Dashboard"
 msgstr ""
 
-#: include/panel-settings/nexter-ext-panel-settings.php:826
-#: include/panel-settings/nexter-ext-panel-settings.php:827
+#: include/panel-settings/nexter-ext-panel-settings.php:957
+#: include/panel-settings/nexter-ext-panel-settings.php:958
+msgid "Templates"
+msgstr ""
+
+#: include/panel-settings/nexter-ext-panel-settings.php:967
+#: include/panel-settings/nexter-ext-panel-settings.php:968
+#: dashboard/build/index.js:1
+msgid "Blocks"
+msgstr ""
+
+#: include/panel-settings/nexter-ext-panel-settings.php:1004
+#: include/panel-settings/nexter-ext-panel-settings.php:1005
 #: assets/js/admin/index.js:1
 #: dashboard/build/index.js:1
 msgid "Code Snippets"
 msgstr ""
 
-#: include/panel-settings/nexter-ext-panel-settings.php:904
+#: include/panel-settings/nexter-ext-panel-settings.php:1013
+#: include/panel-settings/nexter-ext-panel-settings.php:1014
+#: dashboard/build/index.js:1
+msgid "Extensions"
+msgstr ""
+
+#: include/panel-settings/nexter-ext-panel-settings.php:1021
+#: include/panel-settings/nexter-ext-panel-settings.php:1022
+#: dashboard/build/index.js:1
+msgid "Theme Customizer"
+msgstr ""
+
+#: include/panel-settings/nexter-ext-panel-settings.php:1030
+#: include/panel-settings/nexter-ext-panel-settings.php:1031
+msgid "Patterns"
+msgstr ""
+
+#: include/panel-settings/nexter-ext-panel-settings.php:1040
+#: include/panel-settings/nexter-ext-panel-settings.php:1041
+msgid "Get Pro Nexter"
+msgstr ""
+
+#: include/panel-settings/nexter-ext-panel-settings.php:1123
 msgid "Server not found."
 msgstr ""
 
-#: include/panel-settings/nexter-ext-panel-settings.php:941
+#: include/panel-settings/nexter-ext-panel-settings.php:1160
 #: dashboard/build/index.js:1
 msgid "Activated"
 msgstr ""
 
-#: include/panel-settings/nexter-ext-panel-settings.php:941
+#: include/panel-settings/nexter-ext-panel-settings.php:1160
 msgid "DeActivated"
 msgstr ""
 
 #. translators: %s is the size of the table in megabytes
-#: include/panel-settings/nexter-ext-panel-settings.php:973
+#: include/panel-settings/nexter-ext-panel-settings.php:1192
+#, php-format
 msgid "(%s MB)"
 msgstr ""
 
-#: include/panel-settings/nexter-ext-panel-settings.php:1055
+#: include/panel-settings/nexter-ext-panel-settings.php:1274
 msgid "You are not allowed to do this action"
 msgstr ""
 
-#: include/panel-settings/nexter-ext-panel-settings.php:1178
+#: include/panel-settings/nexter-ext-panel-settings.php:1397
 msgid "Failed to retrieve plugin information."
 msgstr ""
 
-#: include/panel-settings/nexter-ext-panel-settings.php:1295
+#: include/panel-settings/nexter-ext-panel-settings.php:1531
 msgid "Not a permission"
 msgstr ""
 
-#: include/panel-settings/nexter-ext-panel-settings.php:1300
+#: include/panel-settings/nexter-ext-panel-settings.php:1536
 msgid "Security check failed"
 msgstr ""
 
-#: include/panel-settings/nexter-ext-panel-settings.php:1307
-#: include/panel-settings/nexter-ext-panel-settings.php:1315
+#: include/panel-settings/nexter-ext-panel-settings.php:1543
+#: include/panel-settings/nexter-ext-panel-settings.php:1549
 msgid "File Import failed"
 msgstr ""
 
-#: include/panel-settings/nexter-ext-panel-settings.php:1322
+#: include/panel-settings/nexter-ext-panel-settings.php:1556
 msgid "Valid .json file extension"
 msgstr ""
 
-#: include/panel-settings/nexter-ext-panel-settings.php:1328
+#: include/panel-settings/nexter-ext-panel-settings.php:1562
 msgid "Please upload a file"
 msgstr ""
 
-#: include/panel-settings/nexter-ext-panel-settings.php:1341
+#: include/panel-settings/nexter-ext-panel-settings.php:1575
 msgid "Invalid JSON format"
 msgstr ""
 
-#: include/panel-settings/nexter-ext-panel-settings.php:1346
+#: include/panel-settings/nexter-ext-panel-settings.php:1580
 msgid "Customizer settings imported successfully"
 msgstr ""
 
-#: include/panel-settings/nexter-ext-panel-settings.php:1349
+#: include/panel-settings/nexter-ext-panel-settings.php:1583
 msgid "No valid settings found in the file"
+msgstr ""
+
+#: include/panel-settings/nexter-ext-panel-settings.php:1604
+msgid "Code snippet setting is already enabled."
+msgstr ""
+
+#: include/panel-settings/nexter-ext-panel-settings.php:1620
+msgid "Code snippet setting enabled successfully."
 msgstr ""
 
 #: include/panel-settings/nxt-deactive.php:90
@@ -2731,46 +3292,21 @@ msgid "Rollback to Previous Version"
 msgstr ""
 
 #. translators: %s: Php Required
-#: nexter-extension.php:88
+#: nexter-extension.php:90
+#, php-format
 msgid "Nexter Extensions requires PHP version %s+, plugin is currently NOT RUNNING."
 msgstr ""
 
 #: assets/js/admin/index.js:1
-msgid "Start Creating Your First Code Snippet Here"
+msgid "Welcome to Nexter Code Snippets"
 msgstr ""
 
 #: assets/js/admin/index.js:1
-msgid "items"
+msgid "Easily add custom PHP, JS, or CSS to extend your site no need to edit theme files or create a child theme. Enjoy safe customization with built-in fail detection, so you never have to worry about breaking your site."
 msgstr ""
 
 #: assets/js/admin/index.js:1
-msgid "Name"
-msgstr ""
-
-#: assets/js/admin/index.js:1
-#: dashboard/build/index.js:1
-msgid "Description"
-msgstr ""
-
-#: assets/js/admin/index.js:1
-msgid "Tag"
-msgstr ""
-
-#: assets/js/admin/index.js:1
-msgid "Last Updated"
-msgstr ""
-
-#: assets/js/admin/index.js:1
-msgid "Edit"
-msgstr ""
-
-#: assets/js/admin/index.js:1
-msgid "Exporting"
-msgstr ""
-
-#: assets/js/admin/index.js:1
-#: dashboard/build/index.js:1
-msgid "Export"
+msgid "Add New Snippet"
 msgstr ""
 
 #: assets/js/admin/index.js:1
@@ -2778,7 +3314,19 @@ msgid "Are you sure you want to delete this snippet?"
 msgstr ""
 
 #: assets/js/admin/index.js:1
+msgid "Trashing"
+msgstr ""
+
+#: assets/js/admin/index.js:1
 msgid "Trash"
+msgstr ""
+
+#: assets/js/admin/index.js:1
+msgid "Exporting"
+msgstr ""
+
+#: assets/js/admin/index.js:1
+msgid "Please save the snippet first before exporting."
 msgstr ""
 
 #: assets/js/admin/index.js:1
@@ -2794,7 +3342,73 @@ msgid "Error opening WDesignKit interface. Please try again."
 msgstr ""
 
 #: assets/js/admin/index.js:1
-msgid "Please save the snippet first before exporting."
+msgid "No inactive snippets to activate."
+msgstr ""
+
+#: assets/js/admin/index.js:1
+msgid "Snippets activated successfully."
+msgstr ""
+
+#: assets/js/admin/index.js:1
+msgid "Error activating snippets."
+msgstr ""
+
+#: assets/js/admin/index.js:1
+msgid "No active snippets to deactivate."
+msgstr ""
+
+#: assets/js/admin/index.js:1
+msgid "Snippets deactivated successfully."
+msgstr ""
+
+#: assets/js/admin/index.js:1
+msgid "Error deactivating snippets."
+msgstr ""
+
+#: assets/js/admin/index.js:1
+msgid "Exporting snippets..."
+msgstr ""
+
+#: assets/js/admin/index.js:1
+msgid "Are you sure you want to move the selected snippets to trash?"
+msgstr ""
+
+#: assets/js/admin/index.js:1
+msgid "Snippets moved to trash successfully."
+msgstr ""
+
+#: assets/js/admin/index.js:1
+msgid "Error moving snippets to trash."
+msgstr ""
+
+#: assets/js/admin/index.js:1
+msgid "Please select at least one snippet."
+msgstr ""
+
+#: assets/js/admin/index.js:1
+msgid "Please select a bulk action."
+msgstr ""
+
+#: assets/js/admin/index.js:1
+#: dashboard/build/index.js:1
+msgid "Title"
+msgstr ""
+
+#: assets/js/admin/index.js:1
+#: dashboard/build/index.js:1
+msgid "Description"
+msgstr ""
+
+#: assets/js/admin/index.js:1
+msgid "Tags"
+msgstr ""
+
+#: assets/js/admin/index.js:1
+msgid "Last Update"
+msgstr ""
+
+#: assets/js/admin/index.js:1
+msgid "Edit"
 msgstr ""
 
 #: assets/js/admin/index.js:1
@@ -2802,24 +3416,164 @@ msgid "Save to Cloud"
 msgstr ""
 
 #: assets/js/admin/index.js:1
-msgid "Code Snippets /"
+msgid "PHP"
+msgstr ""
+
+#: assets/js/admin/index.js:1
+msgid "HTML"
+msgstr ""
+
+#: assets/js/admin/index.js:1
+msgid "CSS"
+msgstr ""
+
+#: assets/js/admin/index.js:1
+msgid "JS"
+msgstr ""
+
+#: assets/js/admin/index.js:1
+msgid "50+ WordPress Extensions"
+msgstr ""
+
+#: assets/js/admin/index.js:1
+msgid "Replace 50+ WordPress Plugins by Enabling Nexter Extension"
+msgstr ""
+
+#: assets/js/admin/index.js:1
+msgid "Skip the hassle of managing dozens of separate plugins. Nexter Extension gives you everything you need in one lightweight, modular package security tools, performance boosters, advanced site controls, and design flexibility without slowing down your site or breaking your workflow."
+msgstr ""
+
+#: assets/js/admin/index.js:1
+#: theme-builder/build/index.js:1
+msgid "Install Nexter Extension"
 msgstr ""
 
 #: assets/js/admin/index.js:1
 #: dashboard/build/index.js:1
-msgid "Import"
+msgid "Explore All Features"
 msgstr ""
 
 #: assets/js/admin/index.js:1
-msgid "Import from Cloud"
+msgid "All Snippets"
 msgstr ""
 
 #: assets/js/admin/index.js:1
-msgid "Choose a Nexter Code Snippet JSON file to import your custom snippets, and add them to the list of available snippets in the Code Snippets Library."
+msgid "Functions"
+msgstr ""
+
+#: assets/js/admin/index.js:1
+msgid "Styles"
+msgstr ""
+
+#: assets/js/admin/index.js:1
+msgid "Scripts"
+msgstr ""
+
+#: assets/js/admin/index.js:1
+msgid "Bulk actions"
 msgstr ""
 
 #: assets/js/admin/index.js:1
 #: dashboard/build/index.js:1
+msgid "Activate"
+msgstr ""
+
+#: assets/js/admin/index.js:1
+#: dashboard/build/index.js:1
+#: theme-builder/build/index.js:1
+msgid "Deactivate"
+msgstr ""
+
+#: assets/js/admin/index.js:1
+#: dashboard/build/index.js:1
+msgid "Export"
+msgstr ""
+
+#: assets/js/admin/index.js:1
+msgid "Move to Trash"
+msgstr ""
+
+#: assets/js/admin/index.js:1
+msgid "Apply"
+msgstr ""
+
+#: assets/js/admin/index.js:1
+msgid "item(s) selected"
+msgstr ""
+
+#: assets/js/admin/index.js:1
+msgid "Code Snippet"
+msgstr ""
+
+#: assets/js/admin/index.js:1
+#: dashboard/build/index.js:1
+msgid "Search"
+msgstr ""
+
+#: assets/js/admin/index.js:1
+msgid "Activating WDesignKit"
+msgstr ""
+
+#: assets/js/admin/index.js:1
+#: dashboard/build/index.js:1
+msgid "Installing WDesignKit"
+msgstr ""
+
+#: assets/js/admin/index.js:1
+msgid "Why Do I Need to Install WDesignKit Plugin?"
+msgstr ""
+
+#: assets/js/admin/index.js:1
+msgid "The Nexter Extension’s Code Snippets feature lets you write and manage your own custom code, but with WDesignKit, you also get access to a library of ready-made snippets. We have kept it as a separate plugin so your custom code stays safe and organized. It works seamlessly with Nexter and won’t affect performance. The best part? It comes completely free with Nexter, giving you more power out of the box."
+msgstr ""
+
+#: assets/js/admin/index.js:1
+msgid "Do I Have to Pay for Snippets?"
+msgstr ""
+
+#: assets/js/admin/index.js:1
+msgid "Not at all! All WDesignKit snippets are 100% free for Nexter users. You can instantly explore, import, and customize pre-built snippets, without paying anything extra."
+msgstr ""
+
+#: assets/js/admin/index.js:1
+msgid "Add functionalities instantly without writing code from scratch"
+msgstr ""
+
+#: assets/js/admin/index.js:1
+msgid "Fully editable to match your needs"
+msgstr ""
+
+#: assets/js/admin/index.js:1
+msgid "Save time with ready-to-use snippets"
+msgstr ""
+
+#: assets/js/admin/index.js:1
+msgid "Explore multiple use cases and conditions"
+msgstr ""
+
+#: assets/js/admin/index.js:1
+msgid "Activate WDesignKit"
+msgstr ""
+
+#: assets/js/admin/index.js:1
+msgid "Install WDesignKit"
+msgstr ""
+
+#: assets/js/admin/index.js:1
+msgid "Import Snippets"
+msgstr ""
+
+#: assets/js/admin/index.js:1
+msgid "Cloud Snippet Library"
+msgstr ""
+
+#: assets/js/admin/index.js:1
+msgid "Upload your file to quickly import all your code snippets into your library in just one click."
+msgstr ""
+
+#: assets/js/admin/index.js:1
+#: dashboard/build/index.js:1
+#: theme-builder/build/index.js:1
 msgid "Choose File"
 msgstr ""
 
@@ -2833,6 +3587,26 @@ msgstr ""
 
 #: assets/js/admin/index.js:1
 msgid "Imported"
+msgstr ""
+
+#: assets/js/admin/index.js:1
+msgid "Enable the admin bar menu that shows info about which snippets & scripts are loaded on current page."
+msgstr ""
+
+#: assets/js/admin/index.js:1
+msgid "NEW! "
+msgstr ""
+
+#: assets/js/admin/index.js:1
+msgid "Connect to the WDesignKit Cloud"
+msgstr ""
+
+#: assets/js/admin/index.js:1
+msgid " and Import Ready-to-Use Code Snippets or Save Your Own to the Cloud"
+msgstr ""
+
+#: assets/js/admin/index.js:1
+msgid "Close"
 msgstr ""
 
 #: assets/js/admin/index.js:1
@@ -4077,6 +4851,10 @@ msgid "Category"
 msgstr ""
 
 #: assets/js/admin/index.js:1
+msgid "Tag"
+msgstr ""
+
+#: assets/js/admin/index.js:1
 msgid "Taxonomy Name (Term)"
 msgstr ""
 
@@ -4115,6 +4893,7 @@ msgstr ""
 
 #: assets/js/admin/index.js:1
 #: dashboard/build/index.js:1
+#: theme-builder/build/index.js:1
 msgid "Draft"
 msgstr ""
 
@@ -4508,10 +5287,6 @@ msgid "Enable"
 msgstr ""
 
 #: assets/js/admin/index.js:1
-msgid "Enable or disable conditional logic for this snippet. When enabled, the snippet will only run if the conditions are met."
-msgstr ""
-
-#: assets/js/admin/index.js:1
 msgid "Select values..."
 msgstr ""
 
@@ -4552,6 +5327,10 @@ msgid "Enter value..."
 msgstr ""
 
 #: assets/js/admin/index.js:1
+msgid "Add"
+msgstr ""
+
+#: assets/js/admin/index.js:1
 msgid "Remove condition"
 msgstr ""
 
@@ -4561,15 +5340,12 @@ msgid "PRO"
 msgstr ""
 
 #: assets/js/admin/index.js:1
+#: dashboard/build/index.js:1
 msgid "NOT INSTALLED"
 msgstr ""
 
 #: assets/js/admin/index.js:1
 msgid "This is a PRO feature - Click to upgrade"
-msgstr ""
-
-#: assets/js/admin/index.js:1
-msgid "Add"
 msgstr ""
 
 #: assets/js/admin/index.js:1
@@ -5069,14 +5845,35 @@ msgid "An error occurred while fetching data."
 msgstr ""
 
 #: assets/js/admin/index.js:1
+msgid "Please Enter Snippet Name"
+msgstr ""
+
+#: assets/js/admin/index.js:1
 msgid "Enter Title of Snippet"
 msgstr ""
 
 #: assets/js/admin/index.js:1
-msgid "Updating..."
+msgid "Please Enter Some Code"
 msgstr ""
 
 #: assets/js/admin/index.js:1
+msgid "Code has lint errors. Please fix them before saving."
+msgstr ""
+
+#: assets/js/admin/index.js:1
+msgid "Unknown error"
+msgstr ""
+
+#: assets/js/admin/index.js:1
+msgid "Code lint error at line"
+msgstr ""
+
+#: assets/js/admin/index.js:1
+msgid "errors total"
+msgstr ""
+
+#: assets/js/admin/index.js:1
+#: dashboard/build/index.js:1
 msgid "Saved"
 msgstr ""
 
@@ -5093,15 +5890,7 @@ msgid "Insert via Shortcode"
 msgstr ""
 
 #: assets/js/admin/index.js:1
-msgid "Snippet Start"
-msgstr ""
-
-#: assets/js/admin/index.js:1
 msgid "Start Date"
-msgstr ""
-
-#: assets/js/admin/index.js:1
-msgid "Snippet End"
 msgstr ""
 
 #: assets/js/admin/index.js:1
@@ -5109,28 +5898,16 @@ msgid "End Date"
 msgstr ""
 
 #: assets/js/admin/index.js:1
-msgid "Snippet Name"
-msgstr ""
-
-#: assets/js/admin/index.js:1
-msgid "Please Enter Name"
-msgstr ""
-
-#: assets/js/admin/index.js:1
+#: theme-builder/build/index.js:1
 msgid "Active"
 msgstr ""
 
 #: assets/js/admin/index.js:1
-#: dashboard/build/index.js:1
-msgid "Deactivate"
+msgid "Command / Ctrl + S to save"
 msgstr ""
 
 #: assets/js/admin/index.js:1
-msgid "Preview Code"
-msgstr ""
-
-#: assets/js/admin/index.js:1
-msgid "Write / Add your code."
+msgid "Code Preview"
 msgstr ""
 
 #: assets/js/admin/index.js:1
@@ -5146,23 +5923,55 @@ msgid "Learn more about Shortcode Attribute"
 msgstr ""
 
 #: assets/js/admin/index.js:1
-msgid "Select Type : "
-msgstr ""
-
-#: assets/js/admin/index.js:1
-msgid "PHP"
-msgstr ""
-
-#: assets/js/admin/index.js:1
-msgid "HTML"
-msgstr ""
-
-#: assets/js/admin/index.js:1
-msgid "CSS"
-msgstr ""
-
-#: assets/js/admin/index.js:1
 msgid "JavaScript"
+msgstr ""
+
+#: assets/js/admin/index.js:1
+msgid "Snippet Name"
+msgstr ""
+
+#: assets/js/admin/index.js:1
+msgid "Write / Add your code."
+msgstr ""
+
+#: assets/js/admin/index.js:1
+msgid "Your Snippet Name"
+msgstr ""
+
+#: assets/js/admin/index.js:1
+msgid "Write snippet description."
+msgstr ""
+
+#: assets/js/admin/index.js:1
+msgid "Enter Description"
+msgstr ""
+
+#: assets/js/admin/index.js:1
+msgid "Schedule"
+msgstr ""
+
+#: assets/js/admin/index.js:1
+msgid "Select Start and End Date show snippet."
+msgstr ""
+
+#: assets/js/admin/index.js:1
+msgid "Snippet Tag"
+msgstr ""
+
+#: assets/js/admin/index.js:1
+msgid "Add multiple tags snippet related."
+msgstr ""
+
+#: assets/js/admin/index.js:1
+msgid "Type tag and press Enter or comma to add"
+msgstr ""
+
+#: assets/js/admin/index.js:1
+msgid "Placement Priority Level"
+msgstr ""
+
+#: assets/js/admin/index.js:1
+msgid "Lower numbers run first. Default is 10."
 msgstr ""
 
 #: assets/js/admin/index.js:1
@@ -5174,11 +5983,11 @@ msgid "Select 'Automatic Placement' if you want the snippet to run automatically
 msgstr ""
 
 #: assets/js/admin/index.js:1
-msgid "Snippet Placement"
+msgid "Select Insertion Method"
 msgstr ""
 
 #: assets/js/admin/index.js:1
-msgid "Notice"
+msgid "Snippet Placement"
 msgstr ""
 
 #: assets/js/admin/index.js:1
@@ -5278,14 +6087,6 @@ msgid "Compress by removing spaces & comments"
 msgstr ""
 
 #: assets/js/admin/index.js:1
-msgid "Schedule"
-msgstr ""
-
-#: assets/js/admin/index.js:1
-msgid "Schedule when your snippet should be active on the site."
-msgstr ""
-
-#: assets/js/admin/index.js:1
 msgid "CSS Selectors are a PRO feature"
 msgstr ""
 
@@ -5337,58 +6138,6 @@ msgstr ""
 msgid "Upgrade to Nexter Extension PRO Unlimited Site Plan to unlock all advanced snippet features including flexible insertion options, powerful scheduling, device targeting, conditional logic, and more."
 msgstr ""
 
-#: assets/js/admin/index.js:1
-msgid "Basic Info"
-msgstr ""
-
-#: assets/js/admin/index.js:1
-msgid "Add some additional information."
-msgstr ""
-
-#: assets/js/admin/index.js:1
-msgid "Snippet Tag"
-msgstr ""
-
-#: assets/js/admin/index.js:1
-msgid "Type tag and press Enter or comma to add"
-msgstr ""
-
-#: assets/js/admin/index.js:1
-msgid "Placement Priority Level"
-msgstr ""
-
-#: assets/js/admin/index.js:1
-msgid "Lower numbers run first. Default is 10."
-msgstr ""
-
-#: assets/js/admin/index.js:1
-msgid "Snippet Description"
-msgstr ""
-
-#: assets/js/admin/index.js:1
-msgid "Add short description explaining how this code snippet works"
-msgstr ""
-
-#: assets/js/admin/nxt-wdk-preset.js:1
-msgid "Design Quickly without starting from Scratch"
-msgstr ""
-
-#: assets/js/admin/nxt-wdk-preset.js:1
-msgid "Fully Customizable for Any Style"
-msgstr ""
-
-#: assets/js/admin/nxt-wdk-preset.js:1
-msgid "Time-Saving and Efficient Workflow"
-msgstr ""
-
-#: assets/js/admin/nxt-wdk-preset.js:1
-msgid "Explore Versatile Layout Options"
-msgstr ""
-
-#: assets/js/admin/nxt-wdk-preset.js:1
-msgid "Enable Presets"
-msgstr ""
-
 #: dashboard/build/index.js:1
 msgid "Pro"
 msgstr ""
@@ -5399,6 +6148,10 @@ msgstr ""
 
 #: dashboard/build/index.js:1
 msgid "Welcome"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "WordPress Templates"
 msgstr ""
 
 #: dashboard/build/index.js:1
@@ -5422,15 +6175,19 @@ msgid "Extra Options"
 msgstr ""
 
 #: dashboard/build/index.js:1
+msgid "Asset Delivery"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Custom CSS & JS"
+msgstr ""
+
+#: dashboard/build/index.js:1
 msgid "Roll Back Plugin"
 msgstr ""
 
 #: dashboard/build/index.js:1
 msgid "White Label"
-msgstr ""
-
-#: dashboard/build/index.js:1
-msgid "Theme Customizer"
 msgstr ""
 
 #: dashboard/build/index.js:1
@@ -5446,15 +6203,13 @@ msgid "Activate PRO"
 msgstr ""
 
 #: dashboard/build/index.js:1
+#: theme-builder/build/index.js:1
 msgid "Version "
 msgstr ""
 
 #: dashboard/build/index.js:1
+#: theme-builder/build/index.js:1
 msgid "System Info"
-msgstr ""
-
-#: dashboard/build/index.js:1
-msgid "50+"
 msgstr ""
 
 #: dashboard/build/index.js:1
@@ -5471,38 +6226,6 @@ msgstr ""
 
 #: dashboard/build/index.js:1
 msgid "Subscription failed. Please try again later."
-msgstr ""
-
-#: dashboard/build/index.js:1
-msgid "90+ Best WordPress Blocks for"
-msgstr ""
-
-#: dashboard/build/index.js:1
-msgid "Gutenberg Editor"
-msgstr ""
-
-#: dashboard/build/index.js:1
-msgid "Enable Blocks"
-msgstr ""
-
-#: dashboard/build/index.js:1
-msgid "Open Blocks"
-msgstr ""
-
-#: dashboard/build/index.js:1
-msgid "Best Elementor Addon with 120+"
-msgstr ""
-
-#: dashboard/build/index.js:1
-msgid "Widgets"
-msgstr ""
-
-#: dashboard/build/index.js:1
-msgid "Enable Addon"
-msgstr ""
-
-#: dashboard/build/index.js:1
-msgid "Open Addon"
 msgstr ""
 
 #: dashboard/build/index.js:1
@@ -5538,7 +6261,88 @@ msgid "UiChemy Setting"
 msgstr ""
 
 #: dashboard/build/index.js:1
-msgid "Total Features"
+msgid "Best Elementor Addon with 120+"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Widgets"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Enable Addon"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Open Addon"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Lightest Starter Theme for Page Builders"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Install Theme"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Open Theme Settings"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "50+ WordPress Extensions to Make Site More Secure, Performant & Smart"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Enable Extension"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Open Extensions"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "90+ Best WordPress Blocks for"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Gutenberg Editor"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Enable Blocks"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Open Blocks"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "90+"
+msgstr ""
+
+#: dashboard/build/index.js:1
+#: theme-builder/build/index.js:1
+msgid "Inactive"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid " Active"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Total Blocks"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "50+"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "25 Active"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Total Extensions"
 msgstr ""
 
 #: dashboard/build/index.js:1
@@ -5574,7 +6378,7 @@ msgid "Suggest Now"
 msgstr ""
 
 #: dashboard/build/index.js:1
-msgid "Rate Extension"
+msgid "Rate Nexter"
 msgstr ""
 
 #: dashboard/build/index.js:1
@@ -5598,27 +6402,163 @@ msgid "View More"
 msgstr ""
 
 #: dashboard/build/index.js:1
-msgid "Fastest Load Time"
+msgid "WordPress Blocks Library from WDesignKit"
 msgstr ""
 
 #: dashboard/build/index.js:1
-msgid "No jQuery Dependency"
+msgid "Explore our curated selection of pre-built blocks for Gutenberg from the WDesignKit Blocks Library."
 msgstr ""
 
 #: dashboard/build/index.js:1
-msgid "Pure Vanilla JS Theme"
+msgid "View Blocks Library*"
 msgstr ""
 
 #: dashboard/build/index.js:1
-msgid "1000+ Pre-Build Website Templates"
+msgid "* WDesignKit Plugin Required"
 msgstr ""
 
 #: dashboard/build/index.js:1
-msgid "Highly Customizable"
+msgid "Developer? Create Your Custom Gutenberg Block"
 msgstr ""
 
 #: dashboard/build/index.js:1
-msgid "Multi-Purpose WordPress Themes"
+msgid "With WDesignKit, you can easily convert your custom code into a Gutenberg block."
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Request for Block"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "We’re always looking to improve our Block Library. Share your ideas, and we’ll consider adding them based on user demand."
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Request Blocks*"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Oops, No Blocks Found!!"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Please try searching with an alternative or more common term!"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Essential"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Creative"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Tabbed"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Social"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Advanced"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Listing"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Builder"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Extras"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "WDesignKit"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Disable All"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Enable All"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Freemium"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Scan Unused Blocks"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Disable Unused Blocks"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid " Total Blocks"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "New"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Live Demo"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Read Docs"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Unused"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Used"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "90+ WordPress Gutenberg Blocks"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Unlock the Complete Potential of Nexter by Enabling Nexter Gutenberg Blocks"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Build professional, fast, and beautiful WordPress sites without relying on heavy page builders. Nexter Blocks work natively with Gutenberg, giving you everything you need while keeping your site lightweight and performance-focused."
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Activate Nexter Blocks"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Install Nexter Blocks Free"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Nexter Blocks"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Nexter Theme Optimization Controls"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Enable or disable core theme features to match your design needs."
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Theme Performance"
 msgstr ""
 
 #: dashboard/build/index.js:1
@@ -5694,11 +6634,79 @@ msgid "Change the highlight color when users select text on your site for a more
 msgstr ""
 
 #: dashboard/build/index.js:1
-msgid "Lightest Starter Theme for Page Builders"
+msgid "Disable Theme Container"
 msgstr ""
 
 #: dashboard/build/index.js:1
-msgid "Install Theme"
+msgid "Disable container settings from theme customizer."
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Disable Theme Header Footer"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Disable theme header and footer from theme customizer."
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Disable Reset CSS"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Remove reset CSS."
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Disable Theme Sidebar"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Disable sidebar settings from theme customizer."
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Disable Theme CSS"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Remove the default theme CSS"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Disable Theme Woo CSS"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Remove the WooCommerce CSS added by theme."
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Disable Skip Link"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Remove the \"Skip to content\" link."
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Nexter Theme"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Ultra-Lightweight WordPress Theme"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Start With the Lightest, Fastest Foundation for Your Website"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Nexter Theme gives you a rock-solid, super-clean base to build on — no heavy CSS frameworks, no bloated JavaScript, just a minimal, performance-first theme that keeps your site fast and stable while you design freely with Gutenberg or your favorite tools."
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Install Nexter Theme"
 msgstr ""
 
 #: dashboard/build/index.js:1
@@ -5706,7 +6714,7 @@ msgid "Activate Theme"
 msgstr ""
 
 #: dashboard/build/index.js:1
-msgid "Read Docs"
+msgid "Explore All Features "
 msgstr ""
 
 #: dashboard/build/index.js:1
@@ -5714,11 +6722,116 @@ msgid "Coming Soon"
 msgstr ""
 
 #: dashboard/build/index.js:1
-msgid "Font Family"
+msgid "NEW"
 msgstr ""
 
 #: dashboard/build/index.js:1
-msgid "Search"
+msgid "Import Pre-Designed Website Templates Made with Nexter Blocks"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Download Now"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Live Preview"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "View More Website Templates"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Upgrade to Nexter Blocks PRO Unlimited Site Plan to Unlock Whitelabel Branding."
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Upgrade to Nexter Blocks PRO to Unlock all 90+ Blocks & 1000+ Pre-Made Templates"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Performance Optimized"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "90+ WordPress Blocks"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "1000+ Pre-made Starter Templates"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Use Code 'FIRST20' for FLAT 20%. (Offer applicable for 1st time only)"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Upgrade to Nexter PRO Unlimited Site Plan to Unlock Whitelabel Branding."
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Upgrade to Nexter Extension Pro to all Unlock all 50+ Features."
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Better Performance & Security"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "50+ Extension Feature"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "50+ Extensions"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Whitelabel Nexter Extension"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Import/Export Theme Customizer Settings"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Easily import or export Nexter Theme Customizer settings to use across different sites."
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Import/Export Extension Settings"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Easily import or export Nexter Extension settings to use across different sites."
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Nexter Import/Export Data"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Export Customizer Settings"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Import Customizer Settings"
+msgstr ""
+
+#: dashboard/build/index.js:1
+#: theme-builder/build/index.js:1
+msgid "Import"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Export Extension Settings"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Import Extension Settings"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Font Family"
 msgstr ""
 
 #: dashboard/build/index.js:1
@@ -6058,71 +7171,28 @@ msgid "Outset"
 msgstr ""
 
 #: dashboard/build/index.js:1
-msgid "Upgrade to Nexter PRO Unlimited Site Plan to Unlock Whitelabel Branding."
+msgid "Install Nexter Extension to Unlock this Feature."
 msgstr ""
 
 #: dashboard/build/index.js:1
-msgid "Upgrade to Nexter Extension Pro to all Unlock all 50+ Features."
+msgid "Replace 50+ WordPress Plugins"
 msgstr ""
 
 #: dashboard/build/index.js:1
-msgid "Better Performance & Security"
+msgid "Theme Builder & Code Snippets"
 msgstr ""
 
 #: dashboard/build/index.js:1
-msgid "50+ Extension Feature"
+msgid "Modular Code"
 msgstr ""
 
 #: dashboard/build/index.js:1
-msgid "50+ Extensions"
+#: theme-builder/build/index.js:1
+msgid "Activate Now"
 msgstr ""
 
 #: dashboard/build/index.js:1
-msgid "Whitelabel Nexter Extension"
-msgstr ""
-
-#: dashboard/build/index.js:1
-msgid "Use Code 'FIRST20' for FLAT 20%. (Offer applicable for 1st time only)"
-msgstr ""
-
-#: dashboard/build/index.js:1
-msgid "Import/Export Theme Customizer Settings"
-msgstr ""
-
-#: dashboard/build/index.js:1
-msgid "Easily import or export Nexter Theme Customizer settings to use across different sites."
-msgstr ""
-
-#: dashboard/build/index.js:1
-msgid "Import/Export Extension Settings"
-msgstr ""
-
-#: dashboard/build/index.js:1
-msgid "Easily import or export Nexter Extension settings to use across different sites."
-msgstr ""
-
-#: dashboard/build/index.js:1
-msgid "Nexter Import/Export Data"
-msgstr ""
-
-#: dashboard/build/index.js:1
-msgid "NEW"
-msgstr ""
-
-#: dashboard/build/index.js:1
-msgid "Export Customizer Settings"
-msgstr ""
-
-#: dashboard/build/index.js:1
-msgid "Import Customizer Settings"
-msgstr ""
-
-#: dashboard/build/index.js:1
-msgid "Export Extension Settings"
-msgstr ""
-
-#: dashboard/build/index.js:1
-msgid "Import Extension Settings"
+msgid "Install Now"
 msgstr ""
 
 #: dashboard/build/index.js:1
@@ -6131,10 +7201,6 @@ msgstr ""
 
 #: dashboard/build/index.js:1
 msgid "This admin bar tool provides insights into which code snippets and scripts are loaded on the current page, helping with debugging and optimization. It also includes a customizable code editor where you can set a fixed height in pixels or enable auto-grow to let the editor expand automatically based on the code content."
-msgstr ""
-
-#: dashboard/build/index.js:1
-msgid "Set the editor height"
 msgstr ""
 
 #: dashboard/build/index.js:1
@@ -6398,7 +7464,7 @@ msgid "Upload Regular font file."
 msgstr ""
 
 #: dashboard/build/index.js:1
-msgid "Freemium"
+msgid "BETA"
 msgstr ""
 
 #: dashboard/build/index.js:1
@@ -6578,6 +7644,22 @@ msgid "Custom SMTP"
 msgstr ""
 
 #: dashboard/build/index.js:1
+msgid "From Email"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Enter From Email ID"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "From Name"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Enter From Name"
+msgstr ""
+
+#: dashboard/build/index.js:1
 msgid "Client ID"
 msgstr ""
 
@@ -6599,22 +7681,6 @@ msgstr ""
 
 #: dashboard/build/index.js:1
 msgid "Redirect URI"
-msgstr ""
-
-#: dashboard/build/index.js:1
-msgid "From Name"
-msgstr ""
-
-#: dashboard/build/index.js:1
-msgid "Enter From Name"
-msgstr ""
-
-#: dashboard/build/index.js:1
-msgid "From Email"
-msgstr ""
-
-#: dashboard/build/index.js:1
-msgid "Enter From Email ID"
 msgstr ""
 
 #: dashboard/build/index.js:1
@@ -7566,10 +8632,6 @@ msgid "Background Color"
 msgstr ""
 
 #: dashboard/build/index.js:1
-msgid "Title"
-msgstr ""
-
-#: dashboard/build/index.js:1
 msgid "Title Color"
 msgstr ""
 
@@ -7698,90 +8760,6 @@ msgid "There is no data available to view the logs"
 msgstr ""
 
 #: dashboard/build/index.js:1
-msgid "Feature"
-msgstr ""
-
-#: dashboard/build/index.js:1
-msgid "35+"
-msgstr ""
-
-#: dashboard/build/index.js:1
-msgid "Header & Footer Builder"
-msgstr ""
-
-#: dashboard/build/index.js:1
-msgid "Breadcrumbs"
-msgstr ""
-
-#: dashboard/build/index.js:1
-msgid "Maintenance/Coming Soon Page"
-msgstr ""
-
-#: dashboard/build/index.js:1
-msgid "Display Rules for Theme Builder Sections"
-msgstr ""
-
-#: dashboard/build/index.js:1
-msgid "Security Hardening"
-msgstr ""
-
-#: dashboard/build/index.js:1
-msgid "Performance Tweaks"
-msgstr ""
-
-#: dashboard/build/index.js:1
-msgid "Google Fonts"
-msgstr ""
-
-#: dashboard/build/index.js:1
-msgid "Custom Font Upload"
-msgstr ""
-
-#: dashboard/build/index.js:1
-msgid "5 Fonts"
-msgstr ""
-
-#: dashboard/build/index.js:1
-msgid "Unlimited Fonts"
-msgstr ""
-
-#: dashboard/build/index.js:1
-msgid "Action & Filter Hooks"
-msgstr ""
-
-#: dashboard/build/index.js:1
-msgid "Advanced Theme Builder (For Single, Archive, Hooks etc)"
-msgstr ""
-
-#: dashboard/build/index.js:1
-msgid "Whitelabel Theme"
-msgstr ""
-
-#: dashboard/build/index.js:1
-msgid "Support"
-msgstr ""
-
-#: dashboard/build/index.js:1
-msgid "WordPress.org"
-msgstr ""
-
-#: dashboard/build/index.js:1
-msgid "Premium Helpdesk"
-msgstr ""
-
-#: dashboard/build/index.js:1
-msgid "Response time under 24 working hours"
-msgstr ""
-
-#: dashboard/build/index.js:1
-msgid "View detailed comparison"
-msgstr ""
-
-#: dashboard/build/index.js:1
-msgid "60 days Money-Back Guarantee"
-msgstr ""
-
-#: dashboard/build/index.js:1
 msgid "Advanced Header Builder"
 msgstr ""
 
@@ -7830,7 +8808,15 @@ msgid "Get rid of the limited Header customizer. Use WordPress Blocks or Blocks 
 msgstr ""
 
 #: dashboard/build/index.js:1
+msgid "Display Rules for Theme Builder Sections"
+msgstr ""
+
+#: dashboard/build/index.js:1
 msgid "Control where and how your theme builder sections appear on your site."
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Action & Filter Hooks"
 msgstr ""
 
 #: dashboard/build/index.js:1
@@ -7847,10 +8833,6 @@ msgstr ""
 
 #: dashboard/build/index.js:1
 msgid "Nexter WP Theme"
-msgstr ""
-
-#: dashboard/build/index.js:1
-msgid "Nexter Blocks"
 msgstr ""
 
 #: dashboard/build/index.js:1
@@ -7874,19 +8856,15 @@ msgid "Install"
 msgstr ""
 
 #: dashboard/build/index.js:1
-msgid "Activate"
-msgstr ""
-
-#: dashboard/build/index.js:1
-msgid "Install & Activate"
-msgstr ""
-
-#: dashboard/build/index.js:1
 msgid "Advanced Performance"
 msgstr ""
 
 #: dashboard/build/index.js:1
 msgid "A set of handy options to fine tune your WordPress site performance, remove unnecessary code."
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Google Fonts"
 msgstr ""
 
 #: dashboard/build/index.js:1
@@ -8218,11 +9196,19 @@ msgid "Are you sure you want to remove this Image Size? This action cannot be un
 msgstr ""
 
 #: dashboard/build/index.js:1
-msgid "Roll Back Nexter Extension FREE Version"
+msgid "Are you sure you want to reinstall the previous version?"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Roll Back Nexter Blocks FREE Version"
 msgstr ""
 
 #: dashboard/build/index.js:1
 msgid "Warning: Please backup your database before making the rollback."
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Roll Back Nexter Extension FREE Version"
 msgstr ""
 
 #: dashboard/build/index.js:1
@@ -8238,6 +9224,10 @@ msgid "Hide Our Recommended plugin Ads?"
 msgstr ""
 
 #: dashboard/build/index.js:1
+msgid "Hide Starter Templates Tab?"
+msgstr ""
+
+#: dashboard/build/index.js:1
 msgid "Hide Licence Key Tab?"
 msgstr ""
 
@@ -8246,7 +9236,15 @@ msgid "Hide Plugin RollBack Tab?"
 msgstr ""
 
 #: dashboard/build/index.js:1
+msgid "Hide WDesignKit Integration for Templates, Presets, Code Snippets & Cloud Storage"
+msgstr ""
+
+#: dashboard/build/index.js:1
 msgid "Please keep the character under 50 characters"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Please keep the character under 250 characters"
 msgstr ""
 
 #: dashboard/build/index.js:1
@@ -8259,58 +9257,6 @@ msgstr ""
 
 #: dashboard/build/index.js:1
 msgid "Please keep the character under 150 characters"
-msgstr ""
-
-#: dashboard/build/index.js:1
-msgid "Are you sure you want to Reset this Form Data?"
-msgstr ""
-
-#: dashboard/build/index.js:1
-msgid "Brand Name"
-msgstr ""
-
-#: dashboard/build/index.js:1
-msgid "Enter Brand Name"
-msgstr ""
-
-#: dashboard/build/index.js:1
-msgid "Theme Name"
-msgstr ""
-
-#: dashboard/build/index.js:1
-msgid "Enter Theme Name"
-msgstr ""
-
-#: dashboard/build/index.js:1
-msgid "Theme Description"
-msgstr ""
-
-#: dashboard/build/index.js:1
-msgid "Enter Theme Description"
-msgstr ""
-
-#: dashboard/build/index.js:1
-msgid "Developer / Agency (Theme)"
-msgstr ""
-
-#: dashboard/build/index.js:1
-msgid "Enter Developer Name"
-msgstr ""
-
-#: dashboard/build/index.js:1
-msgid "Website URL (Pro Version)"
-msgstr ""
-
-#: dashboard/build/index.js:1
-msgid "Enter Website URL"
-msgstr ""
-
-#: dashboard/build/index.js:1
-msgid "Upload Logo / Icon"
-msgstr ""
-
-#: dashboard/build/index.js:1
-msgid "Theme Screenshot"
 msgstr ""
 
 #: dashboard/build/index.js:1
@@ -8338,11 +9284,91 @@ msgid "Plugin Description (Pro Version)"
 msgstr ""
 
 #: dashboard/build/index.js:1
+msgid "Developer / Agency"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Enter Developer Name"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Website URL (Pro Version)"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Enter Website URL"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Theme Name"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Enter Theme Name"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Theme Description"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Enter Theme Description"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Theme Screenshot"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Brand Name"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Enter Brand Name"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Upload Logo / Icon"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Developer / Agency (Pro Version)"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Enter Web URL"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Developer / Agency (Free Version)"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Website URL (Free Version)"
+msgstr ""
+
+#: dashboard/build/index.js:1
 msgid "Select or Upload Media"
 msgstr ""
 
 #: dashboard/build/index.js:1
 msgid "Use this media"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Learn How it Works?"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Save Settings"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Upload your Icon File"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Only .png, .jpg .svg supported"
 msgstr ""
 
 #: dashboard/build/index.js:1
@@ -8406,7 +9432,7 @@ msgid "Check our troubleshooting guide"
 msgstr ""
 
 #: dashboard/build/index.js:1
-msgid "Quick support"
+msgid "Quick Support"
 msgstr ""
 
 #: dashboard/build/index.js:1
@@ -8450,25 +9476,597 @@ msgid "Plugin Version: "
 msgstr ""
 
 #: dashboard/build/index.js:1
-msgid "Get Access to 50+ Nexter "
+msgid "60 days Money-Back Guarantee"
 msgstr ""
 
 #: dashboard/build/index.js:1
-msgid "Extensions."
+msgid "Upgrade to Nexter Pro to Unlock 90+ WordPress"
 msgstr ""
 
 #: dashboard/build/index.js:1
-msgid "View all Features"
+msgid " Blocks, 1000+ Ready Made Templates &"
 msgstr ""
 
 #: dashboard/build/index.js:1
-msgid "50+ WordPress Extensions"
+msgid " 50+ Extensions."
 msgstr ""
 
 #: dashboard/build/index.js:1
-msgid "Security Hardener"
+msgid "100% Performance Optimised"
 msgstr ""
 
 #: dashboard/build/index.js:1
-msgid "Performance Booster"
+msgid "Create Websites in 60 Secs"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Trusted by 20K+ Users"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Delay 3rd Party JS"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "If this option enabled, Some 3rd party JS like FontAwesome Pro, Google Map, Lottiefiles will be delayed. It will be loaded based on Mouse event by user after page load."
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "If you enable this option, Your JS and CSS will be loaded with Defer Attribute. It will make HTML render of page faster and help getting better scores in Google Page Speed."
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Regenerate Files"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "If you notice any discrepancies between the frontend and backend design, we recommend clicking the button above to regenerate the assets dynamically. This will ensure the design reflects the latest changes. We strongly suggest using this feature when changing domains or moving from a staging environment to live."
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Asset Manager"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "PURGE ALL ASSETS"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Smart Optimised (Recommended)"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "On Demand Assets"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "In \"Smart Optimised\" method of caching, We use detect widgets used in each page, combine and minify all JS and CSS of page in two separate files for the best possible performance with least possible requests. All Cache stored at \"SiteURL/wp-content/uploads/nxt-addons/\""
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "REGENERATE ALL ASSETS"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Custom CSS"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Add Your Custom CSS Styles"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Custom JS"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Add Your Custom JS Script"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Get 1000+ Pre-Designed WordPress Websites & Templates"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Skip"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Select Mode"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Select Blocks"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Enable Template"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Special Offer"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Stay Updated"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Confirmation"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Skip Setup"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "How would you like to start?"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Import Ready Made Website"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Get a Full Website Ready Under 60 seconds"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "This will install the WDesignKit Plugin, which enables you to import WordPress Website Templates & Sections."
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Use WordPress Blocks"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Create your design with our highly customisable Blocks"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Select the Blocks You Want to Use"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Setting Up for Website Templates"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Enabling Website Templates"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "WDesignKit Activated"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Why Do I Need a Theme Builder?"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Our Theme Builder gives you the capability to customize the <strong>Header, Footer, Single, and Archive Pages</strong> using Nexter’s <strong>dynamic blocks</strong>.<br><br>You don’t need to rely on the <strong>limited controls of the customizer</strong> like other themes. This makes the <strong>Nexter ecosystem truly limitless</strong>, allowing you to create every element with blocks."
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Will this work with any WordPress theme?"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Yes, the Nexter Extension works with <strong> any WordPress theme</strong>. That said, we <strong> highly recommend using it with the Nexter theme</strong> — it’s the <strong> lightest theme available</strong>, under <strong> 10KB</strong>, built with <strong> pure vanilla JavaScript and no jQuery</strong>. This ensures your website stays lightning fast and optimized. But don’t worry, you’re free to use any theme you like!"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Will it break my current website?"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Not at all! The Theme Builder is designed to <strong> integrate smoothly with your existing site</strong>. It won’t interfere with your current layout or content. You can activate and use it gradually, applying changes only when you’re ready."
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Get Free Theme Builder for"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "WordPress with Nexter Extension"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Free WordPress Header & Footer Builder"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Free Single, Archive & 404 Page Builder"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Pre-Made Theme Builder Section Templates"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "100% Customisable with Blocks"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Enable Theme Builder"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Get access to 90+ WordPress Blocks at FLAT 20% OFF"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "USE CODE:"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "FIRST20 "
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "View all Block"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "100% Whitelabel Plugin"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Get Exclusive WordPress Tips, Tricks and Resources Delivered Straight to Your Inbox!"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Join 500K+ Agency Owners, Marketers and WordPress Users."
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "NO SPAM GUARANTEE"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Agree to contribute to make Nexter Blocks better by sharing non-sensitive details."
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Setup Up Done Successfully."
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "I just Installed Nexter Blocks! It comes with 90+ WordPress Blocks which replace multiple plugins for me, without compromising on my website performance. Excited to use it."
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Post on"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Start Using"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Connect Google Maps API Key"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "To integrate Google Maps with your Maps Block, please enable the API, paste your Google Maps API key by clicking on the settings gear, and then save the changes."
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Paste your <a href = \"https://developers.google.com/maps/documentation/embed/get-api-key\" target=\"_blank\" rel=\"noopener noreferrer\"> Google Maps API Key </a>"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Enable Google Fonts"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "To disable Google Fonts, toggle this off. It will prevent any Google Fonts from loading and instead use the system font. If you want to avoid any Google Font requests, simply disable this option."
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Enable Nexter Global CSS"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "If you do not plan to use Global CSS from Nexter Blocks and prefer to load it from your theme, you can disable it. It reduces extra CSS & JS loading on your site, ensuring faster performance and complete control over design."
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Show Nexter Performance in Admin Bar"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "This option adds the Nexter Performance menu to the WordPress top admin bar, allowing you to purge assets for individual pages or all pages directly from any screen."
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Load Font Awesome PRO Icons"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Connect Font Awesome PRO icons by adding your Font awesome API key in the settings for access to more premium icons for your website."
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid " Enable Ajax Templates"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Load templates using Ajax mode for optimal performance. This file will load after the page finishes loading and will dynamically request content as you scroll."
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Read more"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Lazy Rendering (SEO Friendly)"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "If enabled, you can start using the class <b>nxt-lazy-load</b> in places where you want to lazy load content in an SEO-friendly way."
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "How to Use?"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "If you don't need Dashicons from Nexter Blocks, you can disable them to reduce unnecessary CSS loading and improve your site's performance."
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Disable Template Button"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Turn off the template import option in the Gutenberg Editor if you’re not planning to use it."
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Disable Quick Action Bar"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Turn off the Quick Action Bar in the Gutenberg editor if you don’t plan to use it."
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Connect Mailchimp CRM"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Paste your your <a href = \"https://mailchimp.com/help/about-api-keys/\" target=\"_blank\" rel=\"noopener noreferrer\"> Mailchimp API Key </a> & <a href = \"https://mailchimp.com/help/find-audience-id/\" target=\"_blank\" rel=\"noopener noreferrer\">  List ID </a>"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Enter Audience / List ID"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Connect Google reCAPTCHA"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid " Add your Google reCAPTCHA Site Key and Secret Key to enable spam protection with our form blocks and secure your site."
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Place your <a href = \"https://www.google.com/recaptcha/about/\" target=\"_blank\" rel=\"noopener noreferrer\"> Google reCAPTCHA </a> Site Key & Secret Key"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Site Key reCAPTCHA v3"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Secret Key reCAPTCHA v3"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid " Add Event Tracking ID"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Add your Facebook Pixel ID and GA4 ID here to enable event tracking for your clicks. This will allow you to track events directly from WordPress for your ads and GA4 analytics."
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Click Here"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "GA4 ID"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Facebook Pixel ID"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Blocks Settings"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Successfully Saved"
+msgstr ""
+
+#: theme-builder/build/index.js:1
+msgid "Copied!"
+msgstr ""
+
+#: theme-builder/build/index.js:1
+msgid "No Templates Found"
+msgstr ""
+
+#: theme-builder/build/index.js:1
+msgid "Looks like you don’t have any templates yet. Would you like to create one now?"
+msgstr ""
+
+#: theme-builder/build/index.js:1
+msgid "Activate Nexter Extension"
+msgstr ""
+
+#: theme-builder/build/index.js:1
+msgid "Create "
+msgstr ""
+
+#: theme-builder/build/index.js:1
+msgid "Create Header"
+msgstr ""
+
+#: theme-builder/build/index.js:1
+msgid "Add Header"
+msgstr ""
+
+#: theme-builder/build/index.js:1
+msgid "Create Footer"
+msgstr ""
+
+#: theme-builder/build/index.js:1
+msgid "Add Footer"
+msgstr ""
+
+#: theme-builder/build/index.js:1
+msgid "Create Breadcrumb"
+msgstr ""
+
+#: theme-builder/build/index.js:1
+msgid "Add Breadcrumb"
+msgstr ""
+
+#: theme-builder/build/index.js:1
+msgid "Create Section"
+msgstr ""
+
+#: theme-builder/build/index.js:1
+msgid "Add Section"
+msgstr ""
+
+#: theme-builder/build/index.js:1
+msgid "Create Singular"
+msgstr ""
+
+#: theme-builder/build/index.js:1
+msgid "Add Singular"
+msgstr ""
+
+#: theme-builder/build/index.js:1
+msgid "Create Archive Page"
+msgstr ""
+
+#: theme-builder/build/index.js:1
+msgid "Add Archive"
+msgstr ""
+
+#: theme-builder/build/index.js:1
+msgid "Create Hooks"
+msgstr ""
+
+#: theme-builder/build/index.js:1
+msgid "Add Hooks"
+msgstr ""
+
+#: theme-builder/build/index.js:1
+msgid "Create 404 Page"
+msgstr ""
+
+#: theme-builder/build/index.js:1
+msgid "Add 404 Page"
+msgstr ""
+
+#: theme-builder/build/index.js:1
+msgid "Import Pre-Designed Templates for Theme Builder"
+msgstr ""
+
+#: theme-builder/build/index.js:1
+msgid "Build your website faster with ready-to-use templates"
+msgstr ""
+
+#: theme-builder/build/index.js:1
+msgid "Fully customizable to match your brand and style"
+msgstr ""
+
+#: theme-builder/build/index.js:1
+msgid "Save time by avoiding repetitive design work"
+msgstr ""
+
+#: theme-builder/build/index.js:1
+msgid "Flexible layouts for headers, footers, pages, and more"
+msgstr ""
+
+#: theme-builder/build/index.js:1
+msgid "Activate WDesignKit to Import Templates"
+msgstr ""
+
+#: theme-builder/build/index.js:1
+msgid "Install WDesignKit to Import Templates"
+msgstr ""
+
+#: theme-builder/build/index.js:1
+msgid "Add New"
+msgstr ""
+
+#: theme-builder/build/index.js:1
+msgid "Click to Know How it Works"
+msgstr ""
+
+#: theme-builder/build/index.js:1
+msgid "What is a Sections?"
+msgstr ""
+
+#: theme-builder/build/index.js:1
+msgid "Reusable content blocks that can be placed anywhere on your site, like a banner, promo strip, or CTA. They save time since you design once and reuse across multiple pages."
+msgstr ""
+
+#: theme-builder/build/index.js:1
+msgid "Updating..."
+msgstr ""
+
+#: theme-builder/build/index.js:1
+msgid "Theme builder template"
+msgstr ""
+
+#: theme-builder/build/index.js:1
+msgid "Edit "
+msgstr ""
+
+#: theme-builder/build/index.js:1
+msgid "Last Updated :"
+msgstr ""
+
+#: theme-builder/build/index.js:1
+msgid "All Layout"
+msgstr ""
+
+#: theme-builder/build/index.js:1
+msgid "Breadcrumbs"
+msgstr ""
+
+#: theme-builder/build/index.js:1
+msgid "Single Page"
+msgstr ""
+
+#: theme-builder/build/index.js:1
+msgid "Archive Page"
+msgstr ""
+
+#: theme-builder/build/index.js:1
+msgid "Choose a Nexter Theme Builder template XML file of Builder templates, and add them to the list of templates available in your builder."
+msgstr ""
+
+#: theme-builder/build/index.js:1
+msgid "Choose Template"
+msgstr ""
+
+#: theme-builder/build/index.js:1
+msgid "Please Install Nexter Extension to Enable Theme Builder."
+msgstr ""
+
+#: theme-builder/build/index.js:1
+msgid "Switch to table view"
+msgstr ""
+
+#: theme-builder/build/index.js:1
+msgid "Activated Now"
 msgstr ""

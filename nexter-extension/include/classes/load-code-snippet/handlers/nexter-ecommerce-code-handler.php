@@ -211,7 +211,7 @@ class Nexter_ECommerce_Code_Handler {
         }
 
         // Get priority from post meta, default to 10
-        $hook_priority = get_post_meta($snippet_id, 'nxt-code-hooks-priority', true);
+        $hook_priority = is_numeric($snippet_id) ? get_post_meta($snippet_id, 'nxt-code-hooks-priority', true) : (is_array($code) && isset($code['hooksPriority']) ? $code['hooksPriority'] : 10);
         $priority = !empty($hook_priority) ? intval($hook_priority) : 10;
 
         // Get the hook name
@@ -226,14 +226,14 @@ class Nexter_ECommerce_Code_Handler {
 
             // Register the actual hook
             add_action($hook_name, function() use ($snippet_id, $code) {
-                $is_active = get_post_meta($snippet_id, 'nxt-code-status', true);
+                $is_active = is_numeric($snippet_id) ? get_post_meta($snippet_id, 'nxt-code-status', true) : (is_array($code) && isset($code['status']) ? $code['status'] : 0);
                 if ($is_active == '1') {
                     $authorID = get_post_field('post_author', $snippet_id);
                     $theAuthorDataRoles = get_userdata($authorID);
                     $theRolesAuthor = isset($theAuthorDataRoles->roles) ? $theAuthorDataRoles->roles : [];
                     
-                    if (in_array('administrator', $theRolesAuthor)) {
-                        $code_hidden_execute = get_post_meta($snippet_id, 'nxt-code-php-hidden-execute', true);
+                    if ((is_numeric($snippet_id) && in_array('administrator', $theRolesAuthor)) || (is_array($code) && isset($code['php_hidden_execute']) && $code['php_hidden_execute'] === 'yes')) {
+                        $code_hidden_execute = is_numeric($snippet_id) ? get_post_meta($snippet_id, 'nxt-code-php-hidden-execute', true) : (is_array($code) && isset($code['php_hidden_execute']) ? $code['php_hidden_execute'] : 'no');
                         if ($code_hidden_execute === 'yes') {
                             // Check schedule restrictions before executing
                             if (self::should_skip_due_to_schedule_restrictions($snippet_id)) {
@@ -250,9 +250,17 @@ class Nexter_ECommerce_Code_Handler {
                                     }
                                 }
                             } else {
-                                // Fallback to direct execution if executor class not available
-                                $code = html_entity_decode(htmlspecialchars_decode($code));
-                                eval($code);
+                                if(is_array($code) && class_exists('Nexter_Code_Snippets_File_Based')){
+                                    if( isset($code['file_path']) && !empty($code['file_path']) && file_exists($code['file_path'])){
+                                        // Use safe file execution method
+                                        Nexter_Code_Snippets_File_Based::safe_include_file( $code['file_path'] );
+                                    }
+                                }else{
+                                    // Fallback to direct execution if executor class not available
+                                    $code = html_entity_decode(htmlspecialchars_decode($code));
+                                    eval($code);
+                                }
+                                
                             }
                         }
                     }
@@ -301,6 +309,23 @@ class Nexter_ECommerce_Code_Handler {
             self::$memberpress_snippets = array();
         }
         
+        if(is_numeric($snippet_id) && is_array($css) && isset($css['file_path']) && file_exists($css['file_path'])) {
+            ob_start();
+            // Use safe file execution method
+            if ( class_exists( 'Nexter_Code_Snippets_File_Based' ) ) {
+                Nexter_Code_Snippets_File_Based::safe_include_file( $css['file_path'] );
+            } else {
+                // Fallback: basic validation
+                $file_path = wp_normalize_path( $css['file_path'] );
+                $storage_dir = wp_normalize_path( WP_CONTENT_DIR . '/nexter-snippet-data' );
+                if ( strpos( $file_path, $storage_dir ) === 0 && substr( $file_path, -4 ) === '.php' ) {
+                    require_once $file_path;
+                }
+            }
+            $css = ob_get_clean();
+            $css = '<style id="nexter-snippet-' . esc_attr($snippet_id) . '">' . $css . '</style>';
+        }
+
         self::$memberpress_snippets[$location][] = array(
             'id' => $snippet_id,
             'content' => $css,
@@ -319,6 +344,23 @@ class Nexter_ECommerce_Code_Handler {
             self::$memberpress_snippets = array();
         }
         
+        if(is_numeric($snippet_id) && is_array($js) && isset($js['file_path']) && file_exists($js['file_path'])) {
+            ob_start();
+            // Use safe file execution method
+            if ( class_exists( 'Nexter_Code_Snippets_File_Based' ) ) {
+                Nexter_Code_Snippets_File_Based::safe_include_file( $js['file_path'] );
+            } else {
+                // Fallback: basic validation
+                $file_path = wp_normalize_path( $js['file_path'] );
+                $storage_dir = wp_normalize_path( WP_CONTENT_DIR . '/nexter-snippet-data' );
+                if ( strpos( $file_path, $storage_dir ) === 0 && substr( $file_path, -4 ) === '.php' ) {
+                    require_once $file_path;
+                }
+            }
+            $js = ob_get_clean();
+            $js = '<script id="nexter-snippet-' . esc_attr($snippet_id) . '">' . $js . '</script>';
+        }
+
         self::$memberpress_snippets[$location][] = array(
             'id' => $snippet_id,
             'content' => $js,
@@ -337,6 +379,22 @@ class Nexter_ECommerce_Code_Handler {
             self::$memberpress_snippets = array();
         }
         
+        if(is_numeric($snippet_id) && is_array($html) && isset($html['file_path']) && file_exists($html['file_path'])) {
+            ob_start();
+            // Use safe file execution method
+            if ( class_exists( 'Nexter_Code_Snippets_File_Based' ) ) {
+                Nexter_Code_Snippets_File_Based::safe_include_file( $html['file_path'] );
+            } else {
+                // Fallback: basic validation
+                $file_path = wp_normalize_path( $html['file_path'] );
+                $storage_dir = wp_normalize_path( WP_CONTENT_DIR . '/nexter-snippet-data' );
+                if ( strpos( $file_path, $storage_dir ) === 0 && substr( $file_path, -4 ) === '.php' ) {
+                    require_once $file_path;
+                }
+            }
+            $html = ob_get_clean();
+        }
+
         self::$memberpress_snippets[$location][] = array(
             'id' => $snippet_id,
             'content' => $html,
@@ -371,7 +429,7 @@ class Nexter_ECommerce_Code_Handler {
         }
 
         // Get priority from post meta, default to 10
-        $hook_priority = get_post_meta($snippet_id, 'nxt-code-hooks-priority', true);
+        $hook_priority = is_numeric($snippet_id) ? get_post_meta($snippet_id, 'nxt-code-hooks-priority', true) : (is_array($css) && isset($css['hooksPriority']) ? $css['hooksPriority'] : 10);
         $priority = !empty($hook_priority) ? intval($hook_priority) : 10;
 
         // Get the hook name
@@ -384,16 +442,22 @@ class Nexter_ECommerce_Code_Handler {
                 return;
             }
 
-            $is_active = get_post_meta($snippet_id, 'nxt-code-status', true);
+            $is_active = is_numeric($snippet_id) ? get_post_meta($snippet_id, 'nxt-code-status', true) : (is_array($css) && isset($css['status']) ? $css['status'] : 0);
             if ($is_active == '1') {
                 // Check schedule restrictions before executing
                 if (self::should_skip_due_to_schedule_restrictions($snippet_id)) {
                     return;
                 }
                 
-                $compress = get_post_meta($snippet_id, 'nxt-code-compresscode', true);
-                if ($compress) {
-                    $css = self::compress_css($css);
+                if(class_exists('Nexter_Code_Snippets_File_Based') && is_array($css)){
+                    $file_based = new Nexter_Code_Snippets_File_Based();
+                    $file_path = isset($css['file_path']) ? $css['file_path'] : '';
+                    $css = $file_based->parseBlock(file_get_contents($file_path), true);
+                }else{
+                    $compress = get_post_meta($snippet_id, 'nxt-code-compresscode', true);
+                    if ($compress) {
+                        $css = self::compress_css($css);
+                    }
                 }
 
                 echo '<style id="nexter-snippet-' . esc_attr($snippet_id) . '">' . $css . '</style>';
@@ -428,7 +492,7 @@ class Nexter_ECommerce_Code_Handler {
         }
 
         // Get priority from post meta, default to 10
-        $hook_priority = get_post_meta($snippet_id, 'nxt-code-hooks-priority', true);
+        $hook_priority = is_numeric($snippet_id) ? get_post_meta($snippet_id, 'nxt-code-hooks-priority', true) : (is_array($js) && isset($js['hooksPriority']) ? $js['hooksPriority'] : 10);
         $priority = !empty($hook_priority) ? intval($hook_priority) : 10;
 
         // Get the hook name
@@ -441,16 +505,22 @@ class Nexter_ECommerce_Code_Handler {
                 return;
             }
 
-            $is_active = get_post_meta($snippet_id, 'nxt-code-status', true);
+            $is_active = is_numeric($snippet_id) ? get_post_meta($snippet_id, 'nxt-code-status', true) : (is_array($js) && isset($js['status']) ? $js['status'] : 0);
             if ($is_active == '1') {
                 // Check schedule restrictions before executing
                 if (self::should_skip_due_to_schedule_restrictions($snippet_id)) {
                     return;
                 }
                 
-                $compress = get_post_meta($snippet_id, 'nxt-code-compresscode', true);
-                if ($compress) {
-                    $js = self::compress_js($js);
+                if(class_exists('Nexter_Code_Snippets_File_Based') && is_array($js)){
+                    $file_based = new Nexter_Code_Snippets_File_Based();
+                    $file_path = isset($js['file_path']) ? $js['file_path'] : '';
+                    $js = $file_based->parseBlock(file_get_contents($file_path), true);
+                }else{
+                    $compress = get_post_meta($snippet_id, 'nxt-code-compresscode', true);
+                    if ($compress) {
+                        $js = self::compress_js($js);
+                    }
                 }
 
                 echo '<script id="nexter-snippet-' . esc_attr($snippet_id) . '">' . $js . '</script>';
@@ -485,7 +555,9 @@ class Nexter_ECommerce_Code_Handler {
         }
 
         // Get priority from post meta, default to 10
-        $hook_priority = get_post_meta($snippet_id, 'nxt-code-hooks-priority', true);
+        $hook_priority = is_numeric( $snippet_id )
+        ? get_post_meta( $snippet_id, 'nxt-code-hooks-priority', true )
+        : ( ( is_array( $html ) && isset( $html['hooksPriority'] ) ) ? $html['hooksPriority'] : 10 );
         $priority = !empty($hook_priority) ? intval($hook_priority) : 10;
 
         // Get the hook name
@@ -498,8 +570,23 @@ class Nexter_ECommerce_Code_Handler {
                 return;
             }
 
-            $is_active = get_post_meta($snippet_id, 'nxt-code-status', true);
+            $is_active = is_numeric( $snippet_id ) ? get_post_meta($snippet_id, 'nxt-code-status', true) : ( ( is_array( $html ) && isset( $html['status'] ) ) ? $html['status'] : '0' );
             if ($is_active == '1') {
+                if (is_array($html) && isset($html['file_path']) && file_exists($html['file_path'])) {
+                    ob_start();
+                    // Use safe file execution method
+                    if ( class_exists( 'Nexter_Code_Snippets_File_Based' ) ) {
+                        Nexter_Code_Snippets_File_Based::safe_include_file( $html['file_path'] );
+                    } else {
+                        // Fallback: basic validation
+                        $file_path = wp_normalize_path( $html['file_path'] );
+                        $storage_dir = wp_normalize_path( WP_CONTENT_DIR . '/nexter-snippet-data' );
+                        if ( strpos( $file_path, $storage_dir ) === 0 && substr( $file_path, -4 ) === '.php' ) {
+                            require_once $file_path;
+                        }
+                    }
+                    $html = ob_get_clean();
+                }
                 echo apply_filters('nexter_html_snippets_executed', $html, $snippet_id);
             }
         }, $priority);

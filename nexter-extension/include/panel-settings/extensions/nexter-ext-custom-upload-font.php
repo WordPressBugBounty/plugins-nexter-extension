@@ -75,7 +75,7 @@ class Nexter_Ext_Custom_Upload_Font {
 		if(!empty($fonts)){
 			$custom_fonts_face = $this->get_custom_fonts_face();
 			if( !empty( $custom_fonts_face ) ){
-				echo '<style>'.esc_html($custom_fonts_face).'</style>';
+				echo '<style>'.$custom_fonts_face.'</style>';
 			}
 		}
 	}
@@ -136,12 +136,15 @@ class Nexter_Ext_Custom_Upload_Font {
 					foreach( $font_val as $font_key => $font_value){
 						if(!empty( $font_value['url'] )){
 							$format = self::check_format_font_url($font_value['url']);
-							$font_faces .= '@font-face {';
-							$font_faces .= 'font-family: ' . esc_html($font_name) . ';';
-							$font_faces .= "font-style: " . esc_html($font_value['font-style']) . ";";
-							$font_faces .= "font-weight: " . esc_attr($font_value['weight']) . ";";
-							$font_faces .= "font-display: swap;";
-							$font_faces .= "src: url('" . esc_url($font_value['url']) . "') format('" . $format . "');";
+							if($format === 'otf'){
+								$format = 'opentype';
+							}
+							$font_faces  = '@font-face {';
+							$font_faces .= 'font-family: "' . wp_strip_all_tags($font_name) . '";';
+							$font_faces .= 'font-style: ' . sanitize_text_field($font_value['font-style']) . ';';
+							$font_faces .= 'font-weight: ' . esc_attr($font_value['weight']) . ';';
+							$font_faces .= 'font-display: swap;';
+							$font_faces .= 'src: url("' . esc_url_raw($font_value['url']) . '") format("' . esc_attr($format) . '");';
 							$font_faces .= '}';
 						}
 					}

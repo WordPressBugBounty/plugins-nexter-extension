@@ -24,7 +24,11 @@ class Nexter_Ext_SMTP_Email {
         add_action('wp_ajax_handle_oauth_callback', [$this, 'handle_oauth_callback']);
         add_action('wp_ajax_nxt_smtp_send_test_email', [$this, 'nxt_smtp_send_test_email']);
 
-        if (isset($_GET['code'], $_GET['state'])) {
+        // Security: Sanitize input before checking
+        $get_code = isset( $_GET['code'] ) ? sanitize_text_field( wp_unslash( $_GET['code'] ) ) : '';
+        $get_state = isset( $_GET['state'] ) ? sanitize_text_field( wp_unslash( $_GET['state'] ) ) : '';
+        
+        if ( ! empty( $get_code ) && ! empty( $get_state ) ) {
             add_menu_page(
                 esc_html__('Gmail SMTP Settings', 'nexter-extension'),
                 esc_html__('Gmail SMTP', 'nexter-extension'),
@@ -39,7 +43,11 @@ class Nexter_Ext_SMTP_Email {
     }
 
     public function nexter_smtp_settings_page() {
-        if (isset($_GET['code'], $_GET['state'])) {
+        // Security: Sanitize input
+        $get_code = isset( $_GET['code'] ) ? sanitize_text_field( wp_unslash( $_GET['code'] ) ) : '';
+        $get_state = isset( $_GET['state'] ) ? sanitize_text_field( wp_unslash( $_GET['state'] ) ) : '';
+        
+        if ( ! empty( $get_code ) && ! empty( $get_state ) ) {
             echo '<style>body{display:none}</style>';
             ?>
             <script>
@@ -50,8 +58,8 @@ class Nexter_Ext_SMTP_Email {
                     headers: {'Content-Type': 'application/x-www-form-urlencoded'},
                     body: new URLSearchParams({
                         action: 'handle_oauth_callback',
-                        code: urlParams.get('code'),
-                        state: urlParams.get('state'),
+                        code: <?php echo wp_json_encode( $get_code ); ?>,
+                        state: <?php echo wp_json_encode( $get_state ); ?>,
                         oauth_nonce: '<?php echo esc_js(wp_create_nonce("gmail_oauth_response")); ?>'
                     })
                 })
@@ -153,7 +161,13 @@ class Nexter_Ext_SMTP_Email {
 
         $state = isset( $_POST['state'] ) ? sanitize_text_field( wp_unslash( $_POST['state'] ) ) : '';
         $nonce = isset( $_POST['oauth_nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['oauth_nonce'] ) ) : '';
-        $code  = sanitize_text_field($_POST['code'] ?? '');
+        // Security: Validate OAuth code format
+        $code  = isset( $_POST['code'] ) ? sanitize_text_field( wp_unslash( $_POST['code'] ) ) : '';
+        
+        // Security: OAuth codes are typically alphanumeric with hyphens and underscores
+        if ( ! preg_match( '/^[a-zA-Z0-9_\-\.\/]+$/', $code ) ) {
+            wp_send_json_error(['oauth_error' => __('Invalid authorization code format.', 'nexter-extension')]);
+        }
 
 
         if (!wp_verify_nonce($state, 'gmail_oauth')) {
@@ -254,14 +268,67 @@ class Nexter_Ext_SMTP_Email {
         if( empty( $to ) ){
             wp_send_json_error(__('Please Enter a valid Email ID to send the test mail.', 'nexter-extension'));
         }
-        $subject = __('Gmail SMTP Test Email', 'nexter-extension');
+
+        // Check SMTP configuration
+        $options = get_option('nexter_extra_ext_options', []);
+        
+        // Check if SMTP is enabled
+        if (empty($options['smtp-email']['switch'])) {
+            wp_send_json_error(__('SMTP is not enabled. Please enable SMTP first.', 'nexter-extension'));
+        }
+        
+        $smtp = $options['smtp-email']['values'] ?? [];
+        
+        if (empty($smtp['type'])) {
+            wp_send_json_error(__('SMTP is not configured. Please configure SMTP settings first.', 'nexter-extension'));
+        }
+
+        // For custom SMTP, verify connection was successful
+        if ($smtp['type'] === 'custom') {
+            $smtp_custom = $smtp['custom'] ?? [];
+            if (empty($smtp_custom['connect']) || $smtp_custom['connect'] !== true) {
+                wp_send_json_error(__('SMTP connection not verified. Please test the connection first.', 'nexter-extension'));
+            }
+        }
+
+        $subject = $smtp['type'] === 'custom' 
+            ? __('Custom SMTP Test Email', 'nexter-extension')
+            : __('Gmail SMTP Test Email', 'nexter-extension');
         $body = '<b>This is a test email sent via using SMTP.</b>';
         $headers = ['Content-Type: text/html; charset=UTF-8'];
+        
+        // Capture error message - use closure to capture by reference
+        $error_message = '';
+        $error_capture = function($wp_error) use (&$error_message) {
+            $error_message = $wp_error->get_error_message();
+            error_log('SMTP Test Email Error (wp_mail_failed): ' . $error_message);
+        };
+        
+        // Enable error capture before sending
+        add_action('wp_mail_failed', $error_capture, 10, 1);
+
+        // Let WordPress create PHPMailer instance and apply phpmailer_init hook
+        // Don't interfere with the global $phpmailer instance
         $result = wp_mail($to, $subject, $body, $headers);
+        
+        // Get PHPMailer error after wp_mail execution
+        global $phpmailer;
+        if (empty($error_message) && is_object($phpmailer) && !empty($phpmailer->ErrorInfo)) {
+            $error_message = $phpmailer->ErrorInfo;
+            error_log('SMTP Test Email Error (PHPMailer): ' . $error_message);
+        }
+        
+        // Remove the error capture hook
+        remove_action('wp_mail_failed', $error_capture);
+        
         if ($result === true) {
             wp_send_json_success(__('Test email sent successfully!', 'nexter-extension'));
         } else {
-            wp_send_json_error(__('Failed to send test email: ', 'nexter-extension') . $result);
+            // Provide detailed error message
+            if (empty($error_message)) {
+                $error_message = __('Unknown error occurred while sending email. Please check your SMTP settings and server logs.', 'nexter-extension');
+            }
+            wp_send_json_error(__('Failed to send test email: ', 'nexter-extension') . $error_message);
         }
     }
 
@@ -273,8 +340,14 @@ class Nexter_Ext_SMTP_Email {
         }
 
         $smtp_type    = isset($_POST['smtp_type']) ? sanitize_text_field(wp_unslash($_POST['smtp_type'])) : '';
+        // Security: Sanitize JSON input before decoding
         $smtp_custom_json = isset($_POST['smtp_custom']) ? wp_unslash($_POST['smtp_custom']) : '';
         $smtp_custom = json_decode($smtp_custom_json, true);
+        
+        // Security: Validate JSON was decoded successfully
+        if ( json_last_error() !== JSON_ERROR_NONE || ! is_array( $smtp_custom ) ) {
+            wp_send_json_error( __( 'Invalid JSON data.', 'nexter-extension' ) );
+        }
 
         $option = get_option('nexter_extra_ext_options', []);
         $option['smtp-email']['values'] = array_merge(
@@ -286,13 +359,13 @@ class Nexter_Ext_SMTP_Email {
         $option['smtp-email']['values']['custom'] = array_merge(
             $option['smtp-email']['values']['custom'] ?? [],
             [
-                'host'      => sanitize_text_field($smtp_custom['host']),
-                'port'      => !empty($smtp_custom['port']) ? intval($smtp_custom['port']) : 587,
-                'encryption'=> sanitize_text_field($smtp_custom['encryption']),
+                'host'      => isset( $smtp_custom['host'] ) ? sanitize_text_field( $smtp_custom['host'] ) : '',
+                'port'      => !empty($smtp_custom['port']) ? absint( $smtp_custom['port'] ) : 587,
+                'encryption'=> isset( $smtp_custom['encryption'] ) ? sanitize_text_field( $smtp_custom['encryption'] ) : 'tls',
                 'autoTLS'   => (isset($smtp_custom['autoTLS']) && $smtp_custom['autoTLS'] == true) ? true : false,
                 'auth'      => (isset($smtp_custom['auth']) && $smtp_custom['auth'] == true) ? true : false,
-                'username'  => sanitize_text_field($smtp_custom['username']),
-                'password'  => sanitize_text_field($smtp_custom['password']),
+                'username'  => isset( $smtp_custom['username'] ) ? sanitize_text_field( $smtp_custom['username'] ) : '',
+                'password'  => isset( $smtp_custom['password'] ) ? $smtp_custom['password'] : '', // Password should not be sanitized with sanitize_text_field
                 'connect'   => false,
                 'from_email' => sanitize_email($smtp_custom['from_email']),
                 'from_name' => sanitize_text_field($smtp_custom['from_name']),

@@ -43,7 +43,11 @@ defined('ABSPATH') or die();
 		
 		if(!empty($option) && isset($option['custom_login_url']) && !empty($option['custom_login_url'])){
 			self::$custom_login_url = $option['custom_login_url'];
-		}
+		}else if(isset($option['custom-login']) && !empty($option['custom-login']) && isset($option['custom-login']['switch']) && !empty($option['custom-login']['switch'])){
+            if(isset($option['custom-login']['values']) && !empty($option['custom-login']['values'])){
+                self::$custom_login_url = (array) $option['custom-login']['values'];
+            }
+        }
 
 		if(!empty($option) && isset($option['limit-login-attempt']) && !empty($option['limit-login-attempt']['switch']) && !empty($option['limit-login-attempt']['values']) ){
 			self::$limit_login_opt = (array) $option['limit-login-attempt']['values'];
@@ -82,9 +86,10 @@ defined('ABSPATH') or die();
 		$ip = $this->get_client_ip( 'ip', 'limit-login-attempt' );
 
 		// Setup login config
+		$request_uri = isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( $_SERVER['REQUEST_URI'] ) : '';
 		$nxt_ext_limit_login = array(
 			'ip_address'               => $ip,
-			'request_uri'              => sanitize_text_field( $_SERVER['REQUEST_URI'] ?? '' ),
+			'request_uri'              => sanitize_text_field( $request_uri ),
 			'ip_address_log'           => array(),
 			'failed_count'               => 0,
 			'lockout_count'            => 0,
@@ -190,12 +195,12 @@ defined('ABSPATH') or die();
 
 		$remote_ip = '';
 		if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
-        	$remote_ip = $_SERVER['HTTP_CLIENT_IP'];
+        	$remote_ip = sanitize_text_field( wp_unslash( $_SERVER['HTTP_CLIENT_IP'] ) );
 		} elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-			$ipList = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
+			$ipList = explode(',', sanitize_text_field( wp_unslash( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) );
 			$remote_ip = trim($ipList[0]);
 		} else if (!empty($_SERVER['REMOTE_ADDR'])) {
-			$remote_ip = $_SERVER['REMOTE_ADDR'];
+			$remote_ip = sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) );
 		}
 
 		if ( $return === 'ip' ) {
@@ -314,7 +319,9 @@ defined('ABSPATH') or die();
 		} else {
 			// Get options and check for reload condition
 			$failed_login = isset( self::$limit_login_opt['failed_login'] ) ? (int) self::$limit_login_opt['failed_login'] : 5;
-			$page_was_reloaded = isset( $_GET['ne'] ) && sanitize_text_field($_GET['ne']) == 1;
+			// Security: Sanitize input
+			$get_ne = isset( $_GET['ne'] ) ? absint( $_GET['ne'] ) : 0;
+			$page_was_reloaded = ( $get_ne === 1 );
 
 			if ( isset( $nxt_ext_limit_login['failed_count'] ) ) {
 				$failed_count = (int) $nxt_ext_limit_login['failed_count'];
@@ -344,7 +351,9 @@ defined('ABSPATH') or die();
 	public function render_failed_login_notice( $msg ) {
 		global $nxt_ext_limit_login;
 
-		$is_failed = isset( $_REQUEST['failed_login'] ) && sanitize_text_field( $_REQUEST['failed_login'] ) === 'true';
+		// Security: Sanitize input - prefer $_GET over $_REQUEST for better security
+		$failed_login_param = isset( $_GET['failed_login'] ) ? sanitize_text_field( wp_unslash( $_GET['failed_login'] ) ) : '';
+		$is_failed = ( $failed_login_param === 'true' );
 
 		if ( $is_failed && ! empty( $nxt_ext_limit_login ) && empty( $nxt_ext_limit_login['within_lockout_period'] ) ) {
 			$msg = sprintf(

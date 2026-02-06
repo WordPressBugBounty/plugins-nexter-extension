@@ -145,11 +145,16 @@ defined('ABSPATH') or die();
 		$opts     = get_option( 'nexter_extra_ext_options', [] );
 		$allowed  = $opts['view-admin-role']['view_as_users'] ?? [];
 
-		// Handle role switch
+		// Security: Handle role switch with proper validation
 		if ( isset($_REQUEST['action'], $_REQUEST['role'], $_REQUEST['nonce']) ) {
 			$action = sanitize_text_field( wp_unslash($_REQUEST['action']) );
-			$role   = sanitize_text_field( wp_unslash($_REQUEST['role']) );
+			$role   = sanitize_key( wp_unslash($_REQUEST['role']) );
 			$nonce  = sanitize_text_field( wp_unslash($_REQUEST['nonce']) );
+			
+			// Security: Verify user has permission to switch roles
+			/* if ( ! current_user_can( 'manage_options' ) ) {
+				return;
+			} */
 
 			// --- Switch to role ---
 			if ( $action === 'switch_role_to' ) {
@@ -206,8 +211,8 @@ defined('ABSPATH') or die();
 
 		} elseif ( isset( $_REQUEST['reset-view'] ) ) {
 
-			$reset_user = sanitize_text_field( $_REQUEST['reset-view'] );
-			if ( in_array( $reset_user, $allowed ) ) {
+			$reset_user = sanitize_user( wp_unslash( $_REQUEST['reset-view'] ) );
+			if ( in_array( $reset_user, $allowed, true ) ) {
 				$reset_obj = get_user_by( 'login', $reset_user );
 				if ( $reset_obj ) {
 					foreach ( $reset_obj->roles as $r ) {

@@ -43,12 +43,9 @@ if(!empty($extension_option) && isset($extension_option['wp-duplicate-post']) &&
 				// Get post type
 				$post_type = get_post_type_object( $post->post_type );
 				
-				/* translators: %s: singular name */
-				$label = sprintf( __( 'Duplicate %s', 'nexter-extension' ), $post_type->labels->singular_name );
-				
-				// Create and Return Link
-				return '<a class="nxt-post-duplicate" href="" data-postid="'.esc_attr( $post->ID ).'">'.wp_kses_post( $label ).'</a><div class="nxt-dp-post-modal"><div class="nxt-post-modal-inner"><div class="nxt-post-dp-input-wrap"><input class="nxt-dp-post-input" type="number" min="1" value="1"/><span class="nxt-dp-post-total-text">: '.wp_kses_post($post_type->labels->singular_name).'(s)</span></div><a class="nxt-dp-post-btn" href="">'.esc_html__('Duplicate','nexter-extension').'</a></div></div>';
-	
+				// Security: Create and Return Link with proper escaping
+				$post_type_label = isset( $post_type->labels->singular_name ) ? esc_html( $post_type->labels->singular_name ) : '';
+				return '<a class="nxt-post-duplicate" href="" data-postid="'.esc_attr( $post->ID ).'">'. esc_html__( 'Duplicate', 'nexter-extension' ).'</a><div class="nxt-dp-post-modal"><div class="nxt-post-modal-inner"><div class="nxt-post-dp-input-wrap"><input class="nxt-dp-post-input" type="number" min="1" value="1"/><span class="nxt-dp-post-total-text">: '.esc_html($post_type_label).'(s)</span></div><a class="nxt-dp-post-btn" href="">'.esc_html__('Duplicate','nexter-extension').'</a></div></div>';
 			}
 		}
 	}
@@ -142,7 +139,8 @@ if(!empty($extension_option) && isset($extension_option['wp-duplicate-post']) &&
 				unset( $duplicate['guid'] );
 				unset( $duplicate['comment_count'] );
 
-				$duplicate['post_content'] = str_replace( array( '\r\n', '\r', '\n' ), '<br />', addslashes( $duplicate['post_content'] ) );
+				// Security: Use wp_kses_post instead of addslashes for content sanitization
+				$duplicate['post_content'] = wp_kses_post( $duplicate['post_content'] );
 
 				// Set Post into Database
 				$duplicate_id = wp_insert_post( $duplicate );
@@ -154,15 +152,24 @@ if(!empty($extension_option) && isset($extension_option['wp-duplicate-post']) &&
 					wp_set_object_terms( $duplicate_id, $terms, $taxonomy );
 				}
 				
-				// Duplicate custom fields
+				// Security: Duplicate custom fields with proper sanitization
 				$custom_fields = get_post_custom( $original_id );
 				foreach ( $custom_fields as $key => $value ) {
+					// Security: Skip internal WordPress meta keys that shouldn't be duplicated
+					$skip_keys = array( '_edit_lock', '_edit_last', '_wp_old_slug' );
+					if ( in_array( $key, $skip_keys, true ) ) {
+						continue;
+					}
+					
 					if( is_array($value) && count($value) > 0 ) {
 						foreach( $value as $i=>$v ) {
+							// Security: Sanitize meta value based on type
+							$sanitized_value = is_string( $v ) ? wp_kses_post( $v ) : $v;
+							
 							$data = array(
-								'post_id' 		=> intval( $duplicate_id ),
-								'meta_key' 		=> sanitize_text_field( $key ),
-								'meta_value' 	=> $v,
+								'post_id' 		=> absint( $duplicate_id ),
+								'meta_key' 		=> sanitize_key( $key ),
+								'meta_value' 	=> $sanitized_value,
 							);
 							$formats = array(
 								'%d',

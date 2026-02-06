@@ -2,8 +2,8 @@
 Contributors: posimyththemes, nirmalkavaiya, sagarpatel124
 Tags : security, elementor, theme-builder, pagespeed, code snippet
 Requires at least: 4.0
-Tested up to: 6.8.2
-Stable tag: 4.3.4
+Tested up to: 6.9
+Stable tag: 4.5.3
 Requires PHP: 5.6
 License: GPLv3
 License URI: https://opensource.org/licenses/GPL-3.0
@@ -93,15 +93,15 @@ https://nexterwp.com/free-vs-pro/#Nexter-Extension?utm_source=wordpress&utm_medi
 
 - **Import/Export** – Enables easy snippet management across sites with built-in import and export functionality.
 
-
-
-
+- **Query-Free Code Snippets** – All snippets run as file-based code instead of database queries, delivering faster execution and improved WordPress performance.
 
 - **Works with All WordPress Themes** - Code Snippets are fully compatible with any WordPress theme, offering seamless integration and complete flexibility.
 
+- **Quick Save for Snippets** - Create or update snippets using Ctrl + S (Windows) or Cmd + S (Mac)
+
 === 3. Extra Utilities for Site Enhancement & Tune ups ===
 
-- **Replace Media *(PRO)*** -  Swap existing media files without changing their URL.  
+- **Replace Media *(PRO)*** -  Swap existing media files without changing their URL.  
 
 - **Disable Gutenberg** - Turn off the Gutenberg editor and use your preferred editor instead.
  
@@ -219,7 +219,7 @@ https://nexterwp.com/free-vs-pro/#Nexter-Extension?utm_source=wordpress&utm_medi
 
  - **Cloudflare Turnstile**
 
- - **WooCommerce Pages *(Coming Soon)***
+ - **WooCommerce Pages**
 
  - **Content Protection *(PRO)*** - Prevent unauthorized copying of your site's content.  
 
@@ -262,7 +262,7 @@ https://nexterwp.com/free-vs-pro/#Nexter-Extension?utm_source=wordpress&utm_medi
 
 - **Display Active Plugins First *(PRO)*** - Show all active plugins at the top of the list for quicker access.  
  
-- **User Profile Clean *(PRO)*** -  Hide extra fields in user profiles for a simpler and cleaner layout. 
+- **User Profile Clean *(PRO)*** -  Hide extra fields in user profiles for a simpler and cleaner layout. 
  
 - **Disable Admin Settings** - Easily turn off individual WordPress admin notifications and widgets to streamline your dashboard experience.
 
@@ -323,7 +323,7 @@ https://nexterwp.com/pricing/?utm_source=wordpress&utm_medium=readmepage&utm_cam
 ###🔍 Check our other Products
 
 <strong><a href="
-https://theplusaddons.com/?utm_source=wordpress&utm_medium=readmepage&utm_campaign=nexterextension">🥇 The Plus Addons for Elementor</a></strong> -  Nexter Extension works seamlessly with The Plus Addons for Elementor. Get 120+ unique Elementor widgets, Elementor templates, and more. Which gives it a Free Elementor Theme Builder.
+https://theplusaddons.com/?utm_source=wordpress&utm_medium=readmepage&utm_campaign=nexterextension">🥇 The Plus Addons for Elementor</a></strong> -  Nexter Extension works seamlessly with The Plus Addons for Elementor. Get 120+ unique Elementor widgets, Elementor templates, and more. Which gives it a Free Elementor Theme Builder.
 
 <strong><a href="
 https://nexterwp.com/nexter-blocks/?utm_source=wordpress&utm_medium=readmepage&utm_campaign=nexterextension">🥇 Nexter Blocks</a></strong> - Nexter Theme works in sync with core Gutenberg, you can install Nexter Blocks to get 90+ powerful & highly customizable blocks.
@@ -382,7 +382,78 @@ https://patchstack.com/database/vdp/nexter-extension)
 
 == Changelog ==
 
-### View Complete List of Changelog from [here](https://roadmap.nexterwp.com/updates?filter=Nexter+Extension+-+FREE) 
+### View Complete List of Changelog from [here](https://roadmap.nexterwp.com/updates?filter=Nexter+Extension+-+FREE)
+
+= V4.5.3 = 05 February 2026
+- Compatibility : Theme Builder : Support for Elementor 4.0 Template CSS
+
+= V4.5.2 = 02 February 2026
+- Security : Content Post Order : Improved Sanitized Security Code
+- Security : Rollback Manager : Improved Sanitized Security Code
+- Security : Limit Login Attempts : Improved Sanitized Security Code
+- Security : SMTP Email : Improved Sanitized Security Code
+- Security : Custom Image Sizes : Improved Sanitized Security Code
+- Security : Adobe Fonts : Improved Sanitized Security Code
+- Security : Custom Login Redirect : Improved Sanitized Security Code
+- Security : Performance and Security Settings : Improved Sanitized Security Code
+- Security : Google Captcha : Improved Sanitized Security Code
+- Fixed : Code Snippet : Improved Sanitized Security Code
+- Fixed : General bug fixes and performance improvements
+
+= V4.5.1 = 23 January 2026
+- Fixed : Code Snippet : CSS type Function Bug Fixed
+
+= V4.5.0 = 23 January 2026
+- Update : Code Snippet : All snippets run as file-based code instead of database queries, delivering faster execution and improved WordPress performance.
+- Update : Code Snippet :  UI/UX design improvements 
+- Update : Code Snippet :  Create/Update snippet functionality with shortcut keys (Ctrl + S / Cmd + S) 
+- Update : Code Snippet :  Settings relocated from Dashboard to the Snippet page
+- Compatibility : Extension Security : Google and Cloudflare Turnstile Captcha : WooCommerce Compatibility
+- Fixed : General bug fixes and performance improvements
+
+= V4.4.7 = 09 January 2026
+- Compatibility : Theme Builder : Added compatibility for GreenShift - Animation and Page Builder Blocks plugin template CSS loading
+- Fixed : Custom SMTP : Resolved SMTP test mail functionality issue
+- Fixed : Security : Improved code security and fixed vulnerability in Replace Text and URL feature
+- Fixed : General bug fixes and performance improvements
+
+= V4.4.6 = 17 December 2025
+- Fixed : Theme Builder : Query Bug Fix
+- Fixed : Bug Fixes and Improvements.
+
+= V4.4.5 = 12 December 2025
+- Compatibility : Elementor Pro : Theme Builder Template load Bug Fix
+- Fixed : Theme Builder : Singular Template Edit Condition Select Dropdown Bug Fix
+- Fixed : Theme Builder : Edit Template on load Wdesignkit Popup Improvement
+- Fixed : Bug Fixes and Improvements.
+
+= V4.4.4 = 09 December 2025
+- Fixed : Elementor Pro : Theme Builder Template Load Bug Fixed
+- Fixed : Bug Fixes and Improvements.
+
+= V4.4.3 = 01 December 2025
+- Fixed : Bug Fixes and Improvements.
+
+= V4.4.2 = 27 November 2025
+- Security : Cross Site Scripting (XSS) : Vulnerability Issue bug Fix
+- Fixed : Dashboard : CSS Bug Fix
+- Fixed : Code Snippet : Editor Height : CSS Bug Fix
+- Fixed : Bug Fixes and Improvements.
+
+= 4.4.1 = 24 November 2025
+- Fixed : Theme Builder : Header : Transparent Option CSS load bug Fixed
+- Fixed : Bug Fixes and Improvements.
+
+= 4.4.0 = 24 November 2025
+- Important Release:  Introduced a unified Nexter Settings Panel that combines all options from Nexter Theme, Nexter Blocks, and Nexter Extension into one centralized dashboard. 
+- New : Theme Builder : Modernized UI/UX with a smoother, more intuitive design. 
+- Fixed : Code Snippet : PHP Execute code Bug Fixed
+- Fixed : Bug Fixes and Improvements.
+
+= 4.3.5.1 = Release next
+- Updated : Performance : Toggle Added Disable option
+- Updated : Security : Toggle Added Disable option
+- Fixed : Bug Fixed and Improvements
 
 = 4.3.4 = 10 September 2025
 - Fixed : Captcha : Cloudflare Turnstile bug Fixed

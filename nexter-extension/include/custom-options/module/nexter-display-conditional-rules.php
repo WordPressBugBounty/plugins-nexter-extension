@@ -254,7 +254,7 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 			if ( in_array( $post_type->name, $taxonomy->object_type ) ) {
 				$taxo_name  = $taxonomy->name;
 				$taxo_label = ucwords( $taxonomy->label );
-				/* translators: %s: Taxonomy Label */
+				/* translators: %s: Taxonomy archive label */
 				$options[ $post_name . '|entire|tax-archive|' . $taxo_name ] = sprintf( __( 'All %s Archive', 'nexter-extension' ), $taxo_label );
 			}
 
@@ -1060,6 +1060,7 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 			$type = $type ? esc_sql( $type ) : esc_sql( $post->post_type );
 
 			if ( is_array( self::$current_load_page_data ) && isset( self::$current_load_page_data[ $type ] ) ) {
+				
 				return apply_filters( 'nexter_get_sections_posts_by_conditions', self::$current_load_page_data[ $type ], $type );
 			}
 
@@ -1305,7 +1306,7 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 						}else if( $current_page_type_name == 'is_singular' ){
 							$current_id      = esc_sql( get_the_id() );
 							$conditions = [
-							//	'standard-singulars',
+								'standard-singulars',
 								"{$current_post_type}|entire",
 								"post-{$current_id}"
 							];
@@ -1327,7 +1328,7 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 							
 						}else if( $current_page_type_name == 'is_archive' || $current_page_type_name == 'is_tax' || $current_page_type_name == 'is_date' || $current_page_type_name == 'is_author' ){
 							$conditions = [
-							//	'standard-archives',
+								'standard-archives',
 								"{$current_post_type}|entire|archive",
 							];
 							foreach ($conditions as $condition) {
@@ -1372,7 +1373,7 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 							$post_col = array_column($post_meta_value, 'value');
 							$standard_value = preg_grep('/^standard-/i', $post_col);
 						}else{
-							$standard_value = preg_grep('/^standard-/i', $post_meta_value);
+							$standard_value = preg_grep('/^standard-universal/i', $post_meta_value);
 						}
 						
 						
@@ -1399,7 +1400,7 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 						//archive post type
 						$archive_post_type = get_post_type();
 						if((is_tax() || is_category() || is_tag()) && !empty($archive_post_type) && isset($queried_object->taxonomy)){
-							$match_value = '/^'.$archive_post_type.'\|entire|tax-archive|'.$queried_object->taxonomy.'$/i';
+							$match_value = '/^'.$archive_post_type.'\|entire\|tax-archive\|'.$queried_object->taxonomy.'$/i';
 							if( $type == 'nxt-code-snippet' ){
 								$post_col = array_column($post_meta_value, 'value');
 								$post_type_match = preg_grep($match_value, $post_col);
@@ -1913,7 +1914,6 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 				}
 
 				$condition_results = [];
-
 				// Evaluate each condition in the group (AND logic within group)
 				foreach ( $group['conditions'] as $condition ) {
 					$field = isset( $condition['field'] ) ? $condition['field'] : '';
@@ -1946,7 +1946,7 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 		 * @return bool Whether snippet should be displayed
 		 * @since 1.0.0
 		 */
-		public static function should_display_snippet($post_id) {
+		public static function should_display_snippet($post_id , $snippet = []) {
 			// First check if snippet uses new Smart Conditional Logic
 			$smart_conditions = get_post_meta($post_id, 'nxt-smart-conditional-logic', true);
 			
@@ -1955,11 +1955,11 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 				return self::evaluate_smart_conditional_logic($smart_conditions);
 			}
 			
-					// Fall back to old Display Rules system
-		$include_conditions = get_post_meta($post_id, 'nxt-add-display-rule', true);
-		$exclude_conditions = get_post_meta($post_id, 'nxt-exclude-display-rule', true);
+			// Fall back to old Display Rules system
+			$include_conditions = get_post_meta($post_id, 'nxt-add-display-rule', true);
+			$exclude_conditions = get_post_meta($post_id, 'nxt-exclude-display-rule', true);
 		
-				return self::check_legacy_display_rules($post_id, $include_conditions, $exclude_conditions);
+			return self::check_legacy_display_rules($post_id, $include_conditions, $exclude_conditions);
 	}
 
 	/**
@@ -2237,34 +2237,34 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 				
 				// WooCommerce and other eCommerce conditions
 				case 'wc_page':
-			return self::evaluate_wc_page_condition( $operator, $values );
-		
-		case 'wc_customer_orders':
-			return self::evaluate_wc_customer_orders_condition( $operator, $values );
-		
-		case 'wc_customer_spent':
-			return self::evaluate_wc_customer_spent_condition( $operator, $values );
-		
-		case 'wc_cart_total':
-			return self::evaluate_wc_cart_total_condition( $operator, $values );
-		
-		case 'wc_product_in_cart':
-			return self::evaluate_wc_product_in_cart_condition( $operator, $values );
-		
-		case 'edd_page':
-			return self::evaluate_edd_page_condition( $operator, $values );
-		
-		case 'mp_page':
-			return self::evaluate_mp_page_condition( $operator, $values );
-		
-		case 'mp_user':
-			return self::evaluate_mp_user_condition( $operator, $values );
+					return self::evaluate_wc_page_condition( $operator, $values );
+				
+				case 'wc_customer_orders':
+					return self::evaluate_wc_customer_orders_condition( $operator, $values );
+				
+				case 'wc_customer_spent':
+					return self::evaluate_wc_customer_spent_condition( $operator, $values );
+				
+				case 'wc_cart_total':
+					return self::evaluate_wc_cart_total_condition( $operator, $values );
+				
+				case 'wc_product_in_cart':
+					return self::evaluate_wc_product_in_cart_condition( $operator, $values );
+				
+				case 'edd_page':
+					return self::evaluate_edd_page_condition( $operator, $values );
+				
+				case 'mp_page':
+					return self::evaluate_mp_page_condition( $operator, $values );
+				
+				case 'mp_user':
+					return self::evaluate_mp_user_condition( $operator, $values );
 	
-	// Add more field evaluations as needed
-	default:
-		// For unknown fields, return true to avoid breaking existing setups
-		return true;
-	}
+				// Add more field evaluations as needed
+				default:
+					// For unknown fields, return true to avoid breaking existing setups
+					return true;
+			}
 	}
 
 		/**
@@ -2758,7 +2758,17 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 	 * Evaluate post type condition
 	 */
 	private static function evaluate_post_type_condition( $operator, $values ) {
+		
+		// Try multiple methods to get post type
 		$current_post_type = get_post_type();
+		
+		// Fallback 1: Try global $post
+		if ( $current_post_type === false ) {
+			global $post;
+			if ( isset( $post ) && is_object( $post ) && isset( $post->post_type ) ) {
+				$current_post_type = $post->post_type;
+			}
+		}
 		
 		if ( $operator === 'is' ) {
 			// Return true if ANY value matches the current post type
@@ -2768,9 +2778,9 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 					return true;
 				}
 			}
+			
 			return false;
-		} 
-		else if ( $operator === 'is_not' ) {
+		} else if ( $operator === 'is_not' ) {
 			// Return true only if NONE of the values match the current post type
 			foreach ( $values as $value_obj ) {
 				$post_type = isset( $value_obj['value'] ) ? $value_obj['value'] : $value_obj;
@@ -2978,7 +2988,6 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 			// Check if code snippets are enabled
 			$get_opt = get_option('nexter_extra_ext_options');
 			$code_snippets_enabled = true;
-
 			if (isset($get_opt['code-snippets']) && isset($get_opt['code-snippets']['switch'])) {
 				$code_snippets_enabled = !empty($get_opt['code-snippets']['switch']);
 			}

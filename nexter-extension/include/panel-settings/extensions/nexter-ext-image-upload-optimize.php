@@ -298,14 +298,28 @@ defined('ABSPATH') or die();
 			}
 		}
 
+		// Security: Validate file path
+		$real_path = realpath( $path );
+		if ( ! $real_path || ! file_exists( $real_path ) ) {
+			return $upload;
+		}
+		
 		// Convert to JPG
 		$converted = false;
 		$uploads = wp_upload_dir();
 		$old_name = wp_basename( $path );
 		$new_name = str_ireplace( '.' . $ext, '.jpg', $old_name );
+		$new_name = sanitize_file_name( $new_name ); // Security: Sanitize filename
 		$new_name = wp_unique_filename( dirname( $path ), $new_name );
 		$new_path = $uploads['path'] . '/' . $new_name;
 		$new_url = $uploads['url'] . '/' . $new_name;
+		
+		// Security: Verify new path is within uploads directory
+		$real_new_path = realpath( dirname( $new_path ) );
+		$real_uploads_path = realpath( $uploads['path'] );
+		if ( ! $real_new_path || strpos( $real_new_path, $real_uploads_path ) !== 0 ) {
+			return $upload;
+		}
 
 		if ( is_object( $image_obj ) ) {
 			// Convert using GD
@@ -322,8 +336,11 @@ defined('ABSPATH') or die();
 		}
 
 		if ( $converted ) {
-			// Remove original file
-			unlink( $path );
+			// Security: Verify file exists and is writable before deletion
+			if ( file_exists( $path ) && is_writable( $path ) ) {
+				// Remove original file
+				@unlink( $path );
+			}
 
 			// Update upload array
 			$upload['file'] = $new_path;

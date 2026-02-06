@@ -202,16 +202,12 @@ defined('ABSPATH') or die();
 		$ext = ( isset( $_POST['extension_type'] ) ) ? sanitize_text_field( wp_unslash( $_POST['extension_type'] ) ) : '';
 		$project_id = ( isset( $_POST['project_id'] ) ) ? sanitize_text_field( wp_unslash( $_POST['project_id'] ) ) : '';
 		
-		if (! current_user_can('manage_options')) {
-			wp_send_json_error();
-		}
-
 		$option_page = 'nexter_extra_ext_options';
 		$get_option = get_option($option_page);
 
 		if( !empty( $ext ) && $ext==='adobe-font' && !empty($project_id)){
 			if( !empty( $get_option ) && isset($get_option[ $ext ]) ){
-
+				
 				$get_fonts = $this->get_adobe_font_api($project_id);
 				if ( !$get_fonts ) {
 					wp_send_json_error();
@@ -238,19 +234,28 @@ defined('ABSPATH') or die();
 	}
 
 	public function get_adobe_font_api( $project_id = ''){
-		$adobe_typekit_url = 'https://typekit.com/api/v1/json/kits/' . $project_id . '/published';
+		// Security: Validate and sanitize project ID
+		$project_id = sanitize_text_field( $project_id );
+		if ( empty( $project_id )) {
+			return null;
+		}
+		
+		$adobe_typekit_url = 'https://typekit.com/api/v1/json/kits/' . esc_attr($project_id) . '/published';
 
-		$response = wp_remote_get($adobe_typekit_url, [
+		$response = wp_remote_get( esc_url_raw( $adobe_typekit_url ), [
 			'timeout' => '30',
 		]);
-
+		
 		if ( is_wp_error($response) || wp_remote_retrieve_response_code($response) !== 200 ) {
 			return null;
 		}
 
-		$data = json_decode(wp_remote_retrieve_body($response), true);
-
-		if (! $data) {
+		// Security: Safe JSON decode
+		$body = wp_remote_retrieve_body( $response );
+		$data = json_decode( $body, true );
+		
+		// Security: Validate JSON was decoded successfully
+		if ( json_last_error() !== JSON_ERROR_NONE || ! is_array( $data ) ) {
 			return null;
 		}
 

@@ -191,10 +191,6 @@ function nexter_header_sticky_load_scripts() {
 			top: 32px;
 		}';
 
-		if(function_exists('nexter_minify_css_generate')){
-			wp_add_inline_style( 'nexter-style', nexter_minify_css_generate($header_css) );
-		}
-
 		wp_enqueue_script(
 			'nexter-ext-sticky',
 			NEXTER_EXT_URL . 'assets/js/main/nexter-sticky.min.js',
@@ -202,6 +198,10 @@ function nexter_header_sticky_load_scripts() {
 			NEXTER_EXT_VER,
 			true
 		);
+	}
+
+	if(function_exists('nexter_minify_css_generate')){
+		wp_add_inline_style( 'nexter-style', nexter_minify_css_generate($header_css) );
 	}
 }
 add_action( 'wp_enqueue_scripts', 'nexter_header_sticky_load_scripts' );

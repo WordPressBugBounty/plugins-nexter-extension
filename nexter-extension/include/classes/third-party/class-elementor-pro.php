@@ -8,7 +8,7 @@
 namespace Elementor;
 
 //If check 'Elementor' Exits or not
-if ( ! class_exists( '\Elementor\Plugin' ) || ! class_exists( 'ElementorPro\Modules\ThemeBuilder\Module' ) || ! defined('HELLO_ELEMENTOR_VERSION')) {
+if ( ! class_exists( '\Elementor\Plugin' ) || ! class_exists( 'ElementorPro\Modules\ThemeBuilder\Module' )) {
 	return;
 }
 

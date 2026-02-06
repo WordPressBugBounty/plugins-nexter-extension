@@ -42,13 +42,22 @@ if ( ! class_exists( 'Nexter_Elementor_Builder' ) ) {
 		 * Load enqueue styles and scripts.
 		 */
 		public function enqueue_scripts( $post_id ) {
+			if ( $post_id === '' ) {
+				return;
+			}
 
-			if ( $post_id !== '' ) {
-				if ( class_exists( '\Elementor\Core\Files\CSS\Post' ) ) {
-					$css_file = new \Elementor\Core\Files\CSS\Post( $post_id );
-				} elseif ( class_exists( '\Elementor\Post_CSS_File' ) ) {
-					$css_file = new \Elementor\Post_CSS_File( $post_id );
-				}
+			$post_id = (int) $post_id;
+
+			// Register post for Atomic Widget Styles so local-{post_id}-frontend CSS is generated.
+			if ( class_exists( '\Elementor\Modules\AtomicWidgets\Styles\Atomic_Styles_Manager' ) ) {
+				do_action( 'elementor/post/render', $post_id );
+			}
+
+			if ( class_exists( '\Elementor\Core\Files\CSS\Post' ) ) {
+				$css_file = \Elementor\Core\Files\CSS\Post::create( $post_id );
+				$css_file->enqueue();
+			} elseif ( class_exists( '\Elementor\Post_CSS_File' ) ) {
+				$css_file = new \Elementor\Post_CSS_File( $post_id );
 				$css_file->enqueue();
 			}
 		}

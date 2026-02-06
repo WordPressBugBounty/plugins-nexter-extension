@@ -11,6 +11,7 @@ final class Nexter_Ext_Post_Revision_Control {
 
     public function __construct() {
         self::load_revision_settings();
+        add_action('init', [$this,'enable_revisions_for_cpt'], 20);
         add_filter('wp_revisions_to_keep', [$this, 'limit_post_revisions'], 10, 2);
     }
 
@@ -32,6 +33,28 @@ final class Nexter_Ext_Post_Revision_Control {
         }
     }
 
+    public function enable_revisions_for_cpt(): void {
+        if (empty(self::$revision_settings)) {
+            return;
+        }
+
+        $post_types = isset(self::$revision_settings->posts) ? self::$revision_settings->posts : [];
+
+        if (!is_array($post_types)) {
+            return;
+        }
+        if(!empty($post_types)){
+            foreach ($post_types as $post_type) {
+                if (!post_type_exists($post_type)) {
+                    continue;
+                }
+                if (!post_type_supports($post_type, 'revisions')) {
+                    add_post_type_support($post_type, 'revisions');
+                }
+            }
+        }
+    }
+    
     /**
      * Filter: Limit the number of revisions saved per post type.
      */

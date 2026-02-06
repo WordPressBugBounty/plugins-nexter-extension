@@ -533,7 +533,7 @@ class WP_Import extends WP_Importer {
 				if ( isset($term['term_id']) )
 					$this->processed_terms[intval($term['term_id'])] = $id['term_id'];
 			} else {
-				/* translators: %s: taxonomy term name */
+				/* translators: 1: Taxonomy name, 2: Term name */
 				printf( __( 'Failed to import %1$s %2$s', 'nexter-extension' ), esc_html($term['term_taxonomy']), esc_html($term['term_name']) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 				if ( defined('IMPORT_DEBUG') && IMPORT_DEBUG )
 					echo ': ' . wp_kses_post($id->get_error_message());
@@ -762,7 +762,7 @@ class WP_Import extends WP_Importer {
 							$term_id = $t['term_id'];
 							do_action( 'wp_import_insert_term', $t, $term, $post_id, $post );
 						} else {
-							/* translators: %s: term name */
+							/* translators: 1: Taxonomy name, 2: Term name */
 							printf( __( 'Failed to import %1$s %2$s', 'nexter-extension' ), esc_html($taxonomy), esc_html($term['name']) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 							if ( defined('IMPORT_DEBUG') && IMPORT_DEBUG )
 								echo ': ' . wp_kses_post($t->get_error_message());
@@ -1055,7 +1055,8 @@ class WP_Import extends WP_Importer {
 		// make sure the fetch was successful
 		if ( $remote_response_code != '200' ) {
 			@unlink( $upload['file'] );
-			return new WP_Error( 'import_file_error', sprintf( __('Remote server returned error response %1$d %2$s', 'nexter-extension'), esc_html($remote_response_code), get_status_header_desc($remote_response_code) ) ); // phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment
+			/* translators: 1: HTTP response code, 2: HTTP status description */
+			return new WP_Error( 'import_file_error', sprintf( __('Remote server returned error response %1$d %2$s', 'nexter-extension'), esc_html($remote_response_code), get_status_header_desc($remote_response_code) ) );
 		}
 
 		$filesize = (int) filesize( $upload['file'] );
@@ -1073,7 +1074,8 @@ class WP_Import extends WP_Importer {
 		$max_size = (int) $this->max_attachment_size();
 		if ( ! empty( $max_size ) && $filesize > $max_size ) {
 			@unlink( $upload['file'] );
-			return new WP_Error( 'import_file_error', sprintf(__('Remote file is too large, limit is %s', 'nexter-extension'), size_format($max_size) ) ); // phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment
+			/* translators: %s: Maximum file size limit */
+			return new WP_Error( 'import_file_error', sprintf(__('Remote file is too large, limit is %s', 'nexter-extension'), size_format($max_size) ) );
 		}
 
 		// keep track of the old and new urls so we can substitute them later

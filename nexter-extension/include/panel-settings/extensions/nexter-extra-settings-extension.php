@@ -20,10 +20,7 @@ class Nexter_Ext_Extra_Settings {
 			if( isset($extension_option['adobe-font']) && !empty($extension_option['adobe-font']['switch']) ){
 				require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-adobe-font.php';
 			}
-			//Local Google Font
-			// if( isset($extension_option['local-google-font']) && !empty($extension_option['local-google-font']['switch']) ){
-				require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-local-google-font.php';
-			// }
+			
 			//Custom Upload Font
 			if( isset($extension_option['custom-upload-font']) && !empty($extension_option['custom-upload-font']['switch']) ){
 				require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-custom-upload-font.php';
@@ -85,7 +82,11 @@ class Nexter_Ext_Extra_Settings {
 
 		}
 		
-
+		//Local Google Font
+		// if( isset($extension_option['local-google-font']) && !empty($extension_option['local-google-font']['switch']) ){
+			require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-local-google-font.php';
+		// }
+		
 		require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-post-duplicator.php';
 		require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-replace-url.php';
 		if(!empty($security_option)){
@@ -135,7 +136,10 @@ class Nexter_Ext_Extra_Settings {
 			$types['ext'] = 'ttf';
 			$types['type'] = 'application/x-font-ttf';
 		}
-
+		if (false !== strpos($filename, '.otf')) {
+			$types['ext'] = 'otf';
+			$types['type'] = 'font/otf';
+		}
 		if (false !== strpos($filename, '.woff2')) {
 			$types['ext'] = 'woff2';
 			$types['type'] = 'font/woff2|application/octet-stream|font/x-woff2';
@@ -149,7 +153,8 @@ class Nexter_Ext_Extra_Settings {
 	 * @since 1.1.0 
 	 */
 	public function nxt_allow_mime_types( $mimes ) {
-		$mimes['ttf'] = 'application/x-font-ttf';
+		$mimes['ttf'] = 'application/x-font-ttf|font/ttf';
+		$mimes['otf'] = 'font/otf';
 		$mimes['woff2'] = 'font/woff2|application/octet-stream|font/x-woff2';
 		
 		return $mimes;

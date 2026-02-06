@@ -31,7 +31,13 @@ if ( ! class_exists( 'Nexter_Extensions_Load' ) ) {
 		 */
 		public function __construct() {
 			add_action( 'after_setup_theme', [ $this, 'nexter_builder_post_type' ] );
+			
 			$this->include_custom_options();
+			add_action( 'after_setup_theme', function() {
+				if(defined('NXT_VERSION') && version_compare( NXT_VERSION, '4.2.0', '>' ) ){
+					require_once NEXTER_EXT_DIR . 'include/classes/third-party/class-elementor-pro.php';
+				}
+			} );
 			add_action( 'after_setup_theme', [ $this, 'theme_after_setup' ] );
 
 			$nexter_white_label = get_option('nexter_white_label');
@@ -41,27 +47,40 @@ if ( ! class_exists( 'Nexter_Extensions_Load' ) ) {
 
 			if( is_admin() ){
 				add_filter( 'plugin_row_meta', array( $this, 'add_extra_links_plugin_row_meta' ), 10, 2 );
-				add_action( 'admin_head', [ $this, 'nxt_set_snippet_editor_height' ], 99 );
+				add_filter( 'admin_body_class', function( $classes ) {
+					// Security: Sanitize input
+					$page = isset( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : '';
+					if ( $page === 'nxt_code_snippets' ) {
+						$classes .= ' nxt-code-snippet-page ';
+					}
+					return $classes;
+				}, 11);
 			}
 
 			if( !defined( 'NXT_PRO_EXT' ) && empty( get_option( 'nexter-ext-pro-load-notice' ) ) ) {
 				global $pagenow;
-				if(!empty( $pagenow ) && ! ( $pagenow == 'update.php' && isset($_GET['action']) && ($_GET['action'] === 'install-plugin' || $_GET['action'] === 'upgrade-plugin' ))){
+				// Security: Sanitize input
+				$get_action = isset( $_GET['action'] ) ? sanitize_text_field( wp_unslash( $_GET['action'] ) ) : '';
+				if(!empty( $pagenow ) && ! ( $pagenow == 'update.php' && ! empty( $get_action ) && ( $get_action === 'install-plugin' || $get_action === 'upgrade-plugin' ))){
 					add_action( 'admin_notices', array( $this, 'nexter_extension_pro_load_notice' ) );
 				}
 				add_action( 'wp_ajax_nexter_ext_pro_dismiss_notice', array( $this, 'nexter_ext_pro_dismiss_notice_ajax' ) );
 			}
+	
+			if( defined( 'TPGB_VERSION' ) && version_compare( TPGB_VERSION, '4.6.0', '<' ) ){
+                add_action( 'admin_notices', array( $this , 'nexter_blocks_version_notice' )  );
+            }
+            
 			add_action( 'wp_ajax_nexter_ext_dismiss_notice', array( $this, 'nexter_ext_dismiss_notice_data' ) );
 			
-
 			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts_admin' ) );
-			/* if ( class_exists( '\Elementor\Plugin' )) {
+			add_action( 'admin_enqueue_scripts', array( $this, 'nxt_elementor_wdk_preset_script' ) );
+			if ( class_exists( '\Elementor\Plugin' )) {
 				add_action( 'elementor/editor/before_enqueue_scripts', array( $this, 'nxt_elementor_wdk_preset_script' ) );
-			} */
+			}
 
 			add_action( 'wpml_loaded', array( $this, 'nxt_wpml_compatibility' ) );
 
-			
 			add_shortcode( 'nxt-copyright', array( $this,'nexter_ext_copyright_symbol') );
 			add_shortcode( 'nxt-year', array( $this,'nexter_ext_getyear') );
 
@@ -133,7 +152,7 @@ if ( ! class_exists( 'Nexter_Extensions_Load' ) ) {
 			$atts = shortcode_atts( array(
 				'format' => 'Y',
 			), $atts, 'nxt-year' );
-			return wp_date( $atts['format'] );
+			return esc_html( wp_date( $atts['format'] ) );
 		}
 
 		/**
@@ -143,7 +162,7 @@ if ( ! class_exists( 'Nexter_Extensions_Load' ) ) {
 		public function add_settings_pro_link( $links ) {
 			// Settings link.
 			if ( current_user_can( 'manage_options' ) ) {
-				$settings_link = sprintf( '<a href="%s">%s</a>', admin_url( 'admin.php?page=nexter_welcome' ), __( 'Settings', 'nexter-extension' ) );
+				$settings_link = sprintf( '<a href="%s">%s</a>', admin_url( 'admin.php?page=nexter_welcome#/utilities' ), __( 'Settings', 'nexter-extension' ) );
 				$links = (array) $links;
 				array_unshift( $links, $settings_link );
 				if ( !apply_filters('nexter_remove_branding',false) ) {
@@ -155,7 +174,7 @@ if ( ! class_exists( 'Nexter_Extensions_Load' ) ) {
 
 			// Upgrade PRO link.
 			if ( ! defined('NXT_PRO_EXT') && !apply_filters('nexter_remove_branding',false) ) {
-				$pro_link = sprintf( '<a href="%s" target="_blank" style="color: #cc0000;font-weight: 700;" rel="noopener noreferrer">%s</a>', esc_url('https://nexterwp.com/pricing'), __( 'Upgrade PRO', 'nexter-extension' ) );
+				$pro_link = sprintf( '<a href="%s" target="_blank" style="color: #cc0000;font-weight: 700;" rel="noopener noreferrer">%s</a>', esc_url('https://nexterwp.com/pricing?utm_source=wpbackend&utm_medium=banner&utm_campaign=nextersettings'), __( 'Upgrade PRO', 'nexter-extension' ) );
 				$links = (array) $links;
 				$links[] = $pro_link;
 			}
@@ -172,7 +191,7 @@ if ( ! class_exists( 'Nexter_Extensions_Load' ) ) {
 
 			if ( strpos( $plugin_file, NEXTER_EXT_BASE ) !== false && current_user_can( 'manage_options' ) && !apply_filters('nexter_remove_branding',false) && ( empty($nexter_white_label) || ( !empty($nexter_white_label['nxt_help_link']) && $nexter_white_label['nxt_help_link'] !== 'on') ) ) {
 				$new_links = array(
-					'official-site' => '<a href="'.esc_url('https://nexterwp.com/').'" target="_blank" rel="noopener noreferrer">'.esc_html__( 'Official Site', 'nexter-extension' ).'</a>',
+					'official-site' => '<a href="'.esc_url('https://nexterwp.com/?utm_source=wpbackend&utm_medium=banner&utm_campaign=nextersettings').'" target="_blank" rel="noopener noreferrer">'.esc_html__( 'Official Site', 'nexter-extension' ).'</a>',
 					'docs' => '<a href="'.esc_url('https://nexterwp.com/help/nexter-extension/').'" target="_blank" rel="noopener noreferrer" style="color:green;">'.esc_html__( 'Docs', 'nexter-extension' ).'</a>',
 					'join-community' => '<a href="'.esc_url('https://www.facebook.com/groups/139678088029161/').'" target="_blank" rel="noopener noreferrer">'.esc_html__( 'Join Community', 'nexter-extension' ).'</a>',
 					'whats-new' => '<a href="'.esc_url('https://roadmap.nexterwp.com/updates?filter=Nexter+Extension+-+FREE').'" target="_blank" rel="noopener noreferrer" style="color: orange;">'.esc_html__( 'What\'s New?', 'nexter-extension' ).'</a>',
@@ -229,15 +248,17 @@ if ( ! class_exists( 'Nexter_Extensions_Load' ) ) {
 			require_once NEXTER_EXT_DIR . 'include/classes/nexter-class-load.php';
 			require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/custom-fields/nxt-custom-fields.php';
 			require_once NEXTER_EXT_DIR . 'include/panel-settings/nxt-deactive.php';
-			require_once NEXTER_EXT_DIR . 'include/panel-settings/nexter-whats-new.php';
-
+			if(is_admin()){
+				require_once NEXTER_EXT_DIR . 'include/panel-settings/nexter-whats-new.php';
+			}
+			
 			if ( ! class_exists( 'Nexter_Builder_Compatibility' ) ) {
 				$include_uri = NEXTER_EXT_DIR . 'include/classes/';
 				require_once $include_uri . 'third-party/class-builder-compatibility.php';
 				require_once $include_uri . 'third-party/class-nxt-theme-builder-load.php';
 				require_once $include_uri . 'third-party/class-bricks.php';
 				require_once $include_uri . 'third-party/class-elementor.php';
-				require_once $include_uri . 'third-party/class-elementor-pro.php';
+				
 				require_once $include_uri . 'third-party/class-gutenberg.php';
 				require_once $include_uri . 'third-party/class-visual-composer.php';
 				require_once $include_uri . 'third-party/class-beaver.php';
@@ -267,23 +288,22 @@ if ( ! class_exists( 'Nexter_Extensions_Load' ) ) {
 		}
 
 		public function enqueue_scripts_admin( $hook_suffix ){
-			wp_enqueue_script( 'nexter-ext-builder-js', NEXTER_EXT_URL .'assets/js/admin/nexter-ext-admin.min.js', array(), NEXTER_EXT_VER, true );
-			
+			$minified = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
+			wp_enqueue_script( 'nexter-ext-builder-js', NEXTER_EXT_URL .'assets/js/admin/nexter-ext-admin'.$minified.'.js', array(), NEXTER_EXT_VER, true );
+
 			$user = wp_get_current_user();
             $allowed_roles = array( 'administrator' );
 			if( defined('NEXTER_EXT') && get_post_type() == 'nxt_builder' && ('post.php' == $hook_suffix || 'edit.php' == $hook_suffix || 'post-new.php' == $hook_suffix) && !empty($user) && isset($user->roles) && array_intersect( $allowed_roles, $user->roles ) ){
 
 				/* Edit Page Side Edit Condition Button Enqueue */
-				if(is_admin() && isset( $_GET['action'] ) && $_GET['action'] == 'edit'){
+				// Security: Sanitize input
+				$action = isset( $_GET['action'] ) ? sanitize_text_field( wp_unslash( $_GET['action'] ) ) : '';
+				if(is_admin() && $action == 'edit'){
 					wp_enqueue_style( 'nexter-select-css', NEXTER_EXT_URL .'assets/css/extra/select2.min.css', array(), NEXTER_EXT_VER );
 			    	wp_enqueue_script( 'nexter-select-js', NEXTER_EXT_URL . 'assets/js/extra/select2.min.js', array(), NEXTER_EXT_VER, false );
 					//Editor Theme Builder Conditional
 					wp_enqueue_style( 'nexter-ext-edit-condition-css', NEXTER_EXT_URL .'assets/css/admin/nexter-edit-condition.min.css', array(), NEXTER_EXT_VER );
-					wp_enqueue_script( 'nexter-ext-edit-condition-js', NEXTER_EXT_URL .'assets/js/admin/nexter-edit-condition.min.js', array(), NEXTER_EXT_VER, true );
-
-					//wdesignkit Preset
-					//wp_enqueue_style( 'nexter-ext-wdk-preset', NEXTER_EXT_URL .'assets/css/admin/nxt-wdk-preset.css', array(), NEXTER_EXT_VER );
-					//wp_enqueue_script( 'nexter-ext-wdk-preset', NEXTER_EXT_URL .'assets/js/admin/nxt-wdk-preset.js', array( 'react', 'react-dom','wp-i18n', 'wp-dom-ready', 'wp-element','wp-components', 'wp-block-editor', 'wp-editor' ), NEXTER_EXT_VER, true );
+					wp_enqueue_script( 'nexter-ext-edit-condition-js', NEXTER_EXT_URL .'assets/js/admin/nexter-edit-condition'.$minified.'.js', array(), NEXTER_EXT_VER, true );
 
 				}
 				
@@ -441,33 +461,6 @@ if ( ! class_exists( 'Nexter_Extensions_Load' ) ) {
 		}
 		
 		/**
-		 * Set Code Snippet Editor Height
-		 */
-		public function nxt_set_snippet_editor_height(){
-			// Check if code snippets are enabled
-			$get_opt = get_option('nexter_extra_ext_options');
-			$code_snippets_enabled = true;
-
-			if (isset($get_opt['code-snippets']) && isset($get_opt['code-snippets']['switch'])) {
-				$code_snippets_enabled = !empty($get_opt['code-snippets']['switch']);
-			}
-			
-			if(!$code_snippets_enabled) {
-				return;
-			}
-			
-			if(!empty($get_opt) && !empty($get_opt['code-snippets']) && !empty($get_opt['code-snippets']['values'])){
-				$editor_options = $get_opt['code-snippets']['values'];
-				
-				if(!empty($editor_options['autoheight'])){
-					echo '<style>.nexter-extension_page_nxt_code_snippets .CodeMirror { height: auto; }</style>';
-				}else{
-					echo '<style>.nexter-extension_page_nxt_code_snippets .CodeMirror { height: ' . esc_attr($editor_options['editorheight']) . 'px; }</style>';
-				}
-			}
-		}
-
-		/**
 		 * Nexter Extension Pro Load Notice
 		 */
 		public function nexter_extension_pro_load_notice() {
@@ -480,149 +473,95 @@ if ( ! class_exists( 'Nexter_Extensions_Load' ) ) {
             if ( ! is_array( $nxtData ) || empty( $nxtData['install-date'] ) ) {
                 return;
             }
-        
+
             // Convert from d-m-Y to timestamp
             $inTime = strtotime( $nxtData['install-date'] );
-           
+
             if ( ! $inTime ) {
                 return;
             }
-            
+
             $dayCount = floor( ( current_time( 'timestamp' ) - $inTime ) / DAY_IN_SECONDS );
             // Show after 2 days
-            //if ( $dayCount >= 2 ) {
+            if ( $dayCount >= 2 ) {
+				if(defined('TPGB_VERSION') && !defined('TPGBP_VERSION')){
+					$noticeTitle = esc_html__( 'Upgrade to Nexter Pro to Unlock 1000+ Templates, 90+ Blocks & 50+ Extensions', 'nexter-extension');
+					$noticeDesc = esc_html__( 'A single suite to design faster, reduce plugins, and keep your site lightweight.', 'nexter-extension');
+				}else{
+					$noticeTitle = esc_html__( 'Replace 50+ WordPress Plugins with Nexter Extension Pro', 'nexter-extension' );
+					$noticeDesc = esc_html__( 'Nexter Extension free options cover the basics, but Pro takes it further with features like Login Protection, 2-Factor Authentication, Branded WP Admin & More.', 'nexter-extension' );
+				}
+
 				echo '<div class="notice notice-info is-dismissible nxt-notice-wrap" data-notice-id="nexter_block_show_pro">';
 					echo '<div class="nexter-license-activate">';
                         echo '<div class="nexter-license-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"><rect width="24" height="24" fill="#1717CC" rx="5"/><path fill="#fff" d="M12.605 17.374c.026 0 .038.013.039.038.102 0 .192.014.27.04.025 0 .05.012.076.037.128.077.23.167.307.27v.038c0 .026.013.051.039.077v.038a.63.63 0 0 1 .038.193l-.038 1.882h-2.652v-2.613h1.921Zm.308-13.414c.128 0 .23.038.308.115a.259.259 0 0 1 .115.23V15.26c.025.153-.052.295-.23.423a.872.872 0 0 1-.578.192h-1.844V3.96h2.23Z"/></svg></div>';
                         echo '<div class="nexter-license-content">';
-                            echo '<h2>' . esc_html__( 'Replace 50+ WordPress Plugins with Nexter Extension Pro', 'nexter-extension' ) . '</h2>';
-                            echo '<p>' . esc_html__( 'Nexter Extension free options cover the basics, but Pro takes it further with features like Login Protection, 2-Factor Authentication, Branded WP Admin & More.', 'nexter-extension' ) . '</p>';
+                            echo '<h2>' . esc_html($noticeTitle) . '</h2>';
+                            echo '<p>' . esc_html($noticeDesc) . '</p>';
                             echo '<a href="' . esc_url('https://nexterwp.com/pricing/?utm_source=wpbackend&utm_medium=admin&utm_campaign=pluginpage') . '" target="_blank" rel="noopener noreferrer" class="nxt-nobtn-primary">' . esc_html__( 'Upgrade Now', 'nexter-extension' ) . '</a>';
                             echo '<a href="' . esc_url('https://nexterwp.com/free-vs-pro/?utm_source=wpbackend&utm_medium=admin&utm_campaign=pluginpage') . '" target="_blank" rel="noopener noreferrer" class="nxt-nobtn-secondary">' . esc_html__( 'Compare Free vs Pro', 'nexter-extension' ) . '</a>';
                         echo '</div>';
                     echo '</div>';
                 echo '</div>';
-			//}
+			}
+		}
+
+		public function nexter_blocks_version_notice() {
+			if ( get_option( 'nexter_blocks_installed_dismissed' ) ) {
+                return;
+            }
+
+            echo '<div class="notice notice-info is-dismissible nxt-notice-wrap" data-notice-id="nexter_blocks_installed">';
+                echo '<div class="nexter-license-activate" style="align-items: center;">';
+                    echo '<div class="nexter-license-icon" style="display: flex;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"><rect width="24" height="24" fill="#1717CC" rx="5"/><path fill="#fff" d="M12.605 17.374c.026 0 .038.013.039.038.102 0 .192.014.27.04.025 0 .05.012.076.037.128.077.23.167.307.27v.038c0 .026.013.051.039.077v.038a.63.63 0 0 1 .038.193l-.038 1.882h-2.652v-2.613h1.921Zm.308-13.414c.128 0 .23.038.308.115a.259.259 0 0 1 .115.23V15.26c.025.153-.052.295-.23.423a.872.872 0 0 1-.578.192h-1.844V3.96h2.23Z"/></svg></div>';
+                    echo '<div class="nexter-license-content">';
+                        echo '<h2>' . esc_html__( 'To continue using all latest features smoothly, please update Nexter Blocks to version 4.6.0 or higher.', 'nexter-extension' ) . '</h2>';
+                    echo '</div>';
+                echo '</div>';
+            echo '</div>';
 		}
 
 		/**
 		 * Nexter Pro Notice Dismiss Ajax
 		 */
 		public function nexter_ext_pro_dismiss_notice_ajax(){
+			// Security: Verify nonce
+			//check_ajax_referer( 'nexter_admin_nonce', 'nexter_nonce' );
+			
+			// Security: Check user capabilities
+			if ( ! current_user_can( 'manage_options' ) ) {
+				wp_send_json_error( array( 'content' => __( 'Insufficient permissions.', 'nexter-extension' ) ) );
+			}
+			
 			update_option( 'nexter-ext-pro-load-notice', 1 );
+			wp_send_json_success();
 		}
 
 		public function nexter_ext_dismiss_notice_data(){
+			// Security: Verify nonce
+			//check_ajax_referer( 'nexter_admin_nonce', 'nexter_nonce' );
+			
+			// Security: Check user capabilities
+			if ( ! current_user_can( 'manage_options' ) ) {
+				wp_send_json_error( array( 'content' => __( 'Insufficient permissions.', 'nexter-extension' ) ) );
+			}
+			
 			if ( ! empty($_POST['notice_id']) ) {
-                $notice_id = sanitize_text_field($_POST['notice_id']);
-                update_option($notice_id . '_dismissed', true);
-                wp_send_json_success(['dismissed' => $notice_id]);
-            } else {
-                wp_send_json_error('Invalid Notice ID');
-            }
+				// Security: Use sanitize_key for option names and whitelist allowed notices
+				$notice_id = sanitize_key( $_POST['notice_id'] );
+				$allowed_notices = array( 'nexter_blocks_installed', 'nexter_block_show_pro' );
+				
+				if ( in_array( $notice_id, $allowed_notices, true ) ) {
+					update_option( $notice_id . '_dismissed', true );
+					wp_send_json_success( array( 'dismissed' => $notice_id ) );
+				} else {
+					wp_send_json_error( array( 'content' => __( 'Invalid notice ID.', 'nexter-extension' ) ) );
+				}
+			} else {
+				wp_send_json_error( array( 'content' => __( 'Invalid Notice ID', 'nexter-extension' ) ) );
+			}
 		}
 		
-		/*
-		 * Get Code Snippets Php Execute
-		 * @since 1.0.4
-		 */
-		public function nexter_code_php_snippets_actions(){
-			global $wpdb;
-			
-			$code_snippet = 'nxt-hooks-layout';
-			$type = 'nxt_builder';
-			
-			$join_meta = "pm.meta_value = 'code_snippet'";
-			
-			$nxt_option = 'nxt-build-get-data';
-			$get_data = get_option( $nxt_option );
-			if( $get_data === false ){
-				$get_data = ['saved' => strtotime('now'), 'singular_updated' => '','archives_updated' => '','sections_updated' => ''];
-				add_option( $nxt_option, $get_data );
-			}
-
-			$posts = [];
-			if(!empty($get_data) && isset($get_data['saved']) && isset($get_data['sections_updated']) && $get_data['saved'] !== $get_data['sections_updated']){
-
-				$sqlquery = "SELECT p.ID, pm.meta_value FROM {$wpdb->postmeta} as pm INNER JOIN {$wpdb->posts} as p ON pm.post_id = p.ID WHERE (pm.meta_key = %s) AND p.post_type = %s AND p.post_status = 'publish' AND ( {$join_meta} ) ORDER BY p.post_date DESC";
-				
-				$sql3 = $wpdb->prepare( $sqlquery , [ $code_snippet, $type] ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-				
-				$posts  = $wpdb->get_results( $sql3 ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-
-				$get_data['sections_updated'] = $get_data['saved'];
-				$get_data[ 'code_snippet' ] = $posts;
-				update_option( $nxt_option, $get_data );
-
-			}else if( isset($get_data[ 'code_snippet' ]) && !empty($get_data[ 'code_snippet' ])){
-				$posts = $get_data[ 'code_snippet' ];
-			}
-			$php_snippet_filter = apply_filters('nexter_php_codesnippet_execute',true);
-			if( !empty($posts) && !empty($php_snippet_filter)){
-				foreach ( $posts as $post_data ) {
-
-					$get_layout_type = get_post_meta( $post_data->ID , 'nxt-hooks-layout-code-snippet', false );
-					
-					if(!empty($get_layout_type) && !empty($get_layout_type[0]) && 'php' == $get_layout_type[0]){
-						$post_id = isset($post_data->ID) ? $post_data->ID : '';
-						if(!empty($post_id)){
-							$authorID = get_post_field( 'post_author', $post_id );
-							$theAuthorDataRoles = get_userdata($authorID);
-							$theRolesAuthor = isset($theAuthorDataRoles->roles) ? $theAuthorDataRoles->roles : [];
-							
-							if ( in_array( 'administrator', $theRolesAuthor ) ) {
-								$php_code = get_post_meta( $post_id, 'nxt-code-php-snippet', true );
-								$code_execute = get_post_meta( $post_id, 'nxt-code-execute', true );
-								
-								$php_code_execute = get_post_meta( $post_id, 'nxt-code-snippet-secure-executed', true );
-								
-								if( empty($php_code_execute) || (!empty($php_code_execute) && $php_code_execute=='yes') ){
-									
-									if(!empty($php_code) && !empty($code_execute)){
-										
-										if($code_execute=='global'){
-											$error_code = $this->nexter_code_php_snippets_execute($php_code);
-										}else if(is_admin() && $code_execute=='admin'){
-											$error_code = $this->nexter_code_php_snippets_execute($php_code);
-										}else if(! is_admin() && $code_execute=='front-end' && !$this->is_elementor_edit_or_preview_mode()){
-											$error_code = $this->nexter_code_php_snippets_execute($php_code);
-										}
-									}
-								}
-							}
-						}
-					}
-					
-				}
-			}
-		}
-
-		/*
-		 * Execute Php Snippets Code
-		 * @since 1.0.4
-		 */
-		public function nexter_code_php_snippets_execute( $code, $catch_output = true ) {
-
-			if ( empty( $code ) ) {
-				return false;
-			}
-			$code = html_entity_decode(htmlspecialchars_decode($code));
-
-			if ( $catch_output ) {
-				ob_start();
-			}
-			// @codingStandardsIgnoreStart
-			
-			$result = eval( $code );
-			// @codingStandardsIgnoreEnd
-			
-			if ( $catch_output ) {
-				ob_end_clean();
-			}
-
-			return $result;
-		}
-
 		/**
 		 * Check if current page is in Elementor edit or preview mode
 		 * This prevents frontend_only snippets from running in Elementor editor or preview
@@ -635,8 +574,10 @@ if ( ! class_exists( 'Nexter_Extensions_Load' ) ) {
 					return true;
 				}
 			}
-			if ((isset($_GET['elementor-preview']) && $_GET['elementor-preview']) ||
-				(isset($_GET['elementor']) && $_GET['elementor'])) {
+			// Security: Sanitize input
+			$get_elementor_preview = isset( $_GET['elementor-preview'] ) ? sanitize_text_field( wp_unslash( $_GET['elementor-preview'] ) ) : '';
+			$get_elementor = isset( $_GET['elementor'] ) ? sanitize_text_field( wp_unslash( $_GET['elementor'] ) ) : '';
+			if ( ! empty( $get_elementor_preview ) || ! empty( $get_elementor ) ) {
 				return true;
 			}
 			return false;
@@ -657,43 +598,62 @@ if ( ! class_exists( 'Nexter_Extensions_Load' ) ) {
 		 * Wdesignkit Preset Load templates Elementor Builder
 		 */
 		public function nxt_elementor_wdk_preset_script( $hook_suffix ){
-			if(\Elementor\Plugin::$instance->editor->is_edit_mode() && get_post_type() == 'nxt_builder' ){
-
+			if(('edit.php' === $hook_suffix && isset( $_GET['post_type'] ) && $_GET['post_type'] === 'nxt_builder') || get_post_type() == 'nxt_builder' ){
 				$wdkPlugin = false;
 				include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
             	$pluginslist = get_plugins();
 
 				$wdkVersion = '';
+				$wdkactivate = false;
 				if ( isset( $pluginslist[ 'wdesignkit/wdesignkit.php' ] ) && !empty( $pluginslist[ 'wdesignkit/wdesignkit.php' ] ) ) {
-                if( is_plugin_active('wdesignkit/wdesignkit.php') ){
-                    $wdkPlugin = true;
-                    // Get WDesignKit version
-                    $wdkVersion = '1.0.0'; // Default version
-                    if (defined('WDKIT_VERSION')) {
-                        $wdkVersion = WDKIT_VERSION;
-                    } else {
-                        // Try to get version from plugin data
-                        $plugin_data = get_plugin_data(WP_PLUGIN_DIR . '/wdesignkit/wdesignkit.php');
-                        if (isset($plugin_data['Version'])) {
-                            $wdkVersion = $plugin_data['Version'];
-                        }
-                    }
-                }
-            }
-
-				wp_enqueue_style( 'nexter-ele-wdkit-preset', NEXTER_EXT_URL .'assets/css/admin/nxt-wdk-preset.css', array(), NEXTER_EXT_VER );
-				wp_enqueue_script( 'nexter-ele-wdkit-preset', NEXTER_EXT_URL .'assets/js/admin/nxt-ele-wdk-preset.js', array( 'jquery','elementor-common' ), NEXTER_EXT_VER, true );
+					if( is_plugin_active('wdesignkit/wdesignkit.php') ){
+						$wdkPlugin = true;
+						// Get WDesignKit version
+						$wdkVersion = '1.0.0'; // Default version
+						if (defined('WDKIT_VERSION')) {
+							$wdkVersion = WDKIT_VERSION;
+						} else {
+							// Try to get version from plugin data
+							$plugin_data = get_plugin_data(WP_PLUGIN_DIR . '/wdesignkit/wdesignkit.php');
+							if (isset($plugin_data['Version'])) {
+								$wdkVersion = $plugin_data['Version'];
+							}
+						}
+					}else{
+						$wdkactivate = true;
+					}
+				}
+				$loaded = array( 'jquery');
+				if ( class_exists( '\Elementor\Plugin' ) ) {
+					$loaded[] = 'elementor-common';
+				}
+				$nexter_white_label = get_option('nexter_white_label');
+				$wdk_integration = (!empty($nexter_white_label['nxt_wdk_integration'])) ? $nexter_white_label['nxt_wdk_integration'] : '';
+				if($wdk_integration !== 'on'){
+					wp_enqueue_style( 'nexter-ele-wdkit-preset', NEXTER_EXT_URL .'assets/css/admin/nxt-wdk-preset.css', array(), NEXTER_EXT_VER );
+					wp_enqueue_script( 'nexter-ele-wdkit-preset', NEXTER_EXT_URL .'assets/js/admin/nxt-ele-wdk-preset.js', $loaded, NEXTER_EXT_VER, true );
 				
-				wp_localize_script(
-					'nexter-ele-wdkit-preset',
-					'nxt_ele_wdkit',
-					array(
-						'ajax_url'    => admin_url( 'admin-ajax.php' ),
-						'ajax_nonce' => wp_create_nonce('nexter_admin_nonce'),
-						'wdkPlugin' => $wdkPlugin,
-						'wdkVersion' => isset($wdkVersion) ? $wdkVersion : '1.0.0',
-					)
-				);
+					global $post;
+					$layout_type = '';
+					if( !empty( $post ) ){
+						$post_id = isset($post->ID) ? $post->ID : '';
+						if(!empty($post_id)){
+							$layout_type = get_post_meta($post_id, 'nxt-hooks-layout-sections', true);
+						}
+					}
+					wp_localize_script(
+						'nexter-ele-wdkit-preset',
+						'nxt_ele_wdkit',
+						array(
+							'ajax_url'    => admin_url( 'admin-ajax.php' ),
+							'ajax_nonce' => wp_create_nonce('nexter_admin_nonce'),
+							'wdkPlugin' => $wdkPlugin,
+							'wdkactivate' => $wdkactivate,
+							'wdkVersion' => isset($wdkVersion) ? $wdkVersion : '1.0.0',
+							'layout_type' => $layout_type,
+						)
+					);
+				}
 			}
 		}
 	}

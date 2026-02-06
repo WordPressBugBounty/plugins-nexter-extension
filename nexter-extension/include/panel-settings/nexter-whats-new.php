@@ -39,11 +39,9 @@ if ( ! class_exists( 'Nxt_Ext_Whats_New' ) ) {
 		 */
 		public function __construct() {
 			$this->initialize_notice_data();
-			if ( is_admin() ) {
-				// Set feed cache first, then check new item
-				add_action( 'admin_init', [ $this, 'nxtext_cache_whats_new_feed' ], 10 );
-				add_action( 'admin_init', [ $this, 'check_and_store_latest_item' ], 15 );
-			}
+			// Set feed cache first, then check new item
+			add_action( 'admin_init', [ $this, 'nxtext_cache_whats_new_feed' ], 10 );
+			add_action( 'admin_init', [ $this, 'check_and_store_latest_item' ], 15 );
 			add_action( 'wp_ajax_nxtext_fetch_whats_new', [ $this, 'nxtext_fetch_whats_new_data' ] );
 		}
 
@@ -83,7 +81,7 @@ if ( ! class_exists( 'Nxt_Ext_Whats_New' ) ) {
 				return [];
 			}
 
-			$results = isset($data['nexter-extension']) ? $data['nexter-extension'] : [];
+			$results = isset($data['all']) ? $data['all'] : (isset($data['nexter-extension']) ? $data['nexter-extension'] : []);
 
 			set_transient( self::TRANSIENT_FEED, $results, 4 * DAY_IN_SECONDS );
 
@@ -143,7 +141,7 @@ if ( ! class_exists( 'Nxt_Ext_Whats_New' ) ) {
 					'link'  => $new_link,
 					'date'  => $new_date,
 				];
-				set_transient( self::TRANSIENT_ITEM, $latest, WEEK_IN_SECONDS );
+				set_transient( self::TRANSIENT_ITEM, $latest, 4 * DAY_IN_SECONDS );
 
 				$data = get_option( self::OPTION_NAME, [] );
 				if ( ! is_array( $data ) ) {

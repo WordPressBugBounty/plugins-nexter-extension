@@ -1,6 +1,6 @@
 class NexterBuilder {
     constructor() {
-        if (document.body.classList.contains('post-type-nxt_builder')) {
+        if (document.body.classList.contains('post-type-nxt_builder') || document.body.classList.contains('nxt-page-nexter-builder')) {
             this.init();
         }
     }
@@ -104,7 +104,7 @@ class NexterBuilder {
         this.nxtBuilderCommon(action, true);
     }
 
-    nxtBuilderCommon(action, popupcheck) {
+    nxtBuilderCommon(action, popupcheck, newType = '') {
         let popEle = document.querySelector('.nxt-ext-pop-inner');
         if(popupcheck){
             if (!popEle) {
@@ -113,7 +113,7 @@ class NexterBuilder {
             }
         }
         if(action){
-            this.sendRequest(popEle, action);
+            this.sendRequest(popEle, action, newType);
         }
 
         if(popupcheck){
@@ -156,7 +156,7 @@ class NexterBuilder {
 		}
 	}
 
-    sendRequest(popEle, action) {
+    sendRequest(popEle, action, newType='') {
         const request = new XMLHttpRequest();
         request.open('POST', nexter_admin_config.ajaxurl, true);
         request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
@@ -172,6 +172,7 @@ class NexterBuilder {
                         popEle.insertAdjacentHTML('beforeend', response.data.content);
     
                         let getSel = popEle.querySelector('.nxt-temp-layout');
+                        
                         let headerSec = popEle.querySelector('.nxt-header-type-wrap');
                         let footerSec = popEle.querySelector('.nxt-footer-type-wrap');
                         let hooksSec = popEle.querySelector('.nxt-hooks-type-wrap');
@@ -244,7 +245,7 @@ class NexterBuilder {
                                     if(data && data.success){
                                         btnCrt.textContent = 'Saved';
                                         window.nxtBuilderOldData = lQueryString;
-                                        if(document.body.classList.contains('post-php')){
+                                        if(document.body.classList.contains('post-php') || document.body.classList.contains('nxt-page-nexter-builder')){
                                             setTimeout(()=>{
                                                 btnCrt.textContent = 'Save';
                                             }, 2000)
@@ -439,6 +440,16 @@ class NexterBuilder {
                                     }
                                 }
                             })
+                            if(getSel && newType){
+                                requestAnimationFrame(() => {
+                                getSel.value = newType;
+
+                                // Fire both 'input' and 'change' events for max compatibility
+                                ['input', 'change'].forEach(type => {
+                                getSel.dispatchEvent(new Event(type, { bubbles: true, cancelable: true }));
+                                });
+                            });
+                            }
                         }
                         if(footerType){
                             footerType.addEventListener('change', (es)=>{

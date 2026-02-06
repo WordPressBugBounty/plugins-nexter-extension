@@ -40,7 +40,11 @@ class Nexter_Builders_Singular_Conditional_Rules {
 		 * Constructor
 		 */
 		public function __construct() {
-			add_action( 'wp', [ $this, 'register_post_types_conditions' ], 0 );
+			if(is_admin()){
+				add_action( 'admin_init', [ $this, 'register_post_types_conditions' ], 10 );
+			}else{
+				add_action( 'wp', [ $this, 'register_post_types_conditions' ], 0 );
+			}
 			add_action('wp_ajax_nxt_singular_preview_type_ajax', [ $this, 'get_post_type_posts_list' ] );
 			if( !is_admin() ){
 				add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_scripts' ], 11 );
@@ -191,6 +195,17 @@ class Nexter_Builders_Singular_Conditional_Rules {
 		 * Register Post Type Condition
 		 */
 		public static function register_post_types_conditions( $preview = '' ) {
+
+			// If already prepared, return the cached config.
+			if ( ! empty( self::$Nexter_Singular_Config ) && ! empty( self::$singular_conditions ) ) {
+				return ( $preview === 'preview' )
+					? self::$singular_conditions
+					: apply_filters( 'nexter_display_singular_list', self::$singular_conditions );
+			}
+
+			self::$singular_conditions   = [];
+			self::$load_conditions_rule  = [];
+			self::$Nexter_Singular_Config = [];
 		
 			$post_types_list = self::get_post_types_list();
 

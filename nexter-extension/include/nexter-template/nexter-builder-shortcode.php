@@ -15,7 +15,7 @@ if (!class_exists('Nexter_Builder_Shortcode')) {
 	{
 
 		const NXT_SHORTCODE = 'nexter-builder';
-
+		
 		/**
 		 * Member Variable
 		 */
@@ -48,6 +48,7 @@ if (!class_exists('Nexter_Builder_Shortcode')) {
 			}
 
 			add_shortcode(self::NXT_SHORTCODE, [$this, 'create_shortcode']);
+			
 		}
 
 		public function admin_columns_shortcode($columns)
@@ -85,6 +86,13 @@ if (!class_exists('Nexter_Builder_Shortcode')) {
 				$load_css = new Nexter_Gutenberg_Editor();
 				$load_css->enqueue_scripts($option['id']);
 			}
+
+			if ( get_post_status( $option['id'] ) === 'private' ) {
+				if ( ! current_user_can('manage_options') ) {
+					return;
+				}
+			}
+			
 			ob_start();
 			Nexter_Builder_Sections_Conditional::get_instance()->get_action_content($option['id']);
 			return ob_get_clean();

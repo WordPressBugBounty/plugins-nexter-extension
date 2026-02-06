@@ -7,16 +7,7 @@
  */
 if( ! function_exists('nexter_builders_register_post')){
 	function nexter_builders_register_post() {
-		if(defined('NXT_PRO_EXT')){
-			$options = wp_cache_get('nexter_white_label_options', 'options');
-			if (false === $options) {
-				$options = get_option('nexter_white_label');
-				wp_cache_set('nexter_white_label_options', $options, 'options');
-			}
-			$builder_name = (!empty($options['brand_name'])) ? $options['brand_name'].' Builder' : __( 'Theme Builder', 'nexter-extension' );
-		}else{
-			$builder_name = 'Theme Builder';
-		}
+		$builder_name = 'Theme Builder';
 		$labels = array(
 			'name'                  => $builder_name,
 			'singular_name'         => $builder_name,
@@ -46,6 +37,7 @@ if( ! function_exists('nexter_builders_register_post')){
 			'items_list_navigation' => __( 'Templates list navigation', 'nexter-extension' ),
 			'filter_items_list'     => __( 'Filter templates list', 'nexter-extension' ),
 		);
+		//$builder_switch = get_option('nxt_builder_switcher', false);
 		$args = array(
 			'label'                 => __( 'Post Type', 'nexter-extension' ),
 			'description'           => __( 'Post Type Description', 'nexter-extension' ),
@@ -54,7 +46,7 @@ if( ! function_exists('nexter_builders_register_post')){
 			'hierarchical'          => false,
 			'public'                => true,
 			'show_ui'               => true,
-			'show_in_menu'          => 'nexter_welcome',
+			'show_in_menu' => false,
 			'show_in_admin_bar'     => true,
 			'show_in_nav_menus'     => true,
 			'can_export'            => true,
@@ -78,3 +70,39 @@ function nexter_template_frontend() {
 	}
 }
 add_action( 'template_redirect','nexter_template_frontend' );
+
+add_action('template_redirect', function() {
+    if (!is_singular('nxt_builder')) {
+        return;
+    }
+
+    // Check for preview query
+    if (!isset($_GET['preview_template'])) {
+        return;
+    }
+
+    global $post;
+
+    // Disable admin bar and default layout
+    add_filter('show_admin_bar', '__return_false');
+
+    // Output minimal clean HTML
+    header('Content-Type: text/html; charset=utf-8');
+
+    echo '<!DOCTYPE html><html style="margin-top: 0 !important;">';
+    wp_head(); 
+    echo '<body class="nxt-builder-preview-only">';
+    
+    // Render the builder content properly
+	if(!empty($post->post_content)){
+		$content = apply_filters('the_content', $post->post_content);
+    	echo $content;
+	}else{
+		$layout = get_post_meta($post->ID, 'nxt-hooks-layout-sections', true);
+		echo '<img src="'.esc_url(NEXTER_EXT_URL.'theme-builder/assets/svg/'.esc_attr($layout).'.svg').'" alt="'.esc_attr($layout).'" style="width: 100%;" />';
+	}
+     wp_footer();
+    echo '</body></html>';
+
+    exit;
+});

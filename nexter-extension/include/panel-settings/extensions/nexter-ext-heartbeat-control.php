@@ -41,8 +41,12 @@ defined('ABSPATH') or die();
 	public function get_url_path() {
 		global $pagenow;
 
-		$url = isset($_SERVER['HTTP_HOST'])
-			? (is_ssl() ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']
+		// Security: Sanitize server variables
+		$http_host = isset( $_SERVER['HTTP_HOST'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_HOST'] ) ) : '';
+		$request_uri = isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( $_SERVER['REQUEST_URI'] ) : '';
+		
+		$url = ! empty( $http_host )
+			? (is_ssl() ? 'https://' : 'http://') . $http_host . $request_uri
 			: get_admin_url() . $pagenow;
 
 		$path = parse_url($url, PHP_URL_PATH);

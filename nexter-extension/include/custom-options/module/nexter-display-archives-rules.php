@@ -49,7 +49,11 @@ class Nexter_Builders_Archives_Conditional_Rules {
 		 * Constructor
 		 */
 		public function __construct() {
-			add_action( 'wp', [ $this, 'register_post_type_conditions' ], 0 );
+			if(is_admin()){
+				add_action( 'admin_init', [ $this, 'register_post_type_conditions' ], 10 );
+			}else{
+				add_action( 'wp', [ $this, 'register_post_type_conditions' ], 0 );
+			}
 			add_action('wp_ajax_nxt_archive_preview_taxonomy_ajax', [ $this, 'get_terms_by_taxonomy' ] );
 		}
 		
@@ -213,7 +217,6 @@ class Nexter_Builders_Archives_Conditional_Rules {
 		 * Register Post Type Condition
 		 */
 		public static function register_post_type_conditions( $preview ='' ) {
-		
 			$all_archive = new Nexter_All_Archive();
 			self::register_post_sub_condition($all_archive);
 			
@@ -562,10 +565,10 @@ if( (!defined('NXT_PRO_EXT_VER') && !class_exists('Nexter_Archives_All_Child_Ter
 			return 'all_child_' . $this->taxonomy->name;
 		}
 
-		public function get_type_label() {
-			/* translators: %s: Taxonomy Label */
-			return sprintf( __( '%1$s : Child %2$s', 'nexter-extension' ), $this->post_label, $this->taxonomy->labels->singular_name );
-		}
+	public function get_type_label() {
+		/* translators: 1: Post label, 2: Taxonomy singular name */
+		return sprintf( __( '%1$s : Child %2$s', 'nexter-extension' ), $this->post_label, $this->taxonomy->labels->singular_name );
+	}
 		
 		public static function condition_check( $args ) {
 			$id = (int) $args['id'];

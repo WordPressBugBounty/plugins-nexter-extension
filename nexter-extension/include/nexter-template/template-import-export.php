@@ -122,6 +122,7 @@ class Nexter_Builder_Import_Export {
 		}
 
 		$nxt_action = (isset($_REQUEST['nxt_action'])) ? sanitize_text_field( wp_unslash($_REQUEST['nxt_action'])) : '';
+		$after_import = (isset($_REQUEST['after_import'])) ? sanitize_text_field( wp_unslash($_REQUEST['after_import'])) : '';
 
 		$result = $this->$nxt_action( $_REQUEST );
 
@@ -129,11 +130,14 @@ class Nexter_Builder_Import_Export {
 			/** @var \WP_Error $result */
 			$this->handle_direct_action_error( $result->get_error_message() . '.' );
 		}
+		if(empty($after_import) || $after_import!='no'){
+			$callback = "successful_{$nxt_action}_redirect";
 
-		$callback = "successful_{$nxt_action}_redirect";
-
-		if ( method_exists( $this, $callback ) ) {
-			$this->$callback( $result );
+			if ( method_exists( $this, $callback ) ) {
+				$this->$callback( $result );
+			}
+		}else{
+			wp_send_json_success(esc_html__( 'Imported Successfully', 'nexter-extension' ));
 		}
 
 		die;
@@ -241,11 +245,18 @@ class Nexter_Builder_Import_Export {
 		if ( ! self::check_current_screen_templates() ) {
 			return;
 		}
+		$builder_switch = get_option('nxt_builder_switcher', true);
+		$theme_logo = '';
+		$wdk_integration = '';
+		if(defined('NXT_PRO_EXT') || defined('TPGBP_VERSION')){
+			$options = get_option( 'nexter_white_label' );
+			$theme_logo = (!empty($options['theme_logo'])) ? '<img src="'.esc_url($options['theme_logo']).'" alt="'.esc_html__( 'Theme Logo', 'nexter-extension' ).'" style="max-width:40px;">' : '';
+			$wdk_integration = (!empty($options['nxt_wdk_integration'])) ? $options['nxt_wdk_integration'] : '';
+		}
 		?>
 		<div id="nxt-hidden-area">
-			<a id="nxt-import-template-button" class="page-title-action nxt-btn-action"><?php echo esc_html__( 'Import Templates', 'nexter-extension' ); ?></a>
 			<div id="nxt-import-template-form" style="display:none;">
-				<div id="nxt-import-title"><?php echo esc_html__( 'Choose an Nexter Builder template XML file of Builder templates, and add them to the list of templates available in your builder.', 'nexter-extension' ); ?></div>
+				<div id="nxt-import-title"><?php echo esc_html__( 'Choose a Nexter Builder template XML file of Builder templates, and add them to the list of templates available in your builder.', 'nexter-extension' ); ?></div>
 				<form id="nxt-import-temp-form" method="post" action="<?php echo esc_url(admin_url( 'admin-ajax.php' )); ?>" enctype="multipart/form-data">
 					<input type="hidden" name="action" value="nxt_builder_import_actions">
 					<input type="hidden" name="nxt_action" value="import_template">
@@ -255,6 +266,25 @@ class Nexter_Builder_Import_Export {
 						<input type="submit" class="button" value="<?php echo esc_attr__( 'Import Now', 'nexter-extension' ); ?>">
 					</fieldset>
 				</form>
+			</div>
+			<div class="nxt-theme-builder-left-header">
+				<h1 class="wp-heading-inline"><?php echo !empty($theme_logo) ? $theme_logo : '<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="none" viewBox="0 0 28 28"><rect width="28" height="28" fill="#1717cc" rx="5.833"></rect><path fill="#fff" d="M12.834 5.32h2.917v11.958a.875.875 0 0 1-.875.875h-2.042zM12.834 19.903h2.042c.483 0 .875.391.875.875v2.041h-2.917z"></path></svg>'; ?> <?php echo esc_html__( 'Theme Builder', 'nexter-extension' ); ?></h1>
+				<a id="nxt-import-template-button" class="page-title-action nxt-btn-action"><?php echo esc_html__( 'Import Templates', 'nexter-extension' ); ?></a>
+			</div>
+			<div class="nxt-theme-builder-right-header">
+				<?php if($wdk_integration !== 'on'){ ?>
+					<a id="nxt-import-wdk-template-button" class="page-title-action nxt-btn-action"><?php echo esc_html__( 'Import Pre-Designed Section', 'nexter-extension' ); ?></a>
+				<?php } ?>
+				<div id="nxt-builder-switcher-toggle" class="nxt-builder-switcher-wrap">
+					<div class="nxt-temp-tbl-switch">
+						<div class="nxt-post-status-wrap">
+							<input class="nxt-post-status" id="nxt_thtgl_sw" type="checkbox" <?php checked( $builder_switch, true ); ?> />
+							<label class="nxt-temp-sw-lbl" for="nxt_thtgl_sw">
+							</label>
+						</div>
+						<label for="nxt_thtgl_sw" class="nxt-temp-sw-nm"><?php echo esc_html__('Switch to grid view', 'nexter-extension'); ?></label>
+					</div>
+				</div>
 			</div>
 		</div>
 		<?php

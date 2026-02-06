@@ -55,19 +55,8 @@ $url      = wp_http_supports( [ 'ssl' ] ) ? set_url_scheme( $http_url, 'https' )
 // Attempt update check.
 $response = wp_remote_post( $url, $options );
 
-// Fallback to HTTP if SSL fails.
+// Fallback to HTTP if SSL fails (e.g. local/dev without valid SSL).
 if ( is_wp_error( $response ) && wp_http_supports( [ 'ssl' ] ) ) {
-    trigger_error(
-        __(
-            'An unexpected error occurred. Something may be wrong with WordPress.org or this server’s configuration.',
-            'nexter-extension'
-        ) . ' ' . __(
-            '(WordPress could not establish a secure connection to WordPress.org. Please contact your server administrator.)',
-            'nexter-extension'
-        ),
-        headers_sent() || WP_DEBUG ? E_USER_WARNING : E_USER_NOTICE
-    );
-
     $response = wp_remote_post( $http_url, $options );
 }
 

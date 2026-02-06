@@ -3,12 +3,12 @@
  * Plugin Name: Nexter Extension
  * Plugin URI: https://nexterwp.com
  * Description: Extension for Nexter Theme to unlock all FREE features. Keep this active to use access its all features
- * Version: 4.3.4
+ * Version: 4.5.3
  * Author: POSIMYTH
  * Author URI: https://posimyth.com
  * Text Domain: nexter-extension
  * Requires at least: 4.0
- * Tested up to: 6.8.2
+ * Tested up to: 6.9
  * Requires PHP: 5.6
  * License: GPLv3
  * License URI: https://opensource.org/licenses/GPL-3.0
@@ -26,7 +26,7 @@ define( 'NEXTER_EXT_BASE', plugin_basename( NEXTER_EXT_FILE ) );
 define( 'NEXTER_EXT_DIR', plugin_dir_path( NEXTER_EXT_FILE ) );
 define( 'NEXTER_EXT_URL', plugins_url( '/', NEXTER_EXT_FILE ) );
 define( 'NEXTER_EXT_CPT', 'nxt_builder' );
-define( 'NEXTER_EXT_VER', '4.3.4' );
+define( 'NEXTER_EXT_VER', '4.5.3' );
 
 if(!defined('NXT_BUILD_POST')){
 	define( 'NXT_BUILD_POST', 'nxt_builder' );
@@ -64,6 +64,7 @@ function nxt_ext_activate() {
 		$activation = new Nexter_Ext_Activation();
 		$activation->create_login_attempt_table();
 	}
+	delete_transient( 'nxtext_cached_feed_data' );
 }
 
 /**
@@ -75,6 +76,7 @@ function nxt_ext_deactivate() {
 		$deactivation = new Nexter_Ext_Deactivation();
 		$deactivation->remove_login_attempt_table();
 	}
+	delete_transient( 'nxtext_cached_feed_data' );
 }
 
 // Plugin Activation and Deactivation Hooks
@@ -88,4 +90,17 @@ function nexter_ext_php_version_notice() {
 	$message = sprintf( esc_html__( 'Nexter Extensions requires PHP version %s+, plugin is currently NOT RUNNING.', 'nexter-extension' ), '5.6' );
 	$html_message = sprintf( '<div class="error">%s</div>', wpautop( $message ) );
 	echo wp_kses_post( $html_message );
+}
+
+add_action( 'upgrader_process_complete', 'nxt_ext_after_update', 10, 2 );
+function nxt_ext_after_update( $upgrader_object, $options ) {
+
+    if ( $options['action'] == 'update' && $options['type'] == 'plugin' ) {
+
+        $plugin_slug = 'nexter-extension/nexter-extension.php';
+
+        if ( isset( $options['plugins'] ) && in_array( $plugin_slug, $options['plugins'] ) ) {
+            delete_transient( 'nxtext_cached_feed_data' );
+        }
+    }
 }

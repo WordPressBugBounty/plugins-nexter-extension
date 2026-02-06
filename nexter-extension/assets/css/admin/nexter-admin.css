@@ -1,5 +1,5 @@
 #nxt-import-template-form {
-    margin: 50px 0 30px;
+    margin: 20px 0 30px;
     text-align: center;
 }
 
@@ -7,7 +7,9 @@
     font-size: 17px;
     color: #676767;
 }
-
+#nxt-hidden-area {
+    display: none;
+}
 #nxt-import-temp-form {
 	display: inline-block;
     margin-top: 30px;
@@ -40,9 +42,21 @@
     margin-right: 20px;
 }
 .wp-menu-image.dashicons-nxt-builder-groups {
-    background: url(../../images/nexter-builder.svg);
-    background-size: 17px;
-    background-repeat: no-repeat;
+    background: url(../../images/nxt-favicon.svg);	
+    background-size: 22px;
+    background-repeat: no-repeat;	
+    background-position: center;
+}
+li.wp-has-current-submenu.wp-menu-open.menu-top .wp-menu-image.dashicons-nxt-builder-groups{
+    background: url(../../images/nxt-favicon-white.svg);	
+    background-size: 22px;
+    background-repeat: no-repeat;	
+    background-position: center;
+}
+li.wp-not-current-submenu:hover .wp-menu-image.dashicons-nxt-builder-groups{
+    background: url(../../images/nxt-favicon-blue.svg);	
+    background-size: 22px;
+    background-repeat: no-repeat;	
     background-position: center;
 }
 .nexter_settings_opts * :not(.dashicons) {
@@ -277,39 +291,32 @@
   outline: 0;
 }
 /*skip link end*/
-
-.toplevel_page_nexter_welcome.nxt-ext-admin-notice-active> a .wp-menu-name::after{
-    content: '1';
-    background: #ca2222;
-    color: #fff;
-    border-radius: 50%;
-    position: absolute;
-    top: -8px;
-    right: 1px;
-    width: 18px;
-    font-size: 12px;
-    height: 18px;
-    text-align: center;
-    line-height: 17px;
+.wp-submenu li:has( > a[href*="nexterwp.com/pricing/"]) {
+    font-weight: 500;
+    background-color: #FF1400;
+    color: #fff !important;
+    transition: all .3s;
 }
-.toplevel_page_nexter_welcome.nxt-ext-admin-notice-active > a,.toplevel_page_nexter_welcome.nxt-ext-admin-notice-active:hover > a{
-    background: #162d9e !important;
-    color: #f0f0f1 !important;
+.wp-submenu li a[href*="nexterwp.com/pricing/"] {
+    color: #fff !important;
+    font-weight: 500;
 }
-
-.toplevel_page_nexter_welcome.nxt-ext-admin-notice-active> a .wp-menu-name::after{
-    content: '1';
-    background: #ca2222;
-    color: #fff;
-    border-radius: 50%;
-    position: absolute;
-    top: -8px;
-    right: 1px;
-    width: 18px;
-    font-size: 12px;
-    height: 18px;
-    text-align: center;
-    line-height: 17px;
+.wp-submenu li:has( > a[href*="nexterwp.com/pricing/"]) > a{
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+.wp-submenu li:has( > a[href*="nexterwp.com/pricing/"]) > a:after {
+    position : absolute;
+    content : '';
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    right: 35px;
+    top: 4px;
+    background-size: cover;
+    background-repeat:no-repeat;
+    background-image : url( data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22none%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20stroke%3D%22%23fff%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20stroke-width%3D%221.333%22%20d%3D%22m4.667%2011.333%206.666-6.666M4.667%204.667h6.666v6.666%22%2F%3E%3C%2Fsvg%3E )
 }
 .toplevel_page_nexter_welcome.nxt-ext-admin-notice-active > a,.toplevel_page_nexter_welcome.nxt-ext-admin-notice-active:hover > a{
     background: #162d9e !important;
@@ -375,6 +382,63 @@
     padding-left: 0;
 }
 
+.nxt-theme-builder-wrap {
+    align-items: center;
+    background: #fff;
+    display: flex;
+    padding: 15px;
+    width: calc(100% + 12px);
+    position: relative;
+    left: -22px;
+    top: -30px;
+    justify-content: space-between;
+}
+.nxt-theme-builder-left-header h1.wp-heading-inline{
+    align-items: center;
+    color: #1a1a1a;
+    display: flex;
+    font-size: 16px;
+    font-weight: 600;
+    gap: 10px;
+    justify-content: flex-start;
+    text-decoration: blink;
+    text-transform: uppercase;
+    margin: 0;
+    padding: 0;
+}
+.nxt-theme-builder-left-header, .nxt-theme-builder-right-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+.nxt-theme-builder-left-header a.page-title-action {
+    top: 0;
+    border: 1px solid #1717cc;
+    color: #1717cc;
+    background: transparent;
+}
+.nxt-theme-builder-left-header a.page-title-action:focus, .nxt-theme-builder-left-header a.page-title-action:active {
+    top: 0;
+    outline: none;
+    border: 0;
+    background: #f3f3fc;
+}
+.nxt-theme-builder-left-header a.page-title-action:hover{
+    background: #f3f3fc;
+    border-color: #1717cc;
+    color: #1717cc;
+}
+#nxt-import-wdk-template-button {
+    padding: 6px 15px;
+    background: #1a1a1a;
+    border-radius: 3px;
+    font-size: 13px;
+    line-height: 16px;
+    text-align: center;
+    color: #fff;
+    margin-left: 0;
+    top: 0
+}
 /*tablet responsive start*/
 @media (min-width: 768px) and (max-width: 1024px){ 
 	

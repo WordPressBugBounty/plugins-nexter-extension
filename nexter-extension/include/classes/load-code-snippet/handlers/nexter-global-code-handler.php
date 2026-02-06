@@ -98,67 +98,20 @@ class Nexter_Global_Code_Handler {
         }
 
         // Get priority from post meta, default to 10
-        $hook_priority = get_post_meta($snippet_id, 'nxt-code-hooks-priority', true);
+        $hook_priority = is_numeric($snippet_id) ? get_post_meta($snippet_id, 'nxt-code-hooks-priority', true) : (is_array($code) && isset($code['hooksPriority']) ? $code['hooksPriority'] : 10);
         $priority = !empty($hook_priority) ? intval($hook_priority) : 10;
 
-        // Handle run_everywhere with special logic for immediate execution
-        if ($location === 'run_everywhere') {
-            // For run_everywhere, execute immediately if conditions are met
-            if (function_exists('get_post_meta')) {
-                $is_active = get_post_meta($snippet_id, 'nxt-code-status', true);
-                $code_hidden_execute = get_post_meta($snippet_id, 'nxt-code-php-hidden-execute', true);
-                
-                if ($is_active == '1' && $code_hidden_execute === 'yes') {
-                    // Check schedule restrictions before executing
-                    if (self::should_skip_due_to_schedule_restrictions($snippet_id)) {
-                        return true; // Skip execution but return true to indicate location was handled
-                    }
-                    
-                    // Execute PHP code immediately for run_everywhere
-                    Nexter_Builder_Code_Snippets_Executor::get_instance()->execute_php_snippet($code, $snippet_id);
-                }
-            }
-            return true;
-        }
-
-        // Handle frontend_only and admin_only locations
-        if ($location === 'frontend_only' || $location === 'admin_only') {
-            // Execute immediately with admin/frontend checks
-            if (function_exists('get_post_meta')) {
-                $is_active = get_post_meta($snippet_id, 'nxt-code-status', true);
-                $code_hidden_execute = get_post_meta($snippet_id, 'nxt-code-php-hidden-execute', true);
-                
-                if ($is_active == '1' && $code_hidden_execute === 'yes') {
-                    // Check schedule restrictions before executing
-                    if (self::should_skip_due_to_schedule_restrictions($snippet_id)) {
-                        return true; // Skip execution but return true to indicate location was handled
-                    }
-                    
-                    // Check if we should execute based on admin/frontend context
-                    $should_execute = false;
-                    
-                    if (function_exists('is_admin')) {
-                        if ($location === 'frontend_only' && !is_admin() && !self::is_elementor_edit_or_preview_mode()) {
-                            $should_execute = true;
-                        } elseif ($location === 'admin_only' && is_admin()) {
-                            $should_execute = true;
-                        }
-                    }
-                    
-                    if ($should_execute) {
-                        // Execute PHP code immediately for frontend_only/admin_only
-                        Nexter_Builder_Code_Snippets_Executor::get_instance()->execute_php_snippet($code, $snippet_id);
-                    }
-                }
-            }
-            return true;
+        // Skip basic locations - they are handled by the bypass system for immediate execution
+        // This prevents duplication between bypass system and main system
+        if (in_array($location, ['run_everywhere', 'frontend_only', 'admin_only'])) {
+            return false; // Let bypass system handle these locations
         }
 
         if (function_exists('add_action')) {
             add_action($hook, function() use ($code, $snippet_id) {
                 if (function_exists('get_post_meta')) {
-                    $is_active = get_post_meta($snippet_id, 'nxt-code-status', true);
-                    $code_hidden_execute = get_post_meta($snippet_id, 'nxt-code-php-hidden-execute', true);
+                    $is_active = is_numeric($snippet_id) ? get_post_meta($snippet_id, 'nxt-code-status', true) : (is_array($code) && isset($code['status']) ? $code['status'] : 0);
+                    $code_hidden_execute = is_numeric($snippet_id) ? get_post_meta($snippet_id, 'nxt-code-php-hidden-execute', true) : (is_array($code) && isset($code['php_hidden_execute']) ? $code['php_hidden_execute'] : 'no');
                     
                     if ($is_active != '1' || $code_hidden_execute !== 'yes') {
                         return;
@@ -194,25 +147,6 @@ class Nexter_Global_Code_Handler {
     }
 
     /**
-     * Check if current page is in Elementor edit or preview mode
-     * This prevents frontend_only snippets from running in Elementor editor or preview
-     */
-    private static function is_elementor_edit_or_preview_mode() {
-        if (class_exists('\\Elementor\\Plugin')) {
-            $plugin = \Elementor\Plugin::$instance;
-            if ((isset($plugin->editor) && method_exists($plugin->editor, 'is_edit_mode') && $plugin->editor->is_edit_mode()) ||
-                (isset($plugin->preview) && method_exists($plugin->preview, 'is_preview_mode') && $plugin->preview->is_preview_mode())) {
-                return true;
-            }
-        }
-        if ((isset($_GET['elementor-preview']) && $_GET['elementor-preview']) ||
-            (isset($_GET['elementor']) && $_GET['elementor'])) {
-            return true;
-        }
-        return false;
-    }
-
-    /**
      * Enqueue CSS for global locations
      */
     public static function enqueue_global_css($snippet_id, $css, $location) {
@@ -232,20 +166,27 @@ class Nexter_Global_Code_Handler {
         }
 
         // Get priority from post meta, default to 10
-        $hook_priority = get_post_meta($snippet_id, 'nxt-code-hooks-priority', true);
+        $hook_priority = is_numeric($snippet_id) ? get_post_meta($snippet_id, 'nxt-code-hooks-priority', true) : (is_array($css) && isset($css['hooksPriority']) ? $css['hooksPriority'] : 10);
         $priority = !empty($hook_priority) ? intval($hook_priority) : 10;
 
+        
         add_action($hook, function() use ($css, $snippet_id) {
-            $is_active = get_post_meta($snippet_id, 'nxt-code-status', true);
+            $is_active = is_numeric($snippet_id) ? get_post_meta($snippet_id, 'nxt-code-status', true) : (is_array($css) && isset($css['status']) ? $css['status'] : 0);
             if ($is_active != '1') {
                 return;
             }
-
-            $compress = get_post_meta($snippet_id, 'nxt-code-compresscode', true);
-            if ($compress) {
-                $css = self::compress_css($css);
+            
+            if(class_exists('Nexter_Code_Snippets_File_Based') && is_array($css)){
+                $file_based = new Nexter_Code_Snippets_File_Based();
+                $file_path = isset($css['file_path']) ? $css['file_path'] : '';
+                $css = $file_based->parseBlock(file_get_contents($file_path), true);
+            }else{
+                $compress = get_post_meta($snippet_id, 'nxt-code-compresscode', true);
+                if ($compress) {
+                    $css = self::compress_css($css);
+                }
             }
-
+           
             echo '<style id="nexter-snippet-' . esc_attr($snippet_id) . '">' . $css . '</style>';
         }, $priority);
 
@@ -272,18 +213,24 @@ class Nexter_Global_Code_Handler {
         }
 
         // Get priority from post meta, default to 10
-        $hook_priority = get_post_meta($snippet_id, 'nxt-code-hooks-priority', true);
+        $hook_priority = is_numeric($snippet_id) ? get_post_meta($snippet_id, 'nxt-code-hooks-priority', true) : (is_array($js) && isset($js['hooksPriority']) ? $js['hooksPriority'] : 10);
         $priority = !empty($hook_priority) ? intval($hook_priority) : 10;
 
         add_action($hook, function() use ($js, $snippet_id) {
-            $is_active = get_post_meta($snippet_id, 'nxt-code-status', true);
+            $is_active = is_numeric($snippet_id) ? get_post_meta($snippet_id, 'nxt-code-status', true) : (is_array($js) && isset($js['status']) ? $js['status'] : 0);
             if ($is_active != '1') {
                 return;
             }
 
-            $compress = get_post_meta($snippet_id, 'nxt-code-compresscode', true);
-            if ($compress) {
-                $js = self::compress_js($js);
+             if(class_exists('Nexter_Code_Snippets_File_Based') && is_array($js)){
+                $file_based = new Nexter_Code_Snippets_File_Based();
+                $file_path = isset($js['file_path']) ? $js['file_path'] : '';
+                $js = $file_based->parseBlock(file_get_contents($file_path), true);
+            }else{
+                $compress = get_post_meta($snippet_id, 'nxt-code-compresscode', true);
+                if ($compress) {
+                    $js = self::compress_js($js);
+                }
             }
 
             echo '<script id="nexter-snippet-' . esc_attr($snippet_id) . '">' . $js . '</script>';
@@ -304,20 +251,41 @@ class Nexter_Global_Code_Handler {
         if (empty($hook)) {
             return false;
         }
+        if(is_numeric($snippet_id) ){
+            // Get priority from post meta, default to 10
+            $hook_priority = get_post_meta($snippet_id, 'nxt-code-hooks-priority', true);
+            $priority = !empty($hook_priority) ? intval($hook_priority) : 10;
 
-        // Get priority from post meta, default to 10
-        $hook_priority = get_post_meta($snippet_id, 'nxt-code-hooks-priority', true);
-        $priority = !empty($hook_priority) ? intval($hook_priority) : 10;
+            add_action($hook, function() use ($html, $snippet_id) {
+                $is_active = get_post_meta($snippet_id, 'nxt-code-status', true);
+                if ($is_active != '1') {
+                    return;
+                }
 
-        add_action($hook, function() use ($html, $snippet_id) {
-            $is_active = get_post_meta($snippet_id, 'nxt-code-status', true);
-            if ($is_active != '1') {
-                return;
-            }
+                echo $html;
+            }, $priority);
+        }else{
+            // For non-numeric snippet IDs, use default priority
+            $hook_priority = isset($html['hooksPriority']) ? $html['hooksPriority'] : '';
+            $priority = !empty($hook_priority) ? intval($hook_priority) : 10;
 
-            echo $html;
-        }, $priority);
-
+            add_action($hook, function() use ($html, $snippet_id) {
+                if (!empty( $html['file_path']) && file_exists( $html['file_path'] ) ) {
+                    // Use safe file execution method
+                    if ( class_exists( 'Nexter_Code_Snippets_File_Based' ) ) {
+                        Nexter_Code_Snippets_File_Based::safe_include_file( $html['file_path'] );
+                    } else {
+                        // Fallback: basic validation
+                        $file_path = wp_normalize_path( $html['file_path'] );
+                        $storage_dir = wp_normalize_path( WP_CONTENT_DIR . '/nexter-snippet-data' );
+                        if ( strpos( $file_path, $storage_dir ) === 0 && substr( $file_path, -4 ) === '.php' ) {
+                            require_once $file_path;
+                        }
+                    }
+                }
+            }, $priority);
+        }
+        
         return true;
     }
 

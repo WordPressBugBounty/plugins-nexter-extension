@@ -81,7 +81,7 @@ if ( ! class_exists( 'Nexter_Builder_Pages_Conditional' ) ) {
 				foreach( self::$templates_ids as $id => $priority ){
 					if($i==0){
 						if( self::$location == 'singular' ){
-							echo '<div class="nxt-content-page-template ' . esc_attr(implode(' ', get_post_class('', get_the_ID()))) . '" post-id="' . esc_attr(get_the_ID()) . '">';
+							echo '<div class="nxt-content-page-template ' . esc_attr(implode(' ', get_post_class('', get_the_ID()))) . '" data-post-id="' . esc_attr(get_the_ID()) . '">';
 						}
 						
 						nexter_content_load($id);

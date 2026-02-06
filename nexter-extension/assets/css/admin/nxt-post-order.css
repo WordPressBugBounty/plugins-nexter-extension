@@ -1,16 +1,66 @@
-#the-list.nxt-drag-post-order tr .check-column:hover {
+.nxt-reorder-btn svg {
+    position: relative;
+    top: -2px;
+    vertical-align: middle;
+}
+ul.nxt-cpt-sortable {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 0 20px;
+}
+
+ul.nxt-cpt-sortable[data-level="0"] {
+    margin: 13px;
+}
+
+ul.nxt-cpt-sortable li {
+    list-style: none;
+}
+.sortable-chosen {
+    background: var(--nxtext-light-blue);
+    list-style: none;
+}
+.nxt-cpt-page-item {
+    padding: 12px;
+    background: #fff;
+    border: 1px solid var(--nxtext-toggle-off-bg);
+    border-radius: 4px;
+    margin-block: 8px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: background 0.2s;
+    cursor: grab;
+}
+.nxt-cpt-page-item:hover {
+    background: var(--nxtext-light-blue);
+}
+
+.nxt-cpt-handle {
+    padding: 0 4px;
+    color: var(--nxtext-gray-primary-normal);
+}
+
+.nxt-cpt-title {
+    flex: 1;
+    font-weight: 600;
+}
+
+.nxt-cpt-status {
+    font-size: 12px;
+    font-weight: 400;
+    font-style: italic;
+    color: var(--nxtext-gray-primary-normal);
+    margin-left: 8px;
+}
+
+.table-view-list.media .nxt-drag-post-order tr .check-column:hover {
     cursor: move
 }
-#the-list.nxt-drag-post-order tr.alternate {
+.table-view-list.media .nxt-drag-post-order tr.alternate {
     background-color: #f9f9f9
 }
-/* 
-#the-list.nxt-drag-post-order .sortable-ghost {
-    background-color: #fcfcfc;
-    box-sizing: border-box
-}
- */
-#the-list.nxt-drag-post-order>tr>th:first-child:after {
+.table-view-list.media .nxt-drag-post-order>tr>th:first-child:after {
     position: absolute;
     color: #909090;
     content: "\f545";

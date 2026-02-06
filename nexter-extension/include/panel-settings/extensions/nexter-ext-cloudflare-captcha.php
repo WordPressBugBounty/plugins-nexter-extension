@@ -42,10 +42,47 @@ defined('ABSPATH') or die();
             add_filter( 'preprocess_comment', [ $this, 'validate_turnstile_on_comment' ], 10, 1 );
         }
 
-        /* if ( !empty(self::$captcha_opt['formType']) && in_array( 'nexter_block_form', self::$captcha_opt['formType'] ) && has_action( 'nexter_form_integrate' ) ) {
-            add_action( 'nexter_form_integrate', [ $this, 'render_nexter_block_form_turnstile' ] );
-            add_filter( 'nexter_form_validate', [ $this, 'validate_turnstile_nexter_form' ], 10, 2 );
-        } */
+        // WooCommerce Forms - Register hooks on init to ensure WooCommerce is loaded
+        add_action( 'init', [ $this, 'register_woocommerce_hooks' ], 20 );
+    }
+
+    /**
+     * Register WooCommerce hooks
+     */
+    public function register_woocommerce_hooks() {
+        if ( ! class_exists( 'WooCommerce' ) ) {
+            return;
+        }
+        
+        if ( !empty(self::$captcha_opt['formType']) && in_array( 'woo_checkout', self::$captcha_opt['formType'] ) ) {
+            add_action( 'woocommerce_checkout_before_order_review', [ $this, 'render_woo_checkout_turnstile_field' ], 20 );
+            add_action( 'woocommerce_review_order_before_payment', [ $this, 'render_woo_checkout_turnstile_field' ], 20 );
+            add_action( 'woocommerce_checkout_after_customer_details', [ $this, 'render_woo_checkout_turnstile_field' ], 20 );
+            add_action( 'woocommerce_checkout_billing', [ $this, 'render_woo_checkout_turnstile_field' ], 25 );
+            add_action( 'woocommerce_checkout_process', [ $this, 'validate_turnstile_on_woo_checkout' ] );
+            add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_woo_checkout_styles' ] );
+        }
+
+        if ( !empty(self::$captcha_opt['formType']) && in_array( 'woo_pay_for_order', self::$captcha_opt['formType'] ) ) {
+            add_action( 'woocommerce_pay_order_before_submit', [ $this, 'render_woo_pay_for_order_turnstile_field' ], 20 );
+            add_action( 'woocommerce_review_order_before_submit', [ $this, 'render_woo_pay_for_order_turnstile_field' ], 20 );
+            add_action( 'woocommerce_checkout_process', [ $this, 'validate_turnstile_on_woo_pay_for_order' ] );
+        }
+
+        if ( !empty(self::$captcha_opt['formType']) && in_array( 'woo_login_form', self::$captcha_opt['formType'] ) ) {
+            add_action( 'woocommerce_login_form', [ $this, 'render_woo_login_turnstile_field' ] );
+            add_filter( 'woocommerce_process_login_errors', [ $this, 'validate_turnstile_on_woo_login' ], 10, 3 );
+        }
+
+        if ( !empty(self::$captcha_opt['formType']) && in_array( 'woo_registration_form', self::$captcha_opt['formType'] ) ) {
+            add_action( 'woocommerce_register_form', [ $this, 'render_woo_registration_turnstile_field' ] );
+            add_filter( 'woocommerce_registration_errors', [ $this, 'validate_turnstile_on_woo_registration' ], 10, 3 );
+        }
+
+        if ( !empty(self::$captcha_opt['formType']) && in_array( 'woo_reset_pwd_form', self::$captcha_opt['formType'] ) ) {
+            add_action( 'woocommerce_lostpassword_form', [ $this, 'render_woo_reset_pwd_turnstile_field' ] );
+            add_filter( 'woocommerce_lostpassword_validation', [ $this, 'validate_turnstile_on_woo_reset_pwd' ], 10, 2 );
+        }
     }
 
     private function nxt_get_settings(){
@@ -70,21 +107,78 @@ defined('ABSPATH') or die();
         }
     }
 
+    public function nxt_comments_enabled(){
+
+		$extension_option = get_option( 'nexter_site_performance' );
+
+		$data = [
+			'disable_comments' => '',
+			'disble_custom_post_comments' => []
+		];
+		
+		if(!empty($extension_option) ){
+			if(isset($extension_option['disble_custom_post_comments']) && !empty($extension_option['disble_custom_post_comments'])){
+				$data['disble_custom_post_comments'] = $extension_option['disble_custom_post_comments'];
+			}
+			if(isset($extension_option['disable_comments']) && !empty($extension_option['disable_comments'])){
+				$data['disable_comments'] = $extension_option['disable_comments'];
+			}else if(isset($extension_option['disable-comments']) && !empty($extension_option['disable-comments']) && isset($extension_option['disable-comments']['switch']) && !empty($extension_option['disable-comments']['switch'])){
+				if(isset($extension_option['disable-comments']['values']) && !empty($extension_option['disable-comments']['values'])){
+					$disable_values = $extension_option['disable-comments']['values'];
+					if(isset($disable_values['disable_comments']) && !empty($disable_values['disable_comments'])){
+						$data['disable_comments'] = $disable_values['disable_comments'];
+					}
+					if(isset($disable_values['disble_custom_post_comments']) && !empty($disable_values['disble_custom_post_comments'])){
+						$data['disble_custom_post_comments'] = $disable_values['disble_custom_post_comments'];
+					}
+				}
+			}
+		}
+		
+		return $data;
+	}
+
     public function enqueue_frontend_turnstile_scripts() {
         global $post;
         $disabled_for_post_type = false;
+        
+        // Check for WooCommerce pages
+        if ( class_exists( 'WooCommerce' ) ) {
+            $is_checkout = is_checkout();
+            // Security: Sanitize GET parameter
+            $is_pay_for_order = ( isset( $_GET['pay_for_order'] ) && sanitize_text_field( wp_unslash( $_GET['pay_for_order'] ) ) ) || is_wc_endpoint_url( 'order-pay' );
+            
+            if ( $is_checkout || $is_pay_for_order ) {
+                if ( !empty(self::$captcha_opt['formType']) && 
+                     ( in_array( 'woo_checkout', self::$captcha_opt['formType'] ) || 
+                       in_array( 'woo_pay_for_order', self::$captcha_opt['formType'] ) ) ) {
+                    $this->enqueue_scripts();
+                }
+            }
+            
+            // Check for WooCommerce login/registration/reset password pages
+            if ( is_account_page() ) {
+                if ( !empty(self::$captcha_opt['formType']) && 
+                     ( in_array( 'woo_login_form', self::$captcha_opt['formType'] ) || 
+                       in_array( 'woo_registration_form', self::$captcha_opt['formType'] ) || 
+                       in_array( 'woo_reset_pwd_form', self::$captcha_opt['formType'] ) ) ) {
+                    $this->enqueue_scripts();
+                }
+            }
+        }
+        
         if ( is_object( $post ) && property_exists( $post, 'comment_status' ) ) {
             if ( property_exists( $post, 'post_type' ) ) {
-                $extension_option = get_option( 'nexter_site_performance' );
+                $disable_option = $this->nxt_comments_enabled();
                 $post_types = [];
-                if(!empty($extension_option['disable_comments']) && $extension_option['disable_comments'] === 'custom'){
-                    if(isset($extension_option['disble_custom_post_comments']) && !empty($extension_option['disble_custom_post_comments'])){
-                        $post_types = $extension_option['disble_custom_post_comments'];
+                if(!empty($disable_option['disable_comments']) && $disable_option['disable_comments'] === 'custom'){
+                    if(isset($disable_option['disble_custom_post_comments']) && !empty($disable_option['disble_custom_post_comments'])){
+                        $post_types = $disable_option['disble_custom_post_comments'];
                         if($post->post_type && in_array($post->post_type, $post_types )){
                             $disabled_for_post_type = true;
                         }
                     }
-                }else if(!empty($extension_option['disable_comments']) && $extension_option['disable_comments'] === 'all'){
+                }else if(!empty($disable_option['disable_comments']) && $disable_option['disable_comments'] === 'all'){
                     $disabled_for_post_type = true;
                 }
             }else{
@@ -120,6 +214,46 @@ defined('ABSPATH') or die();
 
         wp_add_inline_script( 'nxt-turnstile', $inline_js );
 
+    }
+
+    /**
+     * Enqueue WooCommerce checkout styles
+     */
+    public function enqueue_woo_checkout_styles() {
+        if ( ! is_checkout() ) {
+            return;
+        }
+        
+        if ( !empty(self::$captcha_opt['formType']) && in_array( 'woo_checkout', self::$captcha_opt['formType'] ) ) {
+            $css = '
+                .woocommerce-checkout .nxt-woo-checkout-turnstile { 
+                    margin: 20px 0 !important; 
+                    clear: both;
+                    display: block;
+                }
+                .woocommerce-checkout .nxt-woo-checkout-turnstile .cf-turnstile,
+                .woocommerce-checkout .cf-turnstile { 
+                    margin: 0 !important; 
+                    display: block;
+                    min-height: 65px;
+                }
+                .woocommerce-checkout .nxt-turnstile-wrapper {
+                    margin: 20px 0 !important;
+                    clear: both;
+                    display: block;
+                }
+            ';
+            
+            // Try to add to WooCommerce styles, fallback to custom handle
+            if ( wp_style_is( 'woocommerce-general', 'enqueued' ) || wp_style_is( 'woocommerce-general', 'registered' ) ) {
+                wp_add_inline_style( 'woocommerce-general', $css );
+            } else {
+                // Register and enqueue our own style
+                wp_register_style( 'nxt-turnstile-woo-checkout', false );
+                wp_enqueue_style( 'nxt-turnstile-woo-checkout' );
+                wp_add_inline_style( 'nxt-turnstile-woo-checkout', $css );
+            }
+        }
     }
 
     /**
@@ -198,6 +332,12 @@ defined('ABSPATH') or die();
     public function render_turnstile_widget( $form_action = '', $callback_function = '', $button_selector = '', $css_class = '', $size = 'flexible', $disable_submit_btn = true ) {
 
         $site_key    = ( isset( self::$captcha_opt['turnSiteKey'] ) && !empty( self::$captcha_opt['turnSiteKey'] ) ) ? sanitize_text_field( self::$captcha_opt['turnSiteKey'] ) : '';
+        
+        // Return early if site key is empty
+        if ( empty( $site_key ) ) {
+            return;
+        }
+        
         $theme       = 'light';
         $unique_id   = '-'.uniqid();
         $widget_id   = 'cf-turnstile' . esc_attr( $unique_id );
@@ -227,17 +367,78 @@ defined('ABSPATH') or die();
         </style>
         <?php endif; ?>
         <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                setTimeout(function () {
-                    var el = document.getElementById("<?php echo esc_js( $widget_id ); ?>");
-                    if (el && !el.innerHTML.trim()) {
-                        turnstile.remove("#<?php echo esc_js( $widget_id ); ?>");
-                        turnstile.render("#<?php echo esc_js( $widget_id ); ?>", {
-                            sitekey: "<?php echo esc_js( $site_key ); ?>"
-                        });
+            (function() {
+                var widgetId = "<?php echo esc_js( $widget_id ); ?>";
+                var siteKey = "<?php echo esc_js( $site_key ); ?>";
+                var formAction = "<?php echo esc_js( $form_action ); ?>";
+                var theme = "<?php echo esc_js( $theme ); ?>";
+                var size = "<?php echo esc_js( $size ); ?>";
+                var retryCount = 0;
+                var maxRetries = 50; // 5 seconds max wait time
+                var elementRetryCount = 0;
+                var maxElementRetries = 20; // 2 seconds max wait for element
+                
+                function initTurnstile() {
+                    // Wait for turnstile library
+                    if (typeof turnstile === 'undefined') {
+                        retryCount++;
+                        if (retryCount < maxRetries) {
+                            setTimeout(initTurnstile, 100);
+                        }
+                        return;
                     }
-                }, 0);
-            });
+                    
+                    // Wait for element to be in DOM
+                    var el = document.getElementById(widgetId);
+                    if (!el) {
+                        elementRetryCount++;
+                        if (elementRetryCount < maxElementRetries) {
+                            setTimeout(initTurnstile, 100);
+                        }
+                        return;
+                    }
+                    
+                    // Element found, render widget
+                    try {
+                        // Remove any existing widget
+                        try {
+                            turnstile.remove("#" + widgetId);
+                        } catch(e) {}
+                        
+                        // Render the widget
+                        var renderOptions = {
+                            sitekey: siteKey,
+                            action: formAction,
+                            theme: theme,
+                            size: size,
+                            language: "auto",
+                            retry: "auto",
+                            "retry-interval": 1500,
+                            appearance: "always"
+                        };
+                        <?php if ( !empty( $callback_function ) ) : ?>
+                        if (typeof window.<?php echo esc_js( $callback_function ); ?> === 'function') {
+                            renderOptions.callback = window.<?php echo esc_js( $callback_function ); ?>;
+                        } else if (typeof <?php echo esc_js( $callback_function ); ?> === 'function') {
+                            renderOptions.callback = <?php echo esc_js( $callback_function ); ?>;
+                        }
+                        <?php endif; ?>
+                        turnstile.render("#" + widgetId, renderOptions);
+                    } catch(error) {
+                        console.error('Turnstile render error:', error);
+                    }
+                }
+                
+                // Start initialization
+                if (document.readyState === 'loading') {
+                    document.addEventListener("DOMContentLoaded", function() {
+                        setTimeout(initTurnstile, 100);
+                    });
+                } else {
+                    // DOM already loaded, wait a bit for dynamic content
+                    setTimeout(initTurnstile, 100);
+                }
+            })();
         </script>
 
         <?php if ( $disable_submit_btn ) : ?>
@@ -399,6 +600,237 @@ defined('ABSPATH') or die();
         }
 
         return ['success' => true, 'data' => esc_html__( 'Cloudflare Turnstile validated successfully.', 'nexter-extension' ) ];
+    }
+
+    /**
+     * Display the Turnstile widget on WooCommerce checkout.
+     */
+    public function render_woo_checkout_turnstile_field() {
+        static $displayed = false;
+        if ( $displayed ) {
+            return;
+        }
+        $displayed = true;
+        
+        // Ensure site key exists
+        if ( empty( self::$captcha_opt['turnSiteKey'] ) ) {
+            return;
+        }
+        
+        // Ensure scripts are enqueued
+        $this->enqueue_scripts();
+        
+        // Output wrapper with inline styles as fallback
+        echo '<div class="nxt-turnstile-wrapper nxt-woo-checkout-turnstile">';
+        echo '<style type="text/css">
+            .woocommerce-checkout .nxt-woo-checkout-turnstile { 
+                margin: 20px 0 !important; 
+                clear: both;
+                display: block !important;
+            }
+            .woocommerce-checkout .nxt-woo-checkout-turnstile .cf-turnstile,
+            .woocommerce-checkout .cf-turnstile { 
+                margin: 0 !important; 
+                display: block !important;
+                min-height: 65px;
+            }
+            .woocommerce-checkout .nxt-turnstile-wrapper {
+                margin: 20px 0 !important;
+                clear: both;
+                display: block !important;
+            }
+        </style>';
+        
+        // Render the widget
+        $this->render_turnstile_widget(
+            'woocommerce-checkout',
+            '',
+            '',
+            'woo-checkout',
+            'normal',
+            false
+        );
+        
+        echo '</div>';
+    }
+
+    /**
+     * Validates Cloudflare Turnstile CAPTCHA on WooCommerce checkout.
+     */
+    public function validate_turnstile_on_woo_checkout() {
+        // Skip if Turnstile response is not present
+        if ( empty( $_POST['cf-turnstile-response'] ) ) {
+            wc_add_notice( esc_html__( 'Please verify that you are human.', 'nexter-extension' ), 'error' );
+            return;
+        }
+
+        // Verify Turnstile
+        $response = $this->verify_turnstile_response();
+
+        if ( empty( $response['success'] ) || $response['success'] !== true ) {
+            wc_add_notice( esc_html__( 'Please verify that you are human.', 'nexter-extension' ), 'error' );
+        }
+    }
+
+    /**
+     * Display the Turnstile widget on WooCommerce pay for order page.
+     */
+    public function render_woo_pay_for_order_turnstile_field() {
+        static $displayed = false;
+        if ( $displayed ) {
+            return;
+        }
+        $displayed = true;
+        
+        // Ensure site key exists
+        if ( empty( self::$captcha_opt['turnSiteKey'] ) ) {
+            return;
+        }
+        
+        // Ensure scripts are enqueued
+        $this->enqueue_scripts();
+        
+        echo '<style>.woocommerce-order-pay .cf-turnstile { margin: 0 0 20px; }</style>';
+        $this->render_turnstile_widget(
+            'woocommerce-pay-order',
+            '',
+            '',
+            'woo-pay-order',
+            'normal',
+            false
+        );
+    }
+
+    /**
+     * Validates Cloudflare Turnstile CAPTCHA on WooCommerce pay for order.
+     */
+    public function validate_turnstile_on_woo_pay_for_order() {
+        // Security: Sanitize and validate GET parameters
+        $pay_for_order = isset( $_GET['pay_for_order'] ) ? sanitize_text_field( wp_unslash( $_GET['pay_for_order'] ) ) : '';
+        $order_key = isset( $_GET['key'] ) ? sanitize_text_field( wp_unslash( $_GET['key'] ) ) : '';
+        
+        // Only validate on pay for order page
+        if ( empty( $pay_for_order ) || empty( $order_key ) ) {
+            return;
+        }
+
+        // Skip if Turnstile response is not present
+        if ( empty( $_POST['cf-turnstile-response'] ) ) {
+            wc_add_notice( esc_html__( 'Please verify that you are human.', 'nexter-extension' ), 'error' );
+            return;
+        }
+
+        // Verify Turnstile
+        $response = $this->verify_turnstile_response();
+
+        if ( empty( $response['success'] ) || $response['success'] !== true ) {
+            wc_add_notice( esc_html__( 'Please verify that you are human.', 'nexter-extension' ), 'error' );
+        }
+    }
+
+    /**
+     * Display the Turnstile widget on WooCommerce login form.
+     */
+    public function render_woo_login_turnstile_field() {
+        echo '<style>.woocommerce-form-login .cf-turnstile { margin: 0 0 15px; }</style>';
+        $this->render_turnstile_widget(
+            'woocommerce-login',
+            '',
+            '',
+            'woo-login',
+            'normal',
+            false
+        );
+    }
+
+    /**
+     * Validates Cloudflare Turnstile CAPTCHA on WooCommerce login.
+     */
+    public function validate_turnstile_on_woo_login( $validation_error, $username, $password ) {
+        // Skip if Turnstile response is not present
+        if ( empty( $_POST['cf-turnstile-response'] ) ) {
+            $validation_error->add( 'turnstile_error', esc_html__( 'Please verify that you are human.', 'nexter-extension' ) );
+            return $validation_error;
+        }
+
+        // Verify Turnstile
+        $response = $this->verify_turnstile_response();
+
+        if ( empty( $response['success'] ) || $response['success'] !== true ) {
+            $validation_error->add( 'turnstile_error', esc_html__( 'Please verify that you are human.', 'nexter-extension' ) );
+        }
+
+        return $validation_error;
+    }
+
+    /**
+     * Display the Turnstile widget on WooCommerce registration form.
+     */
+    public function render_woo_registration_turnstile_field() {
+        echo '<style>.woocommerce-form-register .cf-turnstile { margin: 0 0 15px; }</style>';
+        $this->render_turnstile_widget(
+            'woocommerce-register',
+            '',
+            '',
+            'woo-register',
+            'normal',
+            false
+        );
+    }
+
+    /**
+     * Validates Cloudflare Turnstile CAPTCHA on WooCommerce registration.
+     */
+    public function validate_turnstile_on_woo_registration( $validation_error, $username, $email ) {
+        // Skip if Turnstile response is not present
+        if ( empty( $_POST['cf-turnstile-response'] ) ) {
+            $validation_error->add( 'turnstile_error', esc_html__( 'Please verify that you are human.', 'nexter-extension' ) );
+            return $validation_error;
+        }
+
+        // Verify Turnstile
+        $response = $this->verify_turnstile_response();
+
+        if ( empty( $response['success'] ) || $response['success'] !== true ) {
+            $validation_error->add( 'turnstile_error', esc_html__( 'Please verify that you are human.', 'nexter-extension' ) );
+        }
+
+        return $validation_error;
+    }
+
+    /**
+     * Display the Turnstile widget on WooCommerce reset password form.
+     */
+    public function render_woo_reset_pwd_turnstile_field() {
+        echo '<style>.woocommerce-ResetPassword .cf-turnstile { margin: 0 0 15px; }</style>';
+        $this->render_turnstile_widget(
+            'woocommerce-reset-password',
+            '',
+            '',
+            'woo-reset-pwd',
+            'normal',
+            false
+        );
+    }
+
+    /**
+     * Validates Cloudflare Turnstile CAPTCHA on WooCommerce reset password.
+     */
+    public function validate_turnstile_on_woo_reset_pwd( $errors, $user_login ) {
+        // Skip if Turnstile response is not present
+        if ( empty( $_POST['cf-turnstile-response'] ) ) {
+            $errors->add( 'turnstile_error', esc_html__( 'Please verify that you are human.', 'nexter-extension' ) );
+            return $errors;
+        }
+
+        // Verify Turnstile
+        $response = $this->verify_turnstile_response();
+
+        if ( empty( $response['success'] ) || $response['success'] !== true ) {
+            $errors->add( 'turnstile_error', esc_html__( 'Please verify that you are human.', 'nexter-extension' ) );
+        }
+
+        return $errors;
     }
 
     /**

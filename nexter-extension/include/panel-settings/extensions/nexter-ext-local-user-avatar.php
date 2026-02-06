@@ -162,14 +162,30 @@ defined('ABSPATH') or die();
 	 * Update the user's avatar meta data.
 	 */
 	public function update_user_avatar_meta( $user_id ) {
+		// Security: Verify nonce
+		if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) ), 'update-user_' . $user_id ) ) {
+			return false;
+		}
+		
 		if ( ! current_user_can( 'edit_user', $user_id ) ) {
 			return false;
 		}
 
 		delete_user_meta( $user_id, 'nxt_user_avatar_attach_id' );
 
-		if ( isset( $_POST['nxt_user_avatar_attach_id'] ) && is_numeric( $_POST['nxt_user_avatar_attach_id'] ) ) {
-			add_user_meta( $user_id, 'nxt_user_avatar_attach_id', (int) $_POST['nxt_user_avatar_attach_id'] );
+		if ( isset( $_POST['nxt_user_avatar_attach_id'] ) ) {
+			$attachment_id = absint( $_POST['nxt_user_avatar_attach_id'] );
+			
+			// Security: Verify attachment exists and is an image
+			if ( $attachment_id > 0 ) {
+				$attachment = get_post( $attachment_id );
+				if ( $attachment && 'attachment' === $attachment->post_type ) {
+					$mime_type = get_post_mime_type( $attachment_id );
+					if ( strpos( $mime_type, 'image/' ) === 0 ) {
+						add_user_meta( $user_id, 'nxt_user_avatar_attach_id', $attachment_id );
+					}
+				}
+			}
 		}
 
 		return true;
@@ -210,13 +226,17 @@ defined('ABSPATH') or die();
 		$avatar_src = wp_get_attachment_image_src( $avatar_attachment_id, 'medium' );
 
 		if ( is_array( $avatar_src ) && ! empty( $avatar_src[0] ) ) {
-			$avatar_html = preg_replace( '/src=("|\').*?("|\')/', "src='{$avatar_src[0]}'", $avatar_html );
+			// Security: Escape URL in src attribute
+		$avatar_src_escaped = esc_url( $avatar_src[0] );
+		$avatar_html = preg_replace( '/src=("|\').*?("|\')/', "src='{$avatar_src_escaped}'", $avatar_html );
 		}
 
 		$avatar_srcset = wp_get_attachment_image_srcset( $avatar_attachment_id );
 
 		if ( $avatar_srcset ) {
-			$avatar_html = preg_replace( '/srcset=("|\').*?("|\')/', "srcset='{$avatar_srcset}'", $avatar_html );
+			// Security: Escape srcset attribute
+			$avatar_srcset_escaped = esc_attr( $avatar_srcset );
+			$avatar_html = preg_replace( '/srcset=("|\').*?("|\')/', "srcset='{$avatar_srcset_escaped}'", $avatar_html );
 		}
 
 		return $avatar_html;

@@ -104,6 +104,21 @@ if ( ! class_exists( 'Nexter_Gutenberg_Editor' ) ) {
 						wp_reset_postdata();
 					}
 				}
+
+				/*GSPB GreenShift*/
+				if ( function_exists( 'gspb_get_final_css' ) ) {
+					$gspb_css_content = get_post_meta( $post_id, '_gspb_post_css', true );
+					if ( !empty( $gspb_css_content ) ) {
+						$gspb_saved_css_content = gspb_get_final_css( $gspb_css_content );
+						$final_css = $gspb_saved_css_content;
+						
+						if ( !empty( $final_css ) ) {
+							wp_register_style( 'greenshift-post-css-' . $post_id, false );
+							wp_enqueue_style( 'greenshift-post-css-' . $post_id );
+							wp_add_inline_style( 'greenshift-post-css-' . $post_id, $final_css );
+						}
+					}
+				}
 			}
 		}
 

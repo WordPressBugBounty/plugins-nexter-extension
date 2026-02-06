@@ -52,8 +52,10 @@ class Nexter_Singular_Archives_Rules {
 		if(!empty($get_data)){
 			$data = $get_data;
 		}else{
-			$data = (!empty($_POST['data'])) ? self::sanitize_array_recursive( json_decode( stripslashes_deep( $_POST['data'] ), true ) ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-			$data["rules"] = (is_array($_POST) && isset($_POST['rules']) && !empty($_POST['rules'])) ? sanitize_text_field( wp_unslash($_POST['rules']) ) : '';
+			$data = (!empty($_POST['data'])) ? self::sanitize_array_recursive( json_decode( stripslashes_deep( $_POST['data'] ), true ) ) : []; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+			// ensure we always work with an array to avoid string offset notices
+			$data = is_array( $data ) ? $data : [];
+			$data["rules"] = (isset($_POST['rules']) && !empty($_POST['rules'])) ? sanitize_text_field( wp_unslash($_POST['rules']) ) : '';
 		}
 		
 		if(empty($data)){

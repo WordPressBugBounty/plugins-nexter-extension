@@ -1,4 +1,6 @@
 ( function( window, wp ){
+    window.checkWDKload = true;
+    window.tempType = '';
     wp.data.subscribe(function () {
         setTimeout(() => {
             const headerToolBar = document.querySelector(".editor-header__center");
@@ -21,7 +23,6 @@
 
                         const request = new XMLHttpRequest();
                         request.open('POST', nexter_admin_config.ajaxurl, true);
-                        //request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded;');
                         request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
         		        request.setRequestHeader('Accept', 'application/json');
                         request.onload = () => {
@@ -33,6 +34,7 @@
                                         editConditionButton.setAttribute('data-post', post_id);
                                         editConditionButton.setAttribute('data-type', response.type);
                                         editConditionButton.setAttribute('data-subtype', response.subtype);
+                                        window.tempType = response.subtype
                                     }
                                 }
                             }
@@ -45,12 +47,59 @@
                             builder.nextOpenCondition(e, '', 'edit');
                         })
                     }
+                }
+                
+                //elementor-action-wdkit-button
+                var wdBtn = document.querySelector(".wkit-gutenber-btn");
+                if (window.checkWDKload == true && wdBtn) {
+                    const postContent = wp.data.select('core/editor').getEditedPostContent();
+                    if (wdBtn !== null && (!postContent || postContent.trim() === '')) {
+                        window.checkWDKload = false;
+                        wdBtn.click();
+                        /* // Get current URL
+                        let currentUrl = window.location.href;
 
+                        // Remove any previous '#/theme/builder/<number>' or '#/browse'
+                        currentUrl = currentUrl.replace(/#\/theme\/builder\/\d+$/, '');
+                        currentUrl = currentUrl.replace(/#\/browse$/, ''); */
 
-                    if(!headerToolBar.querySelector('#nexter-wdk-preset')){
+                        let wdkID = 1018
+                        if(window.tempType== 'header'){
+                            wdkID = 1017
+                        }else if(window.tempType== 'footer'){
+                            wdkID = 1018
+                        }else if(window.tempType== 'breadcrumb'){
+                            wdkID = 1017
+                        }else if(window.tempType== 'section'){
+                            wdkID = 1002
+                        }else if(window.tempType== 'singular'){
+                            wdkID = 1009
+                        }else if(window.tempType== 'archives'){
+                            wdkID = 1010
+                        }else if(window.tempType== 'hooks'){  
+                            wdkID = 1002
+                        }else if(window.tempType== 'page-404'){  
+                            wdkID = 1012
+                        }
+                        window.WdkitThemeBuilderToggle.open(null, null, wdkID, '1002');
+                        /* // Add the new path only once
+                        currentUrl += `#/theme/builder/${wdkID}`;
 
+                        history.replaceState(null, "", currentUrl); */
                     }
                 }
+            }
+
+            
+            const changeURL = document.querySelector('.edit-post-fullscreen-mode-close');
+            if (
+                changeURL &&
+                changeURL.getAttribute('data-change') !== 'true' && // ✅ run only once
+                changeURL.getAttribute('href') === 'edit.php?post_type=nxt_builder' &&
+                nxtext_ajax_object.themebuilderStatus == "true"
+            ) {
+                changeURL.setAttribute('href', 'admin.php?page=nxt_builder');
+                changeURL.setAttribute('data-change', 'true');
             }
         }, 1);
     });

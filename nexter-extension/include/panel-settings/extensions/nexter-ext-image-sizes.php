@@ -25,10 +25,36 @@ class Nexter_Ext_Image_Size {
 			wp_send_json_error();
 		}
 
-		$id = ( isset( $_POST['thumbnail_id'] ) ) ? sanitize_text_field(  wp_unslash($_POST['thumbnail_id'])  ) : '';
-        $image_sizes_to_be_generated =  ( isset( $_POST['image_sizes_to_be_generated'] ) ) ? sanitize_text_field(  wp_unslash($_POST['image_sizes_to_be_generated'])  ) : '' ;
-        $image_sizes_to_be_generated = explode(',',$image_sizes_to_be_generated);
+		// Security: Sanitize and validate input
+		$id = isset( $_POST['thumbnail_id'] ) ? absint( wp_unslash( $_POST['thumbnail_id'] ) ) : 0;
+		if ( $id <= 0 ) {
+			wp_send_json_error( array( 'content' => __( 'Invalid attachment ID.', 'nexter-extension' ) ) );
+		}
+		
+		// Security: Verify attachment exists and user has permission
+		$attachment = get_post( $id );
+		if ( ! $attachment || 'attachment' !== $attachment->post_type ) {
+			wp_send_json_error( array( 'content' => __( 'Invalid attachment.', 'nexter-extension' ) ) );
+		}
+		
+		// Security: Validate image sizes list
+		$image_sizes_raw = isset( $_POST['image_sizes_to_be_generated'] ) ? sanitize_text_field( wp_unslash( $_POST['image_sizes_to_be_generated'] ) ) : '';
+		$image_sizes_to_be_generated = ! empty( $image_sizes_raw ) ? explode( ',', $image_sizes_raw ) : array();
+		// Security: Sanitize each image size name
+		$image_sizes_to_be_generated = array_map( 'sanitize_key', array_filter( $image_sizes_to_be_generated ) );
         $fullsizepath = get_attached_file( $id );
+        
+        // Security: Validate file path to prevent directory traversal
+        if ( ! empty( $fullsizepath ) ) {
+            $real_file_path = realpath( $fullsizepath );
+            $uploads_dir = wp_upload_dir();
+            $real_uploads_dir = realpath( $uploads_dir['basedir'] );
+            
+            // Security: Verify file is within uploads directory
+            if ( ! $real_file_path || ! $real_uploads_dir || strpos( $real_file_path, $real_uploads_dir ) !== 0 ) {
+                wp_send_json_error( array( 'content' => __( 'Invalid file path.', 'nexter-extension' ) ) );
+            }
+        }
 
         if ( FALSE !== $fullsizepath && @file_exists( $fullsizepath ) ) {
             set_time_limit( 60 );
@@ -96,8 +122,13 @@ class Nexter_Ext_Image_Size {
 	}
 
 	public function nexter_register_custom_image_sizes(){
+        $get_performance = get_option('nexter_site_performance');
+        $enable_custom_size = true;
+        if(!empty($get_performance) && isset($get_performance['nexter-custom-image-sizes']) && isset($get_performance['nexter-custom-image-sizes']['switch'])){
+            $enable_custom_size = $get_performance['nexter-custom-image-sizes']['switch'];
+        }
 		$custom_sizes = get_option('nexter_custom_image_sizes');
-		if( !empty( $custom_sizes ) ){
+		if( !empty( $custom_sizes ) && !empty($enable_custom_size) ){
 			foreach($custom_sizes as $cs){
 				if ($cs['crop'] == 0 ){
 					$cs['crop'] == false;
@@ -123,8 +154,14 @@ class Nexter_Ext_Image_Size {
 	}
 
 	public function nexter_manage_image_sizes( $sizes ){
-		
-		$disabled_is = get_option('nexter_disabled_images');
+		$disabled_is = array();
+        $get_performance = get_option('nexter_site_performance');
+        if(!empty($get_performance) && isset($get_performance['disabled-image-sizes']) && isset($get_performance['disabled-image-sizes']['switch']) && !empty($get_performance['disabled-image-sizes']['switch']) && isset($get_performance['disabled-image-sizes']['values'])){
+                $disabled_is = (array) $get_performance['disabled-image-sizes']['values'];
+        }else{
+		    $disabled_is = get_option('nexter_disabled_images');
+        }
+        
 		if(is_array($disabled_is)){
 			foreach ( get_intermediate_image_sizes() as $size ) {
 				if ( in_array( $size, $disabled_is ) ) {

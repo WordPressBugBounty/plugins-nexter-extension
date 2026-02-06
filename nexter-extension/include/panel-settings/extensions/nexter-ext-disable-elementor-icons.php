@@ -15,7 +15,13 @@ class Nexter_Ext_Disable_Elementor_Icons {
 	}
 
 	public function nexter_ext_ele_disable_icons(){
-		$disable_icons = get_option('nexter_elementor_icons');
+		$get_performance = get_option('nexter_site_performance');
+		$disable_icons = [];
+        if(!empty($get_performance) && isset($get_performance['disable-elementor-icons']) && isset($get_performance['disable-elementor-icons']['switch']) && isset($get_performance['disable-elementor-icons']['values'])){
+            $disable_icons = (array) $get_performance['disable-elementor-icons']['values'];
+        }else{
+			$disable_icons = get_option('nexter_elementor_icons');
+		}
 		if(!empty($disable_icons)){
 			foreach( [ 'solid', 'regular', 'brands' ] as $icons ) {
 				if(in_array($icons, $disable_icons)){
@@ -26,7 +32,13 @@ class Nexter_Ext_Disable_Elementor_Icons {
 	}
 
 	public function disable_eicons(){
-		$disable_icons = get_option('nexter_elementor_icons');
+		$get_performance = get_option('nexter_site_performance');
+		$disable_icons = [];
+        if(!empty($get_performance) && isset($get_performance['disable-elementor-icons']) && isset($get_performance['disable-elementor-icons']['switch']) && isset($get_performance['disable-elementor-icons']['values'])){
+            $disable_icons = (array) $get_performance['disable-elementor-icons']['values'];
+        }else{
+			$disable_icons = get_option('nexter_elementor_icons');
+		}
 		if(!empty($disable_icons) && in_array('eicons', $disable_icons)){
 			wp_dequeue_style( 'elementor-icons' );
 			wp_deregister_style( 'elementor-icons' );

@@ -13,25 +13,28 @@ class Nexter_Ext_Local_Google_Font_New {
         // Load the configuration options
         $get_Option = get_option('nexter_site_performance');
 
+        $google_fonts = [];
+        if(!empty($get_Option) && isset($get_Option['google-fonts']) && isset($get_Option['google-fonts']['switch']) && !empty($get_Option['google-fonts']['switch']) && isset($get_Option['google-fonts']['values']) && !empty($get_Option['google-fonts']['values'])) {
+            $google_fonts = (array) $get_Option['google-fonts']['values'];
+        }
 		add_action( 'wp_ajax_nxt_clear_local_fonts', [ $this, 'nxt_clear_local_fonts_ajax'] );
         // Check if the local Google Fonts option is enabled
-        if(isset($get_Option['nexter_google_fonts']) && empty($get_Option['nexter_google_fonts']['disable_gfont']) && !is_admin()){
-
+        if(( ( isset($get_Option['nexter_google_fonts']) && empty($get_Option['nexter_google_fonts']['disable_gfont']) ) || ( isset($google_fonts['disable_gfont']) && empty($google_fonts['disable_gfont'])) ) && !is_admin()){
             /* Self Host Google Font */
-            if (!empty($get_Option['nexter_google_fonts']['self_host_gfont'])) {
+            if ( !empty($get_Option['nexter_google_fonts']['self_host_gfont']) || !empty($google_fonts['self_host_gfont']) ) {
                 // Hook into the template redirect to start buffering for local Google Fonts
                 add_action('template_redirect', array($this, 'nxt_start_buffering_for_local_fonts'));
             }
 
             /* Self Host Google Font */
-            if (!empty($get_Option['nexter_google_fonts']['display_swap'])) {
+            if ( !empty($get_Option['nexter_google_fonts']['display_swap'])  || !empty($google_fonts['display_swap']) ) {
                 // Hook into the template redirect to start buffering for display swap
                 add_action('template_redirect', array($this, 'nxt_start_buffering_for_display_swap'));
             }
         }
 
         // Check if the disable Google Fonts option is enabled
-        if (isset($get_Option['nexter_google_fonts']) && !empty($get_Option['nexter_google_fonts']['disable_gfont'])) {
+        if ( ( isset($get_Option['nexter_google_fonts']) && !empty($get_Option['nexter_google_fonts']['disable_gfont']) ) || ( isset($google_fonts['disable_gfont']) && !empty($google_fonts['disable_gfont']) ) ) {
             // Only load on the frontend
             if (!is_admin()) {
                 // Hook into the template redirect to disable Google Fonts
@@ -43,7 +46,7 @@ class Nexter_Ext_Local_Google_Font_New {
         if( is_admin() ){
 			add_action( 'enqueue_block_editor_assets', [ $this, 'head_style_local_google_font' ] );
 		}
-        add_action( 'wp_head', [ $this, 'head_style_local_google_font' ] );
+        add_action( 'wp_head', [ $this, 'head_style_local_google_font' ], 11 );
 
         add_filter('elementor/fonts/groups', function ($groups) {
 			$local_font = $this->check_nxt_ext_local_google_font(true);
@@ -186,7 +189,15 @@ class Nexter_Ext_Local_Google_Font_New {
         }
         WP_Filesystem();
     
+        // Security: Validate directory path
         $directory = WP_CONTENT_DIR . '/nxt_assets/localfonts/';
+        $real_directory = realpath( dirname( $directory ) );
+        $real_content_dir = realpath( WP_CONTENT_DIR );
+        
+        // Security: Ensure directory is within WP_CONTENT_DIR
+        if ( ! $real_directory || strpos( $real_directory, $real_content_dir ) !== 0 ) {
+            return $html;
+        }
     
         // Create fonts nxt_assets directory if it doesn't exist
         if (!$wp_filesystem->is_dir($directory)) {
@@ -252,8 +263,27 @@ class Nexter_Ext_Local_Google_Font_New {
                 // Extract the font file name from the URL
                 $font_file_name = basename($font_url);
     
+                // Security: Sanitize font file name to prevent directory traversal
+                $font_file_name = sanitize_file_name( basename( $font_file_name ) );
+                
+                // Security: Validate file extension
+                $allowed_extensions = array( 'woff2', 'woff', 'ttf', 'otf' );
+                $file_extension = strtolower( pathinfo( $font_file_name, PATHINFO_EXTENSION ) );
+                
+                if ( ! in_array( $file_extension, $allowed_extensions, true ) ) {
+                    continue; // Skip invalid file types
+                }
+                
                 // Define the local file path to save the font file
                 $font_file_path = WP_CONTENT_DIR . '/nxt_assets/localfonts/' . $font_file_name;
+                
+                // Security: Verify path is within allowed directory
+                $real_font_path = realpath( dirname( $font_file_path ) );
+                $real_fonts_dir = realpath( WP_CONTENT_DIR . '/nxt_assets/localfonts/' );
+                
+                if ( $real_font_path !== $real_fonts_dir ) {
+                    continue; // Skip if path is outside allowed directory
+                }
     
                 // Download the font file
                 $this->nxt_download_font_file($font_url, $font_file_path);
@@ -308,13 +338,31 @@ class Nexter_Ext_Local_Google_Font_New {
     }
 
     /* unlink local files */
-	public static function nxt_clear_local_fonts(){
-        $files = glob(WP_CONTENT_DIR . '/nxt_assets/localfonts/*');
+    public static function nxt_clear_local_fonts(){
+        // Security: Validate directory path to prevent directory traversal
+        $fonts_dir = WP_CONTENT_DIR . '/nxt_assets/localfonts/';
+        $real_fonts_dir = realpath( $fonts_dir );
+        $real_content_dir = realpath( WP_CONTENT_DIR );
+        
+        // Security: Ensure we're only deleting files within the intended directory
+        if ( ! $real_fonts_dir || strpos( $real_fonts_dir, $real_content_dir ) !== 0 ) {
+            return false;
+        }
+        
+        $files = glob( $fonts_dir . '*' );
+        if ( ! is_array( $files ) ) {
+            return false;
+        }
+        
         foreach($files as $file) {
-            if(is_file($file)) {
-                unlink($file);
+            // Security: Double-check file is within allowed directory
+            $real_file = realpath( $file );
+            if ( $real_file && strpos( $real_file, $real_fonts_dir ) === 0 && is_file( $real_file ) ) {
+                @unlink( $real_file );
             }
         }
+        
+        return true;
     }
 
     //clear local fonts ajax action

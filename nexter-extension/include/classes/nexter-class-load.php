@@ -92,7 +92,6 @@ if ( ! class_exists( 'Nexter_Class_Load' ) ) {
 				if ( get_option( 'nexter_snippets_imported' ) === false ) {
 					require_once $include_uri . 'load-code-snippet/nexter-import-code-snippets.php';
 				}
-				require_once $include_uri . 'load-code-snippet/nexter-php-snippet-validator-loopback.php';
 				require_once $include_uri . 'load-code-snippet/nexter-php-code-handling.php';
 				require_once $include_uri . 'load-code-snippet/nexter-code-snippet-render.php';
 			}
@@ -275,11 +274,10 @@ if ( ! class_exists( 'Nexter_Class_Load' ) ) {
 			
 			// Use snippets_ids as-is - Pro snippets are now integrated via the nexter_loaded_snippet_ids filter
 			$all_snippets_ids = $snippets_ids;
-			
 			foreach (['css', 'javascript', 'php', 'htmlmixed'] as $type) {
 				if (!empty($all_snippets_ids[$type])) {
 					foreach ($all_snippets_ids[$type] as $post_id) {
-						if (!isset($snippets_lists[$type][$post_id])) {
+						if (is_numeric($post_id) && !isset($snippets_lists[$type][$post_id])) {
 							$post = get_post($post_id);
 
 							if ($post) {
@@ -289,10 +287,22 @@ if ( ! class_exists( 'Nexter_Class_Load' ) ) {
 									'edit_url' => admin_url('admin.php?page=nxt_code_snippets#/edit/' . $post_id),
 								];
 							}
+						}else if(!empty($post_id) && is_string($post_id) && !isset($snippets_lists[$type][$post_id])) {
+							if(class_exists('Nexter_Code_Snippets_File_Based')){
+								$file_based = new Nexter_Code_Snippets_File_Based();
+								$snippet_data = $file_based->getSnippetData($post_id);
+								if(!empty($snippet_data)){
+									$snippets_lists[$type][$post_id] = [
+										'id' => $post_id,
+										'title' => isset($snippet_data['name']) ? $snippet_data['name'] : $post_id,
+										'edit_url' => admin_url('admin.php?page=nxt_code_snippets#/edit/' . $post_id),
+									];
+								}
+							}
 						}
 					}
 				}
-			}			
+			}
 			$template_list1 = array_column($template_list, 'post_type');
 			array_multisort($template_list1, SORT_DESC, $template_list);
 			$nxt_template = [

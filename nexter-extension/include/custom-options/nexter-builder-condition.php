@@ -28,10 +28,12 @@ if ( ! class_exists( 'Nexter_Builder_Condition' ) ) {
 			if( is_admin() ){
                 if ( current_user_can( 'manage_options' ) ) {
 		            add_action( 'wp_ajax_nexter_ext_temp_popup', [ $this, 'nexter_ext_temp_popup_ajax'] );
+		            add_action( 'wp_ajax_nexter_ext_temp_listout', [ $this, 'nexter_ext_temp_listout_data'] );
 		            add_action( 'wp_ajax_nexter_ext_sections_condition_popup', [ $this, 'nexter_ext_sections_condition_popup_ajax'] );
 		            add_action( 'wp_ajax_nexter_ext_pages_condition_popup', [ $this, 'nexter_ext_pages_condition_popup_ajax'] );
 		            add_action( 'wp_ajax_nexter_ext_pages_404_condition_popup', [ $this, 'nexter_ext_pages_404_condition_popup_ajax'] );
 		            add_action( 'wp_ajax_nexter_ext_status', [ $this, 'nexter_ext_status_ajax'] );
+		            add_action( 'wp_ajax_nexter_ext_builder_update', [ $this, 'nexter_ext_builder_update_ajax'] );
 		            add_action( 'wp_ajax_nexter_ext_repeater_custom_structure', [ $this, 'nexter_ext_repeater_custom_structure_ajax'] );
                     add_action('wp_ajax_nexter_ext_edit_template',[$this,'nexter_ext_edit_template_form_data']);
                     add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts_admin' ), 1 );
@@ -43,6 +45,145 @@ if ( ! class_exists( 'Nexter_Builder_Condition' ) ) {
                 }
             }
 		}
+
+        /**
+		 * Check User Permission Ajax
+		 */
+		public function check_permission_user(){
+			
+			if ( ! is_user_logged_in() ) {
+                return false;
+            }
+			
+			$user = wp_get_current_user();
+			if ( empty( $user ) ) {
+				return false;
+			}
+			$allowed_roles = array( 'administrator' );
+			if ( !empty($user) && isset($user->roles) && array_intersect( $allowed_roles, $user->roles ) ) {
+				return true;
+			}
+			return false;
+		}
+        
+        public function nexter_ext_temp_listout_data(){
+            if(!$this->check_permission_user()){
+				wp_send_json_error('Insufficient permissions.');
+			}
+			check_ajax_referer('nexter_admin_nonce', 'nonce');
+
+			$args = array(
+				'post_type'      => NXT_BUILD_POST,
+				'post_status'    => array('publish', 'draft', 'private'),
+				'posts_per_page' => -1,
+			);
+		
+			$query = new WP_Query($args);
+			$code_list = [];
+
+			if ($query->have_posts()) {
+				while ($query->have_posts()) {
+					$query->the_post();
+
+					$post_id = get_the_ID();
+                    $post_status = get_post_status($post_id);
+                    $old_layout = get_post_meta($post_id, 'nxt-hooks-layout', true);
+				
+                    $layout = get_post_meta($post_id, 'nxt-hooks-layout-sections', true);
+                    $sections_pages = '';
+                    $nxt_type = (!empty($layout)) ? $layout : '';
+                    $section_pages_layout = '';
+                    if(!empty($old_layout)){
+                        $section_pages_layout = $old_layout;
+                        if($old_layout == 'sections'){
+                            $nxt_type = get_post_meta($post_id, 'nxt-hooks-layout-sections', true);
+                            $sections_pages = 'sections';
+                        }else if($old_layout == 'pages'){
+                            $nxt_type = get_post_meta($post_id, 'nxt-hooks-layout-pages', true);
+                            $sections_pages = 'pages';
+                        }else if($old_layout == 'code_snippet'){
+                            $nxt_type = esc_html__('Snippet : ', 'nexter-extension').get_post_meta($post_id, 'nxt-hooks-layout-code-snippet', true);
+                            $sections_pages = 'code_snippet';
+                        }else{
+                            $sections_pages = __('None', 'nexter-extension');
+                        }
+                    }
+                    if( $layout === 'header' ) {
+                        $sections_pages = __('Header', 'nexter-extension');
+                    }else if( $layout === 'footer' ){
+                        $sections_pages = __('Footer', 'nexter-extension');
+                    }else if( $layout === 'breadcrumb' ){
+                        $sections_pages = __('Breadcrumb', 'nexter-extension');
+                    }else if( $layout === 'hooks' ){
+                        $sections_pages = __('Hooks', 'nexter-extension');
+                    }else if( $layout === 'singular' ){
+                        $sections_pages = __('Singular', 'nexter-extension');
+                    }else if( $layout === 'archives' ){
+                        $sections_pages = __('Archive', 'nexter-extension');
+                    }else if( $layout === 'page-404' ){
+                        $sections_pages = __('404 Page', 'nexter-extension');
+                    }else if( $layout === 'section' ){
+                        $sections_pages = __('Section', 'nexter-extension');
+                    }else{
+                        $sections_pages = __('None', 'nexter-extension');
+                    }
+                    if( $layout === 'header' || $layout === 'footer' || $layout === 'breadcrumb' || $layout === 'hooks' ) {
+                        $section_pages_layout = 'sections';
+                    }else if( $layout === 'singular' || $layout === 'archives' || $layout === 'page-404' ){
+                        $section_pages_layout = 'pages';
+                    }
+
+                    $getPostStatus = '';
+                    if($layout!='' && $layout != 'section'){
+                        $getPostStatus = get_post_meta($post_id, 'nxt_build_status', true);
+                    }
+
+                    $export_url = add_query_arg(
+                        [
+                            'action' => 'nxt_builder_export_actions',
+                            'nxt_action' => 'export_template',
+                            'source' => 'nxt',
+                            '_nonce' => wp_create_nonce( 'nxt_ajax' ),
+                            'post_id' => $post_id,
+                        ],
+                        admin_url( 'admin-ajax.php' )
+                    );
+
+                    $edit_with_elementor = '';
+                    if ( did_action( 'elementor/loaded' ) ) {
+                        $document = \Elementor\Plugin::$instance->documents->get( $post_id );
+                        if ( $document && $document->is_built_with_elementor() ) {
+                            $edit_with_elementor = $document->get_edit_url();
+                        }
+                    }
+
+					$code_list['templates'][] = [
+						'id' => $post_id,
+						'name'        => get_post_field('post_title', $post_id, 'raw'),
+						'section_page'	=> $section_pages_layout,
+						'type_title'	=> $sections_pages,
+						'type_slug'	=> $nxt_type,
+                        'post_status' => $post_status,
+						'status'	=> $getPostStatus,
+                        'edit' => html_entity_decode( get_edit_post_link( $post_id ) ),
+                        'edit_with_elementor' => html_entity_decode( $edit_with_elementor ),
+                        'view' => html_entity_decode( get_permalink( $post_id ) ),
+                        'export' => $export_url,
+						'last_updated' => get_the_modified_time('F j, Y \a\t g:i a', $post_id),
+                        'author_name' => esc_html( get_the_author_meta('display_name', get_post_field('post_author', $post_id)) ),
+                        'author_avtar' => esc_url( get_avatar_url( get_post_field( 'post_author', $post_id ), ['size'=>64] ) )
+					];
+					
+				}
+				wp_reset_postdata();
+			}else{
+				wp_send_json_error('No List Found.');
+			}
+            
+            $code_list['info']['switcher'] = get_option( 'nxt_builder_switcher', true );
+
+			wp_send_json_success($code_list);
+        }
 
         function nexter_ext_add_template_form_data() {
             $nonce = (isset($_POST['nonce']) && !empty($_POST['nonce'])) ? sanitize_text_field( wp_unslash($_POST['nonce']) ) : '';
@@ -338,9 +479,9 @@ if ( ! class_exists( 'Nexter_Builder_Condition' ) ) {
             $output .= '<div class="nxt-close-warning-popup">';
                 $output .= '<div class="warning-popup-inner">';
                     $output .= '<img src="'.esc_url(NEXTER_EXT_URL . 'assets/images/nxt-close-warning.png').'" class="warning-popup-img" />';
-                    $output .= '<h3 class="warning-popup-title">'.__( "Are you sure?", "nexter-extension" ).'</h3>';
-                    $output .= '<p class="warning-popup-desc">'.__( "Leaving the changes without saving the data cause unsaved material", "nexter-extension" ).'</p>';
-                    $output .= '<a class="popup-leave-btn">'.__( "Yes I want to leave", "nexter-extension" ).'</a>';
+                    $output .= '<h3 class="warning-popup-title">'.__( "Are you sure?", 'nexter-extension' ).'</h3>';
+                    $output .= '<p class="warning-popup-desc">'.__( "Leaving the changes without saving the data cause unsaved material", 'nexter-extension' ).'</p>';
+                    $output .= '<a class="popup-leave-btn">'.__( "Yes I want to leave", 'nexter-extension' ).'</a>';
                 $output .= '</div>';
             $output .= '</div>';
 
@@ -437,8 +578,8 @@ if ( ! class_exists( 'Nexter_Builder_Condition' ) ) {
             $output = '';
             $output .= '<div class="nxt-bul-temp">';
                 $output .= '<div class="nxt-temp-heading">';
-                    $output .= '<h3 class="temp-head-title">'.__( "Create your New Templates", "nexter-extension" ).'</h3>';
-                    $output .= '<p class="temp-head-desc">'.__( "Start by selecting the template type & post source.", "nexter-extension" ).'</p>';
+                    $output .= '<h3 class="temp-head-title">'.__( "Create your New Templates", 'nexter-extension' ).'</h3>';
+                    $output .= '<p class="temp-head-desc">'.__( "Start by selecting the template type & post source.", 'nexter-extension' ).'</p>';
                 $output .= '</div>';
                 // $output .= '<form method="post" action="'.esc_url(admin_url('admin-post.php')).'">';
                 $output .= '<form method="post">';
@@ -446,9 +587,9 @@ if ( ! class_exists( 'Nexter_Builder_Condition' ) ) {
                         $output .= '<div class="nxt-common-cnt-inner">';
                             $output .= '<div>';
                                 // $output .= ' <input type="hidden" name="action" value="nexter_ext_save_template">';
-                                $output .= '<label>'.__( "Select Template", "nexter-extension" ).'</label>';
+                                $output .= '<label>'.__( "Select Template", 'nexter-extension' ).'</label>';
                                 $output .= '<select class="nxt-temp-select nxt-temp-layout" name="nxt-hooks-layout_sections" '.$disableSel.'>';
-                                    $output .= '<option value="" disabled selected>'.__( "Select Type", "nexter-extension" ).'</option>';
+                                    $output .= '<option value="" disabled selected>'.__( "Select Type", 'nexter-extension' ).'</option>';
                                     $output .= '<optgroup label="Layouts">';
                                         foreach ($sec_type as $index => $label) :
                                             $selected = '';
@@ -478,13 +619,13 @@ if ( ! class_exists( 'Nexter_Builder_Condition' ) ) {
                                 }
                             $output .= '</div>';
                             $output .= '<div>';
-                                $output .= '<label>'.__( "Name of Template", "nexter-extension" ).'</label>';
-                                $output .= '<input name="template_name" class="nxt-temp-name" placeholder="'.__( "Enter Template Name", "nexter-extension" ).'" required value="'.esc_attr($title).'"/>';
+                                $output .= '<label>'.__( "Name of Template", 'nexter-extension' ).'</label>';
+                                $output .= '<input name="template_name" class="nxt-temp-name" placeholder="'.__( "Enter Template Name", 'nexter-extension' ).'" required value="'.esc_attr($title).'"/>';
                             $output .= '</div>';
 
                             if($theme_comp_option){
                                 $output .= '<div class="nxt-header-type-wrap">';
-                                    $output .= '<label>'.__( "Type", "nexter-extension" ).'</label>';
+                                    $output .= '<label>'.__( "Type", 'nexter-extension' ).'</label>';
                                     $output .= '<select class="nxt-temp-select nxt-header-type" id="nxt-normal-sticky-header" name="nxt-normal-sticky-header">';
                                         foreach ($header_type as $index => $label) :
                                             $selected = '';
@@ -495,7 +636,7 @@ if ( ! class_exists( 'Nexter_Builder_Condition' ) ) {
                                         endforeach;
                                     $output .= '</select>';
                                     $output .= '<div class="nxt-trans-header-wrap">';
-                                        $output .= '<label>'.__( "Transparent Header", "nexter-extension" ).'</label>';
+                                        $output .= '<label>'.__( "Transparent Header", 'nexter-extension' ).'</label>';
                                         $output .= '<div class="nxt-trans-header-inner">';
                                             $output .= '<input type="checkbox" class="nxt-trans-header" name="nxt-transparent-header" id="nxt-transparent-header" value="on" '.$checkornot.'>';
                                             $output .= '<label for="nxt-transparent-header"></label>';
@@ -506,7 +647,7 @@ if ( ! class_exists( 'Nexter_Builder_Condition' ) ) {
                             if($theme_comp_option){
                                 $output .= '<div class="nxt-footer-type-wrap">';
                                     $output .= '<div class="nxt-footer-type-inner">';
-                                        $output .= '<label>'.__( "Footer Effects", "nexter-extension" ).'</label>';
+                                        $output .= '<label>'.__( "Footer Effects", 'nexter-extension' ).'</label>';
                                         $output .= '<select class="nxt-temp-select nxt-footer-type" id="nxt-hooks-footer-style" name="nxt-hooks-footer-style">';
                                             foreach ($footer_type as $index => $label) :
                                                 $selected = '';
@@ -529,7 +670,7 @@ if ( ! class_exists( 'Nexter_Builder_Condition' ) ) {
 
                             $output .= '<div class="nxt-hooks-type-wrap">';
                                 $output .= '<div class="nxt-hooks-type-inner">';
-                                    $output .= '<label>'.__( "Actions Hooks", "nexter-extension" ).'</label>';
+                                    $output .= '<label>'.__( "Actions Hooks", 'nexter-extension' ).'</label>';
                                     $output .= '<select class="nxt-temp-select nxt-hooks-action-type" id="nxt-display-hooks-action" name="nxt-display-hooks-action">';
                                         foreach ($hooks_action_list as $index => $label) :
                                             $selected = '';
@@ -541,32 +682,32 @@ if ( ! class_exists( 'Nexter_Builder_Condition' ) ) {
                                     $output .= '</select>';
                                 $output .= '</div>';
                                 $output .= '<div class="nxt-hooks-type-inner">';
-                                    $output .= '<label>'.__( "Priority", "nexter-extension" ).'</label>';
-                                    $output .= '<input name="nxt-hooks-priority" class="nxt-hooks-priority" type="number" placeholder="'.__( "10", "nexter-extension" ).'" value="'.esc_attr($hooksPriority).'" max="100" min="1" step="1"/>';
+                                    $output .= '<label>'.__( "Priority", 'nexter-extension' ).'</label>';
+                                    $output .= '<input name="nxt-hooks-priority" class="nxt-hooks-priority" type="number" placeholder="'.__( "10", 'nexter-extension' ).'" value="'.esc_attr($hooksPriority).'" max="100" min="1" step="1"/>';
                                 $output .= '</div>';
                             $output .= '</div>';
 
                             $output .= '<div class="nxt-addition-toggle-wrap '.esc_attr($accActive).'">';
                                 $output .= '<a class="nxt-addition-toggle">';
-                                    $output .= '<span class="nxt-open active">'.__( "Additional Settings", "nexter-extension" ).'</span>';
-                                    $output .= '<span class="nxt-close">'.__( "Close Settings", "nexter-extension" ).'</span>';
-                                    $output .= '<p class="nxt-close nxt-header-note">'.__( "You can set your header effect from here or directly from your Navigation Menu block or widget.", "nexter-extension" ).'</p>';
+                                    $output .= '<span class="nxt-open active">'.__( "Additional Settings", 'nexter-extension' ).'</span>';
+                                    $output .= '<span class="nxt-close">'.__( "Close Settings", 'nexter-extension' ).'</span>';
+                                    $output .= '<p class="nxt-close nxt-header-note">'.__( "You can set your header effect from here or directly from your Navigation Menu block or widget.", 'nexter-extension' ).'</p>';
                                 $output .= '</a>';
                             $output .= '</div>';
                         $output .= '</div>';
                     $output .= '</div>';
                     $output .= '<div class="nxt-temp-action">';
                         $output .= '<a href="'.esc_url('https://nexterwp.com/help/nexter-theme/theme-builder-classic-theme/').'" class="nxt-temp-info" target="_blank" rel="noopener noreferrer">';
-                            $output .= __( "Read How it Works", "nexter-extension" );
+                            $output .= __( "Read How it Works", 'nexter-extension' );
                         $output .= '</a>';
 
                         if(!empty($post_id)){
                             $output .= '<a type="submit" href="" class="temp-next-button" data-post="'.esc_attr($post_id).'" data-type="'.esc_attr($type).'" data-subtype="'.esc_attr($subtype).'">';
-                                $output .= __( "Next", "nexter-extension" );
+                                $output .= __( "Next", 'nexter-extension' );
                             $output .= '</a>';
                         }else{
                             $output .= '<a type="submit" href="" class="temp-action-btn">';
-                                $output .= __( "Next", "nexter-extension" );
+                                $output .= __( "Next", 'nexter-extension' );
                             $output .= '</a>';
                         }
 
@@ -644,8 +785,8 @@ if ( ! class_exists( 'Nexter_Builder_Condition' ) ) {
             $output = '';
             $output .= '<div class="nxt-bul-temp">';
                 $output .= '<div class="nxt-temp-heading">';
-                    $output .= '<h3 class="temp-head-title">'.__( "Set Display Conditions", "nexter-extension" ).'</h3>';
-                    $output .= '<p class="temp-head-desc">'.__( "Select where you want to load the template", "nexter-extension" ).'</p>';
+                    $output .= '<h3 class="temp-head-title">'.__( "Set Display Conditions", 'nexter-extension' ).'</h3>';
+                    $output .= '<p class="temp-head-desc">'.__( "Select where you want to load the template", 'nexter-extension' ).'</p>';
                 $output .= '</div>';
                 $output .= '<form method="post" action="'.esc_url(admin_url('admin-post.php')).'">';
                     if($conType == 'new'){
@@ -665,13 +806,13 @@ if ( ! class_exists( 'Nexter_Builder_Condition' ) ) {
                                 endforeach;
                             }
                             $output .= '<div class="nxt-condition-include">';
-                                $output .= '<label class="nxt-main-label">'.__( "Include In", "nexter-extension" ).'</label>';
+                                $output .= '<label class="nxt-main-label">'.__( "Include In", 'nexter-extension' ).'</label>';
                                 $output .= self::nxt_include_exclude_dis_rules('add', $add_Display, $conType);
                                 $output .= self::nxt_include_exclude_value($getPost_Id, '', $conType);
                             $output .= '</div>';
                             $output .='<div class="nxt-include-exclude-sep"></div>';
                             $output .= '<div class="nxt-condition-exclude">';
-                                $output .= '<label class="nxt-main-label">'.__( "Exclude From", "nexter-extension" ).'</label>';
+                                $output .= '<label class="nxt-main-label">'.__( "Exclude From", 'nexter-extension' ).'</label>';
                                 $output .= self::nxt_include_exclude_dis_rules('exclude', $exclude_Display, $conType);
                                 $output .= self::nxt_include_exclude_value($getPost_Id, 'exclude-', $conType);
                             $output .= '</div>';
@@ -680,13 +821,13 @@ if ( ! class_exists( 'Nexter_Builder_Condition' ) ) {
 
                     $output .= '<div class="nxt-temp-action">';
                         $output .= '<a href="'.esc_url('https://nexterwp.com/help/nexter-theme/theme-builder-classic-theme/').'" class="nxt-temp-info" target="_blank" rel="noopener noreferrer">';
-                            $output .= __( "Read How it Works", "nexter-extension" );
+                            $output .= __( "Read How it Works", 'nexter-extension' );
                         $output .= '</a>';
                         // $output .= '<button type="submit" class="temp-create-btn">'.$btnText.'</button>';
                         $output .= '<div class="nxt-action-btn-wrap">';
                             if(!empty($getPost_Id)){
                                 $output .= '<a class="nxt-action-back">';
-                                    $output .= __( "Go Back", "nexter-extension" );
+                                    $output .= __( "Go Back", 'nexter-extension' );
                                 $output .= '</a>';
                             }
                             
@@ -754,8 +895,8 @@ if ( ! class_exists( 'Nexter_Builder_Condition' ) ) {
             $output = '';
             $output .= '<div class="nxt-bul-temp">';
                 $output .= '<div class="nxt-temp-heading">';
-                    $output .= '<h3 class="temp-head-title">'.__( "Set Display Conditions", "nexter-extension" ).'</h3>';
-                    $output .= '<p class="temp-head-desc">'.__( "Select where you want to load the template", "nexter-extension" ).'</p>';
+                    $output .= '<h3 class="temp-head-title">'.__( "Set Display Conditions", 'nexter-extension' ).'</h3>';
+                    $output .= '<p class="temp-head-desc">'.__( "Select where you want to load the template", 'nexter-extension' ).'</p>';
                 $output .= '</div>';
                 $output .= '<form method="post" action="'.esc_url(admin_url('admin-post.php')).'">';
                     if($conType == 'new'){
@@ -781,7 +922,7 @@ if ( ! class_exists( 'Nexter_Builder_Condition' ) ) {
 
                     $output .= '<div class="nxt-temp-action">';
                         $output .= '<a href="'.esc_url('https://nexterwp.com/help/nexter-theme/theme-builder-classic-theme/').'" class="nxt-temp-info" target="_blank" rel="noopener noreferrer">';
-                            $output .= __( "Read How it Works", "nexter-extension" );
+                            $output .= __( "Read How it Works", 'nexter-extension' );
                         $output .= '</a>';
                         // $output .= '<button type="submit" class="temp-create-btn">';
                         // $output .= '<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 13 15" fill="none"><path d="M10.5 0.572266H2.50003C1.86885 0.572266 1.35718 1.08394 1.35718 1.71512V13.6001C1.35718 14.1603 2.07955 14.386 2.39843 13.9254L5.56039 9.35811C6.01485 8.70166 6.98522 8.70166 7.43968 9.35811L10.6016 13.9254C10.9205 14.386 11.6429 14.1603 11.6429 13.6001V1.71512C11.6429 1.08394 11.1312 0.572266 10.5 0.572266Z" stroke="white" stroke-linecap="round"/></svg>';
@@ -790,7 +931,7 @@ if ( ! class_exists( 'Nexter_Builder_Condition' ) ) {
                         $output .= '<div class="nxt-action-btn-wrap">';
                             if(!empty($getPost_Id)){
                                 $output .= '<a class="nxt-action-back">';
-                                    $output .= __( "Go Back", "nexter-extension" );
+                                    $output .= __( "Go Back", 'nexter-extension' );
                                 $output .= '</a>';
                             }
                             
@@ -823,7 +964,7 @@ if ( ! class_exists( 'Nexter_Builder_Condition' ) ) {
             $output = '';
             $output .= '<div class="nxt-pages-preview-wrap">';
                 $output .= '<div class="nxt-pages-preview-inner">';
-                    $output .= '<label>'.__( "Preview Type", "nexter-extension" ).'</label>';
+                    $output .= '<label>'.__( "Preview Type", 'nexter-extension' ).'</label>';
                     if($layoutType == 'archives'){
                         $get_arc_prev = (!empty($post_id)) ? get_post_meta($post_id, 'nxt-archive-preview-type', true) : '';
                         $output .= self::nxt_generate_select_from_array(Nexter_Builders_Archives_Conditional_Rules::register_post_type_conditions('preview'), 'nxt-archive-preview-type', '', '', $get_arc_prev);
@@ -833,7 +974,7 @@ if ( ! class_exists( 'Nexter_Builder_Condition' ) ) {
                     }
                 $output .= '</div>';
                 $output .= '<div class="nxt-pages-preview-inner">';
-                    $output .= '<label>'.__( "Preview ID", "nexter-extension" ).'</label>';
+                    $output .= '<label>'.__( "Preview ID", 'nexter-extension' ).'</label>';
                         if($layoutType == 'archives'){
                             $arc_pre_opt = self::nxt_get_type_archives_preview_id_new($post_id);
                             $arc_pre_id = get_post_meta($post_id, 'nxt-archive-preview-id', true);
@@ -912,7 +1053,7 @@ if ( ! class_exists( 'Nexter_Builder_Condition' ) ) {
                                     $output .='</select>';
                                 $output .='</div>';
                                 $output .='<div class="accordion-header '.esc_attr($hide_remove_btn).'">';
-                                    $output .='<svg class="remove-accordion" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none"><path class="remove-accordion-path" d="M6.38453 11.2306V6.92286M9.61574 11.2306V6.92286M1 3.69247H15M11.7695 14.4617H4.23106C3.94545 14.4617 3.67153 14.3482 3.46956 14.1463C3.2676 13.9443 3.15414 13.6704 3.15414 13.3848V3.69247H12.8464V13.3848C12.8464 13.6704 12.733 13.9443 12.531 14.1463C12.3291 14.3482 12.0551 14.4617 11.7695 14.4617ZM9.61515 1.53833H6.38438C6.09877 1.53833 5.82485 1.65179 5.62288 1.85375C5.42092 2.05572 5.30746 2.32964 5.30746 2.61525V3.69218H10.6921V2.61525C10.6921 2.32964 10.5786 2.05572 10.3767 1.85375C10.1747 1.65179 9.90077 1.53833 9.61515 1.53833Z" stroke="#615E83" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+                                    $output .='<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" class="remove-accordion" viewBox="0 0 16 16"><path stroke="#615e83" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.3" d="M6.385 11.23V6.924m3.23 4.308V6.923M1 3.693h14m-3.23 10.769H4.23a1.077 1.077 0 0 1-1.077-1.077V3.692h9.692v9.693a1.077 1.077 0 0 1-1.076 1.077M9.615 1.538h-3.23a1.077 1.077 0 0 0-1.078 1.077v1.077h5.385V2.615a1.077 1.077 0 0 0-1.077-1.077" class="remove-accordion-path"/></svg>';
                                 $output .='</div>';
                             $output .='</div>';
                         endforeach;
@@ -928,11 +1069,11 @@ if ( ! class_exists( 'Nexter_Builder_Condition' ) ) {
                                 $output .= self::nxt_generate_select_from_array(Nexter_Builders_Archives_Conditional_Rules::register_post_type_conditions(), 'nxt-archive-group', 0, 'nxt-archive-conditional-rule', '');
 
                                 $output .='<select class="nxt-single-archive-post" multiple="multiple" name="nxt-archive-group[0][nxt-archive-conditional-type][]" id="nxt-archive-group_0_nxt-archive-conditional-type">';
-                                    $output .='<option value="attachment">'.__( "All", "nexter-extension" ).'</option>';
+                                    $output .='<option value="attachment">'.__( "All", 'nexter-extension' ).'</option>';
                                 $output .='</select>';
                             $output .='</div>';
                             $output .='<div class="accordion-header hide-remove-btn">';
-                                $output .='<svg class="remove-accordion" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none"><path class="remove-accordion-path" d="M6.38453 11.2306V6.92286M9.61574 11.2306V6.92286M1 3.69247H15M11.7695 14.4617H4.23106C3.94545 14.4617 3.67153 14.3482 3.46956 14.1463C3.2676 13.9443 3.15414 13.6704 3.15414 13.3848V3.69247H12.8464V13.3848C12.8464 13.6704 12.733 13.9443 12.531 14.1463C12.3291 14.3482 12.0551 14.4617 11.7695 14.4617ZM9.61515 1.53833H6.38438C6.09877 1.53833 5.82485 1.65179 5.62288 1.85375C5.42092 2.05572 5.30746 2.32964 5.30746 2.61525V3.69218H10.6921V2.61525C10.6921 2.32964 10.5786 2.05572 10.3767 1.85375C10.1747 1.65179 9.90077 1.53833 9.61515 1.53833Z" stroke="#615E83" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+                                $output .='<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" class="remove-accordion" viewBox="0 0 16 16"><path stroke="#615e83" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.3" d="M6.385 11.23V6.924m3.23 4.308V6.923M1 3.693h14m-3.23 10.769H4.23a1.077 1.077 0 0 1-1.077-1.077V3.692h9.692v9.693a1.077 1.077 0 0 1-1.076 1.077M9.615 1.538h-3.23a1.077 1.077 0 0 0-1.078 1.077v1.077h5.385V2.615a1.077 1.077 0 0 0-1.077-1.077" class="remove-accordion-path"/></svg>';
                             $output .='</div>';
                         $output .='</div>';
                     }
@@ -977,7 +1118,7 @@ if ( ! class_exists( 'Nexter_Builder_Condition' ) ) {
                                     $output .='</select>';
                                 $output .='</div>';
                                 $output .='<div class="accordion-header '.esc_attr($hide_remove_btn).'">';
-                                    $output .='<svg class="remove-accordion" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none"><path class="remove-accordion-path" d="M6.38453 11.2306V6.92286M9.61574 11.2306V6.92286M1 3.69247H15M11.7695 14.4617H4.23106C3.94545 14.4617 3.67153 14.3482 3.46956 14.1463C3.2676 13.9443 3.15414 13.6704 3.15414 13.3848V3.69247H12.8464V13.3848C12.8464 13.6704 12.733 13.9443 12.531 14.1463C12.3291 14.3482 12.0551 14.4617 11.7695 14.4617ZM9.61515 1.53833H6.38438C6.09877 1.53833 5.82485 1.65179 5.62288 1.85375C5.42092 2.05572 5.30746 2.32964 5.30746 2.61525V3.69218H10.6921V2.61525C10.6921 2.32964 10.5786 2.05572 10.3767 1.85375C10.1747 1.65179 9.90077 1.53833 9.61515 1.53833Z" stroke="#615E83" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+                                    $output .='<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" class="remove-accordion" viewBox="0 0 16 16"><path stroke="#615e83" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.3" d="M6.385 11.23V6.924m3.23 4.308V6.923M1 3.693h14m-3.23 10.769H4.23a1.077 1.077 0 0 1-1.077-1.077V3.692h9.692v9.693a1.077 1.077 0 0 1-1.076 1.077M9.615 1.538h-3.23a1.077 1.077 0 0 0-1.078 1.077v1.077h5.385V2.615a1.077 1.077 0 0 0-1.077-1.077" class="remove-accordion-path"/></svg>';
                                 $output .='</div>';
                             $output .='</div>';
                         endforeach;
@@ -993,18 +1134,18 @@ if ( ! class_exists( 'Nexter_Builder_Condition' ) ) {
                                 $output .= self::nxt_generate_select_from_array(Nexter_Builders_Singular_Conditional_Rules::register_post_types_conditions(), 'nxt-singular-group', 0, 'nxt-singular-conditional-rule', '');
 
                                 $output .='<select class="nxt-single-archive-post" multiple="multiple" name="nxt-singular-group[0][nxt-singular-conditional-type][]" id="nxt-singular-group_0_nxt-singular-conditional-type">';
-                                    $output .='<option value="attachment">'.__( "All", "nexter-extension" ).'</option>';
+                                    $output .='<option value="attachment">'.__( "All", 'nexter-extension' ).'</option>';
                                 $output .='</select>';
                             $output .='</div>';
                             $output .='<div class="accordion-header hide-remove-btn">';
-                                $output .='<svg class="remove-accordion" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none"><path class="remove-accordion-path" d="M6.38453 11.2306V6.92286M9.61574 11.2306V6.92286M1 3.69247H15M11.7695 14.4617H4.23106C3.94545 14.4617 3.67153 14.3482 3.46956 14.1463C3.2676 13.9443 3.15414 13.6704 3.15414 13.3848V3.69247H12.8464V13.3848C12.8464 13.6704 12.733 13.9443 12.531 14.1463C12.3291 14.3482 12.0551 14.4617 11.7695 14.4617ZM9.61515 1.53833H6.38438C6.09877 1.53833 5.82485 1.65179 5.62288 1.85375C5.42092 2.05572 5.30746 2.32964 5.30746 2.61525V3.69218H10.6921V2.61525C10.6921 2.32964 10.5786 2.05572 10.3767 1.85375C10.1747 1.65179 9.90077 1.53833 9.61515 1.53833Z" stroke="#615E83" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+                                $output .='<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" class="remove-accordion" viewBox="0 0 16 16"><path stroke="#615e83" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.3" d="M6.385 11.23V6.924m3.23 4.308V6.923M1 3.693h14m-3.23 10.769H4.23a1.077 1.077 0 0 1-1.077-1.077V3.692h9.692v9.693a1.077 1.077 0 0 1-1.076 1.077M9.615 1.538h-3.23a1.077 1.077 0 0 0-1.078 1.077v1.077h5.385V2.615a1.077 1.077 0 0 0-1.077-1.077" class="remove-accordion-path"/></svg>';
                             $output .='</div>';
                         $output .='</div>';
                     }
                 }
                 $output .='<button type="button" class="nxt-add-accordion" data-type="'.esc_attr($layoutType).'">';
-                    $output .= '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="15" viewBox="0 0 16 15" fill="none"><path d="M7.99998 4.83398V10.1673M5.33331 7.50065H10.6666M14.6666 7.50065C14.6666 11.1825 11.6819 14.1673 7.99998 14.1673C4.31808 14.1673 1.33331 11.1825 1.33331 7.50065C1.33331 3.81875 4.31808 0.833984 7.99998 0.833984C11.6819 0.833984 14.6666 3.81875 14.6666 7.50065Z" stroke="#1717CC" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-                    $output .= __( "Add Condition", "nexter-extension" );
+                    $output .= '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="15" fill="none" viewBox="0 0 16 15"><path stroke="#1717cc" stroke-linecap="round" stroke-linejoin="round" d="M8 4.834v5.333M5.333 7.501h5.334m4 0a6.667 6.667 0 1 1-13.334 0 6.667 6.667 0 0 1 13.334 0"/></svg>';
+                    $output .= __( "Add Condition", 'nexter-extension' );
                 $output .='</button>';
             $output .='</div>';
 
@@ -1041,7 +1182,7 @@ if ( ! class_exists( 'Nexter_Builder_Condition' ) ) {
                         $output .= self::nxt_generate_select_from_array(Nexter_Builders_Archives_Conditional_Rules::register_post_type_conditions(), 'nxt-archive-group', $getId, 'nxt-archive-conditional-rule', '');
 
                         $output .='<select class="nxt-single-archive-post" multiple="multiple" name="nxt-archive-group['.esc_attr($getId).'][nxt-archive-conditional-type][]" id="nxt-archive-group_'.esc_attr($getId).'_nxt-archive-conditional-type">';
-                            $output .='<option value="attachment">'.__( "All", "nexter-extension" ).'</option>';
+                            $output .='<option value="attachment">'.__( "All", 'nexter-extension' ).'</option>';
                         $output .='</select>';
                     }else{
                         $output .='<select name="nxt-singular-group['.esc_attr($getId).'][nxt-singular-include-exclude]" id="nxt-singular-group_'.esc_attr($getId).'_nxt-singular-include-exclude">';
@@ -1053,7 +1194,7 @@ if ( ! class_exists( 'Nexter_Builder_Condition' ) ) {
                         $output .= self::nxt_generate_select_from_array(Nexter_Builders_Singular_Conditional_Rules::register_post_types_conditions(), 'nxt-singular-group', $getId, 'nxt-singular-conditional-rule', '');
 
                         $output .='<select class="nxt-single-archive-post" multiple="multiple" name="nxt-singular-group['.esc_attr($getId).'][nxt-singular-conditional-type][]" id="nxt-singular-group_'.esc_attr($getId).'_nxt-singular-conditional-type">';
-                            $output .='<option value="attachment">'.__( "All", "nexter-extension" ).'</option>';
+                            $output .='<option value="attachment">'.__( "All", 'nexter-extension' ).'</option>';
                         $output .='</select>';
                     }
                 $output .='</div>';
@@ -1106,8 +1247,8 @@ if ( ! class_exists( 'Nexter_Builder_Condition' ) ) {
             $output = '';
             $output .= '<div class="nxt-bul-temp">';
                 $output .= '<div class="nxt-temp-heading">';
-                    $output .= '<h3 class="temp-head-title">'.__( "Set Display Conditions", "nexter-extension" ).'</h3>';
-                    $output .= '<p class="temp-head-desc">'.__( "Select where you want to load the template", "nexter-extension" ).'</p>';
+                    $output .= '<h3 class="temp-head-title">'.__( "Set Display Conditions", 'nexter-extension' ).'</h3>';
+                    $output .= '<p class="temp-head-desc">'.__( "Select where you want to load the template", 'nexter-extension' ).'</p>';
                 $output .= '</div>';
                 $output .= '<form method="post" action="'.esc_url(admin_url('admin-post.php')).'">';
                     if($conType == 'new'){
@@ -1127,9 +1268,9 @@ if ( ! class_exists( 'Nexter_Builder_Condition' ) ) {
                                 endforeach;
                             }
                             $output .= '<div class="nxt-condition-include">';
-                                $output .= '<label class="nxt-main-label">'.__( "Disable Header", "nexter-extension" ).'</label>';
+                                $output .= '<label class="nxt-main-label">'.__( "Disable Header", 'nexter-extension' ).'</label>';
                                 $output .= '<div class="nxt-trans-header-wrap">';
-                                    $output .= '<label>'.__( "Check this option to disable header.", "nexter-extension" ).'</label>';
+                                    $output .= '<label>'.__( "Check this option to disable header.", 'nexter-extension' ).'</label>';
                                     $output .= '<div class="nxt-trans-header-inner">';
                                         $output .= '<input type="checkbox" class="nxt-trans-header" name="nxt-404-disable-header" id="nxt-404-disable-header" value="on" '.$headSelected.'>';
                                         $output .= '<label for="nxt-404-disable-header"></label>';
@@ -1137,9 +1278,9 @@ if ( ! class_exists( 'Nexter_Builder_Condition' ) ) {
                                 $output .= '</div>';
                             $output .= '</div>';
                             $output .= '<div class="nxt-condition-exclude">';
-                                $output .= '<label class="nxt-main-label">'.__( "Disable Footer", "nexter-extension" ).'</label>';
+                                $output .= '<label class="nxt-main-label">'.__( "Disable Footer", 'nexter-extension' ).'</label>';
                                 $output .= '<div class="nxt-trans-header-wrap">';
-                                    $output .= '<label>'.__( "Check this option to disable footer.", "nexter-extension" ).'</label>';
+                                    $output .= '<label>'.__( "Check this option to disable footer.", 'nexter-extension' ).'</label>';
                                     $output .= '<div class="nxt-trans-header-inner">';
                                         $output .= '<input type="checkbox" class="nxt-trans-header" name="nxt-404-disable-footer" id="nxt-404-disable-footer" value="on" '.$footSelected.'>';
                                         $output .= '<label for="nxt-404-disable-footer"></label>';
@@ -1151,12 +1292,12 @@ if ( ! class_exists( 'Nexter_Builder_Condition' ) ) {
 
                     $output .= '<div class="nxt-temp-action">';
                         $output .= '<a href="'.esc_url('https://nexterwp.com/help/nexter-theme/theme-builder-classic-theme/').'" class="nxt-temp-info" target="_blank" rel="noopener noreferrer">';
-                            $output .= __( "Read How it Works", "nexter-extension" );
+                            $output .= __( "Read How it Works", 'nexter-extension' );
                         $output .= '</a>';
                         $output .= '<div class="nxt-action-btn-wrap">';
                             if(!empty($getPost_Id)){
                                 $output .= '<a class="nxt-action-back">';
-                                    $output .= __( "Go Back", "nexter-extension" );
+                                    $output .= __( "Go Back", 'nexter-extension' );
                                 $output .= '</a>';
                             }
                             if($conType == 'new'){
@@ -1229,6 +1370,56 @@ if ( ! class_exists( 'Nexter_Builder_Condition' ) ) {
                 )
             );
             wp_die();
+        }
+
+        /**
+         * Nexter Builder Trash 
+         * Start
+        */
+        public function nexter_ext_builder_update_ajax(){
+            check_ajax_referer( 'nexter_admin_nonce', 'nexter_nonce' );
+            if ( ! is_user_logged_in() || ! current_user_can( 'manage_options' ) ) {
+                wp_send_json_success(
+                    array(
+                        'content'	=> __( 'Insufficient permissions.', 'nexter-extension' ),
+                    )
+                );
+            }
+
+            $post_id = (isset($_POST['post_id']) && !empty($_POST['post_id'])) ? absint($_POST['post_id']) : '';
+            $updated = (isset($_POST['updated']) && !empty($_POST['updated'])) ? sanitize_text_field($_POST['updated']) : '';
+
+            if ($post_id && $updated == 'trash' ) {
+				$post = get_post($post_id);
+		
+				if ( $post && $post->post_type === NXT_BUILD_POST ) {
+
+					if (current_user_can('delete_post', $post_id)) {
+					    $deleted = wp_delete_post($post_id, true);
+
+						if ($deleted) {
+							wp_send_json_success(['message' => 'Snippet deleted successfully']);
+						} else {
+							wp_send_json_error(['message' => 'Failed to delete Snippet']);
+						}
+					} else {
+						wp_send_json_error(['message' => 'You do not have permission to delete this snippet']);
+					}
+				} else {
+					wp_send_json_error(['message' => 'Invalid post or post type']);
+				}
+			}else if($updated == 'switcher'){
+                $checked = isset($_POST['checked']) ? sanitize_text_field($_POST['checked']) : null;
+                if (get_option('nxt_builder_switcher') === false) {
+                    add_option('nxt_builder_switcher', $checked);
+                } else {
+                    update_option('nxt_builder_switcher', $checked);
+                }
+                wp_send_json_success(['switcher' => $checked, 'message' => 'Snippet Switcher updated']);
+            } else {
+				wp_send_json_error(['message' => 'Invalid Snippet ID']);
+			}
+
         }
         
         /**
@@ -1418,7 +1609,7 @@ if ( ! class_exists( 'Nexter_Builder_Condition' ) ) {
             $specific = get_post_meta($post_id, $fields['specific'], true);
 
             $output ='<div class="nxt-set-day-wrap">';
-                $output .='<label>'.__( "Select Days", "nexter-extension" ).'</label>';
+                $output .='<label>'.__( "Select Days", 'nexter-extension' ).'</label>';
                 $output .='<select class="nxt-temp-select nxt-set-day" name="nxt-hooks-layout-'.esc_attr($exClass).'set-day[]" id="nxt-hooks-layout-'.esc_attr($exClass).'set-day" multiple="multiple">';
                     foreach ($days_list as $typ=> $label):
                         $selected = "";
@@ -1431,7 +1622,7 @@ if ( ! class_exists( 'Nexter_Builder_Condition' ) ) {
             $output .='</div>';
 
             $output .='<div class="nxt-layout-os-wrap">';
-                $output .='<label>'.__( "Select Operating System", "nexter-extension" ).'</label>';
+                $output .='<label>'.__( "Select Operating System", 'nexter-extension' ).'</label>';
                 $output .='<select class="nxt-temp-select nxt-layout-os" name="nxt-hooks-layout-'.esc_attr($exClass).'os[]" id="nxt-hooks-layout-'.esc_attr($exClass).'os" multiple="multiple">';
                     foreach ($os_list as $typ=> $label):
                         $selected = "";
@@ -1444,7 +1635,7 @@ if ( ! class_exists( 'Nexter_Builder_Condition' ) ) {
             $output .='</div>';
 
             $output .='<div class="nxt-layout-browser-wrap">';
-                $output .='<label>'.__( "Select Browser", "nexter-extension" ).'</label>';
+                $output .='<label>'.__( "Select Browser", 'nexter-extension' ).'</label>';
                 $output .='<select class="nxt-temp-select nxt-layout-browser" name="nxt-hooks-layout-'.esc_attr($exClass).'browser[]" id="nxt-hooks-layout-'.esc_attr($exClass).'browser" multiple="multiple">';
                    foreach ($browser_list as $typ=> $label):
                         $selected = "";
@@ -1457,7 +1648,7 @@ if ( ! class_exists( 'Nexter_Builder_Condition' ) ) {
             $output .='</div>';
 
             $output .='<div class="nxt-layout-login-status-wrap">';
-                $output .='<label>'.__( "Select Login Status", "nexter-extension" ).'</label>';
+                $output .='<label>'.__( "Select Login Status", 'nexter-extension' ).'</label>';
                 $output .='<select class="nxt-temp-select nxt-layout-login-status" name="nxt-hooks-layout-'.esc_attr($exClass).'login-status[]" id="nxt-hooks-layout-'.esc_attr($exClass).'login-status" multiple="multiple">';
                     foreach ($login_list as $typ=> $label):
                         $selected = "";
@@ -1470,7 +1661,7 @@ if ( ! class_exists( 'Nexter_Builder_Condition' ) ) {
             $output .='</div>';
 
             $output .='<div class="nxt-layout-login-user-roles-wrap">';
-                $output .='<label>'.__( "Select User Roles", "nexter-extension" ).'</label>';
+                $output .='<label>'.__( "Select User Roles", 'nexter-extension' ).'</label>';
                 $output .='<select class="nxt-temp-select nxt-layout-user-roles" name="nxt-hooks-layout-'.esc_attr($exClass).'user-roles[]" id="nxt-hooks-layout-'.esc_attr($exClass).'user-roles" multiple="multiple">';
                 foreach ($roles as $type => $label):
                     $selected = '';
@@ -1483,7 +1674,7 @@ if ( ! class_exists( 'Nexter_Builder_Condition' ) ) {
             $output .='</div>';
 
             $output .='<div class="nxt-layout-specific-post-wrap">';
-                $output .='<label>'.__( "Specific Pages/Posts", "nexter-extension" ).'</label>';
+                $output .='<label>'.__( "Specific Pages/Posts", 'nexter-extension' ).'</label>';
                 $output .='<select class="nxt-temp-select nxt-layout-user-roles" name="nxt-hooks-layout-'.esc_attr($exClass).'specific[]" id="nxt-hooks-layout-'.esc_attr($exClass).'specific" multiple="multiple">';
 
                 $specific_get = self::nexter_get_posts_query_specific_new('nxt-hooks-layout-'.esc_attr($exClass).'specific', $post_id);
@@ -1553,7 +1744,6 @@ if ( ! class_exists( 'Nexter_Builder_Condition' ) ) {
                 $NexterConfig['hiddennonce'] = wp_create_nonce("nxt-builder");
                 wp_localize_script( 'nexter-builder-condition', 'NexterConfig', $NexterConfig );
             }
-
         }
 
         public static function nexter_get_posts_query_specific_new( $specific_id, $post_id ){

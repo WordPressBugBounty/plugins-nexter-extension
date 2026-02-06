@@ -268,8 +268,8 @@ if ( !class_exists( 'Nexter_Pro_Ext_Activate' ) ) {
 					$text_msg = sprintf(
 						// Translators: %1$s is the POSIMYTH Store URL, %2$s is the Nexter Support URL.
 						__( 'Seems Like Your Licence Key for Nexter WP is Expired. Visit %1$s to Pay Invoices / Change Payment Methods / Manage Your Subscriptions. Please Don’t Hesitate to Reach Us at %2$s if You Have an Issue Regarding Our Products.', 'nexter-extension'),
-						esc_url('https://store.posimyth.com/'),
-						esc_url('https://store.posimyth.com/helpdesk')
+						esc_url('https://store.posimyth.com//?utm_source=wpbackend&utm_medium=admin&utm_campaign=dashboardspage'),
+						esc_url('https://store.posimyth.com/helpdesk/?utm_source=wpbackend&utm_medium=admin&utm_campaign=dashboardspage')
 					);
 					$message .= '<p>' . $text_msg . '</p>';
 					break;
@@ -284,8 +284,8 @@ if ( !class_exists( 'Nexter_Pro_Ext_Activate' ) ) {
 					$text_msg = sprintf(
 						/* translators: %1$s: POSIMYTH Store URL, %2$s: Nexter Support URL */
 						__( 'Your Licence Key for Nexter WP is Revoked for Some Reason. Visit %1$s to Update Your Licence Key / Manage Payments / Pay Invoices. Reach Out to Us at %2$s for Queries Regarding Our Products.', 'nexter-extension'),
-						esc_url('https://store.posimyth.com/'),
-						esc_url('https://store.posimyth.com/helpdesk')
+						esc_url('https://store.posimyth.com/?utm_source=wpbackend&utm_medium=admin&utm_campaign=dashboardspage'),
+						esc_url('https://store.posimyth.com/helpdesk/?utm_source=wpbackend&utm_medium=admin&utm_campaign=dashboardspage')
 					);
 					$message .= '<p>' . $text_msg . '</p>';
 					break;

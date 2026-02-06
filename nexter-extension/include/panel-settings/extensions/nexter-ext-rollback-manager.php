@@ -183,18 +183,29 @@ defined('ABSPATH') or die();
     }
 
     public function rb_check_wp_theme() {
-        $slug     = isset($_POST['theme']) ? sanitize_text_field( $_POST['theme'] ) : '';
-        $request  = add_query_arg( 'request[slug]', $slug, self::NXT_RB_THEME_INFO );
-        $response = wp_remote_get( $request );
+        // Security: Add nonce verification and capability check
+        check_ajax_referer( 'nxt_ext_rollback_nonce', 'nonce' );
+        
+        if ( ! current_user_can( 'update_themes' ) ) {
+            wp_send_json_error( __( 'Insufficient permissions.', 'nexter-extension' ) );
+        }
+        
+        $slug     = isset($_POST['theme']) ? sanitize_key( wp_unslash( $_POST['theme'] ) ) : '';
+        
+        if ( empty( $slug ) ) {
+            wp_send_json_error( __( 'Invalid theme slug.', 'nexter-extension' ) );
+        }
+        
+        $request  = add_query_arg( 'request[slug]', urlencode( $slug ), self::NXT_RB_THEME_INFO );
+        $response = wp_remote_get( $request, array( 'timeout' => 15 ) );
     
         if ( is_wp_error( $response ) ) {
-            echo 'error';
+            wp_send_json_error( __( 'Failed to check theme.', 'nexter-extension' ) );
         } else {
-            $body = $response['body'] ?? '';
-            echo ( ! empty( $body ) && $body !== 'false' ) ? 'wp' : 'non-wp';
+            $body = wp_remote_retrieve_body( $response );
+            $is_wp_theme = ( ! empty( $body ) && $body !== 'false' );
+            wp_send_json_success( array( 'is_wp_theme' => $is_wp_theme ) );
         }
-    
-        wp_die(); // Properly ends AJAX execution
     }
 
     /**
@@ -202,18 +213,22 @@ defined('ABSPATH') or die();
      */
     public static function rb_svn_tags( $type, $slug ) {
 
-        if ( empty( $_GET['page'] ) || $_GET['page'] !== 'nxt-rollback' || empty( $_GET['type'] ) ) {
+        // Security: Sanitize input
+        $get_page = isset( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : '';
+        $get_type = isset( $_GET['type'] ) ? sanitize_text_field( wp_unslash( $_GET['type'] ) ) : '';
+        
+        if ( empty( $get_page ) || $get_page !== 'nxt-rollback' || empty( $get_type ) ) {
             return null;
         }
 
         $response = null;
 
         // Build request URL based on the type.
-        if ( $type === 'plugin' && $_GET['type'] === 'plugin' ) {
+        if ( $type === 'plugin' && $get_type === 'plugin' ) {
             $plugin_slug = self::set_plugin_slug();
             $url = self::NXT_RB_PLUGIN_API . '/info/1.0/' . $plugin_slug . '.json';
             $response = wp_remote_get( $url );
-        } elseif ( $type === 'theme' && $_GET['type'] === 'theme' ) {
+        } elseif ( $type === 'theme' && $get_type === 'theme' ) {
             $url = self::NXT_RB_THEME_API . '/' . $slug;
             $response = wp_remote_get( $url );
         }
@@ -321,24 +336,40 @@ defined('ABSPATH') or die();
             return false;
         }
 
+        // Security: Verify nonce for rollback operations
+        if ( ! isset( $_GET['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ), 'nxt_ext_rollback_nonce' ) ) {
+            wp_die( esc_html__( 'Security check failed.', 'nexter-extension' ) );
+        }
+
         // Handle optional current_version.
         if ( ! empty( $_GET['current_version'] ) ) {
             $version_parts    = explode( ' ', sanitize_text_field( wp_unslash($_GET['current_version']) ) );
-            $current_version  = $version_parts[0];
+            $current_version  = sanitize_text_field( $version_parts[0] );
             do_action( 'nxt_current_version', $current_version );
         }
 
         include_once ABSPATH . 'wp-admin/includes/plugin.php';
 
-        $plugin_file_path = WP_PLUGIN_DIR . '/' . sanitize_text_field( $_GET['plugin_file'] );
+        // Security: Validate plugin file path to prevent directory traversal
+        $plugin_file = sanitize_text_field( wp_unslash( $_GET['plugin_file'] ) );
+        $plugin_file = str_replace( '..', '', $plugin_file ); // Remove directory traversal attempts
+        $plugin_file_path = WP_PLUGIN_DIR . '/' . $plugin_file;
 
         if ( ! file_exists( $plugin_file_path ) ) {
             wp_die( esc_html__( 'The referenced plugin does not exist.', 'nexter-extension' ) );
         }
 
+        // Security: Verify the file is actually within the plugins directory
+        $real_plugin_path = realpath( $plugin_file_path );
+        $real_plugin_dir = realpath( WP_PLUGIN_DIR );
+        
+        if ( strpos( $real_plugin_path, $real_plugin_dir ) !== 0 ) {
+            wp_die( esc_html__( 'Invalid plugin path.', 'nexter-extension' ) );
+        }
+
         $plugin_basename = plugin_basename( $plugin_file_path );
         $parts           = explode( '/', $plugin_basename );
-        $plugin_slug     = $parts[0];
+        $plugin_slug     = sanitize_key( $parts[0] );
 
         $plugin_file_path = apply_filters( 'nxt_plugin_file', $plugin_file_path );
         $plugin_slug      = apply_filters( 'nxt_plugin_slug', $plugin_slug );
@@ -351,14 +382,21 @@ defined('ABSPATH') or die();
      * Adds a 'hidden' menu item that is activated when the user selects WP Extended Rollback.
      */
     public function nxt_rollback_admin_menu() {
-        if ( isset( $_GET['page'] ) && $_GET['page'] === 'nxt-rollback' ) {
+        // Security: Sanitize input
+        $get_page = isset( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : '';
+        if ( $get_page === 'nxt-rollback' ) {
             $current_url = '#';  // Default URL.
 
             // Determine the current URL based on the 'type' and other parameters.
-            if ( isset( $_GET['type'] ) ) {
-                if ( $_GET['type'] === 'plugin' && isset( $_GET['plugin_file'] ) ) {
+            // Security: Sanitize input
+            $get_type = isset( $_GET['type'] ) ? sanitize_text_field( wp_unslash( $_GET['type'] ) ) : '';
+            $get_plugin_file = isset( $_GET['plugin_file'] ) ? sanitize_text_field( wp_unslash( $_GET['plugin_file'] ) ) : '';
+            $get_theme_file = isset( $_GET['theme_file'] ) ? sanitize_text_field( wp_unslash( $_GET['theme_file'] ) ) : '';
+            
+            if ( ! empty( $get_type ) ) {
+                if ( $get_type === 'plugin' && ! empty( $get_plugin_file ) ) {
                     $current_url = esc_url( home_url( '/wp-admin/plugins.php' ) );
-                } elseif ( $_GET['type'] === 'theme' && isset( $_GET['theme_file'] ) ) {
+                } elseif ( $get_type === 'theme' && ! empty( $get_theme_file ) ) {
                     $current_url = esc_url( home_url( '/wp-admin/themes.php' ) );
                 }
             }
@@ -385,15 +423,20 @@ defined('ABSPATH') or die();
      * Html layout for plugin/theme version
      */
     public function render_html() {
-        // Permissions check
-        if ( ! current_user_can( 'update_plugins' ) ) {
+        // Security: Permissions check
+        if ( ! current_user_can( 'update_plugins' ) && ! current_user_can( 'update_themes' ) ) {
             wp_die( esc_html__( 'You do not have sufficient permissions to perform rollbacks for this site.', 'nexter-extension' ) );
+        }
+
+        // Security: Verify nonce for all rollback operations
+        if ( ! isset( $_GET['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ), 'nxt_ext_rollback_nonce' ) ) {
+            wp_die( esc_html__( 'Security check failed.', 'nexter-extension' ) );
         }
 
         // Include necessary class for plugin upgrader
         include_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
 
-        // Default arguments for the rollback
+        // Security: Default arguments for the rollback with sanitization
         $defaults = apply_filters(
             'nxt_ext_rollback_html_args', array(
                 'page'           => 'nxt-rollback',
@@ -404,21 +447,34 @@ defined('ABSPATH') or die();
             )
         );
 
-        $args = wp_parse_args( $_GET, $defaults );
+        // Security: Sanitize all GET parameters
+        // Security: Only use specific GET parameters, don't pass entire $_GET array
+        $get_params = array();
+        $allowed_params = array( 'page', 'plugin_file', 'theme_file', 'type', 'action', 'plugin_version', 'theme_version', 'rollback_name', 'current_version' );
+        foreach ( $allowed_params as $param ) {
+            if ( isset( $_GET[ $param ] ) ) {
+                $get_params[ $param ] = sanitize_text_field( wp_unslash( $_GET[ $param ] ) );
+            }
+        }
+        
+        $args = wp_parse_args( $get_params, $defaults );
 
-        // Check for rollback based on plugin version
+        // Security: Validate version format
         if ( ! empty( $args['plugin_version'] ) ) {
-            // Security check for nonce
-            check_admin_referer( 'nxt_ext_rollback_nonce' );
+            // Security: Validate version format (semantic versioning)
+            if ( ! preg_match( '/^[0-9]+\.[0-9]+(\.[0-9]+)?(-[a-zA-Z0-9-]+)?$/', $args['plugin_version'] ) ) {
+                wp_die( esc_html__( 'Invalid version format.', 'nexter-extension' ) );
+            }
             
             // Include plugin rollback logic
             require_once NEXTER_EXT_DIR . '/include/panel-settings/extensions/custom-fields/nxt-rb-plugin-upgrader.php';
             require_once NEXTER_EXT_DIR . '/include/panel-settings/extensions/custom-fields/nxt-rb-action.php';
 
         } elseif ( ! empty( $args['theme_version'] ) ) {
-           
-            // Security check for nonce
-            check_admin_referer( 'nxt_ext_rollback_nonce' );
+            // Security: Validate version format
+            if ( ! preg_match( '/^[0-9]+\.[0-9]+(\.[0-9]+)?(-[a-zA-Z0-9-]+)?$/', $args['theme_version'] ) ) {
+                wp_die( esc_html__( 'Invalid version format.', 'nexter-extension' ) );
+            }
             
             // Include theme rollback logic
             require_once NEXTER_EXT_DIR . '/include/panel-settings/extensions/custom-fields/nxt-rb-theme-upgrader.php';

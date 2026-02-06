@@ -7,6 +7,7 @@ defined('ABSPATH') or die();
 
 class Nexter_Ext_Performance_Security_Settings {
     
+	protected static $disable_comments_opts = [];
     /**
      * Constructor
      */
@@ -18,24 +19,31 @@ class Nexter_Ext_Performance_Security_Settings {
 		// Nexter Security
 		$nxt_security_option = get_option( 'nexter_site_security' );
 
+		$adv_sec_opt = $nxt_security_option;
+		if(isset($adv_sec_opt['advance-security']) && !empty($adv_sec_opt['advance-security']) && isset($adv_sec_opt['advance-security']['switch']) && !empty($adv_sec_opt['advance-security']['switch'])){
+			if(isset($adv_sec_opt['advance-security']['values']) && !empty($adv_sec_opt['advance-security']['values'])){
+				$adv_sec_opt = $adv_sec_opt['advance-security']['values'];
+			}
+		}
+
 		add_action('init',[$this,'add_security_header']);
 
-		if(isset($nxt_security_option) && !empty($nxt_security_option) && isset($nxt_security_option['iframe_security'])){
+		if(isset($adv_sec_opt) && !empty($adv_sec_opt) && isset($adv_sec_opt['iframe_security'])){
 			add_action('send_headers',[$this,'add_x_frame_options_header']);
 		}
 
-		if(isset($nxt_security_option) && !empty($nxt_security_option) && in_array("remove_meta_generator",$nxt_security_option)){
+		if(isset($adv_sec_opt) && !empty($adv_sec_opt) && in_array("remove_meta_generator",$adv_sec_opt)){
 			add_action('init',[$this,'remove_meta_generator']);
 		}
 
 		//XSS Protection
-		if(isset($nxt_security_option) && !empty($nxt_security_option) && in_array('xss_protection',$nxt_security_option)){
+		if(isset($adv_sec_opt) && !empty($adv_sec_opt) && in_array('xss_protection',$adv_sec_opt)){
 			add_action( 'send_headers', function() {
 				header("X-XSS-Protection: 1; mode=block");
 			}, 99 );
 		}
 
-		if(isset($nxt_security_option) && !empty($nxt_security_option) && in_array('user_register_date_time',$nxt_security_option)){
+		if(isset($adv_sec_opt) && !empty($adv_sec_opt) && in_array('user_register_date_time',$adv_sec_opt)){
 			add_filter( 'manage_users_columns', function( $columns ){
 				$columns['nxt_registered_date'] = __( 'Registered', 'nexter-extension' );
 				return $columns;
@@ -55,7 +63,7 @@ class Nexter_Ext_Performance_Security_Settings {
 			}, 10, 3);
 		}
 
-		if(isset($nxt_security_option) && !empty($nxt_security_option) && in_array('user_last_login_display',$nxt_security_option)){
+		if(isset($adv_sec_opt) && !empty($adv_sec_opt) && in_array('user_last_login_display',$adv_sec_opt)){
 			//Update Last Login
 			add_action( 'wp_login', function ( $user_login ){
 				$user = get_user_by( 'login', $user_login );
@@ -85,8 +93,14 @@ class Nexter_Ext_Performance_Security_Settings {
 		}
 		
 		if( !empty($extension_option) ){
+			$adv_perfor_options = [];
+			if(isset($extension_option['advance-performance']) && !empty($extension_option['advance-performance']) && isset($extension_option['advance-performance']['switch']) && !empty($extension_option['advance-performance']['switch'])){
+				if(isset($extension_option['advance-performance']['values']) && !empty($extension_option['advance-performance']['values'])){
+					$adv_perfor_options = $extension_option['advance-performance']['values'];
+				}
+			}
 			/*Disable Emojis Scripts*/
-			if( in_array("disable_emoji_scripts",$extension_option) ){
+			if( in_array("disable_emoji_scripts",$extension_option) || (!empty($adv_perfor_options) && in_array("disable_emoji_scripts",$adv_perfor_options)) ){
 				remove_action( 'wp_head', 'print_emoji_detection_script', 7 );
 				remove_action( 'admin_print_scripts', 'print_emoji_detection_script' );
 				remove_action( 'wp_print_styles', 'wp_enqueue_emoji_styles' );
@@ -116,18 +130,17 @@ class Nexter_Ext_Performance_Security_Settings {
 			}
 			
 			/*Disable Embeds*/
-			if( in_array("disable_embeds",$extension_option) ){
+			if( in_array("disable_embeds",$extension_option) || (!empty($adv_perfor_options) && in_array("disable_embeds",$adv_perfor_options)) ){
 				add_action('init',  [ $this, 'nxt_disable_embeds' ], 9999);
 			}
 			
 			/*Disable Embeds*/
-			if( in_array("media_infinite_scroll",$extension_option) ){
-				
+			if( in_array("media_infinite_scroll",$extension_option) || (!empty($adv_perfor_options) && in_array("media_infinite_scroll",$adv_perfor_options)) ){
 				add_filter( 'media_library_infinite_scrolling', '__return_true' );
 			}
 
 			/*Disable DashIcons*/
-			if( in_array("disable_dashicons",$extension_option)  ){
+			if( in_array("disable_dashicons",$extension_option) || (!empty($adv_perfor_options) && in_array("disable_dashicons",$adv_perfor_options)) ){
 				add_action('wp_enqueue_scripts', function() { 
 					if(!is_user_logged_in()) {
 						wp_dequeue_style('dashicons');
@@ -137,38 +150,38 @@ class Nexter_Ext_Performance_Security_Settings {
 			}
 
 			/*Remove RSD Link*/
-			if( in_array("disable_rsd_link",$extension_option)  ){
+			if( in_array("disable_rsd_link",$extension_option) || (!empty($adv_perfor_options) && in_array("disable_rsd_link",$adv_perfor_options)) ){
 				remove_action('wp_head', 'rsd_link');
 			}
 
 			/*Remove wlwmanifest Link*/
-			if( in_array("disable_wlwmanifest_link",$extension_option) ){
+			if( in_array("disable_wlwmanifest_link",$extension_option) || (!empty($adv_perfor_options) && in_array("disable_wlwmanifest_link",$adv_perfor_options)) ){
 				remove_action('wp_head', 'wlwmanifest_link');
 			}
 			/*Remove Shortlink Link*/
-			if( in_array("disable_shortlink",$extension_option) ){
+			if( in_array("disable_shortlink",$extension_option) || (!empty($adv_perfor_options) && in_array("disable_shortlink",$adv_perfor_options)) ){
 				remove_action('wp_head', 'wp_shortlink_wp_head');
 				remove_action ('template_redirect', 'wp_shortlink_header', 11, 0);
 			}
 
 			/*Remove RSS Feeds*/
-			if( in_array("disable_rss_feeds",$extension_option) ){
+			if( in_array("disable_rss_feeds",$extension_option) || (!empty($adv_perfor_options) && in_array("disable_rss_feeds",$adv_perfor_options)) ){
 				add_action('template_redirect', [ $this , 'nxt_disable_rss_feeds'], 1);
 			}
 
 			/*Remove RSS Feed Links*/
-			if( in_array("disable_rss_feed_link",$extension_option) ){
+			if( in_array("disable_rss_feed_link",$extension_option) || (!empty($adv_perfor_options) && in_array("disable_rss_feed_link",$adv_perfor_options)) ){
 				remove_action('wp_head', 'feed_links_extra', 3);
 				remove_action('wp_head', 'feed_links', 2);
 			}
 			
 			/*Disable Self Pingbacks*/
-			if( in_array("disable_self_pingbacks",$extension_option) ){
+			if( in_array("disable_self_pingbacks",$extension_option) || (!empty($adv_perfor_options) && in_array("disable_self_pingbacks",$adv_perfor_options)) ){
 				add_action('pre_ping', [ $this , 'nxt_disable_self_pingbacks']);
 			}
 
 			/* Disable Password Strength Meter */
-			if( in_array("disable_pw_strength_meter",$extension_option) ){
+			if( in_array("disable_pw_strength_meter",$extension_option) || (!empty($adv_perfor_options) && in_array("disable_pw_strength_meter",$adv_perfor_options)) ){
 	
 				add_action('wp_print_scripts', function(){
 					//admin
@@ -177,7 +190,10 @@ class Nexter_Ext_Performance_Security_Settings {
 					}
 					
 					//wp-login.php
-					if( ( isset($GLOBALS['pagenow']) && $GLOBALS['pagenow'] === 'wp-login.php' ) || ( isset($_GET['action']) && in_array($_GET['action'], array('register','rp', 'lostpassword' )) ) ) {
+					// Security: Sanitize input
+					$get_action = isset( $_GET['action'] ) ? sanitize_text_field( wp_unslash( $_GET['action'] ) ) : '';
+					$allowed_actions = array( 'register', 'rp', 'lostpassword' );
+					if( ( isset($GLOBALS['pagenow']) && $GLOBALS['pagenow'] === 'wp-login.php' ) || ( ! empty( $get_action ) && in_array( $get_action, $allowed_actions, true ) ) ) {
 						return;
 					}
 			
@@ -199,17 +215,19 @@ class Nexter_Ext_Performance_Security_Settings {
 			}
 
 			/* Defer CSS/JS */
-			if( !is_admin() && in_array("defer_css_js",$extension_option) ){
+			if( !is_admin() && (in_array("defer_css_js",$extension_option) || (!empty($adv_perfor_options) && in_array("defer_css_js",$adv_perfor_options))) ){
 				add_filter( 'style_loader_tag', [$this, 'nxt_onload_style_css'], 10, 4 );
 				add_filter( 'script_loader_tag', [$this,'nxt_onload_defer_js'], 10, 2 );
 			}
-			if( isset($extension_option['disable_comments']) && !empty($extension_option['disable_comments']) && ($extension_option['disable_comments'] === 'custom' || $extension_option['disable_comments'] === 'all')){
+
+			$disable_comments = $this->nxt_comments_enabled();
+			
+			if( !empty($disable_comments) && ($disable_comments['disable_comments'] === 'custom' || $disable_comments['disable_comments'] === 'all')){
 				add_action('wp_loaded', [ $this , 'nxt_wp_loaded_comments']);
 			}
 			
-
 			/*Disable Comments Entire Site*/
-			if( isset($extension_option['disable_comments']) && !empty($extension_option['disable_comments']) && $extension_option['disable_comments'] === 'all' ) {
+			if( !empty($disable_comments) && $disable_comments['disable_comments'] === 'all' ) {
 
 				//Disable Built-in Recent Comments Widget
 				add_action('widgets_init', function(){
@@ -217,7 +235,7 @@ class Nexter_Ext_Performance_Security_Settings {
 					add_filter('show_recent_comments_widget_style', '__return_false');
 				});
 				
-				if( in_array("disable_rss_feed_link",$extension_option) ){
+				if( in_array("disable_rss_feed_link",$extension_option) || (!empty($adv_perfor_options) && in_array("disable_rss_feed_link",$adv_perfor_options)) ){
 					// feed_links_extra inserts a comments RSS link.
 					remove_action('wp_head', 'feed_links_extra', 3);
 				}
@@ -256,7 +274,7 @@ class Nexter_Ext_Performance_Security_Settings {
 		if( isset($nxt_security_option) && !empty($nxt_security_option)){
 
 			// Disable XML-RPC
-			if( in_array( 'disable_xml_rpc' , $nxt_security_option ) ){
+			if( in_array( 'disable_xml_rpc' , $adv_sec_opt ) ){
 				add_filter('xmlrpc_enabled', '__return_false');
 				add_filter('wp_headers', [ $this , 'nxt_remove_x_pingback'] );
 				add_filter('pings_open', '__return_false', 9999);
@@ -266,7 +284,7 @@ class Nexter_Ext_Performance_Security_Settings {
 			}
 
 			// Disable WP Version
-			if( in_array( 'disable_wp_version' , $nxt_security_option ) ){
+			if( in_array( 'disable_wp_version' , $adv_sec_opt ) ){
 				remove_action('wp_head', 'wp_generator');
 				add_filter('the_generator', function(){
 					return '';
@@ -275,19 +293,24 @@ class Nexter_Ext_Performance_Security_Settings {
 				add_filter('script_loader_src', [ $this ,'remove_wp_version_from_src'], 9999);
 			}
 
-			if( in_array( 'disable_rest_api_links' , $nxt_security_option ) ){
+			if( in_array( 'disable_rest_api_links' , $adv_sec_opt ) ){
 				remove_action('wp_head', 'rest_output_link_wp_head');
 				remove_action('xmlrpc_rsd_apis', 'rest_output_rsd');
 				remove_action('template_redirect', 'rest_output_link_header', 11, 0);
 			}
 
-			if( isset($nxt_security_option['disable_rest_api']) && !empty($nxt_security_option['disable_rest_api']) ){
+			if( isset($adv_sec_opt['disable_rest_api']) && !empty($adv_sec_opt['disable_rest_api']) ){
 				
 				add_filter( 'rest_authentication_errors', function( $result ) {
 					if(!empty($result)) {
 						return $result;
 					}else{
 						$nxt_site_security =  get_option( 'nexter_site_security' );
+						if(isset($nxt_site_security['advance-security']) && !empty($nxt_site_security['advance-security']) && isset($nxt_site_security['advance-security']['switch']) && !empty($nxt_site_security['advance-security']['switch'])){
+							if(isset($nxt_site_security['advance-security']['values']) && !empty($nxt_site_security['advance-security']['values'])){
+								$nxt_site_security = $nxt_site_security['advance-security']['values'];
+							}
+						}
 						$check_disabled = false;
 			
 						//get rest route
@@ -409,7 +432,11 @@ class Nexter_Ext_Performance_Security_Settings {
 
 	public function add_security_header(){
 		$advanced_security_options = get_option( 'nexter_site_security' ,array());
-		
+		if(isset($advanced_security_options['advance-security']) && !empty($advanced_security_options['advance-security']) && isset($advanced_security_options['advance-security']['switch']) && !empty($advanced_security_options['advance-security']['switch'])){
+			if(isset($advanced_security_options['advance-security']['values']) && !empty($advanced_security_options['advance-security']['values'])){
+				$advanced_security_options = $advanced_security_options['advance-security']['values'];
+			}
+		}
 		if( in_array('disable_file_editor',$advanced_security_options) && !defined('DISALLOW_FILE_EDIT')){
 			define( 'DISALLOW_FILE_EDIT', true );
 		}
@@ -424,14 +451,22 @@ class Nexter_Ext_Performance_Security_Settings {
 	}
 
 	public function remove_meta_generator(){
-		//if(ini_set('output_buffering', 'on')){
+		// Security: Use proper output buffering with error handling
+		if ( ! headers_sent() ) {
 			add_action('get_header', [$this,'clean_generated_header'], 50);
-			add_action('wp_footer', function(){ ob_end_flush(); }, 100);
-		//}
+			add_action('wp_footer', function(){ 
+				if ( ob_get_level() > 0 ) {
+					ob_end_flush(); 
+				}
+			}, 100);
+		}
 	}
 
 	public function clean_generated_header($generated_html){
-		ob_start('remove_meta_tags');
+		// Security: Only start output buffering if not already started
+		if ( ob_get_level() === 0 ) {
+			ob_start('remove_meta_tags');
+		}
 	}
 
 	/* Function For Defer JS */
@@ -492,9 +527,13 @@ class Nexter_Ext_Performance_Security_Settings {
 		global $wp_rewrite;
 		global $wp_query;
 
+		// Security: Sanitize GET parameter
 		//check for GET feed variable
-		if(isset($_GET['feed'])) {
-			wp_redirect(esc_url_raw(remove_query_arg('feed')), 301);
+		// Security: Sanitize input
+		$get_feed = isset( $_GET['feed'] ) ? sanitize_text_field( wp_unslash( $_GET['feed'] ) ) : '';
+		if( ! empty( $get_feed ) ) {
+			$redirect_url = remove_query_arg('feed');
+			wp_safe_redirect(esc_url_raw($redirect_url), 301);
 			exit;
 		}
 
@@ -580,6 +619,43 @@ class Nexter_Ext_Performance_Security_Settings {
 		return $endpoints;
 	}
 
+	public function nxt_comments_enabled(){
+
+		if(!empty(self::$disable_comments_opts)){
+			return self::$disable_comments_opts;
+		}
+
+		$extension_option = get_option( 'nexter_site_performance' );
+
+		$data = [
+			'disable_comments' => '',
+			'disble_custom_post_comments' => []
+		];
+		
+		if(!empty($extension_option) ){
+			if(isset($extension_option['disble_custom_post_comments']) && !empty($extension_option['disble_custom_post_comments'])){
+				$data['disble_custom_post_comments'] = $extension_option['disble_custom_post_comments'];
+			}
+			if(isset($extension_option['disable_comments']) && !empty($extension_option['disable_comments'])){
+				$data['disable_comments'] = $extension_option['disable_comments'];
+			}else if(isset($extension_option['disable-comments']) && !empty($extension_option['disable-comments']) && isset($extension_option['disable-comments']['switch']) && !empty($extension_option['disable-comments']['switch'])){
+				if(isset($extension_option['disable-comments']['values']) && !empty($extension_option['disable-comments']['values'])){
+					$disable_values = $extension_option['disable-comments']['values'];
+					if(isset($disable_values['disable_comments']) && !empty($disable_values['disable_comments'])){
+						$data['disable_comments'] = $disable_values['disable_comments'];
+					}
+					if(isset($disable_values['disble_custom_post_comments']) && !empty($disable_values['disble_custom_post_comments'])){
+						$data['disble_custom_post_comments'] = $disable_values['disble_custom_post_comments'];
+					}
+				}
+			}
+		}
+		
+		self::$disable_comments_opts = $data;
+
+		return self::$disable_comments_opts;
+	}
+
 	/**
 	 * Disable Comments In Post Type
 	 * @since 1.1.0
@@ -588,9 +664,12 @@ class Nexter_Ext_Performance_Security_Settings {
 		$extension_option = get_option( 'nexter_site_performance' );
 		//All Post Types Remove Support Comments
 		$all_post_types = [];
-		if(!empty($extension_option['disable_comments']) && $extension_option['disable_comments'] === 'all'){
+
+		$disable_comments = $this->nxt_comments_enabled();
+		
+		if($disable_comments['disable_comments'] === 'all'){
 			$all_post_types = get_post_types( array('public' => true), 'names' );
-		}else if(!empty($extension_option['disable_comments']) && $extension_option['disable_comments'] === 'custom'){
+		}else if($disable_comments['disable_comments'] === 'custom'){
 			$all_post_types = $this->nxt_get_disabled_post_types();
 		}
 		if(!empty($all_post_types)) {
@@ -603,23 +682,23 @@ class Nexter_Ext_Performance_Security_Settings {
 		}
 	
 		add_filter('comments_array', function($comments, $post_id) { 
-			$extension_option = get_option( 'nexter_site_performance' );
+			$disable_comments = $this->nxt_comments_enabled();
 			$post_type = get_post_type($post_id);
-			return (!empty($extension_option) && ($extension_option['disable_comments'] === 'all' || $this->nxt_comment_post_type_disabled($post_type)) ? array() : $comments);
+			return (!empty($disable_comments) && ($disable_comments['disable_comments'] === 'all' || $this->nxt_comment_post_type_disabled($post_type)) ? array() : $comments);
 		}, 20, 2);
 		add_filter('comments_open', function($open, $post_id) {
-			$extension_option = get_option( 'nexter_site_performance' );
+			$disable_comments = $this->nxt_comments_enabled();
 			$post_type = get_post_type($post_id);
-			return ( !empty($extension_option) && ($extension_option['disable_comments'] === 'all' || $this->nxt_comment_post_type_disabled($post_type)) ? false : $open); 
+			return ( !empty($disable_comments) && ($disable_comments['disable_comments'] === 'all' || $this->nxt_comment_post_type_disabled($post_type)) ? false : $open); 
 		}, 20, 2);
 		add_filter('pings_open', function($count, $post_id) {
-			$extension_option = get_option( 'nexter_site_performance' );
+			$disable_comments = $this->nxt_comments_enabled();
 			$post_type = get_post_type($post_id);
-			return (!empty($extension_option) && ($extension_option['disable_comments'] === 'all' || $this->nxt_comment_post_type_disabled($post_type)) ? 0 : $count);
+			return (!empty($disable_comments) && ($disable_comments['disable_comments'] === 'all' || $this->nxt_comment_post_type_disabled($post_type)) ? 0 : $count);
 		}, 20, 2);
 	
 		if(is_admin()) {
-			if(!empty($extension_option['disable_comments']) && $extension_option['disable_comments'] === 'all'){
+			if($disable_comments['disable_comments'] === 'all'){
 			
 				//Remove Menu Links And Disable Admin Pages 
 				add_action('admin_menu', [ $this, 'nxt_admin_menu_comments'], 9999);
@@ -651,7 +730,7 @@ class Nexter_Ext_Performance_Security_Settings {
 			
 			add_action('template_redirect', [ $this ,'nxt_comment_template'] );
 			
-			if(!empty($extension_option['disable_comments']) && $extension_option['disable_comments'] === 'all'){
+			if($disable_comments['disable_comments'] === 'all'){
 				//Disable the Comments Feed Link
 				add_filter('feed_links_show_comments_feed', '__return_false');
 			}
@@ -664,11 +743,11 @@ class Nexter_Ext_Performance_Security_Settings {
 	 */
 
 	public function nxt_get_disabled_post_types(){
-		$extension_option = get_option( 'nexter_site_performance' );
+		$data = $this->nxt_comments_enabled();
 		$post_types = [];
-		if(!empty($extension_option['disable_comments']) && $extension_option['disable_comments'] === 'custom'){
-			if(isset($extension_option['disble_custom_post_comments']) && !empty($extension_option['disble_custom_post_comments'])){
-				$post_types = $extension_option['disble_custom_post_comments'];
+		if(!empty($data['disable_comments']) && $data['disable_comments'] === 'custom'){
+			if(isset($data['disble_custom_post_comments']) && !empty($data['disble_custom_post_comments'])){
+				$post_types = $data['disble_custom_post_comments'];
 			}
 		}
 		return $post_types;
@@ -722,18 +801,21 @@ class Nexter_Ext_Performance_Security_Settings {
 	}
 
 	public function nxt_xmlrpc_header() {
-		if(!isset($_SERVER['SCRIPT_FILENAME'])) {
+		// Security: Sanitize server variable
+		$script_filename = isset( $_SERVER['SCRIPT_FILENAME'] ) ? sanitize_text_field( wp_unslash( $_SERVER['SCRIPT_FILENAME'] ) ) : '';
+		
+		if( empty( $script_filename ) ) {
 			return;
 		}
 		
-		if('xmlrpc.php' !== basename($_SERVER['SCRIPT_FILENAME'])) {
+		if('xmlrpc.php' !== basename($script_filename)) {
 			return;
 		}
 	
-		$header = 'HTTP/1.1 Error 403 Forbidden';
-		header($header);
-		echo $header;
-		die();
+		// Security: Use proper HTTP status code
+		status_header( 403 );
+		nocache_headers();
+		wp_die( esc_html__( 'XML-RPC is disabled.', 'nexter-extension' ), esc_html__( 'Forbidden', 'nexter-extension' ), array( 'response' => 403 ) );
 	}
 
 	public function nxt_empty_comments_template($headers){
@@ -741,8 +823,8 @@ class Nexter_Ext_Performance_Security_Settings {
 	}
 
 	public function nxt_comment_template(){
-		$extension_option = get_option( 'nexter_site_performance' );
-		if (is_singular() && (!empty($extension_option['disable_comments']) && ( $extension_option['disable_comments'] === 'all' || ($extension_option['disable_comments'] === 'custom' && $this->nxt_comment_post_type_disabled(get_post_type())) ) )) {
+		$data = $this->nxt_comments_enabled();
+		if (is_singular() && (!empty($data['disable_comments']) && ( $data['disable_comments'] === 'all' || ($data['disable_comments'] === 'custom' && $this->nxt_comment_post_type_disabled(get_post_type())) ) )) {
 			if (!defined('DISABLE_COMMENTS_REMOVE_COMMENTS_TEMPLATE') || DISABLE_COMMENTS_REMOVE_COMMENTS_TEMPLATE == true) {
 				//Replace Comments Template
 				add_filter('comments_template', [ $this ,'nxt_empty_comments_template'], 20);
@@ -760,7 +842,8 @@ new Nexter_Ext_Performance_Security_Settings();
 
 
 function remove_meta_tags($generated_html){
-	$regex = '/<meta name(.*)=(.*)"generator"(.*)>/i';
+	// Security: More specific regex to prevent false positives
+	$regex = '/<meta\s+name\s*=\s*["\']generator["\']\s+content\s*=\s*["\'][^"\']*["\']\s*\/?>/i';
 	$generated_html = preg_replace($regex, '', $generated_html);
 	return $generated_html;
 }
