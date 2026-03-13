@@ -5,6 +5,8 @@
  * @package Nexter Extensions
  * @since 1.0.0
  */
+defined( 'ABSPATH' ) || exit;
+
 class Nexter_Builder_Import_Export {
 	
 	/**

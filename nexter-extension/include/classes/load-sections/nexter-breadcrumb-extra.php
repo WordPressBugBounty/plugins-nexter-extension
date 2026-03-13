@@ -5,6 +5,8 @@
  * @package Nexter Extensions
  * @since 1.0.0
  */
+defined( 'ABSPATH' ) || exit;
+
 if( ! function_exists( 'nexter_breadcrumb_sections' ) ) {
 
 	function nexter_breadcrumb_sections( $sections ) {

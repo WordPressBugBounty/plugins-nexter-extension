@@ -5,6 +5,8 @@
  * @package Nexter Extensions
  * @since 1.0.0
  */
+defined( 'ABSPATH' ) || exit;
+
 if( ! function_exists('get_nexter_header_sections') ){
 	
 	function get_nexter_header_sections( $sections ){

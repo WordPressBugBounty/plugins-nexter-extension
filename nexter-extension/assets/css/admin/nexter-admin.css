@@ -364,9 +364,10 @@ li.wp-not-current-submenu:hover .wp-menu-image.dashicons-nxt-builder-groups{
 }
 .nxt-nobtn-primary,.nxt-nobtn-primary:hover, .nxt-nobtn-primary:focus {
 	background-color: #1717CC;
-	color: #fff;
+	color: #fff !important;
 	border: none;
 	box-shadow: none;
+    text-decoration: none !important;
 }
 
 .nxt-nobtn-primary:focus, .nxt-nobtn-secondary:focus {
@@ -438,6 +439,35 @@ li.wp-not-current-submenu:hover .wp-menu-image.dashicons-nxt-builder-groups{
     color: #fff;
     margin-left: 0;
     top: 0
+}
+tr.compat-field-nxt_ext_image_optimization th {
+    display: none;
+}
+.nxt-ext-image-convert-message{
+    font-size: 12px;
+    line-height: 18px;
+    margin-top: 12px;
+}
+.nxt-ext-image-convert-message.error {
+    margin: 0;
+    margin-top: 12px;
+    padding: 4px 16px;
+    gap: 10px;
+    background: #FF14001A;
+    border: 1px solid #FF14001A;
+    border-radius: 6px;
+    border: 1.33333px solid #D1242F;
+    font-weight: 400;
+    display: flex;
+    align-items: flex-start;
+    color: #FF1400;
+    line-height: 1.4;
+}
+.nxt-ext-image-convert-message.error svg {
+    flex-shrink: 0;
+    margin-top: 2px;
+    width: 15px;
+    height: 15px;
 }
 /*tablet responsive start*/
 @media (min-width: 768px) and (max-width: 1024px){ 

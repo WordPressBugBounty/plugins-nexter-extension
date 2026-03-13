@@ -1,4 +1,6 @@
 <?php
+defined( 'ABSPATH' ) || exit;
+
 if( !function_exists('nxt_replace_url')){
 	function nxt_replace_url() {
 		// Security: Require authentication

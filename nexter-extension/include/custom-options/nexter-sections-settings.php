@@ -5,6 +5,7 @@
  * @package Nexter Extensions
  * @since 3.0.0
  */
+defined( 'ABSPATH' ) || exit;
 
 // 1. Register the Meta Box
 function nxt_custom_meta_box() {

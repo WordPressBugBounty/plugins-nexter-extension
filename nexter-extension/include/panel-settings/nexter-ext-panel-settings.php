@@ -161,6 +161,7 @@ if ( ! class_exists( 'Nexter_Ext_Panel_Settings' ) ) {
             $wpDisableSet = ( isset( $_POST['wpDisableSet'] ) ) ? wp_unslash( $_POST['wpDisableSet'] ) : '';
             $svgUploadRoles = ( isset( $_POST['svgUploadRoles'] ) ) ? wp_unslash( $_POST['svgUploadRoles'] ) : '';
             $limitLogin = ( isset( $_POST['limitLogin'] ) ) ? wp_unslash( $_POST['limitLogin'] ) : '';
+            $blockAiCrawlers = ( isset( $_POST['blockAiCrawlers'] ) ) ? wp_unslash( $_POST['blockAiCrawlers'] ) : '';
 
             $wpEmailNotiSet = ( isset( $_POST['wpEmailNotiSet'] ) ) ? wp_unslash( $_POST['wpEmailNotiSet'] ) : '';
             $captchaSetting = ( isset( $_POST['captchaSetting'] ) ) ? wp_unslash( $_POST['captchaSetting'] ) : '';
@@ -379,7 +380,7 @@ if ( ! class_exists( 'Nexter_Ext_Panel_Settings' ) ) {
                             }
                         }else if($ext==='image-upload-optimize' && !empty($imageUploadOpt)){
                             if( isset($get_option[ $ext ]) ){
-                                // Security: Safe JSON decode
+                                // Security: Safe JSON decode — all fields saved in extension option only
                                 $decoded_imageUploadOpt = $this->safe_json_decode( $imageUploadOpt, false );
                                 if ( $decoded_imageUploadOpt !== null ) {
                                     $get_option[ $ext ]['values'] = $decoded_imageUploadOpt;
@@ -748,6 +749,27 @@ if ( ! class_exists( 'Nexter_Ext_Panel_Settings' ) ) {
             
             return $decoded;
         }
+
+        /**
+         * Check if server supports AVIF format (Image Optimisation dashboard).
+         * Self-contained in Extension plugin; does not call other plugins.
+         *
+         * @return bool
+         */
+        private function nxt_ext_check_avif_supported() {
+            if ( ! extension_loaded( 'imagick' ) ) {
+                return false;
+            }
+            try {
+                $imagick = new Imagick();
+                $formats = $imagick->queryFormats();
+                $imagick->clear();
+                $imagick->destroy();
+                return is_array( $formats ) && in_array( 'AVIF', $formats, true );
+            } catch ( Exception $e ) {
+                return false;
+            }
+        }
         
         public function nexter_ext_object_convert_to_array($data) {
             if (is_object($data)) {
@@ -857,7 +879,7 @@ if ( ! class_exists( 'Nexter_Ext_Panel_Settings' ) ) {
                     $uichemyactive = true;
                 }
             }
-            
+
             if(! did_action('wp_enqueue_media')){
 				wp_enqueue_media();
 			}
@@ -956,6 +978,8 @@ if ( ! class_exists( 'Nexter_Ext_Panel_Settings' ) ) {
                 'nxtThemeSetting' => (array) get_option( 'nexter_settings_opts', [] ),
                 'nxt_wdkit_url' => 'https://api.wdesignkit.com/',
                 'extensionPro' =>  defined('NXT_PRO_EXT_VER'),
+                'image_optimizer_avif_supported' => $this->nxt_ext_check_avif_supported(),
+                'image_optimizer_pro_formats' => apply_filters( 'nexter_image_optimizer_pro_formats', array() ),
             ];
 
             $current_user_username = '';
@@ -1139,6 +1163,20 @@ if ( ! class_exists( 'Nexter_Ext_Panel_Settings' ) ) {
                 );
             }
 
+            
+            if ( defined('TPGBP_VERSION') && defined('TPGBP_PATH') ) {
+                $isSub = get_option('tpgb_connection_data');
+                if (( empty($isSub) || ( !empty($isSub) && !isset($isSub['nxt_form_submission_Disable'])) || ( isset($isSub['nxt_form_submission_Disable']) && $isSub['nxt_form_submission_Disable'] == 'enable' ) )) {
+                    add_submenu_page(
+                        "nexter_welcome",
+                        "Form Submissions",
+                        "Form Submissions",
+                        "manage_options",
+                        "nxt-form-submissions",
+                        [$this, "nxt_load_submissions_handler"]
+                    );
+                }
+            }
             if(!defined('NXT_PRO_EXT') && !defined('TPGBP_VERSION')){
                 add_submenu_page( 
                     'nexter_welcome', 
@@ -1185,6 +1223,24 @@ if ( ! class_exists( 'Nexter_Ext_Panel_Settings' ) ) {
         public function nexter_ext_dashboard() {
             echo '<div id="nexter-dash"></div>';
             do_action('nxt_ext_new_update_notice');
+        }
+
+        /**
+         * Load submissions handler when URL contains 'nxt-form-submissions'
+         */
+         public function nxt_load_submissions_handler(){
+            if ( isset($_GET["page"]) && $_GET["page"] === "nxt-form-submissions" && file_exists(TPGBP_PATH . 'classes/extras/nxt-form-submissions.php' ) ) {
+                require_once TPGBP_PATH . 'classes/extras/nxt-form-submissions.php';
+
+                if ( class_exists("Tpgb_Submissions_Table") ) { 
+                    $submissions_table = new Tpgb_Submissions_Table(); 
+                    $submissions_table->nxt_submission_table();
+                } else {
+                    echo '<div class="wrap">';
+                    echo "<h1>".esc_html__('Error: Submission table not found', 'nexter-extension')."</h1>";
+                    echo "</div>";
+                }
+            }
         }
 
         /*
@@ -1250,6 +1306,15 @@ if ( ! class_exists( 'Nexter_Ext_Panel_Settings' ) ) {
 
             $option[ $data ]['switch'] = $is_active;
 
+            // When turning off Image Optimisation with AVIF format, auto-select webp for next time
+            if ( $data === 'image-upload-optimize' && ! $is_active ) {
+                if ( isset( $option[ $data ]['values'] ) && is_array( $option[ $data ]['values'] ) ) {
+                    if ( isset( $option[ $data ]['values']['image_format'] ) && $option[ $data ]['values']['image_format'] === 'avif' ) {
+                        $option[ $data ]['values']['image_format'] = 'webp';
+                    }
+                }
+            }
+
             update_option( $option_page, $option );
 
             // Special handling for wp-debug-mode
@@ -1265,7 +1330,6 @@ if ( ! class_exists( 'Nexter_Ext_Panel_Settings' ) ) {
                 'content' => $is_active ? __( 'Activated', 'nexter-extension' ) : __( 'DeActivated', 'nexter-extension' ),
             ]);
         }
-
 
         /*
          * Nexter WP Replace URL Settings

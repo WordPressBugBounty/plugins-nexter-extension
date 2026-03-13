@@ -1088,19 +1088,61 @@ class Nexter_Builder_Code_Snippets_Executor {
     }
     
     /**
+     * Build PHP code to initialize callback parameters with default values for isolated testing.
+     * Parses param list like '$post_id = null' or '$a, $b = 1' and returns e.g. '$post_id = null; $a = null; $b = 1;'
+     *
+     * @param string $param_list The function parameter list
+     * @return string PHP initialization code, or empty string if parsing fails
+     */
+    private function build_param_initialization($param_list) {
+        $param_list = trim($param_list);
+        if (empty($param_list)) {
+            return '';
+        }
+        $init_lines = array();
+        // Split by comma (simple split; complex defaults like array(1,2) may need fallback to null)
+        $params = preg_split('/\s*,\s*/', $param_list);
+        foreach ($params as $param) {
+            $param = trim($param);
+            if (empty($param) || $param === '...') {
+                continue;
+            }
+            // Match $varname = default or $varname
+            if (preg_match('/^(\$\w+)\s*=\s*(.+)$/s', $param, $m)) {
+                $var = $m[1];
+                $default = trim($m[2]);
+                // Allow common safe literals: null, true, false, numbers, strings, array(), []
+                if (preg_match('/^(null|true|false)$/i', $default) ||
+                    preg_match('/^-?\d+(\.\d+)?$/', $default) ||
+                    preg_match('/^[\'"](?:[^\'"]|\\\\.)*[\'"]$/s', $default) ||
+                    preg_match('/^array\s*\(\s*\)$/i', $default) ||
+                    $default === '[]') {
+                    $init_lines[] = $var . ' = ' . $default . ';';
+                } else {
+                    $init_lines[] = $var . ' = null;';
+                }
+            } elseif (preg_match('/^(\$\w+)$/', $param, $m)) {
+                $init_lines[] = $m[1] . ' = null;';
+            }
+        }
+        return implode("\n", $init_lines);
+    }
+
+    /**
      * Test registered hooks for undefined variables
      */
     private function test_registered_hooks($code, &$captured_errors) {
         // Find all add_action and add_filter calls with anonymous functions
-        // Use a more robust approach to extract callback bodies
+        // Use a more robust approach to extract callback bodies and parameter lists
         $hook_functions = ['add_action', 'add_filter'];
         
         foreach ($hook_functions as $hook_func) {
-            // Find all occurrences of add_action/add_filter
-            $pattern = '/' . preg_quote($hook_func) . '\s*\([^,]+,\s*function\s*\([^)]*\)\s*(?:use\s*\([^)]*\)\s*)?\{/';
+            // Find all occurrences of add_action/add_filter - capture param list via (function\s*\([^)]*\))
+            $pattern = '/' . preg_quote($hook_func) . '\s*\([^,]+,\s*function\s*\(([^)]*)\)\s*(?:use\s*\([^)]*\)\s*)?\{/';
             
             $offset = 0;
             while (preg_match($pattern, $code, $matches, PREG_OFFSET_CAPTURE, $offset)) {
+                $param_list = isset($matches[1][0]) ? trim($matches[1][0]) : '';
                 $match_pos = $matches[0][1];
                 $match_len = strlen($matches[0][0]);
                 $start_pos = $match_pos + $match_len - 1; // Position of opening brace
@@ -1130,7 +1172,7 @@ class Nexter_Builder_Code_Snippets_Executor {
                     $callback_code = substr($code, $callback_start, $callback_end - $callback_start);
                     $line_number = substr_count(substr($code, 0, $callback_start), "\n") + 1;
                     
-                    $this->test_callback_code($callback_code, $captured_errors, $line_number);
+                    $this->test_callback_code($callback_code, $captured_errors, $line_number, $param_list);
                 }
                 
                 // Move offset to continue searching
@@ -1146,11 +1188,25 @@ class Nexter_Builder_Code_Snippets_Executor {
      * will be caught by the callback's own catch block and won't propagate.
      * This method checks for try/catch as a safety measure, but properly
      * handled exceptions won't reach our outer catch block anyway.
+     *
+     * @param string $callback_code The callback body (code inside the function braces)
+     * @param array  $captured_errors Array to merge captured errors into
+     * @param int    $base_line Base line number for error reporting
+     * @param string $param_list The function parameter list (e.g. '$post_id = null' or '$a, $b')
      */
-    private function test_callback_code($callback_code, &$captured_errors, $base_line = 0) {
+    private function test_callback_code($callback_code, &$captured_errors, $base_line = 0, $param_list = '') {
         // Check if callback has proper try/catch blocks - if so, exceptions are intentionally handled
         // This is a safety check; properly caught exceptions won't propagate anyway
         $has_try_catch = preg_match('/try\s*\{[^}]*catch\s*\([^)]+\)\s*\{/s', $callback_code);
+        
+        // Inject function parameters with their default values so callback body has defined variables
+        // When WordPress invokes the hook, it passes these args; during test we simulate with defaults
+        if (!empty($param_list)) {
+            $param_init = $this->build_param_initialization($param_list);
+            if (!empty($param_init)) {
+                $callback_code = $param_init . "\n" . $callback_code;
+            }
+        }
         
         // Try to execute the callback code in isolation to catch undefined variables, functions, and classes
         $callback_errors = array();

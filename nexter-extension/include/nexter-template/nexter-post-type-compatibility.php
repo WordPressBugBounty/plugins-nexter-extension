@@ -5,7 +5,7 @@
  * @package Nexter Extensions
  * @since 3.0.0
  */
-
+defined( 'ABSPATH' ) || exit;
 if ( ! class_exists( 'Nexter_Post_Type_Compatibility' ) ) {
 
 	class Nexter_Post_Type_Compatibility {

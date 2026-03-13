@@ -5,6 +5,8 @@
  * @package Nexter Extensions
  * @since 4.0.4
  */
+defined( 'ABSPATH' ) || exit;
+
 class Nexter_Blocksy_Compat {
 
 	/**

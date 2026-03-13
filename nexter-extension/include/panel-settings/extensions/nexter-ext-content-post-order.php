@@ -194,7 +194,7 @@ defined('ABSPATH') or die();
             $structured_posts = array_map( function ( $post ) use ( $post_id_lookup ) {
                 return [
                     'ID'          => $post->ID,
-                    'post_title'  => $post->post_title ?: __( '(no title)', 'mb-custom-post-type' ),
+                    'post_title'  => $post->post_title ?: __( '(no title)', 'nexter-extension' ),
                     'post_parent' => $post->post_parent,
                     'menu_order'  => $post->menu_order ?: $post_id_lookup[ $post->ID ]->menu_order,
                     'post_status' => $post->post_status,

@@ -53,6 +53,20 @@ defined('ABSPATH') or die();
 		return self::$ele_opt;
 	}
 
+	/**
+	 * Check if Elementor Pro plugin is installed and active.
+	 *
+	 * @return bool
+	 */
+	private function nxt_elementor_pro_is_active() {
+		if ( is_multisite() ) {
+			$active = get_site_option( 'active_sitewide_plugins', [] );
+			return isset( $active['elementor-pro/elementor-pro.php'] );
+		}
+		$active = apply_filters( 'active_plugins', get_option( 'active_plugins', [] ) );
+		return in_array( 'elementor-pro/elementor-pro.php', $active, true );
+	}
+
 	public function nxt_elementor_hide_css(){
 		$css = '';
 
@@ -64,8 +78,9 @@ defined('ABSPATH') or die();
 			$css .= '.elementor-control-promotions,.elementor-control-media__promotions,.e-image-ai-insert-media,.e-excerpt-ai,.e-notice--cta,.elementor-control-media__promotions.elementor-descriptor,.elementor-control-media__promotions.elementor-descriptor[role="alert"],.elementor-send-notice, .elementor-send-banner{ display: none !important; }';
 		}
 
-		if ( !empty(self::$ele_opt) && in_array( 'hide_elementor_pro', self::$ele_opt, true ) ) {
-			$css .= '#elementor-panel-category-pro-elements, #elementor-panel-get-pro-elements, #elementor-panel-elements-navigation div[data-tab="global"], #elementor-panel-global, .elementor-panel-menu-items .elementor-panel-menu-item.elementor-panel-menu-item-site-editor, #elementor-template-library-templates[data-template-source="remote"] .elementor-template-library-template.elementor-template-library-pro-template, a.elementor-plugins-gopro, .elementor-context-menu-list__group-save, .elementor-control-custom_logo_promotion, .elementor-panel-menu-item.elementor-panel-menu-item-notes, div[data-collapse_id="section_custom_css_pro"], div[data-collapse_id="section_custom_css_pro"] + div, .elementor-control-custom_css_pro, .elementor-control-section_custom_css_pro, .elementor-control-section_custom_attributes_pro, .elementor-control-dynamic-switcher, .e-ai-button, .elementor-panel-category .elementor-element-wrapper.elementor-element--promotion, #elementor-panel-get-pro-elements-sticky, #elementor-navigator__footer__promotion, .elementor-pro-upsell, .e-app-banner, .elementor-template-library-cta, .elementor-panel-footer__pro-button, .elementor-panel-saver__button-upgrade, .elementor-panel-heading-promotion,.e-notice-bar, .elementor-template-library-filter-select-source .source-option[data-source="cloud"] { display: none !important; }';
+		// Hide Elementor Pro upsells/promotions only when Elementor Pro is NOT installed
+		if ( !empty(self::$ele_opt) && in_array( 'hide_elementor_pro', self::$ele_opt, true ) && ! $this->nxt_elementor_pro_is_active() ) {
+			$css .= '#elementor-panel-category-pro-elements, #elementor-panel-get-pro-elements, #elementor-panel-elements-navigation div[data-tab="global"], #elementor-panel-global, .elementor-panel-menu-items .elementor-panel-menu-item.elementor-panel-menu-item-site-editor, #elementor-template-library-templates[data-template-source="remote"] .elementor-template-library-template.elementor-template-library-pro-template, a.elementor-plugins-gopro, .elementor-context-menu-list__group-save, .elementor-control-custom_logo_promotion, .elementor-panel-menu-item.elementor-panel-menu-item-notes, div[data-collapse_id="section_custom_css_pro"], div[data-collapse_id="section_custom_css_pro"] + div, .elementor-control-custom_css_pro, .elementor-control-section_custom_css_pro, .elementor-control-section_custom_attributes_pro, .e-ai-button, .elementor-panel-category .elementor-element-wrapper.elementor-element--promotion, #elementor-panel-get-pro-elements-sticky, #elementor-navigator__footer__promotion, .elementor-pro-upsell, .e-app-banner, .elementor-template-library-cta, .elementor-panel-footer__pro-button, .elementor-panel-saver__button-upgrade, .elementor-panel-heading-promotion,.e-notice-bar, .elementor-template-library-filter-select-source .source-option[data-source="cloud"], .elementor-control-dynamic-switcher, #adminmenu a[href="admin.php?page=elementor-one-upgrade"] { display: none !important; }';
 		}
 
 		if ( $css ) {

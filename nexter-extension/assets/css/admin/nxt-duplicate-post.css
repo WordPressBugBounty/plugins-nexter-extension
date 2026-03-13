@@ -17,7 +17,7 @@
 	background: #fff;
 	box-shadow: 0px 0px 10px 3px rgb(0 0 0 / 20%);
 	border-radius: 5px;
-	padding: 20px;
+	padding: 16px;
 	opacity: 0;
 	visibility: hidden;
 	transition: 0.3s linear;
@@ -57,30 +57,39 @@ input.nxt-dp-post-input{
     width: 60%;
     height: 30px;
 	text-align: center;
+	color: #1a1a1a;
+    border-color: #d1d1d6;
+    font-size: 14px;
+    line-height: 17px;
+}
+input.nxt-dp-post-input:hover,input.nxt-dp-post-input:focus {
+	border-color: #1717cc;
+	outline: none;
+	box-shadow: none;
 }
 .nxt-dp-post-total-text {
-	margin-left: 5px;
-	font-size: 15px;
+    margin-left: 5px;
+    font-size: 14px;
     font-weight: 400;
-	color: #000;
-	width: 40%;
+    color: #1a1a1a;
+    width: 40%;
 }
 a.nxt-dp-post-btn {
-	padding: 5px 10px;
-	background: #22379C;
-    border: 1px solid #22379C;
-    color: #fff;
-    border-radius: 3px;
+	background: #1717cc;
+    border: 1px solid #1717cc;
     margin-top: 10px;
-    font-size: 15px;
-    font-weight: 500;
-	width: auto;
+    width: auto;
     position: relative;
     display: inline-block;
-	text-align: center;
-	transition: all .15s ease;
+    text-align: center;
+    transition: all .15s ease;
+    font-size: 14px;
+    line-height: 18px;
+    color: #fff;
+    border-radius: 5px;
+    padding: 7px 16px;
 }
 a.nxt-dp-post-btn:hover,a.nxt-dp-post-btn:focus {
-	background : #16287a;
+	background : #0303a0;
 	box-shadow: none;
 }

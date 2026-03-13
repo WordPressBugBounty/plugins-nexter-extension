@@ -5,6 +5,8 @@
  * @package Nexter Extensions
  * @since 1.0.0
  */
+defined( 'ABSPATH' ) || exit;
+
 if( ! function_exists('nexter_builders_register_post')){
 	function nexter_builders_register_post() {
 		$builder_name = 'Theme Builder';

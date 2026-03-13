@@ -5,6 +5,7 @@
  * @package	Nexter Extension
  * @since	3.2.0
  */
+defined( 'ABSPATH' ) || exit;
 
 if ( ! class_exists( 'Nexter_Builder_Compatibility' ) ) {
 

@@ -1058,6 +1058,7 @@ PHP;
 				'location'              => isset( $cond['location'] ) ? sanitize_text_field( $cond['location'] ) : '',
 				'customname'            => isset( $cond['customname'] ) ? sanitize_text_field( $cond['customname'] ) : '',
 				'compresscode'          => isset( $cond['compresscode'] ) ? rest_sanitize_boolean( $cond['compresscode'] ) : false,
+				'on_ajax_work'          => isset( $cond['on_ajax_work'] ) ? rest_sanitize_boolean( $cond['on_ajax_work'] ) : false,
 				'startDate'             => isset( $cond['startDate'] ) ? sanitize_text_field( $cond['startDate'] ) : '',
 				'endDate'               => isset( $cond['endDate'] ) ? sanitize_text_field( $cond['endDate'] ) : '',
 				'shortcodeattr'         => isset( $cond['shortcodeattr'] ) && is_array( $cond['shortcodeattr'] ) ? $cond['shortcodeattr'] : array(),

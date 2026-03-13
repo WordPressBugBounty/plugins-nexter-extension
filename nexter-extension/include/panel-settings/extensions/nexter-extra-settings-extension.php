@@ -115,6 +115,7 @@ class Nexter_Ext_Extra_Settings {
 			if( isset($sec_opt['limit-login-attempt']) && !empty($sec_opt['limit-login-attempt']['switch']) ){
 				require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-limit-login-attempt.php';
 			}
+			
 		}
 		require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-performance-security-settings.php';
 		require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-image-sizes.php';

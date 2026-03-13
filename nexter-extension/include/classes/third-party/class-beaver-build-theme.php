@@ -5,6 +5,8 @@
  * @package Nexter
  * @since 1.0.0
  */
+defined( 'ABSPATH' ) || exit;
+
 if ( ! class_exists( 'FLBuilderModel' ) || ! class_exists( 'FLThemeBuilderLoader' ) ) {
 	return;
 }

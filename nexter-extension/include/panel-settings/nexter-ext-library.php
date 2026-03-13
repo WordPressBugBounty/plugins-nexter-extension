@@ -5,6 +5,7 @@
  * @package Nexter Extensions
  * @since 1.0.0
  */
+defined( 'ABSPATH' ) || exit;
 if ( !class_exists( 'Nexter_Pro_Ext_Activate' ) ) {
 
 	class Nexter_Pro_Ext_Activate {

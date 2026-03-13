@@ -5,6 +5,8 @@
  * @package Nexter Extensions
  * @since 1.0.0
  */
+defined( 'ABSPATH' ) || exit;
+
 if( ! function_exists('nexter_footer_sections') ) {
 	
 	function nexter_footer_sections( $sections ) {

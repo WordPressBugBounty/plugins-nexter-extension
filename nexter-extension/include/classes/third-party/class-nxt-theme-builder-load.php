@@ -5,6 +5,7 @@
  * @package	Nexter
  * @since	1.0.7
  */
+defined( 'ABSPATH' ) || exit;
 
 if ( ! class_exists( 'Nexter_Theme_Builder_Load' ) ) {
 

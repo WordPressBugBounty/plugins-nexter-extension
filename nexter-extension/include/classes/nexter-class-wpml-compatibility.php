@@ -5,6 +5,8 @@
  * @package Nexter Extensions
  * @since 2.0.3
  */
+defined( 'ABSPATH' ) || exit;
+
 if ( ! class_exists( 'Nexter_Builder_Wpml_Compatibility' ) ) {
 
 	// @codingStandardsIgnoreStart

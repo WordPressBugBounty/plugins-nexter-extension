@@ -238,6 +238,7 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 					'post_number' => isset($snippet['post_number']) ? $snippet['post_number'] : 1,
 					'customname' => isset($snippet['customname']) ? $snippet['customname'] : '',
 					'compresscode' => isset($snippet['compresscode']) ? $snippet['compresscode'] : false,
+					'on_ajax_work' => isset($snippet['on_ajax_work']) ? $snippet['on_ajax_work'] : false,
 					'startDate' => isset($snippet['startDate']) ? $snippet['startDate'] : '',
 					'endDate' => isset($snippet['endDate']) ? $snippet['endDate'] : '',
 					'shortcodeattr' => isset($snippet['shortcodeattr']) ? $snippet['shortcodeattr'] : [],
@@ -1122,6 +1123,13 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 				$metaData['condition']['customname'] = $customname;
 				//update_post_meta( $post_id , 'nxt-code-customname', $customname );
 
+				if($type == 'php'){
+					$on_ajax_work = isset($_POST['on_ajax_work']) ? rest_sanitize_boolean(wp_unslash($_POST['on_ajax_work'])) : false;
+					$metaData['condition']['on_ajax_work'] = $on_ajax_work;
+				}else{
+					$metaData['condition']['on_ajax_work'] = false;
+				}
+
 				$compresscode = isset($_POST['compresscode']) ? rest_sanitize_boolean(wp_unslash($_POST['compresscode'])) : false;
 				$metaData['condition']['compresscode'] = $compresscode;
 				//update_post_meta( $post_id , 'nxt-code-compresscode', $compresscode );
@@ -1553,6 +1561,7 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 						'location'       => get_post_meta($post_id, 'nxt-code-location', true),
 						'customname'     => get_post_meta($post_id, 'nxt-code-customname', true),
 						'compresscode'  => get_post_meta($post_id, 'nxt-code-compresscode', true),
+						'on_ajax_work'  => false,
 						'startDate'     => get_post_meta($post_id, 'nxt-code-startdate', true),
 						'endDate'       => get_post_meta($post_id, 'nxt-code-enddate', true),
 						'shortcodeattr' => get_post_meta($post_id, 'nxt-code-shortcodeattr', true),
@@ -1794,6 +1803,7 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 					'location' => get_post_meta( $post->ID, 'nxt-code-location', true ),
 					'customname' => get_post_meta( $post->ID, 'nxt-code-customname', true ),
 					'compresscode' => get_post_meta( $post->ID, 'nxt-code-compresscode', true ),
+					'on_ajax_work' => false,
 					'startDate' => get_post_meta( $post->ID, 'nxt-code-startdate', true ),
 					'endDate' => get_post_meta( $post->ID, 'nxt-code-enddate', true ),
 					'shortcodeattr' => get_post_meta( $post->ID, 'nxt-code-shortcodeattr', true ),
@@ -3524,8 +3534,9 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 									$file_based = $this->get_file_based_instance();
 									if($file_based){
 										$is_ajax = (defined('DOING_AJAX') && DOING_AJAX) || (defined('REST_REQUEST') && REST_REQUEST) || (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest');
-				
-										if (!$is_ajax && !empty( $file_data['file_path']) && file_exists( $file_data['file_path'] ) ) {
+										$on_ajax_work = isset($file_data['on_ajax_work']) ? $file_data['on_ajax_work'] : false;
+
+										if ( ( !$is_ajax || ($on_ajax_work && ($_REQUEST['action'] != 'update_edit_code_snippets' && $_REQUEST['action'] != 'get_edit_snippet_data') && $_REQUEST['action'] != 'fetch_code_snippet_list' && $_REQUEST['action'] != 'fetch_code_snippet_import' && $_REQUEST['action'] != 'fetch_code_snippet_export' && $_REQUEST['action'] != 'fetch_code_snippet_delete' && $_REQUEST['action'] != 'fetch_code_snippet_duplicate' && $_REQUEST['action'] != 'create_code_snippets' && $_REQUEST['action'] != 'find_where_shortcode_usage' && $_REQUEST['action'] != 'nexter_get_particular_posts_query' && $_REQUEST['action'] != 'nexter_enable_code_snippet' && $_REQUEST['action'] != 'nexter_get_taxonomy_terms' && $_REQUEST['action'] != 'nexter_get_authors' && $_REQUEST['action'] != 'fetch_snippet_list_for_conditions' && $_REQUEST['action'] != 'nexter_ext_save_data' && $_REQUEST['action'] != 'fetch_code_snippet_status' ) ) && !empty( $file_data['file_path'] ) && file_exists( $file_data['file_path'] ) ) {
 											// Use safe file execution method
 											if ( class_exists( 'Nexter_Code_Snippets_File_Based' ) ) {
 												Nexter_Code_Snippets_File_Based::safe_include_file( $file_data['file_path'] );

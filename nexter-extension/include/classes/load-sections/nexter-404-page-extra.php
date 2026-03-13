@@ -5,7 +5,7 @@
  * @package Nexter Extensions
  * @since 1.0.0
  */
-
+defined( 'ABSPATH' ) || exit;
 /*
  * Disable Header/Footer in 404 Page
  */

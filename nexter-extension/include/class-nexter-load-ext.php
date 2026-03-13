@@ -5,7 +5,7 @@
  * @package Nexter Extensions
  * @since 1.0.0
  */
-
+defined( 'ABSPATH' ) || exit;
 if ( ! class_exists( 'Nexter_Extensions_Load' ) ) {
 
 	class Nexter_Extensions_Load {
@@ -549,7 +549,7 @@ if ( ! class_exists( 'Nexter_Extensions_Load' ) ) {
 			if ( ! empty($_POST['notice_id']) ) {
 				// Security: Use sanitize_key for option names and whitelist allowed notices
 				$notice_id = sanitize_key( $_POST['notice_id'] );
-				$allowed_notices = array( 'nexter_blocks_installed', 'nexter_block_show_pro' );
+				$allowed_notices = array( 'nexter_blocks_installed', 'nexter_block_show_pro', 'nexter_image_optimize_notice' );
 				
 				if ( in_array( $notice_id, $allowed_notices, true ) ) {
 					update_option( $notice_id . '_dismissed', true );

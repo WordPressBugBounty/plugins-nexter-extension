@@ -3,6 +3,8 @@
  *	Nexter Duplicate Post/Page
  *	@since 1.1.0
 **/
+defined( 'ABSPATH' ) || exit;
+
 $extension_option = get_option( 'nexter_extra_ext_options' );
 
 if(!empty($extension_option) && isset($extension_option['wp-duplicate-post']) && !empty($extension_option['wp-duplicate-post']['switch']) && !empty($extension_option['wp-duplicate-post']['values']) ){

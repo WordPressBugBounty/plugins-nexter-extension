@@ -5,6 +5,7 @@
  * @package Nexter Extensions
  * @since 1.0.0
  */
+defined( 'ABSPATH' ) || exit;
 
 if ( ! class_exists( 'Nexter_Builder_Pages_Conditional' ) ) {
 
@@ -102,6 +103,7 @@ if ( ! class_exists( 'Nexter_Builder_Pages_Conditional' ) ) {
 				$post_id  = get_the_id();
 				$nxt_hooks_layout = get_post_meta( $post_id, 'nxt-hooks-layout', true );
 				$nxt_hooks_section = get_post_meta( $post_id, 'nxt-hooks-layout-sections', true );
+				
 				if ( 'sections' === $nxt_hooks_layout ||  !empty($nxt_hooks_section)){
 					if( 'header' === $nxt_hooks_section ){
 						remove_action( 'nexter_header', 'nexter_header_template' );
@@ -110,8 +112,18 @@ if ( ! class_exists( 'Nexter_Builder_Pages_Conditional' ) ) {
 						add_action(
 							'nexter_header',
 							function() use ( $post_id ) {
+								$cont_classes = '';
+								if(function_exists('nexter_get_container_class')){
+									$cont_classes = nexter_get_container_class('site-header-container');
+								}
 								echo '<header itemscope="itemscope" id="nxt-header" class="site-header" role="banner">';
+									if($cont_classes){
+										echo '<div class="' . esc_attr($cont_classes) . '">';
+									}
 									$this->get_the_hook_content();
+									if($cont_classes){
+										echo '</div>';
+									}
 								echo '</header>';
 							},
 							10
@@ -122,8 +134,18 @@ if ( ! class_exists( 'Nexter_Builder_Pages_Conditional' ) ) {
 						add_action(
 							'nexter_footer',
 							function() use ( $post_id ) {
-								echo '<footer class="site-footer">';
+								$cont_classes = '';
+								if(function_exists('nexter_get_container_class')){
+									$cont_classes =  nexter_get_container_class( 'site-footer-container' );
+								}
+								echo '<footer id="nxt-footer" class="site-footer">';
+									if($cont_classes){
+										echo '<div class="' . esc_attr($cont_classes) . '">';
+									}
 									$this->get_the_hook_content();
+									if($cont_classes){
+										echo '</div>';
+									}
 								echo '</footer>';
 							},
 							10
