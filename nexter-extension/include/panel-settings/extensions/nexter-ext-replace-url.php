@@ -28,8 +28,9 @@ if( !function_exists('nxt_replace_url')){
 		$user = wp_get_current_user();
 		$allowed_roles = array( 'administrator' );
 		if ( !empty($user) && isset($user->roles) && array_intersect( $allowed_roles, $user->roles ) ) {
-			$from = ( isset($_POST['from']) && !empty( $_POST['from'] ) ) ? sanitize_text_field( wp_unslash($_POST['from']) ) : '';
-			$to = ( isset($_POST['to']) && !empty( $_POST['to'] ) ) ? sanitize_text_field( wp_unslash($_POST['to']) ) : '';
+			// Use stripslashes() only - sanitize_text_field() strips <, >, and HTML-like chars, breaking URLs
+			$from = ( isset($_POST['from']) && '' !== $_POST['from'] ) ? stripslashes( wp_unslash( $_POST['from'] ) ) : '';
+			$to   = ( isset($_POST['to']) && '' !== $_POST['to'] ) ? stripslashes( wp_unslash( $_POST['to'] ) ) : '';
 			
 			$case = ( isset($_POST['case']) && !empty( $_POST['case'] ) ) ? sanitize_text_field( wp_unslash($_POST['case']) ) : '';
 			$guidV = ( isset($_POST['guid']) && !empty( $_POST['guid'] ) ) ? sanitize_text_field( wp_unslash($_POST['guid']) ) : '';
@@ -116,8 +117,9 @@ if( !function_exists('nxt_replace_confirm_url')){
 		$user = wp_get_current_user();
 		$allowed_roles = array( 'administrator' );
 		if ( !empty($user) && isset($user->roles) && array_intersect( $allowed_roles, $user->roles ) ) {
-			$from = !empty( $_POST['from'] ) ? sanitize_text_field( wp_unslash($_POST['from']) ) : '';
-			$to = !empty( $_POST['to'] ) ? sanitize_text_field( wp_unslash($_POST['to']) ) : '';
+			// Use stripslashes() only - sanitize_text_field() strips <, >, and HTML-like chars, breaking URLs
+			$from = !empty( $_POST['from'] ) ? stripslashes( wp_unslash( $_POST['from'] ) ) : '';
+			$to   = !empty( $_POST['to'] ) ? stripslashes( wp_unslash( $_POST['to'] ) ) : '';
 			
 			$case = ( isset($_POST['case']) && !empty( $_POST['case'] ) ) ? sanitize_text_field( wp_unslash($_POST['case']) ) : '';
 			$guidV = ( isset($_POST['guid']) && !empty( $_POST['guid'] ) ) ? sanitize_text_field( wp_unslash($_POST['guid']) ) : '';
@@ -164,8 +166,33 @@ if( !function_exists('nxt_replace_confirm_url')){
 		}
 	}
 	add_action( 'wp_ajax_nxt_replace_confirm_url', 'nxt_replace_confirm_url' );
-	// Removed unauthenticated access to prevent security vulnerability
-	// add_action('wp_ajax_nopriv_nxt_replace_confirm_url', 'nxt_replace_confirm_url' );
+}
+
+if( !function_exists('nxt_table_exists')){
+	/**
+	 * Check if a table exists in the database.
+	 *
+	 * @param string $table Table name.
+	 * @return bool True if table exists.
+	 */
+	function nxt_table_exists( $table ) {
+		global $wpdb;
+		$table = preg_replace( '/[^a-zA-Z0-9_$]/', '', $table );
+		if ( empty( $table ) ) {
+			return false;
+		}
+		$table_escaped = esc_sql( $table );
+		$dbname = ! empty( $wpdb->dbname ) ? $wpdb->dbname : ( defined( 'DB_NAME' ) ? DB_NAME : '' );
+		if ( empty( $dbname ) ) {
+			return false;
+		}
+		$result = $wpdb->get_var( $wpdb->prepare(
+			"SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = %s AND table_name = %s",
+			$dbname,
+			$table
+		) );
+		return ( 1 === (int) $result );
+	}
 }
 
 if( !function_exists('nxt_get_columns')){
@@ -176,6 +203,11 @@ if( !function_exists('nxt_get_columns')){
 		// Security: Validate and sanitize table name to prevent SQL injection
 		$table = preg_replace( '/[^a-zA-Z0-9_$]/', '', $table );
 		if ( empty( $table ) ) {
+			return array( null, array() );
+		}
+
+		// Bug 4: Verify table exists before querying
+		if ( ! nxt_table_exists( $table ) ) {
 			return array( null, array() );
 		}
 		
@@ -211,6 +243,16 @@ if( !function_exists('mysql_escape_mimic')){
 
 if( !function_exists('nxt_unserialize_replace')){
 	function nxt_unserialize_replace( $from = '', $to = '', $data = '', $serialised = false, $case = false ) {
+		try {
+			return nxt_unserialize_replace_inner( $from, $to, $data, $serialised, $case );
+		} catch ( Exception $e ) {
+			return $data;
+		}
+	}
+}
+
+if( !function_exists('nxt_unserialize_replace_inner')){
+	function nxt_unserialize_replace_inner( $from = '', $to = '', $data = '', $serialised = false, $case = false ) {
 		// Security: Prevent PHP object injection by using a safer unserialize approach
 		// Only unserialize data that we control (from database, not user input)
 		
@@ -249,10 +291,23 @@ if( !function_exists('nxt_unserialize_replace')){
 			unset( $_temp );
 		}elseif ( is_object( $data ) ) {
 			// Security: Prevent unserialization of potentially dangerous objects
-			if ('__PHP_Incomplete_Class' !== get_class($data)) {
-				$_temp = $data;
+			if ( '__PHP_Incomplete_Class' !== get_class( $data ) ) {
+				// Bug 6: Try clone; fall back to same object if not cloneable (e.g. PDO, internal classes)
+				try {
+					$_temp = clone $data;
+				} catch ( Exception $e ) {
+					$_temp = $data;
+				}
 				$props = get_object_vars( $data );
 				foreach ( $props as $key => $value ) {
+					// Bug 6: Skip integer-keyed properties
+					if ( is_int( $key ) ) {
+						continue;
+					}
+					// Bug 6: Skip protected/private properties (prefixed with \0)
+					if ( is_string( $key ) && 1 === preg_match( '/^\\0.+/', $key ) ) {
+						continue;
+					}
 					$_temp->$key = nxt_unserialize_replace( $from, $to, $value, false, $case );
 				}
 	
@@ -305,7 +360,7 @@ if( !function_exists('nxt_unserialize_replace')){
 if( !function_exists('nxt_search_replace')){
 	function nxt_search_replace($selTables, $from, $to, $case, $guidV, $limitV, $replaceValue){
 		global $wpdb;
-		$changes = $off = 0;
+		$changes = 0;
 
 		if(!empty($selTables)){
 			foreach ($selTables as $table) {
@@ -316,14 +371,22 @@ if( !function_exists('nxt_search_replace')){
 				}
 				
 				list( $primKey, $columns ) = nxt_get_columns( $table );
+
+				// Bug 3: Skip tables with no primary key - cannot safely UPDATE without PK
+				if ( null === $primKey || empty( $columns ) ) {
+					continue;
+				}
 				
-				// Security: Use prepared statement with proper type casting
-				// Note: Table names cannot be prepared, so we validate them separately
+				// Bug 2: Paginate - process all rows, not just first $limitV
 				$limitV = absint( $limitV );
-				$off = absint( $off );
-				$table_escaped = esc_sql( $table ); // Additional escaping for table name
-				$data = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM `{$table_escaped}` LIMIT %d, %d", $off, $limitV ), ARRAY_A );
-				foreach ( $data as $row ) {
+				$off = 0;
+				$table_escaped = esc_sql( $table );
+
+				do {
+					$data = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM `{$table_escaped}` LIMIT %d, %d", $off, $limitV ), ARRAY_A );
+					$rows_fetched = is_array( $data ) ? count( $data ) : 0;
+
+					foreach ( (array) $data as $row ) {
 					$update_data = array();
 					$where_data = array();
 
@@ -372,7 +435,10 @@ if( !function_exists('nxt_search_replace')){
 							$wpdb->query( $sqlQuery );
 						}
 					}
-				}
+					}
+
+					$off += $limitV;
+				} while ( $rows_fetched === $limitV );
 			}
 		}
 		return $changes;

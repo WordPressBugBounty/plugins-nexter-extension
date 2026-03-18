@@ -199,10 +199,32 @@ class Nexter_Ext_Bulk_Images {
 				<div class="nxt-bulk-center-card">
 					<div class="nxt-bulk-center-header">
 						<div class="nxt-bulk-center-icon">
-							<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="none" viewBox="0 0 40 40"><path fill="#f5f7fe" d="M0 10C0 4.477 4.477 0 10 0h20c5.523 0 10 4.477 10 10v20c0 5.523-4.477 10-10 10H10C4.477 40 0 35.523 0 30z"/><path stroke="#1717cc" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 22a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 21 18h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 19 22z"/></svg>
+							<?php 
+							$theme_logo = '';
+							if(defined('NXT_PRO_EXT') || defined('TPGBP_VERSION')){
+								$options = get_option( 'nexter_white_label' );
+								if(isset($options['theme_logo']) && !empty($options['theme_logo'])){
+									$theme_logo = $options['theme_logo'];
+								}
+							}
+							if(empty($theme_logo)){
+								echo '<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="none" viewBox="0 0 40 40"><path fill="#f5f7fe" d="M0 10C0 4.477 4.477 0 10 0h20c5.523 0 10 4.477 10 10v20c0 5.523-4.477 10-10 10H10C4.477 40 0 35.523 0 30z"/><path stroke="#1717cc" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 22a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 21 18h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 19 22z"/></svg>';
+							}else{
+								echo '<img src="'.esc_url($theme_logo).'" alt="'.esc_attr__( 'Image Optimisation Center', 'nexter-extension' ).'" style="width: 40px;height: 40px;object-fit: cover;" />';
+							}
+							?>
 						</div>
 						<div class="nxt-bulk-center-text">
-							<h2><?php esc_html_e( 'Nexter Image Optimisation Center', 'nexter-extension' ); ?></h2>
+							<?php 
+							$brand_name = __( 'Nexter', 'nexter-extension' );
+							if(defined('NXT_PRO_EXT') || defined('TPGBP_VERSION')){
+							$options = get_option( 'nexter_white_label' );
+								if(isset($options['brand_name']) && !empty($options['brand_name'])){
+									$brand_name = $options['brand_name'];
+								}
+							}
+							?>
+							<h2><?php echo esc_html( $brand_name ); ?> <?php esc_html_e( 'Image Optimisation Center', 'nexter-extension' ); ?></h2>
 						</div>
 						<div class="nxt-bulk-center-actions">
 							<button type="button" class="nxt-bulk-btn-primary nxt-bulk-start-btn" id="nxt-bulk-start-btn"<?php echo $show_start ? '' : ' style="display:none;"'; ?>>
@@ -342,7 +364,7 @@ class Nexter_Ext_Bulk_Images {
 					</div>
 					<div class="nxt-bulk-queue-load-more" id="nxt-bulk-queue-load-more" style="display:none;">
 						<button type="button" class="nxt-bulk-load-more-btn" id="nxt-bulk-load-more-btn">
-							<?php esc_html_e( 'Load next 10 images', 'nexter-extension' ); ?>
+							<?php esc_html_e( 'Load next 6 images', 'nexter-extension' ); ?>
 						</button>
 					</div>
 					<div class="nxt-bulk-queue-empty" id="nxt-bulk-queue-empty" style="<?php echo ( $queue_count === 0 && ( empty( $s['optimized'] ) || (int) $s['unoptimized'] > 0 ) ) ? '' : 'display:none;'; ?>">

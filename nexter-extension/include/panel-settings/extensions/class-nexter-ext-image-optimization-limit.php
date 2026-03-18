@@ -379,7 +379,8 @@ class Nexter_Ext_Image_Optimization_Limit {
 			if ( $counts instanceof \stdClass ) {
 				$total = 0;
 				foreach ( (array) $counts as $mime => $count ) {
-					if ( 'trash' === $mime ) {
+					// Skip trashed items and SVGs so they are not counted in "Images Remaining".
+					if ( 'trash' === $mime || 'image/svg+xml' === $mime ) {
 						continue;
 					}
 					$total += (int) $count;
