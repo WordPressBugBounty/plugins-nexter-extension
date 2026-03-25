@@ -88,6 +88,7 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 			return is_writable( WP_CONTENT_DIR );
 		}
 
+
 	/**
 	 * Get file_based instance (cached) - static version for use in static methods
 	 * 

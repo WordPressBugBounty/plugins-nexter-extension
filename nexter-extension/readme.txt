@@ -3,7 +3,7 @@ Contributors: posimyththemes, nirmalkavaiya, sagarpatel124
 Tags: security, elementor, theme-builder, code-snippet, image-optimizer
 Requires at least: 4.0
 Tested up to: 6.9
-Stable tag: 4.6.1
+Stable tag: 4.6.2
 Requires PHP: 5.6
 License: GPLv3
 License URI: https://opensource.org/licenses/GPL-3.0
@@ -219,6 +219,11 @@ Yes. [Compare Free vs Pro →](https://nexterwp.com/free-vs-pro/#Nexter-Extensio
 == Changelog ==
 
 ### View Complete Changelog at [roadmap.nexterwp.com](https://roadmap.nexterwp.com/updates?filter=Nexter+Extension+-+FREE)
+
+= V4.6.2 = 25 March 2026
+- Fixed : Custom Font Upload : font-face Italic style font bug fix
+- Fixed : Code Snippet : Create Snippet Register Custom Post type or Taxonomy Load Issue Bug Fix.
+- Fixed : General bug fixes and performance improvements
 
 = V4.6.1 = 18 March 2026
 - Fixed : Utilities : Replace URL & Text : Improved search and replace functionality with code-level fixes for more accurate data handling.

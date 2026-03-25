@@ -72,7 +72,7 @@ class Nexter_Ext_Custom_Upload_Font {
 	/* Frontend Load Custom Font */
 	public function enqueue_scripts(){
 		$fonts = $this->nexter_ext_custom_upload_font_lists();
-		if(!empty($fonts)){
+		if(!empty($fonts) && !defined('NXT_VERSION') ){
 			$custom_fonts_face = $this->get_custom_fonts_face();
 			if( !empty( $custom_fonts_face ) ){
 				echo '<style>'.$custom_fonts_face.'</style>';
@@ -96,15 +96,16 @@ class Nexter_Ext_Custom_Upload_Font {
 						$simple_font_variation = [];
 						if(!empty($val['simplefont']['lists'])){
 							foreach($val['simplefont']['lists'] as $key_variant => $val_variation){
+								
 								if( !empty($val_variation) && !empty($val_variation['id']) && !empty($val_variation['variation']) ){
-
 									$font_name = $val['simplefont']['font_name'];
 									$font_url = wp_get_attachment_url( $val_variation['id'] );
 									if( !empty($font_url)){
-										$font_data[$font_name][$key_variant]['type'] = 'simple';
-										$font_data[$font_name][$key_variant]['weight'] = $val_variation['variation'];
-										$font_data[$font_name][$key_variant]['font-style'] = 'normal';
-										$font_data[$font_name][$key_variant]['url'] = $font_url;
+										$parsed = self::parse_simple_font_variation( $val_variation['variation'] );
+										$font_data[ $font_name ][ $key_variant ]['type']       = 'simple';
+										$font_data[ $font_name ][ $key_variant ]['weight']     = $parsed['weight'];
+										$font_data[ $font_name ][ $key_variant ]['font-style'] = $parsed['style'];
+										$font_data[ $font_name ][ $key_variant ]['url']        = $font_url;
 									}
 								}
 								
@@ -139,7 +140,7 @@ class Nexter_Ext_Custom_Upload_Font {
 							if($format === 'otf'){
 								$format = 'opentype';
 							}
-							$font_faces  = '@font-face {';
+							$font_faces .= '@font-face {';
 							$font_faces .= 'font-family: "' . wp_strip_all_tags($font_name) . '";';
 							$font_faces .= 'font-style: ' . sanitize_text_field($font_value['font-style']) . ';';
 							$font_faces .= 'font-weight: ' . esc_attr($font_value['weight']) . ';';
@@ -154,6 +155,36 @@ class Nexter_Ext_Custom_Upload_Font {
 		return $font_faces;
 	}
 
+	/**
+	 * Map UI variation (e.g. 200, 500i, 400italic) to CSS font-weight and font-style for @font-face.
+	 *
+	 * @param string $variation Stored variation key from simple font lists.
+	 * @return array{ weight: string, style: string }
+	 */
+	private static function parse_simple_font_variation( $variation ) {
+		$variation = is_string( $variation ) ? trim( $variation ) : (string) $variation;
+		$style     = 'normal';
+		$weight    = '400';
+
+		if ( preg_match( '/^(\d{1,3})\s*italic$/i', $variation, $m ) ) {
+			$w = min( 900, max( 1, (int) $m[1] ) );
+			$weight = (string) $w;
+			$style  = 'italic';
+		} elseif ( preg_match( '/^(\d{1,3})i$/i', $variation, $m ) ) {
+			$w = min( 900, max( 1, (int) $m[1] ) );
+			$weight = (string) $w;
+			$style  = 'italic';
+		} elseif ( preg_match( '/^(\d{1,3})$/', $variation, $m ) ) {
+			$w = min( 900, max( 1, (int) $m[1] ) );
+			$weight = (string) $w;
+		}
+
+		return [
+			'weight' => $weight,
+			'style'  => $style,
+		];
+	}
+
 	/*
 	 * Font Url check Format
 	 * @since 1.1.0
@@ -161,7 +192,9 @@ class Nexter_Ext_Custom_Upload_Font {
 	private static function check_format_font_url($url) {
 		$array = [
 			'woff2' => 'woff2',
-			'ttf' => 'truetype'
+			'ttf' => 'truetype',
+			'otf' => 'opentype',
+			'woff' => 'woff'
 		];
 
 		$d = strrpos($url,".");
@@ -223,7 +256,12 @@ class Nexter_Ext_Custom_Upload_Font {
 							}
 						}
 						if( !empty($variable_font) ){
-							$font_weight = [ '100', '100italic', '200', '200italic', '300', '300italic', '400', 'italic', '500', '500italic', '600', '600italic', '700', '700italic', '800', '800italic', '900', '900italic'];
+							// Upright weights only when only the regular variable file is present; add italic pairs when an italic file is uploaded.
+							$has_italic = in_array( 'italic', $variable_font, true );
+							$uprights     = [ '100', '200', '300', '400', '500', '600', '700', '800', '900' ];
+							$font_weight  = $has_italic
+								? [ '100', '100italic', '200', '200italic', '300', '300italic', '400', 'italic', '500', '500italic', '600', '600italic', '700', '700italic', '800', '800italic', '900', '900italic' ]
+								: $uprights;
 							$custom_fonts_list[ $val['variablefont']['font_name'] ]['weights'] = $font_weight;
 							$custom_fonts_list[ $val['variablefont']['font_name'] ][] = 'display';
 						}

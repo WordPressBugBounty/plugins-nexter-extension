@@ -31,6 +31,7 @@ if ( ! class_exists( 'Nexter_Class_Load' ) ) {
 		 */
 		public function __construct() {
 			add_action( 'init', [ $this, 'theme_after_setup' ] );
+			add_action( 'plugins_loaded', [ $this, 'nexter_load_code_snippet_system' ], 20 );
 			if(!is_admin()){
 				add_action( 'admin_bar_menu', [ $this, 'add_edit_template_admin_bar' ], 300 );
 				//admin bar enqueue scripts
@@ -81,7 +82,10 @@ if ( ! class_exists( 'Nexter_Class_Load' ) ) {
 				
 			//}
 			require_once $include_uri . 'load-sections/nexter-sections-conditional.php';
-			
+		}
+		
+		public function nexter_load_code_snippet_system() {
+			$include_uri = NEXTER_EXT_DIR . 'include/classes/';
 			// Check if code snippets are enabled before including related files
 			$get_opt = get_option('nexter_extra_ext_options');
 			$code_snippets_enabled = true;
