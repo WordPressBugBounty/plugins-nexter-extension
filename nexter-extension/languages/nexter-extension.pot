@@ -3774,85 +3774,85 @@ msgstr ""
 msgid "Unauthorized API endpoint."
 msgstr ""
 
-#: include/panel-settings/nxt-deactive.php:90
+#: include/panel-settings/nxt-deactivate.php:90
 msgid "Deactivation Reason"
 msgstr ""
 
-#: include/panel-settings/nxt-deactive.php:99
+#: include/panel-settings/nxt-deactivate.php:99
 msgid "Just Debugging."
 msgstr ""
 
-#: include/panel-settings/nxt-deactive.php:103
+#: include/panel-settings/nxt-deactivate.php:103
 msgid "Plugin Issue."
 msgstr ""
 
-#: include/panel-settings/nxt-deactive.php:107
+#: include/panel-settings/nxt-deactivate.php:107
 msgid "Slow Performance."
 msgstr ""
 
-#: include/panel-settings/nxt-deactive.php:111
+#: include/panel-settings/nxt-deactivate.php:111
 msgid "Switched to Alternative."
 msgstr ""
 
-#: include/panel-settings/nxt-deactive.php:115
+#: include/panel-settings/nxt-deactivate.php:115
 msgid "No Longer Needed."
 msgstr ""
 
-#: include/panel-settings/nxt-deactive.php:119
+#: include/panel-settings/nxt-deactivate.php:119
 msgid "Compatibility Issue."
 msgstr ""
 
-#: include/panel-settings/nxt-deactive.php:123
+#: include/panel-settings/nxt-deactivate.php:123
 msgid "Missing Feature."
 msgstr ""
 
-#: include/panel-settings/nxt-deactive.php:127
+#: include/panel-settings/nxt-deactivate.php:127
 msgid "Other Reasons."
 msgstr ""
 
-#: include/panel-settings/nxt-deactive.php:143
+#: include/panel-settings/nxt-deactivate.php:143
 msgid "Please share more details"
 msgstr ""
 
-#: include/panel-settings/nxt-deactive.php:145
+#: include/panel-settings/nxt-deactivate.php:145
 msgid "If you require any help, please"
 msgstr ""
 
-#: include/panel-settings/nxt-deactive.php:146
+#: include/panel-settings/nxt-deactivate.php:146
 msgid "Create A Ticket."
 msgstr ""
 
-#: include/panel-settings/nxt-deactive.php:146
+#: include/panel-settings/nxt-deactivate.php:146
 msgid "We reply within 24 working hours."
 msgstr ""
 
-#: include/panel-settings/nxt-deactive.php:147
+#: include/panel-settings/nxt-deactivate.php:147
 msgid "Looking for instant solutions? Read our "
 msgstr ""
 
-#: include/panel-settings/nxt-deactive.php:147
+#: include/panel-settings/nxt-deactivate.php:147
 #: dashboard/build/index.js:1
 #: dashboard/build/index.js:53649
 msgid "Documentation"
 msgstr ""
 
-#: include/panel-settings/nxt-deactive.php:147
+#: include/panel-settings/nxt-deactivate.php:147
 msgid " or "
 msgstr ""
 
-#: include/panel-settings/nxt-deactive.php:147
+#: include/panel-settings/nxt-deactivate.php:147
 msgid "Ask AI"
 msgstr ""
 
-#: include/panel-settings/nxt-deactive.php:152
+#: include/panel-settings/nxt-deactivate.php:152
 msgid "I agree to be contacted via email for support with this plugin."
 msgstr ""
 
-#: include/panel-settings/nxt-deactive.php:159
+#: include/panel-settings/nxt-deactivate.php:159
 msgid "Skip & Deactivate"
 msgstr ""
 
-#: include/panel-settings/nxt-deactive.php:160
+#: include/panel-settings/nxt-deactivate.php:160
 msgid "Submit & Deactivate"
 msgstr ""
 

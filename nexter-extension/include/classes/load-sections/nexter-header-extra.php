@@ -7,11 +7,26 @@
  */
 defined( 'ABSPATH' ) || exit;
 
+if ( ! function_exists( 'nxt_get_header_sections_cached' ) ) {
+	/**
+	 * Shared accessor for resolved header section IDs.
+	 *
+	 * @return array
+	 */
+	function nxt_get_header_sections_cached() {
+		static $header_sections = null;
+		if ( null === $header_sections ) {
+			$header_sections = Nexter_Builder_Sections_Conditional::nexter_sections_condition_hooks( 'sections', 'header' );
+		}
+		return $header_sections;
+	}
+}
+
 if( ! function_exists('get_nexter_header_sections') ){
 	
 	function get_nexter_header_sections( $sections ){
 		//Normal Header
-		$section_normal_header_id = Nexter_Builder_Sections_Conditional::nexter_sections_condition_hooks( 'sections', 'header' );
+		$section_normal_header_id = nxt_get_header_sections_cached();
 		if(!empty($section_normal_header_id)){
 			$sections = array_merge($sections, $section_normal_header_id);
 		}
@@ -43,7 +58,7 @@ if( ! function_exists('nexter_normal_header_content_load') ){
 	
 	function nexter_normal_header_content_load(){
 		
-		$section_normal_header_id = Nexter_Builder_Sections_Conditional::nexter_sections_condition_hooks( 'sections', 'header' );
+		$section_normal_header_id = nxt_get_header_sections_cached();
 		
 		if(!empty($section_normal_header_id)){
 			foreach ( $section_normal_header_id as $post_id) {
@@ -66,7 +81,7 @@ if( ! function_exists('nexter_sticky_header_content_load') ){
 	
 	function nexter_sticky_header_content_load(){
 		$sticky_header_display = false;
-		$section_sticky_header_id = Nexter_Builder_Sections_Conditional::nexter_sections_condition_hooks( 'sections', 'header' );
+		$section_sticky_header_id = nxt_get_header_sections_cached();
 		
 		if(!empty($section_sticky_header_id)){
 			foreach ( $section_sticky_header_id as $post_id) {
@@ -89,7 +104,7 @@ if( ! function_exists('nexter_sticky_header_content_load') ){
 if ( ! function_exists( 'nexter_header_transparent_sticky_classes' ) ) {
 	function nexter_header_transparent_sticky_classes( $classes ) {
 
-		$sections = Nexter_Builder_Sections_Conditional::nexter_sections_condition_hooks( 'sections', 'header' );
+		$sections = nxt_get_header_sections_cached();
 		
 		$transparent_display = false;
 		$sticky_display      = false;
@@ -127,7 +142,7 @@ if ( ! function_exists( 'nexter_header_transparent_sticky_classes' ) ) {
  * Enqueue Header Sticky JS
  */
 function nexter_header_sticky_load_scripts() {
-	$sections = Nexter_Builder_Sections_Conditional::nexter_sections_condition_hooks( 'sections', 'header' );
+	$sections = nxt_get_header_sections_cached();
 	
 	$transparent_display = false;
 	$sticky_display	= false;

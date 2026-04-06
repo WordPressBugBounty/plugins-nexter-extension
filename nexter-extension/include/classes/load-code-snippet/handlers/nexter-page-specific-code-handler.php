@@ -13,6 +13,35 @@ if (!defined('ABSPATH')) {
 }
 
 class Nexter_Page_Specific_Code_Handler {
+    /**
+     * PHP snippet runtime queues (single hook registration, many snippets).
+     *
+     * @var array<string, array>
+     */
+    private static $php_runtime = array(
+        'content' => array(),
+        'excerpt' => array(),
+        'loop' => array(),
+        'registered' => false,
+        'after_x_executed' => array(),
+        'after_x_last_queue' => array(),
+    );
+
+    /**
+     * CSS/JS/HTML runtime queues (single hook registration, many snippets).
+     *
+     * @var array<string, mixed>
+     */
+    private static $asset_runtime = array(
+        'content' => array(),
+        'excerpt' => array(),
+        'loop' => array(),
+        'header' => array(),
+        'footer' => array(),
+        'registered' => false,
+        'after_x_executed' => array(),
+        'after_x_last_queue' => array(),
+    );
     
     /**
      * Get instance
@@ -215,341 +244,476 @@ class Nexter_Page_Specific_Code_Handler {
             return false;
         }
 
-        // Get priority from post meta, default to appropriate values
         $hook_priority = is_numeric($snippet_id) ? get_post_meta($snippet_id, 'nxt-code-hooks-priority', true) : (is_array($code) && isset($code['hooks_priority']) ? $code['hooks_priority'] : 10);
         $priority = !empty($hook_priority) ? intval($hook_priority) : 10;
+        $item = array(
+            'snippet_id' => $snippet_id,
+            'code' => $code,
+            'location' => $location,
+            'priority' => $priority,
+        );
 
-        // Handle content-based insertions through content filter
-        if (self::is_content_based_location($location) || 
-            self::is_advanced_content_location($location)) {
-            
-            add_filter('the_content', function($content) use ($code, $snippet_id, $location) {
-                // Only process on singular pages and in the main query
-                if (!is_singular() || !in_the_loop() || !is_main_query()) {
-                    return $content;
-                }
+        if (self::is_content_based_location($location) || self::is_advanced_content_location($location) || $location === 'insert_after_post') {
+            self::$php_runtime['content'][] = $item;
+        } elseif ($location === 'insert_before_excerpt' || $location === 'insert_after_excerpt') {
+            self::$php_runtime['excerpt'][] = $item;
+        } elseif (self::is_archive_based_location($location) || self::is_post_based_location($location)) {
+            self::$php_runtime['loop'][] = $item;
+        } else {
+            return false;
+        }
 
-                $is_active = is_numeric($snippet_id) ? get_post_meta($snippet_id, 'nxt-code-status', true) : (is_array($code) && isset($code['status']) ? $code['status'] : 0);
-                if ($is_active != '1') {
-                    return $content;
-                }
+        self::register_php_runtime_hooks_once();
+        return true;
+    }
 
-                // Check PHP execution permission
-                $code_hidden_execute = is_numeric($snippet_id) ? get_post_meta($snippet_id, 'nxt-code-php-hidden-execute', true) : (is_array($code) && isset($code['php_hidden_execute']) ? $code['php_hidden_execute'] : 'no');
-                if ($code_hidden_execute !== 'yes') {
-                    return $content;
-                }
+    /**
+     * Register PHP dispatcher hooks once.
+     */
+    private static function register_php_runtime_hooks_once() {
+        if (self::$php_runtime['registered']) {
+            return;
+        }
 
-                // Check schedule restrictions before executing
-                if (self::should_skip_due_to_schedule_restrictions($snippet_id)) {
-                    return $content;
+        self::$php_runtime['registered'] = true;
+        add_filter('the_content', array(__CLASS__, 'dispatch_php_content'), 10, 1);
+        add_filter('the_excerpt', array(__CLASS__, 'dispatch_php_excerpt'), 10, 1);
+        add_action('the_post', array(__CLASS__, 'dispatch_php_loop'), 10, 2);
+        add_action('loop_end', array(__CLASS__, 'dispatch_php_loop_end'), 10, 0);
+    }
+
+    private static function is_php_runtime_item_executable($snippet_id, $code) {
+        $is_active = is_numeric($snippet_id) ? get_post_meta($snippet_id, 'nxt-code-status', true) : (is_array($code) && isset($code['status']) ? $code['status'] : 0);
+        if ((string) $is_active !== '1') {
+            return false;
+        }
+
+        $code_hidden_execute = is_numeric($snippet_id) ? get_post_meta($snippet_id, 'nxt-code-php-hidden-execute', true) : (is_array($code) && isset($code['php_hidden_execute']) ? $code['php_hidden_execute'] : 'no');
+        if ($code_hidden_execute !== 'yes') {
+            return false;
+        }
+
+        return !self::should_skip_due_to_schedule_restrictions($snippet_id);
+    }
+
+    private static function execute_php_capture_output($snippet_id, $code) {
+        ob_start();
+        if (class_exists('Nexter_Builder_Code_Snippets_Executor')) {
+            Nexter_Builder_Code_Snippets_Executor::get_instance()->execute_php_snippet($code, $snippet_id);
+        }
+        return ob_get_clean();
+    }
+
+    public static function dispatch_php_content($content) {
+        if (empty(self::$php_runtime['content'])) {
+            return $content;
+        }
+        if (!is_singular() || !in_the_loop() || !is_main_query()) {
+            return $content;
+        }
+
+        $items = self::$php_runtime['content'];
+        usort($items, function($a, $b) {
+            return intval($a['priority']) <=> intval($b['priority']);
+        });
+
+        foreach ($items as $item) {
+            $snippet_id = $item['snippet_id'];
+            $code = $item['code'];
+            $location = $item['location'];
+
+            if (!self::is_php_runtime_item_executable($snippet_id, $code)) {
+                continue;
+            }
+
+            $insert_content = self::execute_php_capture_output($snippet_id, $code);
+            $content = self::handle_content_insertion($content, $insert_content, $location, $snippet_id);
+        }
+
+        return $content;
+    }
+
+    public static function dispatch_php_excerpt($excerpt) {
+        if (empty(self::$php_runtime['excerpt'])) {
+            return $excerpt;
+        }
+        if (!is_archive() && !is_home()) {
+            return $excerpt;
+        }
+
+        $items = self::$php_runtime['excerpt'];
+        usort($items, function($a, $b) {
+            return intval($a['priority']) <=> intval($b['priority']);
+        });
+
+        foreach ($items as $item) {
+            $snippet_id = $item['snippet_id'];
+            $code = $item['code'];
+            $location = $item['location'];
+
+            if (!self::is_php_runtime_item_executable($snippet_id, $code)) {
+                continue;
+            }
+
+            $insert_content = self::execute_php_capture_output($snippet_id, $code);
+            if ($location === 'insert_before_excerpt') {
+                $excerpt = $insert_content . $excerpt;
+            } elseif ($location === 'insert_after_excerpt') {
+                $excerpt = $excerpt . $insert_content;
+            }
+        }
+
+        return $excerpt;
+    }
+
+    public static function dispatch_php_loop($post_object, $query) {
+        if (empty(self::$php_runtime['loop']) || is_admin() || (!is_archive() && !is_home() && !is_singular())) {
+            return;
+        }
+
+        $items = self::$php_runtime['loop'];
+        usort($items, function($a, $b) {
+            return intval($a['priority']) <=> intval($b['priority']);
+        });
+
+        foreach ($items as $item) {
+            $snippet_id = $item['snippet_id'];
+            $code = $item['code'];
+            $location = $item['location'];
+
+            if (!self::is_php_runtime_item_executable($snippet_id, $code)) {
+                continue;
+            }
+
+            if ($location === 'insert_before_post') {
+                if (is_singular() && in_the_loop() && is_main_query() && isset($post_object->ID) && get_the_ID() === $post_object->ID) {
+                    if (class_exists('Nexter_Builder_Code_Snippets_Executor')) {
+                        Nexter_Builder_Code_Snippets_Executor::get_instance()->execute_php_snippet($code, $snippet_id);
+                    }
                 }
-                
-                // Execute PHP and capture output
-                ob_start();
+                continue;
+            }
+
+            if (!is_archive() && !is_home()) {
+                continue;
+            }
+
+            $current_post_index = isset($query->current_post) ? intval($query->current_post) + 1 : 1;
+            $target_post_number = is_numeric($snippet_id) ? get_post_meta($snippet_id, 'nxt-post-number', true) : (is_array($code) && isset($code['post_number']) ? $code['post_number'] : 1);
+            $target_post_number = max(1, intval($target_post_number));
+
+            if ($location === 'before_post') {
                 if (class_exists('Nexter_Builder_Code_Snippets_Executor')) {
                     Nexter_Builder_Code_Snippets_Executor::get_instance()->execute_php_snippet($code, $snippet_id);
                 }
-                $insert_content = ob_get_clean();
-                
-                return self::handle_content_insertion($content, $insert_content, $location, $snippet_id);
-            }, $priority);
-            return true;
+                continue;
+            }
+
+            if ($location === 'between_posts') {
+                if ($current_post_index > 1 && class_exists('Nexter_Builder_Code_Snippets_Executor')) {
+                    Nexter_Builder_Code_Snippets_Executor::get_instance()->execute_php_snippet($code, $snippet_id);
+                }
+                continue;
+            }
+
+            if ($location === 'before_x_post') {
+                if ($current_post_index === $target_post_number && class_exists('Nexter_Builder_Code_Snippets_Executor')) {
+                    Nexter_Builder_Code_Snippets_Executor::get_instance()->execute_php_snippet($code, $snippet_id);
+                }
+                continue;
+            }
+
+            if ($location === 'after_x_post') {
+                $execution_key = $snippet_id . '_' . $target_post_number;
+                if ($current_post_index === ($target_post_number + 1) && empty(self::$php_runtime['after_x_executed'][$execution_key])) {
+                    self::$php_runtime['after_x_executed'][$execution_key] = true;
+                    if (class_exists('Nexter_Builder_Code_Snippets_Executor')) {
+                        Nexter_Builder_Code_Snippets_Executor::get_instance()->execute_php_snippet($code, $snippet_id);
+                    }
+                } elseif ($current_post_index === $target_post_number && isset($query->post_count) && ($query->current_post + 1) >= $query->post_count) {
+                    self::$php_runtime['after_x_last_queue'][$execution_key] = array('snippet_id' => $snippet_id, 'code' => $code);
+                }
+            }
+        }
+    }
+
+    public static function dispatch_php_loop_end() {
+        if (empty(self::$php_runtime['after_x_last_queue'])) {
+            return;
         }
 
-        // Handle archive-based insertions (excerpts, between posts, before/after posts)
-        if (self::is_archive_based_location($location)) {
-            
-            // Handle excerpt-based insertions on archive pages
-            if (in_array($location, ['insert_before_excerpt', 'insert_after_excerpt'])) {
-                add_filter('the_excerpt', function($excerpt) use ($code, $snippet_id, $location) {
-                    // Only on archive or home pages
-                    if (!is_archive() && !is_home()) {
-                        return $excerpt;
-                    }
+        foreach (self::$php_runtime['after_x_last_queue'] as $item) {
+            if (class_exists('Nexter_Builder_Code_Snippets_Executor')) {
+                Nexter_Builder_Code_Snippets_Executor::get_instance()->execute_php_snippet($item['code'], $item['snippet_id']);
+            }
+        }
+        self::$php_runtime['after_x_last_queue'] = array();
+    }
 
-                    $is_active = is_numeric($snippet_id) ? get_post_meta($snippet_id, 'nxt-code-status', true) : (is_array($code) && isset($code['status']) ? $code['status'] : 0);
-                    if ($is_active != '1') {
-                        return $excerpt;
-                    }
+    /**
+     * Queue a page-specific non-PHP snippet and register shared dispatchers.
+     */
+    private static function queue_page_specific_asset( $asset_type, $snippet_id, $payload, $location ) {
+        if ( ! self::is_page_specific_location( $location ) ) {
+            return false;
+        }
 
-                    // Check PHP execution permission
-                    $code_hidden_execute = is_numeric($snippet_id) ? get_post_meta($snippet_id, 'nxt-code-php-hidden-execute', true) : (is_array($code) && isset($code['php_hidden_execute']) ? $code['php_hidden_execute'] : 'no');
-                    if ($code_hidden_execute !== 'yes') {
-                        return $excerpt;
-                    }
+        $item = array(
+            'asset_type' => $asset_type,
+            'snippet_id' => $snippet_id,
+            'payload'    => $payload,
+            'location'   => $location,
+            'priority'   => self::resolve_snippet_priority( $snippet_id, $payload ),
+        );
 
-                    // Check schedule restrictions before executing
-                    if (self::should_skip_due_to_schedule_restrictions($snippet_id)) {
-                        return $excerpt;
-                    }
+        if ( self::is_content_based_location( $location ) || self::is_advanced_content_location( $location ) || $location === 'insert_after_post' ) {
+            self::$asset_runtime['content'][] = $item;
+        } elseif ( in_array( $location, array( 'insert_before_excerpt', 'insert_after_excerpt' ), true ) ) {
+            self::$asset_runtime['excerpt'][] = $item;
+        } elseif ( in_array( $location, array( 'between_posts', 'before_post', 'before_x_post', 'after_x_post', 'insert_before_post' ), true ) ) {
+            self::$asset_runtime['loop'][] = $item;
+        } else {
+            $hook = self::get_page_specific_enqueue_hook( $location );
+            if ( 'wp_footer' === $hook ) {
+                self::$asset_runtime['footer'][] = $item;
+            } else {
+                self::$asset_runtime['header'][] = $item;
+            }
+        }
 
-                    // Execute PHP and capture output
+        self::register_asset_runtime_hooks_once();
+        return true;
+    }
+
+    private static function register_asset_runtime_hooks_once() {
+        if ( self::$asset_runtime['registered'] ) {
+            return;
+        }
+        self::$asset_runtime['registered'] = true;
+
+        add_filter( 'the_content', array( __CLASS__, 'dispatch_asset_content' ), 10, 1 );
+        add_filter( 'the_excerpt', array( __CLASS__, 'dispatch_asset_excerpt' ), 10, 1 );
+        add_action( 'the_post', array( __CLASS__, 'dispatch_asset_loop' ), 10, 2 );
+        add_action( 'loop_end', array( __CLASS__, 'dispatch_asset_loop_end' ), 10, 0 );
+        add_action( 'wp_head', array( __CLASS__, 'dispatch_asset_header' ), 10, 0 );
+        add_action( 'wp_footer', array( __CLASS__, 'dispatch_asset_footer' ), 10, 0 );
+    }
+
+    private static function resolve_snippet_priority( $snippet_id, $payload ) {
+        $hook_priority = is_numeric( $snippet_id )
+            ? get_post_meta( $snippet_id, 'nxt-code-hooks-priority', true )
+            : ( ( is_array( $payload ) && isset( $payload['hooksPriority'] ) ) ? $payload['hooksPriority'] : 10 );
+        return ! empty( $hook_priority ) ? intval( $hook_priority ) : 10;
+    }
+
+    private static function is_asset_runtime_item_active( $snippet_id, $payload ) {
+        $status = is_numeric( $snippet_id )
+            ? get_post_meta( $snippet_id, 'nxt-code-status', true )
+            : ( ( is_array( $payload ) && isset( $payload['status'] ) ) ? $payload['status'] : 0 );
+        return (string) $status === '1';
+    }
+
+    private static function resolve_asset_output( $asset_type, $snippet_id, $payload ) {
+        $raw = '';
+
+        if ( $asset_type === 'html' ) {
+            if ( is_array( $payload ) ) {
+                if ( ! empty( $payload['file_path'] ) && file_exists( $payload['file_path'] ) ) {
                     ob_start();
-                    if (class_exists('Nexter_Builder_Code_Snippets_Executor')) {
-                        Nexter_Builder_Code_Snippets_Executor::get_instance()->execute_php_snippet($code, $snippet_id);
+                    if ( class_exists( 'Nexter_Code_Snippets_File_Based' ) ) {
+                        Nexter_Code_Snippets_File_Based::safe_include_file( $payload['file_path'] );
+                    } else {
+                        $file_path = wp_normalize_path( $payload['file_path'] );
+                        $storage_dir = wp_normalize_path( WP_CONTENT_DIR . '/nexter-snippet-data' );
+                        if ( strpos( $file_path, $storage_dir ) === 0 && substr( $file_path, -4 ) === '.php' ) {
+                            require_once $file_path;
+                        }
                     }
-                    $insert_content = ob_get_clean();
-
-                    if ($location === 'insert_before_excerpt') {
-                        return $insert_content . $excerpt;
-                    } elseif ($location === 'insert_after_excerpt') {
-                        return $excerpt . $insert_content;
-                    }
-
-                    return $excerpt;
-                }, $priority);
-                return true;
+                    $raw = ob_get_clean();
+                }
+            } elseif ( is_string( $payload ) ) {
+                $raw = $payload;
             }
-
-            // Handle loop-based insertions
-            if (in_array($location, ['between_posts', 'before_post', 'before_x_post', 'after_x_post'])) {
-                
-                // Handle "before_post" - Execute before each post in loop
-                if ($location === 'before_post') {
-                    add_action('the_post', function($post_object, $query) use ($code, $snippet_id, $location) {
-                        // Only on frontend archive or home pages
-                        if (is_admin() || (!is_archive() && !is_home())) {
-                            return;
-                        }
-
-                        // Check if snippet is active
-                        $is_active = is_numeric($snippet_id) ? get_post_meta($snippet_id, 'nxt-code-status', true) : (is_array($code) && isset($code['status']) ? $code['status'] : 0);
-                        if ($is_active != '1') {
-                            return;
-                        }
-
-                        // Check PHP execution permission
-                        $code_hidden_execute = is_numeric($snippet_id) ? get_post_meta($snippet_id, 'nxt-code-php-hidden-execute', true) : (is_array($code) && isset($code['php_hidden_execute']) ? $code['php_hidden_execute'] : 'no');
-                        if ($code_hidden_execute !== 'yes') {
-                            return;
-                        }
-
-                        // Check schedule restrictions before executing
-                        if (self::should_skip_due_to_schedule_restrictions($snippet_id)) {
-                            return;
-                        }
-
-                        // Execute PHP before each post
-                        if (class_exists('Nexter_Builder_Code_Snippets_Executor')) {
-                            Nexter_Builder_Code_Snippets_Executor::get_instance()->execute_php_snippet($code, $snippet_id);
-                        }
-                    }, $priority, 2);
-                }
-                
-                // Handle "before_x_post" - Execute before a specific post number
-                elseif ($location === 'before_x_post') {
-                    add_action('the_post', function($post_object, $query) use ($code, $snippet_id, $location) {
-                        // Only on frontend archive or home pages
-                        if (is_admin() || (!is_archive() && !is_home())) {
-                            return;
-                        }
-
-                        // Check if snippet is active
-                        $is_active = is_numeric($snippet_id) ? get_post_meta($snippet_id, 'nxt-code-status', true) : (is_array($code) && isset($code['status']) ? $code['status'] : 0);
-                        if ($is_active != '1') {
-                            return;
-                        }
-
-                        // Check PHP execution permission
-                        $code_hidden_execute = is_numeric($snippet_id) ? get_post_meta($snippet_id, 'nxt-code-php-hidden-execute', true) : (is_array($code) && isset($code['php_hidden_execute']) ? $code['php_hidden_execute'] : 'no');
-                        if ($code_hidden_execute !== 'yes') {
-                            return;
-                        }
-
-                        // Check schedule restrictions before executing
-                        if (self::should_skip_due_to_schedule_restrictions($snippet_id)) {
-                            return;
-                        }
-
-                        // Get the target post number (1-indexed)
-                        $target_post_number = is_numeric($snippet_id) ? get_post_meta($snippet_id, 'nxt-post-number', true) : (is_array($code) && isset($code['post_number']) ? $code['post_number'] : 1);
-                        $current_post_index = $query->current_post + 1; // Convert to 1-indexed
-
-                        // Execute before the specific post number
-                        if ($current_post_index == $target_post_number) {
-                            if (class_exists('Nexter_Builder_Code_Snippets_Executor')) {
-                                Nexter_Builder_Code_Snippets_Executor::get_instance()->execute_php_snippet($code, $snippet_id);
-                            }
-                        }
-                    }, $priority, 2);
-                }
-                
-                // Handle "after_x_post" - Execute after a specific post number
-                elseif ($location === 'after_x_post') {
-                    // Use a static variable to track execution
-                    static $executed_after_x_post = [];
-                    
-                    add_action('the_post', function($post_object, $query) use ($code, $snippet_id, $location, &$executed_after_x_post) {
-                        // Only on frontend archive or home pages
-                        if (is_admin() || (!is_archive() && !is_home())) {
-                            return;
-                        }
-
-                        // Check if snippet is active
-                        $is_active = is_numeric($snippet_id) ? get_post_meta($snippet_id, 'nxt-code-status', true) : (is_array($code) && isset($code['status']) ? $code['status'] : 0);
-                        if ($is_active != '1') {
-                            return;
-                        }
-
-                        // Check PHP execution permission
-                        $code_hidden_execute = is_numeric($snippet_id) ? get_post_meta($snippet_id, 'nxt-code-php-hidden-execute', true) : (is_array($code) && isset($code['php_hidden_execute']) ? $code['php_hidden_execute'] : 'no');
-                        if ($code_hidden_execute !== 'yes') {
-                            return;
-                        }
-
-                        // Check schedule restrictions before executing
-                        if (self::should_skip_due_to_schedule_restrictions($snippet_id)) {
-                            return;
-                        }
-
-                        // Get the target post number (1-indexed)
-                        $target_post_number = is_numeric($snippet_id) ? get_post_meta($snippet_id, 'nxt-post-number', true) : (is_array($code) && isset($code['post_number']) ? $code['post_number'] : 1);
-                        $current_post_index = $query->current_post + 1; // Convert to 1-indexed
-
-                        // Execute after the specific post number (when next post is being processed)
-                        if ($current_post_index == $target_post_number + 1) {
-                            // Use a unique key to prevent multiple executions
-                            $execution_key = $snippet_id . '_' . $target_post_number;
-                            
-                            if (!isset($executed_after_x_post[$execution_key])) {
-                                $executed_after_x_post[$execution_key] = true;
-                                
-                                // Execute after the target post (during next post setup)
-                                if (class_exists('Nexter_Builder_Code_Snippets_Executor')) {
-                                    Nexter_Builder_Code_Snippets_Executor::get_instance()->execute_php_snippet($code, $snippet_id);
-                                }
-                            }
-                        }
-                        // Handle edge case: if target post is the last post in the loop
-                        elseif ($current_post_index == $target_post_number && ($query->current_post + 1) >= $query->post_count) {
-                            // Use a unique key to prevent multiple executions
-                            $execution_key = $snippet_id . '_' . $target_post_number . '_last';
-                            
-                            if (!isset($executed_after_x_post[$execution_key])) {
-                                $executed_after_x_post[$execution_key] = true;
-                                
-                                // Use loop_end hook to execute after the last post
-                                add_action('loop_end', function() use ($code, $snippet_id) {
-                                    if (class_exists('Nexter_Builder_Code_Snippets_Executor')) {
-                                        Nexter_Builder_Code_Snippets_Executor::get_instance()->execute_php_snippet($code, $snippet_id);
-                                    }
-                                }, 10);
-                            }
-                        }
-                    }, $priority + 1, 2); // Higher priority to run after post setup
-                }
-                
-                // Handle "between_posts" - Execute between posts in loop
-                elseif ($location === 'between_posts') {
-                    add_action('the_post', function($post_object, $query) use ($code, $snippet_id, $location) {
-                        // Only on frontend archive or home pages
-                        if (is_admin() || (!is_archive() && !is_home())) {
-                            return;
-                        }
-
-                        // Check if snippet is active
-                        $is_active = is_numeric($snippet_id) ? get_post_meta($snippet_id, 'nxt-code-status', true) : (is_array($code) && isset($code['status']) ? $code['status'] : 0);
-                        if ($is_active != '1') {
-                            return;
-                        }
-
-                        // Check PHP execution permission
-                        $code_hidden_execute = is_numeric($snippet_id) ? get_post_meta($snippet_id, 'nxt-code-php-hidden-execute', true) : (is_array($code) && isset($code['php_hidden_execute']) ? $code['php_hidden_execute'] : 'no');
-                        if ($code_hidden_execute !== 'yes') {
-                            return;
-                        }
-
-                        // Check schedule restrictions before executing
-                        if (self::should_skip_due_to_schedule_restrictions($snippet_id)) {
-                            return;
-                        }
-
-                        // If the current post is the first one in the list, skip
-                        if ($query->current_post < 1) {
-                            return;
-                        }
-
-                        // Execute PHP between posts
-                        if (class_exists('Nexter_Builder_Code_Snippets_Executor')) {
-                            Nexter_Builder_Code_Snippets_Executor::get_instance()->execute_php_snippet($code, $snippet_id);
-                        }
-                    }, $priority, 2);
-                }
-                
-                return true;
-            }
+            return $raw;
         }
-       
-        // Handle post-based insertions (before/after post on singular pages)
-        if (self::is_post_based_location($location)) {
-            if ($location === 'insert_before_post') {
-                add_action('the_post', function($post_object) use ($code, $snippet_id) {
-                    // Only on singular pages and in main query for the current post
-                    if (!is_singular() || !in_the_loop() || !is_main_query()) {
-                        return;
-                    }
 
-                    // Ensure we're processing the correct post
-                    if (get_the_ID() !== $post_object->ID) {
-                        return;
-                    }
-
-                    $is_active = is_numeric($snippet_id) ? get_post_meta($snippet_id, 'nxt-code-status', true) : (is_array($code) && isset($code['status']) ? $code['status'] : 0);
-                    if ($is_active != '1') {
-                        return;
-                    }
-
-                    // Check PHP execution permission
-                    $code_hidden_execute = is_numeric($snippet_id) ? get_post_meta($snippet_id, 'nxt-code-php-hidden-execute', true) : (is_array($code) && isset($code['php_hidden_execute']) ? $code['php_hidden_execute'] : 'no');
-                    if ($code_hidden_execute !== 'yes') {
-                        return;
-                    }
-
-                    // Check schedule restrictions before executing
-                    if (self::should_skip_due_to_schedule_restrictions($snippet_id)) {
-                        return;
-                    }
-
-                    // Execute PHP before post
-                    if (class_exists('Nexter_Builder_Code_Snippets_Executor')) {
-                        Nexter_Builder_Code_Snippets_Executor::get_instance()->execute_php_snippet($code, $snippet_id);
-                    }
-                }, $priority);
-                return true;
-            } elseif ($location === 'insert_after_post') {
-                add_filter('the_content', function($content) use ($code, $snippet_id) {
-                    if (is_singular()) {
-                        $is_active = is_numeric($snippet_id) ? get_post_meta($snippet_id, 'nxt-code-status', true) : (is_array($code) && isset($code['status']) ? $code['status'] : 0);
-                        if ($is_active != '1') {
-                            return $content;
-                        }
-
-                        // Check PHP execution permission
-                        $code_hidden_execute = is_numeric($snippet_id) ? get_post_meta($snippet_id, 'nxt-code-php-hidden-execute', true) : (is_array($code) && isset($code['php_hidden_execute']) ? $code['php_hidden_execute'] : 'no');
-                        if ($code_hidden_execute !== 'yes') {
-                            return $content;
-                        }
-
-                        // Check schedule restrictions before executing
-                        if (self::should_skip_due_to_schedule_restrictions($snippet_id)) {
-                            return $content;
-                        }
-
-                        if (class_exists('Nexter_Builder_Code_Snippets_Executor')) {
-                            ob_start();
-                            Nexter_Builder_Code_Snippets_Executor::get_instance()->execute_php_snippet($code, $snippet_id);
-                            $php_output = ob_get_clean();
-                            return $content . $php_output;
-                        }
-                    }
-                    return $content;
-                }, $priority);
-                return true;
+        if ( is_array( $payload ) ) {
+            $file_path = isset( $payload['file_path'] ) ? $payload['file_path'] : '';
+            if ( ! empty( $file_path ) && is_readable( $file_path ) && class_exists( 'Nexter_Code_Snippets_File_Based' ) ) {
+                $file_based = new Nexter_Code_Snippets_File_Based();
+                $file_contents = file_get_contents( $file_path );
+                if ( $file_contents !== false ) {
+                    $raw = $file_based->parseBlock( $file_contents, true );
+                }
+            }
+        } elseif ( is_string( $payload ) ) {
+            $raw = $payload;
+            $compress = is_numeric( $snippet_id ) ? get_post_meta( $snippet_id, 'nxt-code-compresscode', true ) : false;
+            if ( ! empty( $compress ) ) {
+                $raw = ( $asset_type === 'css' ) ? self::compress_css( $raw ) : self::compress_js( $raw );
             }
         }
 
-        return false;
+        if ( $raw === '' ) {
+            return '';
+        }
+
+        if ( $asset_type === 'css' ) {
+            return '<style id="nexter-snippet-' . esc_attr( $snippet_id ) . '">' . $raw . '</style>';
+        }
+        if ( $asset_type === 'js' ) {
+            return '<script id="nexter-snippet-' . esc_attr( $snippet_id ) . '">' . $raw . '</script>';
+        }
+        return '';
+    }
+
+    private static function sorted_runtime_items( $bucket ) {
+        $items = self::$asset_runtime[ $bucket ];
+        if ( empty( $items ) ) {
+            return array();
+        }
+        usort( $items, function( $a, $b ) {
+            return intval( $a['priority'] ) <=> intval( $b['priority'] );
+        } );
+        return $items;
+    }
+
+    public static function dispatch_asset_content( $content ) {
+        if ( empty( self::$asset_runtime['content'] ) || ! is_singular() || ! in_the_loop() || ! is_main_query() ) {
+            return $content;
+        }
+        foreach ( self::sorted_runtime_items( 'content' ) as $item ) {
+            if ( ! self::is_asset_runtime_item_active( $item['snippet_id'], $item['payload'] ) ) {
+                continue;
+            }
+            $insert = self::resolve_asset_output( $item['asset_type'], $item['snippet_id'], $item['payload'] );
+            if ( $insert === '' ) {
+                continue;
+            }
+            $content = self::handle_content_insertion( $content, $insert, $item['location'], $item['snippet_id'] );
+        }
+        return $content;
+    }
+
+    public static function dispatch_asset_excerpt( $excerpt ) {
+        if ( empty( self::$asset_runtime['excerpt'] ) || ( ! is_archive() && ! is_home() ) ) {
+            return $excerpt;
+        }
+        foreach ( self::sorted_runtime_items( 'excerpt' ) as $item ) {
+            if ( ! self::is_asset_runtime_item_active( $item['snippet_id'], $item['payload'] ) ) {
+                continue;
+            }
+            $insert = self::resolve_asset_output( $item['asset_type'], $item['snippet_id'], $item['payload'] );
+            if ( $insert === '' ) {
+                continue;
+            }
+            if ( $item['location'] === 'insert_before_excerpt' ) {
+                $excerpt = $insert . $excerpt;
+            } elseif ( $item['location'] === 'insert_after_excerpt' ) {
+                $excerpt = $excerpt . $insert;
+            }
+        }
+        return $excerpt;
+    }
+
+    public static function dispatch_asset_loop( $post_object, $query ) {
+        if ( empty( self::$asset_runtime['loop'] ) || is_admin() ) {
+            return;
+        }
+        foreach ( self::sorted_runtime_items( 'loop' ) as $item ) {
+            if ( ! self::is_asset_runtime_item_active( $item['snippet_id'], $item['payload'] ) ) {
+                continue;
+            }
+            $location = $item['location'];
+            $snippet_id = $item['snippet_id'];
+            $insert = self::resolve_asset_output( $item['asset_type'], $snippet_id, $item['payload'] );
+            if ( $insert === '' ) {
+                continue;
+            }
+
+            if ( $location === 'insert_before_post' ) {
+                if ( is_singular() && in_the_loop() && is_main_query() && isset( $post_object->ID ) && get_the_ID() === $post_object->ID ) {
+                    echo $insert; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                }
+                continue;
+            }
+
+            if ( ! is_archive() && ! is_home() ) {
+                continue;
+            }
+
+            $current_post_index = isset( $query->current_post ) ? intval( $query->current_post ) + 1 : 1;
+            $target_post_number = is_numeric( $snippet_id )
+                ? get_post_meta( $snippet_id, 'nxt-post-number', true )
+                : ( ( is_array( $item['payload'] ) && isset( $item['payload']['post_number'] ) ) ? $item['payload']['post_number'] : 1 );
+            $target_post_number = max( 1, intval( $target_post_number ) );
+
+            if ( $location === 'before_post' ) {
+                echo $insert; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+            } elseif ( $location === 'between_posts' ) {
+                if ( $current_post_index > 1 ) {
+                    echo $insert; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                }
+            } elseif ( $location === 'before_x_post' ) {
+                if ( $current_post_index === $target_post_number ) {
+                    echo $insert; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                }
+            } elseif ( $location === 'after_x_post' ) {
+                $execution_key = $snippet_id . '_' . $target_post_number . '_' . $item['asset_type'];
+                if ( $current_post_index === ( $target_post_number + 1 ) && empty( self::$asset_runtime['after_x_executed'][ $execution_key ] ) ) {
+                    self::$asset_runtime['after_x_executed'][ $execution_key ] = true;
+                    echo $insert; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                } elseif ( $current_post_index === $target_post_number && isset( $query->post_count ) && ( $query->current_post + 1 ) >= $query->post_count ) {
+                    self::$asset_runtime['after_x_last_queue'][ $execution_key ] = $insert;
+                }
+            }
+        }
+    }
+
+    public static function dispatch_asset_loop_end() {
+        if ( empty( self::$asset_runtime['after_x_last_queue'] ) ) {
+            return;
+        }
+        foreach ( self::$asset_runtime['after_x_last_queue'] as $insert ) {
+            echo $insert; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+        }
+        self::$asset_runtime['after_x_last_queue'] = array();
+    }
+
+    public static function dispatch_asset_header() {
+        if ( empty( self::$asset_runtime['header'] ) ) {
+            return;
+        }
+        foreach ( self::sorted_runtime_items( 'header' ) as $item ) {
+            if ( ! self::is_asset_runtime_item_active( $item['snippet_id'], $item['payload'] ) ) {
+                continue;
+            }
+            if ( self::is_archive_based_location( $item['location'] ) && ! is_archive() && ! is_home() ) {
+                continue;
+            }
+            $insert = self::resolve_asset_output( $item['asset_type'], $item['snippet_id'], $item['payload'] );
+            if ( $insert !== '' ) {
+                echo $insert; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+            }
+        }
+    }
+
+    public static function dispatch_asset_footer() {
+        if ( empty( self::$asset_runtime['footer'] ) ) {
+            return;
+        }
+        foreach ( self::sorted_runtime_items( 'footer' ) as $item ) {
+            if ( ! self::is_asset_runtime_item_active( $item['snippet_id'], $item['payload'] ) ) {
+                continue;
+            }
+            if ( self::is_archive_based_location( $item['location'] ) && ! is_archive() && ! is_home() ) {
+                continue;
+            }
+            $insert = self::resolve_asset_output( $item['asset_type'], $item['snippet_id'], $item['payload'] );
+            if ( $insert !== '' ) {
+                echo $insert; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+            }
+        }
     }
 
     /**
@@ -656,6 +820,9 @@ class Nexter_Page_Specific_Code_Handler {
         if (!self::is_page_specific_location($location)) {
             return false;
         }
+
+        // Route through shared dispatcher runtime (register hooks once).
+        return self::queue_page_specific_asset( 'css', $snippet_id, $css, $location );
 
         // Get priority from post meta, default to appropriate values
         $hook_priority = is_numeric($snippet_id) ? get_post_meta($snippet_id, 'nxt-code-hooks-priority', true) : (is_array($css) && isset($css['hooksPriority']) ? $css['hooksPriority'] : 10);
@@ -797,6 +964,9 @@ class Nexter_Page_Specific_Code_Handler {
         if (!self::is_page_specific_location($location)) {
             return false;
         }
+
+        // Route through shared dispatcher runtime (register hooks once).
+        return self::queue_page_specific_asset( 'js', $snippet_id, $js, $location );
 
         // Cache basic meta / flags
         $is_numeric_id = is_numeric($snippet_id);
@@ -1149,6 +1319,9 @@ class Nexter_Page_Specific_Code_Handler {
         if ( ! self::is_page_specific_location( $location ) ) {
             return false;
         }
+
+        // Route through shared dispatcher runtime (register hooks once).
+        return self::queue_page_specific_asset( 'html', $snippet_id, $html, $location );
 
         $is_numeric_id = is_numeric( $snippet_id );
 

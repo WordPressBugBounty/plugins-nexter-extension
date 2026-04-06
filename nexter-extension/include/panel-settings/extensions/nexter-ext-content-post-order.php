@@ -25,7 +25,7 @@ defined('ABSPATH') or die();
 			return self::$post_type_order;
 		}
 
-		$option = get_option( 'nexter_extra_ext_options' );
+		$option = Nxt_Options::extra_ext();
 		
 		if(!empty($option) && isset($option['content-post-order']) && !empty($option['content-post-order']['switch']) && !empty($option['content-post-order']['values']) ){
 			self::$post_type_order = $option['content-post-order']['values'];

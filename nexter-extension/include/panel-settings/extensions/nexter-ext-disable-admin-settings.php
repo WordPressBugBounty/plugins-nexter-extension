@@ -12,7 +12,7 @@ defined('ABSPATH') or die();
      */
     public function __construct() {
 		
-		$extension_option = get_option( 'nexter_extra_ext_options' );
+		$extension_option = Nxt_Options::extra_ext();
 
 		if(!empty($extension_option) && isset($extension_option['disable-admin-setting']) && !empty($extension_option['disable-admin-setting']['switch']) && !empty($extension_option['disable-admin-setting']['values']) ){
 			$disable_values = $extension_option['disable-admin-setting']['values'];

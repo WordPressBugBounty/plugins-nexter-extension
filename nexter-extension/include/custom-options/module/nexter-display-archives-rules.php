@@ -33,6 +33,13 @@ class Nexter_Builders_Archives_Conditional_Rules {
 		 * Archives Options
 		 */
 		public static $Nexter_Archives_Config = array();
+
+		/**
+		 * Frontend guard cache for template existence check.
+		 *
+		 * @var bool|null
+		 */
+		private static $has_published_templates = null;
 		
 		/**
 		 * Initiator
@@ -55,6 +62,21 @@ class Nexter_Builders_Archives_Conditional_Rules {
 				add_action( 'wp', [ $this, 'register_post_type_conditions' ], 0 );
 			}
 			add_action('wp_ajax_nxt_archive_preview_taxonomy_ajax', [ $this, 'get_terms_by_taxonomy' ] );
+		}
+
+		/**
+		 * Fast pre-check to skip frontend hooks when no builder templates exist.
+		 *
+		 * @return bool
+		 */
+		private static function has_any_published_builder_templates() {
+			if ( self::$has_published_templates !== null ) {
+				return self::$has_published_templates;
+			}
+
+			$counts = wp_count_posts( NXT_BUILD_POST );
+			self::$has_published_templates = ( isset( $counts->publish ) && intval( $counts->publish ) > 0 );
+			return self::$has_published_templates;
 		}
 		
 		/*
@@ -217,6 +239,11 @@ class Nexter_Builders_Archives_Conditional_Rules {
 		 * Register Post Type Condition
 		 */
 		public static function register_post_type_conditions( $preview ='' ) {
+			// Skip on frontend when no builder templates exist (post type is registered by now).
+			if ( ! is_admin() && $preview !== 'preview' && ! empty( self::$load_conditions_rule ) ) {
+				return;
+			}
+
 			$all_archive = new Nexter_All_Archive();
 			self::register_post_sub_condition($all_archive);
 			

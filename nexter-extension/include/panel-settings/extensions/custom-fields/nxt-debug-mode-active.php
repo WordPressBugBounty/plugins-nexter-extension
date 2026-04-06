@@ -48,6 +48,6 @@ try {
         throw new \Exception( 'Failed to write wp-config.php.' );
     }
 } catch ( \Exception $e ) {
-    error_log( 'Config Update Error: ' . $e->getMessage() );
+    if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) { error_log( 'Config Update Error: ' . $e->getMessage() ); }
     throw new \Exception( $e->getMessage() );
 }

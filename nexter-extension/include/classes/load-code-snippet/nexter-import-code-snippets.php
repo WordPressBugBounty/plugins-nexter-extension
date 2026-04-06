@@ -69,10 +69,8 @@ if ( ! class_exists( 'Nexter_Code_Snippets_Import_Data' ) ) {
 			
 			// Pre-check: Ensure WP_CONTENT_DIR is writable before attempting any file operations
 			if ( ! self::check_content_dir_writable() ) {
-				wp_die(
-					'File-based snippets require write access. This environment restricts file creation.',
-					'Nexter Snippets'
-				);
+				if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) { error_log( 'Nexter Extension: File-based snippets require write access. Import skipped.' ); }
+				return;
 			}
 			
 			// Make sure the file based class exists
@@ -95,10 +93,8 @@ if ( ! class_exists( 'Nexter_Code_Snippets_Import_Data' ) ) {
 		private function import_data_code_snippet() {
 			// Pre-check: Ensure WP_CONTENT_DIR is writable before attempting file operations
 			if ( ! self::check_content_dir_writable() ) {
-				wp_die(
-					'File-based snippets require write access. This environment restricts file creation.',
-					'Nexter Snippets'
-				);
+				if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) { error_log( 'Nexter Extension: File-based snippets require write access. Import skipped.' ); }
+				return;
 			}
 
 			// Mark as imported before processing to prevent duplicate imports
@@ -164,10 +160,8 @@ if ( ! class_exists( 'Nexter_Code_Snippets_Import_Data' ) ) {
 		private function ensure_storage_directory( $storage_dir ) {
 			// Pre-check: Ensure WP_CONTENT_DIR is writable before attempting any directory operations
 			if ( ! self::check_content_dir_writable() ) {
-				wp_die(
-					'File-based snippets require write access. This environment restricts file creation.',
-					'Nexter Snippets'
-				);
+				if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) { error_log( 'Nexter Extension: File-based snippets require write access. Storage ensure skipped.' ); }
+				return false;
 			}
 
 			if ( empty( $storage_dir ) ) {
@@ -272,10 +266,8 @@ if ( ! class_exists( 'Nexter_Code_Snippets_Import_Data' ) ) {
 		private static function import_snippet_to_file( $snippet, $file_count, $storage_dir, $env_data ) {
 			// Pre-check: Ensure WP_CONTENT_DIR is writable before attempting file write
 			if ( ! self::check_content_dir_writable() ) {
-				wp_die(
-					'File-based snippets require write access. This environment restricts file creation.',
-					'Nexter Snippets'
-				);
+				if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) { error_log( 'Nexter Extension: File-based snippets require write access. Snippet import item skipped.' ); }
+				return false;
 			}
 
 			// Validate input

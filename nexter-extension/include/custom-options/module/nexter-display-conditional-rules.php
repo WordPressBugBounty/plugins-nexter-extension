@@ -39,8 +39,10 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 
 		/**
 		 * Current page data
+		 *
+		 * @var array Public for Nxt_Rule_Evaluator access.
 		 */
-		private static $current_load_page_data = [];
+		public static $current_load_page_data = [];
 
 		/**
 		 * Current singular page data
@@ -51,6 +53,20 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 		 * Current archive page data
 		 */
 		private static $current_archive_data = [];
+
+		/**
+		 * Per-request post meta cache used by runtime matcher.
+		 *
+		 * @var array
+		 */
+		private static $post_meta_cache = [];
+
+		/**
+		 * Per-request cache for 'nxt-build-get-data' option.
+		 *
+		 * @var array|null
+		 */
+		private static $build_get_data_cache = null;
 		
 		/**
 		 * Operating System List
@@ -93,12 +109,80 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 		}
 
 		/**
+		 * Rule evaluator instance.
+		 *
+		 * @var Nxt_Rule_Evaluator|null
+		 */
+		private $rule_evaluator = null;
+
+		/**
+		 * Get the rule evaluator (lazy-loaded).
+		 *
+		 * @return Nxt_Rule_Evaluator
+		 */
+		public function get_rule_evaluator() {
+			if ( null === $this->rule_evaluator ) {
+				require_once __DIR__ . '/class-nxt-rule-evaluator.php';
+				$this->rule_evaluator = new Nxt_Rule_Evaluator( $this );
+			}
+			return $this->rule_evaluator;
+		}
+
+		/**
 		 * Constructor
 		 */
 		public function __construct() {
 			add_action( 'admin_action_edit', array( $this, 'init_options' ) );
 			add_action( 'wp_ajax_nexter_get_particular_posts_query', [ $this, 'nexter_get_particular_posts_query' ] );
 			add_action( 'save_post', [ $this, 'nxt_build_save_post' ] );
+		}
+
+		/**
+		 * Memoized post meta getter to avoid repeated lookups in hot loops.
+		 *
+		 * @param int    $post_id   Post ID.
+		 * @param string $meta_key  Meta key.
+		 * @param bool   $single    Whether to return single.
+		 * @return mixed
+		 */
+		private static function get_cached_post_meta( $post_id, $meta_key, $single = true ) {
+			$post_id = (int) $post_id;
+			if ( ! isset( self::$post_meta_cache[ $post_id ] ) ) {
+				self::$post_meta_cache[ $post_id ] = [];
+			}
+			if ( ! isset( self::$post_meta_cache[ $post_id ][ $meta_key ] ) ) {
+				self::$post_meta_cache[ $post_id ][ $meta_key ] = get_post_meta( $post_id, $meta_key, true );
+			}
+			$value = self::$post_meta_cache[ $post_id ][ $meta_key ];
+			if ( $single ) {
+				return $value;
+			}
+			return is_array( $value ) ? $value : array( $value );
+		}
+
+		/**
+		 * Shared skip evaluator for template records across resolver pipelines.
+		 *
+		 * @param object $post_data      Template row object.
+		 * @param string $old_layout     Legacy layout key.
+		 * @param string $selected_group Resolved sections/pages/code target.
+		 * @return bool
+		 */
+		private static function should_skip_template_record( $post_data, $old_layout = '', $selected_group = '' ) {
+			$build_status = isset( $post_data->nxt_build_status ) ? $post_data->nxt_build_status : '';
+			if ( 0 == $build_status && '' !== $build_status ) {
+				return true;
+			}
+
+			if ( ! empty( $old_layout ) && 'none' === $old_layout ) {
+				return true;
+			}
+
+			if ( ! empty( $selected_group ) && 'none' === $selected_group ) {
+				return true;
+			}
+
+			return false;
 		}
 
 		public function nxt_build_save_post( $post_id, $post = false ) {
@@ -114,10 +198,10 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 			$get_data = get_option($option);
 			if( $get_data === false ){
 				$value = ['saved' => strtotime('now'), 'singular_updated' => '','archives_updated' => '','sections_updated' => ''];
-				add_option( $option, $value );
+				add_option( $option, $value, '', 'yes' );
 			}else if(!empty($get_data)){
 				$get_data['saved'] = strtotime('now');
-				update_option( $option, $get_data, false );
+				update_option( $option, $get_data, true );
 			}
 		}
 
@@ -311,146 +395,7 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 		 * @since 1.0.0
 		 */
 		public function check_layout_display_inc_exc_rules( $post_id, $conditions ) {
-
-			$current_post_type = get_post_type( $post_id );
-			$display           = false;
-
-			if ( isset( $conditions ) && is_array( $conditions ) && ! empty( $conditions ) ) {
-				
-				foreach ( $conditions as $key => $condition ) {
-					
-					if(is_array($condition) && isset($condition['value'])){
-						if(strrpos( $condition['value'], 'entire' ) !== false){
-							$check_cond = 'entire';
-						}else{
-							$check_cond = $condition['value'];
-						}
-					}else if ( !is_array($condition) && strrpos( $condition, 'entire' ) !== false ) {
-						$check_cond = 'entire';
-					} else {
-						$check_cond = $condition;
-					}
-
-					if( !empty($check_cond) ){
-						if( $check_cond == 'standard-universal' ){
-							$display = true;
-						}else if( $check_cond == 'entire' ){
-						
-							// Fix: Handle array condition properly before explode
-							$condition_value = $condition;
-							if (is_array($condition) && isset($condition['value'])) {
-								$condition_value = $condition['value'];
-							}
-							
-							// Ensure we have a string before using explode
-							if (!is_string($condition_value)) {
-								continue; // Skip this condition if it's not a string
-							}
-							
-							$condition_data = explode( '|', $condition_value );
-
-							$post_type     = isset( $condition_data[0] ) ? $condition_data[0] : false;
-							$archive  = isset( $condition_data[2] ) ? $condition_data[2] : false;
-							$taxonomy      = isset( $condition_data[3] ) ? $condition_data[3] : false;
-							
-							if ( $archive  === false ) {
-								$current_post_type = get_post_type( $post_id );
-
-								if ( $post_id !== false && $current_post_type == $post_type ) {
-									$display = true;
-								}
-							} else {
-
-								if ( is_archive() ) {
-									$current_post_type = get_post_type();
-									if ( $current_post_type == $post_type ) {
-										if ( $archive  == 'archive' ) {
-											$display = true;
-										} else if ( $archive  == 'tax-archive' ) {
-
-											$object	= get_queried_object();
-											$object_taxonomy = '';
-											if ( $object !== '' && $object !== null) {
-												$object_taxonomy = $object->taxonomy;
-											}
-
-											if ( $object_taxonomy == $taxonomy ) {
-												$display = true;
-											}
-										}
-									}
-								}
-							}
-						}else if(!empty($check_cond) && !empty($conditions)){
-							if( $check_cond == 'standard-singulars' && is_singular() ) {
-								$display = true;
-							}else if( $check_cond == 'standard-archives' && is_archive() ) {
-								$display = true;
-							}else if($check_cond == 'default-front' && is_front_page()) {
-								$display = true;
-							}else if($check_cond == 'default-blog' && is_home()) {
-								$display = true;
-							}else if($check_cond == 'default-date' && is_date()) {
-								$display = true;
-							}else if($check_cond == 'default-author' && is_author()) {
-								$display = true;
-							}else if($check_cond == 'default-search' && is_search()) {
-								$display = true;
-							}else if( $check_cond == 'default-404' && is_404() ) {
-								$display = true;
-							}else if( $check_cond == 'default-woo-shop' ) {
-								if ( function_exists( 'is_shop' ) && is_shop() ) {
-									$display = true;
-								}
-							}else if($check_cond == 'particular-post' && isset( $conditions['specific'] ) && is_array( $conditions['specific'] )) {
-								foreach ( $conditions['specific'] as $specific_page ) {
-
-									$specific_data = explode( '-', $specific_page );
-
-									$specific_post_type = isset( $specific_data[0] ) ? $specific_data[0] : false;
-									$specific_post_id   = isset( $specific_data[1] ) ? $specific_data[1] : false;
-									if( $specific_post_type == 'post') {
-										if( $specific_post_id == $post_id ) {
-											$display = true;
-										}
-									}else if( isset( $specific_data[2] ) && ( $specific_data[2] == 'singular' ) && $specific_post_type == 'taxonomy' ) {
-				
-										if( is_singular() ) {
-											$terms = get_term( $specific_post_id );
-				
-											if( isset( $terms->taxonomy ) ) {
-												if( has_term( (int) $specific_post_id, $terms->taxonomy, $post_id ) ) {
-													$display = true;
-												}
-											}
-										}
-									}else if( $specific_post_type == 'taxonomy' ) {
-										if( $specific_post_id == get_queried_object_id() ) {
-											$display = true;
-										}
-									}
-								}
-							}else if($check_cond == 'set-day' && isset( $conditions['set-day'] ) && is_array( $conditions['set-day'] ) ) {
-								$display = self::check_condition_set_day( $conditions['set-day'], $display );
-							}else if($check_cond == 'os' && isset( $conditions['os'] ) && is_array( $conditions['os'] ) ) {
-								$display = self::check_condition_os($conditions['os'], $display);
-							}else if($check_cond == 'browser' && isset( $conditions['browser'] ) && is_array( $conditions['browser'] ) ) {
-								$display = self::check_condition_browser($conditions['browser'], $display);
-							}else if($check_cond == 'login-status' && isset( $conditions['login-status'] ) && is_array( $conditions['login-status'] ) ) {
-								$display = self::check_condition_login_status($conditions['login-status'], $display);
-							}else if($check_cond == 'user-roles' && isset( $conditions['user-roles'] ) && is_array( $conditions['user-roles'] ) ) {
-								$display = self::check_condition_user_roles($conditions['user-roles'], $display);
-							}
-						}
-					}
-					
-					if ( $display ) {
-						break;
-					}
-				}
-			}
-
-			return $display;
+			return $this->get_rule_evaluator()->check_layout_display_inc_exc_rules( $post_id, $conditions );
 		}
 
 		/* Check Condition Set Day */
@@ -923,6 +868,40 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 			}
 		}
 		
+		/**
+		 * Get the 'nxt-build-get-data' option, cached per-request.
+		 *
+		 * @return array
+		 */
+		private static function get_build_data() {
+			if ( self::$build_get_data_cache !== null ) {
+				return self::$build_get_data_cache;
+			}
+			$nxt_option = 'nxt-build-get-data';
+			$get_data = get_option( $nxt_option );
+			if ( $get_data === false ) {
+				$get_data = [
+					'saved'             => strtotime( 'now' ),
+					'singular_updated'  => '',
+					'archives_updated'  => '',
+					'sections_updated'  => '',
+				];
+				add_option( $nxt_option, $get_data, '', 'yes' );
+			}
+			self::$build_get_data_cache = $get_data;
+			return self::$build_get_data_cache;
+		}
+
+		/**
+		 * Update the 'nxt-build-get-data' option and refresh cache.
+		 *
+		 * @param array $data
+		 */
+		private static function save_build_data( $data ) {
+			self::$build_get_data_cache = $data;
+			update_option( 'nxt-build-get-data', $data, true );
+		}
+
 		/*
 		 * Get Singular Template(Posts) By Singular Options Conditions
 		 *
@@ -942,32 +921,36 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 
 			self::$current_singular_data[ $type ] = array();
 
-			$options['current_post_id'] = self::$current_singular_data['ID'];
+			$options['current_post_id'] = isset( self::$current_singular_data['ID'] ) ? self::$current_singular_data['ID'] : 0;
 
 			$singular_group = isset( $options['singular_group'] ) ? esc_sql( $options['singular_group'] ) : '';
 
-			$nxt_option = 'nxt-build-get-data';
-			$get_data = get_option( $nxt_option );
-			if( $get_data === false ){
-				$get_data = ['saved' => strtotime('now'), 'singular_updated' => '','archives_updated' => '','sections_updated' => ''];
-				add_option( $nxt_option, $get_data );
-			}
+			$get_data = self::get_build_data();
 
+			$singular_cache_key = 'nxt-build-cache-singular';
 			if(!empty($get_data) && isset($get_data['saved']) && isset($get_data['singular_updated']) && $get_data['saved'] !== $get_data['singular_updated']){
-				$sqlquery = "SELECT p.ID, pm.meta_value FROM {$wpdb->postmeta} as pm INNER JOIN {$wpdb->posts} as p ON pm.post_id = p.ID WHERE (pm.meta_key = %s) AND p.post_type = %s AND p.post_status = 'publish' ORDER BY p.post_date DESC";
-			
+				$sqlquery = "SELECT p.ID, pm.meta_value,
+					pm_status.meta_value AS nxt_build_status,
+					pm_layout_pages.meta_value AS nxt_layout_pages,
+					pm_layout_sections.meta_value AS nxt_layout_sections
+					FROM {$wpdb->postmeta} as pm
+					INNER JOIN {$wpdb->posts} as p ON pm.post_id = p.ID
+					LEFT JOIN {$wpdb->postmeta} as pm_status ON pm_status.post_id = p.ID AND pm_status.meta_key = 'nxt_build_status'
+					LEFT JOIN {$wpdb->postmeta} as pm_layout_pages ON pm_layout_pages.post_id = p.ID AND pm_layout_pages.meta_key = 'nxt-hooks-layout-pages'
+					LEFT JOIN {$wpdb->postmeta} as pm_layout_sections ON pm_layout_sections.post_id = p.ID AND pm_layout_sections.meta_key = 'nxt-hooks-layout-sections'
+					WHERE (pm.meta_key = %s) AND p.post_type = %s AND p.post_status = 'publish' ORDER BY p.post_date DESC";
+
 				$sql1 = $wpdb->prepare( $sqlquery , $singular_group, $type ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-				
+
 				$posts  = $wpdb->get_results( $sql1 );	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-				
+
 				foreach ( $posts as $post_data ) {
-					$getPostStatus = get_post_meta($post_data->ID , 'nxt_build_status', true);
-					if($getPostStatus==0 && $getPostStatus!=''){
+					if ( self::should_skip_template_record( $post_data ) ) {
 						continue;
 					}
-					$get_layout_type = get_post_meta( $post_data->ID , 'nxt-hooks-layout-pages', false );
-					$hook_layout_sections = get_post_meta(  $post_data->ID, 'nxt-hooks-layout-sections', false );
-					if((!empty($get_layout_type) && !empty($get_layout_type[0]) && 'singular' == $get_layout_type[0]) || (!empty($hook_layout_sections) && !empty($hook_layout_sections[0]) && 'singular' == $hook_layout_sections[0])){
+					$get_layout_type = isset( $post_data->nxt_layout_pages ) ? $post_data->nxt_layout_pages : '';
+					$hook_layout_sections = isset( $post_data->nxt_layout_sections ) ? $post_data->nxt_layout_sections : '';
+					if((!empty($get_layout_type) && 'singular' == $get_layout_type) || (!empty($hook_layout_sections) && 'singular' == $hook_layout_sections)){
 						self::$current_singular_data[ $type ][ $post_data->ID ] = array(
 							'id'       => $post_data->ID,
 							'template_group' => maybe_unserialize( $post_data->meta_value ),
@@ -975,10 +958,17 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 					}
 				}
 				$get_data['singular_updated'] = $get_data['saved'];
-				$get_data[ 'singular' ] = self::$current_singular_data[ $type ];
-				update_option( $nxt_option, $get_data );
-			}else if( isset($get_data[ 'singular' ]) && !empty($get_data[ 'singular' ])){
-				self::$current_singular_data[ $type ] = $get_data[ 'singular' ];
+				unset( $get_data['singular'] ); // Remove legacy inline data from timestamp option.
+				self::save_build_data( $get_data );
+				update_option( $singular_cache_key, self::$current_singular_data[ $type ], true );
+			}else{
+				// Read from per-type cache option (preferred) or legacy inline data.
+				$singular_cache = get_option( $singular_cache_key );
+				if ( ! empty( $singular_cache ) ) {
+					self::$current_singular_data[ $type ] = $singular_cache;
+				} elseif ( isset( $get_data['singular'] ) && ! empty( $get_data['singular'] ) ) {
+					self::$current_singular_data[ $type ] = $get_data['singular'];
+				}
 			}
 
 			return apply_filters( 'nexter_get_singluar_posts_by_conditions', self::$current_singular_data[ $type ], $type );
@@ -1003,48 +993,58 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 
 			
 			self::$current_archive_data[ $type ] = array();
-			
-			$options['current_post_id'] = self::$current_archive_data['ID'];
-			
+
+			$options['current_post_id'] = isset( self::$current_archive_data['ID'] ) ? self::$current_archive_data['ID'] : 0;
+
 			$archive_group = isset( $options['archive_group'] ) ? esc_sql( $options['archive_group'] ) : '';
+
+			$get_data = self::get_build_data();
 			
-			$nxt_option = 'nxt-build-get-data';
-			$get_data = get_option( $nxt_option );
-			if( $get_data === false ){
-				$get_data = ['saved' => strtotime('now'), 'singular_updated' => '','archives_updated' => '','sections_updated' => ''];
-				add_option( $nxt_option, $get_data );
-			}
-			
+			$archives_cache_key = 'nxt-build-cache-archives';
 			if(!empty($get_data) && isset($get_data['saved']) && isset($get_data['archives_updated']) && $get_data['saved'] !== $get_data['archives_updated']){
-				$sqlquery = "SELECT p.ID, pm.meta_value FROM {$wpdb->postmeta} as pm INNER JOIN {$wpdb->posts} as p ON pm.post_id = p.ID WHERE (pm.meta_key = %s) AND p.post_type = %s AND p.post_status = 'publish' ORDER BY p.post_date DESC";
-				
+				$sqlquery = "SELECT p.ID, pm.meta_value,
+					pm_status.meta_value AS nxt_build_status,
+					pm_layout_pages.meta_value AS nxt_layout_pages,
+					pm_layout_sections.meta_value AS nxt_layout_sections
+					FROM {$wpdb->postmeta} as pm
+					INNER JOIN {$wpdb->posts} as p ON pm.post_id = p.ID
+					LEFT JOIN {$wpdb->postmeta} as pm_status ON pm_status.post_id = p.ID AND pm_status.meta_key = 'nxt_build_status'
+					LEFT JOIN {$wpdb->postmeta} as pm_layout_pages ON pm_layout_pages.post_id = p.ID AND pm_layout_pages.meta_key = 'nxt-hooks-layout-pages'
+					LEFT JOIN {$wpdb->postmeta} as pm_layout_sections ON pm_layout_sections.post_id = p.ID AND pm_layout_sections.meta_key = 'nxt-hooks-layout-sections'
+					WHERE (pm.meta_key = %s) AND p.post_type = %s AND p.post_status = 'publish' ORDER BY p.post_date DESC";
+
 				$sql2 = $wpdb->prepare( $sqlquery , $archive_group, $type );	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-				
+
 				$posts  = $wpdb->get_results( $sql2 );	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
 				foreach ( $posts as $post_data ) {
-
-					$getPostStatus = get_post_meta($post_data->ID , 'nxt_build_status', true);
-					if($getPostStatus==0 && $getPostStatus!=''){
+					if ( self::should_skip_template_record( $post_data ) ) {
 						continue;
 					}
-	
-					$get_layout_type = get_post_meta( $post_data->ID , 'nxt-hooks-layout-pages', false );
-					$hook_layout_sections = get_post_meta( $post_data->ID, 'nxt-hooks-layout-sections', false );
-					if( (!empty($get_layout_type) && !empty($get_layout_type[0]) && 'archives' == $get_layout_type[0]) || (!empty($hook_layout_sections) && !empty($hook_layout_sections[0]) && 'archives' == $hook_layout_sections[0])){
+
+					$get_layout_type = isset( $post_data->nxt_layout_pages ) ? $post_data->nxt_layout_pages : '';
+					$hook_layout_sections = isset( $post_data->nxt_layout_sections ) ? $post_data->nxt_layout_sections : '';
+					if( (!empty($get_layout_type) && 'archives' == $get_layout_type) || (!empty($hook_layout_sections) && 'archives' == $hook_layout_sections)){
 						self::$current_archive_data[ $type ][ $post_data->ID ] = array(
 							'id'       => $post_data->ID,
 							'template_group' => maybe_unserialize( $post_data->meta_value ),
 						);
 					}
 				}
-				
+
 				$get_data['archives_updated'] = $get_data['saved'];
-				$get_data[ 'archives' ] = self::$current_archive_data[ $type ];
-				update_option( $nxt_option, $get_data );
-				
-			}else if( isset($get_data[ 'archives' ]) && !empty($get_data[ 'archives' ])){
-				self::$current_archive_data[ $type ] = $get_data[ 'archives' ];
+				unset( $get_data['archives'] ); // Remove legacy inline data from timestamp option.
+				self::save_build_data( $get_data );
+				update_option( $archives_cache_key, self::$current_archive_data[ $type ], true );
+
+			}else{
+				// Read from per-type cache option (preferred) or legacy inline data.
+				$archives_cache = get_option( $archives_cache_key );
+				if ( ! empty( $archives_cache ) ) {
+					self::$current_archive_data[ $type ] = $archives_cache;
+				} elseif ( isset( $get_data['archives'] ) && ! empty( $get_data['archives'] ) ) {
+					self::$current_archive_data[ $type ] = $get_data['archives'];
+				}
 			}
 			return apply_filters( 'nexter_get_archive_posts_by_conditions', self::$current_archive_data[ $type ], $type );
 		}
@@ -1070,7 +1070,7 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 
 			self::$current_load_page_data[ $type ] = array();
 
-			$option['current_post_id'] = self::$current_load_page_data['ID'];
+			$option['current_post_id'] = isset( self::$current_load_page_data['ID'] ) ? self::$current_load_page_data['ID'] : 0;
 
 			$current_post_type	= esc_sql( get_post_type() );
 			$current_post_id	= false;
@@ -1163,58 +1163,83 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 				$join_meta = "AND ( {$join_meta} )";
 			}
 
-			$nxt_option = 'nxt-build-get-data';
-			$get_data = get_option( $nxt_option );
-			if( $get_data === false ){
-				$get_data = ['saved' => strtotime('now'), 'singular_updated' => '','archives_updated' => '','sections_updated' => '', "{$type}_entire" => ''];
-				add_option( $nxt_option, $get_data );
-			}
-			
+			$get_data = self::get_build_data();
+
+			$sections_cache_key = 'nxt-build-cache-' . sanitize_key( $type );
 			if(!empty($get_data) && isset($get_data['saved']) && (!isset($get_data["{$type}_entire"]) || (isset($get_data["{$type}_entire"]) && $get_data['saved'] !== $get_data["{$type}_entire"]))){
 
-				$sqlquery = "SELECT p.ID, pm.meta_value FROM {$wpdb->postmeta} as pm INNER JOIN {$wpdb->posts} as p ON pm.post_id = p.ID WHERE (pm.meta_key = %s OR 
+				$sqlquery = "SELECT p.ID, pm.meta_value,
+					pm_status.meta_value AS nxt_build_status,
+					pm_old_layout.meta_value AS nxt_old_layout,
+					pm_layout_pages.meta_value AS nxt_layout_pages,
+					pm_layout_sections.meta_value AS nxt_layout_sections
+					FROM {$wpdb->postmeta} as pm
+					INNER JOIN {$wpdb->posts} as p ON pm.post_id = p.ID
+					LEFT JOIN {$wpdb->postmeta} as pm_status ON pm_status.post_id = p.ID AND pm_status.meta_key = 'nxt_build_status'
+					LEFT JOIN {$wpdb->postmeta} as pm_old_layout ON pm_old_layout.post_id = p.ID AND pm_old_layout.meta_key = 'nxt-hooks-layout'
+					LEFT JOIN {$wpdb->postmeta} as pm_layout_pages ON pm_layout_pages.post_id = p.ID AND pm_layout_pages.meta_key = 'nxt-hooks-layout-pages'
+					LEFT JOIN {$wpdb->postmeta} as pm_layout_sections ON pm_layout_sections.post_id = p.ID AND pm_layout_sections.meta_key = 'nxt-hooks-layout-sections'
+					WHERE (pm.meta_key = %s OR
          (pm.meta_key = 'nxt-hooks-layout-pages' AND pm.meta_value = 'page-404') OR (pm.meta_key = 'nxt-hooks-layout-sections' AND pm.meta_value = 'page-404')
       ) AND p.post_type = %s AND p.post_status = 'publish' {$join_meta} ORDER BY p.post_date DESC";
-			
+
 				if($type==='nxt-code-snippet'){
-					$sqlquery = "SELECT p.ID, pm.meta_value FROM {$wpdb->postmeta} as pm INNER JOIN {$wpdb->posts} as p ON pm.post_id = p.ID WHERE (pm.meta_key = %s) AND p.post_type = %s AND p.post_status = 'publish' {$join_meta} ORDER BY p.post_date DESC";
+					$sqlquery = "SELECT p.ID, pm.meta_value,
+						pm_status.meta_value AS nxt_build_status,
+						pm_old_layout.meta_value AS nxt_old_layout,
+						pm_layout_pages.meta_value AS nxt_layout_pages,
+						pm_layout_sections.meta_value AS nxt_layout_sections
+						FROM {$wpdb->postmeta} as pm
+						INNER JOIN {$wpdb->posts} as p ON pm.post_id = p.ID
+						LEFT JOIN {$wpdb->postmeta} as pm_status ON pm_status.post_id = p.ID AND pm_status.meta_key = 'nxt_build_status'
+						LEFT JOIN {$wpdb->postmeta} as pm_old_layout ON pm_old_layout.post_id = p.ID AND pm_old_layout.meta_key = 'nxt-hooks-layout'
+						LEFT JOIN {$wpdb->postmeta} as pm_layout_pages ON pm_layout_pages.post_id = p.ID AND pm_layout_pages.meta_key = 'nxt-hooks-layout-pages'
+						LEFT JOIN {$wpdb->postmeta} as pm_layout_sections ON pm_layout_sections.post_id = p.ID AND pm_layout_sections.meta_key = 'nxt-hooks-layout-sections'
+						WHERE (pm.meta_key = %s) AND p.post_type = %s AND p.post_status = 'publish' {$join_meta} ORDER BY p.post_date DESC";
 				}
 
 				$sql3 = $wpdb->prepare( $sqlquery , $location, $type );	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-				
+
 				$posts  = $wpdb->get_results( $sql3 );	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-				
+
 				$get_data["{$type}_entire"] = $get_data['saved'];
-				$get_data[ "{$type}_data" ] = $posts;
-				update_option( $nxt_option, $get_data );
-			}else if( isset($get_data[ "{$type}_data" ]) && !empty($get_data[ "{$type}_data" ])){
-				$posts = $get_data[ "{$type}_data" ];
+				unset( $get_data["{$type}_data"] ); // Remove legacy inline data from timestamp option.
+				self::save_build_data( $get_data );
+				update_option( $sections_cache_key, $posts, true );
+			}else{
+				// Read from per-type cache option (preferred) or legacy inline data.
+				$sections_cache = get_option( $sections_cache_key );
+				if ( false !== $sections_cache && ! empty( $sections_cache ) ) {
+					$posts = $sections_cache;
+				} elseif ( isset( $get_data["{$type}_data"] ) && ! empty( $get_data["{$type}_data"] ) ) {
+					$posts = $get_data["{$type}_data"];
+				}
 			}
 			
 			
 			if( !empty($posts) ){
+				update_meta_cache( 'post', wp_list_pluck( $posts, 'ID' ) );
 				foreach ( $posts as $post_data ) {
 					
-					$old_layout = get_post_meta($post_data->ID, 'nxt-hooks-layout', true);
+					$old_layout = isset( $post_data->nxt_old_layout ) ? $post_data->nxt_old_layout : '';
 					
 					$selectSType = '';
 					if(!empty($old_layout)){
 						$selectType = $old_layout;
 						if($old_layout == 'sections'){
-							$selectSType = get_post_meta($post_data->ID, 'nxt-hooks-layout-sections', true);
+							$selectSType = isset( $post_data->nxt_layout_sections ) ? $post_data->nxt_layout_sections : '';
 						}else if($old_layout == 'pages'){
-							$selectSType = get_post_meta($post_data->ID, 'nxt-hooks-layout-pages', true);
+							$selectSType = isset( $post_data->nxt_layout_pages ) ? $post_data->nxt_layout_pages : '';
 						}else if($old_layout == 'code_snippet'){
-							$selectSType = get_post_meta($post_data->ID, 'nxt-hooks-layout-code-snippet', true);
+							$selectSType = self::get_cached_post_meta( $post_data->ID, 'nxt-hooks-layout-code-snippet', true );
 						}else{
-							$selectSType = get_post_meta($post_data->ID, 'nxt-hooks-layout-sections', true);
+							$selectSType = isset( $post_data->nxt_layout_sections ) ? $post_data->nxt_layout_sections : '';
 						}
 					}else if(empty($old_layout)){
-						$selectSType = get_post_meta($post_data->ID, 'nxt-hooks-layout-sections', true);
+						$selectSType = isset( $post_data->nxt_layout_sections ) ? $post_data->nxt_layout_sections : '';
 					}
 					
-					$getPostStatus = get_post_meta($post_data->ID , 'nxt_build_status', true);
-					if($getPostStatus==0 && $getPostStatus!='' || (!empty($old_layout) && $old_layout=='none') || (!empty($selectSType) && $selectSType=='none')){
+					if ( self::should_skip_template_record( $post_data, $old_layout, $selectSType ) ) {
 						continue;
 					}
 					
@@ -1420,14 +1445,14 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 						$get_sub_field = [];
 						if(isset($post_meta_value[0]) && isset($post_meta_value[0]['value'])){
 							$code_condition = array_column($post_meta_value, 'value');
-							$get_sub_field = get_post_meta( $post_data->ID, 'nxt-in-sub-rule', true );
+							$get_sub_field = self::get_cached_post_meta( $post_data->ID, 'nxt-in-sub-rule', true );
 						}
 
 						//Particular Posts/Pages Match
 						if(!empty($post_meta_value) && in_array('particular-post',$post_meta_value) ){
 						
 							if(is_object( $queried_object )){
-								$specific_value   = get_post_meta( $post_data->ID, 'nxt-hooks-layout-specific', true );
+								$specific_value   = self::get_cached_post_meta( $post_data->ID, 'nxt-hooks-layout-specific', true );
 								
 								if(!empty($specific_value) && isset($queried_object->ID)){
 									
@@ -1523,7 +1548,7 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 						
 						//Date & Time (Day/Time/Date)
 						if(!empty($post_meta_value) && in_array('set-day',$post_meta_value)){
-							$set_day   = get_post_meta( $post_data->ID, 'nxt-hooks-layout-set-day', true );
+							$set_day   = self::get_cached_post_meta( $post_data->ID, 'nxt-hooks-layout-set-day', true );
 							$check_day = self::check_condition_set_day( $set_day, $check_day );
 						}else if(!empty($code_condition) && in_array('set-day',$code_condition) && !empty($get_sub_field) && isset($get_sub_field['set-day'])){
 							$set_day = array_column($get_sub_field['set-day'], 'value');
@@ -1532,7 +1557,7 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 						
 						//Operating System
 						if(!empty($post_meta_value) && in_array('os',$post_meta_value)) {
-							$set_os  = get_post_meta( $post_data->ID, 'nxt-hooks-layout-os', true );
+							$set_os  = self::get_cached_post_meta( $post_data->ID, 'nxt-hooks-layout-os', true );
 							$check_os = self::check_condition_os($set_os, $check_os);
 						}else if(!empty($code_condition) && in_array('os',$code_condition) && !empty($get_sub_field) && isset($get_sub_field['os'])){
 							$set_os  = array_column($get_sub_field['os'], 'value');
@@ -1541,7 +1566,7 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 
 						//Browser
 						if(!empty($post_meta_value) && in_array('browser',$post_meta_value)){
-							$set_browser  = get_post_meta( $post_data->ID, 'nxt-hooks-layout-browser', true );
+							$set_browser  = self::get_cached_post_meta( $post_data->ID, 'nxt-hooks-layout-browser', true );
 							$check_browser = self::check_condition_browser($set_browser, $check_browser );
 						}else if(!empty($code_condition) && in_array('browser',$code_condition) && !empty($get_sub_field) && isset($get_sub_field['browser'])){
 							$set_browser = array_column($get_sub_field['browser'], 'value');
@@ -1550,7 +1575,7 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 						
 						//Login Status
 						if(!empty($post_meta_value) && in_array('login-status',$post_meta_value)){
-							$set_login_status  = get_post_meta( $post_data->ID, 'nxt-hooks-layout-login-status', true );
+							$set_login_status  = self::get_cached_post_meta( $post_data->ID, 'nxt-hooks-layout-login-status', true );
 							$check_login_status = self::check_condition_login_status($set_login_status, $check_login_status );
 						}else if(!empty($code_condition) && in_array('login-status',$code_condition) && !empty($get_sub_field) && isset($get_sub_field['login-status'])){
 							$set_login_status = array_column($get_sub_field['login-status'], 'value');
@@ -1559,7 +1584,7 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 						
 						//User Roles
 						if(!empty($post_meta_value) && in_array('user-roles',$post_meta_value)){
-							$set_user_roles  = get_post_meta( $post_data->ID, 'nxt-hooks-layout-user-roles', true );
+							$set_user_roles  = self::get_cached_post_meta( $post_data->ID, 'nxt-hooks-layout-user-roles', true );
 							$check_user_roles = self::check_condition_user_roles($set_user_roles, $check_user_roles );
 						}else if(!empty($code_condition) && in_array('user-roles',$code_condition) && !empty($get_sub_field) && isset($get_sub_field['user-roles'])){
 							$set_user_roles = array_column($get_sub_field['user-roles'], 'value');
@@ -1606,46 +1631,7 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 		 * Remove Template Exclude Locations Conditional Rules
 		 */
 		public function remove_templates_excludes_conditional_rules( $type, $options ) {
-
-			$exclusion       = isset( $options['exclusion'] ) ? $options['exclusion'] : '';
-			$current_post_id = isset( $options['current_post_id'] ) ? $options['current_post_id'] : false;
-
-			foreach ( self::$current_load_page_data[ $type ] as $c_post_id => $c_data ) {
-
-				$exclusion_rules = get_post_meta( $c_post_id, $exclusion, true );
-				if( !empty($exclusion_rules) && !empty($c_post_id)){
-					$code_condition = [];
-					$get_sub_field = [];
-					if(isset($exclusion_rules[0]) && isset($exclusion_rules[0]['value'])){
-						$code_condition = array_column($exclusion_rules, 'value');
-						$get_sub_field = get_post_meta( $c_post_id, 'nxt-ex-sub-rule', true );
-					}
-					
-					if(!empty($code_condition) && in_array('particular-post',$code_condition) && !empty($get_sub_field) && isset($get_sub_field['specific'])){
-						$exclusion_rules['specific'] = array_column($get_sub_field['specific'], 'value');
-					}else if( !empty($exclusion_rules) && in_array('particular-post',$exclusion_rules) ){
-						$exclusion_rules['specific'] = get_post_meta( $c_post_id, 'nxt-hooks-layout-exclude-specific', true );
-					}
-
-					$exclude_array = [ 'set-day', 'os', 'browser', 'login-status', 'user-roles' ];
-					
-					foreach ($exclude_array as $exclude) {
-						if(!empty($code_condition) && !empty($get_sub_field) && isset($get_sub_field[$exclude]) ){
-							$exclusion_rules[$exclude] = array_column($get_sub_field[$exclude], 'value');
-						}else if( !empty($exclusion_rules) && in_array($exclude, $exclusion_rules) ){
-							$exclusion_rules[$exclude]   = get_post_meta( $c_post_id, 'nxt-hooks-layout-exclude-'.$exclude, true );
-						}
-					}
-				}
-				
-				$exclusion_rules = apply_filters( 'nexter_advanced_section_exclude_condition', $exclusion_rules, $c_post_id );
-				
-				$exclude_id = $this->check_layout_display_inc_exc_rules( $current_post_id, $exclusion_rules );
-				
-				if ( $exclude_id ) {
-					unset( self::$current_load_page_data[ $type ][ $c_post_id ] );
-				}
-			}
+			$this->get_rule_evaluator()->remove_templates_excludes_conditional_rules( $type, $options );
 		}
 
 		
@@ -1653,41 +1639,8 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 		/* 
 		 *	Sorting Data Array By Priority
 		 */
-		public function array_sort_by_priority($data_array, $on, $order=SORT_ASC){
-
-			$new_array = [];
-			$sorting_array = [];
-			
-			if (count($data_array) > 0) {
-				foreach ($data_array as $key => $val) {
-					if (is_array($val)) {
-						foreach ($val as $k2 => $v2) {
-							if ($k2 == $on) {
-								$sorting_array[$key] = $v2;
-							}
-						}
-					} else {
-						$sorting_array[$key] = $val;
-					}
-				}
-
-				switch ($order) {
-					case SORT_ASC:
-						asort($sorting_array);
-						break;
-					case SORT_DESC:
-						arsort($sorting_array);
-						break;
-				}
-
-				foreach ($sorting_array as $key => $val) {
-					if( isset($data_array[$key]['condition']) && $data_array[$key]['condition']==1 ){
-						$new_array[$key] = $data_array[$key];
-					}
-				}
-			}
-
-			return $new_array;
+		public function array_sort_by_priority( $data_array, $on, $order = SORT_ASC ) {
+			return $this->get_rule_evaluator()->array_sort_by_priority( $data_array, $on, $order );
 		}
 		
 		/**
@@ -1950,7 +1903,7 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 		 */
 		public static function should_display_snippet($post_id , $snippet = []) {
 			// First check if snippet uses new Smart Conditional Logic
-			$smart_conditions = get_post_meta($post_id, 'nxt-smart-conditional-logic', true);
+			$smart_conditions = isset($snippet['smart_conditional_logic']) ? $snippet['smart_conditional_logic'] : get_post_meta($post_id, 'nxt-smart-conditional-logic', true);
 			
 			if (!empty($smart_conditions) && isset($smart_conditions['enabled']) && $smart_conditions['enabled']) {
 				// Use new Smart Conditional Logic system
@@ -1958,8 +1911,8 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 			}
 			
 			// Fall back to old Display Rules system
-			$include_conditions = get_post_meta($post_id, 'nxt-add-display-rule', true);
-			$exclude_conditions = get_post_meta($post_id, 'nxt-exclude-display-rule', true);
+			$include_conditions = isset($snippet['add_display_rule']) ? $snippet['add_display_rule'] : get_post_meta($post_id, 'nxt-add-display-rule', true);
+			$exclude_conditions = isset($snippet['exclude_display_rule']) ? $snippet['exclude_display_rule'] : get_post_meta($post_id, 'nxt-exclude-display-rule', true);
 		
 			return self::check_legacy_display_rules($post_id, $include_conditions, $exclude_conditions);
 	}
@@ -2344,7 +2297,7 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 		 */
 		private static function evaluate_user_meta_condition( $operator, $values ) {
 			// Check if code snippets are enabled
-			$get_opt = get_option('nexter_extra_ext_options');
+			$get_opt = Nxt_Options::extra_ext();
 			$code_snippets_enabled = true;
 
 			if (isset($get_opt['code-snippets']) && isset($get_opt['code-snippets']['switch'])) {
@@ -2365,7 +2318,7 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 		 */
 		private static function evaluate_ip_address_condition( $operator, $values ) {
 			// Check if code snippets are enabled
-			$get_opt = get_option('nexter_extra_ext_options');
+			$get_opt = Nxt_Options::extra_ext();
 			$code_snippets_enabled = true;
 
 			if (isset($get_opt['code-snippets']) && isset($get_opt['code-snippets']['switch'])) {
@@ -2988,7 +2941,7 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 
 		private static function evaluate_country_condition( $operator, $values ) {
 			// Check if code snippets are enabled
-			$get_opt = get_option('nexter_extra_ext_options');
+			$get_opt = Nxt_Options::extra_ext();
 			$code_snippets_enabled = true;
 			if (isset($get_opt['code-snippets']) && isset($get_opt['code-snippets']['switch'])) {
 				$code_snippets_enabled = !empty($get_opt['code-snippets']['switch']);

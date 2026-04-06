@@ -18,7 +18,6 @@ require_once NEXTER_EXT_DIR . 'include/classes/load-code-snippet/handlers/nexter
 require_once NEXTER_EXT_DIR . 'include/classes/load-code-snippet/handlers/nexter-ecommerce-code-handler.php';
 require_once NEXTER_EXT_DIR . 'include/classes/load-code-snippet/handlers/nexter-memberpress-hook-handler.php';
 // require_once NEXTER_EXT_DIR . 'include/classes/load-code-snippet/nexter-php-code-handling.php';
-
 if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 
 	class Nexter_Builder_Code_Snippets_Render {
@@ -57,6 +56,27 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 
 	private static $glob_file_count_cache = null;
 
+	/**
+	 * Cached flag: whether admin snippet runtime should boot.
+	 *
+	 * @var bool|null
+	 */
+	private static $should_boot_admin_runtime = null;
+
+	/**
+	 * Transient cache TTL for file snippet scans.
+	 *
+	 * @var int
+	 */
+	private static $file_snippet_transient_ttl = 300;
+
+	/**
+	 * Per-request post meta cache for legacy DB-based snippets.
+	 *
+	 * @var array<int, array<string, array>>
+	 */
+	private static $post_meta_cache = [];
+
 		/**
 		 * Check if code snippets functionality is enabled (with cache)
 		 */
@@ -64,7 +84,8 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 			if ( self::$code_snippets_enabled_cache !== null ) {
 				return self::$code_snippets_enabled_cache;
 			}
-			$get_opt = get_option('nexter_extra_ext_options');
+
+			$get_opt = Nxt_Options::extra_ext();
 			$code_snippets_enabled = true;
 
 			if (isset($get_opt['code-snippets']) && isset($get_opt['code-snippets']['switch'])) {
@@ -73,6 +94,42 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 
 			self::$code_snippets_enabled_cache = $code_snippets_enabled;
 			return $code_snippets_enabled;
+		}
+
+		/**
+		 * Prime and return all meta for a snippet post in one call.
+		 *
+		 * @param int $post_id Snippet post ID.
+		 * @return array<string, array>
+		 */
+		private static function get_snippet_meta( $post_id ) {
+			$post_id = absint( $post_id );
+			if ( empty( $post_id ) ) {
+				return [];
+			}
+
+			if ( ! isset( self::$post_meta_cache[ $post_id ] ) ) {
+				self::$post_meta_cache[ $post_id ] = get_post_meta( $post_id );
+			}
+
+			return self::$post_meta_cache[ $post_id ];
+		}
+
+		/**
+		 * Read a single snippet meta value from local cache.
+		 *
+		 * @param int    $post_id Snippet post ID.
+		 * @param string $key     Meta key.
+		 * @param mixed  $default Default value.
+		 * @return mixed
+		 */
+		private static function get_snippet_meta_value( $post_id, $key, $default = '' ) {
+			$meta = self::get_snippet_meta( $post_id );
+			if ( empty( $meta ) || ! isset( $meta[ $key ][0] ) ) {
+				return $default;
+			}
+
+			return maybe_unserialize( $meta[ $key ][0] );
 		}
 
 		/**
@@ -113,6 +170,24 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 	 */
 	private function get_file_based_instance() {
 		return self::get_file_based_instance_static();
+	}
+
+	/**
+	 * Lazy-load PHP executor only when PHP execution/validation is needed.
+	 *
+	 * @return bool
+	 */
+	private static function ensure_php_executor_loaded() {
+		if ( class_exists( 'Nexter_Builder_Code_Snippets_Executor' ) ) {
+			return true;
+		}
+
+		$executor_file = NEXTER_EXT_DIR . 'include/classes/load-code-snippet/nexter-php-code-handling.php';
+		if ( is_file( $executor_file ) ) {
+			require_once $executor_file;
+		}
+
+		return class_exists( 'Nexter_Builder_Code_Snippets_Executor' );
 	}
 
 	/**
@@ -286,10 +361,10 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 					'sections_updated' => '',
 					'code_updated' => ''
 				];
-				add_option( $cache_option, $value );
+				add_option( $cache_option, $value, '', 'yes' );
 			} elseif ( ! empty($get_data) ) {
 				$get_data['saved'] = strtotime('now');
-				update_option( $cache_option, $get_data, false );
+				update_option( $cache_option, $get_data, true );
 			}
 		}
 
@@ -300,7 +375,32 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 	 */
 	private function clear_file_based_cache() {
 		self::$file_count_cache = null;
+		self::$file_code_list_cache_with_meta = null;
+		self::$file_code_list_cache_without_meta = null;
+		$this->clear_file_snippet_transients();
 		// Note: We don't clear file_based_instance and storage_dir_cache as they're stable
+	}
+
+	/**
+	 * Build transient key for file snippet fallback list.
+	 *
+	 * @param string $code_type Snippet code type.
+	 * @return string
+	 */
+	private static function get_file_snippet_transient_key( $code_type ) {
+		$site_suffix = is_multisite() ? '_' . absint( get_current_blog_id() ) : '_single';
+		return 'nxt_snippet_file_list_v1_' . sanitize_key( $code_type ) . $site_suffix;
+	}
+
+	/**
+	 * Clear cached file snippet fallback transients.
+	 *
+	 * @return void
+	 */
+	private function clear_file_snippet_transients() {
+		foreach ( array( 'php', 'css', 'javascript', 'htmlmixed' ) as $type ) {
+			delete_transient( self::get_file_snippet_transient_key( $type ) );
+		}
 	}
 
 	/**
@@ -351,10 +451,11 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 			//	add_action( 'wp', array( $this, 'get_snippet_ids' ), 1 );
 			//}
 				
-			// Separate actions for each code type
-			add_action( 'wp', array( $this, 'nexter_code_html_hooks_actions' ), 2 );
-
-			add_action('wp', array($this, 'nexter_register_snippet_ids_filter'), 3);
+			// Separate actions for each code type (frontend scope only).
+			if ( ! is_admin() ) {
+				add_action( 'wp', array( $this, 'nexter_code_html_hooks_actions' ), 2 );
+				add_action( 'wp', array( $this, 'nexter_register_snippet_ids_filter' ), 3 );
+			}
 
 			// Enqueue CSS/JS for frontend
 			if(!is_admin()){
@@ -363,33 +464,45 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 		
 			// Enqueue CSS/JS for admin area (for admin_header and admin_footer locations)
 			if(is_admin()){
-				add_action( 'admin_enqueue_scripts', array( $this, 'nexter_code_snippets_css_js_admin' ),2 );
-				add_action( 'admin_init', array( $this, 'nexter_code_html_hooks_actions_admin' ), 2 );
+				if ( $this->should_boot_admin_snippet_runtime() ) {
+					add_action( 'admin_enqueue_scripts', array( $this, 'nexter_code_snippets_css_js_admin' ),2 );
+					add_action( 'admin_init', array( $this, 'nexter_code_html_hooks_actions_admin' ), 2 );
+				}
 				add_action( 'admin_init', array( $this, 'migrate_post_snippets_to_file_based' ), 1 );
 			}
 
-			// Execute PHP snippets with immediate bypass for REST API registration
+			// Execute PHP snippets only after request context is available.
 			if((!isset($_GET['test_code']) || empty($_GET['test_code']))){ // phpcs:ignore WordPress.Security.NonceVerification.Recommended, handled by the core method already.
 				//add_action( 'wp', array( $this, 'nexter_php_execution_snippet' ), 1 );
-				$this->nexter_php_execution_snippet();
+                $this->nexter_php_execution_snippet();
+			   
+				/* if ( is_admin() ) {
+					add_action( 'admin_init', array( $this, 'nexter_php_execution_snippet' ), 1 );
+				} else {
+					add_action( 'wp', array( $this, 'nexter_php_execution_snippet' ), 1 );
+				} */
 			}
 
-			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts_admin' ) );
-			add_action('wp_ajax_create_code_snippets', array( $this, 'create_new_snippet') );
-			add_action('wp_ajax_update_edit_code_snippets', array( $this, 'update_edit_snippet') );
-			add_action('wp_ajax_fetch_code_snippet_list', array( $this, 'fetch_code_list') );
-			add_action('wp_ajax_fetch_code_snippet_delete', array( $this, 'fetch_code_snippet_delete') );
-			add_action('wp_ajax_fetch_code_snippet_export', array( $this, 'fetch_code_snippet_export') );
-			add_action('wp_ajax_fetch_code_snippet_import', array( $this, 'fetch_code_snippet_import') );
-			add_action('wp_ajax_fetch_code_snippet_status', array( $this, 'fetch_code_snippet_status') );
-			add_action('wp_ajax_get_edit_snippet_data', array( $this, 'get_edit_snippet_data') );
-			add_action('wp_ajax_nexter_get_taxonomy_terms', array( $this, 'get_taxonomy_terms_ajax') );
-			add_action('wp_ajax_nexter_get_authors', array( $this, 'get_authors_ajax') );
-			add_action('wp_ajax_fetch_snippet_list_for_conditions', array( $this, 'fetch_snippet_list_for_conditions') );
+			if ( is_admin() ) {
+				add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts_admin' ) );
+				add_action('wp_ajax_create_code_snippets', array( $this, 'create_new_snippet') );
+				add_action('wp_ajax_update_edit_code_snippets', array( $this, 'update_edit_snippet') );
+				add_action('wp_ajax_fetch_code_snippet_list', array( $this, 'fetch_code_list') );
+				add_action('wp_ajax_fetch_code_snippet_delete', array( $this, 'fetch_code_snippet_delete') );
+				add_action('wp_ajax_fetch_code_snippet_export', array( $this, 'fetch_code_snippet_export') );
+				add_action('wp_ajax_fetch_code_snippet_import', array( $this, 'fetch_code_snippet_import') );
+				add_action('wp_ajax_fetch_code_snippet_status', array( $this, 'fetch_code_snippet_status') );
+				add_action('wp_ajax_get_edit_snippet_data', array( $this, 'get_edit_snippet_data') );
+				add_action('wp_ajax_nexter_get_taxonomy_terms', array( $this, 'get_taxonomy_terms_ajax') );
+				add_action('wp_ajax_nexter_get_authors', array( $this, 'get_authors_ajax') );
+				add_action('wp_ajax_fetch_snippet_list_for_conditions', array( $this, 'fetch_snippet_list_for_conditions') );
+			}
 			//add_action( 'init', array( $this, 'home_page_code_execute' ) );
 			
-			// Initialize CSS Selector functionality
-			add_action( 'wp', array( $this, 'init_css_selector_functionality' ), 4 );
+			// Initialize CSS selector functionality only on frontend.
+			if ( ! is_admin() ) {
+				add_action( 'wp', array( $this, 'init_css_selector_functionality' ), 4 );
+			}
 		}
 
 		public function nexter_register_snippet_ids_filter() {
@@ -554,21 +667,8 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 				require_once ABSPATH . 'wp-admin/includes/user.php';
 			}
 			
-			// Get dynamic post types and taxonomies
-			$post_types_data = $this->get_dynamic_post_types();
-			$taxonomies_data = $this->get_dynamic_taxonomies();
-			$page_templates_data = $this->get_dynamic_page_templates();
-
-
-			include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
-        	$pluginslist = get_plugins();
-
-			$extensioninstall = false;
-			if ( isset( $pluginslist[ 'nexter-extension/nexter-extension.php' ] ) && !empty( $pluginslist[ 'nexter-extension/nexter-extension.php' ] ) ) {
-				if( is_plugin_active('nexter-extension/nexter-extension.php') ){
-					$extensioninstall = true;
-				}
-			}
+			$extensioninstall = defined( 'NEXTER_EXT_VER' );
+			$cached_localize_data = $this->get_cached_snippets_admin_localize_data();
 
 			wp_localize_script(
 				'nxt-code-snippet',
@@ -579,13 +679,13 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 					'nonce'       => wp_create_nonce( 'nxt-code-snippet' ),
 					'nxt_url' => NEXTER_EXT_URL.'code-snippets/',
 					'assets' => NEXTER_EXT_URL . 'assets/',
-					'htmlHooks' => class_exists('Nexter_Builder_Display_Conditional_Rules') ? Nexter_Builder_Display_Conditional_Rules::get_sections_hooks_options() : [],
-					'in_ex_option' => class_exists('Nexter_Builder_Display_Conditional_Rules') ? Nexter_Builder_Display_Conditional_Rules::get_location_rules_options() : [],
-					'user_role' => class_exists('Nexter_Builder_Display_Conditional_Rules') ?Nexter_Builder_Display_Conditional_Rules::get_others_location_sub_options('user-roles') : [],
-					'post_types' => $post_types_data,
-					'taxonomies' => $taxonomies_data,
-					'page_templates' => $page_templates_data,
-					'whiteLabel' => get_option('nexter_white_label'),
+					'htmlHooks' => isset( $cached_localize_data['htmlHooks'] ) ? $cached_localize_data['htmlHooks'] : [],
+					'in_ex_option' => isset( $cached_localize_data['in_ex_option'] ) ? $cached_localize_data['in_ex_option'] : [],
+					'user_role' => isset( $cached_localize_data['user_role'] ) ? $cached_localize_data['user_role'] : [],
+					'post_types' => isset( $cached_localize_data['post_types'] ) ? $cached_localize_data['post_types'] : [],
+					'taxonomies' => isset( $cached_localize_data['taxonomies'] ) ? $cached_localize_data['taxonomies'] : [],
+					'page_templates' => isset( $cached_localize_data['page_templates'] ) ? $cached_localize_data['page_templates'] : [],
+					'whiteLabel' => Nxt_Options::white_label(),
 					'isactivate' => (defined('NXT_PRO_EXT') && class_exists('Nexter_Pro_Ext_Activate')) ? Nexter_Pro_Ext_Activate::get_instance()->nexter_activate_status() : '',
 					'is_pro' => (defined('NXT_PRO_EXT')) ? true : false,
 					'ecommerce_plugins' => array(
@@ -593,15 +693,82 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 						'edd' => class_exists('Easy_Digital_Downloads'),
 						'memberpress' => class_exists('MeprAppCtrl')
 					),
-					'memberpress_memberships' => $this->get_memberpress_memberships(),
+					'memberpress_memberships' => isset( $cached_localize_data['memberpress_memberships'] ) ? $cached_localize_data['memberpress_memberships'] : [],
 					'cs_pro_svg' => NEXTER_EXT_URL . 'assets/images/cs_pro.svg',
 					'cs_premium_icon' => NEXTER_EXT_URL . 'dashboard/assets/svg/premium_icon.svg',
 					'cs_ec_required_icon' => NEXTER_EXT_URL . 'assets/images/cs_ec_require.svg',
 					'extensioninstall' => $extensioninstall,
-					'nxtExtra' => get_option('nexter_extra_ext_options'),
+					'nxtExtra' => Nxt_Options::extra_ext(),
 					'dashboard_url' => admin_url( 'admin.php?page=nexter_welcome' ),
 				)
 			);
+		}
+
+		/**
+		 * Return cached heavy data for snippets admin screen localization.
+		 *
+		 * @return array
+		 */
+		private function get_cached_snippets_admin_localize_data() {
+			$cache_key = 'nexter_snippets_admin_localize_v1';
+			$cached = get_transient( $cache_key );
+			if ( is_array( $cached ) ) {
+				return $cached;
+			}
+
+			$data = array(
+				'htmlHooks' => class_exists('Nexter_Builder_Display_Conditional_Rules') ? Nexter_Builder_Display_Conditional_Rules::get_sections_hooks_options() : [],
+				'in_ex_option' => class_exists('Nexter_Builder_Display_Conditional_Rules') ? Nexter_Builder_Display_Conditional_Rules::get_location_rules_options() : [],
+				'user_role' => class_exists('Nexter_Builder_Display_Conditional_Rules') ? Nexter_Builder_Display_Conditional_Rules::get_others_location_sub_options('user-roles') : [],
+				'memberpress_memberships' => $this->get_memberpress_memberships(),
+				'post_types' => $this->get_dynamic_post_types(),
+				'taxonomies' => $this->get_dynamic_taxonomies(),
+				'page_templates' => $this->get_dynamic_page_templates(),
+			);
+
+			set_transient( $cache_key, $data, 5 * MINUTE_IN_SECONDS );
+			return $data;
+		}
+
+		/**
+		 * Decide whether global admin snippet runtime callbacks should boot.
+		 *
+		 * @return bool
+		 */
+		private function should_boot_admin_snippet_runtime() {
+			if ( null !== self::$should_boot_admin_runtime ) {
+				return self::$should_boot_admin_runtime;
+			}
+
+			$cache_key = 'nexter_snippets_admin_runtime_needed_v1';
+			$cached = get_transient( $cache_key );
+			if ( is_bool( $cached ) ) {
+				self::$should_boot_admin_runtime = $cached;
+				return self::$should_boot_admin_runtime;
+			}
+
+			$admin_locations = array( 'admin_header', 'admin_footer', 'admin_only' );
+			$types = array( 'css', 'javascript', 'htmlmixed', 'php' );
+			$needed = false;
+
+			foreach ( $types as $type ) {
+				$snippets = self::get_file_snippets_fallback( $type );
+				if ( empty( $snippets ) || ! is_array( $snippets ) ) {
+					continue;
+				}
+				foreach ( $snippets as $snippet ) {
+					$status = isset( $snippet['status'] ) ? (string) $snippet['status'] : '0';
+					$location = isset( $snippet['location'] ) ? (string) $snippet['location'] : '';
+					if ( '1' === $status && in_array( $location, $admin_locations, true ) ) {
+						$needed = true;
+						break 2;
+					}
+				}
+			}
+
+			self::$should_boot_admin_runtime = $needed;
+			set_transient( $cache_key, $needed, 5 * MINUTE_IN_SECONDS );
+			return self::$should_boot_admin_runtime;
 		}
 
 		/**
@@ -1222,6 +1389,10 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 						}
 						
 						// For PHP snippets, validate before saving
+						if ( ! self::ensure_php_executor_loaded() ) {
+							wp_send_json_error( __( 'PHP executor unavailable.', 'nexter-extension' ) );
+							return;
+						}
 						$executor = Nexter_Builder_Code_Snippets_Executor::get_instance();
 						$validation_result = $executor->validate_php_snippet_on_save('', $lang_code);
 						
@@ -1450,6 +1621,7 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 					$fullCode = $docBlockString . $lang_code;
 
 					if ( file_put_contents($existingFile, $fullCode) ) {
+						$this->clear_file_based_cache();
 						$file_based->snippetIndexData();
 						wp_send_json_success(__('Snippet Updated Successfully.', 'nexter-extension'));
 					} else {
@@ -1470,12 +1642,12 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 		// Pre-check: Ensure WP_CONTENT_DIR is writable before attempting file operations
 		if ( ! self::check_content_dir_writable() ) {
 			// Log error but don't break execution for migration
-			error_log( 'Nexter Extension: File-based snippets require write access. Migration skipped.' );
+			if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) { error_log( 'Nexter Extension: File-based snippets require write access. Migration skipped.' ); }
 			return;
 		}
 
 		// Check if migration has already been completed
-		$get_opt = get_option('nexter_extra_ext_options');
+		$get_opt = Nxt_Options::extra_ext();
 		$migration = false;
 
 		if (isset($get_opt['code-snippets']) && isset($get_opt['code-snippets']['values']['migration'])) {
@@ -1774,42 +1946,42 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 					continue; // Skip invalid posts
 				}
 			
-				$type = get_post_meta( $post->ID, 'nxt-code-type', true );
+				$type = self::get_snippet_meta_value( $post->ID, 'nxt-code-type', '' );
 			
 				$data = [
 					'id' => $post->ID,
 					'name'        => $post->post_title,
-					'description'	=> get_post_meta($post->ID, 'nxt-code-note', true),
+					'description'	=> self::get_snippet_meta_value( $post->ID, 'nxt-code-note', '' ),
 					'type'	=> $type,
 					'post_type'    => self::$snippet_type,
-					'tags'	=> get_post_meta($post->ID, 'nxt-code-tags', true),
-					'codeExecute'	=> get_post_meta($post->ID, 'nxt-code-execute', true),
-					'status'	=> get_post_meta($post->ID, 'nxt-code-status', true),
-					'langCode' => get_post_meta( $post->ID, 'nxt-'.$type.'-code', true ),
-					'htmlHooks' => get_post_meta( $post->ID, 'nxt-code-html-hooks', true ),
-					'hooksPriority' => get_post_meta( $post->ID, 'nxt-code-hooks-priority', true ),
-					'include_data' => get_post_meta( $post->ID, 'nxt-add-display-rule', true ),
-					'exclude_data' => get_post_meta( $post->ID, 'nxt-exclude-display-rule', true ),
-					'in_sub_data' => get_post_meta( $post->ID, 'nxt-in-sub-rule', true ),
-					'ex_sub_data' => get_post_meta( $post->ID, 'nxt-ex-sub-rule', true ),
+					'tags'	=> self::get_snippet_meta_value( $post->ID, 'nxt-code-tags', '' ),
+					'codeExecute'	=> self::get_snippet_meta_value( $post->ID, 'nxt-code-execute', '' ),
+					'status'	=> self::get_snippet_meta_value( $post->ID, 'nxt-code-status', '' ),
+					'langCode' => self::get_snippet_meta_value( $post->ID, 'nxt-' . $type . '-code', '' ),
+					'htmlHooks' => self::get_snippet_meta_value( $post->ID, 'nxt-code-html-hooks', '' ),
+					'hooksPriority' => self::get_snippet_meta_value( $post->ID, 'nxt-code-hooks-priority', '' ),
+					'include_data' => self::get_snippet_meta_value( $post->ID, 'nxt-add-display-rule', '' ),
+					'exclude_data' => self::get_snippet_meta_value( $post->ID, 'nxt-exclude-display-rule', '' ),
+					'in_sub_data' => self::get_snippet_meta_value( $post->ID, 'nxt-in-sub-rule', '' ),
+					'ex_sub_data' => self::get_snippet_meta_value( $post->ID, 'nxt-ex-sub-rule', '' ),
 					// Word-based insertion settings
-					'word_count' => get_post_meta( $post->ID, 'nxt-insert-word-count', true ) ?: 100,
-					'word_interval' => get_post_meta( $post->ID, 'nxt-insert-word-interval', true ) ?: 200,
-					'post_number' => get_post_meta( $post->ID, 'nxt-post-number', true ) ?: 1,
+					'word_count' => self::get_snippet_meta_value( $post->ID, 'nxt-insert-word-count', 100 ) ?: 100,
+					'word_interval' => self::get_snippet_meta_value( $post->ID, 'nxt-insert-word-interval', 200 ) ?: 200,
+					'post_number' => self::get_snippet_meta_value( $post->ID, 'nxt-post-number', 1 ) ?: 1,
 					// CSS Selector settings
-					'css_selector' => get_post_meta( $post->ID, 'nxt-css-selector', true ),
-					'element_index' => get_post_meta( $post->ID, 'nxt-element-index', true ) ?: 0,
+					'css_selector' => self::get_snippet_meta_value( $post->ID, 'nxt-css-selector', '' ),
+					'element_index' => self::get_snippet_meta_value( $post->ID, 'nxt-element-index', 0 ) ?: 0,
 					// Missing fields that should be exported
-					'insertion' => get_post_meta( $post->ID, 'nxt-code-insertion', true ),
-					'location' => get_post_meta( $post->ID, 'nxt-code-location', true ),
-					'customname' => get_post_meta( $post->ID, 'nxt-code-customname', true ),
-					'compresscode' => get_post_meta( $post->ID, 'nxt-code-compresscode', true ),
+					'insertion' => self::get_snippet_meta_value( $post->ID, 'nxt-code-insertion', '' ),
+					'location' => self::get_snippet_meta_value( $post->ID, 'nxt-code-location', '' ),
+					'customname' => self::get_snippet_meta_value( $post->ID, 'nxt-code-customname', '' ),
+					'compresscode' => self::get_snippet_meta_value( $post->ID, 'nxt-code-compresscode', '' ),
 					'on_ajax_work' => false,
-					'startDate' => get_post_meta( $post->ID, 'nxt-code-startdate', true ),
-					'endDate' => get_post_meta( $post->ID, 'nxt-code-enddate', true ),
-					'shortcodeattr' => get_post_meta( $post->ID, 'nxt-code-shortcodeattr', true ),
-					'smart_conditional_logic' => get_post_meta( $post->ID, 'nxt-smart-conditional-logic', true ),
-					'php_hidden_execute' => get_post_meta( $post->ID, 'nxt-code-php-hidden-execute', true ),
+					'startDate' => self::get_snippet_meta_value( $post->ID, 'nxt-code-startdate', '' ),
+					'endDate' => self::get_snippet_meta_value( $post->ID, 'nxt-code-enddate', '' ),
+					'shortcodeattr' => self::get_snippet_meta_value( $post->ID, 'nxt-code-shortcodeattr', '' ),
+					'smart_conditional_logic' => self::get_snippet_meta_value( $post->ID, 'nxt-smart-conditional-logic', '' ),
+					'php_hidden_execute' => self::get_snippet_meta_value( $post->ID, 'nxt-code-php-hidden-execute', '' ),
 				];
 			
 				// Normalize code line endings
@@ -2261,6 +2433,7 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 							$fullCode = $docBlockString . $lang_code;
 
 							if ( file_put_contents($existingFile, $fullCode) ) {
+								$this->clear_file_based_cache();
 								$file_based->snippetIndexData();
 								wp_send_json_success(['status' => $new_status, 'message' => __('Updated Status Successfully.', 'nexter-extension')]);
 							} else {
@@ -2378,7 +2551,7 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 			switch ($type) {
 				case 'htmlmixed':
 					// For HTML snippets, check if there was a hook set
-					$html_hooks = !is_numeric($post_id) ? $html_hooks : get_post_meta($post_id, 'nxt-code-html-hooks', true);
+					$html_hooks = !is_numeric($post_id) ? $html_hooks : self::get_snippet_meta_value($post_id, 'nxt-code-html-hooks', '');
 					if (!empty($html_hooks)) {
 						// Map hook to new location system
 						$migrated_location = $this->map_hook_to_location($html_hooks);
@@ -2390,7 +2563,7 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 					
 				case 'php':
 					// For PHP snippets, check "Run Code On" setting
-					$code_execute = !is_numeric($post_id) ? $code_execute : get_post_meta($post_id, 'nxt-code-execute', true);
+					$code_execute = !is_numeric($post_id) ? $code_execute : self::get_snippet_meta_value($post_id, 'nxt-code-execute', '');
 					$migrated_location = $this->map_php_execute_to_location($code_execute);
 					break;
 					
@@ -2477,9 +2650,7 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 		 * Enhanced to support location-based execution
 		 */
 		public static function nexter_code_snippets_css_js() {
-			
-			wp_register_script( 'nxt-snippet-js', false );
-            wp_enqueue_script( 'nxt-snippet-js' );
+			$js_handle_registered = false;
 
 			// CSS Snippets
 			$css_actions = self::get_snippets_ids_list( 'css' );
@@ -2548,7 +2719,7 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 
 					// Conditional logic check
 					if (class_exists('Nexter_Builder_Display_Conditional_Rules')) {
-						if (!Nexter_Builder_Display_Conditional_Rules::should_display_snippet($post_id)) {
+						if (!Nexter_Builder_Display_Conditional_Rules::should_display_snippet($post_id, $css_snippet)) {
 							continue; // Skip this snippet, conditional logic not met
 						}
 					}
@@ -2568,15 +2739,14 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 								// SECURITY FIX: Wrap file operations in try-catch to prevent crashes
 								try {
 									$css_code = $file_based->parseBlock(file_get_contents($file_path), true);
-									
 									// Use old system (default to wp_head)
 									wp_register_style( 'nxt-snippet-'.$post_id, false );
 									wp_enqueue_style( 'nxt-snippet-'.$post_id );
 									wp_add_inline_style( 'nxt-snippet-'.$post_id, wp_specialchars_decode($css_code) );
 								} catch (Exception $e) {
-									error_log(sprintf('Nexter Extension: Error loading CSS snippet %s: %s', $post_id, $e->getMessage()));
+									if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) { error_log(sprintf('Nexter Extension: Error loading CSS snippet %s: %s', $post_id, $e->getMessage())); }
 								} catch (Error $e) {
-									error_log(sprintf('Nexter Extension: Fatal error loading CSS snippet %s: %s', $post_id, $e->getMessage()));
+									if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) { error_log(sprintf('Nexter Extension: Fatal error loading CSS snippet %s: %s', $post_id, $e->getMessage())); }
 								}
 							}
 						}
@@ -2635,6 +2805,11 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 			} */
 
 			if(!empty($file_javascript)){
+				if ( ! $js_handle_registered ) {
+					wp_register_script( 'nxt-snippet-js', false );
+					wp_enqueue_script( 'nxt-snippet-js' );
+					$js_handle_registered = true;
+				}
 				foreach ($file_javascript as $js_snippet) {
 					$post_id = isset($js_snippet['id']) ? $js_snippet['id'] : '';
 					$insertion_type = isset($js_snippet['insertion']) ? $js_snippet['insertion'] : '';
@@ -2649,7 +2824,7 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 
 					// Conditional logic check
 					if (class_exists('Nexter_Builder_Display_Conditional_Rules')) {
-						if (!Nexter_Builder_Display_Conditional_Rules::should_display_snippet($post_id)) {
+						if (!Nexter_Builder_Display_Conditional_Rules::should_display_snippet($post_id, $js_snippet)) {
 							continue; // Skip this snippet, conditional logic not met
 						}
 					}
@@ -2687,7 +2862,22 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 		 * Nexter Builder Code Snippets Css/Js Enqueue for Admin Area
 		 * Enhanced to support admin location-based execution
 		 */
-		public static function nexter_code_snippets_css_js_admin() {
+		public static function nexter_code_snippets_css_js_admin( $hook_suffix = '' ) {
+			$allowed_hooks = array( 'post.php', 'post-new.php', 'edit.php', 'admin.php' );
+			if ( ! in_array( $hook_suffix, $allowed_hooks, true ) ) {
+				return;
+			}
+
+			$page = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$post_type = get_post_type();
+			$get_post_type = isset( $_GET['post_type'] ) ? sanitize_key( wp_unslash( $_GET['post_type'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$is_snippet_or_builder_screen = ( $page === 'nxt_code_snippets' || $page === 'nxt_builder' )
+				|| ( $post_type === self::$snippet_type || $post_type === 'nxt_builder' )
+				|| ( $get_post_type === self::$snippet_type || $get_post_type === 'nxt_builder' );
+			if ( ! $is_snippet_or_builder_screen ) {
+				return;
+			}
+
 			// Only process admin-specific locations
 			$admin_locations = ['admin_header', 'admin_footer'];
 			
@@ -2761,7 +2951,7 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 
 					// Conditional logic check
 					if (class_exists('Nexter_Builder_Display_Conditional_Rules')) {
-						if (!Nexter_Builder_Display_Conditional_Rules::should_display_snippet($post_id)) {
+						if (!Nexter_Builder_Display_Conditional_Rules::should_display_snippet($post_id, $css_snippet)) {
 							continue; // Skip this snippet, conditional logic not met
 						}
 					}
@@ -2819,7 +3009,7 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 
 						// Conditional logic check
 						if (class_exists('Nexter_Builder_Display_Conditional_Rules')) {
-							if (!Nexter_Builder_Display_Conditional_Rules::should_display_snippet($post_id)) {
+							if (!Nexter_Builder_Display_Conditional_Rules::should_display_snippet($post_id, $js_snippet)) {
 								continue; // Skip this snippet, conditional logic not met
 							}
 						}
@@ -2856,7 +3046,7 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 
 					// Conditional logic check
 					if (class_exists('Nexter_Builder_Display_Conditional_Rules')) {
-						if (!Nexter_Builder_Display_Conditional_Rules::should_display_snippet($post_id)) {
+						if (!Nexter_Builder_Display_Conditional_Rules::should_display_snippet($post_id, $js_snippet)) {
 							continue; // Skip this snippet, conditional logic not met
 						}
 					}
@@ -3045,6 +3235,9 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 		 * Optimized HTML Snippets Hook Execution
 		 */
 		public static function nexter_code_html_hooks_actions() {
+			if ( is_admin() ) {
+				return;
+			}
 
 			$snippets = self::get_snippets_ids_list('htmlmixed');
 			$file_snippets = [];
@@ -3174,6 +3367,11 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 		} */
 
 		private static function get_file_snippets_fallback( $code_type ) {
+			$cache_key = self::get_file_snippet_transient_key( $code_type );
+			$cached_snippets = get_transient( $cache_key );
+			if ( is_array( $cached_snippets ) ) {
+				return $cached_snippets;
+			}
 
 			// Early bail for max performance
 			if ( ! class_exists( 'Nexter_Code_Snippets_File_Based' ) ) {
@@ -3189,11 +3387,19 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 			// Run snippet loader
 			$snippets = $file_based->getSnippetData( '', $code_type );
 
+			// Integrity fallback: attempt one lightweight index rebuild when config is stale.
+			if ( empty( $snippets ) && method_exists( $file_based, 'snippetIndexData' ) ) {
+				$file_based->snippetIndexData();
+				$snippets = $file_based->getSnippetData( '', $code_type );
+			}
+
 			// Ensure returned data is valid array
 			if ( ! empty( $snippets ) && is_array( $snippets ) ) {
+				set_transient( $cache_key, $snippets, self::$file_snippet_transient_ttl );
 				return $snippets;
 			}
 
+			set_transient( $cache_key, array(), self::$file_snippet_transient_ttl );
 			return array();
 		}
 
@@ -3201,6 +3407,9 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 		 * Execute PHP code at specified location using specialized handlers
 		 */
 		private static function execute_php_at_location($snippet_id, $code, $location) {
+			if ( ! self::ensure_php_executor_loaded() ) {
+				return;
+			}
 			// Try Global Code Handler first
 			if (Nexter_Global_Code_Handler::execute_global_php($snippet_id, $code, $location)) {
 				return;
@@ -3220,6 +3429,7 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 		 * Enqueue CSS at specified location using specialized handlers
 		 */
 		private static function enqueue_css_at_location($snippet_id, $css, $location) {
+			
 			// Try Global Code Handler first
 			if (Nexter_Global_Code_Handler::enqueue_global_css($snippet_id, $css, $location)) {
 				return;
@@ -3229,6 +3439,7 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 			if (Nexter_Page_Specific_Code_Handler::enqueue_page_specific_css($snippet_id, $css, $location)) {
 				return;
 			}
+			
 
 			// Try eCommerce Code Handler
 			if (Nexter_ECommerce_Code_Handler::enqueue_ecommerce_css($snippet_id, $css, $location)) {
@@ -3440,7 +3651,7 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 		 */
 		public function nexter_php_execution_snippet(){
 			global $wpdb;
-			
+
 			// Check if PHP execution is globally disabled
 			$php_snippet_filter = apply_filters('nexter_php_codesnippet_execute', true);
 			if (empty($php_snippet_filter)) {
@@ -3448,7 +3659,6 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 			}
 
 			$file_php = self::get_file_snippets_fallback('php');
-			
 			if( !empty($file_php) ){
 				
 				foreach ( $file_php as $file_data ) {
@@ -3536,8 +3746,28 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 									if($file_based){
 										$is_ajax = (defined('DOING_AJAX') && DOING_AJAX) || (defined('REST_REQUEST') && REST_REQUEST) || (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest');
 										$on_ajax_work = isset($file_data['on_ajax_work']) ? $file_data['on_ajax_work'] : false;
+										$request_action = isset( $_REQUEST['action'] ) ? sanitize_key( wp_unslash( $_REQUEST['action'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+										$restricted_actions = array(
+											'update_edit_code_snippets',
+											'get_edit_snippet_data',
+											'fetch_code_snippet_list',
+											'fetch_code_snippet_import',
+											'fetch_code_snippet_export',
+											'fetch_code_snippet_delete',
+											'fetch_code_snippet_duplicate',
+											'create_code_snippets',
+											'find_where_shortcode_usage',
+											'nexter_get_particular_posts_query',
+											'nexter_enable_code_snippet',
+											'nexter_get_taxonomy_terms',
+											'nexter_get_authors',
+											'fetch_snippet_list_for_conditions',
+											'nexter_ext_save_data',
+											'fetch_code_snippet_status',
+										);
+										$restricted_actions = (array) apply_filters( 'nexter_skip_snippet_execution_ajax_actions', $restricted_actions );
 
-										if ( ( !$is_ajax || ($on_ajax_work && ($_REQUEST['action'] != 'update_edit_code_snippets' && $_REQUEST['action'] != 'get_edit_snippet_data') && $_REQUEST['action'] != 'fetch_code_snippet_list' && $_REQUEST['action'] != 'fetch_code_snippet_import' && $_REQUEST['action'] != 'fetch_code_snippet_export' && $_REQUEST['action'] != 'fetch_code_snippet_delete' && $_REQUEST['action'] != 'fetch_code_snippet_duplicate' && $_REQUEST['action'] != 'create_code_snippets' && $_REQUEST['action'] != 'find_where_shortcode_usage' && $_REQUEST['action'] != 'nexter_get_particular_posts_query' && $_REQUEST['action'] != 'nexter_enable_code_snippet' && $_REQUEST['action'] != 'nexter_get_taxonomy_terms' && $_REQUEST['action'] != 'nexter_get_authors' && $_REQUEST['action'] != 'fetch_snippet_list_for_conditions' && $_REQUEST['action'] != 'nexter_ext_save_data' && $_REQUEST['action'] != 'fetch_code_snippet_status' ) ) && !empty( $file_data['file_path'] ) && file_exists( $file_data['file_path'] ) ) {
+										if ( ( ! $is_ajax || ( $on_ajax_work && ! in_array( $request_action, $restricted_actions, true ) ) ) && !empty( $file_data['file_path'] ) && file_exists( $file_data['file_path'] ) ) {
 											// Use safe file execution method
 											if ( class_exists( 'Nexter_Code_Snippets_File_Based' ) ) {
 												Nexter_Code_Snippets_File_Based::safe_include_file( $file_data['file_path'] );
@@ -3697,8 +3927,10 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 			}
 			
 			try {
-				// Execute the code
-				eval($code);
+				// Execute the code through centralized guarded executor.
+				if ( self::ensure_php_executor_loaded() ) {
+					Nexter_Builder_Code_Snippets_Executor::get_instance()->execute_php_snippet( $code, $post_id, false, array() );
+				}
 				
 				// Clean output buffer for AJAX requests
 				if ($is_ajax && $suppress_ajax_output) {

@@ -86,7 +86,7 @@ class Nexter_Ext_SMTP_Email {
             return self::$smtp_opt;
         }
 
-        $option = get_option('nexter_extra_ext_options');
+        $option = Nxt_Options::extra_ext();
         if (!empty($option['smtp-email']['switch']) && !empty($option['smtp-email']['values'])) {
             self::$smtp_opt = (array) $option['smtp-email']['values'];
         }
@@ -121,7 +121,7 @@ class Nexter_Ext_SMTP_Email {
         $smtp_from_name = isset($_POST['smtp_from_name']) ? sanitize_text_field(wp_unslash($_POST['smtp_from_name'])) : get_bloginfo('name');
         $smtp_from_email = isset($_POST['smtp_from_email']) ? sanitize_email(wp_unslash($_POST['smtp_from_email'])) : '';
 
-        $option = get_option('nexter_extra_ext_options', []);
+        $option = Nxt_Options::extra_ext() ?: [];
         $option['smtp-email']['values'] = array_merge(
             $option['smtp-email']['values'] ?? [],
             [
@@ -182,7 +182,7 @@ class Nexter_Ext_SMTP_Email {
             wp_send_json_error(['oauth_error' => __('Missing authorization code', 'nexter-extension')]);
         }
 
-        $options      = get_option('nexter_extra_ext_options', []);
+        $options      = Nxt_Options::extra_ext() ?: [];
         $smtp_values  = $options['smtp-email']['values'] ?? [];
         $client_id    = $smtp_values['gclient_id'] ?? '';
         $client_secret = $smtp_values['gsecret_key'] ?? '';
@@ -246,7 +246,7 @@ class Nexter_Ext_SMTP_Email {
             ));
         }
 
-        $smtp_data = get_option('nexter_extra_ext_options');
+        $smtp_data = Nxt_Options::extra_ext();
         $access_token = $smtp_data['smtp-email']['values']['access_token'] ?? '';
         $email = $smtp_data['smtp-email']['values']['email'] ?? '';
 
@@ -270,7 +270,7 @@ class Nexter_Ext_SMTP_Email {
         }
 
         // Check SMTP configuration
-        $options = get_option('nexter_extra_ext_options', []);
+        $options = Nxt_Options::extra_ext() ?: [];
         
         // Check if SMTP is enabled
         if (empty($options['smtp-email']['switch'])) {
@@ -301,7 +301,7 @@ class Nexter_Ext_SMTP_Email {
         $error_message = '';
         $error_capture = function($wp_error) use (&$error_message) {
             $error_message = $wp_error->get_error_message();
-            error_log('SMTP Test Email Error (wp_mail_failed): ' . $error_message);
+            if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) { error_log('SMTP Test Email Error (wp_mail_failed): ' . $error_message); }
         };
         
         // Enable error capture before sending
@@ -315,7 +315,7 @@ class Nexter_Ext_SMTP_Email {
         global $phpmailer;
         if (empty($error_message) && is_object($phpmailer) && !empty($phpmailer->ErrorInfo)) {
             $error_message = $phpmailer->ErrorInfo;
-            error_log('SMTP Test Email Error (PHPMailer): ' . $error_message);
+            if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) { error_log('SMTP Test Email Error (PHPMailer): ' . $error_message); }
         }
         
         // Remove the error capture hook
@@ -349,7 +349,7 @@ class Nexter_Ext_SMTP_Email {
             wp_send_json_error( __( 'Invalid JSON data.', 'nexter-extension' ) );
         }
 
-        $option = get_option('nexter_extra_ext_options', []);
+        $option = Nxt_Options::extra_ext() ?: [];
         $option['smtp-email']['values'] = array_merge(
             $option['smtp-email']['values'] ?? [],
             [

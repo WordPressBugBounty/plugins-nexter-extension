@@ -468,14 +468,14 @@ class Nexter_Builder_Code_Snippets_Executor {
                 if (!empty($existing_functions)) {
                     /* translators: %s: Comma-separated list of function names */
                     $this->nexter_deactivate_snippet($post_id, sprintf(__('Functions already exist: %s', 'nexter-extension'), implode(', ', $existing_functions)));
-                    error_log('Nexter Extension: Prevented execution - Functions already exist: ' . implode(', ', $existing_functions));
+                    if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) { error_log('Nexter Extension: Prevented execution - Functions already exist: ' . implode(', ', $existing_functions)); }
                     // Return early to prevent fatal error from function redeclaration
                     return;
                 }
             }
         }
         
-        eval( $code ); // Run in isolated scope
+        eval( $code ); // WARNING: eval() runs in the caller's scope, NOT in isolation — local variables here are accessible to the evaluated code.
     }
     
 

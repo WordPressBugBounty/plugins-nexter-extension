@@ -15,7 +15,7 @@ class Nexter_Ext_Disable_Elementor_Icons {
 	}
 
 	public function nexter_ext_ele_disable_icons(){
-		$get_performance = get_option('nexter_site_performance');
+		$get_performance = Nxt_Options::performance();
 		$disable_icons = [];
         if(!empty($get_performance) && isset($get_performance['disable-elementor-icons']) && isset($get_performance['disable-elementor-icons']['switch']) && isset($get_performance['disable-elementor-icons']['values'])){
             $disable_icons = (array) $get_performance['disable-elementor-icons']['values'];
@@ -32,7 +32,7 @@ class Nexter_Ext_Disable_Elementor_Icons {
 	}
 
 	public function disable_eicons(){
-		$get_performance = get_option('nexter_site_performance');
+		$get_performance = Nxt_Options::performance();
 		$disable_icons = [];
         if(!empty($get_performance) && isset($get_performance['disable-elementor-icons']) && isset($get_performance['disable-elementor-icons']['switch']) && isset($get_performance['disable-elementor-icons']['values'])){
             $disable_icons = (array) $get_performance['disable-elementor-icons']['values'];

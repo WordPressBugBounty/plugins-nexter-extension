@@ -251,7 +251,7 @@ class Nexter_Builder_Import_Export {
 		$theme_logo = '';
 		$wdk_integration = '';
 		if(defined('NXT_PRO_EXT') || defined('TPGBP_VERSION')){
-			$options = get_option( 'nexter_white_label' );
+			$options = Nxt_Options::white_label();
 			$theme_logo = (!empty($options['theme_logo'])) ? '<img src="'.esc_url($options['theme_logo']).'" alt="'.esc_html__( 'Theme Logo', 'nexter-extension' ).'" style="max-width:40px;">' : '';
 			$wdk_integration = (!empty($options['nxt_wdk_integration'])) ? $options['nxt_wdk_integration'] : '';
 		}

@@ -18,7 +18,7 @@ defined('ABSPATH') or die();
     }
 
 	public function view_admin_as_admin_bar_menu( $admin_bar ) {
-		$opts      = get_option( 'nexter_extra_ext_options', array() );
+		$opts      = Nxt_Options::extra_ext() ?: [];
 		$whitelist = isset( $opts['view-admin-role']['view_as_users'] ) ? $opts['view-admin-role']['view_as_users'] : array();
 		
 		$user      = wp_get_current_user();
@@ -142,7 +142,7 @@ defined('ABSPATH') or die();
 		$user     = wp_get_current_user();
 		$roles    = $user->roles;
 		$uname    = $user->user_login;
-		$opts     = get_option( 'nexter_extra_ext_options', [] );
+		$opts     = Nxt_Options::extra_ext() ?: [];
 		$allowed  = $opts['view-admin-role']['view_as_users'] ?? [];
 
 		// Security: Handle role switch with proper validation
@@ -259,7 +259,7 @@ defined('ABSPATH') or die();
 			}
 
 			$uname    = $user->user_login;
-			$opts     = get_option( 'nexter_extra_ext_options', [] );
+			$opts     = Nxt_Options::extra_ext() ?: [];
 			$allowed  = $opts['view-admin-role']['view_as_users'] ?? [];
 
 			// Remove user from the list of switchable usernames
@@ -280,7 +280,7 @@ defined('ABSPATH') or die();
 	 * @since 6.1.3
 	 */
 	public function add_floating_reset_button() {
-		$opts     = get_option( 'nexter_extra_ext_options', [] );
+		$opts     = Nxt_Options::extra_ext() ?: [];
 		$allowed  = $opts['view-admin-role']['view_as_users'] ?? [];
 		$user     = wp_get_current_user();
 		$uname    = $user->user_login;

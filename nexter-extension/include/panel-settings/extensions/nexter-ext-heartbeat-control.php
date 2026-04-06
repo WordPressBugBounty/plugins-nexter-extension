@@ -15,19 +15,19 @@ defined('ABSPATH') or die();
      * Constructor
      */
     public function __construct() {
-        $this->nxt_get_post_order_settings();
+        $this->nxt_get_heartbeat_settings();
         add_filter( 'heartbeat_settings', [$this, 'change_heartbeat_interval'], 99, 2 );
         add_action( 'admin_enqueue_scripts', [$this, 'disable_heartbeat_enqueue'], 99 );
         add_action( 'wp_enqueue_scripts', [$this, 'disable_heartbeat_enqueue'], 99 );
     }
 
-    private function nxt_get_post_order_settings(){
+    private function nxt_get_heartbeat_settings(){
         
 		if(isset(self::$heartbeat_opt) && !empty(self::$heartbeat_opt)){
 			return self::$heartbeat_opt;
 		}
 
-		$option = get_option( 'nexter_site_performance' );
+		$option = Nxt_Options::performance();
 		
 		if(!empty($option) && isset($option['heartbeat-control']) && !empty($option['heartbeat-control']['switch']) && !empty($option['heartbeat-control']['values']) ){
 			self::$heartbeat_opt = (array) $option['heartbeat-control']['values'];

@@ -3,7 +3,7 @@ Contributors: posimyththemes, nirmalkavaiya, sagarpatel124
 Tags: security, elementor, theme-builder, code-snippet, image-optimizer
 Requires at least: 4.0
 Tested up to: 6.9
-Stable tag: 4.6.2
+Stable tag: 4.6.3
 Requires PHP: 5.6
 License: GPLv3
 License URI: https://opensource.org/licenses/GPL-3.0
@@ -219,6 +219,17 @@ Yes. [Compare Free vs Pro →](https://nexterwp.com/free-vs-pro/#Nexter-Extensio
 == Changelog ==
 
 ### View Complete Changelog at [roadmap.nexterwp.com](https://roadmap.nexterwp.com/updates?filter=Nexter+Extension+-+FREE)
+
+= V4.6.3 = 06 April 2026
+- Improved : Bootstrap & Core : Optimized initialization flow and conditional loading for better performance and stability.
+- Improved : Architecture : Refactored core modules into smaller classes for enhanced maintainability, performance, and clearer separation of logic.
+- Improved : General : Applied strict checks, cleanup handling, and overall performance and stability enhancements.
+- Fixed : Code Snippets : Corrected snippet display logic to use in-memory data for accurate conditional evaluation and avoid redundant meta queries.
+- Fixed : Admin & Assets : Resolved issue where dashboard/admin assets were skipped due to over-restricted enqueue conditions after refactor.
+- Fixed : Theme Builder : Singular & Archive Templates : Resolved issue where templates were not rendering on the frontend due to premature post type check before registration.
+- Fixed : Admin Interface : Notice Dismiss : Fixed "Invalid Notice ID" error when dismissing pro license notices, added extensible filter for notice ID whitelist.
+- Fixed : Performance : Template Resolution : Consolidated three separate nxt-build-get-data option reads per frontend request into a single cached read.
+- Fixed : General bug fixes and performance improvements.
 
 = V4.6.2 = 25 March 2026
 - Fixed : Custom Font Upload : font-face Italic style font bug fix

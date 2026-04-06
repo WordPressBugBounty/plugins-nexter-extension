@@ -67,10 +67,8 @@ if ( ! class_exists( 'Nexter_Code_Snippets_File_Based' ) ) {
 		private function ensure_directory( $dir = '' ) {
 			// Pre-check: Ensure WP_CONTENT_DIR is writable before attempting any file operations
 			if ( ! $this->check_content_dir_writable() ) {
-				wp_die(
-					'File-based snippets require write access. This environment restricts file creation.',
-					'Nexter Snippets'
-				);
+				if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) { error_log( 'Nexter Extension: File-based snippets require write access. Directory ensure skipped.' ); }
+				return false;
 			}
 
 			if ( empty( $dir ) ) {
@@ -298,19 +296,19 @@ if ( ! class_exists( 'Nexter_Code_Snippets_File_Based' ) ) {
 			
 			// Additional execution context check (must be in WordPress context)
 			if ( ! defined( 'ABSPATH' ) ) {
-				error_log( 'Nexter Extension: safe_include_file called outside WordPress context' );
+				if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) { error_log( 'Nexter Extension: safe_include_file called outside WordPress context' ); }
 				return false;
 			}
-			
+
 			// Use static validation methods (more efficient than creating instance)
 			if ( ! self::is_valid_file_path_static( $file_path ) ) {
-				error_log( sprintf( 'Nexter Extension: Blocked invalid file execution attempt: %s', $file_path ) );
+				if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) { error_log( sprintf( 'Nexter Extension: Blocked invalid file execution attempt: %s', $file_path ) ); }
 				return false;
 			}
-			
+
 			// Validate file content using static method
 			if ( ! self::is_valid_file_content_static( $file_path ) ) {
-				error_log( sprintf( 'Nexter Extension: Blocked file with invalid content: %s', $file_path ) );
+				if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) { error_log( sprintf( 'Nexter Extension: Blocked file with invalid content: %s', $file_path ) ); }
 				return false;
 			}
 
@@ -319,10 +317,10 @@ if ( ! class_exists( 'Nexter_Code_Snippets_File_Based' ) ) {
 				require_once $file_path;
 				return true;
 			} catch ( Exception $e ) {
-				error_log( sprintf( 'Nexter Extension: Error executing snippet file %s: %s', $file_path, $e->getMessage() ) );
+				if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) { error_log( sprintf( 'Nexter Extension: Error executing snippet file %s: %s', $file_path, $e->getMessage() ) ); }
 				return false;
 			} catch ( Error $e ) {
-				error_log( sprintf( 'Nexter Extension: Fatal error executing snippet file %s: %s', $file_path, $e->getMessage() ) );
+				if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) { error_log( sprintf( 'Nexter Extension: Fatal error executing snippet file %s: %s', $file_path, $e->getMessage() ) ); }
 				return false;
 			}
 		}
@@ -489,7 +487,7 @@ if ( ! class_exists( 'Nexter_Code_Snippets_File_Based' ) ) {
 					$error = error_get_last();
 					// Check if this is a new permission error
 					if ( $error !== $previous_error && isset( $error['message'] ) && strpos( $error['message'], 'Permission denied' ) !== false ) {
-						error_log( sprintf( 'Permission denied: Unable to read file %s. Please check file permissions.', $specific_file ) );
+						if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) { error_log( sprintf( 'Permission denied: Unable to read file %s. Please check file permissions.', $specific_file ) ); }
 					}
 					return array();
 				}
@@ -547,7 +545,7 @@ if ( ! class_exists( 'Nexter_Code_Snippets_File_Based' ) ) {
 						$error = error_get_last();
 						// Check if this is a new permission error
 						if ( $error !== $previous_error && isset( $error['message'] ) && strpos( $error['message'], 'Permission denied' ) !== false ) {
-							error_log( sprintf( 'Permission denied: Unable to read file %s. Please check file permissions.', $file ) );
+							if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) { error_log( sprintf( 'Permission denied: Unable to read file %s. Please check file permissions.', $file ) ); }
 						}
 						continue;
 					}
@@ -775,10 +773,8 @@ if ( ! class_exists( 'Nexter_Code_Snippets_File_Based' ) ) {
 		public function saveSnippetData( $data, $cache_file = '' ) {
 			// Pre-check: Ensure WP_CONTENT_DIR is writable before attempting file operations
 			if ( ! $this->check_content_dir_writable() ) {
-				wp_die(
-					'File-based snippets require write access. This environment restricts file creation.',
-					'Nexter Snippets'
-				);
+				if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) { error_log( 'Nexter Extension: File-based snippets require write access. Save skipped.' ); }
+				return false;
 			}
 
 			if ( empty( $cache_file ) ) {

@@ -5,13 +5,13 @@
  */
 defined('ABSPATH') or die();
 
-class Nexter_Ext_Local_Google_Font_New {
+class Nexter_Ext_Local_Google_Font {
     /**
      * Constructor
      */
     public function __construct() {
         // Load the configuration options
-        $get_Option = get_option('nexter_site_performance');
+        $get_Option = Nxt_Options::performance();
 
         $google_fonts = [];
         if(!empty($get_Option) && isset($get_Option['google-fonts']) && isset($get_Option['google-fonts']['switch']) && !empty($get_Option['google-fonts']['switch']) && isset($get_Option['google-fonts']['values']) && !empty($get_Option['google-fonts']['values'])) {
@@ -430,7 +430,7 @@ class Nexter_Ext_Local_Google_Font_New {
 	 */
 	public function check_nxt_ext_local_google_font( $style = false, $values = false){
 		$check = false;
-		$nxt_ext = get_option( 'nexter_extra_ext_options' );
+		$nxt_ext = Nxt_Options::extra_ext();
 		if( !empty($nxt_ext) && isset($nxt_ext['local-google-font']) && !empty($nxt_ext['local-google-font']['switch']) && !empty($nxt_ext['local-google-font']['values']) ){
 			$check = true;
 			if($style==true){
@@ -504,4 +504,4 @@ class Nexter_Ext_Local_Google_Font_New {
 }
 
 // Instantiate the class to run the functionality
-new Nexter_Ext_Local_Google_Font_New();
+new Nexter_Ext_Local_Google_Font();

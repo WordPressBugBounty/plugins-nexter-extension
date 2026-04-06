@@ -59,7 +59,7 @@ defined('ABSPATH') or die();
 			return self::$svg_upload_opt;
 		}
 		
-		$option = get_option( 'nexter_site_security' );
+		$option = Nxt_Options::security();
 		
 		if(!empty($option) && isset($option['svg-upload']) && !empty($option['svg-upload']['switch']) && !empty( (array) $option['svg-upload']['values']) ){
 			self::$svg_upload_opt = (array) $option['svg-upload']['values'];

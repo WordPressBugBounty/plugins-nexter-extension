@@ -7,7 +7,7 @@ use PHPMailer\PHPMailer\Exception;
 
 // Prevent WordPress from setting default From address when SMTP is configured
 add_filter('wp_mail_from', function($from_email) {
-    $options = get_option('nexter_extra_ext_options', []);
+    $options = Nxt_Options::extra_ext() ?: [];
     $smtp = $options['smtp-email']['values'] ?? [];
     
     // Only override if custom SMTP is configured and enabled
@@ -27,7 +27,7 @@ add_filter('wp_mail_from', function($from_email) {
 // Use high priority to ensure our settings override WordPress defaults
 add_action('phpmailer_init', function (PHPMailer $phpmailer) {
 
-    $options = get_option('nexter_extra_ext_options', []);
+    $options = Nxt_Options::extra_ext() ?: [];
     
     // Only configure SMTP if it's enabled
     if (empty($options['smtp-email']['switch'])) {
@@ -124,7 +124,7 @@ add_action('phpmailer_init', function (PHPMailer $phpmailer) {
         $phpmailer->Encoding = 'base64';
         
     } catch (Exception $e) {
-        error_log('SMTP Configuration Error: ' . $e->getMessage());
+        if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) { error_log('SMTP Configuration Error: ' . $e->getMessage()); }
         // Don't throw - let wp_mail handle the error
     }
 }, 999); // High priority to override WordPress defaults

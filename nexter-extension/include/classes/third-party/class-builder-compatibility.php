@@ -37,7 +37,7 @@ if ( ! class_exists( 'Nexter_Builder_Compatibility' ) ) {
 		
 		public function nexter_template_list_ids( $post_ids ){
 			if( !empty( $this->template_post_ids ) ){
-				$post_ids = array_unique(array_merge($this->template_post_ids, $post_ids));
+				$post_ids = array_unique( array_merge( array_keys( $this->template_post_ids ), $post_ids ) );
 			}
 			return $post_ids;
 		}
@@ -51,7 +51,7 @@ if ( ! class_exists( 'Nexter_Builder_Compatibility' ) ) {
 			
 				$post = get_post( $post_id );
 				
-				array_push($this->template_post_ids, $post_id);
+				$this->template_post_ids[ (int) $post_id ] = true;
 
 				if ( function_exists( 'ultimate_post' ) ) {
 					$ultp = ultimate_post();

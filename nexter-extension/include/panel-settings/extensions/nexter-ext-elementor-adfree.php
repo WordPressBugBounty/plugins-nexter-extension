@@ -13,7 +13,7 @@ defined('ABSPATH') or die();
      * Constructor
      */
     public function __construct() {
-		$this->nxt_get_post_order_settings();
+		$this->nxt_get_elementor_adfree_settings();
 		if (! did_action('elementor/loaded')) {
 			return false;
 		}
@@ -38,13 +38,13 @@ defined('ABSPATH') or die();
 
     }
 
-	private function nxt_get_post_order_settings(){
+	private function nxt_get_elementor_adfree_settings(){
 
 		if(isset(self::$ele_opt) && !empty(self::$ele_opt)){
 			return self::$ele_opt;
 		}
 
-		$option = get_option( 'nexter_extra_ext_options' );
+		$option = Nxt_Options::extra_ext();
 		
 		if(!empty($option) && isset($option['elementor-adfree']) && !empty($option['elementor-adfree']['switch']) && !empty($option['elementor-adfree']['values']) ){
 			self::$ele_opt = (array) $option['elementor-adfree']['values'];

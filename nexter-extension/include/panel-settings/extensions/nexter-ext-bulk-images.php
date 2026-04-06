@@ -202,7 +202,7 @@ class Nexter_Ext_Bulk_Images {
 							<?php 
 							$theme_logo = '';
 							if(defined('NXT_PRO_EXT') || defined('TPGBP_VERSION')){
-								$options = get_option( 'nexter_white_label' );
+								$options = Nxt_Options::white_label();
 								if(isset($options['theme_logo']) && !empty($options['theme_logo'])){
 									$theme_logo = $options['theme_logo'];
 								}
@@ -218,7 +218,7 @@ class Nexter_Ext_Bulk_Images {
 							<?php 
 							$brand_name = __( 'Nexter', 'nexter-extension' );
 							if(defined('NXT_PRO_EXT') || defined('TPGBP_VERSION')){
-							$options = get_option( 'nexter_white_label' );
+							$options = Nxt_Options::white_label();
 								if(isset($options['brand_name']) && !empty($options['brand_name'])){
 									$brand_name = $options['brand_name'];
 								}

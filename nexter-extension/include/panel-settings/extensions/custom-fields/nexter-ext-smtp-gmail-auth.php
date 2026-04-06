@@ -37,7 +37,7 @@ use PHPMailer\PHPMailer\OAuth;
 
 // Configure WordPress to use SMTP with OAuth
 add_action('phpmailer_init', function (PHPMailer $phpmailer) {
-    $options = get_option('nexter_extra_ext_options', []);
+    $options = Nxt_Options::extra_ext() ?: [];
     $smtp = $options['smtp-email']['values'] ?? [];
 
     // Check for all required credentials
@@ -88,14 +88,14 @@ add_action('phpmailer_init', function (PHPMailer $phpmailer) {
         $phpmailer->setFrom($smtp['email'], $smtp['name'] ?? get_bloginfo('name'));
 
     } catch (IdentityProviderException $e) {
-        error_log('SMTP OAuth Check Failed: IdentityProviderException - ' . $e->getMessage());
+        if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) { error_log('SMTP OAuth Check Failed: IdentityProviderException - ' . $e->getMessage()); }
         // Do NOT set up OAuth if check fails, to avoid fatal error during connection
         return;
     } catch (Exception $e) {
-        error_log('SMTP OAuth Check Failed: Exception - ' . $e->getMessage());
+        if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) { error_log('SMTP OAuth Check Failed: Exception - ' . $e->getMessage()); }
         return;
     } catch (\Throwable $e) {
-        error_log('SMTP OAuth Check Failed: Throwable - ' . $e->getMessage());
+        if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) { error_log('SMTP OAuth Check Failed: Throwable - ' . $e->getMessage()); }
         return;
     }
 });

@@ -5,14 +5,20 @@
 **/
 defined( 'ABSPATH' ) || exit;
 
-$extension_option = get_option( 'nexter_extra_ext_options' );
+// Admin-only feature: post list row actions, admin scripts, and AJAX handlers.
+// File is only included when wp-duplicate-post switch is enabled (see nexter-extra-settings-extension.php).
+if ( ! is_admin() ) {
+	return;
+}
 
-if(!empty($extension_option) && isset($extension_option['wp-duplicate-post']) && !empty($extension_option['wp-duplicate-post']['switch']) && !empty($extension_option['wp-duplicate-post']['values']) ){
+$extension_option = Nxt_Options::extra_ext();
+
+if( !empty($extension_option['wp-duplicate-post']['values']) ){
 
 	if( !function_exists('nxt_duplicate_post_action_link')){
 		function nxt_duplicate_post_action_link( $post ) {
 
-			$extension_option = get_option( 'nexter_extra_ext_options' );
+			$extension_option = Nxt_Options::extra_ext();
 			$wpDupPostSet = $extension_option['wp-duplicate-post']['values'];
 			if(!empty($wpDupPostSet)){
 	
@@ -80,7 +86,7 @@ if(!empty($extension_option) && isset($extension_option['wp-duplicate-post']) &&
 	 */
 	if( !function_exists('nxt_post_duplicate')){
 		function nxt_post_duplicate( $original_id,$p) {
-			$extension_option = get_option( 'nexter_extra_ext_options' );
+			$extension_option = Nxt_Options::extra_ext();
 			$wpDupPostSet = $extension_option['wp-duplicate-post']['values'];
 			if(!empty($wpDupPostSet)){
 

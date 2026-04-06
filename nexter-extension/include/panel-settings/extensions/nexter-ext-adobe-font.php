@@ -123,7 +123,7 @@ defined('ABSPATH') or die();
 			return self::$adobe_val;
 		}
 
-		$option = get_option( 'nexter_extra_ext_options' );
+		$option = Nxt_Options::extra_ext();
 		
 		if(!empty($option) && isset($option['adobe-font']) && !empty($option['adobe-font']['switch']) && !empty($option['adobe-font']['values']) ){
 			self::$adobe_val = $option['adobe-font']['values'];

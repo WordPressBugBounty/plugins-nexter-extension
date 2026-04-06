@@ -194,7 +194,7 @@ class Nexter_MemberPress_Hook_Handler {
         // Prevent infinite recursion
         static $recursion_depth = 0;
         if ($recursion_depth > 10) {
-            error_log('Nexter Extension: Maximum recursion depth exceeded for location: ' . $location);
+            if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) { error_log('Nexter Extension: Maximum recursion depth exceeded for location: ' . $location); }
             return;
         }
         $recursion_depth++;
@@ -205,7 +205,7 @@ class Nexter_MemberPress_Hook_Handler {
         if ($memory_limit !== '-1') {
             $limit_bytes = $this->return_bytes($memory_limit);
             if ($memory_usage > ($limit_bytes * 0.8)) {
-                error_log('Nexter Extension: Memory usage too high, skipping snippet execution for location: ' . $location);
+                if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) { error_log('Nexter Extension: Memory usage too high, skipping snippet execution for location: ' . $location); }
                 $recursion_depth--;
                 return;
             }
@@ -248,7 +248,7 @@ class Nexter_MemberPress_Hook_Handler {
         // Prevent infinite recursion
         static $recursion_depth = 0;
         if ($recursion_depth > 10) {
-            error_log('Nexter Extension: Maximum recursion depth exceeded for location: ' . $location);
+            if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) { error_log('Nexter Extension: Maximum recursion depth exceeded for location: ' . $location); }
             return $content;
         }
         $recursion_depth++;

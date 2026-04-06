@@ -81,7 +81,7 @@ class Nexter_Ext_Custom_Upload_Font {
 	}
 
 	public static function get_custom_fonts_face(){
-		$nxt_ext = get_option( 'nexter_extra_ext_options' );
+		$nxt_ext = Nxt_Options::extra_ext();
 
 		$font_faces = '';
 		//custom upload font load
@@ -214,7 +214,7 @@ class Nexter_Ext_Custom_Upload_Font {
 	public function nexter_ext_custom_upload_font_lists( $fonts_list=[] ){
 		$custom_fonts_list = [];
 		
-		$nxt_ext = get_option( 'nexter_extra_ext_options' );
+		$nxt_ext = Nxt_Options::extra_ext();
 		//custom upload font load
 		if( !empty($nxt_ext) && isset($nxt_ext['custom-upload-font']) && !empty($nxt_ext['custom-upload-font']['switch']) && !empty($nxt_ext['custom-upload-font']['values']) ){
 			$upload_font_list = $nxt_ext['custom-upload-font']['values'];

@@ -26,7 +26,7 @@ class Nexter_Ext_Custom_Login_Redirect {
 
     public function __construct() {
         
-        $this->cusloOption = get_option( 'nexter_site_security' );
+        $this->cusloOption = Nxt_Options::security();
         
         if(isset($this->cusloOption['custom-login']) && !empty($this->cusloOption['custom-login']) && isset($this->cusloOption['custom-login']['switch']) && !empty($this->cusloOption['custom-login']['switch'])){
             if(isset($this->cusloOption['custom-login']['values']) && !empty($this->cusloOption['custom-login']['values'])){
@@ -36,7 +36,9 @@ class Nexter_Ext_Custom_Login_Redirect {
 
         if( isset($this->cusloOption['custom_login_url']) && !empty($this->cusloOption['custom_login_url']) && !defined('WP_CLI') ){
 
-            add_action('plugins_loaded', [ $this,'nxt_login_plugins_loaded'], 2 );
+            // Hook into 'init' so this class can be safely loaded on 'plugins_loaded'
+            // from the main plugin file without missing the current request.
+            add_action('init', [ $this,'nxt_login_plugins_loaded'], 2 );
             add_action('wp_loaded', [ $this,'nxt_wp_loaded'] );
             add_action('setup_theme', [ $this , 'nxt_login_customizer_redirect'], 1);
 
@@ -332,4 +334,3 @@ class Nexter_Ext_Custom_Login_Redirect {
         }
     }
 }
-new Nexter_Ext_Custom_Login_Redirect();

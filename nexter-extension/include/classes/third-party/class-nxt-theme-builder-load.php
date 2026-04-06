@@ -68,21 +68,26 @@ if ( ! class_exists( 'Nexter_Theme_Builder_Load' ) ) {
 			}
 			$current_post_id = $post->ID;
 			$NexterPreview = [];
-			
-			$hook_layout = get_post_meta( $current_post_id, 'nxt-hooks-layout', true );
-			$hook_layout_pages = get_post_meta(  $current_post_id, 'nxt-hooks-layout-pages', true );
-			$hook_layout_sections = get_post_meta(  $current_post_id, 'nxt-hooks-layout-sections', true );
+
+			$all_meta = get_post_meta( $current_post_id );
+			$get_meta = static function ( $key ) use ( $all_meta ) {
+				return isset( $all_meta[ $key ][0] ) ? maybe_unserialize( $all_meta[ $key ][0] ) : '';
+			};
+
+			$hook_layout = $get_meta( 'nxt-hooks-layout' );
+			$hook_layout_pages = $get_meta( 'nxt-hooks-layout-pages' );
+			$hook_layout_sections = $get_meta( 'nxt-hooks-layout-sections' );
 			if( ($hook_layout == 'pages' && $hook_layout_pages == 'singular') || $hook_layout_sections == 'singular'){
-				$singular_preview_type = get_post_meta( $current_post_id, 'nxt-singular-preview-type', true );
-				$singular_preview_id = get_post_meta( $current_post_id, 'nxt-singular-preview-id', true );
+				$singular_preview_type = $get_meta( 'nxt-singular-preview-type' );
+				$singular_preview_id = $get_meta( 'nxt-singular-preview-id' );
 				if( !empty($singular_preview_type) && !empty($singular_preview_id)){
 					$NexterPreview['type'] = 'singular'; 
 					$NexterPreview['preview_type'] = $singular_preview_type; 
 					$NexterPreview['preview_id'] = $singular_preview_id; 
 				}
 			}else if(($hook_layout == 'pages' && $hook_layout_pages == 'archives') || $hook_layout_sections == 'archives'){
-				$archive_preview_type = get_post_meta( $current_post_id, 'nxt-archive-preview-type', true );
-				$archive_preview_id = get_post_meta( $current_post_id, 'nxt-archive-preview-id', true );
+				$archive_preview_type = $get_meta( 'nxt-archive-preview-type' );
+				$archive_preview_id = $get_meta( 'nxt-archive-preview-id' );
 				if( !empty($archive_preview_type) && !empty($archive_preview_id)){
 					$NexterPreview['type'] = 'archives'; 
 					$NexterPreview['preview_type'] = $archive_preview_type; 

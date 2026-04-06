@@ -23,7 +23,7 @@ final class Nexter_Ext_Post_Revision_Control {
             return;
         }
 
-        $options = get_option('nexter_site_performance', []);
+        $options = Nxt_Options::performance() ?: [];
 
         if (
             !empty($options['post-revision-control']['switch']) &&

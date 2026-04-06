@@ -122,7 +122,7 @@ class Nexter_Ext_Image_Size {
 	}
 
 	public function nexter_register_custom_image_sizes(){
-        $get_performance = get_option('nexter_site_performance');
+        $get_performance = Nxt_Options::performance();
         $enable_custom_size = true;
         if(!empty($get_performance) && isset($get_performance['nexter-custom-image-sizes']) && isset($get_performance['nexter-custom-image-sizes']['switch'])){
             $enable_custom_size = $get_performance['nexter-custom-image-sizes']['switch'];
@@ -155,7 +155,7 @@ class Nexter_Ext_Image_Size {
 
 	public function nexter_manage_image_sizes( $sizes ){
 		$disabled_is = array();
-        $get_performance = get_option('nexter_site_performance');
+        $get_performance = Nxt_Options::performance();
         if(!empty($get_performance) && isset($get_performance['disabled-image-sizes']) && isset($get_performance['disabled-image-sizes']['switch']) && !empty($get_performance['disabled-image-sizes']['switch']) && isset($get_performance['disabled-image-sizes']['values'])){
                 $disabled_is = (array) $get_performance['disabled-image-sizes']['values'];
         }else{

@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function nxt_recaptcha_init() {
 	// Get and cache options once
-	$option = get_option( 'nexter_site_security', array() );
+	$option = Nxt_Options::security() ?: array();
 	
 	// Check if captcha-security exists and is enabled
 	if ( empty( $option['captcha-security'] ) || ! is_array( $option['captcha-security'] ) ) {
@@ -770,7 +770,7 @@ function nxt_woo_reset_pwd_check( $errors, $user_login ) {
  * Admin footer - Optimized
  */
 function nxt_admin_footer() {
-	$option = get_option( 'nexter_extra_ext_options', array() );
+	$option = Nxt_Options::extra_ext() ?: array();
 	if ( empty( $option['captcha-security'] ) || ! is_array( $option['captcha-security'] ) || empty( $option['captcha-security']['switch'] ) ) {
 		return;
 	}

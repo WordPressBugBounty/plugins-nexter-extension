@@ -162,6 +162,18 @@ if (!class_exists('Nexter_Builder_Hooks_Loader')) {
 		 * @since 1.0.7
 		 */
 		public function nxt_column_content($column, $post_id) {
+			static $meta_cache_primed = false;
+			if ( ! $meta_cache_primed ) {
+				global $wp_query;
+				$row_ids = [];
+				if ( isset( $wp_query->posts ) && is_array( $wp_query->posts ) ) {
+					$row_ids = wp_list_pluck( $wp_query->posts, 'ID' );
+				}
+				if ( ! empty( $row_ids ) ) {
+					update_meta_cache( 'post', array_map( 'intval', $row_ids ) );
+				}
+				$meta_cache_primed = true;
+			}
 
 			if ($column == 'sections_pages_action') {
 

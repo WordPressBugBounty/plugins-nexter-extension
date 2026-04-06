@@ -13,7 +13,7 @@ defined('ABSPATH') or die();
      * Constructor
      */
     public function __construct() {
-		$option = get_option( 'nexter_extra_ext_options' );
+		$option = Nxt_Options::extra_ext();
 		
 		if(!empty($option) && isset($option['wider-admin-menu']) && !empty($option['wider-admin-menu']['switch']) && !empty($option['wider-admin-menu']['values']) ){
 			self::$admin_menu_width = $option['wider-admin-menu']['values'];

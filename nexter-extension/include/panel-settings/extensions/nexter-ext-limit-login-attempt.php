@@ -14,7 +14,7 @@ defined('ABSPATH') or die();
      * Constructor
      */
     public function __construct() {
-		$this->nxt_get_post_order_settings();
+		$this->nxt_get_login_security_settings();
 
 		add_filter( 'authenticate', [ $this, 'maybe_allow_login' ], 999, 3 );
 		add_action( 'wp_login_errors', [ $this, 'handle_login_errors' ], 999, 2 );
@@ -33,13 +33,13 @@ defined('ABSPATH') or die();
 		}
     }
 
-	private function nxt_get_post_order_settings(){
+	private function nxt_get_login_security_settings(){
 		
 		if(isset(self::$limit_login_opt) && !empty(self::$limit_login_opt)){
 			return self::$limit_login_opt;
 		}
 
-		$option = get_option( 'nexter_site_security' );
+		$option = Nxt_Options::security();
 		
 		if(!empty($option) && isset($option['custom_login_url']) && !empty($option['custom_login_url'])){
 			self::$custom_login_url = $option['custom_login_url'];

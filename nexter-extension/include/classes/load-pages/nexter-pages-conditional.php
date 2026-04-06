@@ -28,6 +28,17 @@ if ( ! class_exists( 'Nexter_Builder_Pages_Conditional' ) ) {
 		public static $templates_ids = [];
 
 		/**
+		 * Unified request-level template registry for debugging/introspection.
+		 *
+		 * @var array
+		 */
+		public static $request_template_registry = array(
+			'location' => '',
+			'pages'    => array(),
+			'sections' => array(),
+		);
+
+		/**
 		 *  Initiator
 		 */
 		public static function get_instance() {
@@ -47,14 +58,24 @@ if ( ! class_exists( 'Nexter_Builder_Pages_Conditional' ) ) {
 			add_filter( 'template_include', [ $this, 'load_template_include' ], 15 ); 
 			add_action( 'wp_enqueue_scripts', array( $this, 'load_pages_enqueue_styles' ) );
 			add_filter( 'single_template', array( $this, 'load_nxt_builder_template' ) );
-			add_filter('rank_math/frontend/robots', function ($robots) {
-				if ( is_singular( NXT_BUILD_POST ) ) {
-					$robots['index']  = 'noindex';
-					$robots['follow'] = 'nofollow';
-				}
-		
-				return $robots;
-			});
+			if ( ! is_admin() ) {
+				add_filter( 'rank_math/frontend/robots', [ $this, 'filter_rank_math_robots' ] );
+			}
+		}
+
+		/**
+		 * Set noindex/nofollow for builder template singulars in Rank Math frontend output.
+		 *
+		 * @param array $robots Rank Math robots directives.
+		 * @return array
+		 */
+		public function filter_rank_math_robots( $robots ) {
+			if ( is_singular( NXT_BUILD_POST ) ) {
+				$robots['index']  = 'noindex';
+				$robots['follow'] = 'nofollow';
+			}
+
+			return $robots;
 		}
 		
 		public function nexter_load_templates_ids(){
@@ -69,8 +90,35 @@ if ( ! class_exists( 'Nexter_Builder_Pages_Conditional' ) ) {
 			}
 			self::$location = $singular_archives;
 			$pages_loader = new Nexter_Builder_Pages_Loader();
-			
 			self::$templates_ids = $pages_loader->get_templates_ids_for_location($singular_archives);
+			self::$request_template_registry['location'] = $singular_archives;
+			self::$request_template_registry['pages'] = is_array( self::$templates_ids ) ? self::$templates_ids : array();
+		}
+
+		/**
+		 * Add matched template IDs to unified per-request registry.
+		 *
+		 * @param string $type Template group type (pages|sections).
+		 * @param array  $ids  Matched IDs map/list.
+		 * @return void
+		 */
+		public static function register_request_templates( $type, $ids ) {
+			if ( ! isset( self::$request_template_registry[ $type ] ) ) {
+				self::$request_template_registry[ $type ] = array();
+			}
+			if ( ! is_array( $ids ) ) {
+				return;
+			}
+			self::$request_template_registry[ $type ] = $ids;
+		}
+
+		/**
+		 * Expose unified request template registry for debug tooling.
+		 *
+		 * @return array
+		 */
+		public static function get_request_template_registry() {
+			return self::$request_template_registry;
 		}
 		
 		/* Template Build Load Content
@@ -78,20 +126,19 @@ if ( ! class_exists( 'Nexter_Builder_Pages_Conditional' ) ) {
 		 */
 		public function nexter_pages_hooks_template_content(){
 			if(!empty(self::$templates_ids)){
-				$i=0;
 				foreach( self::$templates_ids as $id => $priority ){
-					if($i==0){
-						if( self::$location == 'singular' ){
-							echo '<div class="nxt-content-page-template ' . esc_attr(implode(' ', get_post_class('', get_the_ID()))) . '" data-post-id="' . esc_attr(get_the_ID()) . '">';
-						}
-						
-						nexter_content_load($id);
-						
-						if( self::$location == 'singular' ){
-							echo '</div>';
-						}
+					// First-match-wins: subsequent matches are intentionally ignored.
+					if( self::$location == 'singular' ){
+						echo '<div class="nxt-content-page-template ' . esc_attr(implode(' ', get_post_class('', get_the_ID()))) . '" data-post-id="' . esc_attr(get_the_ID()) . '">';
 					}
-					$i++;
+
+					nexter_content_load($id);
+
+					if( self::$location == 'singular' ){
+						echo '</div>';
+					}
+
+					break;
 				}
 			}else{
 				$this->get_the_hook_content();
@@ -237,6 +284,7 @@ if ( ! class_exists( 'Nexter_Builder_Pages_Conditional' ) ) {
 			$sec_ids = [];
 			if(class_exists('Nexter_Builder_Sections_Conditional')){
 				$section_ids = Nexter_Builder_Sections_Conditional::get_instance();
+				$section_ids->ensure_sections_ids_loaded();
 				$sec_ids = $section_ids::load_sections_id();
 			}
 			
@@ -245,7 +293,10 @@ if ( ! class_exists( 'Nexter_Builder_Pages_Conditional' ) ) {
 			}else{
 				$found = false;
 			}
-			
+			//$skip_404_template_override = apply_filters( 'nexter_skip_template_override', false );
+			//if ( ! $skip_404_template_override && self::$location === 'singular' && is_404() && ! empty( $found ) ) {
+			//	return $this->get_template_path();
+			//}
 			if ( !defined('ASTRA_THEME_VERSION') && !defined('GENERATE_VERSION') && !defined('OCEANWP_THEME_VERSION') && !defined('KADENCE_VERSION') && !function_exists('blocksy_get_wp_theme') && !defined('NEVE_VERSION') && !defined('NXT_VERSION') && self::$location === 'singular' && is_404() && !empty($found)){
 				return $this->get_template_path();
 			}

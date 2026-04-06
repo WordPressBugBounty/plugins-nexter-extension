@@ -12,8 +12,8 @@ class Nexter_Ext_Extra_Settings {
      */
     public function __construct() {
 		
-		$extension_option = get_option( 'nexter_extra_ext_options' );
-		$security_option = get_option( 'nexter_site_security' );
+		$extension_option = Nxt_Options::extra_ext();
+		$security_option = Nxt_Options::security();
 
 		if( !empty($extension_option)){
 			//Adobe Font
@@ -24,6 +24,9 @@ class Nexter_Ext_Extra_Settings {
 			//Custom Upload Font
 			if( isset($extension_option['custom-upload-font']) && !empty($extension_option['custom-upload-font']['switch']) ){
 				require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-custom-upload-font.php';
+				// Font MIME types only needed when custom font uploads are enabled
+				add_filter( 'upload_mimes', [$this, 'nxt_allow_mime_types']);
+				add_filter('wp_check_filetype_and_ext', [$this, 'nxt_check_file_ext'], 10, 4);
 			}
 			//Disable Admin Settings
 			if( isset($extension_option['disable-admin-setting']) && !empty($extension_option['disable-admin-setting']['switch']) ){
@@ -82,16 +85,27 @@ class Nexter_Ext_Extra_Settings {
 
 		}
 		
-		//Local Google Font
-		// if( isset($extension_option['local-google-font']) && !empty($extension_option['local-google-font']['switch']) ){
+		//Local Google Font — load when the extension toggle is on OR when performance google-fonts settings are active
+		$perf_option = Nxt_Options::performance();
+		$local_gfont_ext   = ! empty( $extension_option['local-google-font']['switch'] );
+		$perf_gfont_active = ! empty( $perf_option['google-fonts']['switch'] )
+			|| ! empty( $perf_option['nexter_google_fonts'] );
+		if ( $local_gfont_ext || $perf_gfont_active || defined('NXT_VERSION') ) {
 			require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-local-google-font.php';
-		// }
-		
-		require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-post-duplicator.php';
-		require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-replace-url.php';
+		}
+
+		//Post Duplicator (admin-only: row actions, admin scripts, AJAX)
+		if( is_admin() && !empty($extension_option) && isset($extension_option['wp-duplicate-post']) && !empty($extension_option['wp-duplicate-post']['switch']) ){
+			require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-post-duplicator.php';
+		}
+
+		//Replace URL (admin-only utility, toggle controlled)
+		if ( is_admin() && ! empty( $extension_option['wp-replace-url']['switch'] ) ) {
+			require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-replace-url.php';
+		}
 		if(!empty($security_option)){
 			if( isset($security_option['captcha-security']) && !empty($security_option['captcha-security']['switch']) && isset( $security_option['captcha-security']['values'] ) &&  !empty( $security_option['captcha-security']['values'] ) ){
-				
+
 				$captcha_type = (isset($security_option['captcha-security']['values']['captcha_type']) && !empty($security_option['captcha-security']['values']['captcha_type'])) ? $security_option['captcha-security']['values']['captcha_type'] : 'google';
 
 				$reoption = $security_option['captcha-security']['values'];
@@ -115,16 +129,20 @@ class Nexter_Ext_Extra_Settings {
 			if( isset($sec_opt['limit-login-attempt']) && !empty($sec_opt['limit-login-attempt']['switch']) ){
 				require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-limit-login-attempt.php';
 			}
-			
 		}
 		require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-performance-security-settings.php';
-		require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-image-sizes.php';
-		if(class_exists( '\Elementor\Plugin' ) ){
-			require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-disable-elementor-icons.php';
+
+		//Image Sizes (custom sizes + disabled sizes) — load only when either toggle is on
+		$image_sizes_active = ( ! empty( $perf_option['disabled-image-sizes']['switch'] ) )
+			|| ( ! empty( $perf_option['nexter-custom-image-sizes']['switch'] ) );
+		if ( $image_sizes_active ) {
+			require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-image-sizes.php';
 		}
 
-        add_filter( 'upload_mimes', [$this, 'nxt_allow_mime_types']);
-		add_filter('wp_check_filetype_and_ext', [$this, 'nxt_check_file_ext'], 10, 4);
+		//Disable Elementor Icons — load only when toggle is on and Elementor is active
+		if ( class_exists( '\Elementor\Plugin' ) && ! empty( $perf_option['disable-elementor-icons']['switch'] ) ) {
+			require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-disable-elementor-icons.php';
+		}
     }
 
 	/**

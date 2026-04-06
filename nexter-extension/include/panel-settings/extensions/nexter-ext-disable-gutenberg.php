@@ -13,7 +13,7 @@ defined('ABSPATH') or die();
      * Constructor
      */
     public function __construct() {
-        $this->nxt_get_post_order_settings();
+        $this->nxt_get_disable_gutenberg_settings();
         add_action( 'admin_init', [$this, 'disable_gutenberg_for_post_types_admin'] );
         add_action( 'admin_print_styles', [$this, 'safari_18_fix'] );
         
@@ -22,13 +22,13 @@ defined('ABSPATH') or die();
         }
     }
 
-    private function nxt_get_post_order_settings(){
+    private function nxt_get_disable_gutenberg_settings(){
         
 		if(isset(self::$post_type_opt) && !empty(self::$post_type_opt)){
 			return self::$post_type_opt;
 		}
 
-		$option = get_option( 'nexter_extra_ext_options' );
+		$option = Nxt_Options::extra_ext();
 		
 		if(!empty($option) && isset($option['disable-gutenberg']) && !empty($option['disable-gutenberg']['switch']) && !empty($option['disable-gutenberg']['values']) ){
 			self::$post_type_opt = $option['disable-gutenberg']['values'];

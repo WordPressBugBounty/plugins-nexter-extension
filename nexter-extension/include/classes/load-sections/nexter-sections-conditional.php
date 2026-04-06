@@ -22,6 +22,13 @@ if ( ! class_exists( 'Nexter_Builder_Sections_Conditional' ) ) {
 		 public static $sections_ids =array();
 
 		 public static $section_get_type = [];
+
+		/**
+		 * Frontend runtime bootstrap guard cache.
+		 *
+		 * @var bool|null
+		 */
+		private static $should_boot_frontend_runtime = null;
 		
 		/**
 		 *  Initiator
@@ -37,15 +44,30 @@ if ( ! class_exists( 'Nexter_Builder_Sections_Conditional' ) ) {
 		 *  Constructor
 		 */
 		public function __construct() {
-			if(!is_admin()){
+			if ( ! is_admin() && $this->should_boot_frontend_runtime() ) {
 				add_action( 'wp', array( $this, 'get_sections_ids' ), 1 );
 				if(!defined('ASTRA_THEME_VERSION') && !defined('GENERATE_VERSION') && !defined('OCEANWP_THEME_VERSION') && !defined('KADENCE_VERSION') && !function_exists('blocksy_get_wp_theme') && !defined('NEVE_VERSION') && !defined('NXT_VERSION')){
 					add_action( 'wp', array( $this, 'theme_hooks' ) );
 				}
+				add_action( 'template_redirect', array( $this, 'nexter_builder_template_frontend' ) );
+				add_action( 'wp_enqueue_scripts', array( $this, 'load_sections_enqueue_styles' ) );
+			}
+		}
+
+		/**
+		 * Avoid booting frontend runtime when there are no published templates.
+		 *
+		 * @return bool
+		 */
+		private function should_boot_frontend_runtime() {
+			if ( null !== self::$should_boot_frontend_runtime ) {
+				return self::$should_boot_frontend_runtime;
 			}
 
-			add_action( 'template_redirect', array( $this, 'nexter_builder_template_frontend' ) );
-			add_action( 'wp_enqueue_scripts', array( $this, 'load_sections_enqueue_styles' ) );
+			$counts = wp_count_posts( NXT_BUILD_POST );
+			self::$should_boot_frontend_runtime = ( isset( $counts->publish ) && intval( $counts->publish ) > 0 );
+
+			return self::$should_boot_frontend_runtime;
 		}
 		
 		public function get_sections_ids(){
@@ -56,13 +78,28 @@ if ( ! class_exists( 'Nexter_Builder_Sections_Conditional' ) ) {
 			];
 
 			self::$sections_ids = Nexter_Builder_Display_Conditional_Rules::get_instance()->get_templates_by_sections_conditions( NXT_BUILD_POST, $options );
+			if ( class_exists( 'Nexter_Builder_Pages_Conditional' ) ) {
+				Nexter_Builder_Pages_Conditional::register_request_templates( 'sections', self::$sections_ids );
+			}
 			
+		}
+
+		/**
+		 * Ensure sections IDs are loaded before dependent consumers read them.
+		 *
+		 * @return void
+		 */
+		public function ensure_sections_ids_loaded() {
+			if ( empty( self::$sections_ids ) ) {
+				$this->get_sections_ids();
+			}
 		}
 		
 		public static function load_sections_id(){
 			if(isset(self::$sections_ids) && !empty(self::$sections_ids)){
 				return self::$sections_ids;
 			}
+			return array();
 		}
 
 		/**
@@ -70,12 +107,17 @@ if ( ! class_exists( 'Nexter_Builder_Sections_Conditional' ) ) {
 		 */
 		public function load_sections_enqueue_styles() {
 			if(!empty(self::$sections_ids)){
+				$post_ids = array_keys( self::$sections_ids );
+				if ( ! empty( $post_ids ) ) {
+					update_meta_cache( 'post', $post_ids );
+				}
+
 				foreach ( self::$sections_ids as $post_id => $post_data ) {
 					$nxt_hooks_layout = get_post_meta( $post_id, 'nxt-hooks-layout', true );
 					$hook_layout_sections = get_post_meta(  $post_id, 'nxt-hooks-layout-sections', true );
 					$pages = [];
 					if(!empty($nxt_hooks_layout) && $nxt_hooks_layout=='pages'){
-						$pages = get_post_meta( $post_id, 'nxt-hooks-layout-pages', false );
+						$pages = (array) get_post_meta( $post_id, 'nxt-hooks-layout-pages', true );
 						if(!empty($pages) && in_array('page-404',$pages) && !is_404()){
 							continue;
 						}
@@ -146,11 +188,10 @@ if ( ! class_exists( 'Nexter_Builder_Sections_Conditional' ) ) {
 			require NEXTER_EXT_DIR . 'include/classes/load-pages/template/nxt-header.php';
 			$templates   = [];
 			$templates[] = 'header.php';
-			// Avoid running wp_head hooks again.
-			remove_all_actions( 'wp_head' );
+			// Include theme header only for lifecycle compatibility, but discard output.
 			ob_start();
 			locate_template( $templates, true );
-			ob_get_clean();
+			ob_end_clean();
 		}
 
 		/**
@@ -162,11 +203,10 @@ if ( ! class_exists( 'Nexter_Builder_Sections_Conditional' ) ) {
 			require NEXTER_EXT_DIR . 'include/classes/load-pages/template/nxt-footer.php';
 			$templates   = [];
 			$templates[] = 'footer.php';
-			// Avoid running wp_footer hooks again.
-			remove_all_actions( 'wp_footer' );
+			// Include theme footer only for lifecycle compatibility, but discard output.
 			ob_start();
 			locate_template( $templates, true );
-			ob_get_clean();
+			ob_end_clean();
 		}
 		
 		/*
@@ -181,11 +221,16 @@ if ( ! class_exists( 'Nexter_Builder_Sections_Conditional' ) ) {
 			
 			$get_result=array();
 			if( !empty(self::$sections_ids) ) {
+				$post_ids = array_map( 'intval', array_keys( self::$sections_ids ) );
+				if ( ! empty( $post_ids ) ) {
+					update_meta_cache( 'post', $post_ids );
+				}
+
+				$current_post_type = get_post_type();
 				foreach ( self::$sections_ids as $post_id => $post_data ) {
-					$post_type = get_post_type();					
-					if ( NXT_BUILD_POST != $post_type ) {
+					if ( NXT_BUILD_POST != $current_post_type ) {
 						$nxt_hooks_layout   = get_post_meta( $post_id, 'nxt-hooks-layout', true );
-						$sections   = get_post_meta( $post_id, 'nxt-hooks-layout-sections', false );
+						$sections   = (array) get_post_meta( $post_id, 'nxt-hooks-layout-sections', true );
 
 						if( (!empty( $nxt_layout ) && !empty($nxt_hooks_layout) && $nxt_hooks_layout == $nxt_layout && !empty( $sections_pages )) || !empty($sections)){
 							if(('sections' === $nxt_hooks_layout) || (!empty($sections) && empty($nxt_hooks_layout) && $nxt_hooks_layout != 'page' )){
@@ -193,12 +238,12 @@ if ( ! class_exists( 'Nexter_Builder_Sections_Conditional' ) ) {
 									$get_result[] = $post_id;
 								}
 							}else if('pages' === $nxt_hooks_layout){
-								$pages = get_post_meta( $post_id, 'nxt-hooks-layout-pages', false );
+								$pages = (array) get_post_meta( $post_id, 'nxt-hooks-layout-pages', true );
 								if(!empty($pages) && $pages[0] == $sections_pages){
 									$get_result[] = $post_id;
 								}
 							}else if('code_snippet' === $nxt_hooks_layout){
-								$codes_snippet   = get_post_meta( $post_id, 'nxt-hooks-layout-code-snippet', false );
+								$codes_snippet   = (array) get_post_meta( $post_id, 'nxt-hooks-layout-code-snippet', true );
 								if(!empty($codes_snippet) && $codes_snippet[0] == $sections_pages){
 									$get_result[] = $post_id;
 								}

@@ -24,6 +24,13 @@ class Nexter_Builders_Singular_Conditional_Rules {
 		 * Singular Options
 		 */
 		public static $Nexter_Singular_Config = array();
+
+		/**
+		 * Frontend guard cache for template existence check.
+		 *
+		 * @var bool|null
+		 */
+		private static $has_published_templates = null;
 		
 		/**
 		 * Initiator
@@ -44,11 +51,24 @@ class Nexter_Builders_Singular_Conditional_Rules {
 				add_action( 'admin_init', [ $this, 'register_post_types_conditions' ], 10 );
 			}else{
 				add_action( 'wp', [ $this, 'register_post_types_conditions' ], 0 );
-			}
-			add_action('wp_ajax_nxt_singular_preview_type_ajax', [ $this, 'get_post_type_posts_list' ] );
-			if( !is_admin() ){
 				add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_scripts' ], 11 );
 			}
+			add_action('wp_ajax_nxt_singular_preview_type_ajax', [ $this, 'get_post_type_posts_list' ] );
+		}
+
+		/**
+		 * Fast pre-check to skip frontend hooks when no builder templates exist.
+		 *
+		 * @return bool
+		 */
+		private static function has_any_published_builder_templates() {
+			if ( self::$has_published_templates !== null ) {
+				return self::$has_published_templates;
+			}
+
+			$counts = wp_count_posts( NXT_BUILD_POST );
+			self::$has_published_templates = ( isset( $counts->publish ) && intval( $counts->publish ) > 0 );
+			return self::$has_published_templates;
 		}
 		
 		/*
@@ -148,12 +168,24 @@ class Nexter_Builders_Singular_Conditional_Rules {
 		 * @since 1.0.1
 		 */
 		public static function get_post_type_posts_list( $post_type = '') {
-		
-			$query_args = [ 'post_type' => 'any', 'posts_per_page' => -1 ];
+			$posts_limit = (int) apply_filters( 'nexter_builder_condition_posts_limit', 200 );
+			if ( $posts_limit < 1 ) {
+				$posts_limit = 200;
+			}
+
+			$query_args = [
+				'post_type'      => 'any',
+				'post_status'    => 'publish',
+				'posts_per_page' => $posts_limit,
+			];
 			if( !empty( $post_type ) ){
 				$query_args['post_type'] = $post_type;
 			}else{
 				$query_args['post_type'] = (!empty($_POST['rules'])) ? sanitize_text_field( wp_unslash($_POST['rules']) ) : 'any';
+				$search_term = isset( $_POST['q'] ) ? sanitize_text_field( wp_unslash( $_POST['q'] ) ) : '';
+				if ( '' !== $search_term ) {
+					$query_args['s'] = $search_term;
+				}
 			}
 			
 			$post_query = new \WP_Query( $query_args );
@@ -201,6 +233,11 @@ class Nexter_Builders_Singular_Conditional_Rules {
 				return ( $preview === 'preview' )
 					? self::$singular_conditions
 					: apply_filters( 'nexter_display_singular_list', self::$singular_conditions );
+			}
+
+			// Skip on frontend when no builder templates exist (post type is registered by now).
+			if ( ! is_admin() && $preview !== 'preview' && ! self::has_any_published_builder_templates() ) {
+				return apply_filters( 'nexter_display_singular_list', self::$singular_conditions );
 			}
 
 			self::$singular_conditions   = [];

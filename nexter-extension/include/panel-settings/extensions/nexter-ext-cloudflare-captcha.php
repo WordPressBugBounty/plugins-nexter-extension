@@ -8,12 +8,14 @@ defined('ABSPATH') or die();
  class Nexter_Ext_Cloudflare_Captcha {
     
 	public static $captcha_opt = [];
+	private $widget_renderer_ready = false;
 
     /**
      * Constructor
      */
     public function __construct() {
         $this->nxt_get_settings();
+		$this->ensure_widget_renderer();
 
         add_action( 'login_enqueue_scripts', [ $this, 'enqueue_login_turnstile_scripts' ] );
         add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_frontend_turnstile_scripts' ] );
@@ -45,6 +47,14 @@ defined('ABSPATH') or die();
         // WooCommerce Forms - Register hooks on init to ensure WooCommerce is loaded
         add_action( 'init', [ $this, 'register_woocommerce_hooks' ], 20 );
     }
+
+	private function ensure_widget_renderer() {
+		if ( $this->widget_renderer_ready ) {
+			return;
+		}
+		require_once plugin_dir_path( __FILE__ ) . 'class-nxt-cloudflare-turnstile-renderer.php';
+		$this->widget_renderer_ready = true;
+	}
 
     /**
      * Register WooCommerce hooks
@@ -91,7 +101,7 @@ defined('ABSPATH') or die();
 			return self::$captcha_opt;
 		}
 
-		$option = get_option( 'nexter_site_security' );
+		$option = Nxt_Options::security();
 		
 		if(!empty($option) && isset($option['captcha-security']) && !empty($option['captcha-security']['switch']) && !empty($option['captcha-security']['values']) ){
 			self::$captcha_opt = (array) $option['captcha-security']['values'];
@@ -109,7 +119,7 @@ defined('ABSPATH') or die();
 
     public function nxt_comments_enabled(){
 
-		$extension_option = get_option( 'nexter_site_performance' );
+		$extension_option = Nxt_Options::performance();
 
 		$data = [
 			'disable_comments' => '',
@@ -330,123 +340,9 @@ defined('ABSPATH') or die();
      * Outputs the Turnstile widget markup.
      */
     public function render_turnstile_widget( $form_action = '', $callback_function = '', $button_selector = '', $css_class = '', $size = 'flexible', $disable_submit_btn = true ) {
-
-        $site_key    = ( isset( self::$captcha_opt['turnSiteKey'] ) && !empty( self::$captcha_opt['turnSiteKey'] ) ) ? sanitize_text_field( self::$captcha_opt['turnSiteKey'] ) : '';
-        
-        // Return early if site key is empty
-        if ( empty( $site_key ) ) {
-            return;
-        }
-        
-        $theme       = 'light';
-        $unique_id   = '-'.uniqid();
-        $widget_id   = 'cf-turnstile' . esc_attr( $unique_id );
-
-        do_action( 'nxt_turnstile_enqueue_scripts' );
-        do_action( 'nxt_turnstile_before_field', esc_attr( $unique_id ) );
-        ?>
-        <div id="<?php echo esc_attr($widget_id); ?>"
-            class="cf-turnstile<?php echo $css_class ? ' ' . esc_attr( $css_class ) : ''; ?>"
-            <?php if ( $disable_submit_btn ) : ?>
-                data-callback="<?php echo esc_attr( $callback_function ); ?>"
-            <?php endif; ?>
-            data-sitekey="<?php echo esc_attr( $site_key ); ?>"
-            data-theme="<?php echo esc_attr( $theme ); ?>"
-            data-language="auto"
-            data-size="<?php echo esc_attr( $size ); ?>"
-            data-retry="auto"
-            data-retry-interval="1500"
-            data-action="<?php echo esc_attr( $form_action ); ?>"
-            data-appearance="always">
-        </div>
-        <?php if ( $form_action == 'wordpress-login' ) : ?>
-        <style>
-            #login {
-                min-width: 350px !important;
-            }
-        </style>
-        <?php endif; ?>
-        <script>
-            (function() {
-                var widgetId = "<?php echo esc_js( $widget_id ); ?>";
-                var siteKey = "<?php echo esc_js( $site_key ); ?>";
-                var formAction = "<?php echo esc_js( $form_action ); ?>";
-                var theme = "<?php echo esc_js( $theme ); ?>";
-                var size = "<?php echo esc_js( $size ); ?>";
-                var retryCount = 0;
-                var maxRetries = 50; // 5 seconds max wait time
-                var elementRetryCount = 0;
-                var maxElementRetries = 20; // 2 seconds max wait for element
-                
-                function initTurnstile() {
-                    // Wait for turnstile library
-                    if (typeof turnstile === 'undefined') {
-                        retryCount++;
-                        if (retryCount < maxRetries) {
-                            setTimeout(initTurnstile, 100);
-                        }
-                        return;
-                    }
-                    
-                    // Wait for element to be in DOM
-                    var el = document.getElementById(widgetId);
-                    if (!el) {
-                        elementRetryCount++;
-                        if (elementRetryCount < maxElementRetries) {
-                            setTimeout(initTurnstile, 100);
-                        }
-                        return;
-                    }
-                    
-                    // Element found, render widget
-                    try {
-                        // Remove any existing widget
-                        try {
-                            turnstile.remove("#" + widgetId);
-                        } catch(e) {}
-                        
-                        // Render the widget
-                        var renderOptions = {
-                            sitekey: siteKey,
-                            action: formAction,
-                            theme: theme,
-                            size: size,
-                            language: "auto",
-                            retry: "auto",
-                            "retry-interval": 1500,
-                            appearance: "always"
-                        };
-                        <?php if ( !empty( $callback_function ) ) : ?>
-                        if (typeof window.<?php echo esc_js( $callback_function ); ?> === 'function') {
-                            renderOptions.callback = window.<?php echo esc_js( $callback_function ); ?>;
-                        } else if (typeof <?php echo esc_js( $callback_function ); ?> === 'function') {
-                            renderOptions.callback = <?php echo esc_js( $callback_function ); ?>;
-                        }
-                        <?php endif; ?>
-                        turnstile.render("#" + widgetId, renderOptions);
-                    } catch(error) {
-                        console.error('Turnstile render error:', error);
-                    }
-                }
-                
-                // Start initialization
-                if (document.readyState === 'loading') {
-                    document.addEventListener("DOMContentLoaded", function() {
-                        setTimeout(initTurnstile, 100);
-                    });
-                } else {
-                    // DOM already loaded, wait a bit for dynamic content
-                    setTimeout(initTurnstile, 100);
-                }
-            })();
-        </script>
-
-        <?php if ( $disable_submit_btn ) : ?>
-            <style><?php echo esc_html( $button_selector ); ?> { pointer-events: none; opacity: 0.5; }</style>
-        <?php endif;
-
-        do_action( 'nxt_turnstile_after_field', esc_attr( $unique_id ), $button_selector );
-        echo '<br class="cf-turnstile-br cf-turnstile-br' . esc_attr( $unique_id ) . '">';
+		$this->ensure_widget_renderer();
+		$site_key = ( isset( self::$captcha_opt['turnSiteKey'] ) && ! empty( self::$captcha_opt['turnSiteKey'] ) ) ? sanitize_text_field( self::$captcha_opt['turnSiteKey'] ) : '';
+		Nxt_Cloudflare_Turnstile_Renderer::render_widget( $site_key, $form_action, $callback_function, $button_selector, $css_class, $size, $disable_submit_btn );
     }
 
     /**

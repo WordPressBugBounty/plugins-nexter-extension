@@ -122,8 +122,10 @@ class Nexter_Global_Code_Handler {
                         return; // Skip execution
                     }
 
-                    // Execute PHP code
-                    Nexter_Builder_Code_Snippets_Executor::get_instance()->execute_php_snippet($code, $snippet_id);
+                    // Execute PHP code only when executor is available.
+                    if (class_exists('Nexter_Builder_Code_Snippets_Executor')) {
+                        Nexter_Builder_Code_Snippets_Executor::get_instance()->execute_php_snippet($code, $snippet_id);
+                    }
                 }
             }, $priority);
         }

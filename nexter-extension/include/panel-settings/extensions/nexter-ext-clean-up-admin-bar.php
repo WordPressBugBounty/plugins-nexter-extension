@@ -34,7 +34,7 @@ defined('ABSPATH') or die();
 			return self::$clean_up_opt;
 		}
 
-		$option = get_option( 'nexter_extra_ext_options' );
+		$option = Nxt_Options::extra_ext();
 		
 		if(!empty($option) && isset($option['clean-up-admin-bar']) && !empty($option['clean-up-admin-bar']['switch']) && !empty($option['clean-up-admin-bar']['values']) ){
 			self::$clean_up_opt = $option['clean-up-admin-bar']['values'];
