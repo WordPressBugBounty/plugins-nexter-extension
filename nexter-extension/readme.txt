@@ -220,6 +220,9 @@ Yes. [Compare Free vs Pro →](https://nexterwp.com/free-vs-pro/#Nexter-Extensio
 
 ### View Complete Changelog at [roadmap.nexterwp.com](https://roadmap.nexterwp.com/updates?filter=Nexter+Extension+-+FREE)
 
+= V4.6.4 = 07 April 2026
+- Fixed : Bug Fixes and Improvements.
+
 = V4.6.3 = 06 April 2026
 - Improved : Bootstrap & Core : Optimized initialization flow and conditional loading for better performance and stability.
 - Improved : Architecture : Refactored core modules into smaller classes for enhanced maintainability, performance, and clearer separation of logic.

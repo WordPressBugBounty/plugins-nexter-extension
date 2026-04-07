@@ -16,6 +16,8 @@ class Nxt_Security_Network {
 	 */
 	public function __construct( $adv_sec_opt, $nxt_security_raw ) {
 
+		$nxt_security_raw = is_object( $nxt_security_raw ) ? json_decode( wp_json_encode( $nxt_security_raw ), true ) : (array) $nxt_security_raw;
+
 		// Disable XML-RPC
 		if ( is_array( $adv_sec_opt ) && in_array( 'disable_xml_rpc', $adv_sec_opt, true ) ) {
 			add_filter( 'xmlrpc_enabled', '__return_false' );
