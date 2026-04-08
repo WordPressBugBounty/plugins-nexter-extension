@@ -465,7 +465,7 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 			// Enqueue CSS/JS for admin area (for admin_header and admin_footer locations)
 			if(is_admin()){
 				if ( $this->should_boot_admin_snippet_runtime() ) {
-					add_action( 'admin_enqueue_scripts', array( $this, 'nexter_code_snippets_css_js_admin' ),2 );
+					add_action( 'admin_enqueue_scripts', array( $this, 'nexter_code_snippets_css_js_admin' ), 2 );
 					add_action( 'admin_init', array( $this, 'nexter_code_html_hooks_actions_admin' ), 2 );
 				}
 				add_action( 'admin_init', array( $this, 'migrate_post_snippets_to_file_based' ), 1 );
@@ -2661,49 +2661,6 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 				$file_snippets = self::get_file_snippets_fallback('css');
 			}
 			
-			/* if( !empty( $css_actions ) ){
-				foreach ( $css_actions as $post_id) {
-					$post_type = get_post_type();
-
-					if ( self::$snippet_type != $post_type ) {
-
-						$insertion_type   = get_post_meta($post_id, 'nxt-code-insertion', true);
-						if( !empty($insertion_type) && $insertion_type == 'shortcode'){
-							continue;
-						}
-
-						// Check Pro restrictions (device and scheduling)
-						if (self::should_skip_due_to_pro_restrictions($post_id)) {
-							continue; // Skip this snippet due to Pro restrictions
-						}
-
-						// Conditional logic check
-						if (class_exists('Nexter_Builder_Display_Conditional_Rules')) {
-							if (!Nexter_Builder_Display_Conditional_Rules::should_display_snippet($post_id)) {
-								continue; // Skip this snippet, conditional logic not met
-							}
-						}
-
-						$css_code = get_post_meta( $post_id, 'nxt-css-code', true );
-						if(!empty($css_code) ){
-							self::$snippet_loaded_ids['css'][] = $post_id;
-							
-							// Check for new location system
-							$location = get_post_meta($post_id, 'nxt-code-location', true);
-							if (!empty($location)) {
-								// Use new location-based system
-								self::enqueue_css_at_location($post_id, $css_code, $location);
-							} else {
-								// Use old system (default to wp_head)
-								wp_register_style( 'nxt-snippet-css', false );
-								wp_enqueue_style( 'nxt-snippet-css' );
-								wp_add_inline_style( 'nxt-snippet-css', wp_specialchars_decode($css_code) );
-							}
-						}
-					}
-				}
-			} */
-
 			if (!empty($file_snippets)) {
 				foreach ($file_snippets as $css_snippet) {
 					$post_id = isset($css_snippet['id']) ? $css_snippet['id'] : '';
@@ -2763,47 +2720,6 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 				$file_javascript = self::get_file_snippets_fallback('javascript');
 			}
 			
-			/* if( !empty( $javascript_actions ) ){
-				foreach ( $javascript_actions as $post_id) {
-					$post_type = get_post_type();
-
-					if ( self::$snippet_type != $post_type ) {
-						
-						$insertion_type   = get_post_meta($post_id, 'nxt-code-insertion', true);
-						if( !empty($insertion_type) && $insertion_type == 'shortcode'){
-							continue;
-						}
-
-						// Check Pro restrictions (device and scheduling)
-						if (self::should_skip_due_to_pro_restrictions($post_id)) {
-							continue; // Skip this snippet due to Pro restrictions
-						}
-
-						// Conditional logic check
-						if (class_exists('Nexter_Builder_Display_Conditional_Rules')) {
-							if (!Nexter_Builder_Display_Conditional_Rules::should_display_snippet($post_id)) {
-								continue; // Skip this snippet, conditional logic not met
-							}
-						}
-
-						$javascript_code = get_post_meta( $post_id, 'nxt-javascript-code', true );
-						if(!empty($javascript_code) ){
-							self::$snippet_loaded_ids['javascript'][] = $post_id;
-							
-							// Check for new location system
-							$location = get_post_meta($post_id, 'nxt-code-location', true);
-							if (!empty($location)) {
-								// Use new location-based system
-								self::enqueue_js_at_location($post_id, $javascript_code, $location);
-							} else {
-								// Use old system (default to footer)
-								wp_add_inline_script( 'nxt-snippet-js', html_entity_decode($javascript_code, ENT_QUOTES) );
-							}
-						}
-					}
-				}
-			} */
-
 			if(!empty($file_javascript)){
 				if ( ! $js_handle_registered ) {
 					wp_register_script( 'nxt-snippet-js', false );
@@ -2863,21 +2779,7 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 		 * Enhanced to support admin location-based execution
 		 */
 		public static function nexter_code_snippets_css_js_admin( $hook_suffix = '' ) {
-			$allowed_hooks = array( 'post.php', 'post-new.php', 'edit.php', 'admin.php' );
-			if ( ! in_array( $hook_suffix, $allowed_hooks, true ) ) {
-				return;
-			}
-
-			$page = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-			$post_type = get_post_type();
-			$get_post_type = isset( $_GET['post_type'] ) ? sanitize_key( wp_unslash( $_GET['post_type'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-			$is_snippet_or_builder_screen = ( $page === 'nxt_code_snippets' || $page === 'nxt_builder' )
-				|| ( $post_type === self::$snippet_type || $post_type === 'nxt_builder' )
-				|| ( $get_post_type === self::$snippet_type || $get_post_type === 'nxt_builder' );
-			if ( ! $is_snippet_or_builder_screen ) {
-				return;
-			}
-
+			
 			// Only process admin-specific locations
 			$admin_locations = ['admin_header', 'admin_footer'];
 			
@@ -2890,46 +2792,6 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 				$file_css = self::get_file_snippets_fallback('css');
 			}
 			
-			/* if( !empty( $css_actions ) ){
-				foreach ( $css_actions as $post_id) {
-					$post_type = get_post_type();
-
-					if ( self::$snippet_type != $post_type ) {
-
-						$insertion_type   = get_post_meta($post_id, 'nxt-code-insertion', true);
-						if( !empty($insertion_type) && $insertion_type == 'shortcode'){
-							continue;
-						}
-
-						// Only process admin locations
-						$location = get_post_meta($post_id, 'nxt-code-location', true);
-						if (!in_array($location, $admin_locations)) {
-							continue;
-						}
-
-						// Check Pro restrictions (device and scheduling)
-						if (self::should_skip_due_to_pro_restrictions($post_id)) {
-							continue; // Skip this snippet due to Pro restrictions
-						}
-
-						// Conditional logic check
-						if (class_exists('Nexter_Builder_Display_Conditional_Rules')) {
-							if (!Nexter_Builder_Display_Conditional_Rules::should_display_snippet($post_id)) {
-								continue; // Skip this snippet, conditional logic not met
-							}
-						}
-
-						$css_code = get_post_meta( $post_id, 'nxt-css-code', true );
-						if(!empty($css_code) ){
-							self::$snippet_loaded_ids['css'][] = $post_id;
-							
-							// Use location-based system for admin locations
-							self::enqueue_css_at_location($post_id, $css_code, $location);
-						}
-					}
-				}
-			} */
-
 			if(!empty($file_css)){
 				foreach ($file_css as $css_snippet) {
 					$post_id = isset($css_snippet['id']) ? $css_snippet['id'] : '';
@@ -2985,46 +2847,6 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 				$file_javascript = self::get_file_snippets_fallback('javascript');
 			}
 			
-			/* if( !empty( $javascript_actions ) ){
-				foreach ( $javascript_actions as $post_id) {
-					$post_type = get_post_type();
-
-					if ( self::$snippet_type != $post_type ) {
-						
-						$insertion_type   = get_post_meta($post_id, 'nxt-code-insertion', true);
-						if( !empty($insertion_type) && $insertion_type == 'shortcode'){
-							continue;
-						}
-
-						// Only process admin locations
-						$location = get_post_meta($post_id, 'nxt-code-location', true);
-						if (!in_array($location, $admin_locations)) {
-							continue;
-						}
-
-						// Check Pro restrictions (device and scheduling)
-						if (self::should_skip_due_to_pro_restrictions($post_id)) {
-							continue; // Skip this snippet due to Pro restrictions
-						}
-
-						// Conditional logic check
-						if (class_exists('Nexter_Builder_Display_Conditional_Rules')) {
-							if (!Nexter_Builder_Display_Conditional_Rules::should_display_snippet($post_id, $js_snippet)) {
-								continue; // Skip this snippet, conditional logic not met
-							}
-						}
-
-						$javascript_code = get_post_meta( $post_id, 'nxt-javascript-code', true );
-						if(!empty($javascript_code) ){
-							self::$snippet_loaded_ids['javascript'][] = $post_id;
-							
-							// Use location-based system for admin locations
-							self::enqueue_js_at_location($post_id, $javascript_code, $location);
-						}
-					}
-				}
-			} */
-
 			if(!empty($file_javascript)){
 				foreach ($file_javascript as $js_snippet) {
 					$post_id = isset($js_snippet['id']) ? $js_snippet['id'] : '';

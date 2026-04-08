@@ -120,6 +120,7 @@ class Nexter_Ext_Image_Upload_Optimization {
 		if ( is_array( $pro_formats ) && ! empty( $pro_formats ) ) {
 			$allowed_formats = array_merge( $allowed_formats, $pro_formats );
 		}
+		
 		$allowed_formats = array_unique( array_values( $allowed_formats ) );
 		if ( empty( $allowed_formats ) ) {
 			$allowed_formats = array( 'webp', 'original' );

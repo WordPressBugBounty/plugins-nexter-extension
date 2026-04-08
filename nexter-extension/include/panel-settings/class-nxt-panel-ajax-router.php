@@ -448,9 +448,9 @@ class Nxt_Panel_Ajax_Router {
                         if(false !== array_search('hide_telephone_secure', $get_option)){
                             unset($get_option[array_search('hide_telephone_secure' , $get_option)]);
                         }
-                        $get_option = Nexter_Ext_Panel_Settings::nexter_ext_object_convert_to_array($get_option);
+                        $get_option = $this->parent->nexter_ext_object_convert_to_array( $get_option );
 
-                        $securData = Nexter_Ext_Panel_Settings::nexter_ext_object_convert_to_array($securData);
+                        $securData = $this->parent->nexter_ext_object_convert_to_array( $securData );
                         $get_option[ $ext ]['switch'] = true;
 
                         $get_option[ $ext ]['values'] = $securData;

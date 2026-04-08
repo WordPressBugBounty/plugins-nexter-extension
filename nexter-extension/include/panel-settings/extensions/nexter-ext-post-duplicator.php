@@ -99,9 +99,6 @@ if( !empty($extension_option['wp-duplicate-post']['values']) ){
 				$duplicate_postfix = (!empty($wpDupPostSet['nxt-duplicate-postfix'])) ? $wpDupPostSet['nxt-duplicate-postfix'] : 'Copy';
 				$duplicate_slug = (!empty($wpDupPostSet['nxt-duplicate-slug'])) ? $wpDupPostSet['nxt-duplicate-slug'] : 'copy';
 			
-				// Get global database
-				global $wpdb;
-				
 				// Get post array
 				$duplicate = get_post( $original_id, 'ARRAY_A' );
 					
@@ -122,8 +119,9 @@ if( !empty($extension_option['wp-duplicate-post']['values']) ){
 
 				// Change elements
 				$postfixText = isset( $settings['title'] ) ? sanitize_text_field( $settings['title'] ) : esc_html__( 'Copy', 'nexter-extension' );
-				$duplicate['post_title'] = wp_kses_post( $duplicate['post_title'] ).' '.wp_kses_post($postfixText).' #'.esc_html($p);
-				$duplicate['post_name'] = sanitize_title( $duplicate['post_name'].'-'.$settings['slug'] ).'-'.esc_html($p);
+				$p           = absint( $p );
+				$duplicate['post_title'] = sanitize_text_field( $duplicate['post_title'] . ' ' . $postfixText . ' #' . $p );
+				$duplicate['post_name']  = sanitize_title( $duplicate['post_name'] . '-' . $settings['slug'] . '-' . $p );
 				
 				// Set the status
 				if( $settings['status'] != 'same' ) {
@@ -147,11 +145,13 @@ if( !empty($extension_option['wp-duplicate-post']['values']) ){
 				unset( $duplicate['guid'] );
 				unset( $duplicate['comment_count'] );
 
-				// Security: Use wp_kses_post instead of addslashes for content sanitization
-				$duplicate['post_content'] = wp_kses_post( $duplicate['post_content'] );
+				$duplicate['post_content'] = $duplicate['post_content'];
 
 				// Set Post into Database
-				$duplicate_id = wp_insert_post( $duplicate );
+				$duplicate_id = wp_insert_post( $duplicate, true );
+				if ( is_wp_error( $duplicate_id ) ) {
+					return false;
+				}
 				
 				// Duplicate all taxonomies and terms
 				$taxonomies = get_object_taxonomies( $duplicate['post_type'] );
@@ -160,31 +160,17 @@ if( !empty($extension_option['wp-duplicate-post']['values']) ){
 					wp_set_object_terms( $duplicate_id, $terms, $taxonomy );
 				}
 				
-				// Security: Duplicate custom fields with proper sanitization
-				$custom_fields = get_post_custom( $original_id );
-				foreach ( $custom_fields as $key => $value ) {
-					// Security: Skip internal WordPress meta keys that shouldn't be duplicated
-					$skip_keys = array( '_edit_lock', '_edit_last', '_wp_old_slug' );
-					if ( in_array( $key, $skip_keys, true ) ) {
-						continue;
-					}
-					
-					if( is_array($value) && count($value) > 0 ) {
-						foreach( $value as $i=>$v ) {
-							// Security: Sanitize meta value based on type
-							$sanitized_value = is_string( $v ) ? wp_kses_post( $v ) : $v;
-							
-							$data = array(
-								'post_id' 		=> absint( $duplicate_id ),
-								'meta_key' 		=> sanitize_key( $key ),
-								'meta_value' 	=> $sanitized_value,
-							);
-							$formats = array(
-								'%d',
-								'%s',
-								'%s',
-							);
-							$result = $wpdb->insert( $wpdb->prefix.'postmeta', $data, $formats );
+				// Duplicate meta via API so serialized / JSON values (Elementor, etc.) stay intact.
+				$skip_keys = array( '_edit_lock', '_edit_last', '_wp_old_slug' );
+				$meta_keys = get_post_custom_keys( $original_id );
+				if ( is_array( $meta_keys ) ) {
+					foreach ( $meta_keys as $meta_key ) {
+						if ( in_array( $meta_key, $skip_keys, true ) ) {
+							continue;
+						}
+						$meta_values = get_post_meta( $original_id, $meta_key, false );
+						foreach ( (array) $meta_values as $meta_value ) {
+							add_post_meta( $duplicate_id, $meta_key, $meta_value );
 						}
 					}
 				}

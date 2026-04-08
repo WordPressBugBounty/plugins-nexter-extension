@@ -60,7 +60,7 @@ class Nxt_Dashboard_Data {
             }
             if (is_array($data)) {
                 foreach ($data as $key => $value) {
-                    $data[$key] = self::nexter_ext_object_convert_to_array($value);
+                    $data[ $key ] = $this->nexter_ext_object_convert_to_array( $value );
                 }
             }
             return $data;
