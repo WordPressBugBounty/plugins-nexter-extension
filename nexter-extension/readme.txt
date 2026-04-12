@@ -3,7 +3,7 @@ Contributors: posimyththemes, nirmalkavaiya, sagarpatel124
 Tags: security, elementor, theme-builder, code-snippet, image-optimizer
 Requires at least: 4.0
 Tested up to: 6.9
-Stable tag: 4.6.5
+Stable tag: 4.6.6
 Requires PHP: 5.6
 License: GPLv3
 License URI: https://opensource.org/licenses/GPL-3.0
@@ -219,6 +219,11 @@ Yes. [Compare Free vs Pro →](https://nexterwp.com/free-vs-pro/#Nexter-Extensio
 == Changelog ==
 
 ### View Complete Changelog at [roadmap.nexterwp.com](https://roadmap.nexterwp.com/updates?filter=Nexter+Extension+-+FREE)
+
+= V4.6.6 = 11 April 2026
+- Fixed : Advanced Security : options object fatal error bug Fix
+- Fixed : Custom Login URL : bug fix
+- Fixed : Bug Fixes and Improvements.
 
 = V4.6.5 = 08 April 2026
 - Fixed : Post Duplicate : Fix issue on duplicate post data

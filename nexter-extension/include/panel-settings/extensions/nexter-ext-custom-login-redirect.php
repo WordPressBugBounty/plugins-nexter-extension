@@ -75,6 +75,10 @@ class Nexter_Ext_Custom_Login_Redirect {
         $path = !empty($request_URI['path']) ? untrailingslashit($request_URI['path']) : '';
         
         $login_slug = $this->nxt_custom_login_slug();
+        $get_login_slug = '';
+        if ( ! empty( $login_slug ) && isset( $_GET[ $login_slug ] ) ) {
+            $get_login_slug = sanitize_text_field( wp_unslash( $_GET[ $login_slug ] ) );
+        }
 
         if( !is_admin() && ( strpos(rawurldecode($request_uri), 'wp-login.php') !== false || $path === site_url('wp-login', 'relative') ) ) {
             //wp-login.php URL 
@@ -91,9 +95,7 @@ class Nexter_Ext_Custom_Login_Redirect {
             $_SERVER['REQUEST_URI'] = $this->nxt_user_trailingslashit('/' . str_repeat('-/', 10));
             $pagenow = 'index.php';
             
-        // Security: Sanitize GET parameter
-        $get_login_slug = isset( $_GET[ $login_slug ] ) ? sanitize_text_field( wp_unslash( $_GET[ $login_slug ] ) ) : '';
-        } else if( $path === home_url( $login_slug, 'relative') || ( !get_option('permalink_structure') && ! empty( $get_login_slug ) && empty( $get_login_slug ) ) ) {
+        } else if( $path === home_url( $login_slug, 'relative') || ( !get_option('permalink_structure') && ! empty( $get_login_slug ) ) ) {
             //Hidden Login URL
             $pagenow = 'wp-login.php';
         }

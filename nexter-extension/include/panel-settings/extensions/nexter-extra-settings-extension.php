@@ -12,8 +12,8 @@ class Nexter_Ext_Extra_Settings {
      */
     public function __construct() {
 		
-		$extension_option = Nxt_Options::extra_ext();
-		$security_option = Nxt_Options::security();
+		$extension_option = $this->nxt_options_to_array( Nxt_Options::extra_ext() );
+		$security_option = $this->nxt_options_to_array( Nxt_Options::security() );
 
 		if( !empty($extension_option)){
 			//Adobe Font
@@ -86,9 +86,9 @@ class Nexter_Ext_Extra_Settings {
 		}
 		
 		//Local Google Font — load when the extension toggle is on OR when performance google-fonts settings are active
-		$perf_option = Nxt_Options::performance();
-		$local_gfont_ext   = ! empty( $extension_option['local-google-font']['switch'] );
-		$perf_gfont_active = ! empty( $perf_option['google-fonts']['switch'] )
+		$perf_option = $this->nxt_options_to_array( Nxt_Options::performance() );
+		$local_gfont_ext   = ! empty( ( $extension_option['local-google-font'] ?? array() )['switch'] );
+		$perf_gfont_active = ! empty( ( $perf_option['google-fonts'] ?? array() )['switch'] )
 			|| ! empty( $perf_option['nexter_google_fonts'] );
 		if ( $local_gfont_ext || $perf_gfont_active || defined('NXT_VERSION') ) {
 			require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-local-google-font.php';
@@ -100,7 +100,7 @@ class Nexter_Ext_Extra_Settings {
 		}
 
 		//Replace URL (admin-only utility, toggle controlled)
-		if ( is_admin() && ! empty( $extension_option['wp-replace-url']['switch'] ) ) {
+		if ( is_admin() && ! empty( $extension_option ) && isset( $extension_option['wp-replace-url']['switch'] ) && $extension_option['wp-replace-url']['switch'] ) {
 			require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-replace-url.php';
 		}
 		if(!empty($security_option)){
@@ -125,22 +125,21 @@ class Nexter_Ext_Extra_Settings {
 		}
 
 		if(!empty($security_option)){
-			$sec_opt = $this->convert_object_to_array($security_option);
-			if( isset($sec_opt['limit-login-attempt']) && !empty($sec_opt['limit-login-attempt']['switch']) ){
+			if( isset($security_option['limit-login-attempt']['switch']) && !empty($security_option['limit-login-attempt']['switch']) ){
 				require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-limit-login-attempt.php';
 			}
 		}
 		require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-performance-security-settings.php';
 
 		//Image Sizes (custom sizes + disabled sizes) — load only when either toggle is on
-		$image_sizes_active = ( ! empty( $perf_option['disabled-image-sizes']['switch'] ) )
-			|| ( ! empty( $perf_option['nexter-custom-image-sizes']['switch'] ) );
+		$image_sizes_active = ( ! empty( ( $perf_option['disabled-image-sizes'] ?? array() )['switch'] ) )
+			|| ( ! empty( ( $perf_option['nexter-custom-image-sizes'] ?? array() )['switch'] ) );
 		if ( $image_sizes_active ) {
 			require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-image-sizes.php';
 		}
 
 		//Disable Elementor Icons — load only when toggle is on and Elementor is active
-		if ( class_exists( '\Elementor\Plugin' ) && ! empty( $perf_option['disable-elementor-icons']['switch'] ) ) {
+		if ( class_exists( '\Elementor\Plugin' ) && ! empty( ( $perf_option['disable-elementor-icons'] ?? array() )['switch'] ) ) {
 			require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-disable-elementor-icons.php';
 		}
     }
@@ -187,6 +186,24 @@ class Nexter_Ext_Extra_Settings {
 			return array_map([$this, 'convert_object_to_array'], $data);
 		}
 		return $data;
+	}
+
+	/**
+	 * Deep-convert options to plain arrays (handles stdClass trees from JSON / DB).
+	 *
+	 * @param mixed $data Raw option value.
+	 * @return array
+	 */
+	private function nxt_options_to_array( $data ) {
+		if ( null === $data || false === $data || '' === $data ) {
+			return array();
+		}
+		$json = wp_json_encode( $data );
+		if ( false === $json || 'null' === $json ) {
+			return array();
+		}
+		$decoded = json_decode( $json, true );
+		return is_array( $decoded ) ? $decoded : array();
 	}
 
 }

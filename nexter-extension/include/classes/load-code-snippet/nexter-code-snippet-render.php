@@ -377,7 +377,7 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 		self::$file_count_cache = null;
 		self::$file_code_list_cache_with_meta = null;
 		self::$file_code_list_cache_without_meta = null;
-		$this->clear_file_snippet_transients();
+		$this->clear_all_snippet_transients();
 		// Note: We don't clear file_based_instance and storage_dir_cache as they're stable
 	}
 
@@ -393,6 +393,35 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 	}
 
 	/**
+	 * Read transient value in a lock-safe way for DB-backed transients.
+	 *
+	 * Avoids delete-on-read behavior from get_transient() when timeout has passed,
+	 * which can deadlock on high-concurrency sites hitting wp_options.
+	 *
+	 * @param string $key Cache key without transient prefixes.
+	 * @param mixed  $default Default when missing/expired.
+	 * @return mixed
+	 */
+	private static function get_transient_lock_safe( $key, $default = false ) {
+		// External object cache handles expiry efficiently and doesn't hit wp_options timeout cleanup path.
+		if ( wp_using_ext_object_cache() ) {
+			return get_transient( $key );
+		}
+
+		$value = get_option( '_transient_' . $key, false );
+		if ( false === $value ) {
+			return $default;
+		}
+
+		$timeout = (int) get_option( '_transient_timeout_' . $key, 0 );
+		if ( $timeout > 0 && $timeout < time() ) {
+			return $default;
+		}
+
+		return $value;
+	}
+
+	/**
 	 * Clear cached file snippet fallback transients.
 	 *
 	 * @return void
@@ -401,6 +430,19 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 		foreach ( array( 'php', 'css', 'javascript', 'htmlmixed' ) as $type ) {
 			delete_transient( self::get_file_snippet_transient_key( $type ) );
 		}
+	}
+
+	/**
+	 * Clear all snippet-related transients used in snippet render flow.
+	 *
+	 * @return void
+	 */
+	private function clear_all_snippet_transients() {
+		$this->clear_file_snippet_transients();
+
+		// Transients used by snippets admin runtime / localize data.
+		delete_transient( 'nexter_snippets_admin_localize_v1' );
+		delete_transient( 'nexter_snippets_admin_runtime_needed_v1' );
 	}
 
 	/**
@@ -711,7 +753,7 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 		 */
 		private function get_cached_snippets_admin_localize_data() {
 			$cache_key = 'nexter_snippets_admin_localize_v1';
-			$cached = get_transient( $cache_key );
+			$cached = self::get_transient_lock_safe( $cache_key, false );
 			if ( is_array( $cached ) ) {
 				return $cached;
 			}
@@ -741,8 +783,8 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 			}
 
 			$cache_key = 'nexter_snippets_admin_runtime_needed_v1';
-			$cached = get_transient( $cache_key );
-			if ( is_bool( $cached ) ) {
+			$cached = self::get_transient_lock_safe( $cache_key, false );
+			if ( $cached ) {
 				self::$should_boot_admin_runtime = $cached;
 				return self::$should_boot_admin_runtime;
 			}
@@ -2779,7 +2821,6 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 		 * Enhanced to support admin location-based execution
 		 */
 		public static function nexter_code_snippets_css_js_admin( $hook_suffix = '' ) {
-			
 			// Only process admin-specific locations
 			$admin_locations = ['admin_header', 'admin_footer'];
 			
@@ -3190,7 +3231,7 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 
 		private static function get_file_snippets_fallback( $code_type ) {
 			$cache_key = self::get_file_snippet_transient_key( $code_type );
-			$cached_snippets = get_transient( $cache_key );
+			$cached_snippets = self::get_transient_lock_safe( $cache_key, false );
 			if ( is_array( $cached_snippets ) ) {
 				return $cached_snippets;
 			}

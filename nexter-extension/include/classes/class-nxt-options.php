@@ -49,6 +49,25 @@ class Nxt_Options {
 		'notice_count'     => 'nxt_ext_menu_notice_count',
 	];
 
+	/**
+	 * Aliases whose stored value is always a nested settings tree (array).
+	 * Deep-normalized so nested stdClass (JSON decode / DB) never breaks array access.
+	 *
+	 * @var string[]
+	 */
+	private static $tree_option_aliases = [
+		'extra_ext',
+		'performance',
+		'security',
+		'white_label',
+		'disabled_images',
+		'custom_img_sizes',
+		'elementor_icons',
+		'google_fonts',
+		'settings_opts',
+		'tpgb_white_label',
+	];
+
 	// ── Public getters ─────────────────────────────────────────────
 
 	/**
@@ -195,8 +214,43 @@ class Nxt_Options {
 		self::register_hooks();
 
 		if ( ! array_key_exists( $alias, self::$cache ) ) {
-			self::$cache[ $alias ] = get_option( self::$keys[ $alias ] );
+			$raw = get_option( self::$keys[ $alias ] );
+			self::$cache[ $alias ] = in_array( $alias, self::$tree_option_aliases, true )
+				? self::coerce_option_tree_to_array( $raw )
+				: $raw;
 		}
 		return self::$cache[ $alias ];
+	}
+
+	/**
+	 * Normalize tree options to plain arrays (handles stdClass and arrays containing objects).
+	 *
+	 * @param mixed $value Raw option from get_option().
+	 * @return array|false False when the option is missing in the database.
+	 */
+	private static function coerce_option_tree_to_array( $value ) {
+		if ( false === $value ) {
+			return false;
+		}
+		if ( null === $value || '' === $value ) {
+			return array();
+		}
+		if ( is_array( $value ) || is_object( $value ) ) {
+			return self::json_decode_assoc( $value );
+		}
+		return array();
+	}
+
+	/**
+	 * @param mixed $value Serializable value.
+	 * @return array
+	 */
+	private static function json_decode_assoc( $value ) {
+		$json = wp_json_encode( $value );
+		if ( false === $json || 'null' === $json ) {
+			return array();
+		}
+		$decoded = json_decode( $json, true );
+		return is_array( $decoded ) ? $decoded : array();
 	}
 }

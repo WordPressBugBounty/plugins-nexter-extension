@@ -11,12 +11,31 @@ defined( 'ABSPATH' ) || exit;
 class Nxt_Security_Network {
 
 	/**
+	 * Deep-convert options to plain arrays (handles stdClass trees and arrays with nested objects).
+	 *
+	 * @param mixed $data Raw option value.
+	 * @return array
+	 */
+	private static function nxt_options_to_array( $data ) {
+		if ( null === $data || false === $data || '' === $data ) {
+			return array();
+		}
+		$json = wp_json_encode( $data );
+		if ( false === $json || 'null' === $json ) {
+			return array();
+		}
+		$decoded = json_decode( $json, true );
+		return is_array( $decoded ) ? $decoded : array();
+	}
+
+	/**
 	 * @param array $adv_sec_opt       Advance security values.
 	 * @param array $nxt_security_raw  Raw nexter_site_security option (for SVG).
 	 */
 	public function __construct( $adv_sec_opt, $nxt_security_raw ) {
 
-		$nxt_security_raw = is_object( $nxt_security_raw ) ? json_decode( wp_json_encode( $nxt_security_raw ), true ) : (array) $nxt_security_raw;
+		$adv_sec_opt      = self::nxt_options_to_array( $adv_sec_opt );
+		$nxt_security_raw = self::nxt_options_to_array( $nxt_security_raw );
 
 		// Disable XML-RPC
 		if ( is_array( $adv_sec_opt ) && in_array( 'disable_xml_rpc', $adv_sec_opt, true ) ) {
@@ -77,7 +96,8 @@ class Nxt_Security_Network {
 		}
 
 		// SVG Upload
-		if ( ! empty( $nxt_security_raw['svg-upload']['switch'] ) && ! empty( $nxt_security_raw['svg-upload']['values'] ) ) {
+		$svg_upload = isset( $nxt_security_raw['svg-upload'] ) && is_array( $nxt_security_raw['svg-upload'] ) ? $nxt_security_raw['svg-upload'] : array();
+		if ( ! empty( $svg_upload['switch'] ) && ! empty( $svg_upload['values'] ) ) {
 			require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-svg-upload.php';
 		}
 	}

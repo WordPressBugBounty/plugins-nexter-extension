@@ -27,6 +27,24 @@ class Nexter_Ext_Performance_Security_Settings {
 	private $module_dir;
 
 	/**
+	 * Deep-convert options to plain arrays (handles stdClass trees from JSON / DB).
+	 *
+	 * @param mixed $data Raw option value.
+	 * @return array
+	 */
+	private function nxt_options_to_array( $data ) {
+		if ( null === $data || false === $data || '' === $data ) {
+			return array();
+		}
+		$json = wp_json_encode( $data );
+		if ( false === $json || 'null' === $json ) {
+			return array();
+		}
+		$decoded = json_decode( $json, true );
+		return is_array( $decoded ) ? $decoded : array();
+	}
+
+	/**
 	 * Constructor — reads options once, delegates to per-feature modules.
 	 */
 	public function __construct() {
@@ -34,8 +52,8 @@ class Nexter_Ext_Performance_Security_Settings {
 		$this->module_dir = __DIR__ . '/perf-security/';
 
 		// ── Read options once ───────────────────────────────────────
-		$perf_option     = Nxt_Options::performance();
-		$security_option = Nxt_Options::security();
+		$perf_option     = $this->nxt_options_to_array( Nxt_Options::performance() );
+		$security_option = $this->nxt_options_to_array( Nxt_Options::security() );
 
 		// Resolve advance-security values
 		$adv_sec_opt = $security_option;
