@@ -3,7 +3,7 @@
  * Plugin Name: Nexter Extension
  * Plugin URI: https://nexterwp.com
  * Description: Nexter Extension adds lightweight performance, security, and admin features to WordPress so you can improve and manage your website without installing many plugins.
- * Version: 4.6.6
+ * Version: 4.6.7
  * Author: POSIMYTH
  * Author URI: https://posimyth.com
  * Text Domain: nexter-extension
@@ -26,7 +26,7 @@ define( 'NEXTER_EXT_BASE', plugin_basename( NEXTER_EXT_FILE ) );
 define( 'NEXTER_EXT_DIR', plugin_dir_path( NEXTER_EXT_FILE ) );
 define( 'NEXTER_EXT_URL', plugins_url( '/', NEXTER_EXT_FILE ) );
 define( 'NEXTER_EXT_CPT', 'nxt_builder' );
-define( 'NEXTER_EXT_VER', '4.6.6' );
+define( 'NEXTER_EXT_VER', '4.6.7' );
 
 if(!defined('NXT_BUILD_POST')){
 	define( 'NXT_BUILD_POST', 'nxt_builder' );
@@ -37,7 +37,8 @@ require_once NEXTER_EXT_DIR . 'include/classes/class-nxt-options.php';
 
 /**
  * Load Custom Login Redirect early if enabled.
- * Must run before plugins_loaded priority 2 so its early hooks (plugins_loaded:2, setup_theme:1) fire.
+ * Runs on plugins_loaded at priority 1 (before the main plugin bootstrap at priority 10) so
+ * Nexter_Ext_Custom_Login_Redirect can attach init / setup_theme / wp_loaded handlers in time.
  *
  * @since 4.6.3
  */

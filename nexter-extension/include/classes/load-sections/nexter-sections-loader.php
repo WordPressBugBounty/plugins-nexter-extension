@@ -354,18 +354,16 @@ if (!class_exists('Nexter_Builder_Hooks_Loader')) {
 					$selectSType = $layout;
 				}
 				if($selectType !='none' && $selectSType!='' && $selectSType!='none' && $selectSType!='section'){
-					printf('<button class="nexter-conditions-action" data-post="'.esc_attr($post_id).'" data-type="'.esc_attr($selectType).'" data-subtype="'.esc_attr($selectSType).'">
+					echo '<button class="nexter-conditions-action" data-post="' . esc_attr( $post_id ) . '" data-type="' . esc_attr( $selectType ) . '" data-subtype="' . esc_attr( $selectSType ) . '">
 					<svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg" class="nexter-conditions-action-svg">
 						<path d="M8.42293 1.377C8.30181 1.2564 8.158 1.161 7.99981 1.09629C7.84161 1.03159 7.67216 0.998873 7.50125 1.00003C7.33034 1.00119 7.16135 1.0362 7.00404 1.10304C6.84673 1.16987 6.70423 1.26722 6.58476 1.38945L1.42936 6.54484L0.800049 8.99988L3.25508 8.37021L8.41048 3.21481C8.53274 3.0954 8.63012 2.95293 8.69698 2.79565C8.76384 2.63837 8.79886 2.4694 8.80002 2.2985C8.80118 2.12761 8.76845 1.95817 8.70372 1.8C8.63899 1.64183 8.54356 1.49806 8.42293 1.377V1.377Z" stroke-linecap="round" stroke-linejoin="round"/>
-					</svg>'.esc_attr("Edit", 'nexter-extension').'</button>', 'nexter-extension');
+					</svg>' . esc_html__( 'Edit', 'nexter-extension' ) . '</button>';
 				}
 				
 			} elseif ($column == 'author') {
 
 				printf('<div class="author-row-text-add" data-content="%s"></div>
-    					<style>
-        						.conditions-row-text-add::after {content: attr(data-content);}
-    					</style>',
+    					<style>.conditions-row-text-add::after {content: attr(data-content);}</style>',
 					esc_html__('None', 'nexter-extension')
 				);
 

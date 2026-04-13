@@ -1,3 +1,8 @@
+function nxtBuilderT( key, fallback ) {
+    var pack = ( typeof NexterConfig !== 'undefined' && NexterConfig.nexterBuilderI18n ) ? NexterConfig.nexterBuilderI18n : {};
+    return ( pack[ key ] !== undefined && pack[ key ] !== '' ) ? pack[ key ] : fallback;
+}
+
 class NexterBuilder {
     constructor() {
         if (document.body.classList.contains('post-type-nxt_builder') || document.body.classList.contains('nxt-page-nexter-builder')) {
@@ -213,7 +218,7 @@ class NexterBuilder {
                             saveBtn.addEventListener('click', (eee)=>{
                                 eee.preventDefault();
                                 let btnCrt = eee.currentTarget;
-                                btnCrt.textContent = 'Saving..';
+                                btnCrt.textContent = nxtBuilderT( 'saving', 'Saving…' );
                                 const formData = new FormData(form);
                                 let params = new URLSearchParams();
                                 let lParams = new URLSearchParams();
@@ -243,14 +248,14 @@ class NexterBuilder {
                                 .then(response => response.json())
                                 .then(data => {
                                     if(data && data.success){
-                                        btnCrt.textContent = 'Saved';
+                                        btnCrt.textContent = nxtBuilderT( 'saved', 'Saved' );
                                         window.nxtBuilderOldData = lQueryString;
                                         if(document.body.classList.contains('post-php') || document.body.classList.contains('nxt-page-nexter-builder')){
                                             setTimeout(()=>{
-                                                btnCrt.textContent = 'Save';
+                                                btnCrt.textContent = nxtBuilderT( 'save', 'Save' );
                                             }, 2000)
                                         }else{
-                                            btnCrt.textContent = 'Save';
+                                            btnCrt.textContent = nxtBuilderT( 'save', 'Save' );
                                             location.reload();
                                         }
                                     }
@@ -373,7 +378,9 @@ class NexterBuilder {
                                         }
                                         let getbtnAction = popEle.querySelector('.nxt-temp-action');
                                         if(getbtnAction){
-                                            getbtnAction.insertAdjacentHTML('beforeend', '<div class="nxt-action-btn-wrap"><input type="hidden" name="action" value="nexter_ext_save_template" id="nxt_section_action" /><input type="hidden" name="nonce" value="'+NexterConfig.hiddennonce+'" /><button type="submit" class="temp-create-btn">Create</button></div>');
+                                            var nxtCreateBtnLabel = ( typeof NexterConfig !== 'undefined' && NexterConfig.createLabel ) ? NexterConfig.createLabel : 'Create';
+                                            nxtCreateBtnLabel = String( nxtCreateBtnLabel ).replace( /&/g, '&amp;' ).replace( /</g, '&lt;' );
+                                            getbtnAction.insertAdjacentHTML('beforeend', '<div class="nxt-action-btn-wrap"><input type="hidden" name="action" value="nexter_ext_save_template" id="nxt_section_action" /><input type="hidden" name="nonce" value="'+NexterConfig.hiddennonce+'" /><button type="submit" class="temp-create-btn">' + nxtCreateBtnLabel + '</button></div>');
                                         }
                                         form.setAttribute('action', NexterConfig.adminPostUrl);
                                         addToggle.parentElement.classList.remove('visible')
@@ -605,7 +612,7 @@ class NexterBuilder {
                 
                                             var all_data = {
                                                 id: 'all',
-                                                text: 'All'
+                                                text: nxtBuilderT( 'all', 'All' )
                                             };
                                             var option = new Option(all_data.text, all_data.id, true, true);
                                             cond_type.append(option);
@@ -620,7 +627,7 @@ class NexterBuilder {
                                         } else {
                                             var data = {
                                                 id: 'all',
-                                                text: 'All'
+                                                text: nxtBuilderT( 'all', 'All' )
                                             };
                                             while(cond_type.firstChild) cond_type.removeChild(cond_type.firstChild)
                                             var option = new Option(data.text, data.id, true, true);
@@ -669,7 +676,7 @@ class NexterBuilder {
                 
                                             var all_data = {
                                                 id: 'all',
-                                                text: 'All'
+                                                text: nxtBuilderT( 'all', 'All' )
                                             };
                                             var option = new Option(all_data.text, all_data.id, true, true);
                                             cond_type.append(option);
@@ -684,7 +691,7 @@ class NexterBuilder {
                                         } else {
                                             var data = {
                                                 id: 'all',
-                                                text: 'All'
+                                                text: nxtBuilderT( 'all', 'All' )
                                             };
                                             jQuery(cond_type).select2('close');
                                             while(cond_type.firstChild) cond_type.removeChild(cond_type.firstChild)
@@ -730,7 +737,7 @@ class NexterBuilder {
                                         } else {
                                             var data = {
                                                 id: 'all',
-                                                text: 'All'
+                                                text: nxtBuilderT( 'all', 'All' )
                                             };
                                             // jQuery(preview_id).select2('close');
                                             while(preview_id.firstChild) preview_id.removeChild(preview_id.firstChild)
@@ -779,7 +786,7 @@ class NexterBuilder {
                                         } else {
                                             var data = {
                                                 id: 'all',
-                                                text: 'All'
+                                                text: nxtBuilderT( 'all', 'All' )
                                             };
                                             // jQuery(preview_id).select2('close');
                                             while(preview_id.firstChild) preview_id.removeChild(preview_id.firstChild)
@@ -881,8 +888,10 @@ class NexterBuilder {
         let loginStatusWrap = popEle.querySelector('.nxt-layout-login-status-wrap');
         let userRoleWrap = popEle.querySelector('.nxt-layout-login-user-roles-wrap');
         let specificWrap = popEle.querySelector('.nxt-layout-specific-post-wrap');
-        let typeVal = (type=='include') ? 'show' : 'hide'; 
-        jQuery(inexrule).select2({ dropdownCssClass: 'nxt-builder-select', value: '', placeholder: "Select locations where you want to "+typeVal+" your template.", allowClear: true});
+        const displayRulesPh = ( type === 'include' )
+            ? nxtBuilderT( 'placeholderInclude', 'Select locations where you want to show your template.' )
+            : nxtBuilderT( 'placeholderExclude', 'Select locations where you want to hide your template.' );
+        jQuery(inexrule).select2({ dropdownCssClass: 'nxt-builder-select', value: '', placeholder: displayRulesPh, allowClear: true});
         jQuery('.nxt-set-day').select2({ dropdownCssClass: 'nxt-builder-select', value: '', placeholder: '', allowClear: true});
         jQuery('.nxt-layout-os').select2({ dropdownCssClass: 'nxt-builder-select', value: '', placeholder: '', allowClear: true});
         jQuery('.nxt-layout-browser').select2({ dropdownCssClass: 'nxt-builder-select', value: '', placeholder: '', allowClear: true});

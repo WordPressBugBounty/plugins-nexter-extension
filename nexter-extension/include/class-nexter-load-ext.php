@@ -430,6 +430,13 @@ if ( ! class_exists( 'Nexter_Extensions_Load' ) ) {
 					//Editor Theme Builder Conditional
 					wp_enqueue_style( 'nexter-ext-edit-condition-css', NEXTER_EXT_URL .'assets/css/admin/nexter-edit-condition.min.css', array(), NEXTER_EXT_VER );
 					wp_enqueue_script( 'nexter-ext-edit-condition-js', NEXTER_EXT_URL .'assets/js/admin/nexter-edit-condition'.$minified.'.js', array(), NEXTER_EXT_VER, true );
+					wp_localize_script(
+						'nexter-ext-edit-condition-js',
+						'nexter_edit_condition_i18n',
+						array(
+							'edit_condition' => __( 'Edit Condition', 'nexter-extension' ),
+						)
+					);
 
 				}
 				

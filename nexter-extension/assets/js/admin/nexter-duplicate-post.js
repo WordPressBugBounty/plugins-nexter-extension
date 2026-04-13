@@ -24,6 +24,10 @@ document.addEventListener("DOMContentLoaded", function(){
 			
 			dpBtn.addEventListener('click', function(e){
 				e.preventDefault();
+				var originalBtnText = dpBtn.textContent;
+				var duplicatingText = (typeof nexter_admin_config !== 'undefined' && nexter_admin_config.duplicating) ? nexter_admin_config.duplicating : 'Duplicating..';
+				var duplicatedText = (typeof nexter_admin_config !== 'undefined' && nexter_admin_config.duplicated) ? nexter_admin_config.duplicated : 'Duplicated';
+				dpBtn.textContent = duplicatingText;
 				var request = new XMLHttpRequest();
 				request.open('POST', nexter_admin_config.ajaxurl, true);
 				//request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded;');
@@ -33,9 +37,19 @@ document.addEventListener("DOMContentLoaded", function(){
 					if (request.status >= 200 && request.status < 400) {
 						var response = JSON.parse(request.response);
 						if(response.success == true){
-							location.reload()
+							dpBtn.textContent = duplicatedText;
+							setTimeout(function(){
+								location.reload();
+							}, 200);
+						} else {
+							dpBtn.textContent = originalBtnText;
 						}
+					} else {
+						dpBtn.textContent = originalBtnText;
 					}
+				};
+				request.onerror = function () {
+					dpBtn.textContent = originalBtnText;
 				};
 				request.send('action=nxt_duplicate_post&nexter_nonce=' + nexter_admin_config.ajax_nonce+'&original_id=' + mainA.dataset.postid+'&total='+totalCopy.value);
 				

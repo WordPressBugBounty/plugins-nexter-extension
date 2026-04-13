@@ -11,7 +11,12 @@
 
                     const editCondition = document.createElement("div");
                     editCondition.classList.add("nexter-edit-condition-wrap");
-                    const htmlData = '<button id="nexter-edit-condition" title="Edit Condition" class="nxt-hide">'+svgIcon+'Edit Condition</button>';
+                    const editConditionLabel = ( typeof nexter_edit_condition_i18n !== 'undefined' && nexter_edit_condition_i18n.edit_condition ) ? nexter_edit_condition_i18n.edit_condition : 'Edit Condition';
+                    const nexterEscHtml = function( str ) {
+                        return String( str ).replace( /&/g, '&amp;' ).replace( /</g, '&lt;' ).replace( /"/g, '&quot;' ).replace( /'/g, '&#039;' );
+                    };
+                    const escLabel = nexterEscHtml( editConditionLabel );
+                    const htmlData = '<button id="nexter-edit-condition" title="' + escLabel + '" class="nxt-hide">' + svgIcon + escLabel + '</button>';
                     if( headerToolBar instanceof HTMLElement ){
                         headerToolBar.insertAdjacentHTML( 'beforeend', htmlData );
                     }

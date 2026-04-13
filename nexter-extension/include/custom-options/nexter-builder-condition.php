@@ -678,6 +678,15 @@ if ( ! class_exists( 'Nexter_Builder_Condition' ) ) {
                 $NexterConfig['nxt_archives'] = Nexter_Builders_Archives_Conditional_Rules::$Nexter_Archives_Config;
                 $NexterConfig['adminPostUrl'] = admin_url('admin-post.php');
                 $NexterConfig['hiddennonce'] = wp_create_nonce("nxt-builder");
+                $NexterConfig['createLabel'] = __( 'Create', 'nexter-extension' );
+                $NexterConfig['nexterBuilderI18n'] = array(
+                    'saving'               => __( 'Saving…', 'nexter-extension' ),
+                    'saved'                => __( 'Saved', 'nexter-extension' ),
+                    'save'                 => __( 'Save', 'nexter-extension' ),
+                    'all'                  => __( 'All', 'nexter-extension' ),
+                    'placeholderInclude'   => __( 'Select locations where you want to show your template.', 'nexter-extension' ),
+                    'placeholderExclude'   => __( 'Select locations where you want to hide your template.', 'nexter-extension' ),
+                );
                 wp_localize_script( 'nexter-builder-condition', 'NexterConfig', $NexterConfig );
             }
         }

@@ -138,7 +138,7 @@ class Nxt_Builder_Condition_UI {
                             $output .= '<label>'.__( "Select Template", 'nexter-extension' ).'</label>';
                             $output .= '<select class="nxt-temp-select nxt-temp-layout" name="nxt-hooks-layout_sections" '.$disableSel.'>';
                                 $output .= '<option value="" disabled selected>'.__( "Select Type", 'nexter-extension' ).'</option>';
-                                $output .= '<optgroup label="Layouts">';
+                                $output .= '<optgroup label="' . esc_attr__( 'Layouts', 'nexter-extension' ) . '">';
                                     foreach ($sec_type as $index => $label) :
                                         $selected = '';
                                         if(!empty($selectedLayout) && $index == $selectedLayout){
@@ -150,7 +150,7 @@ class Nxt_Builder_Condition_UI {
                                     endforeach;
 
                                 $output .= '</optgroup>';
-                                $output .= '<optgroup label="Pages">';
+                                $output .= '<optgroup label="' . esc_attr__( 'Pages', 'nexter-extension' ) . '">';
                                     foreach ($page_type as $index => $label) :
                                         $selected = '';
                                         if(!empty($selectedLayout) && $index == $selectedLayout){

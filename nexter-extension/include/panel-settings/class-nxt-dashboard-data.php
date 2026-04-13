@@ -350,6 +350,8 @@ class Nxt_Dashboard_Data {
                 'ajax_nonce' => wp_create_nonce('nexter_admin_nonce'),
                 'nexter_path' => NEXTER_EXT_URL.'assets/',
                 'is_pro' => (defined('NXT_PRO_EXT')) ? true : false,
+                'duplicating' => esc_html__( 'Duplicating..', 'nexter-extension' ),
+                'duplicated' => esc_html__( 'Duplicated', 'nexter-extension' ),
             );
 
             wp_localize_script( 'nexter-ext-dashscript', 'nexter_admin_config', $nexter_admin_localize );
@@ -358,6 +360,12 @@ class Nxt_Dashboard_Data {
                 wp_enqueue_style( 'nexter-theme-builder', NEXTER_EXT_URL . 'theme-builder/build/index.css', array(), NEXTER_EXT_VER, 'all' );
 
                 wp_enqueue_script( 'nexter-theme-builder', NEXTER_EXT_URL . 'theme-builder/build/index.js', array( 'react', 'react-dom', 'wp-dom-ready', 'wp-i18n' ), NEXTER_EXT_VER, true );
+
+                wp_set_script_translations(
+                    'nexter-theme-builder',
+                    'nexter-extension',
+                    NEXTER_EXT_DIR . 'languages'
+                );
 
                 $extension_option = Nxt_Options::extra_ext();
                 $duplicate_enabled = false;

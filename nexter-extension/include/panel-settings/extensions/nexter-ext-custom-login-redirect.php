@@ -30,7 +30,8 @@ class Nexter_Ext_Custom_Login_Redirect {
         
         if(isset($this->cusloOption['custom-login']) && !empty($this->cusloOption['custom-login']) && isset($this->cusloOption['custom-login']['switch']) && !empty($this->cusloOption['custom-login']['switch'])){
             if(isset($this->cusloOption['custom-login']['values']) && !empty($this->cusloOption['custom-login']['values'])){
-                $this->cusloOption = (array) $this->cusloOption['custom-login']['values'];
+                $values = $this->cusloOption['custom-login']['values'];
+                $this->cusloOption = is_array( $values ) ? $values : (array) $values;
             }
         }
 
