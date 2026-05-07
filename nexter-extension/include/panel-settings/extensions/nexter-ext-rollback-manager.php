@@ -82,21 +82,36 @@ defined('ABSPATH') or die();
     public function rb_plugin_action_links($actions, $plugin_file, $plugin_data, $context) {
         // Filter plugin data.
         $data = apply_filters('nxt_ext_plugin_data', $plugin_data);
+
+        // Normalise plugin data; some filters return stdClass.
+        if ( is_object( $data ) ) {
+            $data = (array) $data;
+        }
+        if ( ! is_array( $data ) ) {
+            return $actions;
+        }
        
         // Ensure required data exists.
+        $package = isset( $data['package'] ) && is_string( $data['package'] ) ? $data['package'] : '';
+        $version = isset( $data['Version'] ) && is_string( $data['Version'] ) ? $data['Version'] : '';
+        $name    = isset( $data['Name'] ) && is_string( $data['Name'] ) ? $data['Name'] : '';
+        $slug    = isset( $data['slug'] ) && is_string( $data['slug'] ) ? $data['slug'] : '';
+
         if (
-            empty($data['package']) ||
-            !preg_match('/^https?:\/\/downloads\.wordpress\.org/', $data['package']) ||
-            empty($data['Version'])
+            empty($package) ||
+            !preg_match('/^https?:\/\/downloads\.wordpress\.org/', $package) ||
+            empty($version) ||
+            empty($name) ||
+            empty($slug)
         ) {
             return $actions;
         }
         
         // Build rollback URL.
         $args = apply_filters('nxt_ext_plugin_query_args', [
-            'current_version' => urlencode($data['Version']),
-            'rollback_name'   => urlencode($data['Name']),
-            'plugin_slug'     => urlencode($data['slug']),
+            'current_version' => urlencode($version),
+            'rollback_name'   => urlencode($name),
+            'plugin_slug'     => urlencode($slug),
             '_wpnonce'        => wp_create_nonce('nxt_ext_rollback_nonce'),
         ]);
 

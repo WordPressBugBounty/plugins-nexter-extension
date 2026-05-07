@@ -215,9 +215,9 @@ if ( ! class_exists( 'Nexter_Builder_Sections_Conditional' ) ) {
 		 */
 		public static function nexter_sections_condition_hooks($nxt_layout='', $sections_pages='' ) {
 			
-			if(!empty($sections_pages) && isset(self::$section_get_type[$sections_pages])){
+			/*if(!empty($sections_pages) && isset(self::$section_get_type[$sections_pages])){
 				return self::$section_get_type[$sections_pages];
-			}
+			}*/
 			
 			$get_result=array();
 			if( !empty(self::$sections_ids) ) {
@@ -228,6 +228,7 @@ if ( ! class_exists( 'Nexter_Builder_Sections_Conditional' ) ) {
 
 				$current_post_type = get_post_type();
 				foreach ( self::$sections_ids as $post_id => $post_data ) {
+					
 					if ( NXT_BUILD_POST != $current_post_type ) {
 						$nxt_hooks_layout   = get_post_meta( $post_id, 'nxt-hooks-layout', true );
 						$sections   = (array) get_post_meta( $post_id, 'nxt-hooks-layout-sections', true );
@@ -254,9 +255,9 @@ if ( ! class_exists( 'Nexter_Builder_Sections_Conditional' ) ) {
 				}
 			}
 
-			if(!empty($sections_pages) && !isset(self::$section_get_type[$sections_pages])){
+			/*if(!empty($sections_pages) && !isset(self::$section_get_type[$sections_pages])){
 				self::$section_get_type[$sections_pages] = $get_result;
-			}
+			}*/
 			
 			return $get_result;
 		}

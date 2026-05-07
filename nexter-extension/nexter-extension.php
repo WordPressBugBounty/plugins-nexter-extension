@@ -3,7 +3,7 @@
  * Plugin Name: Nexter Extension
  * Plugin URI: https://nexterwp.com
  * Description: Nexter Extension adds lightweight performance, security, and admin features to WordPress so you can improve and manage your website without installing many plugins.
- * Version: 4.6.7
+ * Version: 4.6.8
  * Author: POSIMYTH
  * Author URI: https://posimyth.com
  * Text Domain: nexter-extension

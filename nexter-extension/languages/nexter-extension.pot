@@ -2,14 +2,14 @@
 # This file is distributed under the GPLv3.
 msgid ""
 msgstr ""
-"Project-Id-Version: Nexter Extension 4.6.7\n"
+"Project-Id-Version: Nexter Extension 4.6.8\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/nexter-extension\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-04-13T09:16:04+00:00\n"
+"POT-Creation-Date: 2026-05-07T11:36:05+02:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: nexter-extension\n"
@@ -164,7 +164,7 @@ msgstr ""
 #: include/panel-settings/extensions/nexter-ext-post-duplicator.php:193
 #: include/panel-settings/extensions/nexter-ext-replace-url.php:23
 #: include/panel-settings/extensions/nexter-ext-replace-url.php:112
-#: include/panel-settings/extensions/nexter-ext-rollback-manager.php:190
+#: include/panel-settings/extensions/nexter-ext-rollback-manager.php:205
 #: include/panel-settings/extensions/nexter-ext-svg-upload.php:329
 msgid "Insufficient permissions."
 msgstr ""
@@ -193,8 +193,8 @@ msgid "Snippets List"
 msgstr ""
 
 #: include/classes/class-nxt-ajax-guard.php:44
-#: include/panel-settings/extensions/nexter-ext-rollback-manager.php:341
-#: include/panel-settings/extensions/nexter-ext-rollback-manager.php:433
+#: include/panel-settings/extensions/nexter-ext-rollback-manager.php:356
+#: include/panel-settings/extensions/nexter-ext-rollback-manager.php:448
 msgid "Security check failed."
 msgstr ""
 
@@ -2718,9 +2718,9 @@ msgstr ""
 
 #: include/panel-settings/extensions/custom-fields/nxt-rb-menu.php:103
 #: include/panel-settings/extensions/nexter-ext-rollback-manager.php:73
-#: include/panel-settings/extensions/nexter-ext-rollback-manager.php:108
-#: include/panel-settings/extensions/nexter-ext-rollback-manager.php:151
-#: include/panel-settings/extensions/nexter-ext-rollback-manager.php:413
+#: include/panel-settings/extensions/nexter-ext-rollback-manager.php:123
+#: include/panel-settings/extensions/nexter-ext-rollback-manager.php:166
+#: include/panel-settings/extensions/nexter-ext-rollback-manager.php:428
 #: dashboard/build/index.js:1
 #: dashboard/build/index.js:60222
 #: dashboard/build/index.js:60248
@@ -3368,40 +3368,40 @@ msgstr ""
 msgid "No Rollback Available: This is a non-WordPress.org theme."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-rollback-manager.php:196
+#: include/panel-settings/extensions/nexter-ext-rollback-manager.php:211
 msgid "Invalid theme slug."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-rollback-manager.php:203
+#: include/panel-settings/extensions/nexter-ext-rollback-manager.php:218
 msgid "Failed to check theme."
 msgstr ""
 
 #. Translators: %s is the rollback type (e.g., plugin or theme) author.
-#: include/panel-settings/extensions/nexter-ext-rollback-manager.php:302
+#: include/panel-settings/extensions/nexter-ext-rollback-manager.php:317
 #, php-format
 msgid "It appears there are no versions to select. This is likely due to the %s author not using tags for their versions and only committing new releases to the repository trunk."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-rollback-manager.php:359
+#: include/panel-settings/extensions/nexter-ext-rollback-manager.php:374
 msgid "The referenced plugin does not exist."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-rollback-manager.php:367
+#: include/panel-settings/extensions/nexter-ext-rollback-manager.php:382
 msgid "Invalid plugin path."
 msgstr ""
 
 #. Translators: %s is the current URL linking to the Rollback Manager page.
-#: include/panel-settings/extensions/nexter-ext-rollback-manager.php:406
+#: include/panel-settings/extensions/nexter-ext-rollback-manager.php:421
 #, php-format
 msgid "<a href=\"%s\">Rollback Manager</a>"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-rollback-manager.php:428
+#: include/panel-settings/extensions/nexter-ext-rollback-manager.php:443
 msgid "You do not have sufficient permissions to perform rollbacks for this site."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-rollback-manager.php:466
-#: include/panel-settings/extensions/nexter-ext-rollback-manager.php:476
+#: include/panel-settings/extensions/nexter-ext-rollback-manager.php:481
+#: include/panel-settings/extensions/nexter-ext-rollback-manager.php:491
 msgid "Invalid version format."
 msgstr ""
 
