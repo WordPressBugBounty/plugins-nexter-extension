@@ -33,6 +33,7 @@ class Nxt_Performance_Feed_Tweaks {
 
 		wp_die(
 			sprintf(
+				/* translators: %s: HTML link to the home page */
 				esc_html__( 'No feed available, please visit the %s!', 'nexter-extension' ),
 				sprintf(
 					'<a href="%s">%s</a>',

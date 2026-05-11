@@ -692,6 +692,7 @@ class Nexter_Ext_Image_Upload_Optimization {
 			$usage_html .= '<div class="nxt-opt-usage-wrap">';
 			$usage_html .= '<div class="nxt-opt-usage-hdr"><span>' . esc_html__( 'Monthly Usage', 'nexter-extension' ) . '</span><span>' . $usage_count . ' / ' . $usage_limit . '</span></div>';
 			$usage_html .= '<div class="nxt-opt-progress-bar"><div class="nxt-opt-progress-fill" style="width: ' . $usage_pct . '%; background: ' . $fill_color . ';"></div></div>';
+			/* translators: %d: Number of days until monthly limit resets */
 			$usage_html .= '<div class="nxt-opt-reset-days"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 16 16"><g stroke="#666" clip-path="url(#aasdda)"><path d="M8 14.667A6.667 6.667 0 1 0 8 1.334a6.667 6.667 0 0 0 0 13.333Z"/><path stroke-linecap="round" d="M8 4.445v3.556l2.222 2.222"/></g><defs><clipPath id="aasdda"><path fill="#fff" d="M0 0h16v16H0z"/></clipPath></defs></svg>' . sprintf( esc_html__( 'Resets in %d days', 'nexter-extension' ), $reset_days ) . '</div>';
 			$usage_html .= '</div>';
 		}
@@ -711,7 +712,8 @@ class Nexter_Ext_Image_Upload_Optimization {
 			$html .= '<div class="nxt-opt-icon"><svg xmlns="http://www.w3.org/2000/svg" width="11" height="12" fill="none" viewBox="0 0 11 12"><path stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.05" d="M1.052 6.827a.525.525 0 0 1-.41-.856L5.84.616a.263.263 0 0 1 .451.242l-1.008 3.16a.525.525 0 0 0 .494.709h3.675a.525.525 0 0 1 .41.856l-5.198 5.355a.262.262 0 0 1-.452-.242l1.008-3.16a.525.525 0 0 0-.493-.71z"/></svg></div>';
 			$html .= '<div class="nxt-opt-title-grp">';
 			$html .= '<h3>' . esc_html__( 'Image Successfully Optimised', 'nexter-extension' ) . '</h3>';
-			$html .= '<p class="nxt-opt-desc">' . sprintf( esc_html__( 'Your image has been optimised and converted to %s format, reducing file size by %s%%.', 'nexter-extension' ), esc_html( $format_upper ), esc_html( number_format_i18n( $saved_pct, 2 ) ) ) . '</p>';
+			/* translators: 1: Image format (e.g. WebP, AVIF), 2: Percentage of file size reduction */
+			$html .= '<p class="nxt-opt-desc">' . sprintf( esc_html__( 'Your image has been optimised and converted to %1$s format, reducing file size by %2$s%%.', 'nexter-extension' ), esc_html( $format_upper ), esc_html( number_format_i18n( $saved_pct, 2 ) ) ) . '</p>';
 			$html .= '</div>'; // nxt-opt-title-grp
 			$html .= '</div>'; // nxt-opt-header
 
@@ -839,15 +841,18 @@ class Nexter_Ext_Image_Upload_Optimization {
 			'success'             => __( 'Image converted successfully!', 'nexter-extension' ),
 			'error'               => __( 'Conversion failed. Please try again.', 'nexter-extension' ),
 			'successTitle'        => __( 'Image Successfully Optimised', 'nexter-extension' ),
+			/* translators: %s1: Image format (e.g. WebP, AVIF), %s2: Percentage of file size reduction (JS placeholders) */
 			'successDesc'         => __( 'Your image has been optimised and converted to %s1 format, reducing file size by %s2%.', 'nexter-extension' ),
 			'originalSizeLabel'   => __( 'Original Size', 'nexter-extension' ),
 			'optimizedSizeLabel'  => __( 'Optimised Size', 'nexter-extension' ),
 			'monthlyUsageLabel'   => __( 'Monthly Usage', 'nexter-extension' ),
+			/* translators: %d: Number of days until monthly limit resets */
 			'resetsInDaysLabel'   => __( 'Resets in %d days', 'nexter-extension' ),
 			'reconvertLabel'      => __( 'Re-convert Image', 'nexter-extension' ),
 			'upgradeLabel'        => __( 'Upgrade Pro', 'nexter-extension' ),
 			'upgradeUrl'          => 'https://nexterwp.com/pricing/',
 			'imageOptimisedLabel' => __( 'Image Optimised', 'nexter-extension' ),
+			/* translators: %s: Amount the image is smaller (e.g. "45%") */
 			'smallerLabel'        => __( '%s smaller', 'nexter-extension' ),
 		);
 	}
@@ -1508,6 +1513,7 @@ class Nexter_Ext_Image_Upload_Optimization {
 
 		$max_size = apply_filters( 'nexter_image_optimizer_max_file_size', 20 * 1024 * 1024 );
 		if ( $max_size > 0 && $file_size > $max_size ) {
+			/* translators: %s: Maximum file size (e.g. "20 MB") */
 			return array( 'skip' => true, 'message' => sprintf( __( 'File exceeds maximum size for optimisation (%s). Skipped.', 'nexter-extension' ), size_format( $max_size ) ) );
 		}
 
@@ -1540,6 +1546,7 @@ class Nexter_Ext_Image_Upload_Optimization {
 
 		$limit_handler = Nexter_Ext_Image_Optimization_Limit::get_instance();
 		if ( ! $limit_handler->can_optimize( $attachment_id ) ) {
+			/* translators: %d: Monthly image optimisation limit */
 			return array( 'skip' => true, 'message' => sprintf( __( 'Monthly Optimisation limit reached (%d images). Upgrade to Pro for unlimited Optimisation.', 'nexter-extension' ), $limit_handler->get_monthly_limit() ) );
 		}
 
@@ -1683,6 +1690,7 @@ class Nexter_Ext_Image_Upload_Optimization {
 		$saved_pct = $result['original_size'] > 0 ? round( ( $saved / $result['original_size'] ) * 100, 2 ) : 0;
 		$sizes_count = $sizes_converted + 1;
 		$data = array(
+			/* translators: %d: Number of image sizes converted */
 			'message'         => sprintf( __( 'Image Optimised (%d sizes converted).', 'nexter-extension' ), $sizes_count ),
 			'format'          => isset( $result['format'] ) ? $result['format'] : 'webp',
 			'original_size'   => $result['original_size'],
@@ -1807,7 +1815,8 @@ class Nexter_Ext_Image_Upload_Optimization {
 		wp_send_json_success( array(
 			'restored' => $restored,
 			'failed'   => $failed,
-			'message'  => sprintf( __( 'Restored %d images. %d failed.', 'nexter-extension' ), $restored, $failed ),
+			/* translators: 1: Number of images restored, 2: Number of images that failed to restore */
+			'message'  => sprintf( __( 'Restored %1$d images. %2$d failed.', 'nexter-extension' ), $restored, $failed ),
 		) );
 	}
 }

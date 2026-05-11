@@ -101,9 +101,9 @@ class Nexter_Builder_Code_Snippets_Executor {
                 ob_end_clean();
             }
             // Return short parse error message
-            /* translators: 1: Error message, 2: Line number */
             return new WP_Error(
                 'php_parse_error',
+                /* translators: 1: Error message, 2: Line number */
                 sprintf(__('Parse error: %1$s on line %2$d', 'nexter-extension'), $e->getMessage(), $e->getLine())
             );
         } catch (\Error $e) {
@@ -115,18 +115,18 @@ class Nexter_Builder_Code_Snippets_Executor {
             if ($catch_output) {
                 ob_end_clean();
             }
-            /* translators: 1: Exception message, 2: Line number */
             return new WP_Error(
                 'php_exception',
+                /* translators: 1: Exception message, 2: Line number */
                 sprintf(__('Exception: %1$s on line %2$d', 'nexter-extension'), $e->getMessage(), $e->getLine())
             );
         }
 
         if ($error) {
             $this->nexter_deactivate_snippet($post_id, $error->getMessage());
-            /* translators: 1: Error message, 2: Line number */
             return new WP_Error(
                 'php_error',
+                /* translators: 1: Error message, 2: Line number */
                 sprintf(__('Fatal error: %1$s on line %2$d', 'nexter-extension'), $error->getMessage(), $error->getLine())
             );
         }
@@ -676,22 +676,22 @@ class Nexter_Builder_Code_Snippets_Executor {
         // Common typos for echo
         if (preg_match('/^\s*(ech|ecoh|eho|ehco)\s+/', $line, $matches)) {
             $typo = $matches[1];
-            /* translators: 1: Function name (typo), 2: Line number */
             return [
                 'line' => $line_number,
                 'type' => 'typo',
+                /* translators: 1: Function name (typo), 2: Line number */
                 'message' => sprintf(__('Syntax Error: Unknown function \'%1$s\' on line %2$d', 'nexter-extension'), $typo, $line_number),
                 'code' => $line
             ];
         }
-        
+
         // Common typos for print
         if (preg_match('/^\s*(prin|pint|prnt)\s+/', $line, $matches)) {
             $typo = $matches[1];
-            /* translators: 1: Function name (typo), 2: Line number */
             return [
                 'line' => $line_number,
                 'type' => 'typo',
+                /* translators: 1: Function name (typo), 2: Line number */
                 'message' => sprintf(__('Syntax Error: Unknown function \'%1$s\' on line %2$d', 'nexter-extension'), $typo, $line_number),
                 'code' => $line
             ];
@@ -764,22 +764,22 @@ class Nexter_Builder_Code_Snippets_Executor {
             
             // Check for unterminated single-quoted string
             if ($in_single_string) {
-                /* translators: %d: Line number */
                 return new WP_Error(
                     'syntax_error',
                     sprintf(
+                        /* translators: %d: Line number */
                         __('Syntax Error: Unterminated string on line %d', 'nexter-extension'),
                         $line_number
                     )
                 );
             }
-            
+
             // Check for unterminated double-quoted string
             if ($in_double_string) {
-                /* translators: %d: Line number */
                 return new WP_Error(
                     'syntax_error',
                     sprintf(
+                        /* translators: %d: Line number */
                         __('Syntax Error: Unterminated string on line %d', 'nexter-extension'),
                         $line_number
                     )
@@ -799,10 +799,10 @@ class Nexter_Builder_Code_Snippets_Executor {
             // Check if it starts with an identifier but ends with a quote
             if (preg_match('/echo\s+([a-zA-Z_][a-zA-Z0-9_.]*)[\'\"];?$/', $line, $matches)) {
                 $identifier = $matches[1];
-                /* translators: %d: Line number */
                 return new WP_Error(
                     'syntax_error',
                     sprintf(
+                        /* translators: %d: Line number */
                         __('Syntax Error: Unexpected identifier on line %d', 'nexter-extension'),
                         $line_number
                     )
@@ -904,9 +904,9 @@ class Nexter_Builder_Code_Snippets_Executor {
             $hook_info = $this->get_recursive_hook_info($code);
             $hook_name = isset($hook_info['hook']) ? $hook_info['hook'] : 'hook';
             
-            /* translators: %s: Hook name */
             return new WP_Error(
                 'recursive_hook_detected',
+                /* translators: %s: Hook name */
                 sprintf(__('Recursive hook detected: %s', 'nexter-extension'), $hook_name)
             );
         }
@@ -1075,10 +1075,10 @@ class Nexter_Builder_Code_Snippets_Executor {
             if (function_exists('set_time_limit') && $old_time_limit !== false) {
                 @set_time_limit($old_time_limit);
             }
-            /* translators: 1: Line number, 2: Exception message */
             return new WP_Error(
                 'execution_error',
                 sprintf(
+                    /* translators: 1: Line number, 2: Exception message */
                     __('Runtime Exception on line %1$d: %2$s', 'nexter-extension'),
                     $e->getLine(),
                     $e->getMessage()
@@ -1314,8 +1314,8 @@ class Nexter_Builder_Code_Snippets_Executor {
                 $type_name = __('Warning', 'nexter-extension');
             }
             
-            /* translators: 1: Error type name, 2: Line number, 3: Error message */
             $error_msg = sprintf(
+                /* translators: 1: Error type name, 2: Line number, 3: Error message */
                 __('%1$s on line %2$d: %3$s', 'nexter-extension'),
                 $type_name,
                 $line_number > 0 ? $line_number : __('unknown', 'nexter-extension'),
@@ -1326,8 +1326,8 @@ class Nexter_Builder_Code_Snippets_Executor {
         }
         
         $total_errors = count($error_messages);
-        /* translators: %d: Number of execution errors */
         $formatted_message = sprintf(
+            /* translators: %d: Number of execution errors */
             _n('Found %d execution error:', 'Found %d execution errors:', $total_errors, 'nexter-extension'),
             $total_errors
         ) . '<br>';
@@ -1352,7 +1352,8 @@ class Nexter_Builder_Code_Snippets_Executor {
         return new WP_Error(
             'syntax_error',
             sprintf(
-                __('Parse Error on line %d: %s', 'nexter-extension'),
+                /* translators: 1: Line number, 2: Parse error message */
+                __('Parse Error on line %1$d: %2$s', 'nexter-extension'),
                 $line_number,
                 $message
             )
@@ -1366,10 +1367,10 @@ class Nexter_Builder_Code_Snippets_Executor {
         $line_number = $error->getLine();
         $message = $error->getMessage();
         
-        /* translators: 1: Line number, 2: Fatal error message */
         return new WP_Error(
             'syntax_error',
             sprintf(
+                /* translators: 1: Line number, 2: Fatal error message */
                 __('Fatal Error on line %1$d: %2$s', 'nexter-extension'),
                 $line_number,
                 $message
@@ -1510,8 +1511,8 @@ class Nexter_Builder_Code_Snippets_Executor {
                 $output_line = isset($lines[$output_line_num - 1]) ? trim($lines[$output_line_num - 1]) : '';
                 $redirect_line = isset($lines[$redirect_line_num - 1]) ? trim($lines[$redirect_line_num - 1]) : '';
                 
-                /* translators: 1: Output line number, 2: Output line content, 3: Redirect line number, 4: Redirect line content */
                 return sprintf(
+                    /* translators: 1: Output line number, 2: Output line content, 3: Redirect line number, 4: Redirect line content */
                     __('Output on line %1$d (\'%2$s\') appears before redirect/header call on line %3$d (\'%4$s\')', 'nexter-extension'),
                     $output_line_num,
                     substr($output_line, 0, 50),
@@ -1528,10 +1529,10 @@ class Nexter_Builder_Code_Snippets_Executor {
      * Format syntax error from php -l
      */
     private function format_syntax_error($error_message, $line_number, $code) {
-        /* translators: 1: Line number, 2: Syntax error message */
         return new WP_Error(
             'syntax_error',
             sprintf(
+                /* translators: 1: Line number, 2: Syntax error message */
                 __('Syntax Error on line %1$d: %2$s', 'nexter-extension'),
                 $line_number,
                 $error_message
@@ -1551,8 +1552,8 @@ class Nexter_Builder_Code_Snippets_Executor {
      */
     private function format_multiple_errors($errors) {
         $total_errors = count($errors);
-        /* translators: %d: Number of syntax errors */
         $message = sprintf(
+            /* translators: %d: Number of syntax errors */
             _n('Found %d syntax error:', 'Found %d syntax errors:', $total_errors, 'nexter-extension'),
             $total_errors
         ) . '<br>';

@@ -145,7 +145,10 @@ if( !empty($extension_option['wp-duplicate-post']['values']) ){
 				unset( $duplicate['guid'] );
 				unset( $duplicate['comment_count'] );
 
-				$duplicate['post_content'] = $duplicate['post_content'];
+				// Keep content payload intact for Classic/Gutenberg and safely normalize unexpected types.
+				$duplicate['post_content'] = isset( $duplicate['post_content'] ) && is_string( $duplicate['post_content'] ) ? $duplicate['post_content'] : '';
+				
+				$duplicate = wp_slash( $duplicate );
 
 				// Set Post into Database
 				$duplicate_id = wp_insert_post( $duplicate, true );

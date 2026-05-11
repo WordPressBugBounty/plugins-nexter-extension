@@ -2293,8 +2293,8 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 		if ($total_snippets === 1) {
 			$message = __('Snippet imported successfully.', 'nexter-extension');
 		} else {
-			/* translators: %d: Number of snippets imported successfully */
 			$message = sprintf(
+				/* translators: %d: Number of snippets imported successfully */
 				_n(
 					'%d snippet imported successfully.',
 					'%d snippets imported successfully.',
@@ -2304,8 +2304,8 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 				$imported_count
 			);
 			if ($failed_count > 0) {
-				/* translators: %d: Number of snippets that failed to import */
 				$message .= ' ' . sprintf(
+					/* translators: %d: Number of snippets that failed to import */
 					_n(
 						'%d snippet failed.',
 						'%d snippets failed.',

@@ -2,14 +2,14 @@
 # This file is distributed under the GPLv3.
 msgid ""
 msgstr ""
-"Project-Id-Version: Nexter Extension 4.6.8\n"
+"Project-Id-Version: Nexter Extension 4.6.9\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/nexter-extension\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-05-07T11:36:05+02:00\n"
+"POT-Creation-Date: 2026-05-11T13:01:31+02:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: nexter-extension\n"
@@ -51,7 +51,7 @@ msgid "Settings"
 msgstr ""
 
 #: include/class-nexter-load-ext.php:263
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:62480
 msgid "Need Help?"
 msgstr ""
@@ -115,6 +115,7 @@ msgstr ""
 #: include/class-nexter-load-ext.php:634
 #: assets/js/admin/index.js:1
 #: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: theme-builder/build/index.js:1
 #: dashboard/build/index.js:54890
 #: dashboard/build/index.js:57597
@@ -161,7 +162,7 @@ msgstr ""
 #: include/panel-settings/class-nxt-panel-ajax-router.php:1119
 #: include/panel-settings/extensions/nexter-ext-image-sizes.php:75
 #: include/panel-settings/extensions/nexter-ext-local-google-font.php:374
-#: include/panel-settings/extensions/nexter-ext-post-duplicator.php:193
+#: include/panel-settings/extensions/nexter-ext-post-duplicator.php:196
 #: include/panel-settings/extensions/nexter-ext-replace-url.php:23
 #: include/panel-settings/extensions/nexter-ext-replace-url.php:112
 #: include/panel-settings/extensions/nexter-ext-rollback-manager.php:205
@@ -178,9 +179,9 @@ msgid "Invalid Notice ID"
 msgstr ""
 
 #: include/classes/class-nexter-ext-base.php:110
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:436
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1555
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1706
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:446
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1562
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1714
 msgid "Permission denied."
 msgstr ""
 
@@ -361,6 +362,7 @@ msgstr ""
 msgid "Snippet imported successfully."
 msgstr ""
 
+#. translators: %d: Number of snippets imported successfully
 #: include/classes/load-code-snippet/nexter-code-snippet-render.php:2298
 #, php-format
 msgid "%d snippet imported successfully."
@@ -368,6 +370,7 @@ msgid_plural "%d snippets imported successfully."
 msgstr[0] ""
 msgstr[1] ""
 
+#. translators: %d: Number of snippets that failed to import
 #: include/classes/load-code-snippet/nexter-code-snippet-render.php:2309
 #, php-format
 msgid "%d snippet failed."
@@ -466,16 +469,19 @@ msgstr ""
 msgid "Infinite loop detected in code."
 msgstr ""
 
+#. translators: 1: Error message, 2: Line number
 #: include/classes/load-code-snippet/nexter-php-code-handling.php:107
 #, php-format
 msgid "Parse error: %1$s on line %2$d"
 msgstr ""
 
+#. translators: 1: Exception message, 2: Line number
 #: include/classes/load-code-snippet/nexter-php-code-handling.php:121
 #, php-format
 msgid "Exception: %1$s on line %2$d"
 msgstr ""
 
+#. translators: 1: Error message, 2: Line number
 #: include/classes/load-code-snippet/nexter-php-code-handling.php:130
 #, php-format
 msgid "Fatal error: %1$s on line %2$d"
@@ -507,6 +513,7 @@ msgstr ""
 msgid "Execution error detected: %s"
 msgstr ""
 
+#. translators: 1: Function name (typo), 2: Line number
 #: include/classes/load-code-snippet/nexter-php-code-handling.php:683
 #: include/classes/load-code-snippet/nexter-php-code-handling.php:695
 #: include/classes/load-code-snippet/nexter-php-code-handling.php:721
@@ -514,12 +521,14 @@ msgstr ""
 msgid "Syntax Error: Unknown function '%1$s' on line %2$d"
 msgstr ""
 
+#. translators: %d: Line number
 #: include/classes/load-code-snippet/nexter-php-code-handling.php:771
 #: include/classes/load-code-snippet/nexter-php-code-handling.php:783
 #, php-format
 msgid "Syntax Error: Unterminated string on line %d"
 msgstr ""
 
+#. translators: %d: Line number
 #: include/classes/load-code-snippet/nexter-php-code-handling.php:806
 #, php-format
 msgid "Syntax Error: Unexpected identifier on line %d"
@@ -537,6 +546,7 @@ msgstr ""
 msgid "Infinite loop detected"
 msgstr ""
 
+#. translators: %s: Hook name
 #: include/classes/load-code-snippet/nexter-php-code-handling.php:910
 #, php-format
 msgid "Recursive hook detected: %s"
@@ -550,6 +560,7 @@ msgstr ""
 msgid "Code execution timeout"
 msgstr ""
 
+#. translators: 1: Line number, 2: Exception message
 #: include/classes/load-code-snippet/nexter-php-code-handling.php:1082
 #, php-format
 msgid "Runtime Exception on line %1$d: %2$s"
@@ -574,6 +585,7 @@ msgstr ""
 msgid "Notice"
 msgstr ""
 
+#. translators: 1: Error type name, 2: Line number, 3: Error message
 #: include/classes/load-code-snippet/nexter-php-code-handling.php:1319
 #, php-format
 msgid "%1$s on line %2$d: %3$s"
@@ -583,6 +595,7 @@ msgstr ""
 msgid "unknown"
 msgstr ""
 
+#. translators: %d: Number of execution errors
 #: include/classes/load-code-snippet/nexter-php-code-handling.php:1331
 #, php-format
 msgid "Found %d execution error:"
@@ -590,27 +603,32 @@ msgid_plural "Found %d execution errors:"
 msgstr[0] ""
 msgstr[1] ""
 
-#: include/classes/load-code-snippet/nexter-php-code-handling.php:1355
+#. translators: 1: Line number, 2: Parse error message
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:1356
 #, php-format
-msgid "Parse Error on line %d: %s"
+msgid "Parse Error on line %1$d: %2$s"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-php-code-handling.php:1373
+#. translators: 1: Line number, 2: Fatal error message
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:1374
 #, php-format
 msgid "Fatal Error on line %1$d: %2$s"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-php-code-handling.php:1515
+#. translators: 1: Output line number, 2: Output line content, 3: Redirect line number, 4: Redirect line content
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:1516
 #, php-format
 msgid "Output on line %1$d ('%2$s') appears before redirect/header call on line %3$d ('%4$s')"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-php-code-handling.php:1535
+#. translators: 1: Line number, 2: Syntax error message
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:1536
 #, php-format
 msgid "Syntax Error on line %1$d: %2$s"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-php-code-handling.php:1556
+#. translators: %d: Number of syntax errors
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:1557
 #, php-format
 msgid "Found %d syntax error:"
 msgid_plural "Found %d syntax errors:"
@@ -618,7 +636,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: 1: Line number, 2: Error message
-#: include/classes/load-code-snippet/nexter-php-code-handling.php:1564
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:1565
 #, php-format
 msgid "Line %1$d: %2$s"
 msgstr ""
@@ -726,7 +744,7 @@ msgid "Author"
 msgstr ""
 
 #: include/classes/load-sections/nexter-sections-loader.php:155
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:284
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:292
 #: assets/js/admin/index.js:1
 #: theme-builder/build/index.js:1
 msgid "Status"
@@ -986,7 +1004,7 @@ msgid "Start by selecting the template type & post source."
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:138
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:57848
 msgid "Select Template"
 msgstr ""
@@ -1052,6 +1070,7 @@ msgstr ""
 #: include/panel-settings/extensions/custom-fields/nxt-rb-menu.php:104
 #: assets/js/admin/index.js:1
 #: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:49877
 #: dashboard/build/index.js:54333
 #: dashboard/build/index.js:60015
@@ -1065,6 +1084,7 @@ msgstr ""
 #: include/custom-options/class-nxt-builder-condition-ui.php:254
 #: include/custom-options/class-nxt-builder-condition-ui.php:258
 #: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:58528
 #: dashboard/build/index.js:60395
 msgid "Next"
@@ -1076,6 +1096,7 @@ msgstr ""
 #: include/custom-options/nexter-builder-condition.php:685
 #: assets/js/admin/index.js:1
 #: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:49879
 #: dashboard/build/index.js:60021
 #: dashboard/build/index.js:62091
@@ -1164,9 +1185,7 @@ msgstr ""
 msgid "All %s"
 msgstr ""
 
-#. translators: %s: Archive Post Label
-#. translators: %s: Taxonomy Label
-#. translators: %s: Taxonomy archive label
+#. translators: %s: Post type or taxonomy archive label
 #: include/custom-options/class-nxt-builder-condition-ui.php:880
 #: include/custom-options/class-nxt-builder-condition-ui.php:887
 #: include/custom-options/module/nexter-display-conditional-rules.php:337
@@ -1452,8 +1471,7 @@ msgstr ""
 msgid "%1$s : First Child %2$s"
 msgstr ""
 
-#. translators: 1: Post label, 2: Taxonomy singular name
-#. translators: %s: Taxonomy terms
+#. translators: 1: Post type label, 2: Taxonomy singular name
 #: include/custom-options/module/nexter-display-archives-rules.php:597
 #: include/custom-options/module/nexter-display-singular-archives-rules.php:316
 #, php-format
@@ -2158,12 +2176,14 @@ msgstr ""
 
 #: include/custom-options/nexter-builder-condition.php:683
 #: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 msgid "Saving…"
 msgstr ""
 
 #: include/custom-options/nexter-builder-condition.php:684
 #: assets/js/admin/index.js:1
 #: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:63487
 msgid "Saved"
 msgstr ""
@@ -2522,6 +2542,7 @@ msgstr ""
 #: include/panel-settings/nexter-ext-panel-settings.php:270
 #: include/panel-settings/nexter-ext-panel-settings.php:271
 #: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: theme-builder/build/index.js:1
 #: dashboard/build/index.js:54676
 #: dashboard/build/index.js:57831
@@ -2545,7 +2566,7 @@ msgstr ""
 
 #: include/panel-settings/class-nxt-dashboard-data.php:72
 #: include/panel-settings/class-nxt-dashboard-data.php:75
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:219
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:225
 #: include/panel-settings/nexter-ext-panel-settings.php:203
 msgid "Nexter"
 msgstr ""
@@ -2721,7 +2742,7 @@ msgstr ""
 #: include/panel-settings/extensions/nexter-ext-rollback-manager.php:123
 #: include/panel-settings/extensions/nexter-ext-rollback-manager.php:166
 #: include/panel-settings/extensions/nexter-ext-rollback-manager.php:428
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:60222
 #: dashboard/build/index.js:60248
 msgid "Rollback"
@@ -2756,7 +2777,7 @@ msgid "Cancel"
 msgstr ""
 
 #: include/panel-settings/extensions/custom-fields/nxt-rb-menu.php:156
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:57726
 #: dashboard/build/index.js:57939
 #: dashboard/build/index.js:58160
@@ -2774,7 +2795,7 @@ msgid "Custom Fonts"
 msgstr ""
 
 #: include/panel-settings/extensions/nexter-ext-bulk-images.php:64
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:191
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:197
 msgid "Bulk Image Optimisation"
 msgstr ""
 
@@ -2783,7 +2804,7 @@ msgid "Bulk Images"
 msgstr ""
 
 #: include/panel-settings/extensions/nexter-ext-bulk-images.php:105
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:233
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:239
 msgid "Start Bulk Optimisation"
 msgstr ""
 
@@ -2795,222 +2816,226 @@ msgstr ""
 msgid "Reoptimise Images"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:108
+#. translators: %d: Number of images ready to be optimised
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:109
 #, php-format
 msgid "Ready to optimise %d images and save storage space"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:109
-#, php-format
-msgid "%d of %d images optimised"
-msgstr ""
-
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:110
-msgid "Need to Optimise"
-msgstr ""
-
+#. translators: 1: number of images optimised so far, 2: total number of images in queue
 #: include/panel-settings/extensions/nexter-ext-bulk-images.php:111
-#: dashboard/build/index.js:1
-msgid "Done"
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:323
+#, php-format
+msgid "%1$d of %2$d images optimised"
 msgstr ""
 
 #: include/panel-settings/extensions/nexter-ext-bulk-images.php:112
-msgid "Failed"
+msgid "Need to Optimise"
 msgstr ""
 
 #: include/panel-settings/extensions/nexter-ext-bulk-images.php:113
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:181
-msgid "Ready to Optimise"
+#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
+msgid "Done"
 msgstr ""
 
 #: include/panel-settings/extensions/nexter-ext-bulk-images.php:114
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:181
-msgid "Completed"
+msgid "Failed"
 msgstr ""
 
 #: include/panel-settings/extensions/nexter-ext-bulk-images.php:115
-msgid "Errors Found"
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:187
+msgid "Ready to Optimise"
 msgstr ""
 
 #: include/panel-settings/extensions/nexter-ext-bulk-images.php:116
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:838
-msgid "Optimising..."
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:187
+msgid "Completed"
 msgstr ""
 
 #: include/panel-settings/extensions/nexter-ext-bulk-images.php:117
-msgid "Before"
+msgid "Errors Found"
 msgstr ""
 
 #: include/panel-settings/extensions/nexter-ext-bulk-images.php:118
-msgid "After"
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:840
+msgid "Optimising..."
 msgstr ""
 
 #: include/panel-settings/extensions/nexter-ext-bulk-images.php:119
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:719
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:843
-msgid "Original Size"
+msgid "Before"
 msgstr ""
 
 #: include/panel-settings/extensions/nexter-ext-bulk-images.php:120
+msgid "After"
+msgstr ""
+
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:121
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:721
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:846
+msgid "Original Size"
+msgstr ""
+
+#. translators: %s: Percentage of file size saved
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:123
 #, php-format
 msgid "%s% saved"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:121
+#. translators: %d: Number of items remaining
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:125
 #, php-format
 msgid "%d items left"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:122
+#. translators: %d: Number of failed items
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:127
 #, php-format
 msgid "Retry Failed (%d)"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:123
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:128
 msgid "All Optimised Successfully"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:124
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:129
 msgid "An error occurred. Please try again."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:125
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:374
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:130
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:384
 msgid "No images to optimise."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:126
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:131
 msgid "Load More"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:127
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:132
 msgid "Loading..."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:128
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:159
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:133
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:165
 msgid "Unlimited"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:129
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:296
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:134
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:304
 msgid "Monthly Limit Reached"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:130
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:300
+#. translators: %d: Monthly image optimisation limit
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:136
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:310
 #, php-format
 msgid "You have reached your monthly limit of %d images. Upgrade to Pro for unlimited optimisation or wait until next month."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:131
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:174
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:137
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:180
 msgid "Upgrade to Pro"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:132
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:138
 msgid "Failed to load queue."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:133
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:139
 msgid "Optimisation in progress in another tab or window. Only one bulk optimisation can run at a time. This page will update when it finishes."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:134
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:140
 msgid "Optimisation is already running in another tab or window. Please wait for it to complete."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:174
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:180
 #: dashboard/build/index.js:1
 #: theme-builder/build/index.js:1
 #: dashboard/build/index.js:54042
 msgid "Activate Now"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:194
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:200
 msgid "Image Optimisation Settings"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:213
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:227
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:219
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:233
 msgid "Image Optimisation Center"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:237
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:243
 msgid "Stop"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:246
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:252
 msgid "Storage Saved"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:260
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:266
 #: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:693
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:845
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:848
 msgid "Monthly Usage"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:266
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:272
 msgid "You have unlimited image optimization credits with Nexter Pro."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:266
+#. translators: %d: Monthly image optimisation credit limit
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:274
 #, php-format
 msgid "Free version includes %d image optimization credits per month. This resets at the start of each month."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:277
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:285
 msgid "Total Count"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:298
+#. translators: %d: Monthly image optimisation limit
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:307
 #, php-format
 msgid "You have reached your monthly limit of %d images. Please activate Nexter Extension Pro to unlock unlimited access."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:311
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:321
 msgid "Overall Progress"
 msgstr ""
 
-#. translators: 1: number of images optimised so far, 2: total number of images in queue
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:313
-#, php-format
-msgid "%1$d of %2$d images optimised"
-msgstr ""
-
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:317
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:327
 msgid "Complete"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:331
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:341
 msgid "Images Remaining"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:338
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:348
 msgid "Skipped Images"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:345
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:355
 msgid "Total Savings"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:355
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:365
 msgid "Image Queue"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:358
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:368
 msgid "Retry Failed (0)"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:367
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:377
 msgid "Load next 6 images"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:380
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:390
 msgid "All Images Optimised!"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:381
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:391
 msgid "Great job! All images in the queue have been successfully optimised. Upload more images to continue optimising."
 msgstr ""
 
@@ -3125,7 +3150,7 @@ msgid "Authentication failed."
 msgstr ""
 
 #: include/panel-settings/extensions/nexter-ext-google-captcha.php:627
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 msgid "Error"
 msgstr ""
 
@@ -3134,7 +3159,7 @@ msgid "Click the BACK button on your browser and try again."
 msgstr ""
 
 #: include/panel-settings/extensions/nexter-ext-image-sizes.php:31
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1496
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1501
 msgid "Invalid attachment ID."
 msgstr ""
 
@@ -3147,139 +3172,145 @@ msgstr ""
 msgid "Invalid file path."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:695
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:846
+#. translators: %d: Number of days until monthly limit resets
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:696
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:850
 #, php-format
 msgid "Resets in %d days"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:713
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:841
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:714
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:843
 msgid "Image Successfully Optimised"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:714
+#. translators: 1: Image format (e.g. WebP, AVIF), 2: Percentage of file size reduction
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:716
 #, php-format
-msgid "Your image has been optimised and converted to %s format, reducing file size by %s%%."
+msgid "Your image has been optimised and converted to %1$s format, reducing file size by %2$s%%."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:720
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:844
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:722
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:847
 msgid "Optimised Size"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:725
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:751
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:848
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:727
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:753
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:852
 msgid "Upgrade Pro"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:728
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:847
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:730
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:851
 msgid "Re-convert Image"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:744
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:746
 msgid "Image Needs To Be Optimised"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:745
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:747
 msgid "Optimising this image will reduce its file size and help the page load faster with Nexter Image Optimiser."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:754
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1382
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:756
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1387
 msgid "Optimise Image"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:839
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:841
 msgid "Image converted successfully!"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:840
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:842
 msgid "Conversion failed. Please try again."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:842
+#. translators: %s1: Image format (e.g. WebP, AVIF), %s2: Percentage of file size reduction (JS placeholders)
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:845
 #, php-format
 msgid "Your image has been optimised and converted to %s1 format, reducing file size by %s2%."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:850
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1364
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:854
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1369
 msgid "Image Optimised"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:851
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1374
+#. translators: %s: Amount the image is smaller (e.g. "45%")
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:856
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1379
 #, php-format
 msgid "%s smaller"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1308
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1313
 msgid "Optimise"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1338
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1343
 msgid "Excluded via settings"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1501
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1506
 msgid "File not found."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1506
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1511
 msgid "File is empty or invalid. Skipped."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1511
+#. translators: %s: Maximum file size (e.g. "20 MB")
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1517
 #, php-format
 msgid "File exceeds maximum size for optimisation (%s). Skipped."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1516
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1522
 msgid "Already optimised."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1521
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1527
 msgid "Unsupported image format. Skipped."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1526
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1532
 msgid "Image path is excluded from optimisation in settings. Skipped."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1530
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1536
 msgid "Image Optimisation is disabled."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1538
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1544
 msgid "Imagick or GD is required for image optimisation. Skipped."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1543
+#. translators: %d: Monthly image optimisation limit
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1550
 #, php-format
 msgid "Monthly Optimisation limit reached (%d images). Upgrade to Pro for unlimited Optimisation."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1576
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1583
 msgid "Optimisation failed. The image may be in an unsupported format or state, or the server could not process it."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1580
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1587
 msgid "Optimised file was not saved. Check folder permissions for wp-content/nexter-optimizer."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1686
+#. translators: %d: Number of image sizes converted
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1694
 #, php-format
 msgid "Image Optimised (%d sizes converted)."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1810
-#: dashboard/build/index.js:1
-#: dashboard/build/index.js:59252
-#, php-format,js-format
-msgid "Restored %d images. %d failed."
+#. translators: 1: Number of images restored, 2: Number of images that failed to restore
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1819
+#, php-format
+msgid "Restored %1$d images. %2$d failed."
 msgstr ""
 
 #: include/panel-settings/extensions/nexter-ext-limit-login-attempt.php:264
@@ -3341,7 +3372,7 @@ msgstr ""
 msgid "Copy"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-post-duplicator.php:199
+#: include/panel-settings/extensions/nexter-ext-post-duplicator.php:202
 msgid "You do not have permission to duplicate this post."
 msgstr ""
 
@@ -3607,12 +3638,13 @@ msgstr ""
 msgid "Optimise image"
 msgstr ""
 
-#: include/panel-settings/extensions/perf-security/class-nxt-performance-feed-tweaks.php:36
+#. translators: %s: HTML link to the home page
+#: include/panel-settings/extensions/perf-security/class-nxt-performance-feed-tweaks.php:37
 #, php-format
 msgid "No feed available, please visit the %s!"
 msgstr ""
 
-#: include/panel-settings/extensions/perf-security/class-nxt-performance-feed-tweaks.php:40
+#: include/panel-settings/extensions/perf-security/class-nxt-performance-feed-tweaks.php:41
 #: dashboard/build/index.js:1
 #: dashboard/build/index.js:60545
 msgid "Home Page"
@@ -3727,7 +3759,7 @@ msgid "Seems Like Your Licence Key for Nexter WP is Expired. Visit %1$s to Pay I
 msgstr ""
 
 #: include/panel-settings/nexter-ext-library.php:279
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:48518
 msgid "Congratulation! License Successfully Activated."
 msgstr ""
@@ -4126,6 +4158,7 @@ msgstr ""
 
 #: assets/js/admin/index.js:1
 #: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:48511
 #: dashboard/build/index.js:54471
 #: dashboard/build/index.js:54487
@@ -4133,7 +4166,7 @@ msgid "Activate"
 msgstr ""
 
 #: assets/js/admin/index.js:1
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: theme-builder/build/index.js:1
 #: dashboard/build/index.js:48505
 msgid "Deactivate"
@@ -4175,7 +4208,7 @@ msgid "Activating WDesignKit"
 msgstr ""
 
 #: assets/js/admin/index.js:1
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:58191
 msgid "Installing WDesignKit"
 msgstr ""
@@ -6809,6 +6842,7 @@ msgid "Upgrade to Nexter Extension PRO Unlimited Site Plan to unlock all advance
 msgstr ""
 
 #: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:50415
 #: dashboard/build/index.js:54613
 #: dashboard/build/index.js:58147
@@ -6840,6 +6874,7 @@ msgid "Utilities"
 msgstr ""
 
 #: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:54724
 #: dashboard/build/index.js:59379
 msgid "Performance"
@@ -6863,28 +6898,33 @@ msgid "Extra Options"
 msgstr ""
 
 #: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:54789
 #: dashboard/build/index.js:63479
 msgid "Asset Delivery"
 msgstr ""
 
 #: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:53150
 #: dashboard/build/index.js:54797
 msgid "Custom CSS & JS"
 msgstr ""
 
 #: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 msgid "AI Integration"
 msgstr ""
 
 #: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:54816
 #: dashboard/build/index.js:60201
 msgid "Roll Back Plugin"
 msgstr ""
 
 #: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:54826
 #: dashboard/build/index.js:66676
 msgid "White Label"
@@ -6902,6 +6942,7 @@ msgid "More Products"
 msgstr ""
 
 #: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:48496
 #: dashboard/build/index.js:54883
 msgid "Activate PRO"
@@ -6961,6 +7002,7 @@ msgid "Removing…"
 msgstr ""
 
 #: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:59511
 msgid "Reset"
 msgstr ""
@@ -7049,6 +7091,7 @@ msgid "WordPress Pages & Templates."
 msgstr ""
 
 #: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:53405
 #: dashboard/build/index.js:57724
 #: dashboard/build/index.js:62717
@@ -7194,6 +7237,7 @@ msgid "Total Extensions"
 msgstr ""
 
 #: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:53607
 #: dashboard/build/index.js:53725
 #: dashboard/build/index.js:54491
@@ -7393,6 +7437,26 @@ msgid "Disabling unused blocks…"
 msgstr ""
 
 #: dashboard/build/index.js:1
+msgid "1000+ Ready-to-Import templates & sections"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "No coding required – perfect for beginners & pros"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Built on WordPress Core Block Editor (no extra builder needed)"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "jQuery-free with smart CSS & JS loading for speed"
+msgstr ""
+
+#: dashboard/build/index.js:1
+msgid "Lightweight yet powerful – design without compromise"
+msgstr ""
+
+#: dashboard/build/index.js:1
 #: dashboard/build/index.js:50389
 msgid "Disable All"
 msgstr ""
@@ -7403,6 +7467,7 @@ msgid "Enable All"
 msgstr ""
 
 #: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:50414
 #: dashboard/build/index.js:59424
 #: dashboard/build/index.js:61327
@@ -7436,6 +7501,7 @@ msgid "Live Demo"
 msgstr ""
 
 #: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:49291
 #: dashboard/build/index.js:50510
 #: dashboard/build/index.js:50810
@@ -7717,6 +7783,7 @@ msgid "Coming Soon"
 msgstr ""
 
 #: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:49264
 #: dashboard/build/index.js:49338
 #: dashboard/build/index.js:49851
@@ -7761,12 +7828,14 @@ msgid "Upgrade to Nexter Blocks PRO to Unlock all 90+ Blocks & 1000+ Pre-Made Te
 msgstr ""
 
 #: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:58429
 #: dashboard/build/index.js:60091
 msgid "Performance Optimized"
 msgstr ""
 
 #: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:58433
 #: dashboard/build/index.js:60092
 msgid "90+ WordPress Blocks"
@@ -7951,6 +8020,7 @@ msgid "Replace SVG"
 msgstr ""
 
 #: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:51245
 #: dashboard/build/index.js:66791
 #: dashboard/build/index.js:66906
@@ -8470,6 +8540,7 @@ msgid "Easily regenerate various sizes of image thumbnails at once or individual
 msgstr ""
 
 #: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:48830
 #: dashboard/build/index.js:58708
 #: dashboard/build/index.js:58717
@@ -8735,6 +8806,7 @@ msgid "Upload Regular font file."
 msgstr ""
 
 #: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:61294
 #: dashboard/build/index.js:65186
 msgid "BETA"
@@ -9140,6 +9212,7 @@ msgid " ensure the option \"Block attempts to gain administrative privileges\" i
 msgstr ""
 
 #: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:57719
 #: dashboard/build/index.js:58159
 #: dashboard/build/index.js:58296
@@ -9564,6 +9637,7 @@ msgid "Logo"
 msgstr ""
 
 #: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:49459
 #: dashboard/build/index.js:59612
 #: dashboard/build/index.js:60030
@@ -10147,12 +10221,14 @@ msgid "Limit failed login attempts per IP address to help protect your site from
 msgstr ""
 
 #: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:60755
 #: dashboard/build/index.js:62208
 msgid "Paste your Font Awesome PRO Kit ID below <a href = 'https://fontawesome.com/license' target='_blank' rel='noopener noreferrer'> Get ID </a>"
 msgstr ""
 
 #: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:60756
 #: dashboard/build/index.js:62209
 msgid "FontAwesome Pro Kit"
@@ -10731,6 +10807,7 @@ msgid "Remove the wp-embed.min.js from the code, to disable embed preview."
 msgstr ""
 
 #: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:58777
 #: dashboard/build/index.js:62161
 msgid "Disable Dashicons"
@@ -10812,6 +10889,7 @@ msgid "Remove the password-strength related JavaScript from the code on unnecess
 msgstr ""
 
 #: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:58819
 #: dashboard/build/index.js:63325
 msgid "Defer CSS & JS"
@@ -10936,393 +11014,400 @@ msgstr ""
 msgid "Restore all Optimised images to their original versions? This will copy originals from backup and remove Optimised files."
 msgstr ""
 
-#: dashboard/build/index.js:1
+#. translators: 1: number of successfully restored images, 2: number of failed images
+#: dashboard/build/index.js:3
+#: dashboard/build/index.js:59252
+#, js-format
+msgid "Restored %d images. %d failed."
+msgstr ""
+
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:59255
 #: dashboard/build/index.js:59258
 msgid "Restore failed. Please try again."
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:59522
 msgid "Comments"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:59601
 #: dashboard/build/index.js:60029
 msgid "Image Name"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 msgid "Enter Image Size Name"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 msgid "Enter Image Width"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:59623
 #: dashboard/build/index.js:60031
 msgid "Height"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 msgid "Enter Image Height"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:59634
 #: dashboard/build/index.js:60032
 msgid "Crop"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:59660
 msgid "Disable Font Awesome Icons"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:59686
 msgid "Disable Elementor Icons"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:59724
 msgid "Revisions For :"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:59748
 msgid "WordPress Dashboard"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:59750
 msgid "WordPress Frontend"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:59752
 msgid "Post Editor"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:59760
 msgid "Select Compressed Image Format"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:59765
 msgid "Smart"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:59765
 msgid "Automatically serves AVIF or WebP based on browser support. Select either of them for higher compression when supported, and falls back to for compatibility."
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:59766
 msgid "WebP"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:59766
 msgid "Compresses images using WebP format. Offers good compression with broad browser support, making it a reliable and safe choice."
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:59767
 msgid "AVIF"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:59767
 msgid "Compresses images using AVIF format, which generally provides higher compression than WebP. Best for modern browsers that support the latest image formats."
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 msgid "Keep Original"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:59768
 msgid "Compresses the image while keeping the original format. Only compresses and Optimises—does not change the extension type or MIME (JPEG or PNG). Choose this if you don't want format conversion."
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:59807
 #: dashboard/build/index.js:59811
 msgid "Supported"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:59809
 msgid "Not Supported"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 msgid "AVIF not supported. Install/enable Imagick PHP module with libavif support. Contact hosting if required "
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 msgid "Learn More."
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:59829
 msgid "Select Optimisation Mode"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:59833
 #: dashboard/build/index.js:59911
 msgid "Balanced"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:59833
 msgid "Best balance between image quality and file size. Reduces size noticeably while keeping images clean and sharp. Recommended for most websites."
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:59834
 msgid "Lossless"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:59834
 msgid "Compresses images without removing any visual data. File size reduction is smaller, but image quality stays exactly the same. Good for logos or detailed graphics."
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:59835
 msgid "Aggressive"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:59835
 msgid "Applies higher compression to achieve maximum size reduction. Best when performance matters more than minor quality changes, such as large photos or background images."
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:59847
 msgid "Auto Optimise on Upload"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:59849
 msgid "Automatically optimises images as soon as they’re uploaded to your site. This ensures every image added by you or your clients is compressed and performance-ready without manual work. Recommended for new sites and ongoing content uploads."
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:59862
 msgid "Image Metadata (EXIF)"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:59866
 msgid "Strip"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:59866
 msgid "Removes hidden camera data like location, device details, and capture settings. This reduces file size and helps protect privacy. Recommended for most websites."
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:59867
 msgid "Keep"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:59867
 msgid "Keeps original image metadata such as camera information and capture details. Use this if you need EXIF data for photography or editing purposes."
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:59878
 msgid "Resize Large Images"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:59879
 msgid "Automatically resizes images that exceed the set width or height before optimisation. Choose dimensions based on your largest content area to avoid uploading unnecessarily large images and improve performance."
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:59884
 msgid "Max Width (in pixels)"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:59890
 msgid "Max Height (in pixels)"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:59899
 msgid "Resize images larger than these dimensions"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:59922
 msgid "Avoid Larger Output Files"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:59923
 msgid "Skips optimisation if the processed image is larger than the original file. This ensures optimisation never increases file size and only saves storage."
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:59928
 msgid "Skip optimisation if output file is larger than original"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:59933
 msgid "Restore Original Images"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:59934
 msgid "Restores all optimised images back to their original versions. Use this if you want to undo optimisation or reset image changes."
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:59937
 msgid "Restore all optimised images to their original files."
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:59939
 msgid "Restoring…"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:59939
 msgid "Restore Now"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:59960
 msgid "Exclude Images From Optimisation"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:59961
 msgid "Add image URLs or paths you don’t want to optimise. Each image should be on a new line. Useful for logos, icons, or images that must stay untouched."
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:59965
 msgid "Enter one path per line"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:59980
 msgid "Run Image Optimisation in Background"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:59982
 msgid "Runs image optimisation in the background without blocking uploads or slowing down the admin experience. Recommended for smoother performance on active sites."
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:59904
 msgid "Image Optimisation Speed"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:59905
 msgid "Controls how quickly images are processed during optimisation. Faster speeds complete optimisation sooner, while slower speeds apply deeper processing for better compression."
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:59910
 msgid "Fast"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:59912
 msgid "Slow"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:60001
 msgid "Advanced Settings"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:60018
 msgid "Bulk Optimise Images"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:59221
 msgid "Are you sure you want to remove this Image Size? This action cannot be undone."
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:60166
 msgid "Are you sure you want to reinstall the previous version?"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:60212
 msgid "Roll Back Nexter Blocks FREE Version"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:60228
 #: dashboard/build/index.js:60253
 msgid "Warning: Please backup your database before making the rollback."
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:60241
 msgid "Roll Back Nexter Extension FREE Version"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:66327
 msgid "Hide all Help Links?"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:66328
 msgid "Hide all Plugin Updates related News?"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:66329
 msgid "Hide Our Recommended plugin Ads?"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:66330
 msgid "Hide Starter Templates Tab?"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:66331
 msgid "Hide Licence Key Tab?"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:66332
 msgid "Hide Plugin RollBack Tab?"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:66333
 msgid "Hide WDesignKit Integration for Templates, Presets, Code Snippets & Cloud Storage"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:66359
 #: dashboard/build/index.js:66360
 #: dashboard/build/index.js:66362
@@ -11331,19 +11416,19 @@ msgstr ""
 msgid "Please keep the character under 50 characters"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:66361
 msgid "Please keep the character under 250 characters"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:66363
 #: dashboard/build/index.js:66374
 #: dashboard/build/index.js:66375
 msgid "Please enter a valid URL"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:66364
 #: dashboard/build/index.js:66365
 #: dashboard/build/index.js:66368
@@ -11351,7 +11436,7 @@ msgstr ""
 msgid "Please keep the character 50 characters"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:66366
 #: dashboard/build/index.js:66367
 #: dashboard/build/index.js:66369
@@ -11359,17 +11444,17 @@ msgstr ""
 msgid "Please keep the character under 150 characters"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 msgid "Save failed"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:66509
 #: dashboard/build/index.js:66617
 msgid "Plugin Name (Free Version)"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:66511
 #: dashboard/build/index.js:66517
 #: dashboard/build/index.js:66590
@@ -11377,19 +11462,19 @@ msgstr ""
 msgid "Enter Plugin Name"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:66515
 #: dashboard/build/index.js:66588
 msgid "Plugin Name (Pro Version)"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:66521
 #: dashboard/build/index.js:66623
 msgid "Plugin Description (Free Version)"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:66523
 #: dashboard/build/index.js:66529
 #: dashboard/build/index.js:66596
@@ -11397,19 +11482,19 @@ msgstr ""
 msgid "Enter Plugin Description"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:66527
 #: dashboard/build/index.js:66594
 msgid "Plugin Description (Pro Version)"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:66533
 #: dashboard/build/index.js:66560
 msgid "Developer / Agency"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:66535
 #: dashboard/build/index.js:66562
 #: dashboard/build/index.js:66602
@@ -11417,922 +11502,930 @@ msgstr ""
 msgid "Enter Developer Name"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:66539
 #: dashboard/build/index.js:66606
 msgid "Website URL (Pro Version)"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:66541
 #: dashboard/build/index.js:66637
 msgid "Enter Website URL"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:66548
 msgid "Theme Name"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:66550
 msgid "Enter Theme Name"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:66554
 msgid "Theme Description"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:66556
 msgid "Enter Theme Description"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:66566
 msgid "Theme Screenshot"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:66574
 msgid "Brand Name"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:66576
 msgid "Enter Brand Name"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:66580
 msgid "Upload Logo / Icon"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:66600
 msgid "Developer / Agency (Pro Version)"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:66608
 msgid "Enter Web URL"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:66629
 msgid "Developer / Agency (Free Version)"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:66635
 msgid "Website URL (Free Version)"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:66643
 msgid "Select or Upload Media"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:66645
 msgid "Use this media"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:66680
 msgid "Learn How it Works?"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:53153
 #: dashboard/build/index.js:66684
 msgid "Save Settings"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:66796
 msgid "Upload your Icon File"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:66796
 msgid "Only .png, .jpg .svg supported"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:66911
 #: dashboard/build/index.js:66976
 msgid "Drag and drop to upload your super awesome"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:66911
 #: dashboard/build/index.js:66976
 msgid "icon/logo"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:67015
 msgid "Enable Force Disable Options : "
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:67016
 msgid "If you enable this option, It will be completely hidden. If you want it back, You have to deactivate and activate the plugin to make it work again."
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:48501
 msgid "Enter your Activation Key"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 msgid "Enter your key"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:48508
 msgid "Manage"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:48535
 msgid "How to Find the Activation Key?"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:48538
 msgid "1"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:48541
 msgid "Visit POSIMYTH Store Dashboard"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:48546
 msgid "2"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:48547
 msgid "Copy the License Key"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:48550
 msgid "3"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:48551
 msgid "Paste the Key here & Hit Activate"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:48555
 msgid "Facing Issues?"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:48556
 msgid "Check our troubleshooting guide"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:62494
 msgid "Quick Support"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:62496
 msgid "PRO VERSION"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:62496
 msgid "FREE VERSION"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:62504
 msgid "Get Premium Support"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:62504
 msgid "Get Free Support"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:62511
 msgid "Whats New?"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:62517
 msgid "Join Facebook Community"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:62523
 msgid "Suggest New Features"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:62535
 msgid "AI Chat"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:62576
 msgid "WordPress Version: "
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:62577
 msgid "Plugin Version: "
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:57594
 #: dashboard/build/index.js:58413
 msgid "60 days Money-Back Guarantee"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:57595
 msgid "Upgrade to Nexter Pro to Unlock 90+ WordPress"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:57595
 msgid " Blocks, 1000+ Ready Made Templates &"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:57595
 msgid " 50+ Extensions."
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:57601
 msgid "100% Performance Optimised"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:57602
 msgid "Create Websites in 60 Secs"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:57603
 msgid "Trusted by 20K+ Users"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:63319
 msgid "Delay 3rd Party JS"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:63320
 msgid "If this option enabled, Some 3rd party JS like FontAwesome Pro, Google Map, Lottiefiles will be delayed. It will be loaded based on Mouse event by user after page load."
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:63326
 msgid "If you enable this option, Your JS and CSS will be loaded with Defer Attribute. It will make HTML render of page faster and help getting better scores in Google Page Speed."
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:63331
 msgid "Regenerate Files"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:63332
 msgid "If you notice any discrepancies between the frontend and backend design, we recommend clicking the button above to regenerate the assets dynamically. This will ensure the design reflects the latest changes. We strongly suggest using this feature when changing domains or moving from a staging environment to live."
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 msgid "Are you sure you want to remove all cache files? This will remove all cached JS and CSS files from your server. They will be regenerated automatically on your next page visit."
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 msgid "PURGING..."
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 msgid "REGENERATING..."
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 msgid "DONE"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:63490
 msgid "PURGE ALL ASSETS"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:63535
 msgid "REGENERATE ALL ASSETS"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:63486
 msgid "Asset Manager"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:63498
 #: dashboard/build/index.js:63503
 msgid "Smart Optimised (Recommended)"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:63498
 #: dashboard/build/index.js:63504
 msgid "On Demand Assets"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:63509
 msgid "In \"Smart Optimised\" method of caching, We use detect widgets used in each page, combine and minify all JS and CSS of page in two separate files for the best possible performance with least possible requests. All Cache stored at \"SiteURL/wp-content/uploads/nxt-addons/\""
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:53158
 msgid "Custom CSS"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:53185
 msgid "Add Your Custom CSS Styles"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:53189
 msgid "Custom JS"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:53216
 msgid "Add Your Custom JS Script"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:57697
 msgid "Get 1000+ Pre-Designed WordPress Websites & Templates"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:57722
 #: dashboard/build/index.js:58298
 msgid "Skip"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:57828
 #: dashboard/build/index.js:57847
 msgid "Select Mode"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:57829
 msgid "Select Blocks"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:57830
 msgid "Enable Template"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:57835
 msgid "Special Offer"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:57839
 msgid "Stay Updated"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:57840
 msgid "Confirmation"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:58613
 msgid "Skip Setup"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:57909
 msgid "How would you like to start?"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:57917
 msgid "Import Ready Made Website"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:57918
 msgid "Get a Full Website Ready Under 60 seconds"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:57924
 msgid "This will install the WDesignKit Plugin, which enables you to import WordPress Website Templates & Sections."
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:57933
 msgid "Use WordPress Blocks"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:57934
 msgid "Create your design with our highly customisable Blocks"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:58092
 msgid "Select the Blocks You Want to Use"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:58168
 msgid "Setting Up for Website Templates"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:58179
 msgid "Enabling Website Templates"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:58203
 msgid "WDesignKit Activated"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:58222
 msgid "Why Do I Need a Theme Builder?"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:58222
 msgid "Our Theme Builder gives you the capability to customize the <strong>Header, Footer, Single, and Archive Pages</strong> using Nexter’s <strong>dynamic blocks</strong>.<br><br>You don’t need to rely on the <strong>limited controls of the customizer</strong> like other themes. This makes the <strong>Nexter ecosystem truly limitless</strong>, allowing you to create every element with blocks."
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:58223
 msgid "Will this work with any WordPress theme?"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:58223
 msgid "Yes, the Nexter Extension works with <strong> any WordPress theme</strong>. That said, we <strong> highly recommend using it with the Nexter theme</strong> — it’s the <strong> lightest theme available</strong>, under <strong> 10KB</strong>, built with <strong> pure vanilla JavaScript and no jQuery</strong>. This ensures your website stays lightning fast and optimized. But don’t worry, you’re free to use any theme you like!"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:58224
 msgid "Will it break my current website?"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:58224
 msgid "Not at all! The Theme Builder is designed to <strong> integrate smoothly with your existing site</strong>. It won’t interfere with your current layout or content. You can activate and use it gradually, applying changes only when you’re ready."
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:58239
 msgid "Get Free Theme Builder for"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:58240
 msgid "WordPress with Nexter Extension"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:58245
 msgid "Free WordPress Header & Footer Builder"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:58246
 msgid "Free Single, Archive & 404 Page Builder"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:58247
 msgid "Pre-Made Theme Builder Section Templates"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:58248
 msgid "100% Customisable with Blocks"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:58301
 msgid "Enable Theme Builder"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:58415
 msgid "Get access to 90+ WordPress Blocks at FLAT 20% OFF"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:58417
 msgid "USE CODE:"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:58417
 msgid "FIRST20 "
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:58422
 msgid "View all Block"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:58437
 msgid "100% Whitelabel Plugin"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:58502
 msgid "Get Exclusive WordPress Tips, Tricks and Resources Delivered Straight to Your Inbox!"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:58506
 msgid "Join 500K+ Agency Owners, Marketers and WordPress Users."
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:58512
 msgid "NO SPAM GUARANTEE"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:58520
 msgid "Agree to contribute to make Nexter Blocks better by sharing non-sensitive details."
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:58559
 msgid "Setup Up Done Successfully."
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:58565
 msgid "I just Installed Nexter Blocks! It comes with 90+ WordPress Blocks which replace multiple plugins for me, without compromising on my website performance. Excited to use it."
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:58570
 msgid "Post on"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:58579
 msgid "Start Using"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:62121
 msgid "Connect Google Maps API Key"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:62122
 msgid "To integrate Google Maps with your Maps Block, please enable the API, paste your Google Maps API key by clicking on the settings gear, and then save the changes."
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:62123
 msgid "Paste your <a href = \"https://developers.google.com/maps/documentation/embed/get-api-key\" target=\"_blank\" rel=\"noopener noreferrer\"> Google Maps API Key </a>"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:62129
 msgid "Enable Google Fonts"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:62130
 msgid "To disable Google Fonts, toggle this off. It will prevent any Google Fonts from loading and instead use the system font. If you want to avoid any Google Font requests, simply disable this option."
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:62134
 msgid "Enable Nexter Global CSS"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:62135
 msgid "If you do not plan to use Global CSS from Nexter Blocks and prefer to load it from your theme, you can disable it. It reduces extra CSS & JS loading on your site, ensuring faster performance and complete control over design."
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:62139
 msgid "Show Nexter Performance in Admin Bar"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:62140
 msgid "This option adds the Nexter Performance menu to the WordPress top admin bar, allowing you to purge assets for individual pages or all pages directly from any screen."
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:62144
 msgid "Load Font Awesome PRO Icons"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:62145
 msgid "Connect Font Awesome PRO icons by adding your Font awesome API key in the settings for access to more premium icons for your website."
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:62149
 msgid " Enable Ajax Templates"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:62150
 msgid "Load templates using Ajax mode for optimal performance. This file will load after the page finishes loading and will dynamically request content as you scroll."
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:62151
 msgid "Read more"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:62155
 msgid "Lazy Rendering (SEO Friendly)"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:62156
 msgid "If enabled, you can start using the class <b>nxt-lazy-load</b> in places where you want to lazy load content in an SEO-friendly way."
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:62157
 msgid "How to Use?"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:62162
 msgid "If you don't need Dashicons from Nexter Blocks, you can disable them to reduce unnecessary CSS loading and improve your site's performance."
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:62166
 msgid "Disable Template Button"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:62167
 msgid "Turn off the template import option in the Gutenberg Editor if you’re not planning to use it."
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:62171
 msgid "Disable Quick Action Bar"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:62172
 msgid "Turn off the Quick Action Bar in the Gutenberg editor if you don’t plan to use it."
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
+msgid "Enable MCP Abilities"
+msgstr ""
+
+#: dashboard/build/index.js:3
+msgid "If enabled, you can utilize MCP capabilities to enhance automation, streamline workflows, and enable smarter interactions across supported features."
+msgstr ""
+
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:62181
 msgid "Connect Mailchimp CRM"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:62183
 msgid "Paste your your <a href = \"https://mailchimp.com/help/about-api-keys/\" target=\"_blank\" rel=\"noopener noreferrer\"> Mailchimp API Key </a> & <a href = \"https://mailchimp.com/help/find-audience-id/\" target=\"_blank\" rel=\"noopener noreferrer\">  List ID </a>"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:62184
 msgid "Enter Audience / List ID"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:62189
 msgid "Connect Google reCAPTCHA"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:62190
 msgid " Add your Google reCAPTCHA Site Key and Secret Key to enable spam protection with our form blocks and secure your site."
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:62191
 msgid "Place your <a href = \"https://www.google.com/recaptcha/about/\" target=\"_blank\" rel=\"noopener noreferrer\"> Google reCAPTCHA </a> Site Key & Secret Key"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:62192
 msgid "Site Key reCAPTCHA v3"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:62192
 msgid "Secret Key reCAPTCHA v3"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:62197
 msgid " Add Event Tracking ID"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:62198
 msgid "Add your Facebook Pixel ID and GA4 ID here to enable event tracking for your clicks. This will allow you to track events directly from WordPress for your ads and GA4 analytics."
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:62200
 msgid "Click Here"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:62201
 msgid "GA4 ID"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:62201
 msgid "Facebook Pixel ID"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 msgid "Enable Form Submission Menu"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 msgid "Keep the Form Submission menu visible in the WordPress admin to view, manage, and export entries collected from Nexter form blocks.."
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:62317
 msgid "Blocks Settings"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 msgid "WordPress Image Optimization WebP/AVIF, AI in Every Block, Form Submissions"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 msgid "Manage API Keys"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 msgid "Manage, update, or view your API keys for connected AI providers."
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 msgid "Configure your AI provider settings including API keys, model selection, and token limits for text and image generation."
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 msgid "AI Settings"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 msgid "Custom Context"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 msgid "Set the writing style, tone, and site-specific instructions. This context will be applied to all AI prompts to deliver more accurate and brand-aligned output."
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 msgid "Define your business context and targeted audience to help AI generate more relevant and personalized content."
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 msgid "AI Context Settings"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 msgid "API Key"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 msgid "Add Website Custom Context"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 msgid "Please enable AI Integration first."
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 msgid "OpenAI"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 msgid "Google Gemini"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 msgid "sk-proj-..."
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 msgid "Text Generation"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 msgid " Enable to allow OpenAI for text generation."
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 msgid "Image Generation"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 msgid "Enable to allow OpenAI for image generation."
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 msgid "Max Text Tokens per Prompt"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 msgid "Number of tokens allowed per prompt. If a generation exceeds this limit, the process will stop to prevent excessive usage. Set 0 for no limit."
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 msgid "Text Model"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 msgid "Select which AI model to use for text generation"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 msgid "AIza..."
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 msgid " Enable to allow Gemini for text generation."
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 msgid "Enable Gemini image generation"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 msgid "Max Image Tokens per Prompt"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 msgid "About Business"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 msgid "Describe your business, offerings, positioning, and unique value propositions. The AI will use this to generate content aligned with your brand identity and messaging."
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 msgid "Describe your business, industry, products/services..."
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 msgid "About Target Audience"
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 msgid "Explain who your audience is their needs, demographics, preferences, and goals. This helps the AI tailor tone, depth, and content style to the right user group."
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 msgid "Describe your target audience demographics, interests, pain points..."
 msgstr ""
 
-#: dashboard/build/index.js:1
+#: dashboard/build/index.js:3
 #: dashboard/build/index.js:53815
 msgid "Successfully Saved"
 msgstr ""

@@ -105,8 +105,10 @@ class Nexter_Ext_Bulk_Images {
 					'startBulk'        => __( 'Start Bulk Optimisation', 'nexter-extension' ),
 					'optimizing'       => __( 'Optimising Images', 'nexter-extension' ),
 					'reoptimise'       => __( 'Reoptimise Images', 'nexter-extension' ),
+					/* translators: %d: Number of images ready to be optimised */
 					'readyToOptimize'  => __( 'Ready to optimise %d images and save storage space', 'nexter-extension' ),
-					'imagesOptimized'  => __( '%d of %d images optimised', 'nexter-extension' ),
+					/* translators: 1: number of images optimised so far, 2: total number of images in queue */
+					'imagesOptimized'  => __( '%1$d of %2$d images optimised', 'nexter-extension' ),
 					'needToOptimise'   => __( 'Need to Optimise', 'nexter-extension' ),
 					'done'             => __( 'Done', 'nexter-extension' ),
 					'failed'           => __( 'Failed', 'nexter-extension' ),
@@ -117,8 +119,11 @@ class Nexter_Ext_Bulk_Images {
 					'before'           => __( 'Before', 'nexter-extension' ),
 					'after'            => __( 'After', 'nexter-extension' ),
 					'originalSize'     => __( 'Original Size', 'nexter-extension' ),
+					/* translators: %s: Percentage of file size saved */
 					'saved'            => __( '%s% saved', 'nexter-extension' ),
+					/* translators: %d: Number of items remaining */
 					'itemsLeft'        => __( '%d items left', 'nexter-extension' ),
+					/* translators: %d: Number of failed items */
 					'retryFailedCount' => __( 'Retry Failed (%d)', 'nexter-extension' ),
 					'toastAllComplete' => __( 'All Optimised Successfully', 'nexter-extension' ),
 					'toastError'       => __( 'An error occurred. Please try again.', 'nexter-extension' ),
@@ -127,6 +132,7 @@ class Nexter_Ext_Bulk_Images {
 					'loadingMore'       => __( 'Loading...', 'nexter-extension' ),
 					'unlimited'         => __( 'Unlimited', 'nexter-extension' ),
 					'monthlyLimitReached' => __( 'Monthly Limit Reached', 'nexter-extension' ),
+					/* translators: %d: Monthly image optimisation limit */
 					'monthlyLimitNotice' => __( 'You have reached your monthly limit of %d images. Upgrade to Pro for unlimited optimisation or wait until next month.', 'nexter-extension' ),
 					'upgradeToPro'      => __( 'Upgrade to Pro', 'nexter-extension' ),
 					'failedLoadQueue'   => __( 'Failed to load queue.', 'nexter-extension' ),
@@ -263,7 +269,9 @@ class Nexter_Ext_Bulk_Images {
                       <path d="M7 9.333V7" stroke="#1A1A1A" stroke-width="0.705882" stroke-linecap="round" stroke-linejoin="round" />
                       <path d="M7 4.666h.006" stroke="#1A1A1A" stroke-width="0.705882" stroke-linecap="round" stroke-linejoin="round" />
                     </svg>
-                    <span class="nxtext_tooltiptext"><?php echo ( $is_pro ) ? esc_html__( 'You have unlimited image optimization credits with Nexter Pro.', 'nexter-extension' ) : sprintf( esc_html__( 'Free version includes %d image optimization credits per month. This resets at the start of each month.', 'nexter-extension' ), (int) $monthly_limit ); ?></span>
+                    <span class="nxtext_tooltiptext"><?php echo ( $is_pro ) ? esc_html__( 'You have unlimited image optimization credits with Nexter Pro.', 'nexter-extension' ) :
+								/* translators: %d: Monthly image optimisation credit limit */
+								sprintf( esc_html__( 'Free version includes %d image optimization credits per month. This resets at the start of each month.', 'nexter-extension' ), (int) $monthly_limit ); ?></span>
                   </div></span>
 							<span class="nxt-bulk-stat-value" id="nxt-bulk-stat-monthly-usage"><?php echo esc_html( $monthly_usage ); ?></span>
 							<?php /* if ( ! $is_pro && $resets_in_days > 0 ) : ?>
@@ -295,8 +303,10 @@ class Nexter_Ext_Bulk_Images {
 						<div class="nxt-bulk-limit-text">
 							<h4><?php esc_html_e( 'Monthly Limit Reached', 'nexter-extension' ); ?></h4>
 							<?php if ( $show_activate_button ) : ?>
+								<?php /* translators: %d: Monthly image optimisation limit */ ?>
 								<p><?php printf( esc_html__( 'You have reached your monthly limit of %d images. Please activate Nexter Extension Pro to unlock unlimited access.', 'nexter-extension' ), (int) $monthly_limit ); ?></p>
 							<?php else : ?>
+								<?php /* translators: %d: Monthly image optimisation limit */ ?>
 								<p><?php printf( esc_html__( 'You have reached your monthly limit of %d images. Upgrade to Pro for unlimited optimisation or wait until next month.', 'nexter-extension' ), (int) $monthly_limit ); ?></p>
 							<?php endif; ?>
 						</div>

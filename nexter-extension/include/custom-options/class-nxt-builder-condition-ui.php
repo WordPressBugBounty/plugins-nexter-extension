@@ -876,14 +876,14 @@ class Nxt_Builder_Condition_UI {
         $options[ $post_name . '|entire' ]	= sprintf( __( 'All %s', 'nexter-extension' ), $post_label );
 
         if ( $post_key != 'pages' ) {
-            /* translators: %s: Archive Post Label */
+            /* translators: %s: Post type or taxonomy archive label */
             $options[ $post_name . '|entire|archive' ] = sprintf( __( 'All %s Archive', 'nexter-extension' ), $post_label );
         }
 
         if ( in_array( $post_type->name, $taxonomy->object_type ) ) {
             $taxo_name  = $taxonomy->name;
             $taxo_label = ucwords( $taxonomy->label );
-            /* translators: %s: Taxonomy Label */
+            /* translators: %s: Post type or taxonomy archive label */
             $options[ $post_name . '|entire|tax-archive|' . $taxo_name ] = sprintf( __( 'All %s Archive', 'nexter-extension' ), $taxo_label );
         }
 

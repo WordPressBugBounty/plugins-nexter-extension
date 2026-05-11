@@ -312,7 +312,7 @@ if( (!defined('NXT_PRO_EXT_VER') && !class_exists('Nexter_Singular_Sub_Term')) |
 			if(isset(self::$post_type_data) && self::$post_type_data->label){
 				$post_name = self::$post_type_data->label;
 			}
-			/* translators: %s: Taxonomy terms */
+			/* translators: 1: Post type label, 2: Taxonomy singular name */
 			return sprintf( __( '%1$s : Child %2$s', 'nexter-extension' ), $post_name, $this->taxonomy_terms->labels->name );
 		}
 		

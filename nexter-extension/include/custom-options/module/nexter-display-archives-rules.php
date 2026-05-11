@@ -593,7 +593,7 @@ if( (!defined('NXT_PRO_EXT_VER') && !class_exists('Nexter_Archives_All_Child_Ter
 		}
 
 	public function get_type_label() {
-		/* translators: 1: Post label, 2: Taxonomy singular name */
+		/* translators: 1: Post type label, 2: Taxonomy singular name */
 		return sprintf( __( '%1$s : Child %2$s', 'nexter-extension' ), $this->post_label, $this->taxonomy->labels->singular_name );
 	}
 		
