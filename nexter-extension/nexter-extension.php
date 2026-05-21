@@ -3,13 +3,13 @@
  * Plugin Name: Nexter Extension
  * Plugin URI: https://nexterwp.com
  * Description: Nexter Extension adds lightweight performance, security, and admin features to WordPress so you can improve and manage your website without installing many plugins.
- * Version: 4.6.9
+ * Version: 4.6.10
  * Author: POSIMYTH
  * Author URI: https://posimyth.com
  * Text Domain: nexter-extension
  * Requires at least: 4.0
- * Tested up to: 6.9
- * Requires PHP: 5.6
+ * Tested up to: 7.0
+ * Requires PHP: 7.4
  * License: GPLv3
  * License URI: https://opensource.org/licenses/GPL-3.0
  * Domain Path: /languages
@@ -26,7 +26,7 @@ define( 'NEXTER_EXT_BASE', plugin_basename( NEXTER_EXT_FILE ) );
 define( 'NEXTER_EXT_DIR', plugin_dir_path( NEXTER_EXT_FILE ) );
 define( 'NEXTER_EXT_URL', plugins_url( '/', NEXTER_EXT_FILE ) );
 define( 'NEXTER_EXT_CPT', 'nxt_builder' );
-define( 'NEXTER_EXT_VER', '4.6.9' );
+define( 'NEXTER_EXT_VER', '4.6.10' );
 
 if(!defined('NXT_BUILD_POST')){
 	define( 'NXT_BUILD_POST', 'nxt_builder' );
@@ -60,7 +60,7 @@ add_action( 'plugins_loaded', 'nexter_ext_early_custom_login_redirect', 1 );
 function nexter_extension_plugins_loaded() {
 	load_plugin_textdomain( 'nexter-extension', false, NEXTER_EXT_DIR . 'languages' );
 
-	if ( ! version_compare( PHP_VERSION, '5.6', '>=' ) ) {
+	if ( ! version_compare( PHP_VERSION, '7.4', '>=' ) ) {
 		add_action( 'admin_notices', 'nexter_ext_php_version_notice' );
 	} else {
 		require_once NEXTER_EXT_DIR . 'include/class-nexter-load-ext.php';
@@ -108,7 +108,7 @@ register_deactivation_hook(__FILE__, 'nxt_ext_deactivate');
  */
 function nexter_ext_php_version_notice() {
 	/* translators: %s: Php Required */
-	$message = sprintf( esc_html__( 'Nexter Extensions requires PHP version %s+, plugin is currently NOT RUNNING.', 'nexter-extension' ), '5.6' );
+	$message = sprintf( esc_html__( 'Nexter Extensions requires PHP version %s+, plugin is currently NOT RUNNING.', 'nexter-extension' ), '7.4' );
 	$html_message = sprintf( '<div class="error">%s</div>', wpautop( $message ) );
 	echo wp_kses_post( $html_message );
 }
