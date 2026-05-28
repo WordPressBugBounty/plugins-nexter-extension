@@ -41,6 +41,7 @@ if ( ! class_exists( 'Nexter_Extensions_Load' ) ) {
 			add_action( 'after_setup_theme', [ $this, 'nexter_builder_post_type' ] );
 			
 			$this->include_custom_options();
+			$this->maybe_load_mcp_abilities();
 			add_action( 'after_setup_theme', function() {
 				if(defined('NXT_VERSION') && version_compare( NXT_VERSION, '4.2.0', '>' ) ){
 					require_once NEXTER_EXT_DIR . 'include/classes/third-party/class-elementor-pro.php';
@@ -332,6 +333,24 @@ if ( ! class_exists( 'Nexter_Extensions_Load' ) ) {
 			require_once NEXTER_EXT_DIR . 'include/classes/nexter-class-wpml-compatibility.php';
 		}
 		
+		/**
+		 * Load Nexter Extension MCP abilities when the Abilities API is available.
+		 *
+		 * @return void
+		 */
+		private function maybe_load_mcp_abilities() {
+			if ( ! function_exists( 'wp_register_ability' ) ) {
+				return;
+			}
+
+			$mcp_option        = get_option( 'tpgb_connection_data', array() );
+			$mcp_ability_value = isset( $mcp_option['nxt_enable_mcp_abilities'] ) ? $mcp_option['nxt_enable_mcp_abilities'] : 'enable';
+			if ( empty( $mcp_option ) || 'enable' === $mcp_ability_value ) {
+				require_once NEXTER_EXT_DIR . 'include/abilities/class-nxt-mcp-abilities.php';
+				Nxt_MCP_Abilities::instance();
+			}
+		}
+
 		/*
 		 * Custom Options Load
 		 */

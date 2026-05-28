@@ -56,8 +56,9 @@ add_action('phpmailer_init', function (PHPMailer $phpmailer) {
             ? $smtp_custom['encryption'] 
             : '';
         
-        // For port 465, force SSL if encryption is not set
-        if ($phpmailer->Port == 465 && empty($encryption)) {
+        // Port 465 = SMTPS — always force SSL regardless of user-selected encryption
+        // Port 587 = STARTTLS — tls is correct there
+        if ($phpmailer->Port == 465) {
             $encryption = 'ssl';
         }
         
@@ -80,7 +81,7 @@ add_action('phpmailer_init', function (PHPMailer $phpmailer) {
                 $phpmailer->Username = sanitize_text_field($smtp_custom['username']);
             }
             if (!empty($smtp_custom['password'])) {
-                $phpmailer->Password = sanitize_text_field($smtp_custom['password']);
+                $phpmailer->Password = $smtp_custom['password'];
             }
         }
 
@@ -119,6 +120,17 @@ add_action('phpmailer_init', function (PHPMailer $phpmailer) {
             }
         }
         
+        // Always allow self-signed / mismatched certs — matches behaviour of WP Mail SMTP,
+        // Fluent SMTP and other plugins; without this shared-hosting servers fail with
+        // "Peer certificate CN did not match" even when credentials are correct.
+        $phpmailer->SMTPOptions = [
+            'ssl' => [
+                'verify_peer'       => false,
+                'verify_peer_name'  => false,
+                'allow_self_signed' => true,
+            ],
+        ];
+
         // Set CharSet and encoding
         $phpmailer->CharSet = 'UTF-8';
         $phpmailer->Encoding = 'base64';

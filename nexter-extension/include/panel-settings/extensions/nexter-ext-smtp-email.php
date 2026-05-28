@@ -399,23 +399,50 @@ class Nexter_Ext_SMTP_Email {
             }
 
             $mail->isSMTP();
-            $mail->SMTPDebug = 0; // Set to 2 for detailed debug
-            $mail->Host = $settings['host'];
-            $mail->Port = $settings['port'];
-            $mail->SMTPAuth = $settings['auth'] == 'true';
-            $mail->SMTPSecure = $settings['encryption'] !== 'none' ? $settings['encryption'] : '';
-            $mail->SMTPAutoTLS = $settings['autoTLS'] == 'true';
-            $mail->Username = $settings['username'];
-            $mail->Password = $settings['password'];
+            $mail->SMTPDebug = 0;
+            $mail->Timeout   = 10; // 10s — prevents PHP hanging on slow/unreachable servers
+            $mail->Host      = $settings['host'];
+            $mail->Port      = intval( $settings['port'] );
+            $mail->SMTPAuth  = !empty( $settings['auth'] );
+            $mail->Username  = $settings['username'];
+            $mail->Password  = $settings['password'];
+
+            // Resolve encryption
+            $encryption = ( !empty( $settings['encryption'] ) && $settings['encryption'] !== 'none' )
+                ? $settings['encryption']
+                : '';
+            // Port 465 = SMTPS — always force SSL regardless of user-selected encryption
+            // Port 587 = STARTTLS — tls is correct there
+            if ( $mail->Port === 465 ) {
+                $encryption = 'ssl';
+            }
+            $mail->SMTPSecure  = $encryption;
+            $mail->SMTPAutoTLS = ( $encryption === 'ssl' ) ? false : !empty( $settings['autoTLS'] );
+
+            // Always allow self-signed / mismatched certs — matches behaviour of WP Mail SMTP,
+            // Fluent SMTP and other plugins; without this shared-hosting servers fail with
+            // "Peer certificate CN did not match" even when credentials are correct.
+            $mail->SMTPOptions = [
+                'ssl' => [
+                    'verify_peer'       => false,
+                    'verify_peer_name'  => false,
+                    'allow_self_signed' => true,
+                ],
+            ];
 
             // Apply From values only if provided
             if ($from_email) {
                 $mail->setFrom($from_email, $from_name);
             }
 
-            // Try to connect only (no send)
+            // smtpConnect() handles the full handshake:
+            //   - TCP connection
+            //   - SSL/TLS negotiation
+            //   - EHLO and, when SMTPAuth=true, credential authentication
+            // A false return means TCP, TLS *or* auth failed — ErrorInfo contains the specific reason.
             if (!$mail->smtpConnect()) {
-                wp_send_json_error( __( 'SMTP Connection failed.', 'nexter-extension' ) );
+                $smtp_error = !empty($mail->ErrorInfo) ? $mail->ErrorInfo : __( 'Could not connect to host.', 'nexter-extension' );
+                wp_send_json_error( __( 'SMTP Connection failed.', 'nexter-extension' ) . ' ' . esc_html( $smtp_error ) );
             }
 
             $mail->smtpClose();
@@ -431,7 +458,7 @@ class Nexter_Ext_SMTP_Email {
             
             wp_send_json_success(['connect' => true, 'message' => __( 'SMTP Connection successful.', 'nexter-extension' )]);
         } catch (Exception $e) {
-            wp_send_json_error( __( 'SMTP Connection failed.', 'nexter-extension' ) );
+            wp_send_json_error( __( 'SMTP Connection failed.', 'nexter-extension' ) . ' ' . esc_html( $e->getMessage() ) );
         }
     }
 }

@@ -2,24 +2,24 @@
 # This file is distributed under the GPLv3.
 msgid ""
 msgstr ""
-"Project-Id-Version: Nexter Extension 4.6.9\n"
+"Project-Id-Version: Nexter Extension 4.6.11\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/nexter-extension\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-05-11T13:01:31+02:00\n"
+"POT-Creation-Date: 2026-05-28T08:25:07+02:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: nexter-extension\n"
 
 #. Plugin Name of the plugin
 #: nexter-extension.php
+#: include/abilities/class-nxt-mcp-abilities.php:63
 #: include/rollback.php:204
 #: assets/js/admin/index.js:1
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:54374
 msgid "Nexter Extension"
 msgstr ""
 
@@ -43,98 +43,308 @@ msgstr ""
 msgid "https://posimyth.com"
 msgstr ""
 
-#: include/class-nexter-load-ext.php:259
+#: include/abilities/class-nxt-mcp-abilities.php:64
+msgid "Nexter Extension MCP abilities for templates, snippets, and site settings."
+msgstr ""
+
+#: include/abilities/nexter-bulk-image-optimizer.php:20
+msgid "Get Bulk Image Optimizer Status"
+msgstr ""
+
+#: include/abilities/nexter-bulk-image-optimizer.php:21
+msgid "Returns Nexter Bulk Image Optimizer stats (totals, savings, monthly usage) and the next batch of unoptimized attachments — the same data shown on Media → Bulk Images."
+msgstr ""
+
+#: include/abilities/nexter-bulk-image-optimizer.php:59
+msgid "Bulk Optimize Images"
+msgstr ""
+
+#: include/abilities/nexter-bulk-image-optimizer.php:60
+msgid "Optimizes one or more attachments using the configured Nexter Image Optimization settings. Same effect as clicking Start Bulk Optimisation on Media → Bulk Images."
+msgstr ""
+
+#: include/abilities/nexter-bulk-image-optimizer.php:98
+#: dashboard/build/index.js:3
+msgid "Restore Original Images"
+msgstr ""
+
+#: include/abilities/nexter-bulk-image-optimizer.php:99
+msgid "Restores all images that were optimized by Nexter back to their original files from backup, and clears optimization metadata."
+msgstr ""
+
+#: include/abilities/nexter-create-snippet.php:13
+msgid "Create Code Snippet"
+msgstr ""
+
+#: include/abilities/nexter-create-snippet.php:14
+msgid "Creates a new Nexter Extension code snippet. Supports PHP, CSS, JavaScript, and HTML snippet types with configurable insertion locations, conditions, scheduling, and display rules."
+msgstr ""
+
+#: include/abilities/nexter-create-template.php:13
+msgid "Create Theme Builder Template"
+msgstr ""
+
+#: include/abilities/nexter-create-template.php:14
+msgid "Creates a new Nexter Extension Theme Builder template (header, footer, singular, archives, 404, hooks, breadcrumb, or section) with display rules and type-specific settings."
+msgstr ""
+
+#: include/abilities/nexter-custom-fonts.php:9
+msgid "Get Custom Fonts Settings"
+msgstr ""
+
+#: include/abilities/nexter-custom-fonts.php:10
+msgid "Retrieves uploaded custom fonts configuration including font names, file IDs, and weight variations."
+msgstr ""
+
+#: include/abilities/nexter-custom-fonts.php:27
+msgid "Update Custom Fonts Settings"
+msgstr ""
+
+#: include/abilities/nexter-custom-fonts.php:28
+msgid "Updates custom font upload feature: enable/disable and configure font families with weight variations."
+msgstr ""
+
+#: include/abilities/nexter-delete-snippet.php:13
+msgid "Delete Code Snippet"
+msgstr ""
+
+#: include/abilities/nexter-delete-snippet.php:14
+msgid "Permanently deletes a Nexter Extension code snippet by ID. This removes the snippet file from the filesystem and updates the index. This action cannot be undone."
+msgstr ""
+
+#: include/abilities/nexter-delete-template.php:13
+msgid "Delete Theme Builder Template"
+msgstr ""
+
+#: include/abilities/nexter-delete-template.php:14
+msgid "Permanently deletes a Nexter Theme Builder template by post ID. This action cannot be undone."
+msgstr ""
+
+#: include/abilities/nexter-get-snippet.php:13
+msgid "Get Code Snippet"
+msgstr ""
+
+#: include/abilities/nexter-get-snippet.php:14
+msgid "Retrieves a single Nexter Extension code snippet by ID, including full source code, metadata, conditions, display rules, and all settings. Use nexter/list-snippets first to discover available snippet IDs."
+msgstr ""
+
+#: include/abilities/nexter-get-template.php:13
+msgid "Get Theme Builder Template"
+msgstr ""
+
+#: include/abilities/nexter-get-template.php:14
+msgid "Retrieves a single Nexter Theme Builder template by ID with all settings including display rules, conditions, type-specific options, and edit URL."
+msgstr ""
+
+#: include/abilities/nexter-image-optimization.php:9
+msgid "Get Image Optimization Settings"
+msgstr ""
+
+#: include/abilities/nexter-image-optimization.php:10
+msgid "Retrieves Nexter Extension image optimization/compression settings including format, quality, resize, and exclusion rules."
+msgstr ""
+
+#: include/abilities/nexter-image-optimization.php:31
+msgid "Update Image Optimization Settings"
+msgstr ""
+
+#: include/abilities/nexter-image-optimization.php:32
+msgid "Updates Nexter Extension image optimization settings. Only provided fields are changed."
+msgstr ""
+
+#: include/abilities/nexter-list-extensions.php:13
+msgid "List Nexter Extensions"
+msgstr ""
+
+#: include/abilities/nexter-list-extensions.php:14
+msgid "Lists all available Nexter Extension modules with their activation status, showing which features are enabled or disabled."
+msgstr ""
+
+#: include/abilities/nexter-list-snippets.php:13
+msgid "List Code Snippets"
+msgstr ""
+
+#: include/abilities/nexter-list-snippets.php:14
+msgid "Lists all Nexter Extension code snippets with metadata including name, type (php/css/javascript/html), status (active/inactive), tags, description, insertion location, and priority. Returns snippets sorted newest-first."
+msgstr ""
+
+#: include/abilities/nexter-list-templates.php:13
+msgid "List Theme Builder Templates"
+msgstr ""
+
+#: include/abilities/nexter-list-templates.php:14
+msgid "Lists all Nexter Extension Theme Builder templates (headers, footers, singular, archives, 404, hooks, breadcrumbs) with their type, status, and display rules."
+msgstr ""
+
+#: include/abilities/nexter-performance-settings.php:9
+msgid "Get Performance Settings"
+msgstr ""
+
+#: include/abilities/nexter-performance-settings.php:10
+msgid "Retrieves all Nexter performance settings including heartbeat control, lazy loading, preloading, minification, emoji/embed disabling, and more."
+msgstr ""
+
+#: include/abilities/nexter-performance-settings.php:31
+msgid "Update Performance Settings"
+msgstr ""
+
+#: include/abilities/nexter-performance-settings.php:32
+msgid "Updates Nexter performance settings. Can enable/disable features and change their values. Only provided features are modified."
+msgstr ""
+
+#: include/abilities/nexter-security-settings.php:9
+msgid "Get Nexter Security Settings"
+msgstr ""
+
+#: include/abilities/nexter-security-settings.php:10
+msgid "Retrieve all security settings. Returns every configured security feature with its enabled status and values."
+msgstr ""
+
+#: include/abilities/nexter-security-settings.php:31
+msgid "Update Nexter Security Settings"
+msgstr ""
+
+#: include/abilities/nexter-security-settings.php:32
+msgid "Update a specific security feature. Set enabled to toggle, and values to update configuration."
+msgstr ""
+
+#: include/abilities/nexter-smtp-settings.php:9
+msgid "Get SMTP Email Settings"
+msgstr ""
+
+#: include/abilities/nexter-smtp-settings.php:10
+msgid "Retrieves Nexter SMTP email configuration including type (Gmail/Custom), host, port, encryption, and from address."
+msgstr ""
+
+#: include/abilities/nexter-smtp-settings.php:27
+msgid "Update SMTP Email Settings"
+msgstr ""
+
+#: include/abilities/nexter-smtp-settings.php:28
+msgid "Updates Nexter SMTP email configuration. Supports Gmail OAuth and Custom SMTP with host/port/encryption/auth."
+msgstr ""
+
+#: include/abilities/nexter-toggle-extension.php:13
+msgid "Toggle Nexter Extension"
+msgstr ""
+
+#: include/abilities/nexter-toggle-extension.php:14
+msgid "Enables or disables a specific Nexter Extension module by key name. Use nexter/list-extensions to see available module keys."
+msgstr ""
+
+#: include/abilities/nexter-toggle-snippet.php:13
+msgid "Toggle Code Snippet"
+msgstr ""
+
+#: include/abilities/nexter-toggle-snippet.php:14
+msgid "Enables or disables a Nexter Extension code snippet by toggling its activation status. Can explicitly set active/inactive or toggle the current state."
+msgstr ""
+
+#: include/abilities/nexter-toggle-template.php:13
+msgid "Toggle Theme Builder Template"
+msgstr ""
+
+#: include/abilities/nexter-toggle-template.php:14
+msgid "Enables or disables a Nexter Theme Builder template. Can explicitly set active/inactive or toggle current state."
+msgstr ""
+
+#: include/abilities/nexter-update-snippet.php:13
+msgid "Update Code Snippet"
+msgstr ""
+
+#: include/abilities/nexter-update-snippet.php:14
+msgid "Updates an existing Nexter Extension code snippet. You can update the code, name, description, tags, type, location, conditions, and all other settings. Only provided fields are updated — omitted fields keep their current values."
+msgstr ""
+
+#: include/abilities/nexter-update-template.php:13
+msgid "Update Theme Builder Template"
+msgstr ""
+
+#: include/abilities/nexter-update-template.php:14
+msgid "Updates an existing Nexter Theme Builder template settings including title, display rules, and type-specific options. Only provided fields are updated."
+msgstr ""
+
+#: include/class-nexter-load-ext.php:260
 #: assets/js/admin/index.js:1
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:54781
 msgid "Settings"
 msgstr ""
 
-#: include/class-nexter-load-ext.php:263
+#: include/class-nexter-load-ext.php:264
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:62480
 msgid "Need Help?"
 msgstr ""
 
-#: include/class-nexter-load-ext.php:271
+#: include/class-nexter-load-ext.php:272
 #: assets/js/admin/index.js:1
 msgid "Upgrade PRO"
 msgstr ""
 
-#: include/class-nexter-load-ext.php:288
+#: include/class-nexter-load-ext.php:289
 msgid "Official Site"
 msgstr ""
 
-#: include/class-nexter-load-ext.php:289
-msgid "Docs"
-msgstr ""
-
 #: include/class-nexter-load-ext.php:290
-#: dashboard/build/index.js:1
-#: dashboard/build/index.js:53659
-msgid "Join Community"
+msgid "Docs"
 msgstr ""
 
 #: include/class-nexter-load-ext.php:291
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:53567
-#: dashboard/build/index.js:53708
-msgid "What's New?"
+msgid "Join Community"
 msgstr ""
 
 #: include/class-nexter-load-ext.php:292
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:53664
-msgid "Request Feature"
+msgid "What's New?"
 msgstr ""
 
 #: include/class-nexter-load-ext.php:293
+#: dashboard/build/index.js:1
+msgid "Request Feature"
+msgstr ""
+
+#: include/class-nexter-load-ext.php:294
 msgid "Rate Plugin"
 msgstr ""
 
-#: include/class-nexter-load-ext.php:437
+#: include/class-nexter-load-ext.php:456
 msgid "Edit Condition"
 msgstr ""
 
-#: include/class-nexter-load-ext.php:621
+#: include/class-nexter-load-ext.php:640
 msgid "Upgrade to Nexter Pro to Unlock 1000+ Templates, 90+ Blocks & 50+ Extensions"
 msgstr ""
 
-#: include/class-nexter-load-ext.php:622
+#: include/class-nexter-load-ext.php:641
 msgid "A single suite to design faster, reduce plugins, and keep your site lightweight."
 msgstr ""
 
-#: include/class-nexter-load-ext.php:624
+#: include/class-nexter-load-ext.php:643
 msgid "Replace 50+ WordPress Plugins with Nexter Extension Pro"
 msgstr ""
 
-#: include/class-nexter-load-ext.php:625
+#: include/class-nexter-load-ext.php:644
 msgid "Nexter Extension free options cover the basics, but Pro takes it further with features like Login Protection, 2-Factor Authentication, Branded WP Admin & More."
 msgstr ""
 
-#: include/class-nexter-load-ext.php:634
+#: include/class-nexter-load-ext.php:653
 #: assets/js/admin/index.js:1
 #: dashboard/build/index.js:1
 #: dashboard/build/index.js:3
 #: theme-builder/build/index.js:1
-#: dashboard/build/index.js:54890
-#: dashboard/build/index.js:57597
-#: dashboard/build/index.js:58421
-#: dashboard/build/index.js:60095
-#: dashboard/build/index.js:60119
 msgid "Upgrade Now"
 msgstr ""
 
-#: include/class-nexter-load-ext.php:635
+#: include/class-nexter-load-ext.php:654
 msgid "Compare Free vs Pro"
 msgstr ""
 
-#: include/class-nexter-load-ext.php:651
+#: include/class-nexter-load-ext.php:670
 msgid "To continue using all latest features smoothly, please update Nexter Blocks to version 4.6.0 or higher."
 msgstr ""
 
-#: include/class-nexter-load-ext.php:666
-#: include/class-nexter-load-ext.php:676
+#: include/class-nexter-load-ext.php:685
+#: include/class-nexter-load-ext.php:695
 #: include/classes/load-code-snippet/nexter-code-snippet-render.php:821
 #: include/classes/load-code-snippet/nexter-code-snippet-render.php:879
 #: include/classes/load-code-snippet/nexter-code-snippet-render.php:928
@@ -153,13 +363,13 @@ msgstr ""
 #: include/custom-options/class-nxt-builder-condition-ui.php:757
 #: include/custom-options/nexter-builder-condition.php:556
 #: include/custom-options/nexter-builder-condition.php:599
-#: include/panel-settings/class-nxt-panel-ajax-router.php:649
-#: include/panel-settings/class-nxt-panel-ajax-router.php:666
-#: include/panel-settings/class-nxt-panel-ajax-router.php:834
-#: include/panel-settings/class-nxt-panel-ajax-router.php:931
-#: include/panel-settings/class-nxt-panel-ajax-router.php:1063
-#: include/panel-settings/class-nxt-panel-ajax-router.php:1101
-#: include/panel-settings/class-nxt-panel-ajax-router.php:1119
+#: include/panel-settings/class-nxt-panel-ajax-router.php:652
+#: include/panel-settings/class-nxt-panel-ajax-router.php:669
+#: include/panel-settings/class-nxt-panel-ajax-router.php:837
+#: include/panel-settings/class-nxt-panel-ajax-router.php:934
+#: include/panel-settings/class-nxt-panel-ajax-router.php:1066
+#: include/panel-settings/class-nxt-panel-ajax-router.php:1104
+#: include/panel-settings/class-nxt-panel-ajax-router.php:1122
 #: include/panel-settings/extensions/nexter-ext-image-sizes.php:75
 #: include/panel-settings/extensions/nexter-ext-local-google-font.php:374
 #: include/panel-settings/extensions/nexter-ext-post-duplicator.php:196
@@ -170,11 +380,11 @@ msgstr ""
 msgid "Insufficient permissions."
 msgstr ""
 
-#: include/class-nexter-load-ext.php:706
+#: include/class-nexter-load-ext.php:725
 msgid "Invalid notice ID."
 msgstr ""
 
-#: include/class-nexter-load-ext.php:709
+#: include/class-nexter-load-ext.php:728
 msgid "Invalid Notice ID"
 msgstr ""
 
@@ -194,6 +404,7 @@ msgid "Snippets List"
 msgstr ""
 
 #: include/classes/class-nxt-ajax-guard.php:44
+#: include/panel-settings/class-nxt-panel-ajax-router.php:1209
 #: include/panel-settings/extensions/nexter-ext-rollback-manager.php:356
 #: include/panel-settings/extensions/nexter-ext-rollback-manager.php:448
 msgid "Security check failed."
@@ -661,7 +872,6 @@ msgstr ""
 #: include/custom-options/nexter-builder-condition.php:686
 #: dashboard/build/index.js:1
 #: theme-builder/build/index.js:1
-#: dashboard/build/index.js:50412
 msgid "All"
 msgstr ""
 
@@ -687,7 +897,6 @@ msgstr ""
 #: include/custom-options/nexter-builder-condition.php:122
 #: dashboard/build/index.js:1
 #: theme-builder/build/index.js:1
-#: dashboard/build/index.js:49761
 msgid "Footer"
 msgstr ""
 
@@ -726,7 +935,6 @@ msgstr ""
 #: include/custom-options/class-nxt-builder-condition-ui.php:176
 #: assets/js/admin/index.js:1
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:49417
 msgid "Type"
 msgstr ""
 
@@ -764,9 +972,8 @@ msgstr ""
 #: include/classes/load-sections/nexter-sections-loader.php:367
 #: include/custom-options/nexter-builder-condition.php:116
 #: include/custom-options/nexter-builder-condition.php:136
-#: include/panel-settings/class-nxt-panel-ajax-router.php:947
+#: include/panel-settings/class-nxt-panel-ajax-router.php:950
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:51385
 msgid "None"
 msgstr ""
 
@@ -786,7 +993,6 @@ msgstr ""
 #: assets/js/admin/index.js:1
 #: dashboard/build/index.js:1
 #: theme-builder/build/index.js:1
-#: dashboard/build/index.js:62807
 msgid "404 Page"
 msgstr ""
 
@@ -969,10 +1175,6 @@ msgstr ""
 #: include/custom-options/class-nxt-builder-condition-ui.php:73
 #: include/custom-options/class-nxt-builder-condition-ui.php:79
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:49559
-#: dashboard/build/index.js:49649
-#: dashboard/build/index.js:49773
-#: dashboard/build/index.js:52209
 msgid "Normal"
 msgstr ""
 
@@ -986,8 +1188,6 @@ msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:80
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:51372
-#: dashboard/build/index.js:51386
 msgid "Fixed"
 msgstr ""
 
@@ -1005,7 +1205,6 @@ msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:138
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:57848
 msgid "Select Template"
 msgstr ""
 
@@ -1071,13 +1270,6 @@ msgstr ""
 #: assets/js/admin/index.js:1
 #: dashboard/build/index.js:1
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:49877
-#: dashboard/build/index.js:54333
-#: dashboard/build/index.js:60015
-#: dashboard/build/index.js:62089
-#: dashboard/build/index.js:62375
-#: dashboard/build/index.js:63289
-#: dashboard/build/index.js:66021
 msgid "Read How it Works"
 msgstr ""
 
@@ -1085,8 +1277,6 @@ msgstr ""
 #: include/custom-options/class-nxt-builder-condition-ui.php:258
 #: dashboard/build/index.js:1
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:58528
-#: dashboard/build/index.js:60395
 msgid "Next"
 msgstr ""
 
@@ -1097,12 +1287,6 @@ msgstr ""
 #: assets/js/admin/index.js:1
 #: dashboard/build/index.js:1
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:49879
-#: dashboard/build/index.js:60021
-#: dashboard/build/index.js:62091
-#: dashboard/build/index.js:62376
-#: dashboard/build/index.js:63291
-#: dashboard/build/index.js:66030
 msgid "Save"
 msgstr ""
 
@@ -2184,7 +2368,6 @@ msgstr ""
 #: assets/js/admin/index.js:1
 #: dashboard/build/index.js:1
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:63487
 msgid "Saved"
 msgstr ""
 
@@ -2544,9 +2727,6 @@ msgstr ""
 #: dashboard/build/index.js:1
 #: dashboard/build/index.js:3
 #: theme-builder/build/index.js:1
-#: dashboard/build/index.js:54676
-#: dashboard/build/index.js:57831
-#: dashboard/build/index.js:62848
 msgid "Theme Builder"
 msgstr ""
 
@@ -2571,106 +2751,119 @@ msgstr ""
 msgid "Nexter"
 msgstr ""
 
-#: include/panel-settings/class-nxt-dashboard-data.php:353
+#: include/panel-settings/class-nxt-dashboard-data.php:354
 msgid "Duplicating.."
 msgstr ""
 
-#: include/panel-settings/class-nxt-dashboard-data.php:354
+#: include/panel-settings/class-nxt-dashboard-data.php:355
 msgid "Duplicated"
 msgstr ""
 
 #. translators: %s is the size of the table in megabytes
-#: include/panel-settings/class-nxt-dashboard-data.php:428
+#: include/panel-settings/class-nxt-dashboard-data.php:429
 #, php-format
 msgid "(%s MB)"
 msgstr ""
 
-#: include/panel-settings/class-nxt-panel-ajax-router.php:678
+#: include/panel-settings/class-nxt-panel-ajax-router.php:681
 #: include/panel-settings/nexter-ext-panel-settings.php:421
 msgid "Server not found."
 msgstr ""
 
-#: include/panel-settings/class-nxt-panel-ajax-router.php:724
+#: include/panel-settings/class-nxt-panel-ajax-router.php:727
 #: include/panel-settings/nexter-ext-panel-settings.php:467
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:54474
-#: dashboard/build/index.js:54483
-#: dashboard/build/index.js:54864
 msgid "Activated"
 msgstr ""
 
-#: include/panel-settings/class-nxt-panel-ajax-router.php:724
+#: include/panel-settings/class-nxt-panel-ajax-router.php:727
 #: include/panel-settings/nexter-ext-panel-settings.php:467
 msgid "DeActivated"
 msgstr ""
 
-#: include/panel-settings/class-nxt-panel-ajax-router.php:736
+#: include/panel-settings/class-nxt-panel-ajax-router.php:739
 msgid "You are not allowed to do this action"
 msgstr ""
 
-#: include/panel-settings/class-nxt-panel-ajax-router.php:783
+#: include/panel-settings/class-nxt-panel-ajax-router.php:786
 msgid "Invalid theme information format."
 msgstr ""
 
-#: include/panel-settings/class-nxt-panel-ajax-router.php:788
+#: include/panel-settings/class-nxt-panel-ajax-router.php:791
 msgid "Invalid theme information structure."
 msgstr ""
 
-#: include/panel-settings/class-nxt-panel-ajax-router.php:875
+#: include/panel-settings/class-nxt-panel-ajax-router.php:878
 msgid "Failed to retrieve plugin information or invalid format."
 msgstr ""
 
-#: include/panel-settings/class-nxt-panel-ajax-router.php:880
+#: include/panel-settings/class-nxt-panel-ajax-router.php:883
 msgid "Invalid plugin information structure."
 msgstr ""
 
-#: include/panel-settings/class-nxt-panel-ajax-router.php:999
+#: include/panel-settings/class-nxt-panel-ajax-router.php:1002
 msgid "Not a permission"
 msgstr ""
 
-#: include/panel-settings/class-nxt-panel-ajax-router.php:1004
+#: include/panel-settings/class-nxt-panel-ajax-router.php:1007
 msgid "Security check failed"
 msgstr ""
 
-#: include/panel-settings/class-nxt-panel-ajax-router.php:1011
-#: include/panel-settings/class-nxt-panel-ajax-router.php:1017
+#: include/panel-settings/class-nxt-panel-ajax-router.php:1014
+#: include/panel-settings/class-nxt-panel-ajax-router.php:1020
 msgid "File Import failed"
 msgstr ""
 
-#: include/panel-settings/class-nxt-panel-ajax-router.php:1024
+#: include/panel-settings/class-nxt-panel-ajax-router.php:1027
 msgid "Valid .json file extension"
 msgstr ""
 
-#: include/panel-settings/class-nxt-panel-ajax-router.php:1030
+#: include/panel-settings/class-nxt-panel-ajax-router.php:1033
 msgid "Please upload a file"
 msgstr ""
 
-#: include/panel-settings/class-nxt-panel-ajax-router.php:1043
+#: include/panel-settings/class-nxt-panel-ajax-router.php:1046
 msgid "Invalid JSON format"
 msgstr ""
 
-#: include/panel-settings/class-nxt-panel-ajax-router.php:1048
+#: include/panel-settings/class-nxt-panel-ajax-router.php:1051
 msgid "Customizer settings imported successfully"
 msgstr ""
 
-#: include/panel-settings/class-nxt-panel-ajax-router.php:1051
+#: include/panel-settings/class-nxt-panel-ajax-router.php:1054
 msgid "No valid settings found in the file"
 msgstr ""
 
-#: include/panel-settings/class-nxt-panel-ajax-router.php:1072
+#: include/panel-settings/class-nxt-panel-ajax-router.php:1075
 msgid "Code snippet setting is already enabled."
 msgstr ""
 
-#: include/panel-settings/class-nxt-panel-ajax-router.php:1088
+#: include/panel-settings/class-nxt-panel-ajax-router.php:1091
 msgid "Code snippet setting enabled successfully."
 msgstr ""
 
-#: include/panel-settings/class-nxt-panel-ajax-router.php:1126
+#: include/panel-settings/class-nxt-panel-ajax-router.php:1129
 msgid "Invalid HTTP method."
 msgstr ""
 
-#: include/panel-settings/class-nxt-panel-ajax-router.php:1135
+#: include/panel-settings/class-nxt-panel-ajax-router.php:1138
 msgid "Unauthorized API endpoint."
+msgstr ""
+
+#: include/panel-settings/class-nxt-panel-ajax-router.php:1221
+msgid "No data provided."
+msgstr ""
+
+#: include/panel-settings/class-nxt-panel-ajax-router.php:1235
+msgid "Invalid data format."
+msgstr ""
+
+#: include/panel-settings/class-nxt-panel-ajax-router.php:1258
+msgid "Settings saved successfully."
+msgstr ""
+
+#: include/panel-settings/class-nxt-panel-ajax-router.php:1265
+msgid "Failed to save settings. No changes were made."
 msgstr ""
 
 #: include/panel-settings/extensions/class-nexter-ext-image-cron.php:37
@@ -2716,8 +2909,6 @@ msgstr ""
 
 #: include/panel-settings/extensions/custom-fields/nxt-rb-menu.php:30
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:63670
-#: dashboard/build/index.js:63673
 msgid "Rollback Manager"
 msgstr ""
 
@@ -2743,8 +2934,6 @@ msgstr ""
 #: include/panel-settings/extensions/nexter-ext-rollback-manager.php:166
 #: include/panel-settings/extensions/nexter-ext-rollback-manager.php:428
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:60222
-#: dashboard/build/index.js:60248
 msgid "Rollback"
 msgstr ""
 
@@ -2778,10 +2967,6 @@ msgstr ""
 
 #: include/panel-settings/extensions/custom-fields/nxt-rb-menu.php:156
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:57726
-#: dashboard/build/index.js:57939
-#: dashboard/build/index.js:58160
-#: dashboard/build/index.js:58455
 msgid "Continue"
 msgstr ""
 
@@ -2952,7 +3137,6 @@ msgstr ""
 #: include/panel-settings/extensions/nexter-ext-bulk-images.php:180
 #: dashboard/build/index.js:1
 #: theme-builder/build/index.js:1
-#: dashboard/build/index.js:54042
 msgid "Activate Now"
 msgstr ""
 
@@ -3442,7 +3626,6 @@ msgstr ""
 
 #: include/panel-settings/extensions/nexter-ext-smtp-email.php:34
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:65745
 msgid "Gmail SMTP"
 msgstr ""
 
@@ -3554,12 +3737,16 @@ msgstr ""
 msgid "Invalid From Email address."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-smtp-email.php:418
-#: include/panel-settings/extensions/nexter-ext-smtp-email.php:434
+#: include/panel-settings/extensions/nexter-ext-smtp-email.php:444
+msgid "Could not connect to host."
+msgstr ""
+
+#: include/panel-settings/extensions/nexter-ext-smtp-email.php:445
+#: include/panel-settings/extensions/nexter-ext-smtp-email.php:461
 msgid "SMTP Connection failed."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-smtp-email.php:432
+#: include/panel-settings/extensions/nexter-ext-smtp-email.php:459
 msgid "SMTP Connection successful."
 msgstr ""
 
@@ -3646,7 +3833,6 @@ msgstr ""
 
 #: include/panel-settings/extensions/perf-security/class-nxt-performance-feed-tweaks.php:41
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60545
 msgid "Home Page"
 msgstr ""
 
@@ -3760,7 +3946,6 @@ msgstr ""
 
 #: include/panel-settings/nexter-ext-library.php:279
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:48518
 msgid "Congratulation! License Successfully Activated."
 msgstr ""
 
@@ -3820,7 +4005,6 @@ msgstr ""
 #: include/panel-settings/nexter-ext-panel-settings.php:233
 #: include/panel-settings/nexter-ext-panel-settings.php:234
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:53547
 msgid "Dashboard"
 msgstr ""
 
@@ -3832,8 +4016,6 @@ msgstr ""
 #: include/panel-settings/nexter-ext-panel-settings.php:251
 #: include/panel-settings/nexter-ext-panel-settings.php:252
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:50385
-#: dashboard/build/index.js:54667
 msgid "Blocks"
 msgstr ""
 
@@ -3841,27 +4023,18 @@ msgstr ""
 #: include/panel-settings/nexter-ext-panel-settings.php:289
 #: assets/js/admin/index.js:1
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:50684
-#: dashboard/build/index.js:50690
-#: dashboard/build/index.js:50778
-#: dashboard/build/index.js:54685
-#: dashboard/build/index.js:54688
-#: dashboard/build/index.js:62825
 msgid "Code Snippets"
 msgstr ""
 
 #: include/panel-settings/nexter-ext-panel-settings.php:297
 #: include/panel-settings/nexter-ext-panel-settings.php:298
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:54697
 msgid "Extensions"
 msgstr ""
 
 #: include/panel-settings/nexter-ext-panel-settings.php:305
 #: include/panel-settings/nexter-ext-panel-settings.php:306
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:54750
-#: dashboard/build/index.js:63136
 msgid "Theme Customizer"
 msgstr ""
 
@@ -3937,7 +4110,6 @@ msgstr ""
 
 #: include/panel-settings/nxt-deactivate.php:146
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:53649
 msgid "Documentation"
 msgstr ""
 
@@ -4075,13 +4247,11 @@ msgstr ""
 
 #: assets/js/admin/index.js:1
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:61731
 msgid "Title"
 msgstr ""
 
 #: assets/js/admin/index.js:1
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:61742
 msgid "Description"
 msgstr ""
 
@@ -4132,7 +4302,6 @@ msgstr ""
 
 #: assets/js/admin/index.js:1
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:50636
 msgid "Explore All Features"
 msgstr ""
 
@@ -4159,23 +4328,17 @@ msgstr ""
 #: assets/js/admin/index.js:1
 #: dashboard/build/index.js:1
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:48511
-#: dashboard/build/index.js:54471
-#: dashboard/build/index.js:54487
 msgid "Activate"
 msgstr ""
 
 #: assets/js/admin/index.js:1
 #: dashboard/build/index.js:3
 #: theme-builder/build/index.js:1
-#: dashboard/build/index.js:48505
 msgid "Deactivate"
 msgstr ""
 
 #: assets/js/admin/index.js:1
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:54244
-#: dashboard/build/index.js:54289
 msgid "Export"
 msgstr ""
 
@@ -4198,7 +4361,6 @@ msgstr ""
 #: assets/js/admin/index.js:1
 #: dashboard/build/index.js:1
 #: theme-builder/build/index.js:1
-#: dashboard/build/index.js:52785
 msgid "Search"
 msgstr ""
 
@@ -4209,7 +4371,6 @@ msgstr ""
 
 #: assets/js/admin/index.js:1
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:58191
 msgid "Installing WDesignKit"
 msgstr ""
 
@@ -4269,8 +4430,6 @@ msgstr ""
 #: assets/js/admin/index.js:1
 #: dashboard/build/index.js:1
 #: theme-builder/build/index.js:1
-#: dashboard/build/index.js:54255
-#: dashboard/build/index.js:54302
 msgid "Choose File"
 msgstr ""
 
@@ -5345,7 +5504,6 @@ msgstr ""
 
 #: assets/js/admin/index.js:1
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:50937
 msgid "Desktop"
 msgstr ""
 
@@ -5583,20 +5741,17 @@ msgstr ""
 
 #: assets/js/admin/index.js:1
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:63703
 msgid "Published"
 msgstr ""
 
 #: assets/js/admin/index.js:1
 #: dashboard/build/index.js:1
 #: theme-builder/build/index.js:1
-#: dashboard/build/index.js:63702
 msgid "Draft"
 msgstr ""
 
 #: assets/js/admin/index.js:1
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:63705
 msgid "Private"
 msgstr ""
 
@@ -6034,17 +6189,11 @@ msgstr ""
 
 #: assets/js/admin/index.js:1
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:49297
-#: dashboard/build/index.js:54203
-#: dashboard/build/index.js:61324
-#: dashboard/build/index.js:61402
-#: dashboard/build/index.js:65217
 msgid "PRO"
 msgstr ""
 
 #: assets/js/admin/index.js:1
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:61569
 msgid "NOT INSTALLED"
 msgstr ""
 
@@ -6843,71 +6992,49 @@ msgstr ""
 
 #: dashboard/build/index.js:1
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:50415
-#: dashboard/build/index.js:54613
-#: dashboard/build/index.js:58147
-#: dashboard/build/index.js:59803
 msgid "Pro"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:50413
-#: dashboard/build/index.js:54616
 msgid "Free"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:54649
 msgid "Welcome"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:54658
-#: dashboard/build/index.js:62714
 msgid "WordPress Templates"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:54716
-#: dashboard/build/index.js:65172
 msgid "Utilities"
 msgstr ""
 
 #: dashboard/build/index.js:1
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:54724
-#: dashboard/build/index.js:59379
 msgid "Performance"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:54732
-#: dashboard/build/index.js:61280
 msgid "Security"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:49253
-#: dashboard/build/index.js:54740
 msgid "Admin Interface"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:54759
 msgid "Extra Options"
 msgstr ""
 
 #: dashboard/build/index.js:1
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:54789
-#: dashboard/build/index.js:63479
 msgid "Asset Delivery"
 msgstr ""
 
 #: dashboard/build/index.js:1
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:53150
-#: dashboard/build/index.js:54797
 msgid "Custom CSS & JS"
 msgstr ""
 
@@ -6918,45 +7045,34 @@ msgstr ""
 
 #: dashboard/build/index.js:1
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:54816
-#: dashboard/build/index.js:60201
 msgid "Roll Back Plugin"
 msgstr ""
 
 #: dashboard/build/index.js:1
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:54826
-#: dashboard/build/index.js:66676
 msgid "White Label"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:54836
 msgid "Import/Export"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:54447
-#: dashboard/build/index.js:54847
 msgid "More Products"
 msgstr ""
 
 #: dashboard/build/index.js:1
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:48496
-#: dashboard/build/index.js:54883
 msgid "Activate PRO"
 msgstr ""
 
 #: dashboard/build/index.js:1
 #: theme-builder/build/index.js:1
-#: dashboard/build/index.js:54908
 msgid "Version "
 msgstr ""
 
 #: dashboard/build/index.js:1
 #: theme-builder/build/index.js:1
-#: dashboard/build/index.js:54918
 msgid "System Info"
 msgstr ""
 
@@ -7003,7 +7119,6 @@ msgstr ""
 
 #: dashboard/build/index.js:1
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:59511
 msgid "Reset"
 msgstr ""
 
@@ -7060,195 +7175,145 @@ msgid "Please check your Project ID in Adobe Fonts."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:53333
 msgid "Please provide your email & name."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:53337
 msgid "Please enter a valid email."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:53362
 msgid "Success! You’ve been added to our email list."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:53372
-#: dashboard/build/index.js:53376
 msgid "Subscription failed. Please try again later."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:53403
 msgid "Get 1000+ Pre-Designed"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:53404
 msgid "WordPress Pages & Templates."
 msgstr ""
 
 #: dashboard/build/index.js:1
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:53405
-#: dashboard/build/index.js:57724
-#: dashboard/build/index.js:62717
 msgid "Enable Templates"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:53406
-#: dashboard/build/index.js:62721
-#: dashboard/build/index.js:62722
-#: dashboard/build/index.js:62764
-#: dashboard/build/index.js:62765
 msgid "Open Templates"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:53415
 msgid "Convert Figma to WordPress"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:53416
 msgid "in Minutes"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:53417
 msgid "Install UiChemy"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:53418
 msgid "UiChemy Setting"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:53427
 msgid "Best Elementor Addon with 120+"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:53428
 msgid "Widgets"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:53429
 msgid "Enable Addon"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:53430
 msgid "Open Addon"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:53471
 msgid "Lightest Starter Theme for Page Builders"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:53472
 msgid "Install Theme"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:53473
 msgid "Open Theme Settings"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:53458
 msgid "50+ WordPress Extensions to Make Site More Secure, Performant & Smart"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:53459
 msgid "Enable Extension"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:53460
 msgid "Open Extensions"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:53443
 msgid "90+ Best WordPress Blocks for"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:53444
 msgid "Gutenberg Editor"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:53445
-#: dashboard/build/index.js:66236
 msgid "Enable Blocks"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:53446
 msgid "Open Blocks"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:53576
 msgid "90+"
 msgstr ""
 
 #: dashboard/build/index.js:1
 #: theme-builder/build/index.js:1
-#: dashboard/build/index.js:53577
-#: dashboard/build/index.js:53584
 msgid "Inactive"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:50474
-#: dashboard/build/index.js:53577
 msgid " Active"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:53579
 msgid "Total Blocks"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:53583
 msgid "50+"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:53584
 msgid "25 Active"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:53586
 msgid "Total Extensions"
 msgstr ""
 
 #: dashboard/build/index.js:1
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:53607
-#: dashboard/build/index.js:53725
-#: dashboard/build/index.js:54491
-#: dashboard/build/index.js:57598
-#: dashboard/build/index.js:62875
-#: dashboard/build/index.js:66237
 msgid "Learn More"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:53622
 msgid "Stay Updated with Nexter & WordPress Updates"
 msgstr ""
 
@@ -7261,166 +7326,131 @@ msgid "Your Email"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:53637
 msgid "Subscribe Now"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:53650
 msgid "Read Now"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:53654
 msgid "Need Help ?"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:53655
 msgid "Raise Ticket"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:53660
-#: dashboard/build/index.js:53683
 msgid "Join Now"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:53665
 msgid "Suggest Now"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:53674
 msgid "Rate Nexter"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:53682
 msgid "Join Discord"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:53686
 msgid "Video Tutorials"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:53687
 msgid "Watch Now"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:53690
 msgid "We're Active on"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:53733
 msgid "View More"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:54940
 msgid "WordPress Blocks Library from WDesignKit"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:54941
 msgid "Explore our curated selection of pre-built blocks for Gutenberg from the WDesignKit Blocks Library."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:54942
-#: dashboard/build/index.js:54950
 msgid "View Blocks Library*"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:54944
-#: dashboard/build/index.js:54952
 msgid "* WDesignKit Plugin Required"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:54948
 msgid "Developer? Create Your Custom Gutenberg Block"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:54949
 msgid "With WDesignKit, you can easily convert your custom code into a Gutenberg block."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:54956
 msgid "Request for Block"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:54957
 msgid "We’re always looking to improve our Block Library. Share your ideas, and we’ll consider adding them based on user demand."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:54958
 msgid "Request Blocks*"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:54971
 msgid "Oops, No Blocks Found!!"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:54972
 msgid "Please try searching with an alternative or more common term!"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:49907
 msgid "Essential"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:49907
 msgid "Creative"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:49907
 msgid "Tabbed"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:49907
 msgid "Social"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:49907
 msgid "Advanced"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:49907
 msgid "Listing"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:49907
 msgid "Builder"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:49907
 msgid "Extras"
 msgstr ""
 
 #: dashboard/build/index.js:1
 #: theme-builder/build/index.js:1
-#: dashboard/build/index.js:49907
 msgid "WDesignKit"
 msgstr ""
 
@@ -7457,1342 +7487,982 @@ msgid "Lightweight yet powerful – design without compromise"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:50389
 msgid "Disable All"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:50402
 msgid "Enable All"
 msgstr ""
 
 #: dashboard/build/index.js:1
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:50414
-#: dashboard/build/index.js:59424
-#: dashboard/build/index.js:61327
-#: dashboard/build/index.js:65220
 msgid "Freemium"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:50426
 msgid "Scan Unused Blocks"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:50433
 msgid "Disable Unused Blocks"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:50473
 msgid " Total Blocks"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:50503
 msgid "New"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:50509
 msgid "Live Demo"
 msgstr ""
 
 #: dashboard/build/index.js:1
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:49291
-#: dashboard/build/index.js:50510
-#: dashboard/build/index.js:50810
-#: dashboard/build/index.js:54198
-#: dashboard/build/index.js:59419
-#: dashboard/build/index.js:61319
-#: dashboard/build/index.js:63221
-#: dashboard/build/index.js:65212
 msgid "Read Docs"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:50588
 msgid "Unused"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:50588
 msgid "Used"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:50616
 msgid "90+ WordPress Gutenberg Blocks"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:50619
 msgid "Unlock the Complete Potential of Nexter by Enabling Nexter Gutenberg Blocks"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:50625
 msgid "Build professional, fast, and beautiful WordPress sites without relying on heavy page builders. Nexter Blocks work natively with Gutenberg, giving you everything you need while keeping your site lightweight and performance-focused."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:50633
 msgid "Activate Nexter Blocks"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:50633
 msgid "Install Nexter Blocks Free"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:50651
-#: dashboard/build/index.js:54380
 msgid "Nexter Blocks"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:62899
 msgid "Nexter Theme Optimization Controls"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:62900
-#: dashboard/build/index.js:62901
 msgid "Enable or disable core theme features to match your design needs."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:62904
 msgid "Theme Performance"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:62907
 msgid "Global Color Palette"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:62908
 msgid "Manage the overall color scheme of your site using theme.json color palette, ensuring a consistent look across all elements."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:62913
 msgid "Global Colors"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:62914
 msgid "Manage the overall color scheme of your site, ensuring a consistent look across all elements."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:62919
 msgid "Global Typography"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:62920
 msgid "Set your site’s default fonts and styles to maintain a uniform typography throughout."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:62925
 msgid "Site Logo & Favicon"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:62926
 msgid "Set your website logo and favicon."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:62931
 msgid "Blog Settings"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:62932
 msgid "Customize the layout and appearance of your blog posts and archive pages."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:62937
 msgid "Container Settings"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:62938
 msgid "Set the width and structure of your content areas to create a responsive and visually clean layout."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:62943
 msgid "Header Settings"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:62944
 msgid "Enable or disable the default theme header."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:62949
 msgid "Footer Settings"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:62950
 msgid "Enable or disable the default theme footer."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:62955
 msgid "Body Style"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:62956
 msgid "Control the background and overall look of the main body of your site."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:62961
 msgid "Selection Text Color"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:62962
 msgid "Change the highlight color when users select text on your site for a more personalized experience."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:62971
 msgid "Disable Theme Container"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:62973
 msgid "Disable container settings from theme customizer."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:62977
 msgid "Disable Theme Header Footer"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:62979
 msgid "Disable theme header and footer from theme customizer."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:62983
 msgid "Disable Reset CSS"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:62985
 msgid "Remove reset CSS."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:62989
 msgid "Disable Theme Sidebar"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:62991
 msgid "Disable sidebar settings from theme customizer."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:62995
 msgid "Disable Theme CSS"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:62997
 msgid "Remove the default theme CSS"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:63000
 msgid "Disable Theme Woo CSS"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:63002
 msgid "Remove the WooCommerce CSS added by theme."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:63005
 msgid "Disable Skip Link"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:63007
 msgid "Remove the \"Skip to content\" link."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:63136
-#: dashboard/build/index.js:63181
 msgid "Nexter Theme"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:63144
 msgid "Ultra-Lightweight WordPress Theme"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:63147
 msgid "Start With the Lightest, Fastest Foundation for Your Website"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:63153
 msgid "Nexter Theme gives you a rock-solid, super-clean base to build on — no heavy CSS frameworks, no bloated JavaScript, just a minimal, performance-first theme that keeps your site fast and stable while you design freely with Gutenberg or your favorite tools."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:63160
 msgid "Install Nexter Theme"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:63163
 msgid "Activate Theme"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:63166
 msgid "Explore All Features "
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:61568
-#: dashboard/build/index.js:63226
 msgid "Coming Soon"
 msgstr ""
 
 #: dashboard/build/index.js:1
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:49264
-#: dashboard/build/index.js:49338
-#: dashboard/build/index.js:49851
-#: dashboard/build/index.js:54187
-#: dashboard/build/index.js:59391
-#: dashboard/build/index.js:59465
-#: dashboard/build/index.js:61291
-#: dashboard/build/index.js:61407
-#: dashboard/build/index.js:63263
-#: dashboard/build/index.js:65183
 msgid "NEW"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:62730
 msgid "Import Pre-Designed Website Templates Made with Nexter Blocks"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:62746
 msgid "Download Now"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:62749
 msgid "Live Preview"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:62760
 msgid "View More Website Templates"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60089
 msgid "Upgrade to Nexter Blocks PRO Unlimited Site Plan to Unlock Whitelabel Branding."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60089
 msgid "Upgrade to Nexter Blocks PRO to Unlock all 90+ Blocks & 1000+ Pre-Made Templates"
 msgstr ""
 
 #: dashboard/build/index.js:1
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:58429
-#: dashboard/build/index.js:60091
 msgid "Performance Optimized"
 msgstr ""
 
 #: dashboard/build/index.js:1
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:58433
-#: dashboard/build/index.js:60092
 msgid "90+ WordPress Blocks"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60093
 msgid "1000+ Pre-made Starter Templates"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60096
-#: dashboard/build/index.js:60120
 msgid "Use Code 'FIRST20' for FLAT 20%. (Offer applicable for 1st time only)"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60103
 msgid "Upgrade to Nexter PRO Unlimited Site Plan to Unlock Whitelabel Branding."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60103
 msgid "Upgrade to Nexter Extension Pro to all Unlock all 50+ Features."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60107
-#: dashboard/build/index.js:60113
 msgid "Better Performance & Security"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60108
 msgid "50+ Extension Feature"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60112
 msgid "50+ Extensions"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60114
 msgid "Whitelabel Nexter Extension"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:54069
-#: dashboard/build/index.js:54073
 msgid "Import/Export Theme Customizer Settings"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:54070
-#: dashboard/build/index.js:54071
 msgid "Easily import or export Nexter Theme Customizer settings to use across different sites."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:54078
-#: dashboard/build/index.js:54082
 msgid "Import/Export Extension Settings"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:54079
-#: dashboard/build/index.js:54080
 msgid "Easily import or export Nexter Extension settings to use across different sites."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:54178
 msgid "Nexter Import/Export Data"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:54238
 msgid "Export Customizer Settings"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:54251
 msgid "Import Customizer Settings"
 msgstr ""
 
 #: dashboard/build/index.js:1
 #: theme-builder/build/index.js:1
-#: dashboard/build/index.js:54267
-#: dashboard/build/index.js:54314
 msgid "Import"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:54283
 msgid "Export Extension Settings"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:54296
 msgid "Import Extension Settings"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:52782
 msgid "Font Family"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:51300
-#: dashboard/build/index.js:52785
-#: dashboard/build/index.js:52809
 msgid "Select"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:52799
 msgid "Not Found Font"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:52807
 msgid "Font Weight"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:50938
 msgid "Tablet"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:50939
 msgid "Phone"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:50956
 msgid "Note : "
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:51082
-#: dashboard/build/index.js:51443
-#: dashboard/build/index.js:52068
-#: dashboard/build/index.js:52345
-#: dashboard/build/index.js:52469
 msgid "Clear"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:51188
-#: dashboard/build/index.js:51216
 msgid "image"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:51194
-#: dashboard/build/index.js:51222
 msgid "Delete"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:51195
-#: dashboard/build/index.js:51223
 msgid "Remove"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:51206
-#: dashboard/build/index.js:51232
 msgid "Insert"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:51243
 msgid "Replace Video"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:51244
 msgid "Replace SVG"
 msgstr ""
 
 #: dashboard/build/index.js:1
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:51245
-#: dashboard/build/index.js:66791
-#: dashboard/build/index.js:66906
-#: dashboard/build/index.js:66971
 msgid "Replace Image"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:51246
 msgid "Upload Video"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:51247
 msgid "Upload SVG"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:49450
-#: dashboard/build/index.js:51248
 msgid "Upload Image"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:51359
-#: dashboard/build/index.js:51370
-#: dashboard/build/index.js:51374
-#: dashboard/build/index.js:51380
-#: dashboard/build/index.js:52201
-#: dashboard/build/index.js:52208
 msgid "Default"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:51360
-#: dashboard/build/index.js:58852
 msgid "Left Top"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:51361
-#: dashboard/build/index.js:58855
 msgid "Left Center"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:51362
-#: dashboard/build/index.js:58858
 msgid "Left Bottom"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:51363
-#: dashboard/build/index.js:58853
 msgid "Center Top"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:51364
-#: dashboard/build/index.js:58856
 msgid "Center Center"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:51365
-#: dashboard/build/index.js:58859
 msgid "Center Bottom"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:51366
-#: dashboard/build/index.js:58854
 msgid "Right Top"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:51367
-#: dashboard/build/index.js:58857
 msgid "Right Center"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:51368
-#: dashboard/build/index.js:58860
 msgid "Right Bottom"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:51371
 msgid "Scroll"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:51375
 msgid "No Repeat"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:51376
-#: dashboard/build/index.js:51570
-#: dashboard/build/index.js:51575
-#: dashboard/build/index.js:51581
 msgid "Repeat"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:51377
 msgid "Repeat X"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:51378
 msgid "Repeat Y"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:51381
 msgid "Auto"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:51382
 msgid "Cover"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:51383
 msgid "Contain"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:49436
-#: dashboard/build/index.js:49504
-#: dashboard/build/index.js:49661
-#: dashboard/build/index.js:49716
-#: dashboard/build/index.js:51433
-#: dashboard/build/index.js:61709
 msgid "Background"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:51457
-#: dashboard/build/index.js:51486
-#: dashboard/build/index.js:52492
 msgid "Color"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:51462
 msgid "Image"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:51467
-#: dashboard/build/index.js:51635
 msgid "Gradient"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:51472
-#: dashboard/build/index.js:51654
 msgid "Video"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:51495
 msgid "Background Image"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:51502
 msgid "Parallax"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:51535
-#: dashboard/build/index.js:51540
-#: dashboard/build/index.js:51545
 msgid "Position"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:51555
-#: dashboard/build/index.js:51623
 msgid "Attachment"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:51602
-#: dashboard/build/index.js:51607
-#: dashboard/build/index.js:51612
 msgid "Size"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:51646
 msgid "Video Source"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:51646
 msgid "Local"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:51646
 msgid "External"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:51649
 msgid "Video URL"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:51656
 msgid "Fallback Image (Poster)"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:51767
 msgid "Top-left"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:51767
 msgid "Top-right"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:51767
 msgid "Bottom-right"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:51767
 msgid "Bottom-left"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:51928
 msgid "Tip : "
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:52053
 msgid "Solid"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:52053
 msgid "Dotted"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:52053
 msgid "Dashed"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:52053
 msgid "Double"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:49511
-#: dashboard/build/index.js:49570
-#: dashboard/build/index.js:49608
-#: dashboard/build/index.js:49668
-#: dashboard/build/index.js:49723
-#: dashboard/build/index.js:52055
-#: dashboard/build/index.js:61720
 msgid "Border"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:52095
-#: dashboard/build/index.js:61723
 msgid "Border Color"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:52101
 msgid "Border Width"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:52195
 msgid "Capitalize"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:52196
 msgid "Uppercase"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:52197
 msgid "Lowercase"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:52202
 msgid "Underline"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:52203
 msgid "Overline"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:52204
 msgid "Line Through"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:52210
-#: dashboard/build/index.js:63731
 msgid "Italic"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:52211
 msgid "Oblique"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:52233
 msgid "Line Height"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:52254
 msgid "Letter Spacing"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:52276
 msgid "Font Size"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:52297
 msgid "Text Transform"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:52313
 msgid "Text Decoration"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:52330
 msgid "Font Style"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:49549
-#: dashboard/build/index.js:49639
-#: dashboard/build/index.js:49763
-#: dashboard/build/index.js:49799
-#: dashboard/build/index.js:52371
 msgid "Typography"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:49538
-#: dashboard/build/index.js:49695
-#: dashboard/build/index.js:49750
-#: dashboard/build/index.js:52464
 msgid "Box Shadow"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:52499
 msgid "Horizontal (X)"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:52508
 msgid "Vertical (Y)"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:52516
 msgid "Blur"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:52524
 msgid "Spread"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:52536
 msgid "Inset"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:52537
 msgid "Outset"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:54036
 msgid "Install Nexter Extension to Unlock this Feature."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:54038
 msgid "Replace 50+ WordPress Plugins"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:54039
 msgid "Theme Builder & Code Snippets"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:54040
 msgid "Modular Code"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:54042
 msgid "Install Now"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:50685
 msgid "Add custom code snippets to your site."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:50686
 msgid "This admin bar tool provides insights into which code snippets and scripts are loaded on the current page, helping with debugging and optimization. It also includes a customizable code editor where you can set a fixed height in pixels or enable auto-grow to let the editor expand automatically based on the code content."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:63565
 msgid "Adobe Fonts"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:63566
 msgid "Connect your Adobe Typekit project ID to use Adobe fonts on your website."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:58680
-#: dashboard/build/index.js:63567
-#: dashboard/build/index.js:65271
 msgid "Project ID"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:63572
 msgid "Custom Fonts Upload"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:63573
 msgid "Upload your custom fonts and use them on your website to give a unique look to your website."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:63574
 msgid "adobe scan"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:63579
-#: dashboard/build/index.js:63582
 msgid "SMTP Email"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:63580
 msgid "Use Google SMTP or a Custom SMTP to ensure your site’s emails are delivered to inboxes reliably."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:63587
 msgid "Replace URL & Text"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:63588
 msgid "Easily find and replace URL or text on your website. Useful when moving your site from one domain to another or just moving from http:// to https:// or going from www. to a non www. URL."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:63589
 msgid "URL/Text"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:63594
-#: dashboard/build/index.js:63596
 msgid "Duplicate Post"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:63595
 msgid "This will add a duplicate button to the post, page, custom post types that you can use to duplicate the same."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:63601
 msgid "Regenerate Thumbnails"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:63602
 msgid "Easily regenerate various sizes of image thumbnails at once or individually. This can be useful if image thumbnails are not showing properly on your website."
 msgstr ""
 
 #: dashboard/build/index.js:1
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:48830
-#: dashboard/build/index.js:58708
-#: dashboard/build/index.js:58717
-#: dashboard/build/index.js:58726
-#: dashboard/build/index.js:60426
-#: dashboard/build/index.js:60434
-#: dashboard/build/index.js:60443
-#: dashboard/build/index.js:60710
-#: dashboard/build/index.js:60719
-#: dashboard/build/index.js:60728
-#: dashboard/build/index.js:62124
-#: dashboard/build/index.js:62184
-#: dashboard/build/index.js:63603
 msgid "Enter API Key"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:63608
 msgid "Replace Media"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:63609
 msgid "Replace any existing media file without changing its URL, ID, or file name—perfect for updating images or documents without breaking links."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:63617
-#: dashboard/build/index.js:63619
 msgid "Content Post Order"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:63618
 msgid "Enable a custom order for your posts, pages, or media—perfect for manual sorting or organizing content just the way you want it."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:63624
-#: dashboard/build/index.js:63627
 msgid "Taxonomy (Term) Order"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:63625
 msgid "Easily order taxonomy terms (categories, tags or custom taxonomies) to control their display order in both wp-admin and the frontend."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:63635
-#: dashboard/build/index.js:63637
 msgid "Disable Gutenberg"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:63636
 msgid "Turn off the Gutenberg block editor for posts, pages, or both, perfect for those who prefer Classic Editor or use a page builder."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:63642
 msgid "Custom User Avatar"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:63643
 msgid "Allow users to set their profile picture by choosing any image from the Media Library—no need for a Gravatar account."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:63650
-#: dashboard/build/index.js:63653
 msgid "Public Preview for Drafts"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:63651
 msgid "Enable a temporary public link for your draft content. Let others view unpublished posts/pages before they're live. Great for collecting feedback or client approval."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:63660
-#: dashboard/build/index.js:63663
 msgid "Redirect 404"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:63661
 msgid "When someone visits a broken 404 page or missing link on your site, this setting will send 301 redirect them to the page you choose."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:63661
 msgid "301 (permanent) redirect to the homepage for all 404 (not found) pages."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:63671
 msgid "Easily switch back to restore a plugin or theme to its earlier version in just one click if something breaks after an update."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:63678
-#: dashboard/build/index.js:63681
 msgid "Admin Role Switcher"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:63679
 msgid "View admin pages and the site as a non-administrator user to test and manage user role experiences."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:63686
-#: dashboard/build/index.js:63689
 msgid "WP Debug Mode"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:63687
 msgid "Enable Debug Mode to get detailed error logs and developer warnings, making it easier to troubleshoot and fix issues."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:63701
 msgid "Same as Original"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:63704
 msgid "Pending"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:63709
 msgid "Thin 100"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:63710
 msgid "Extra Light 200"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:63711
 msgid "Light 300"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:63712
 msgid "Regular 400"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:63713
 msgid "Medium 500"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:63714
 msgid "Semi-Bold 600"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:63715
 msgid "Bold 700"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:63716
 msgid "Extra-Bold 800"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:63717
 msgid "Bolder 900"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:63718
 msgid "Thin 100 Italic"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:63719
 msgid "Extra Light 200 Italic"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:63720
 msgid "Light 300 Italic"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:63721
 msgid "Regular 400 Italic"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:63722
 msgid "Medium 500 Italic"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:63723
 msgid "Semi-Bold 600 Italic"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:63724
 msgid "Bold 700 Italic"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:63725
 msgid "Extra-Bold 800 Italic"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:63726
 msgid "Bolder 900 Italic"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:63730
 msgid "Regular"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:63948
 msgid "Select or Upload Font File"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:63950
 msgid "Use this file"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:64027
-#: dashboard/build/index.js:64090
 msgid "Upgrade to Pro for more than 5 Custom Fonts!"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:64050
 msgid "Are you sure you want to remove this font? This action cannot be undone."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:64676
-#: dashboard/build/index.js:64700
 msgid "Font name cannot be empty."
 msgstr ""
 
@@ -8801,851 +8471,646 @@ msgid "Upload at least one font file for the variants you need. Empty variant ro
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:64707
 msgid "Upload Regular font file."
 msgstr ""
 
 #: dashboard/build/index.js:1
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:61294
-#: dashboard/build/index.js:65186
 msgid "BETA"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:65223
 msgid "Beta"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:65240
-#: dashboard/build/index.js:65300
 msgid "Simple Font Upload"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:65244
-#: dashboard/build/index.js:65315
 msgid "Variable Font Upload"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:65273
 msgid "Enter Project ID"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:64148
 msgid "Variation: "
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:64835
-#: dashboard/build/index.js:64998
-#: dashboard/build/index.js:65138
 msgid "Font Name"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:64836
-#: dashboard/build/index.js:64999
-#: dashboard/build/index.js:65109
-#: dashboard/build/index.js:65144
 msgid "Enter Font Name"
 msgstr ""
 
 #: dashboard/build/index.js:1
 #: theme-builder/build/index.js:1
-#: dashboard/build/index.js:64850
-#: dashboard/build/index.js:65012
-#: dashboard/build/index.js:65120
-#: dashboard/build/index.js:65151
 msgid "--Choose File--"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:64851
-#: dashboard/build/index.js:65013
 msgid "Upload Your Font"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:64886
-#: dashboard/build/index.js:65047
 msgid "Add Variant"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:65348
 msgid "Old URL/Text"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:65354
 msgid "http://oldurl.com or old text"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:65364
 msgid "New URL/Text"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:65370
 msgid "http://newurl.com or new text"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:65386
 msgid "Case Sensitive"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:65396
 msgid "Replace GUIDs"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:65398
 msgid "Important GUID Note"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:65407
 msgid "Search Limit"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:65409
 msgid "Decrease the value if you face any server timeout."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:65423
 msgid "Select Tables"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:65425
 msgid "Select one or more database tables where you want to search and replace text or URLs."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:65461
 msgid "Dry Run"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:65475
 msgid "Who Can Duplicate"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:65479
 msgid "All Users"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:65484
-#: dashboard/build/index.js:65526
 msgid "Original Author"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:65491
 msgid "Post Date"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:65495
 msgid "Duplicate Time"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:65500
 msgid "Current Time"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:65506
 msgid "Postfix Text"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:65507
 msgid "Enter Postfix Text"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:65517
 msgid "Post Author"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:65521
 msgid "Current User"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:65533
 msgid "Post Status"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:65550
 msgid "Slug Text"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:65551
 msgid "Enter Slug Text"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:65605
 msgid "Disable Frontend Block Styles"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:65607
 msgid "Remove default Gutenberg block CSS from the frontend of your site for selected types. This helps reduce unnecessary styling or improve page speed if Gutenberg isn’t in use."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:65629
 msgid "Redirect to "
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:65631
 msgid "Enter Path URL (e.g. new-404-page)"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:65636
 msgid "This will be added after your main domain. For example: yoursite.com/page-not-found"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:65642
 msgid "Set how long the preview link stays active"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:65648
 msgid "days"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:65650
 msgid "After the set number of days, the preview link will automatically expire for security. "
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:65762
 msgid "Custom SMTP"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:65770
-#: dashboard/build/index.js:65841
 msgid "From Email"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:65771
-#: dashboard/build/index.js:65843
 msgid "Enter From Email ID"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:65781
-#: dashboard/build/index.js:65850
 msgid "From Name"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:65782
-#: dashboard/build/index.js:65852
 msgid "Enter From Name"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:65792
 msgid "Client ID"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:65793
 msgid "Enter Google Client ID"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:65801
 msgid "Enable Gmail API and Generate Client ID and Secret ID from Google Cloud Platform. Click Here to "
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:65804
 msgid "Client Secret"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:65805
 msgid "Enter Google Client Secret"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:65816
 msgid "Redirect URI"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:65859
 msgid "SMTP Host"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:65861
 msgid "Enter SMTP Host"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:65868
 msgid "SMTP Port"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:65870
 msgid "Enter SMTP Port"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:65878
 msgid "Encryption"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:65905
 msgid "Auto TLS"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:65907
-#: dashboard/build/index.js:65925
 msgid "By default, TLS encryption is automatically used if the server supports it."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:65923
 msgid "Authentication"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:65941
 msgid "SMTP Username"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:65943
 msgid "Enter SMTP Username"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:65951
 msgid "SMTP Password"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:65953
 msgid "Enter SMTP Password"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:65965
 msgid "Send Test Email"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:65968
 msgid "Type email here to check SMTP"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:65981
 msgid "Send"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:65999
 msgid "Please refresh the page to see your settings in the admin bar."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:66001
 msgid "Notice :"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:66002
 msgid "If you lose access to your administrator account, recover it by visiting: "
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:66006
 msgid "Important :"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:66007
 msgid "If you're using"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:66007
 msgid "Ninja Firewall"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:66008
 msgid " ensure the option \"Block attempts to gain administrative privileges\" is unchecked in Firewall Policies before switching to a non-admin role. This prevents accidental lockouts from your admin account."
 msgstr ""
 
 #: dashboard/build/index.js:1
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:57719
-#: dashboard/build/index.js:58159
-#: dashboard/build/index.js:58296
-#: dashboard/build/index.js:58454
-#: dashboard/build/index.js:58525
-#: dashboard/build/index.js:58576
-#: dashboard/build/index.js:62077
-#: dashboard/build/index.js:66026
 msgid "Back"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:66030
 msgid "Regenerate"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:66030
 msgid "Confirm"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:66033
 msgid "Authorize with Gmail"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:66036
 msgid "Connect SMTP"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:48587
 msgid "Disable Admin Settings"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:48588
 msgid "Disable various admin notifications individually."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:48589
-#: dashboard/build/index.js:48677
-#: dashboard/build/index.js:58699
 msgid "Hide Admin Notice"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:48594
-#: dashboard/build/index.js:48596
 msgid "Clean Admin Bar"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:48595
 msgid "Remove various elements from the admin bar."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:48601
-#: dashboard/build/index.js:48604
 msgid "Wider Admin Menu"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:48602
 msgid "Set custom admin menu width."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:48603
 msgid "Adjust the admin menu width to fit wider items."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:48609
 msgid "Display Active Plugins First"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:48610
 msgid "Show active plugins first in the Installed Plugins list"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:48611
 msgid "Show active plugins first in the Installed Plugins list—handy for sites with many deactivated plugins during testing or development."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:48612
 msgid "Display Active Plugin First"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:48620
-#: dashboard/build/index.js:48623
 msgid "User Profile Clean"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:48621
 msgid "Remove unnecessary fields from admin profile."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:48622
 msgid "Customize the admin profile by removing unnecessary fields for a cleaner, more user-friendly interface."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:48629
-#: dashboard/build/index.js:48632
 msgid "WP Admin Menu Organizer"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:48630
-#: dashboard/build/index.js:48631
 msgid "Customize the admin menu order, rename menu items, or hide them as needed, from the settings under Nexter Extension > Admin Menu."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:48645
-#: dashboard/build/index.js:48648
 msgid "Elementor AdFree"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:48646
-#: dashboard/build/index.js:48647
 msgid "Easily remove unwanted Elementor banners from different areas of your site."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:48657
 msgid "Hide Frontend Admin Bar"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:48659
 msgid "Hide the admin bar from the frontend for all logged-in users."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:48662
 msgid "Hide Themes Update Notifications"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:48664
 msgid "Hide theme update notifications in the WordPress backend."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:48667
 msgid "Hide Plugin Update Notifications"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:48669
 msgid "Hide all the plugin update notifications in the WordPress backend."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:48672
 msgid "Hide Core Update Notifications"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:48674
 msgid "Hide WordPress core update notifications in the WordPress backend."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:48679
 msgid "Hide all the additional theme or plugin notifications in the WordPress backend."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:48682
 msgid "Remove ‘PHP Update Required’ Notice"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:48684
 msgid "Hide the PHP update required notification in the WordPress backend."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:48687
 msgid "Remove Welcome Panel"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:48689
 msgid "Hide the WordPress welcome panel from the backend."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:48692
 msgid "Hide Dashboard Activity"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:48694
 msgid "Hide Dashboard Activity Box. (dashboard_activity)"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:48697
 msgid "Hide At a Glance"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:48699
 msgid "Hide At a Glance Box. (dashboard_right_now)"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:48702
 msgid "Hide Quick Draft"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:48704
 msgid "Hide Dashboard Quick Draft Box. (dashboard_quick_press)"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:48707
 msgid "Hide Site Health Status"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:48709
 msgid "Hide Dashboard Site Health Status Box. (dashboard_site_health)"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:48712
 msgid "Hide WooCommerce Setup"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:48714
 msgid "Hide Dashboard WooCommerce Setup Box. (wc_admin_dashboard_setup)"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:48717
 msgid "WordPress Events and News"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:48719
 msgid "Hide Dashboard WordPress Events and News Box. (dashboard_primary)"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:48725
 msgid "Admin Color Scheme"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:48729
 msgid "Toolbar"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:48733
 msgid "Biographical Info"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:48737
 msgid "Role"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:48741
 msgid "Email"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:48745
 msgid "New Password"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:48749
 msgid "Reset Password"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:48760
-#: dashboard/build/index.js:49069
 msgid "Remove WordPress Logo/Menu"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:48765
-#: dashboard/build/index.js:49070
 msgid "Remove Home Icon and Site Name"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:48769
-#: dashboard/build/index.js:49071
 msgid "Remove Customize Menu"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:48773
-#: dashboard/build/index.js:49072
 msgid "Remove Updates Counter/Link"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:48777
-#: dashboard/build/index.js:49073
 msgid "Remove Comments Counter/Link"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:48781
-#: dashboard/build/index.js:49074
 msgid "Remove New Content Menu"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:48785
-#: dashboard/build/index.js:49075
 msgid "Remove \"Howdy\""
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:48789
-#: dashboard/build/index.js:49076
 msgid "Remove the Help Tab and Drawer"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:48796
 msgid "Hide Elementor AI banners"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:48798
 msgid "Hide all Elementor AI notice from backend and Elementor editor."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:48806
 msgid "Hide Elementor Image Optimization Banner"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:48808
 msgid "Hide Elementor Image Optimization notice backend and Elementor editor."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:48816
 msgid "Hide Elementor Pro Ads"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:48818
 msgid "Hide Elementor Pro banner/notice from backend and Elementor editor."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:48828
 msgid "Branded WP Admin"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:48829
 msgid "Customize the look and feel of the admin login screen to match your branding."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:49390
 msgid "Menu Width"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:49412
 msgid "Layout"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:49422
 msgid "Left"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:49423
 msgid "Center"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:49424
 msgid "Right"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:49431
 msgid "Body"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:49444
 msgid "Form"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:49448
 msgid "Logo"
 msgstr ""
 
 #: dashboard/build/index.js:1
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:49459
-#: dashboard/build/index.js:59612
-#: dashboard/build/index.js:60030
 msgid "Width"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:49473
 msgid "Link"
 msgstr ""
 
@@ -9654,59 +9119,38 @@ msgid "http://"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:49486
 msgid "Box"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:49488
-#: dashboard/build/index.js:61695
 msgid "Padding"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:49523
-#: dashboard/build/index.js:49582
-#: dashboard/build/index.js:49620
-#: dashboard/build/index.js:49680
-#: dashboard/build/index.js:49735
 msgid "Border Radius"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:49547
 msgid "Field"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:49562
-#: dashboard/build/index.js:49600
-#: dashboard/build/index.js:49652
-#: dashboard/build/index.js:49707
-#: dashboard/build/index.js:49776
-#: dashboard/build/index.js:49787
-#: dashboard/build/index.js:49810
 msgid "Text Color"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:49597
 msgid "Focus"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:49637
 msgid "Button"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:49704
-#: dashboard/build/index.js:49784
 msgid "Hover"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:49797
 msgid "Label"
 msgstr ""
 
@@ -9727,722 +9171,568 @@ msgid "Lockouts"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60321
-#: dashboard/build/index.js:62041
 msgid "View Logs"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60356
 msgid "Show lists to"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60372
 msgid "Previous"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60423
 msgid "Advanced Security"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60424
-#: dashboard/build/index.js:60425
 msgid "A set of options to improve your site’s security."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60431
 msgid "CAPTCHA"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60432
 msgid "Add reCAPTCHA protection to your site."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60433
 msgid "Increase spam protection by adding reCAPTCHA protection at various locations on your site."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60440
 msgid "Custom Login URL"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60441
 msgid "Add custom WP-Admin login URL."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60442
 msgid "Secure your site by hiding the WP-Admin login URL and creating a custom login URL to block spammers."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60448
-#: dashboard/build/index.js:60451
 msgid "SVG Upload"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60449
 msgid "Allow users to upload SVG files."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60450
 msgid "Allow selected or all user roles to upload SVG files, which will be sanitized for security."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60458
 msgid "Disable XML-RPC"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60460
 msgid "Disable XML-RPC to reduce brute force attacks."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60463
 msgid "Hide WordPress Version"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60465
 msgid "Hide the WordPress version from the public to increase security."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60468
 msgid "Remove REST API Links"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60470
 msgid "Remove REST API links from the code, if not used."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60473
 msgid "Disable File Editor"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60475
 msgid "Disable the WordPress file editor to increase security."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60478
 msgid "Remove Meta Generator"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60480
 msgid "Remove the meta generator code to hide the WordPress and plugin versions from the public."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60483
 msgid "XSS Protection"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60485
 msgid "Enable XSS protection to increase security."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60491
 msgid "Secure Cookies"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60493
 msgid "Enable secure cookies to ensure encrypted and secure data transfer."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60495
 msgid "Last Login Date & Time"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60497
 msgid "Track user's last login date and time and display it in the users list table."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60499
 msgid "Registration Date & Time"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60501
 msgid "Track user's registration date and time in the users list table."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60503
 msgid "Hide Email from Spam Bots"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60505
 msgid "Display email like [obfuscate email=\"john@site.com\" display=\"inline\"] so bots can't scrape it."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60508
 msgid "Hide Telephone Secure Spam Bots"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60510
 msgid "Protects contact info from bots — use [nxt_encode link=\"tel:+1555123\"]+1 (555) 123-4567[/nxt_encode] to display a safe, clickable number."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60514
 msgid "Hide Author URLs for Security"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60516
 msgid "Changes links like /author/admin/ to a scrambled version and returns a 404 if someone tries to guess the original."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60522
 msgid "REST API"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60524
 msgid "Disable REST API for logged-out and non-admin users."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:58864
-#: dashboard/build/index.js:60526
 msgid "Enabled"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60527
 msgid "Disable for Non-Admin"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60528
 msgid "Disable When Logged Out"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60532
 msgid "iFrame Security"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60534
 msgid "Disable iFrame embedding to prevent your site from being embedded on other websites."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60536
 msgid "Disabled"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60537
 msgid "Same Origin"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60538
 msgid "Deny"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60544
 msgid "Message (Default)"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60546
 msgid "404 Page Template"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60555
 msgid "Disable Right Click"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60556
 msgid "Disable Drag/Drop"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60557
 msgid "Disable Dev's Tools Hot Keys"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60558
 msgid "Disable Search Hot Keys"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60559
 msgid "Disable Ctrl+C/CMD+C"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60560
 msgid "Disable Ctrl+V/CMD+V"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60561
 msgid "Disable Ctrl+A/CMD+A"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60562
 msgid "Disable Ctrl+U/CMD+U"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60563
 msgid "Disable Ctrl+P/CMD+P"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60564
 msgid "Disable Ctrl+H/CMD+H"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60565
 msgid "Disable Ctrl+L/CMD+L"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60566
 msgid "Disable Ctrl+K"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60567
 msgid "Disable Ctrl+O"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60568
 msgid "Disable Ctrl+E"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60569
 msgid "Disable Alt+D"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60570
 msgid "Disable F3"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60571
 msgid "Disable F6"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60572
 msgid "Disable F12"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60573
 msgid "Disable Text Selection"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60643
 msgid "WordPress Default"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60647
-#: dashboard/build/index.js:60666
 msgid "Login Form"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60648
-#: dashboard/build/index.js:60667
 msgid "Registration Form"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60651
-#: dashboard/build/index.js:60670
 msgid "Reset Password Form"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60652
 msgid "Comments Form"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60657
 msgid "WooCommerce"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60659
 msgid "Add reCAPTCHA security to various locations of WooCommerce."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60662
 msgid "Checkout"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60663
 msgid "Pay For Order"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60675
 msgid "Forms Support"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60677
 msgid "Add reCAPTCHA security on different 3rd-party forms."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60681
 msgid "Elementor Form"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60682
 msgid "Ninja Form"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60685
 msgid "WPForm"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60686
 msgid "Contact Form 7"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60689
 msgid "Everest Form"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60690
 msgid "Gravity Form"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60707
 msgid "2-Factor Authentication"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60708
 msgid "Add 2-Factor Authentication to secure your WordPress login."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60709
 msgid "Add 2-Factor Authentication by different user roles to secure your WordPress login."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60716
 msgid "Content Protection"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60717
 msgid "A set of options to protect your website content from plagiarism."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60718
 msgid "A set of options to protect your website content from plagiarism and unauthorized copying."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60725
 msgid "Login Email Notification"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60726
 msgid "Get email alerts for WordPress admin logins to track access."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60727
 msgid "Get email notifications when someone logs into your WordPress admin to track any unusual activity."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60734
-#: dashboard/build/index.js:60737
 msgid "Limit Login Attempts"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:60735
-#: dashboard/build/index.js:60736
 msgid "Limit failed login attempts per IP address to help protect your site from brute force attacks."
 msgstr ""
 
 #: dashboard/build/index.js:1
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:60755
-#: dashboard/build/index.js:62208
 msgid "Paste your Font Awesome PRO Kit ID below <a href = 'https://fontawesome.com/license' target='_blank' rel='noopener noreferrer'> Get ID </a>"
 msgstr ""
 
 #: dashboard/build/index.js:1
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:60756
-#: dashboard/build/index.js:62209
 msgid "FontAwesome Pro Kit"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:61435
-#: dashboard/build/index.js:61537
 msgid "Google reCAPTCHA"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:61440
 msgid "Cloudflare Turnstile"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:61447
 msgid "Site Key"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:61449
 msgid "Add Google reCAPTCHA Site Key."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:61449
 msgid "Add Cloudflare Turnstile reCAPTCHA Site Key."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:61471
 msgid "Please Enter Site Key"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:61472
 msgid "Please Enter Turnstile Site Key"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:61489
 msgid "Secret Key"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:61491
 msgid "Add Google reCAPTCHA Secret Key."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:61491
 msgid "Add Cloudflare Turnstile reCAPTCHA Secret Key."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:61513
 msgid "Please Enter Secret Key"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:61514
 msgid "Please Enter Turnstile Secret Key"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:61530
-#: dashboard/build/index.js:61542
 msgid "The Generate Site Key and Secret key"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:61549
 msgid "Cloudflare Turnstile dashboard"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:61595
 msgid "Protections"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:61597
 msgid "Who Can Access"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:61923
 msgid "Message"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:61645
 msgid "Customisation"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:61650
 msgid "Notice Style"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:61655
 msgid "Message Position"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:61660
 msgid "Top Right"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:61661
 msgid "Bottom Right"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:61667
 msgid "Message Disappear Time(ms)"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:61675
 msgid "Title Typography"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:61685
 msgid "Description Typography"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:61712
 msgid "Background Color"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:61734
 msgid "Title Color"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:61745
 msgid "Description Color"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:61753
 msgid "Icon"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:61756
 msgid "Icon Color"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:61764
 msgid "Progress"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:61767
 msgid "Icon Background/Progress Color"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:61790
 msgid "Change WP Admin Login Path"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:61792
 msgid "Add the custom login path."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:61795
 msgid "Please enter your custom path e.g. new-login-page"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:61808
 msgid "Login URL Behaviour"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:61810
 msgid "Set the action for the old login URL."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:61838
 msgid "Custom Message"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:61840
 msgid "Display a custom message for users accessing the old login URL."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:61870
 msgid "Which User Roles are allowed"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:61879
 msgid "2A Email Customizations"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:61881
 msgid "Custom Email Subject"
 msgstr ""
 
@@ -10451,22 +9741,18 @@ msgid "Your 2FA Verification Code for [SiteName]"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:61885
 msgid "Custom Email Message"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:61890
 msgid "You can use hottags username for username, nicename for Name, token for One time token and time for time"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:61898
 msgid "Who Get Alert"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:61908
 msgid "Exclude IPs"
 msgstr ""
 
@@ -10475,22 +9761,18 @@ msgid "Enter Exclude IPs"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:61912
 msgid "Get your IP Address from"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:61914
 msgid "whatismyipaddress.com"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:61916
 msgid "You can also add multiple IPs using a comma in between. E.g. 192.168.1.XX, 10.0.0.XX"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:61919
 msgid "Subject"
 msgstr ""
 
@@ -10499,22 +9781,18 @@ msgid "New Login Detected at [SiteName]"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:62001
 msgid "Limit Allowed failed login attempts before a 15-minute lockout."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:62009
 msgid "After multiple lockouts, further login attempts will be blocked for 30 Minutes."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:62014
 msgid "Never Block IP Addresses"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:62016
 msgid "Enter each IPv4 or IPv6 address on a new line."
 msgstr ""
 
@@ -10523,485 +9801,380 @@ msgid "e.g. 103.250.148.152"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:62029
 msgid "Detect IP from Specific Header"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:62031
 msgid "Use HTTP_X_FORWARDED_FOR IP if behind proxy; leave blank for default detection"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:62069
 msgid "There is no data available to view the logs"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:62788
 msgid "Advanced Header Builder"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:62789
 msgid "Get rid of the limited Header customizer. Use Elementor Widgets or Blocks to create custom. menu."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:62794
 msgid "Advanced Footer Builder"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:62795
 msgid "Your custom Footer with no limit of layout. Create any footer layout you want with our Footer Builder."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:62801
 msgid "Breadcrumbs Bar"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:62802
 msgid "Help users navigate your website by adding breadcrumb bar that shows the path they've taken."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:62808
 msgid "Turn a \"Page Not Found\" into an opportunity by customizing your 404 error page with your branding and helpful content."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:62813
 msgid "Single Pages"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:62814
 msgid "Create custom Single pages for your CPT, Blog Posts, or WooCommerce Product Pages."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:62819
 msgid "Archive Pages"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:62820
 msgid "Create custom listing pages for posts, CPT or WooCommerce Products."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:62826
 msgid "Get rid of the limited Header customizer. Use WordPress Blocks or Blocks to create custom menu."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:62831
 msgid "Display Rules for Theme Builder Sections"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:62832
 msgid "Control where and how your theme builder sections appear on your site."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:62837
 msgid "Action & Filter Hooks"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:62838
 msgid "Fine-tune your website's behavior and appearance by utilizing action and filter hooks for developers to extend functionalities."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:62851
 msgid "Open Theme Builder"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:62856
 msgid "Get Theme Builder for WordPress with our Nexter Extension"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:54368
 msgid "Nexter WP Theme"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:54386
 msgid "The Plus Addons for Elementor"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:54392
 msgid "WDesignKit – Templates, Widgets, Cloud Storage & More"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:54398
 msgid "UiChemy - Figma to WordPress Convertor"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:54450
 msgid "Visit Official Website"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:54468
-#: dashboard/build/index.js:54487
 msgid "Install"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:58677
 msgid "Advanced Performance"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:58678
-#: dashboard/build/index.js:58679
 msgid "A set of handy options to fine tune your WordPress site performance, remove unnecessary code."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:58686
 msgid "Google Fonts"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:58687
 msgid "Self-host Google Fonts locally for GDPR compliance, no third-party requests, and faster site performance."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:58688
-#: dashboard/build/index.js:58831
 msgid "Self-host Google Fonts locally for GDPR compliance."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:58690
 msgid "Adobe Scan"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:58696
 msgid "Disable Comments"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:58697
 msgid "Disable comments on the entire site or on specific post types."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:58698
 msgid "Stop spam comments by disabling comments on the entire site or on specific post types."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:58705
 msgid "Disable Image Sizes"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:58706
 msgid "Disable unnecessary image sizes to optimise your site's performance."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:58707
 msgid "Disable unnecessary image sizes generated by WordPress, theme or plugin to optimise your site's performance."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:58714
 msgid "Register Custom Image Sizes"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:58715
-#: dashboard/build/index.js:58716
 msgid "Add custom image sizes to use specific dimensions for images on your site."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:58723
 msgid "Disable Icons"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:58724
 msgid "Disable Elementor page builder icons."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:58725
 msgid "Improve the Elementor page builder's performance by removing unnecessary icons."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:58732
-#: dashboard/build/index.js:58735
 msgid "Revisions Control"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:58733
-#: dashboard/build/index.js:58734
 msgid "Limit post revisions for supported post types to reduce database bloat."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:58741
-#: dashboard/build/index.js:58744
 msgid "Heartbeat Control"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:58742
 msgid "Lower CPU by limiting Heartbeat API."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:58743
 msgid "Reduce server CPU usage by limiting or disabling the WordPress Heartbeat API on selected locations of your site."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:58750
-#: dashboard/build/index.js:58753
 msgid "Image Optimisation"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:58751
-#: dashboard/build/index.js:58752
 msgid "Optimise your images automatically to boost your site’s loading speed, improving user experience and SEO performance without sacrificing visual quality."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:58765
 msgid "Disable Emojis Script"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:58767
 msgid "Remove the wp-emoji-release.min.js from the code, to disable the use of emojis."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:58771
 msgid "Disable Embeds"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:58773
 msgid "Remove the wp-embed.min.js from the code, to disable embed preview."
 msgstr ""
 
 #: dashboard/build/index.js:1
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:58777
-#: dashboard/build/index.js:62161
 msgid "Disable Dashicons"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:58779
 msgid "Remove the dashicons.min.css from the code, to disable the use of dashicons."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:58783
 msgid "Remove RSD Link"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:58785
 msgid "Remove the RSD code from the code, to disable editing the site from 3rd party applications."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:58789
 msgid "Remove wlwmanifest Link"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:58791
 msgid "Remove the wlwmanifest link from the code, to disable the use of Windows Live Writer."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:58794
 msgid "Remove Shortlink"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:58796
 msgid "Remove the shortlink tag from the code, to disable the use of shortlinks for page and posts."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:58799
 msgid "Disable RSS Feeds"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:58801
 msgid "Disable the RSS Feeds from your website."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:58804
 msgid "Remove RSS Feed Links"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:58806
 msgid "Remove the RSS Feed code from the code, to disable RSS Feed."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:58809
 msgid "Disable Self Pingbacks"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:58811
 msgid "Disable self pingbacks on your WordPress website."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:58814
 msgid "Disable Password Strength Meter"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:58816
 msgid "Remove the password-strength related JavaScript from the code on unnecessary pages."
 msgstr ""
 
 #: dashboard/build/index.js:1
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:58819
-#: dashboard/build/index.js:63325
 msgid "Defer CSS & JS"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:58821
 msgid "Load CSS and JS files using the “defer” attribute."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:58824
 msgid "Media Library Infinite Scrolling"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:58826
 msgid "Activate infinite scrolling in the Media Library's grid view — perfect for browsing large collections with ease."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:58831
 msgid "Self-Host Google Fonts"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:58832
 msgid "Display Swap"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:58832
 msgid "Enable the \"swap\" attribute for Google Fonts to display system fonts while Google Fonts load."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:58833
 msgid "Disable Google Font"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:58833
 msgid "Disable Google Fonts loading."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:58834
 msgid "Clear Google Fonts"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:58834
 msgid "Delete the locally saved font files saved with the Self-Host Google Fonts feature."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:58838
 msgid "Solid Icons"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:58838
 msgid "Disable the solid icons from Font Awesome."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:58839
 msgid "Regular Icons"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:58839
 msgid "Disable the regular icons from Font Awesome."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:58840
 msgid "Brands Icons"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:58840
 msgid "Disable the brands icons from Font Awesome."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:58844
 msgid "E-icons"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:58844
 msgid "Disable the e-icons from Elementor."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:58850
 msgid "Default crop"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:58851
 msgid "No crop"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:58865
 msgid "Disable Everywhere"
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:58866
 msgid "Disable Specific Post Type"
 msgstr ""
 
@@ -11010,31 +10183,24 @@ msgid "Please enter all fields."
 msgstr ""
 
 #: dashboard/build/index.js:1
-#: dashboard/build/index.js:59241
 msgid "Restore all Optimised images to their original versions? This will copy originals from backup and remove Optimised files."
 msgstr ""
 
 #. translators: 1: number of successfully restored images, 2: number of failed images
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:59252
 #, js-format
 msgid "Restored %d images. %d failed."
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:59255
-#: dashboard/build/index.js:59258
 msgid "Restore failed. Please try again."
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:59522
 msgid "Comments"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:59601
-#: dashboard/build/index.js:60029
 msgid "Image Name"
 msgstr ""
 
@@ -11047,8 +10213,6 @@ msgid "Enter Image Width"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:59623
-#: dashboard/build/index.js:60031
 msgid "Height"
 msgstr ""
 
@@ -11057,73 +10221,58 @@ msgid "Enter Image Height"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:59634
-#: dashboard/build/index.js:60032
 msgid "Crop"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:59660
 msgid "Disable Font Awesome Icons"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:59686
 msgid "Disable Elementor Icons"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:59724
 msgid "Revisions For :"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:59748
 msgid "WordPress Dashboard"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:59750
 msgid "WordPress Frontend"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:59752
 msgid "Post Editor"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:59760
 msgid "Select Compressed Image Format"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:59765
 msgid "Smart"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:59765
 msgid "Automatically serves AVIF or WebP based on browser support. Select either of them for higher compression when supported, and falls back to for compatibility."
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:59766
 msgid "WebP"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:59766
 msgid "Compresses images using WebP format. Offers good compression with broad browser support, making it a reliable and safe choice."
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:59767
 msgid "AVIF"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:59767
 msgid "Compresses images using AVIF format, which generally provides higher compression than WebP. Best for modern browsers that support the latest image formats."
 msgstr ""
 
@@ -11132,18 +10281,14 @@ msgid "Keep Original"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:59768
 msgid "Compresses the image while keeping the original format. Only compresses and Optimises—does not change the extension type or MIME (JPEG or PNG). Choose this if you don't want format conversion."
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:59807
-#: dashboard/build/index.js:59811
 msgid "Supported"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:59809
 msgid "Not Supported"
 msgstr ""
 
@@ -11156,291 +10301,218 @@ msgid "Learn More."
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:59829
 msgid "Select Optimisation Mode"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:59833
-#: dashboard/build/index.js:59911
 msgid "Balanced"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:59833
 msgid "Best balance between image quality and file size. Reduces size noticeably while keeping images clean and sharp. Recommended for most websites."
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:59834
 msgid "Lossless"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:59834
 msgid "Compresses images without removing any visual data. File size reduction is smaller, but image quality stays exactly the same. Good for logos or detailed graphics."
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:59835
 msgid "Aggressive"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:59835
 msgid "Applies higher compression to achieve maximum size reduction. Best when performance matters more than minor quality changes, such as large photos or background images."
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:59847
 msgid "Auto Optimise on Upload"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:59849
 msgid "Automatically optimises images as soon as they’re uploaded to your site. This ensures every image added by you or your clients is compressed and performance-ready without manual work. Recommended for new sites and ongoing content uploads."
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:59862
 msgid "Image Metadata (EXIF)"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:59866
 msgid "Strip"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:59866
 msgid "Removes hidden camera data like location, device details, and capture settings. This reduces file size and helps protect privacy. Recommended for most websites."
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:59867
 msgid "Keep"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:59867
 msgid "Keeps original image metadata such as camera information and capture details. Use this if you need EXIF data for photography or editing purposes."
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:59878
 msgid "Resize Large Images"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:59879
 msgid "Automatically resizes images that exceed the set width or height before optimisation. Choose dimensions based on your largest content area to avoid uploading unnecessarily large images and improve performance."
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:59884
 msgid "Max Width (in pixels)"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:59890
 msgid "Max Height (in pixels)"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:59899
 msgid "Resize images larger than these dimensions"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:59922
 msgid "Avoid Larger Output Files"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:59923
 msgid "Skips optimisation if the processed image is larger than the original file. This ensures optimisation never increases file size and only saves storage."
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:59928
 msgid "Skip optimisation if output file is larger than original"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:59933
-msgid "Restore Original Images"
-msgstr ""
-
-#: dashboard/build/index.js:3
-#: dashboard/build/index.js:59934
 msgid "Restores all optimised images back to their original versions. Use this if you want to undo optimisation or reset image changes."
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:59937
 msgid "Restore all optimised images to their original files."
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:59939
 msgid "Restoring…"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:59939
 msgid "Restore Now"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:59960
 msgid "Exclude Images From Optimisation"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:59961
 msgid "Add image URLs or paths you don’t want to optimise. Each image should be on a new line. Useful for logos, icons, or images that must stay untouched."
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:59965
 msgid "Enter one path per line"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:59980
 msgid "Run Image Optimisation in Background"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:59982
 msgid "Runs image optimisation in the background without blocking uploads or slowing down the admin experience. Recommended for smoother performance on active sites."
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:59904
 msgid "Image Optimisation Speed"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:59905
 msgid "Controls how quickly images are processed during optimisation. Faster speeds complete optimisation sooner, while slower speeds apply deeper processing for better compression."
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:59910
 msgid "Fast"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:59912
 msgid "Slow"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:60001
 msgid "Advanced Settings"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:60018
 msgid "Bulk Optimise Images"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:59221
 msgid "Are you sure you want to remove this Image Size? This action cannot be undone."
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:60166
 msgid "Are you sure you want to reinstall the previous version?"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:60212
 msgid "Roll Back Nexter Blocks FREE Version"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:60228
-#: dashboard/build/index.js:60253
 msgid "Warning: Please backup your database before making the rollback."
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:60241
 msgid "Roll Back Nexter Extension FREE Version"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:66327
 msgid "Hide all Help Links?"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:66328
 msgid "Hide all Plugin Updates related News?"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:66329
 msgid "Hide Our Recommended plugin Ads?"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:66330
 msgid "Hide Starter Templates Tab?"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:66331
 msgid "Hide Licence Key Tab?"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:66332
 msgid "Hide Plugin RollBack Tab?"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:66333
 msgid "Hide WDesignKit Integration for Templates, Presets, Code Snippets & Cloud Storage"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:66359
-#: dashboard/build/index.js:66360
-#: dashboard/build/index.js:66362
-#: dashboard/build/index.js:66370
-#: dashboard/build/index.js:66373
 msgid "Please keep the character under 50 characters"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:66361
 msgid "Please keep the character under 250 characters"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:66363
-#: dashboard/build/index.js:66374
-#: dashboard/build/index.js:66375
 msgid "Please enter a valid URL"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:66364
-#: dashboard/build/index.js:66365
-#: dashboard/build/index.js:66368
-#: dashboard/build/index.js:66371
 msgid "Please keep the character 50 characters"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:66366
-#: dashboard/build/index.js:66367
-#: dashboard/build/index.js:66369
-#: dashboard/build/index.js:66372
 msgid "Please keep the character under 150 characters"
 msgstr ""
 
@@ -11449,186 +10521,134 @@ msgid "Save failed"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:66509
-#: dashboard/build/index.js:66617
 msgid "Plugin Name (Free Version)"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:66511
-#: dashboard/build/index.js:66517
-#: dashboard/build/index.js:66590
-#: dashboard/build/index.js:66619
 msgid "Enter Plugin Name"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:66515
-#: dashboard/build/index.js:66588
 msgid "Plugin Name (Pro Version)"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:66521
-#: dashboard/build/index.js:66623
 msgid "Plugin Description (Free Version)"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:66523
-#: dashboard/build/index.js:66529
-#: dashboard/build/index.js:66596
-#: dashboard/build/index.js:66625
 msgid "Enter Plugin Description"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:66527
-#: dashboard/build/index.js:66594
 msgid "Plugin Description (Pro Version)"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:66533
-#: dashboard/build/index.js:66560
 msgid "Developer / Agency"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:66535
-#: dashboard/build/index.js:66562
-#: dashboard/build/index.js:66602
-#: dashboard/build/index.js:66631
 msgid "Enter Developer Name"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:66539
-#: dashboard/build/index.js:66606
 msgid "Website URL (Pro Version)"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:66541
-#: dashboard/build/index.js:66637
 msgid "Enter Website URL"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:66548
 msgid "Theme Name"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:66550
 msgid "Enter Theme Name"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:66554
 msgid "Theme Description"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:66556
 msgid "Enter Theme Description"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:66566
 msgid "Theme Screenshot"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:66574
 msgid "Brand Name"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:66576
 msgid "Enter Brand Name"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:66580
 msgid "Upload Logo / Icon"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:66600
 msgid "Developer / Agency (Pro Version)"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:66608
 msgid "Enter Web URL"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:66629
 msgid "Developer / Agency (Free Version)"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:66635
 msgid "Website URL (Free Version)"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:66643
 msgid "Select or Upload Media"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:66645
 msgid "Use this media"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:66680
 msgid "Learn How it Works?"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:53153
-#: dashboard/build/index.js:66684
 msgid "Save Settings"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:66796
 msgid "Upload your Icon File"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:66796
 msgid "Only .png, .jpg .svg supported"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:66911
-#: dashboard/build/index.js:66976
 msgid "Drag and drop to upload your super awesome"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:66911
-#: dashboard/build/index.js:66976
 msgid "icon/logo"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:67015
 msgid "Enable Force Disable Options : "
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:67016
 msgid "If you enable this option, It will be completely hidden. If you want it back, You have to deactivate and activate the plugin to make it work again."
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:48501
 msgid "Enter your Activation Key"
 msgstr ""
 
@@ -11637,168 +10657,134 @@ msgid "Enter your key"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:48508
 msgid "Manage"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:48535
 msgid "How to Find the Activation Key?"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:48538
 msgid "1"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:48541
 msgid "Visit POSIMYTH Store Dashboard"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:48546
 msgid "2"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:48547
 msgid "Copy the License Key"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:48550
 msgid "3"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:48551
 msgid "Paste the Key here & Hit Activate"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:48555
 msgid "Facing Issues?"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:48556
 msgid "Check our troubleshooting guide"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:62494
 msgid "Quick Support"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:62496
 msgid "PRO VERSION"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:62496
 msgid "FREE VERSION"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:62504
 msgid "Get Premium Support"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:62504
 msgid "Get Free Support"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:62511
 msgid "Whats New?"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:62517
 msgid "Join Facebook Community"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:62523
 msgid "Suggest New Features"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:62535
 msgid "AI Chat"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:62576
 msgid "WordPress Version: "
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:62577
 msgid "Plugin Version: "
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:57594
-#: dashboard/build/index.js:58413
 msgid "60 days Money-Back Guarantee"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:57595
 msgid "Upgrade to Nexter Pro to Unlock 90+ WordPress"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:57595
 msgid " Blocks, 1000+ Ready Made Templates &"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:57595
 msgid " 50+ Extensions."
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:57601
 msgid "100% Performance Optimised"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:57602
 msgid "Create Websites in 60 Secs"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:57603
 msgid "Trusted by 20K+ Users"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:63319
 msgid "Delay 3rd Party JS"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:63320
 msgid "If this option enabled, Some 3rd party JS like FontAwesome Pro, Google Map, Lottiefiles will be delayed. It will be loaded based on Mouse event by user after page load."
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:63326
 msgid "If you enable this option, Your JS and CSS will be loaded with Defer Attribute. It will make HTML render of page faster and help getting better scores in Google Page Speed."
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:63331
 msgid "Regenerate Files"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:63332
 msgid "If you notice any discrepancies between the frontend and backend design, we recommend clicking the button above to regenerate the assets dynamically. This will ensure the design reflects the latest changes. We strongly suggest using this feature when changing domains or moving from a staging environment to live."
 msgstr ""
 
@@ -11819,391 +10805,310 @@ msgid "DONE"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:63490
 msgid "PURGE ALL ASSETS"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:63535
 msgid "REGENERATE ALL ASSETS"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:63486
 msgid "Asset Manager"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:63498
-#: dashboard/build/index.js:63503
 msgid "Smart Optimised (Recommended)"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:63498
-#: dashboard/build/index.js:63504
 msgid "On Demand Assets"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:63509
 msgid "In \"Smart Optimised\" method of caching, We use detect widgets used in each page, combine and minify all JS and CSS of page in two separate files for the best possible performance with least possible requests. All Cache stored at \"SiteURL/wp-content/uploads/nxt-addons/\""
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:53158
 msgid "Custom CSS"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:53185
 msgid "Add Your Custom CSS Styles"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:53189
 msgid "Custom JS"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:53216
 msgid "Add Your Custom JS Script"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:57697
 msgid "Get 1000+ Pre-Designed WordPress Websites & Templates"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:57722
-#: dashboard/build/index.js:58298
 msgid "Skip"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:57828
-#: dashboard/build/index.js:57847
 msgid "Select Mode"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:57829
 msgid "Select Blocks"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:57830
 msgid "Enable Template"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:57835
 msgid "Special Offer"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:57839
 msgid "Stay Updated"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:57840
 msgid "Confirmation"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:58613
 msgid "Skip Setup"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:57909
 msgid "How would you like to start?"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:57917
 msgid "Import Ready Made Website"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:57918
 msgid "Get a Full Website Ready Under 60 seconds"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:57924
 msgid "This will install the WDesignKit Plugin, which enables you to import WordPress Website Templates & Sections."
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:57933
 msgid "Use WordPress Blocks"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:57934
 msgid "Create your design with our highly customisable Blocks"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:58092
 msgid "Select the Blocks You Want to Use"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:58168
 msgid "Setting Up for Website Templates"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:58179
 msgid "Enabling Website Templates"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:58203
 msgid "WDesignKit Activated"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:58222
 msgid "Why Do I Need a Theme Builder?"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:58222
 msgid "Our Theme Builder gives you the capability to customize the <strong>Header, Footer, Single, and Archive Pages</strong> using Nexter’s <strong>dynamic blocks</strong>.<br><br>You don’t need to rely on the <strong>limited controls of the customizer</strong> like other themes. This makes the <strong>Nexter ecosystem truly limitless</strong>, allowing you to create every element with blocks."
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:58223
 msgid "Will this work with any WordPress theme?"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:58223
 msgid "Yes, the Nexter Extension works with <strong> any WordPress theme</strong>. That said, we <strong> highly recommend using it with the Nexter theme</strong> — it’s the <strong> lightest theme available</strong>, under <strong> 10KB</strong>, built with <strong> pure vanilla JavaScript and no jQuery</strong>. This ensures your website stays lightning fast and optimized. But don’t worry, you’re free to use any theme you like!"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:58224
 msgid "Will it break my current website?"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:58224
 msgid "Not at all! The Theme Builder is designed to <strong> integrate smoothly with your existing site</strong>. It won’t interfere with your current layout or content. You can activate and use it gradually, applying changes only when you’re ready."
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:58239
 msgid "Get Free Theme Builder for"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:58240
 msgid "WordPress with Nexter Extension"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:58245
 msgid "Free WordPress Header & Footer Builder"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:58246
 msgid "Free Single, Archive & 404 Page Builder"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:58247
 msgid "Pre-Made Theme Builder Section Templates"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:58248
 msgid "100% Customisable with Blocks"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:58301
 msgid "Enable Theme Builder"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:58415
 msgid "Get access to 90+ WordPress Blocks at FLAT 20% OFF"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:58417
 msgid "USE CODE:"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:58417
 msgid "FIRST20 "
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:58422
 msgid "View all Block"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:58437
 msgid "100% Whitelabel Plugin"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:58502
 msgid "Get Exclusive WordPress Tips, Tricks and Resources Delivered Straight to Your Inbox!"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:58506
 msgid "Join 500K+ Agency Owners, Marketers and WordPress Users."
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:58512
 msgid "NO SPAM GUARANTEE"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:58520
 msgid "Agree to contribute to make Nexter Blocks better by sharing non-sensitive details."
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:58559
 msgid "Setup Up Done Successfully."
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:58565
 msgid "I just Installed Nexter Blocks! It comes with 90+ WordPress Blocks which replace multiple plugins for me, without compromising on my website performance. Excited to use it."
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:58570
 msgid "Post on"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:58579
 msgid "Start Using"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:62121
 msgid "Connect Google Maps API Key"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:62122
 msgid "To integrate Google Maps with your Maps Block, please enable the API, paste your Google Maps API key by clicking on the settings gear, and then save the changes."
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:62123
 msgid "Paste your <a href = \"https://developers.google.com/maps/documentation/embed/get-api-key\" target=\"_blank\" rel=\"noopener noreferrer\"> Google Maps API Key </a>"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:62129
 msgid "Enable Google Fonts"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:62130
 msgid "To disable Google Fonts, toggle this off. It will prevent any Google Fonts from loading and instead use the system font. If you want to avoid any Google Font requests, simply disable this option."
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:62134
 msgid "Enable Nexter Global CSS"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:62135
 msgid "If you do not plan to use Global CSS from Nexter Blocks and prefer to load it from your theme, you can disable it. It reduces extra CSS & JS loading on your site, ensuring faster performance and complete control over design."
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:62139
 msgid "Show Nexter Performance in Admin Bar"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:62140
 msgid "This option adds the Nexter Performance menu to the WordPress top admin bar, allowing you to purge assets for individual pages or all pages directly from any screen."
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:62144
 msgid "Load Font Awesome PRO Icons"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:62145
 msgid "Connect Font Awesome PRO icons by adding your Font awesome API key in the settings for access to more premium icons for your website."
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:62149
 msgid " Enable Ajax Templates"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:62150
 msgid "Load templates using Ajax mode for optimal performance. This file will load after the page finishes loading and will dynamically request content as you scroll."
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:62151
 msgid "Read more"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:62155
 msgid "Lazy Rendering (SEO Friendly)"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:62156
 msgid "If enabled, you can start using the class <b>nxt-lazy-load</b> in places where you want to lazy load content in an SEO-friendly way."
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:62157
 msgid "How to Use?"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:62162
 msgid "If you don't need Dashicons from Nexter Blocks, you can disable them to reduce unnecessary CSS loading and improve your site's performance."
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:62166
 msgid "Disable Template Button"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:62167
 msgid "Turn off the template import option in the Gutenberg Editor if you’re not planning to use it."
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:62171
 msgid "Disable Quick Action Bar"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:62172
 msgid "Turn off the Quick Action Bar in the Gutenberg editor if you don’t plan to use it."
 msgstr ""
 
@@ -12216,67 +11121,54 @@ msgid "If enabled, you can utilize MCP capabilities to enhance automation, strea
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:62181
 msgid "Connect Mailchimp CRM"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:62183
 msgid "Paste your your <a href = \"https://mailchimp.com/help/about-api-keys/\" target=\"_blank\" rel=\"noopener noreferrer\"> Mailchimp API Key </a> & <a href = \"https://mailchimp.com/help/find-audience-id/\" target=\"_blank\" rel=\"noopener noreferrer\">  List ID </a>"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:62184
 msgid "Enter Audience / List ID"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:62189
 msgid "Connect Google reCAPTCHA"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:62190
 msgid " Add your Google reCAPTCHA Site Key and Secret Key to enable spam protection with our form blocks and secure your site."
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:62191
 msgid "Place your <a href = \"https://www.google.com/recaptcha/about/\" target=\"_blank\" rel=\"noopener noreferrer\"> Google reCAPTCHA </a> Site Key & Secret Key"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:62192
 msgid "Site Key reCAPTCHA v3"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:62192
 msgid "Secret Key reCAPTCHA v3"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:62197
 msgid " Add Event Tracking ID"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:62198
 msgid "Add your Facebook Pixel ID and GA4 ID here to enable event tracking for your clicks. This will allow you to track events directly from WordPress for your ads and GA4 analytics."
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:62200
 msgid "Click Here"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:62201
 msgid "GA4 ID"
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:62201
 msgid "Facebook Pixel ID"
 msgstr ""
 
@@ -12289,7 +11181,6 @@ msgid "Keep the Form Submission menu visible in the WordPress admin to view, man
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:62317
 msgid "Blocks Settings"
 msgstr ""
 
@@ -12426,7 +11317,6 @@ msgid "Describe your target audience demographics, interests, pain points..."
 msgstr ""
 
 #: dashboard/build/index.js:3
-#: dashboard/build/index.js:53815
 msgid "Successfully Saved"
 msgstr ""
 
@@ -12648,107 +11538,4 @@ msgstr ""
 
 #: theme-builder/build/index.js:1
 msgid "Activated Now"
-msgstr ""
-
-#: dashboard/build/index.js:59768
-msgid "Original"
-msgstr ""
-
-#: dashboard/build/index.js:60744
-#: dashboard/build/index.js:60747
-msgid "Block AI Crawlers"
-msgstr ""
-
-#: dashboard/build/index.js:60745
-msgid "Block AI crawlers and bots via robots.txt and meta tags to prevent AI training on your content."
-msgstr ""
-
-#: dashboard/build/index.js:60746
-msgid "Block AI crawlers and bots via robots.txt and meta tags. This plugin automatically blocks major AI crawlers like ChatGPT, Claude, Google Extended, and many others."
-msgstr ""
-
-#: dashboard/build/index.js:61935
-msgid "Select User Agents to Block"
-msgstr ""
-
-#: dashboard/build/index.js:61937
-msgid "Select which AI crawler user agents to block. Unselected agents will not be blocked."
-msgstr ""
-
-#: dashboard/build/index.js:61963
-msgid "Custom Robots.txt Entries"
-msgstr ""
-
-#: dashboard/build/index.js:61965
-msgid "Add custom entries to robots.txt file. These will be added after the built-in AI crawler blocking rules."
-msgstr ""
-
-#: dashboard/build/index.js:61973
-msgid ""
-"User-agent: CustomBot\n"
-"Disallow: /private/"
-msgstr ""
-
-#: dashboard/build/index.js:61985
-msgid "This section can be used to add custom entries to the robots.txt file. The built-in AI crawler blocking rules are automatically added."
-msgstr ""
-
-#: dashboard/build/index.js:64685
-msgid "Filename cannot be empty."
-msgstr ""
-
-#: dashboard/build/index.js:64714
-msgid "Upload Italic font file."
-msgstr ""
-
-#: dashboard/build/index.js:66197
-msgid "Why Do I Need to Install WDesignKit If I Already Have Nexter Blocks?"
-msgstr ""
-
-#: dashboard/build/index.js:66197
-msgid "Using WDesignKit you will get access of extra Gutenberg Blocks, which is not part of Nexter Blocks. Those blocks built from Block Builder of WDesignKit and You can edit them from our Easy to Use Gutenberg Block Builder as well."
-msgstr ""
-
-#: dashboard/build/index.js:66198
-msgid "Why Can’t These Blocks Be Part of Nexter Blocks?"
-msgstr ""
-
-#: dashboard/build/index.js:66198
-msgid "We designed Nexter Blocks to focus on essential and core blocks that are required for most websites. WDesignKit, on the other hand, is a library with specialized creative blocks. You can download only those you want to use in WDesignKit."
-msgstr ""
-
-#: dashboard/build/index.js:66199
-msgid "Will the Blocks Remain If I Remove WDesignKit?"
-msgstr ""
-
-#: dashboard/build/index.js:66199
-msgid "No, the Blocks will be removed if you delete WDesignKit, as it is required for blocks used from WDesignKit."
-msgstr ""
-
-#: dashboard/build/index.js:66200
-msgid "Will This Affect My Website Performance?"
-msgstr ""
-
-#: dashboard/build/index.js:66200
-msgid "Not at all. Performance is our priority. WDesignKit will load assets of only blocks you downloaded and used on on that page. No extra assets will be loaded ever."
-msgstr ""
-
-#: dashboard/build/index.js:66214
-msgid "Get Access to 50+ More Unique Gutenberg Blocks from WDesignKit"
-msgstr ""
-
-#: dashboard/build/index.js:66219
-msgid "Get Access to 1000+ WordPress Templates"
-msgstr ""
-
-#: dashboard/build/index.js:66223
-msgid "50+ Unique Gutenberg Blocks"
-msgstr ""
-
-#: dashboard/build/index.js:66227
-msgid "Custom Gutenberg Block Builder"
-msgstr ""
-
-#: dashboard/build/index.js:66231
-msgid "100% Customizable Blocks"
 msgstr ""

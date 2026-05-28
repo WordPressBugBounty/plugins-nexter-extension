@@ -46,6 +46,9 @@ class Nxt_Panel_Ajax_Router {
         add_action( 'wp_ajax_nexter_temp_api_call', [ $this, 'nexter_temp_api_call' ] );
         add_action( 'admin_init', [ $this, 'nxt_customizer_export_data' ] );
         add_action('wp_ajax_nxt_import_customizer_data', [ $this, 'nxt_customizer_import_data' ]);
+        if ( ! defined( 'TPGB_VERSION' ) ) {
+            add_action( 'wp_ajax_tpgb_connection_data_save', array( $this, 'nexter_ext_connection_data_save_action' ) );
+        }
     }
 
     /**
@@ -1188,5 +1191,86 @@ class Nxt_Panel_Ajax_Router {
 
         wp_send_json( $final );
         wp_die();
+    }
+
+    public function nexter_ext_connection_data_save_action(){
+        check_ajax_referer( 'nexter_admin_nonce', 'nonce_tpgb_connection_data' );
+        if ( ! is_user_logged_in() || ! current_user_can( 'manage_options' ) ) {
+            wp_safe_redirect( esc_url( admin_url( 'admin.php?page=nexter_welcome' ) ) );
+            exit;
+        }
+        $action_page = 'tpgb_connection_data';
+		if ( isset( $_POST['submit-key'] ) && ! empty( $_POST['submit-key'] ) && 'Save' === $_POST['submit-key'] ) {
+			// Verify nonce.
+			if ( ! isset( $_POST['nonce_tpgb_connection_data'] ) || ! wp_verify_nonce( sanitize_key( $_POST['nonce_tpgb_connection_data'] ), 'nexter_admin_nonce' ) ) {
+				wp_send_json(
+					array(
+						'success' => false,
+						'message' => __( 'Security check failed.', 'nexter-extension' ),
+					),
+					403
+				);
+				exit;
+			}
+
+			// Validate connection data exists.
+			if ( ! isset( $_POST['tpgb_connection_data'] ) || empty( $_POST['tpgb_connection_data'] ) ) {
+				wp_send_json(
+					array(
+						'success' => false,
+						'message' => __( 'No data provided.', 'nexter-extension' ),
+					),
+					400
+				);
+				exit;
+			}
+
+			// Decode and validate JSON.
+			$get_arr = json_decode( stripslashes( sanitize_text_field( wp_unslash( $_POST['tpgb_connection_data'] ) ) ), true );
+
+			if ( json_last_error() !== JSON_ERROR_NONE || ! is_array( $get_arr ) ) {
+				wp_send_json(
+					array(
+						'success' => false,
+						'message' => __( 'Invalid data format.', 'nexter-extension' ),
+					),
+					400
+				);
+				exit;
+			}
+
+			// Save or update option.
+			$option_exists = get_option( $action_page );
+
+			if ( false === $option_exists ) {
+				// Option doesn't exist, add it.
+				$result = add_option( $action_page, $get_arr );
+			} else {
+				// Option exists, update it.
+				$result = update_option( $action_page, $get_arr );
+			}
+
+			// Send JSON response.
+			if ( $result ) {
+				wp_send_json(
+					array(
+						'success' => true,
+						'message' => __( 'Settings saved successfully.', 'nexter-extension' ),
+					)
+				);
+			} else {
+				wp_send_json(
+					array(
+						'success' => false,
+						'message' => __( 'Failed to save settings. No changes were made.', 'nexter-extension' ),
+					)
+				);
+			}
+			exit;
+		} else {
+			// Invalid request, redirect to admin page.
+			wp_safe_redirect( esc_url( admin_url( 'admin.php?page=nexter_welcome' ) ) );
+			exit;
+		}
     }
 }

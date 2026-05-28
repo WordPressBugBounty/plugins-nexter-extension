@@ -3,7 +3,7 @@ Contributors: posimyththemes, nirmalkavaiya, sagarpatel124
 Tags: security, elementor, theme-builder, code-snippet, image-optimizer
 Requires at least: 4.0
 Tested up to: 7.0
-Stable tag: 4.6.10
+Stable tag: 4.6.11
 Requires PHP: 7.4
 License: GPLv3
 License URI: https://opensource.org/licenses/GPL-3.0
@@ -219,6 +219,11 @@ Yes. [Compare Free vs Pro →](https://nexterwp.com/free-vs-pro/#Nexter-Extensio
 == Changelog ==
 
 ### View Complete Changelog at [roadmap.nexterwp.com](https://roadmap.nexterwp.com/updates?filter=Nexter+Extension+-+FREE)
+
+= V4.6.11 = 28 May 2026
+- New : MCP Abilities : 26 Added WordPress Abilities API integration for templates, snippets, extensions, SMTP, security, performance, image optimization, and custom fonts.
+- Added : Dashboard : Settings : "Enable MCP Abilities" setting in Connection.
+- Improved : Utilities : SMTP Email : improve SMTP connection.
 
 = V4.6.10 = 20 May 2026
 - Compatibility : WordPress 7.0 Tested

@@ -47,6 +47,7 @@ class Nxt_Options {
 		'builder_switcher' => 'nxt_builder_switcher',
 		'tpgb_white_label' => 'tpgb_white_label',
 		'notice_count'     => 'nxt_ext_menu_notice_count',
+		'tpgb_connection_data' => 'tpgb_connection_data',
 	];
 
 	/**
@@ -66,9 +67,17 @@ class Nxt_Options {
 		'google_fonts',
 		'settings_opts',
 		'tpgb_white_label',
+		'tpgb_connection_data',
 	];
 
 	// ── Public getters ─────────────────────────────────────────────
+
+	/**
+	 * @return array|false  nexter_extra_ext_options value.
+	 */
+	public static function tpgb_connection_data() {
+		return get_option( 'tpgb_connection_data' );
+	}
 
 	/**
 	 * @return array|false  nexter_extra_ext_options value.

@@ -308,6 +308,7 @@ class Nxt_Dashboard_Data {
                 'extensionPro' =>  defined('NXT_PRO_EXT_VER'),
                 'image_optimizer_avif_supported' => $this->nxt_ext_check_avif_supported(),
                 'image_optimizer_pro_formats' => apply_filters( 'nexter_image_optimizer_pro_formats', array() ),
+                'extOption' => Nxt_Options::tpgb_connection_data(),
             ];
 
             $current_user_username = '';
