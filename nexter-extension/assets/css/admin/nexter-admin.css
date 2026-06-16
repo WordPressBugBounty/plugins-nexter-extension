@@ -345,7 +345,7 @@ li.wp-not-current-submenu:hover .wp-menu-image.dashicons-nxt-builder-groups{
 }
 
 .nxt-nobtn-secondary, .nxt-nobtn-primary{
-    padding: 8px 16px;
+    padding: 7px 16px;
     border-radius: 4px;
     font-weight: 600;
     font-size: 12px;
@@ -361,11 +361,12 @@ li.wp-not-current-submenu:hover .wp-menu-image.dashicons-nxt-builder-groups{
     box-shadow: none;
     margin-left: 8px;
     padding: 7px 16px;
+    text-decoration: blink !important;
 }
 .nxt-nobtn-primary,.nxt-nobtn-primary:hover, .nxt-nobtn-primary:focus {
 	background-color: #1717CC;
+    border: 1px solid #1717CC;
 	color: #fff !important;
-	border: none;
 	box-shadow: none;
     text-decoration: none !important;
 }
@@ -388,10 +389,10 @@ li.wp-not-current-submenu:hover .wp-menu-image.dashicons-nxt-builder-groups{
     background: #fff;
     display: flex;
     padding: 15px;
-    width: calc(100% + 12px);
+    width: calc(100% + 42px);
     position: relative;
     left: -22px;
-    top: -30px;
+    top: -32px;
     justify-content: space-between;
 }
 .nxt-theme-builder-left-header h1.wp-heading-inline{
@@ -421,7 +422,6 @@ li.wp-not-current-submenu:hover .wp-menu-image.dashicons-nxt-builder-groups{
 .nxt-theme-builder-left-header a.page-title-action:focus, .nxt-theme-builder-left-header a.page-title-action:active {
     top: 0;
     outline: none;
-    border: 0;
     background: #f3f3fc;
 }
 .nxt-theme-builder-left-header a.page-title-action:hover{

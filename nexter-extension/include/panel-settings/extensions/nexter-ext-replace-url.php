@@ -186,6 +186,7 @@ if( !function_exists('nxt_table_exists')){
 		if ( empty( $dbname ) ) {
 			return false;
 		}
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$result = $wpdb->get_var( $wpdb->prepare(
 			"SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = %s AND table_name = %s",
 			$dbname,
@@ -213,6 +214,7 @@ if( !function_exists('nxt_get_columns')){
 		
 		// Security: Table names cannot be prepared, so we validate and escape separately
 		$table_escaped = esc_sql( $table );
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$fields = $wpdb->get_results( "DESCRIBE `{$table_escaped}`" );
 	
 		if ( is_array( $fields ) ) {
@@ -383,6 +385,7 @@ if( !function_exists('nxt_search_replace')){
 				$table_escaped = esc_sql( $table );
 
 				do {
+					// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 					$data = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM `{$table_escaped}` LIMIT %d, %d", $off, $limitV ), ARRAY_A );
 					$rows_fetched = is_array( $data ) ? count( $data ) : 0;
 
@@ -432,6 +435,7 @@ if( !function_exists('nxt_search_replace')){
 						if ( ! empty( $set_clause ) && ! empty( $where_clause ) ) {
 							// Note: update_data and where_data already use wpdb->prepare, so they're safe
 							$sqlQuery = "UPDATE `{$table_escaped}` SET {$set_clause} WHERE {$where_clause}";
+							// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 							$wpdb->query( $sqlQuery );
 						}
 					}

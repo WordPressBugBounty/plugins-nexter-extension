@@ -97,8 +97,8 @@
 					cardHtml += '<div class="nxt-opt-title-grp">';
 					cardHtml += '<h3>' + nxtExtImageOptimise.successTitle + '</h3>';
 					cardHtml += '<p class="nxt-opt-desc">' + nxtExtImageOptimise.successDesc
-						.replace( '%s1', format )
-						.replace( '%s2', savedPercent.toFixed( 2 ) ) + '</p>';
+						.replace( '%1$s', format )
+						.replace( '%2$s', savedPercent.toFixed( 2 ) ) + '</p>';
 					cardHtml += '</div>';
 					cardHtml += '</div>';
 

@@ -133,8 +133,14 @@ class Nexter_Ext_Image_Upload_Optimization {
 			? $values['quality_mode']
 			: 'balanced';
 
-		$quality_map   = array( 'balanced' => 80, 'lossless' => 90, 'aggressive' => 70 );
-		$quality_value = isset( $quality_map[ $quality_mode ] ) ? $quality_map[ $quality_mode ] : 80;
+		// WebP quality: higher value = better quality / less compressed.
+		$webp_quality_map = array( 'balanced' => 80, 'lossless' => 90, 'aggressive' => 70 );
+		// AVIF quality: AVIF uses a different perceptual scale — quality 80 in AVIF produces
+		// larger files than WebP at 80.  Use lower quality values so AVIF is actually more
+		// compressed (and competes with WebP in Smart mode).
+		$avif_quality_map = array( 'balanced' => 70, 'lossless' => 80, 'aggressive' => 60 );
+		$quality_value      = isset( $webp_quality_map[ $quality_mode ] ) ? $webp_quality_map[ $quality_mode ] : 80;
+		$avif_quality_value = isset( $avif_quality_map[ $quality_mode ] ) ? $avif_quality_map[ $quality_mode ] : 70;
 
 		$exif_data = isset( $values['exif_data'] ) && in_array( $values['exif_data'], array( 'strip', 'keep' ), true )
 			? $values['exif_data']
@@ -163,7 +169,7 @@ class Nexter_Ext_Image_Upload_Optimization {
 			'resize_large'      => ! empty( $values['resize_large'] ),
 			'quality_mode'      => $quality_mode,
 			'webp_quality'      => $quality_value,
-			'avif_quality'      => $quality_value,
+			'avif_quality'      => $avif_quality_value,
 			'exif_data'         => $exif_data,
 			'avoid_larger'      => ! empty( $values['avoid_larger'] ),
 			'processing_speed'  => isset( $values['processing_speed'] ) && in_array( $values['processing_speed'], array( 'fast', 'balanced', 'slow' ), true ) ? $values['processing_speed'] : 'fast',
@@ -841,8 +847,8 @@ class Nexter_Ext_Image_Upload_Optimization {
 			'success'             => __( 'Image converted successfully!', 'nexter-extension' ),
 			'error'               => __( 'Conversion failed. Please try again.', 'nexter-extension' ),
 			'successTitle'        => __( 'Image Successfully Optimised', 'nexter-extension' ),
-			/* translators: %s1: Image format (e.g. WebP, AVIF), %s2: Percentage of file size reduction (JS placeholders) */
-			'successDesc'         => __( 'Your image has been optimised and converted to %s1 format, reducing file size by %s2%.', 'nexter-extension' ),
+			/* translators: 1: Image format (e.g. WebP, AVIF), 2: Percentage of file size reduction — replaced client-side by JS */
+			'successDesc'         => __( 'Your image has been optimised and converted to %1$s format, reducing file size by %2$s%.', 'nexter-extension' ),
 			'originalSizeLabel'   => __( 'Original Size', 'nexter-extension' ),
 			'optimizedSizeLabel'  => __( 'Optimised Size', 'nexter-extension' ),
 			'monthlyUsageLabel'   => __( 'Monthly Usage', 'nexter-extension' ),
@@ -1757,6 +1763,16 @@ class Nexter_Ext_Image_Upload_Optimization {
 			$optimized_path = self::get_absolute_path( $metadata['nxt_optimized_file'] );
 			if ( $optimized_path && file_exists( $optimized_path ) ) {
 				@unlink( $optimized_path );
+			}
+			// Smart mode keeps both .avif and .webp on disk — clean up the companion file too.
+			if ( $optimized_path ) {
+				$base_no_ext = preg_replace( '/\.(webp|avif)$/i', '', wp_normalize_path( $optimized_path ) );
+				foreach ( array( '.avif', '.webp' ) as $companion_ext ) {
+					$companion = $base_no_ext . $companion_ext;
+					if ( $companion !== wp_normalize_path( $optimized_path ) && file_exists( $companion ) ) {
+						@unlink( $companion );
+					}
+				}
 			}
 
 			// Restore all thumbnail sizes from backup and delete optimised size files.

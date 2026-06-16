@@ -124,7 +124,7 @@ class Nexter_Ext_Image_Cron {
 	private function get_unoptimized_attachment_ids( $limit = 5 ) {
 		$args = array(
 			'post_type'      => 'attachment',
-			'post_mime_type' => array( 'image/jpeg', 'image/png', 'image/gif' ),
+			'post_mime_type' => array( 'image/jpeg', 'image/jpg', 'image/png', 'image/gif' ),
 			'post_status'    => 'inherit',
 			'posts_per_page' => (int) $limit,
 			'fields'         => 'ids',

@@ -696,6 +696,7 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 			//wp_enqueue_style( 'nxt-code-snippet-style', NEXTER_EXT_URL . 'code-snippets/build/index.css', array(), NEXTER_EXT_VER, 'all' );
 
 			wp_enqueue_script( 'nxt-code-snippet', NEXTER_EXT_URL . 'assets/js/admin/index.js', array( 'react', 'react-dom', 'react-jsx-runtime', 'wp-dom-ready', 'wp-element','lodash', 'wp-i18n' ), NEXTER_EXT_VER, true );
+			//wp_enqueue_script( 'nxt-code-snippet', NEXTER_EXT_URL . 'code-snippets/build/index.js', array( 'react', 'react-dom', 'react-jsx-runtime', 'wp-dom-ready', 'wp-element','lodash', 'wp-i18n' ), NEXTER_EXT_VER, true );
 			
 			// Attach JavaScript translations
             wp_set_script_translations(

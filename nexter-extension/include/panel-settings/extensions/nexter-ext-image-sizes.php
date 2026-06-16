@@ -7,6 +7,13 @@ defined('ABSPATH') or die();
 
 class Nexter_Ext_Image_Size {
 
+	/**
+	 * Cached image sizes list (populated on first call to image_sizes()).
+	 *
+	 * @var array|null
+	 */
+	private $cached_image_sizes = null;
+
 	public function __construct() {
         if(is_admin()){
             add_action( 'wp_ajax_nexter_ext_delete_image_size', [ $this, 'nexter_ext_delete_image_size_ajax'] );
@@ -16,7 +23,8 @@ class Nexter_Ext_Image_Size {
             add_action( 'wp_ajax_nexter_regenerate_image_thumbnail_by_id', [ $this, 'nexter_ext_regenerate_image_thumbnail_by_id'] );
         }
 		add_action( 'init', [ $this, 'nexter_register_custom_image_sizes'] );
-        add_filter( 'init', [ $this, 'nexter_manage_image_sizes'] );
+		// Fix: was add_filter() — 'init' is an action, not a filter.
+        add_action( 'init', [ $this, 'nexter_manage_image_sizes'] );
 	}
 	public function nexter_ext_regenerate_image_thumbnail_by_id(){
 		check_admin_referer('nexter_admin_nonce','nexter_nonce');
@@ -57,11 +65,13 @@ class Nexter_Ext_Image_Size {
         }
 
         if ( FALSE !== $fullsizepath && @file_exists( $fullsizepath ) ) {
-            set_time_limit( 60 );
+            // Allow more time for large images or sites with many registered sizes.
+            @set_time_limit( 300 );
             $updated_metadata = $this->custom_metadata( $id, $fullsizepath, $image_sizes_to_be_generated );
-            $status = wp_update_attachment_metadata( $id, $updated_metadata );
-            $result = array( 'content'	=> $status,);
-            wp_send_json_success($result);
+            $status           = wp_update_attachment_metadata( $id, $updated_metadata );
+            wp_send_json_success( array( 'content' => $status ) );
+        } else {
+            wp_send_json_error( array( 'content' => __( 'Source file not found.', 'nexter-extension' ) ) );
         }
 	}
 
@@ -78,17 +88,16 @@ class Nexter_Ext_Image_Size {
 		}
 
         $output = array();
-		$args = array (
-			'post_type'=>'attachment',
-			'numberposts'=>null,
-			'post_status'=>null,
-			'posts_per_page'=> -1,
-			'fields' => 'ids',
-			'post_mime_type' => array( 'image/jpeg', 'image/gif', 'image/png', 'image/bmp', 'image/tiff', 'image/x-icon' ),
+		$args = array(
+			'post_type'      => 'attachment',
+			'post_status'    => 'inherit',   // Fix: was null; attachments use 'inherit' status.
+			'posts_per_page' => -1,
+			'fields'         => 'ids',       // Return IDs only — fast, low memory.
+			'post_mime_type' => array( 'image/jpeg', 'image/jpg', 'image/gif', 'image/png', 'image/bmp', 'image/tiff', 'image/x-icon' ),
         );
-		$attachments = get_posts ($args);
-		$output ['attachment_ids'] = $attachments;
-		$output['total_images_to_regenerate'] = count($output['attachment_ids']);
+		$attachments                          = get_posts( $args );
+		$output['attachment_ids']             = $attachments;
+		$output['total_images_to_regenerate'] = count( $attachments );
 
 		wp_send_json_success(
 			array(
@@ -131,9 +140,11 @@ class Nexter_Ext_Image_Size {
 		if( !empty( $custom_sizes ) && !empty($enable_custom_size) ){
 			foreach($custom_sizes as $cs){
 				if ($cs['crop'] == 0 ){
-					$cs['crop'] == false;
+					// Fix: was == (comparison, result discarded); must be = (assignment).
+					$cs['crop'] = false;
 				}else if ($cs['crop'] == 1 ) {
-					$cs['crop'] == true;
+					// Fix: was == (comparison, result discarded); must be = (assignment).
+					$cs['crop'] = true;
 				} else {
 					$crop_name = $this->get_image_crop_name($cs['crop']);{
 						if(isset($crop_name['x']) && isset($crop_name['y'])){
@@ -153,7 +164,8 @@ class Nexter_Ext_Image_Size {
 		}
 	}
 
-	public function nexter_manage_image_sizes( $sizes ){
+	// Fix: removed unused $sizes parameter — this is an action callback, not a filter.
+	public function nexter_manage_image_sizes(){
 		$disabled_is = array();
         $get_performance = Nxt_Options::performance();
         if(!empty($get_performance) && isset($get_performance['disabled-image-sizes']) && isset($get_performance['disabled-image-sizes']['switch']) && !empty($get_performance['disabled-image-sizes']['switch']) && isset($get_performance['disabled-image-sizes']['values'])){
@@ -171,26 +183,42 @@ class Nexter_Ext_Image_Size {
 		}
 	}
 
-    function custom_metadata( $thumbnail_id, $thumbnail, $image_sizes_to_be_generated = NULL ) {
-        $attachment = get_post( $thumbnail_id );
+	/**
+	 * Build attachment metadata, regenerating only the requested sizes (or all if none specified).
+	 *
+	 * @param int    $thumbnail_id                 Attachment ID.
+	 * @param string $thumbnail                    Full path to the original image.
+	 * @param array  $image_sizes_to_be_generated  Size names to regenerate; empty = regenerate all.
+	 * @return array Attachment metadata array.
+	 */
+    function custom_metadata( $thumbnail_id, $thumbnail, $image_sizes_to_be_generated = array() ) {
+        $attachment         = get_post( $thumbnail_id );
         $thumbnail_metadata = array();
         if ( preg_match( '!^image/!', get_post_mime_type( $attachment ) ) && file_is_displayable_image( $thumbnail ) ) {
             $imagesize = getimagesize( $thumbnail );
-            $thumbnail_metadata['width'] = $imagesize[0];
+            $thumbnail_metadata['width']  = $imagesize[0];
             $thumbnail_metadata['height'] = $imagesize[1];
             list($uwidth, $uheight) = wp_constrain_dimensions($thumbnail_metadata['width'], $thumbnail_metadata['height'], 128, 96);
             $thumbnail_metadata['hwstring_small'] = sprintf( "height='%s' width='%s'", $uheight, $uwidth );
             $thumbnail_metadata['file'] = _wp_relative_upload_path( $thumbnail );
+
+            // Pre-load existing size metadata so sizes not being regenerated are preserved intact.
+            $existing_metadata           = wp_get_attachment_metadata( $thumbnail_id );
+            $thumbnail_metadata['sizes'] = ( ! empty( $existing_metadata['sizes'] ) && is_array( $existing_metadata['sizes'] ) )
+                ? $existing_metadata['sizes']
+                : array();
+
             $sizes = $this->image_sizes();
             foreach ( $sizes as $size => $size_data ) {
-                if( isset( $image_sizes_to_be_generated ) && ! in_array( $size, $image_sizes_to_be_generated ) ) {
-                    $intermediate_size = image_get_intermediate_size( $thumbnail_id, $size_data['name'] );
+                // Fix: was isset($image_sizes_to_be_generated) which is ALWAYS true (even for array()).
+                // Use !empty() instead: when list is empty → regenerate all; when non-empty → skip sizes not listed.
+                if ( ! empty( $image_sizes_to_be_generated ) && ! in_array( $size, $image_sizes_to_be_generated ) ) {
+                    // Not in the requested list — existing metadata already loaded above; nothing to do.
+                    continue;
                 }
-                else {
-                    $intermediate_size = image_make_intermediate_size( $thumbnail, $size_data['width'], $size_data['height'], $size_data['crop'] );
-                }
+                $intermediate_size = image_make_intermediate_size( $thumbnail, $size_data['width'], $size_data['height'], $size_data['crop'] );
                 if ( $intermediate_size ) {
-                    $thumbnail_metadata['sizes'][$size] = $intermediate_size;
+                    $thumbnail_metadata['sizes'][ $size ] = $intermediate_size;
                 }
             }
             $image_meta = wp_read_image_metadata( $thumbnail );
@@ -201,46 +229,72 @@ class Nexter_Ext_Image_Size {
         return apply_filters( 'wp_generate_attachment_metadata', $thumbnail_metadata, $thumbnail_id );
     }
 
+	/**
+	 * Return all registered image sizes with their dimensions.
+	 *
+	 * Result is cached per request so repeated calls within one AJAX handler (e.g. when
+	 * processing many attachments in a loop) never re-query the database.
+	 *
+	 * @return array Keyed by size name: { name, width, height, crop }.
+	 */
     function image_sizes() {
+        // Return cached result to avoid repeated DB queries.
+        if ( null !== $this->cached_image_sizes ) {
+            return $this->cached_image_sizes;
+        }
+
+        // wp_get_registered_image_subsizes() (WP 5.3+) replaces multiple get_option() calls
+        // per size with a single, internally-cached read — much faster for large size lists.
+        if ( function_exists( 'wp_get_registered_image_subsizes' ) ) {
+            $registered = wp_get_registered_image_subsizes();
+            $sizes      = array();
+            foreach ( $registered as $size_name => $size_data ) {
+                $sizes[ $size_name ] = array(
+                    'name'   => $size_name,
+                    'width'  => isset( $size_data['width'] )  ? (int) $size_data['width']  : 0,
+                    'height' => isset( $size_data['height'] ) ? (int) $size_data['height'] : 0,
+                    'crop'   => isset( $size_data['crop'] )   ? $size_data['crop']          : false,
+                );
+            }
+            $sizes                    = apply_filters( 'intermediate_image_sizes_advanced', $sizes );
+            $this->cached_image_sizes = $sizes;
+            return $sizes;
+        }
+
+        // Fallback for WP < 5.3: build from global and per-option DB reads.
         global $_wp_additional_image_sizes;
         $sizes = array();
         foreach ( get_intermediate_image_sizes() as $size ) {
             $sizes[$size] = array(
-                'name'   => '',
+                'name'   => $size,
                 'width'  => '',
                 'height' => '',
-                'crop'   => FALSE
+                'crop'   => false,
             );
-            $sizes[$size]['name'] = $size;
             if ( isset( $_wp_additional_image_sizes[$size]['width'] ) ) {
                 $sizes[$size]['width'] = intval( $_wp_additional_image_sizes[$size]['width'] );
-            }
-            else {
+            } else {
                 $sizes[$size]['width'] = get_option( "{$size}_size_w" );
             }
 
             if ( isset( $_wp_additional_image_sizes[$size]['height'] ) ) {
                 $sizes[$size]['height'] = intval( $_wp_additional_image_sizes[$size]['height'] );
-            }
-            else {
+            } else {
                 $sizes[$size]['height'] = get_option( "{$size}_size_h" );
             }
 
             if ( isset( $_wp_additional_image_sizes[$size]['crop'] ) ) {
-                if( ! is_array( $sizes[$size]['crop'] ) ) {
+                if ( ! is_array( $sizes[$size]['crop'] ) ) {
                     $sizes[$size]['crop'] = intval( $_wp_additional_image_sizes[$size]['crop'] );
-                }
-                else {
+                } else {
                     $sizes[$size]['crop'] = $_wp_additional_image_sizes[$size]['crop'];
                 }
-            }
-            else {
+            } else {
                 $sizes[$size]['crop'] = get_option( "{$size}_crop" );
             }
         }
-
-        $sizes = apply_filters( 'intermediate_image_sizes_advanced', $sizes );
-
+        $sizes                    = apply_filters( 'intermediate_image_sizes_advanced', $sizes );
+        $this->cached_image_sizes = $sizes;
         return $sizes;
     }
 

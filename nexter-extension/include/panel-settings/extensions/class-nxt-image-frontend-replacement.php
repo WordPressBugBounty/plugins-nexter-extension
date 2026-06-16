@@ -129,7 +129,9 @@ class Nxt_Image_Frontend_Replacement {
 
 		$new_url = false;
 
-		// Check for optimised versions (prefer AVIF, fallback to WebP, then original format in nexter-optimizer/uploads)
+		// Check for optimised versions (prefer AVIF for AVIF-capable browsers, fallback to WebP, then original).
+		// Smart mode keeps BOTH .avif and .webp on disk — we always prefer AVIF when the browser supports it,
+		// regardless of which format was stored as the "primary" in attachment metadata.
 		if ( self::$browser_support['avif'] && file_exists( $opt_base . '.avif' ) ) {
 			$new_url = $this->parent->get_output_url( $abs ) . '.avif';
 		} elseif ( self::$browser_support['webp'] && file_exists( $opt_base . '.webp' ) ) {
@@ -244,15 +246,48 @@ class Nxt_Image_Frontend_Replacement {
 		$original_rel_path = preg_replace( '/\.(webp|avif)$/i', '', $rel_path );
 
 		$opt_abs_path = wp_normalize_path( WP_CONTENT_DIR . '/nexter-optimizer/uploads/' . $rel_path );
+
 		if ( ! file_exists( $opt_abs_path ) ) {
+			// Optimised file gone: revert src to original upload URL.
 			$original_url = $upload_dir['baseurl'] . '/' . $original_rel_path;
 			$tag = str_replace( $optimized_url, $original_url, $tag );
-
 			$tag = preg_replace_callback(
 				'/srcset=["\']([^"\']+)["\']/i',
 				array( $this, 'revert_srcset_urls' ),
 				$tag
 			);
+			return $tag;
+		}
+
+		// File exists — but browser may not support this format (e.g. .avif served to a WebP-only browser).
+		// Initialise browser support detection if not done yet (Admin pages skip this normally, but the
+		// output buffer can fire on any request).
+		if ( null === self::$browser_support ) {
+			$accept = isset( $_SERVER['HTTP_ACCEPT'] ) ? (string) $_SERVER['HTTP_ACCEPT'] : '';
+			self::$browser_support = array(
+				'avif' => ( strpos( $accept, 'image/avif' ) !== false ),
+				'webp' => ( strpos( $accept, 'image/webp' ) !== false ),
+			);
+		}
+
+		// If an AVIF URL was injected (e.g. via filter_attachment_url) but the browser doesn't support AVIF,
+		// try to serve the companion WebP (Smart mode keeps both) or fall back to the original.
+		if ( 'avif' === $format && ! self::$browser_support['avif'] ) {
+			$base_no_ext = preg_replace( '/\.avif$/i', '', $opt_abs_path );
+			$webp_abs    = $base_no_ext . '.webp';
+			if ( self::$browser_support['webp'] && file_exists( $webp_abs ) ) {
+				$webp_url = preg_replace( '/\.avif(\?|$)/i', '.webp$1', $optimized_url );
+				$tag = str_replace( $optimized_url, $webp_url, $tag );
+			} else {
+				// No WebP available (or browser doesn't support it): serve original.
+				$original_url = $upload_dir['baseurl'] . '/' . $original_rel_path;
+				$tag = str_replace( $optimized_url, $original_url, $tag );
+				$tag = preg_replace_callback(
+					'/srcset=["\']([^"\']+)["\']/i',
+					array( $this, 'revert_srcset_urls' ),
+					$tag
+				);
+			}
 		}
 
 		return $tag;

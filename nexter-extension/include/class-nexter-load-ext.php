@@ -334,11 +334,22 @@ if ( ! class_exists( 'Nexter_Extensions_Load' ) ) {
 		}
 		
 		/**
+		 * Whether MCP abilities have been bootstrapped.
+		 *
+		 * @var bool
+		 */
+		private static $mcp_abilities_bootstrapped = false;
+
+		/**
 		 * Load Nexter Extension MCP abilities when the Abilities API is available.
 		 *
 		 * @return void
 		 */
 		private function maybe_load_mcp_abilities() {
+			if ( self::$mcp_abilities_bootstrapped ) {
+				return;
+			}
+
 			if ( ! function_exists( 'wp_register_ability' ) ) {
 				return;
 			}
@@ -348,6 +359,7 @@ if ( ! class_exists( 'Nexter_Extensions_Load' ) ) {
 			if ( empty( $mcp_option ) || 'enable' === $mcp_ability_value ) {
 				require_once NEXTER_EXT_DIR . 'include/abilities/class-nxt-mcp-abilities.php';
 				Nxt_MCP_Abilities::instance();
+				self::$mcp_abilities_bootstrapped = true;
 			}
 		}
 
@@ -421,6 +433,49 @@ if ( ! class_exists( 'Nexter_Extensions_Load' ) ) {
 			require_once NEXTER_EXT_DIR . 'include/nexter-template/nexter-post-type-compatibility.php';
 		}
 
+		/**
+		 * Whether the current admin screen is for the theme builder CPT.
+		 *
+		 * get_post_type() without a post ID is unreliable during admin_enqueue_scripts
+		 * because global $post is often unset (notably on WP 7+ block editor screens).
+		 *
+		 * @param string $hook_suffix Current admin page hook.
+		 * @return bool
+		 */
+		private function is_nxt_builder_admin_screen( $hook_suffix ) {
+			$post_type = defined( 'NXT_BUILD_POST' ) ? NXT_BUILD_POST : 'nxt_builder';
+
+			if ( ! in_array( $hook_suffix, array( 'post.php', 'post-new.php', 'edit.php' ), true ) ) {
+				return false;
+			}
+
+			if ( 'edit.php' === $hook_suffix || 'post-new.php' === $hook_suffix ) {
+				if ( isset( $_GET['post_type'] ) ) {
+					return sanitize_key( wp_unslash( $_GET['post_type'] ) ) === $post_type;
+				}
+				return false;
+			}
+
+			if ( 'post.php' === $hook_suffix && ! empty( $_GET['post'] ) ) {
+				$post_id = absint( $_GET['post'] );
+				if ( $post_id ) {
+					return get_post_type( $post_id ) === $post_type;
+				}
+			}
+
+			$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
+			if ( $screen && ! empty( $screen->post_type ) ) {
+				return $screen->post_type === $post_type;
+			}
+
+			global $post;
+			if ( $post instanceof WP_Post ) {
+				return $post->post_type === $post_type;
+			}
+
+			return get_post_type() === $post_type;
+		}
+
 		public function enqueue_scripts_admin( $hook_suffix ){
 			$minified = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
 
@@ -429,16 +484,16 @@ if ( ! class_exists( 'Nexter_Extensions_Load' ) ) {
 			// - Pages where Nexter admin notices are active (dismiss handlers)
 			// - Media library (image optimization notice)
 			$needs_admin_js = $this->has_admin_notices
-				|| ( get_post_type() === 'nxt_builder' && in_array( $hook_suffix, array( 'post.php', 'post-new.php', 'edit.php' ), true ) )
+				|| $this->is_nxt_builder_admin_screen( $hook_suffix )
 				|| 'upload.php' === $hook_suffix;
-
+			
 			if ( $needs_admin_js ) {
 				wp_enqueue_script( 'nexter-ext-builder-js', NEXTER_EXT_URL .'assets/js/admin/nexter-ext-admin'.$minified.'.js', array(), NEXTER_EXT_VER, true );
 			}
 
 			$user = wp_get_current_user();
             $allowed_roles = array( 'administrator' );
-			if( defined('NEXTER_EXT') && get_post_type() == 'nxt_builder' && ('post.php' == $hook_suffix || 'edit.php' == $hook_suffix || 'post-new.php' == $hook_suffix) && !empty($user) && isset($user->roles) && array_intersect( $allowed_roles, $user->roles ) ){
+			if( defined('NEXTER_EXT') && $this->is_nxt_builder_admin_screen( $hook_suffix ) && !empty($user) && isset($user->roles) && array_intersect( $allowed_roles, $user->roles ) ){
 
 				/* Edit Page Side Edit Condition Button Enqueue */
 				// Security: Sanitize input
@@ -765,7 +820,7 @@ if ( ! class_exists( 'Nexter_Extensions_Load' ) ) {
 		 * Wdesignkit Preset Load templates Elementor Builder
 		 */
 		public function nxt_elementor_wdk_preset_script( $hook_suffix ){
-			if(('edit.php' === $hook_suffix && isset( $_GET['post_type'] ) && $_GET['post_type'] === 'nxt_builder') || get_post_type() == 'nxt_builder' ){
+			if ( $this->is_nxt_builder_admin_screen( $hook_suffix ) ) {
 				$wdkPlugin = false;
 				$wdkVersion = '';
 				$wdkactivate = false;

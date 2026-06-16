@@ -900,6 +900,7 @@ th.sortable a span, th.sorted a span {
 .my-ccs-class{
     margin: 0% 0% 0% -21%; 
     font-size: 13px;
+    min-height: 30px !important;
 }
 .nexter-input-box-button-svg{
     width: 12px;

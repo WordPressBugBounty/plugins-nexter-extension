@@ -699,6 +699,10 @@ class Nxt_Panel_Ajax_Router {
 
         if ( isset( $option[ $data ] ) && is_object( $option[ $data ] ) ) {
             $option[ $data ] = (array) $option[ $data ];
+        } elseif ( ! isset( $option[ $data ] ) || ! is_array( $option[ $data ] ) ) {
+            // Scalar/string DB values (e.g. legacy "1") cannot hold a 'switch' key —
+            // reset to an empty array so the assignment below works correctly.
+            $option[ $data ] = array();
         }
 
         $option[ $data ]['switch'] = $is_active;

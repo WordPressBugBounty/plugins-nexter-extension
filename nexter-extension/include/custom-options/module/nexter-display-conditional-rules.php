@@ -169,8 +169,17 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 		 * @return bool
 		 */
 		private static function should_skip_template_record( $post_data, $old_layout = '', $selected_group = '' ) {
-			$build_status = isset( $post_data->nxt_build_status ) ? $post_data->nxt_build_status : '';
-			if ( 0 == $build_status && '' !== $build_status ) {
+			
+			if ( is_object( $post_data ) && property_exists( $post_data, 'nxt_build_status' ) ) {
+				$build_status = $post_data->nxt_build_status;
+			} elseif ( is_object( $post_data ) && isset( $post_data->ID ) ) {
+				$build_status = get_post_meta( $post_data->ID, 'nxt_build_status', true );
+			} else {
+				$build_status = '';
+			}
+
+			// Exactly "0" means disabled; null / empty / unset means enabled (default).
+			if ( null !== $build_status && '' !== $build_status && 0 == $build_status ) {
 				return true;
 			}
 

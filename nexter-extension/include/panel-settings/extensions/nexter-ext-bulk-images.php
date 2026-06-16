@@ -263,15 +263,11 @@ class Nexter_Ext_Bulk_Images {
 					</div> -->
 					<div class="nxt-bulk-stat-card nxt-bulk-monthly-usage-card">
 						<div class="nxt-bulk-stat-content">
-							<span class="nxt-bulk-stat-label" style="display: flex; align-items: center; gap: 5px;"><?php esc_html_e( 'Monthly Usage', 'nexter-extension' ); ?><div class='nxtext_tooltip'>
-                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M12.48 7A5.48 5.48 0 1 1 1.52 7 5.48 5.48 0 0 1 12.48 7z" stroke="#1A1A1A" stroke-width="0.705882" stroke-linecap="round" stroke-linejoin="round" />
-                      <path d="M7 9.333V7" stroke="#1A1A1A" stroke-width="0.705882" stroke-linecap="round" stroke-linejoin="round" />
-                      <path d="M7 4.666h.006" stroke="#1A1A1A" stroke-width="0.705882" stroke-linecap="round" stroke-linejoin="round" />
-                    </svg>
-                    <span class="nxtext_tooltiptext"><?php echo ( $is_pro ) ? esc_html__( 'You have unlimited image optimization credits with Nexter Pro.', 'nexter-extension' ) :
+							<span class="nxt-bulk-stat-label" style="display: flex; align-items: center; gap: 5px;"><?php esc_html_e( 'Monthly Usage', 'nexter-extension' ); ?><div class='nxp-tooltip-wrap' data-position="top">
+							<span class="nxp-ftc__info-icon" tabindex="0" role="button" aria-label="About Disable Admin Settings"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><circle cx="7" cy="7" r="6.25" stroke="currentColor" stroke-width="1.5"></circle><path d="M7 6.5v3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path><circle cx="7" cy="4.25" r="0.875" fill="currentColor"></circle></svg></span>
+                    <div class="nxp-tooltip"><?php echo ( $is_pro ) ? esc_html__( 'You have unlimited image optimization credits with Nexter Pro.', 'nexter-extension' ) :
 								/* translators: %d: Monthly image optimisation credit limit */
-								sprintf( esc_html__( 'Free version includes %d image optimization credits per month. This resets at the start of each month.', 'nexter-extension' ), (int) $monthly_limit ); ?></span>
+								sprintf( esc_html__( 'Free version includes %d image optimization credits per month. This resets at the start of each month.', 'nexter-extension' ), (int) $monthly_limit ); ?></div>
                   </div></span>
 							<span class="nxt-bulk-stat-value" id="nxt-bulk-stat-monthly-usage"><?php echo esc_html( $monthly_usage ); ?></span>
 							<?php /* if ( ! $is_pro && $resets_in_days > 0 ) : ?>

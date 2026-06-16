@@ -23,6 +23,13 @@ class Nxt_MCP_Abilities {
 	private static $instance;
 
 	/**
+	 * Whether abilities API hooks have been registered.
+	 *
+	 * @var bool
+	 */
+	private static $hooks_registered = false;
+
+	/**
 	 * Gets the singleton instance of the class.
 	 *
 	 * @return Nxt_MCP_Abilities
@@ -40,12 +47,18 @@ class Nxt_MCP_Abilities {
 	 * Initializes MCP abilities if enabled in the plugin options and hooks
 	 * registration callbacks into the abilities API.
 	 */
-	public function __construct() {
+	private function __construct() {
 		$mcp_option        = get_option( 'tpgb_connection_data', array() );
 		$mcp_ability_value = isset( $mcp_option['nxt_enable_mcp_abilities'] ) ? $mcp_option['nxt_enable_mcp_abilities'] : 'enable';
 		if ( 'enable' !== $mcp_ability_value ) {
 			return;
 		}
+
+		if ( self::$hooks_registered ) {
+			return;
+		}
+
+		self::$hooks_registered = true;
 
 		add_action( 'wp_abilities_api_categories_init', array( $this, 'register_categories' ) );
 		add_action( 'wp_abilities_api_init', array( $this, 'register_abilities' ) );
@@ -57,6 +70,10 @@ class Nxt_MCP_Abilities {
 	 * @return void
 	 */
 	public function register_categories(): void {
+		if ( function_exists( 'wp_get_ability_category' ) && wp_get_ability_category( 'nexter-extension' ) ) {
+			return;
+		}
+
 		wp_register_ability_category(
 			'nexter-extension',
 			array(

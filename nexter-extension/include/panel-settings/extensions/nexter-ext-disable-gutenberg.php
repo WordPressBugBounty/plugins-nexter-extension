@@ -6,80 +6,97 @@
 defined('ABSPATH') or die();
 
  class Nexter_Ext_Disable_Gutenberg {
-    
+
     public static $post_type_opt = [];
 
-    /**
-     * Constructor
-     */
     public function __construct() {
         $this->nxt_get_disable_gutenberg_settings();
-        add_action( 'admin_init', [$this, 'disable_gutenberg_for_post_types_admin'] );
-        add_action( 'admin_print_styles', [$this, 'safari_18_fix'] );
-        
-        if ( isset(self::$post_type_opt->frontend_style) && self::$post_type_opt->frontend_style === true ) {
-            add_action( 'wp_enqueue_scripts', [$this, 'disable_gutenberg_frontend_style'], 100 );
+
+        // Register both block-editor filters in the constructor so they are always
+        // present when WordPress applies them — no dependency on $pagenow/$typenow.
+        add_filter( 'use_block_editor_for_post_type', [ $this, 'maybe_disable_block_editor' ], 100, 2 );
+
+        // Gutenberg plugin hook removal must still run at admin_init (before admin_menu fires).
+        add_action( 'admin_init', [ $this, 'maybe_remove_gutenberg_hooks' ] );
+        add_action( 'admin_print_styles', [ $this, 'safari_18_fix' ] );
+
+        if ( isset( self::$post_type_opt->frontend_style ) && true === self::$post_type_opt->frontend_style ) {
+            add_action( 'wp_enqueue_scripts', [ $this, 'disable_gutenberg_frontend_style' ], 100 );
         }
     }
 
-    private function nxt_get_disable_gutenberg_settings(){
-        
-		if(isset(self::$post_type_opt) && !empty(self::$post_type_opt)){
-			return self::$post_type_opt;
-		}
-
-		$option = Nxt_Options::extra_ext();
-		
-		if(!empty($option) && isset($option['disable-gutenberg']) && !empty($option['disable-gutenberg']['switch']) && !empty($option['disable-gutenberg']['values']) ){
-			self::$post_type_opt = $option['disable-gutenberg']['values'];
-		}
-        
-	}
- 
-    /**
-     * Disable Gutenberg in wp-admin for some or all post types
-     *
-     * @since 2.8.0
-     */
-    public function disable_gutenberg_for_post_types_admin() {
-        if (!is_admin()) return;
-
-        global $pagenow, $typenow;
-        $post_type = null;
-        if ( 'edit.php' === $pagenow ) {
-            $post_type = $typenow;
-        } elseif ( 'post.php' === $pagenow ) {
-            $post_type = ( isset( $_GET['post'] ) ? get_post_type( sanitize_text_field(wp_unslash($_GET['post'])) ) : 'post' );
-        } elseif ( 'post-new.php' === $pagenow ) {
-            $post_type = ( isset( $_GET['post_type'] ) ? sanitize_text_field(wp_unslash($_GET['post_type'])) : 'post' );
+    private function nxt_get_disable_gutenberg_settings() {
+        if ( isset( self::$post_type_opt ) && ! empty( self::$post_type_opt ) ) {
+            return self::$post_type_opt;
         }
-        
-        if (!$post_type) return;
+        $option = Nxt_Options::extra_ext();
+        if ( ! empty( $option ) && isset( $option['disable-gutenberg'] )
+            && ! empty( $option['disable-gutenberg']['switch'] )
+            && ! empty( $option['disable-gutenberg']['values'] ) ) {
+            self::$post_type_opt = (object) $option['disable-gutenberg']['values'];
+        }
+    }
 
-        $gutenberg = function_exists( 'gutenberg_register_scripts_and_styles' );
-        
-        $block_editor = has_action( 'enqueue_block_assets' );
-        if ( !$gutenberg && false === $block_editor ) {
+    /**
+     * Filter: use_block_editor_for_post_type — disable by post type.
+     */
+    public function maybe_disable_block_editor( $use_block_editor, $post_type ) {
+        if ( ! $this->should_disable_for_post_type( $post_type ) ) {
+            return $use_block_editor;
+        }
+        return false;
+    }
+
+    /**
+     * Returns true when the block editor should be suppressed for the given post type.
+     */
+    private function should_disable_for_post_type( $post_type ) {
+        if ( empty( self::$post_type_opt ) ) {
+            return false;
+        }
+        $disable_type = isset( self::$post_type_opt->type ) ? self::$post_type_opt->type : 'only-on';
+        $posts        = isset( self::$post_type_opt->posts ) ? (array) self::$post_type_opt->posts : [];
+
+        switch ( $disable_type ) {
+            case 'all-post-types':
+                return true;
+            case 'except-on':
+                // Guard: if no post types are selected, disable nothing.
+                return ! empty( $posts ) && ! in_array( $post_type, $posts, true );
+            case 'only-on':
+            default:
+                return ! empty( $posts ) && in_array( $post_type, $posts, true );
+        }
+    }
+
+    /**
+     * admin_init: remove Gutenberg plugin hooks when the plugin is active and the
+     * editor should be suppressed for the current screen's post type.
+     * Must run at admin_init because admin_menu fires before the page script takes over.
+     */
+    public function maybe_remove_gutenberg_hooks() {
+        if ( ! is_admin() || ! function_exists( 'gutenberg_register_scripts_and_styles' ) ) {
             return;
         }
 
-        $disable_gutenberg_type = 'only-on';
-
-        $disable_type = 'only-on';
-        $disable = (
-            ($disable_type === 'only-on' && !empty(self::$post_type_opt) && isset(self::$post_type_opt->posts) && in_array($post_type, self::$post_type_opt->posts, true)) ||
-            ($disable_type === 'except-on' && !empty(self::$post_type_opt) && isset(self::$post_type_opt->posts) && !in_array($post_type, self::$post_type_opt->posts, true)) ||
-            $disable_type === 'all-post-types'
-        );
-
-        if (!$disable) return;
-
-        add_filter('use_block_editor_for_post_type', '__return_false', 100);
-
-        if (function_exists('gutenberg_register_scripts_and_styles')) {
-            add_filter('gutenberg_can_edit_post_type', '__return_false', 100);
-            $this->remove_all_gutenberg_hooks();
+        global $pagenow;
+        $post_type = null;
+        if ( 'post.php' === $pagenow ) {
+            $post_type = isset( $_GET['post'] )
+                ? get_post_type( absint( wp_unslash( $_GET['post'] ) ) )
+                : 'post';
+        } elseif ( 'post-new.php' === $pagenow ) {
+            $post_type = isset( $_GET['post_type'] )
+                ? sanitize_text_field( wp_unslash( $_GET['post_type'] ) )
+                : 'post';
         }
+
+        if ( ! $post_type || ! $this->should_disable_for_post_type( $post_type ) ) {
+            return;
+        }
+
+        add_filter( 'gutenberg_can_edit_post_type', '__return_false', 100 );
+        $this->remove_all_gutenberg_hooks();
     }
 
     private function remove_all_gutenberg_hooks() {
@@ -145,12 +162,15 @@ defined('ABSPATH') or die();
             return;
         }
 
-        $disable_gutenberg_type = 'only-on'; // You can set this dynamically if needed
+        // Read the saved mode; fall back to 'only-on' for sites that haven't set one yet.
+        $disable_gutenberg_type = ( ! empty( self::$post_type_opt ) && isset( self::$post_type_opt->type ) )
+            ? self::$post_type_opt->type
+            : 'only-on';
         $post_type = $post->post_type;
 
         $should_disable = (
-            ($disable_gutenberg_type === 'only-on' && in_array($post_type, self::$post_type_opt->posts, true)) ||
-            ($disable_gutenberg_type === 'except-on' && !in_array($post_type, self::$post_type_opt->posts, true)) ||
+            ($disable_gutenberg_type === 'only-on' && !empty(self::$post_type_opt->posts) && in_array($post_type, self::$post_type_opt->posts, true)) ||
+            ($disable_gutenberg_type === 'except-on' && !empty(self::$post_type_opt->posts) && !in_array($post_type, self::$post_type_opt->posts, true)) ||
             ($disable_gutenberg_type === 'all-post-types')
         );
 

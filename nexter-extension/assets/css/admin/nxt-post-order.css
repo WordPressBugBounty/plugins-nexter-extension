@@ -17,13 +17,13 @@ ul.nxt-cpt-sortable li {
     list-style: none;
 }
 .sortable-chosen {
-    background: var(--nxtext-light-blue);
+    background: #e2e9ff;
     list-style: none;
 }
 .nxt-cpt-page-item {
     padding: 12px;
     background: #fff;
-    border: 1px solid var(--nxtext-toggle-off-bg);
+    border: 1px solid #d1d1d6;
     border-radius: 4px;
     margin-block: 8px;
     display: flex;
@@ -33,12 +33,12 @@ ul.nxt-cpt-sortable li {
     cursor: grab;
 }
 .nxt-cpt-page-item:hover {
-    background: var(--nxtext-light-blue);
+    background: #e2e9ff;
 }
 
 .nxt-cpt-handle {
     padding: 0 4px;
-    color: var(--nxtext-gray-primary-normal);
+    color: #666;
 }
 
 .nxt-cpt-title {
@@ -50,7 +50,7 @@ ul.nxt-cpt-sortable li {
     font-size: 12px;
     font-weight: 400;
     font-style: italic;
-    color: var(--nxtext-gray-primary-normal);
+    color: #666;
     margin-left: 8px;
 }
 

@@ -1,9 +1,9 @@
 === Nexter Extension - Security, Performance, Code Snippets & Site Toolkit ===
 Contributors: posimyththemes, nirmalkavaiya, sagarpatel124
 Tags: security, elementor, theme-builder, code-snippet, image-optimizer
-Requires at least: 4.0
+Requires at least: 5.0
 Tested up to: 7.0
-Stable tag: 4.6.11
+Stable tag: 4.6.12
 Requires PHP: 7.4
 License: GPLv3
 License URI: https://opensource.org/licenses/GPL-3.0
@@ -219,6 +219,12 @@ Yes. [Compare Free vs Pro →](https://nexterwp.com/free-vs-pro/#Nexter-Extensio
 == Changelog ==
 
 ### View Complete Changelog at [roadmap.nexterwp.com](https://roadmap.nexterwp.com/updates?filter=Nexter+Extension+-+FREE)
+
+= V4.6.12 = 16 June 2026
+- Improve : Dashboard : Converted dashboard modules to a component-based structure for improved maintainability and scalability
+- Fixed : Custom Upload Font : TTF, Woff2 , Woff compatibility Upload file
+- Fixed : Image Optimisation : Improve Image optimization
+- Fixed : Bug Fixes and Improvements
 
 = V4.6.11 = 28 May 2026
 - New : MCP Abilities : 26 Added WordPress Abilities API integration for templates, snippets, extensions, SMTP, security, performance, image optimization, and custom fonts.

@@ -151,16 +151,20 @@ class Nexter_Ext_Extra_Settings {
 	public function nxt_check_file_ext($types, $file, $filename, $mimes) {
 		
 		if (false !== strpos($filename, '.ttf')) {
-			$types['ext'] = 'ttf';
-			$types['type'] = 'application/x-font-ttf';
+			$types['ext']  = 'ttf';
+			$types['type'] = 'font/ttf';
 		}
 		if (false !== strpos($filename, '.otf')) {
 			$types['ext'] = 'otf';
 			$types['type'] = 'font/otf';
 		}
+		if (false !== strpos($filename, '.woff') && false === strpos($filename, '.woff2')) {
+			$types['ext']  = 'woff';
+			$types['type'] = 'font/woff';
+		}
 		if (false !== strpos($filename, '.woff2')) {
-			$types['ext'] = 'woff2';
-			$types['type'] = 'font/woff2|application/octet-stream|font/x-woff2';
+			$types['ext']  = 'woff2';
+			$types['type'] = 'font/woff2';
 		}
 
 		return $types;
@@ -171,8 +175,9 @@ class Nexter_Ext_Extra_Settings {
 	 * @since 1.1.0 
 	 */
 	public function nxt_allow_mime_types( $mimes ) {
-		$mimes['ttf'] = 'application/x-font-ttf|font/ttf';
-		$mimes['otf'] = 'font/otf';
+		$mimes['ttf']   = 'application/x-font-ttf|font/ttf';
+		$mimes['otf']   = 'font/otf';
+		$mimes['woff']  = 'font/woff';
 		$mimes['woff2'] = 'font/woff2|application/octet-stream|font/x-woff2';
 		
 		return $mimes;

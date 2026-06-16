@@ -382,7 +382,7 @@ if ( ! class_exists( 'Nxt_Ext_Deactivate' ) ) {
                 #nxt-ext-deactive-modal .nxt-ext-modal-footer .nxt-ext-modal-submit {
                     background-color: #1717CC;
                     color: #fff;
-                    width: 150px
+                    width: 160px
                 }
 
                 #nxt-ext-deactive-modal .nxt-ext-modal-footer .nxt-ext-modal-deactive {
