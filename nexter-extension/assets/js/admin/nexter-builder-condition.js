@@ -648,7 +648,8 @@ class NexterBuilder {
                             cond_type.style.display = 'block';
                             cond_type.nextElementSibling.style.display = 'block';
                             var data = {
-                                action: "nxt_singular_archives_filters_ajax"
+                                action: "nxt_singular_archives_filters_ajax",
+                                nexter_nonce: nexter_admin_config.ajax_nonce
                             };
                             data.data = '';
                             data.rules = $this;

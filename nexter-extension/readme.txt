@@ -3,7 +3,7 @@ Contributors: posimyththemes, nirmalkavaiya, sagarpatel124
 Tags: security, elementor, theme-builder, code-snippet, image-optimizer
 Requires at least: 5.0
 Tested up to: 7.0
-Stable tag: 4.6.12
+Stable tag: 4.6.13
 Requires PHP: 7.4
 License: GPLv3
 License URI: https://opensource.org/licenses/GPL-3.0
@@ -219,6 +219,19 @@ Yes. [Compare Free vs Pro →](https://nexterwp.com/free-vs-pro/#Nexter-Extensio
 == Changelog ==
 
 ### View Complete Changelog at [roadmap.nexterwp.com](https://roadmap.nexterwp.com/updates?filter=Nexter+Extension+-+FREE)
+
+= V4.6.13 = 22 June 2026
+- Fixed : Disable Gutenberg : "Except On" and "All Post Types" modes not disabling the block editor for selected post types
+- Fixed : Code Snippets : wp_head PHP snippet (e.g. Add Google Analytics Tracking Code) not loading on the frontend
+- Fixed : Code Snippets : JavaScript error when selecting a field in Conditional Logic
+- Fixed : Post Duplicate : Elementor content not copied correctly on duplicated pages
+- Fixed : Translate : Missing text-domain in Dashboard, Code Snippets and Theme Builder
+- Fixed : Dashboard : Responsive Mobile Devices
+- Fixed : Bug Fixes and Improvements
+
+= V4.6.13 = 17 June 2026
+- Fixed : Translate : Missing text-domain bug fix
+- Fixed : Bug Fixes and Improvements
 
 = V4.6.12 = 16 June 2026
 - Improve : Dashboard : Converted dashboard modules to a component-based structure for improved maintainability and scalability

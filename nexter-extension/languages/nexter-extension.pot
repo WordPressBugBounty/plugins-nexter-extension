@@ -2,14 +2,14 @@
 # This file is distributed under the GPLv3.
 msgid ""
 msgstr ""
-"Project-Id-Version: Nexter Extension 4.6.12\n"
+"Project-Id-Version: Nexter Extension 4.6.13\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/nexter-extension\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-06-15T07:55:51+02:00\n"
+"POT-Creation-Date: 2026-06-22T12:07:20+02:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: nexter-extension\n"
@@ -17,7 +17,7 @@ msgstr ""
 #. Plugin Name of the plugin
 #: nexter-extension.php
 #: include/abilities/class-nxt-mcp-abilities.php:80
-#: include/rollback.php:204
+#: include/rollback.php:199
 #: assets/js/admin/index.js:1
 #: dashboard/build/index.js:7
 msgid "Nexter Extension"
@@ -328,12 +328,11 @@ msgid "Nexter Extension free options cover the basics, but Pro takes it further 
 msgstr ""
 
 #: include/class-nexter-load-ext.php:708
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:7
 #: dashboard/build/index.js:1
 #: dashboard/build/index.js:7
 #: dashboard/build/index.js:9
 #: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:1075
 msgid "Upgrade Now"
 msgstr ""
 
@@ -374,7 +373,7 @@ msgstr ""
 #: include/panel-settings/class-nxt-panel-ajax-router.php:1126
 #: include/panel-settings/extensions/nexter-ext-image-sizes.php:85
 #: include/panel-settings/extensions/nexter-ext-local-google-font.php:374
-#: include/panel-settings/extensions/nexter-ext-post-duplicator.php:444
+#: include/panel-settings/extensions/nexter-ext-post-duplicator.php:449
 #: include/panel-settings/extensions/nexter-ext-replace-url.php:23
 #: include/panel-settings/extensions/nexter-ext-replace-url.php:112
 #: include/panel-settings/extensions/nexter-ext-rollback-manager.php:205
@@ -388,6 +387,61 @@ msgstr ""
 
 #: include/class-nexter-load-ext.php:783
 msgid "Invalid Notice ID"
+msgstr ""
+
+#: include/class-nexter-load-ext.php:867
+#: theme-builder/build/index.js:1
+msgid "Activate WDesignKit to Import Templates"
+msgstr ""
+
+#: include/class-nexter-load-ext.php:868
+#: theme-builder/build/index.js:1
+msgid "Install WDesignKit to Import Templates"
+msgstr ""
+
+#: include/class-nexter-load-ext.php:869
+#: assets/js/admin/index.js:1
+#: theme-builder/build/index.js:1
+msgid "Activating WDesignKit"
+msgstr ""
+
+#: include/class-nexter-load-ext.php:870
+#: assets/js/admin/index.js:1
+#: dashboard/build/index.js:9
+msgid "Installing WDesignKit"
+msgstr ""
+
+#: include/class-nexter-load-ext.php:871
+msgid "Failed to Install, Please Manual Install Plugin."
+msgstr ""
+
+#: include/class-nexter-load-ext.php:872
+#: theme-builder/build/index.js:1
+msgid "Import Pre-Designed Templates for Theme Builder"
+msgstr ""
+
+#: include/class-nexter-load-ext.php:873
+#: theme-builder/build/index.js:1
+msgid "Build your website faster with ready-to-use templates"
+msgstr ""
+
+#: include/class-nexter-load-ext.php:874
+#: theme-builder/build/index.js:1
+msgid "Fully customizable to match your brand and style"
+msgstr ""
+
+#: include/class-nexter-load-ext.php:875
+#: theme-builder/build/index.js:1
+msgid "Save time by avoiding repetitive design work"
+msgstr ""
+
+#: include/class-nexter-load-ext.php:876
+#: theme-builder/build/index.js:1
+msgid "Flexible layouts for headers, footers, pages, and more"
+msgstr ""
+
+#: include/class-nexter-load-ext.php:877
+msgid "Design from Scratch"
 msgstr ""
 
 #: include/classes/class-nexter-ext-base.php:110
@@ -795,7 +849,7 @@ msgid "Exception"
 msgstr ""
 
 #: include/classes/load-code-snippet/nexter-php-code-handling.php:1312
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Notice"
 msgstr ""
 
@@ -875,14 +929,12 @@ msgstr ""
 #: include/custom-options/nexter-builder-condition.php:686
 #: dashboard/build/index.js:7
 #: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:854
 msgid "All"
 msgstr ""
 
 #: include/classes/load-sections/nexter-sections-loader.php:117
 #: include/custom-options/class-nxt-builder-condition-ui.php:64
 #: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:286
 msgid "Sections"
 msgstr ""
 
@@ -892,8 +944,6 @@ msgstr ""
 #: include/custom-options/class-nxt-builder-condition-ui.php:60
 #: include/custom-options/nexter-builder-condition.php:120
 #: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:283
-#: theme-builder/build/index.js:802
 msgid "Header"
 msgstr ""
 
@@ -904,8 +954,6 @@ msgstr ""
 #: include/custom-options/nexter-builder-condition.php:122
 #: dashboard/build/index.js:7
 #: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:284
-#: theme-builder/build/index.js:807
 msgid "Footer"
 msgstr ""
 
@@ -914,7 +962,6 @@ msgstr ""
 #: include/custom-options/class-nxt-builder-condition-ui.php:62
 #: include/custom-options/nexter-builder-condition.php:124
 #: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:285
 msgid "Breadcrumb"
 msgstr ""
 
@@ -923,8 +970,6 @@ msgstr ""
 #: include/custom-options/class-nxt-builder-condition-ui.php:63
 #: include/custom-options/nexter-builder-condition.php:126
 #: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:289
-#: theme-builder/build/index.js:837
 msgid "Hooks"
 msgstr ""
 
@@ -967,7 +1012,6 @@ msgstr ""
 #: include/panel-settings/extensions/nexter-ext-bulk-images.php:288
 #: assets/js/admin/index.js:1
 #: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:308
 msgid "Status"
 msgstr ""
 
@@ -1005,15 +1049,12 @@ msgstr ""
 #: include/custom-options/nexter-builder-condition.php:132
 #: assets/js/admin/index.js:1
 #: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:290
-#: theme-builder/build/index.js:842
 msgid "404 Page"
 msgstr ""
 
 #: include/classes/load-sections/nexter-sections-loader.php:214
 #: include/custom-options/nexter-builder-condition.php:134
 #: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:817
 msgid "Section"
 msgstr ""
 
@@ -1310,7 +1351,7 @@ msgstr ""
 #: include/custom-options/class-nxt-builder-condition-ui.php:417
 #: include/custom-options/class-nxt-builder-condition-ui.php:766
 #: include/custom-options/nexter-builder-condition.php:681
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Create"
 msgstr ""
 
@@ -1427,14 +1468,14 @@ msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:907
 #: include/custom-options/module/nexter-display-conditional-rules.php:246
-#: include/custom-options/module/nexter-display-singular-archives-rules.php:415
+#: include/custom-options/module/nexter-display-singular-archives-rules.php:416
 #: assets/js/admin/index.js:1
 msgid "Date Archive"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:908
 #: include/custom-options/module/nexter-display-conditional-rules.php:247
-#: include/custom-options/module/nexter-display-singular-archives-rules.php:382
+#: include/custom-options/module/nexter-display-singular-archives-rules.php:383
 msgid "Author Archive"
 msgstr ""
 
@@ -1655,7 +1696,7 @@ msgid "---Select---"
 msgstr ""
 
 #: include/custom-options/module/nexter-display-archives-rules.php:137
-#: include/custom-options/module/nexter-display-singular-archives-rules.php:62
+#: include/custom-options/module/nexter-display-singular-archives-rules.php:63
 msgid "Empty Data"
 msgstr ""
 
@@ -1673,7 +1714,7 @@ msgstr ""
 
 #. translators: 1: Post type label, 2: Taxonomy singular name
 #: include/custom-options/module/nexter-display-archives-rules.php:597
-#: include/custom-options/module/nexter-display-singular-archives-rules.php:316
+#: include/custom-options/module/nexter-display-singular-archives-rules.php:317
 #, php-format
 msgid "%1$s : Child %2$s"
 msgstr ""
@@ -1978,7 +2019,7 @@ msgid "Pagination"
 msgstr ""
 
 #: include/custom-options/module/nexter-display-conditional-rules.php:719
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Before Single Product"
 msgstr ""
 
@@ -2059,7 +2100,7 @@ msgid "After Single Product Summary"
 msgstr ""
 
 #: include/custom-options/module/nexter-display-conditional-rules.php:739
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "After Single Product"
 msgstr ""
 
@@ -2168,7 +2209,7 @@ msgid "After Edit Account Form"
 msgstr ""
 
 #: include/custom-options/module/nexter-display-conditional-rules.php:772
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Before Checkout Form"
 msgstr ""
 
@@ -2253,7 +2294,7 @@ msgid "Checkout After Order Review"
 msgstr ""
 
 #: include/custom-options/module/nexter-display-conditional-rules.php:793
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "After Checkout Form"
 msgstr ""
 
@@ -2343,18 +2384,18 @@ msgid "iPhone"
 msgstr ""
 
 #. translators: %s: Taxonomy Label
-#: include/custom-options/module/nexter-display-singular-archives-rules.php:269
+#: include/custom-options/module/nexter-display-singular-archives-rules.php:270
 #, php-format
 msgid "%1$s : %2$s"
 msgstr ""
 
 #. translators: %s: By Author
-#: include/custom-options/module/nexter-display-singular-archives-rules.php:348
+#: include/custom-options/module/nexter-display-singular-archives-rules.php:349
 #, php-format
 msgid "%s : By Author"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-singular-archives-rules.php:447
+#: include/custom-options/module/nexter-display-singular-archives-rules.php:448
 msgid "Search Results"
 msgstr ""
 
@@ -2381,7 +2422,7 @@ msgid "Saving…"
 msgstr ""
 
 #: include/custom-options/nexter-builder-condition.php:684
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 #: dashboard/build/index.js:1
 #: dashboard/build/index.js:3
 #: dashboard/build/index.js:9
@@ -2615,7 +2656,7 @@ msgid "This does not appear to be a WXR file, missing/invalid WXR version number
 msgstr ""
 
 #: include/nexter-template/nexter-builder-shortcode.php:56
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:5
 msgid "Shortcode"
 msgstr ""
 
@@ -2636,7 +2677,7 @@ msgid "Add New Template"
 msgstr ""
 
 #: include/nexter-template/nexter-template-function.php:23
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Create New"
 msgstr ""
 
@@ -2716,7 +2757,6 @@ msgstr ""
 #: include/nexter-template/template-import-export.php:81
 #: assets/js/admin/index.js:1
 #: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:306
 msgid "Export Template"
 msgstr ""
 
@@ -2745,21 +2785,16 @@ msgstr ""
 #: dashboard/build/index.js:1
 #: dashboard/build/index.js:9
 #: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:1019
-#: theme-builder/build/index.js:1028
 msgid "Theme Builder"
 msgstr ""
 
 #: include/nexter-template/template-import-export.php:274
 #: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:990
-#: theme-builder/build/index.js:1039
 msgid "Import Templates"
 msgstr ""
 
 #: include/nexter-template/template-import-export.php:278
 #: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:359
 msgid "Import Pre-Designed Section"
 msgstr ""
 
@@ -3163,7 +3198,6 @@ msgstr ""
 #: include/panel-settings/extensions/nexter-ext-bulk-images.php:180
 #: dashboard/build/index.js:7
 #: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:1086
 msgid "Activate Now"
 msgstr ""
 
@@ -3581,17 +3615,16 @@ msgstr ""
 
 #: include/panel-settings/extensions/nexter-ext-post-duplicator.php:56
 #: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:307
 msgid "Duplicate"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-post-duplicator.php:364
+#: include/panel-settings/extensions/nexter-ext-post-duplicator.php:369
 #: dashboard/build/index.js:7
 #: dashboard/build/index.js:9
 msgid "Copy"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-post-duplicator.php:450
+#: include/panel-settings/extensions/nexter-ext-post-duplicator.php:455
 msgid "You do not have permission to duplicate this post."
 msgstr ""
 
@@ -4179,8 +4212,7 @@ msgstr ""
 msgid "Error, Try selecting another version."
 msgstr ""
 
-#: include/rollback.php:168
-#: include/rollback.php:204
+#: include/rollback.php:199
 msgid "Rollback to Previous Version"
 msgstr ""
 
@@ -4212,7 +4244,6 @@ msgstr ""
 
 #: assets/js/admin/index.js:1
 #: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:309
 msgid "Trash"
 msgstr ""
 
@@ -4221,18 +4252,22 @@ msgid "Exporting"
 msgstr ""
 
 #: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Please save the snippet first before exporting."
 msgstr ""
 
 #: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "WDesignKit plugin URL not found. Please ensure WDesignKit is properly installed and activated."
 msgstr ""
 
 #: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Failed to load WDesignKit interface. Please check if WDesignKit is properly installed and activated."
 msgstr ""
 
 #: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Error opening WDesignKit interface. Please try again."
 msgstr ""
 
@@ -4290,6 +4325,7 @@ msgid "Title"
 msgstr ""
 
 #: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 #: dashboard/build/index.js:7
 msgid "Description"
 msgstr ""
@@ -4307,14 +4343,17 @@ msgid "Save to Cloud"
 msgstr ""
 
 #: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "PHP"
 msgstr ""
 
 #: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "HTML"
 msgstr ""
 
 #: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "CSS"
 msgstr ""
 
@@ -4336,10 +4375,6 @@ msgstr ""
 
 #: assets/js/admin/index.js:1
 #: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:408
-#: theme-builder/build/index.js:426
-#: theme-builder/build/index.js:509
-#: theme-builder/build/index.js:776
 msgid "Install Nexter Extension"
 msgstr ""
 
@@ -4374,9 +4409,9 @@ msgid "Activate"
 msgstr ""
 
 #: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 #: dashboard/build/index.js:9
 #: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:699
 msgid "Deactivate"
 msgstr ""
 
@@ -4398,25 +4433,14 @@ msgid "item(s) selected"
 msgstr ""
 
 #: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Code Snippet"
 msgstr ""
 
 #: assets/js/admin/index.js:1
 #: dashboard/build/index.js:7
 #: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:349
 msgid "Search"
-msgstr ""
-
-#: assets/js/admin/index.js:1
-#: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:103
-msgid "Activating WDesignKit"
-msgstr ""
-
-#: assets/js/admin/index.js:1
-#: dashboard/build/index.js:9
-msgid "Installing WDesignKit"
 msgstr ""
 
 #: assets/js/admin/index.js:1
@@ -4433,6 +4457,10 @@ msgstr ""
 
 #: assets/js/admin/index.js:1
 msgid "Not at all! All WDesignKit snippets are 100% free for Nexter users. You can instantly explore, import, and customize pre-built snippets, without paying anything extra."
+msgstr ""
+
+#: assets/js/admin/index.js:1
+msgid "Import Pre-Made Code Snippets for Nexter Extension"
 msgstr ""
 
 #: assets/js/admin/index.js:1
@@ -4453,7 +4481,6 @@ msgstr ""
 
 #: assets/js/admin/index.js:1
 #: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:118
 msgid "Activate WDesignKit"
 msgstr ""
 
@@ -4476,7 +4503,6 @@ msgstr ""
 #: assets/js/admin/index.js:1
 #: dashboard/build/index.js:7
 #: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:999
 msgid "Choose File"
 msgstr ""
 
@@ -4490,7 +4516,6 @@ msgstr ""
 
 #: assets/js/admin/index.js:1
 #: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:920
 msgid "Imported"
 msgstr ""
 
@@ -5799,7 +5824,6 @@ msgstr ""
 #: assets/js/admin/index.js:1
 #: dashboard/build/index.js:7
 #: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:488
 msgid "Draft"
 msgstr ""
 
@@ -6241,6 +6265,7 @@ msgid "Remove condition"
 msgstr ""
 
 #: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 #: dashboard/build/index.js:7
 #: dashboard/build/index.js:9
 msgid "PRO"
@@ -6252,797 +6277,820 @@ msgid "NOT INSTALLED"
 msgstr ""
 
 #: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "This is a PRO feature - Click to upgrade"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#. translators: %s: Plugin type
+#: assets/js/admin/index.js:2
+#: assets/js/admin/index.js:5
+#, js-format
+msgid "%s plugin is required for this field"
+msgstr ""
+
+#: assets/js/admin/index.js:2
 msgid "OR"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:2
 msgid "Add New Condition Group"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#. translators: %s: Plugin name
+#: assets/js/admin/index.js:3
+#: assets/js/admin/index.js:6
+#, js-format
+msgid "%s Plugin not installed"
+msgstr ""
+
+#. translators: %s: Plugin name
+#: assets/js/admin/index.js:4
+#: assets/js/admin/index.js:7
+#, js-format
+msgid "Please install and activate %s to use this feature."
+msgstr ""
+
+#: assets/js/admin/index.js:4
+#: assets/js/admin/index.js:7
 msgid "Install Plugin"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Run on All Pages (Frontend + Admin)"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Run this PHP snippet on every page (frontend and backend)"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Frontend Pages Only"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Run this snippet only on the frontend of the site"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Admin Dashboard Only"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Run this snippet only in the WordPress admin area"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Global Header (All Pages)"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Insert into the site-wide header area"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Global Body (All Pages)"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Insert into the site-wide body area"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Global Footer (All Pages)"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Insert into the site-wide footer area"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Admin Header Area"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Insert into the WordPress admin header area"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Admin Footer Area"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Insert into the WordPress admin footer area"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Insert Before Element"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Insert content before a selected HTML element using CSS selector"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Insert After Element"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Insert content after a selected HTML element using CSS selector"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Insert at Start of Element"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Insert content at the start of the selected HTML element"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Insert at End of Element"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Insert content at the end of the selected HTML element"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Replace Target Element"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Replace the selected HTML element with your custom content"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Before Post Element"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Insert content before the entire post element"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "After Post Element"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Insert content after the entire post element"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Before Post Content"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Insert content before the main content area"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "After Post Content"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Insert content after the main content area"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Before Paragraph"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Insert content before a specific paragraph"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "After Paragraph"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Insert content after a specific paragraph"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Before Post Excerpt"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Insert content before the excerpt in listings"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "After Post Excerpt"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Insert content after the excerpt in listings"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Between Posts in Loop"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Insert content between post listings"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Before Each Post in Loop"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Insert content before individual posts in archive pages"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Before X Post"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Insert content before a specific post number (e.g., before 3rd post)"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
+#: assets/js/admin/index.js:5
 msgid "Post Number"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Enter post number (e.g., 3)"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "After X Post"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Insert content after a specific post number (e.g., after 2nd post)"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Enter post number (e.g., 2)"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "After X Words in Content"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Insert content after a specified number of words"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Insert Every X Words"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Insert content at intervals of a specified word count"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "After 25% of Content"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Insert content after the first 25% of the content"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "After 33% of Content"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Insert content after 33% of the content"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Midpoint (50%) of Content"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Insert content in the middle of the main content"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "After 66% of Content"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Insert content after 66% of the content"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "After 75% of Content"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Insert content after 75% of the content"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "After 80% of Content"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Insert content after 80% of the content"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Before Product Listing"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Insert content before product listing on shop/archive pages"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "After Product Listing"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Insert content after product listing on shop/archive pages"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Insert content before the single product wrapper"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Insert content after the single product wrapper"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Before Product Summary"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Insert content before the summary section of single product"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "After Product Summary"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Insert content after the summary section of single product"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Before Cart Content"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Insert content before the cart contents"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "After Cart Content"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Insert content after the cart contents"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Insert content before the checkout form"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Insert content after the checkout form"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Before Checkout Button"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Insert content before the checkout button"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "After Checkout Button"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Insert content after the checkout button"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Before Thank You Page"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Insert content before the order confirmation (Thank You) page"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Before Purchase Button"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Insert content before the purchase/download button"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "After Purchase Button"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Insert content after the purchase/download button"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Before Single Download"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Insert content before the single download content"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "After Single Download"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Insert content after the single download content"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Before Checkout Cart"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Insert content before the EDD checkout cart"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "After Checkout Cart"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Insert content after the EDD checkout cart"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Insert content before the EDD checkout form"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Insert content after the EDD checkout form"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Before Registration Form"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Insert content above the MemberPress registration form"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Before Submit (Checkout) Button"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Insert content before the MemberPress checkout submit button"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Before Coupon (Checkout) Field"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Insert content before the coupon field in checkout"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Before Content (Subscription Tab)"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Insert content before the subscriptions section in MemberPress"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Before Submit Button (Login Form)"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Insert content before the login form submit button"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Before Unauthorized Message"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Insert content before unauthorized access message"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "After Unauthorized Message"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Insert content after unauthorized access message"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Update"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "An error occurred while fetching data."
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Please Enter Snippet Name"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Enter Title of Snippet"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Please Enter Some Code"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Code has lint errors. Please fix them before saving."
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Unknown error"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Code lint error at line"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "errors total"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "An error occurred"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Automatic Placement"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Insert via Shortcode"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Start Date"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "End Date"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 #: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:493
-#: theme-builder/build/index.js:698
 msgid "Active"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Command / Ctrl + S to save"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Code Preview"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Hide Shortcode Attributes"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Show Shortcode Attributes"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Learn more about Shortcode Attribute"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "JavaScript"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Snippet Name"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Write / Add your code."
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Your Snippet Name"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Write snippet description."
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Enter Description"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Schedule"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Select Start and End Date show snippet."
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Snippet Tag"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Add multiple tags snippet related."
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Type tag and press Enter or comma to add"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Placement Priority Level"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Lower numbers run first. Default is 10."
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Placement Method"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Select 'Automatic Placement' if you want the snippet to run automatically in one of the available spots. If you choose 'Insert via Shortcode', the snippet will only run where you place the shortcode"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Select Insertion Method"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "Snippet Placement"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "On Ajax Work"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
 msgid "No supported eCommerce plugins detected. Install and activate WooCommerce, Easy Digital Downloads, or MemberPress to access eCommerce-specific code snippet locations."
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:4
+#: assets/js/admin/index.js:5
 msgid "Click to select this location"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:5
 msgid "Word Count"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:5
 msgid "Insert content after this many words in the post/page content."
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:5
 msgid "Word Interval"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:5
 msgid "Insert content at regular intervals of this many words throughout the post/page content."
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:5
 msgid "Insert content before this post number (e.g., 3 = before 3rd post)."
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:5
 msgid "Insert content after this post number (e.g., 2 = after 2nd post)."
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:5
 msgid "CSS Selector"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:5
 msgid "Enter a CSS selector to target specific HTML elements (e.g., '.my-class', '#header', 'div.content')"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:5
 msgid "Target elements using CSS selectors. Examples: .class-name, #element-id, tag.class, [attribute='value']"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:5
 msgid "Element Index"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:5
 msgid "When multiple elements match the CSS selector, specify which one to target (0 = first match, 1 = second match, etc.)"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:5
 msgid "Choose which element to target when multiple elements match the CSS selector. 0 targets ALL matches, 1 targets the first match, 2 targets the second match, and so on."
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:5
 msgid "Generated Shortcode"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:5
 msgid "Save the snippet to generate and view the shortcode."
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:5
 msgid "User-Defined Shortcode"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:5
 msgid "Shortcode Name"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:5
 msgid "Shortcode Parameters"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:5
 msgid "Type attribute and press Enter or comma to add"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:5
 msgid "Shortcode Usage Locations"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:5
 msgid "Find where this shortcode is used"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:5
 msgid "Compress Output"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:5
 msgid "Compress by removing spaces & comments"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:7
 msgid "CSS Selectors are a PRO feature"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:7
 msgid "Content-based insertion is a PRO feature"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:7
 msgid "Scheduling is a PRO feature"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:7
 msgid "Device targeting is a PRO feature"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:7
 msgid "Conditional logic is a PRO feature"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:7
 msgid "Shortcode is a PRO feature"
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:7
 msgid "Upgrade to Nexter Extension PRO Unlimited Site Plan to unlock the ability to insert snippets anywhere on your site using CSS selectors to target any HTML element."
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:7
 msgid "Upgrade to Nexter Extension PRO Unlimited Site Plan to unlock advanced content-based insertion options to precisely control where your snippets appear."
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:7
 msgid "Upgrade to Nexter Extension PRO Unlimited Site Plan to unlock powerful scheduling options to limit when your snippet is active on the site."
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:7
 msgid "Upgrade to Nexter Extension PRO Unlimited Site Plan to unlock device targeting options to control when your snippets appear on different devices."
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:7
 msgid "Upgrade to Nexter Extension PRO Unlimited Site Plan to unlock dynamic conditional logic to show snippets based on device, date, time, and more."
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:7
 msgid "Upgrade to Nexter Extension PRO Unlimited Site Plan to unlock custom shortcodes with advanced attributes to manually place snippets anywhere on your site."
 msgstr ""
 
-#: assets/js/admin/index.js:1
+#: assets/js/admin/index.js:7
 msgid "Upgrade to Nexter Extension PRO Unlimited Site Plan to unlock all advanced snippet features including flexible insertion options, powerful scheduling, device targeting, conditional logic, and more."
 msgstr ""
 
@@ -7130,13 +7178,11 @@ msgstr ""
 
 #: dashboard/build/index.js:1
 #: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:1092
 msgid "Version "
 msgstr ""
 
 #: dashboard/build/index.js:1
 #: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:1094
 msgid "System Info"
 msgstr ""
 
@@ -7162,8 +7208,6 @@ msgstr ""
 
 #: dashboard/build/index.js:1
 #: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:107
-#: theme-builder/build/index.js:109
 msgid "Activating Nexter Extension"
 msgstr ""
 
@@ -7325,6 +7369,10 @@ msgid "Open Theme Settings"
 msgstr ""
 
 #: dashboard/build/index.js:7
+msgid "Nexter Theme Image"
+msgstr ""
+
+#: dashboard/build/index.js:7
 msgid "50+ WordPress Extensions to Make Site More Secure, Performant & Smart"
 msgstr ""
 
@@ -7354,13 +7402,20 @@ msgid "Open Blocks"
 msgstr ""
 
 #: dashboard/build/index.js:7
+msgid "Total Blocks"
+msgstr ""
+
+#: dashboard/build/index.js:7
 #: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:491
 msgid "Inactive"
 msgstr ""
 
 #: dashboard/build/index.js:7
 msgid " Active"
+msgstr ""
+
+#: dashboard/build/index.js:7
+msgid "Total Extensions"
 msgstr ""
 
 #: dashboard/build/index.js:7
@@ -7426,6 +7481,10 @@ msgstr ""
 
 #: dashboard/build/index.js:7
 msgid "We're Active on"
+msgstr ""
+
+#: dashboard/build/index.js:7
+msgid "New"
 msgstr ""
 
 #: dashboard/build/index.js:7
@@ -7511,7 +7570,6 @@ msgstr ""
 #: dashboard/build/index.js:7
 #: dashboard/build/index.js:9
 #: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:367
 msgid "WDesignKit"
 msgstr ""
 
@@ -7598,10 +7656,6 @@ msgstr ""
 
 #: dashboard/build/index.js:7
 msgid " Total Blocks"
-msgstr ""
-
-#: dashboard/build/index.js:7
-msgid "New"
 msgstr ""
 
 #: dashboard/build/index.js:7
@@ -7913,10 +7967,6 @@ msgstr ""
 
 #: dashboard/build/index.js:7
 #: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:923
-#: theme-builder/build/index.js:931
-#: theme-builder/build/index.js:937
-#: theme-builder/build/index.js:1003
 msgid "Import"
 msgstr ""
 
@@ -8269,11 +8319,6 @@ msgstr ""
 
 #: dashboard/build/index.js:7
 #: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:876
-#: theme-builder/build/index.js:885
-#: theme-builder/build/index.js:917
-#: theme-builder/build/index.js:926
-#: theme-builder/build/index.js:944
 msgid "--Choose File--"
 msgstr ""
 
@@ -8382,7 +8427,7 @@ msgid "Enter Slug Text"
 msgstr ""
 
 #: dashboard/build/index.js:7
-msgid "Post Types"
+msgid "Disable by Post Type"
 msgstr ""
 
 #: dashboard/build/index.js:7
@@ -8836,11 +8881,23 @@ msgid "Border Width"
 msgstr ""
 
 #: dashboard/build/index.js:7
+msgid "Ag"
+msgstr ""
+
+#: dashboard/build/index.js:7
 msgid "Capitalize"
 msgstr ""
 
 #: dashboard/build/index.js:7
+msgid "AG"
+msgstr ""
+
+#: dashboard/build/index.js:7
 msgid "Uppercase"
+msgstr ""
+
+#: dashboard/build/index.js:7
+msgid "ag"
 msgstr ""
 
 #: dashboard/build/index.js:7
@@ -11285,6 +11342,10 @@ msgid "Connect Mailchimp CRM"
 msgstr ""
 
 #: dashboard/build/index.js:9
+msgid " Add your Mailchimp API key to connect with our Mailchimp form block and send emails directly to your CRM."
+msgstr ""
+
+#: dashboard/build/index.js:9
 msgid "Paste your your <a href = \"https://mailchimp.com/help/about-api-keys/\" target=\"_blank\" rel=\"noopener noreferrer\"> Mailchimp API Key </a> & <a href = \"https://mailchimp.com/help/find-audience-id/\" target=\"_blank\" rel=\"noopener noreferrer\">  List ID </a>"
 msgstr ""
 
@@ -11318,6 +11379,10 @@ msgstr ""
 
 #: dashboard/build/index.js:9
 msgid "Add your Facebook Pixel ID and GA4 ID here to enable event tracking for your clicks. This will allow you to track events directly from WordPress for your ads and GA4 analytics."
+msgstr ""
+
+#: dashboard/build/index.js:9
+msgid "Paste your your <a href = \"https://support.google.com/analytics/answer/12270356\" target=\"_blank\" rel=\"noopener noreferrer\">  GA4 Measurement ID </a> & <a href = \"https://www.facebook.com/business/help/952192354843755?id=1205376682832142\" target=\"_blank\" rel=\"noopener noreferrer\">  Facebook Pixel </a>"
 msgstr ""
 
 #: dashboard/build/index.js:9
@@ -11625,283 +11690,193 @@ msgid "Successfully Saved"
 msgstr ""
 
 #: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:53
 msgid "Failed to fetch templates."
 msgstr ""
 
 #: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:105
 msgid "Installing Nexter Extension"
 msgstr ""
 
 #: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:120
-#: theme-builder/build/index.js:408
-#: theme-builder/build/index.js:426
-#: theme-builder/build/index.js:509
-#: theme-builder/build/index.js:776
 msgid "Activate Nexter Extension"
 msgstr ""
 
 #: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:746
 msgid "Copied!"
 msgstr ""
 
 #: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:773
 msgid "No Templates Found"
 msgstr ""
 
 #: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:774
 msgid "Looks like you don’t have any templates yet. Would you like to create one now?"
 msgstr ""
 
 #: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:778
 msgid "Create "
 msgstr ""
 
 #: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:204
 msgid "Create Header"
 msgstr ""
 
 #: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:206
 msgid "Add Header"
 msgstr ""
 
 #: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:212
 msgid "Create Footer"
 msgstr ""
 
 #: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:214
 msgid "Add Footer"
 msgstr ""
 
 #: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:220
 msgid "Create Breadcrumb"
 msgstr ""
 
 #: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:222
 msgid "Add Breadcrumb"
 msgstr ""
 
 #: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:228
 msgid "Create Section"
 msgstr ""
 
 #: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:230
 msgid "Add Section"
 msgstr ""
 
 #: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:236
 msgid "Create Singular"
 msgstr ""
 
 #: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:238
 msgid "Add Singular"
 msgstr ""
 
 #: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:244
 msgid "Create Archive Page"
 msgstr ""
 
 #: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:246
 msgid "Add Archive"
 msgstr ""
 
 #: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:252
 msgid "Create Hooks"
 msgstr ""
 
 #: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:254
 msgid "Add Hooks"
 msgstr ""
 
 #: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:260
 msgid "Create 404 Page"
 msgstr ""
 
 #: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:262
 msgid "Add 404 Page"
 msgstr ""
 
 #: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:287
-#: theme-builder/build/index.js:822
 msgid "Single Page"
 msgstr ""
 
 #: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:288
-#: theme-builder/build/index.js:827
 msgid "Archive Page"
 msgstr ""
 
 #: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:303
 msgid "Edit Conditions"
 msgstr ""
 
 #: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:304
 msgid "Preview"
 msgstr ""
 
 #: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:305
 msgid "Copy Shortcode"
 msgstr ""
 
 #: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:373
-msgid "Import Pre-Designed Templates for Theme Builder"
-msgstr ""
-
-#: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:378
-msgid "Build your website faster with ready-to-use templates"
-msgstr ""
-
-#: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:382
-msgid "Fully customizable to match your brand and style"
-msgstr ""
-
-#: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:386
-msgid "Save time by avoiding repetitive design work"
-msgstr ""
-
-#: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:390
-msgid "Flexible layouts for headers, footers, pages, and more"
-msgstr ""
-
-#: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:396
-msgid "Activate WDesignKit to Import Templates"
-msgstr ""
-
-#: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:396
-msgid "Install WDesignKit to Import Templates"
-msgstr ""
-
-#: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:411
-#: theme-builder/build/index.js:413
 msgid "Add New"
 msgstr ""
 
 #: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:453
 msgid "Click to Know How it Works"
 msgstr ""
 
 #: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:465
 msgid "What is a Sections?"
 msgstr ""
 
 #: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:466
 msgid "Reusable content blocks that can be placed anywhere on your site, like a banner, promo strip, or CTA. They save time since you design once and reuse across multiple pages."
 msgstr ""
 
 #: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:489
 msgid "Updating..."
 msgstr ""
 
 #: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:497
 msgid "Theme builder template"
 msgstr ""
 
 #: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:513
 msgid "Edit "
 msgstr ""
 
 #: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:533
 msgid "Last Updated :"
 msgstr ""
 
 #: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:797
 msgid "All Layout"
 msgstr ""
 
 #: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:812
 msgid "Breadcrumbs"
 msgstr ""
 
 #: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:991
 msgid "Choose a Nexter Theme Builder template XML file of Builder templates, and add them to the list of templates available in your builder."
 msgstr ""
 
 #: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:892
 msgid "Please select a file to import."
 msgstr ""
 
 #: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:906
 msgid "Importing…"
 msgstr ""
 
 #: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:914
 msgid "Import successful!"
 msgstr ""
 
 #: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:929
 msgid "Import failed."
 msgstr ""
 
 #: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:935
 msgid "An error occurred during import."
 msgstr ""
 
 #: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:996
 msgid "Choose Template"
 msgstr ""
 
 #: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:1034
 msgid "Please Install Nexter Extension to Enable Theme Builder."
 msgstr ""
 
 #: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:1048
 msgid "Switch to table view"
 msgstr ""
 
 #: theme-builder/build/index.js:1
-#: theme-builder/build/index.js:1081
 msgid "Activated Now"
 msgstr ""

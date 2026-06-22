@@ -863,6 +863,19 @@ if ( ! class_exists( 'Nexter_Extensions_Load' ) ) {
 							'wdkactivate' => $wdkactivate,
 							'wdkVersion' => isset($wdkVersion) ? $wdkVersion : '1.0.0',
 							'layout_type' => $layout_type,
+							'i18n' => array(
+								'activate_wdk'   => __( 'Activate WDesignKit to Import Templates', 'nexter-extension' ),
+								'install_wdk'    => __( 'Install WDesignKit to Import Templates', 'nexter-extension' ),
+								'activating_wdk' => __( 'Activating WDesignKit', 'nexter-extension' ),
+								'installing_wdk' => __( 'Installing WDesignKit', 'nexter-extension' ),
+								'install_failed' => __( 'Failed to Install, Please Manual Install Plugin.', 'nexter-extension' ),
+								'popup_heading'  => __( 'Import Pre-Designed Templates for Theme Builder', 'nexter-extension' ),
+								'feature_1'      => __( 'Build your website faster with ready-to-use templates', 'nexter-extension' ),
+								'feature_2'      => __( 'Fully customizable to match your brand and style', 'nexter-extension' ),
+								'feature_3'      => __( 'Save time by avoiding repetitive design work', 'nexter-extension' ),
+								'feature_4'      => __( 'Flexible layouts for headers, footers, pages, and more', 'nexter-extension' ),
+								'design_scratch' => __( 'Design from Scratch', 'nexter-extension' ),
+							),
 						)
 					);
 				}

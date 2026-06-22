@@ -163,12 +163,7 @@ if(!class_exists('NxtExt_Rollback')){
 
 			$this->nxtext_update_plugin();
 			$this->nxtext_upgrade_plugin();
-
-			wp_die(
-				'', esc_html__( 'Rollback to Previous Version', 'nexter-extension' ), [
-					'response' => 200,
-				]
-			);
+			exit();
 		}
 
 		public function nxtext_update_plugin(){

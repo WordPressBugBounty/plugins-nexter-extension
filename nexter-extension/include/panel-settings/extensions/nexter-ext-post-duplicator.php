@@ -144,7 +144,12 @@ if( !empty($extension_option['wp-duplicate-post']['values']) ){
 					continue;
 				}
 				$value = maybe_unserialize( $meta->meta_value );
-				add_post_meta( $duplicate_id, $meta->meta_key, $value );
+				// $value comes straight from the DB (already in WP's stored, slashed form).
+				// add_post_meta() runs wp_unslash() internally, so re-slash here to keep the
+				// value byte-identical — critical for builder payloads like Elementor's
+				// _elementor_data (slashed JSON), which otherwise loses a backslash layer
+				// and becomes invalid JSON the editor/front-end can't parse.
+				add_post_meta( $duplicate_id, $meta->meta_key, wp_slash( $value ) );
 			}
 		}
 	}

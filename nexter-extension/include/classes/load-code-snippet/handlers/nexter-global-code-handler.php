@@ -107,6 +107,15 @@ class Nexter_Global_Code_Handler {
             return false; // Let bypass system handle these locations
         }
 
+        // For the front-end output hooks (wp_head / wp_body_open / wp_footer) the PHP code
+        // must run as early as possible on that hook. Many header snippets (e.g. the bundled
+        // "Add Google Analytics Tracking Code") register their OWN add_action('wp_head', ...)
+        // at the default priority 10. If we executed them at priority 10 too, that inner
+        // callback would be added to the priority bucket WordPress is already iterating and
+        // would never fire. Running the execution early lets those self-registered callbacks
+        // run, while direct-echo snippets still output inside the head/body/footer.
+        $exec_priority = in_array($hook, ['wp_head', 'wp_body_open', 'wp_footer'], true) ? 0 : $priority;
+
         if (function_exists('add_action')) {
             add_action($hook, function() use ($code, $snippet_id) {
                 if (function_exists('get_post_meta')) {
@@ -127,7 +136,7 @@ class Nexter_Global_Code_Handler {
                         Nexter_Builder_Code_Snippets_Executor::get_instance()->execute_php_snippet($code, $snippet_id);
                     }
                 }
-            }, $priority);
+            }, $exec_priority);
         }
 
         return true;

@@ -1831,7 +1831,7 @@ class Nexter_Ext_Image_Upload_Optimization {
 		wp_send_json_success( array(
 			'restored' => $restored,
 			'failed'   => $failed,
-			/* translators: 1: Number of images restored, 2: Number of images that failed to restore */
+			/* translators: 1: number of images successfully restored, 2: number of images that failed to restore */
 			'message'  => sprintf( __( 'Restored %1$d images. %2$d failed.', 'nexter-extension' ), $restored, $failed ),
 		) );
 	}

@@ -48,10 +48,11 @@ class Nexter_Singular_Archives_Rules {
 	
 	//Ajax Get Data Singular/Archive Condition Rules
 	public static function nexter_ajax_singular_archives_filters( $get_data ='' ){
-		
+
 		if(!empty($get_data)){
 			$data = $get_data;
 		}else{
+			
 			$data = (!empty($_POST['data'])) ? self::sanitize_array_recursive( json_decode( stripslashes_deep( $_POST['data'] ), true ) ) : []; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 			// ensure we always work with an array to avoid string offset notices
 			$data = is_array( $data ) ? $data : [];
@@ -93,7 +94,7 @@ class Nexter_Singular_Archives_Rules {
 					}
 				}
 			}else if( $query_data['object'] == 'post' ) {
-			
+
 				$post_query = new \WP_Query( $query_args );
 
 				foreach ( $post_query->posts as $post ) {
