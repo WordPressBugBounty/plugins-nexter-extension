@@ -36,7 +36,7 @@ wp_register_ability('nexter/delete-snippet', [
         ],
     ],
     'execute_callback'    => 'nexter_mcp_delete_snippet',
-    'permission_callback' => 'sprout_mcp_permission_callback',
+    'permission_callback' => 'nexter_mcp_permission_callback',
     'meta' => [
         'show_in_rest' => true,
         'mcp'          => ['public' => true],

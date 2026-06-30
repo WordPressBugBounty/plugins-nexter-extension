@@ -12,7 +12,7 @@ wp_register_ability('nexter/get-smtp-settings', [
     'input_schema' => ['type' => 'object', 'properties' => [], 'additionalProperties' => false],
     'output_schema' => ['type' => 'object'],
     'execute_callback'    => 'nexter_mcp_get_smtp_settings',
-    'permission_callback' => 'sprout_mcp_permission_callback',
+    'permission_callback' => 'nexter_mcp_permission_callback',
     'meta' => [
         'show_in_rest' => true,
         'mcp' => ['public' => true],
@@ -46,7 +46,7 @@ wp_register_ability('nexter/update-smtp-settings', [
     ],
     'output_schema' => ['type' => 'object'],
     'execute_callback'    => 'nexter_mcp_update_smtp_settings',
-    'permission_callback' => 'sprout_mcp_permission_callback',
+    'permission_callback' => 'nexter_mcp_permission_callback',
     'meta' => [
         'show_in_rest' => true,
         'mcp' => ['public' => true],

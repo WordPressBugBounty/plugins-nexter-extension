@@ -360,7 +360,7 @@ class Nxt_Panel_Ajax_Router {
                     add_option($secr_opt,$securData);
                 }else if(!empty($nxtctmLogin)){
                     if(isset($nxtctmLogin['custom_login_url']) && !empty($nxtctmLogin['custom_login_url'])){
-                        $nxtctmLogin['custom_login_url'] = sanitize_key($nxtctmLogin['custom_login_url']);
+                        $nxtctmLogin['custom_login_url'] = $this->sanitize_custom_login_path($nxtctmLogin['custom_login_url']);
                     }
                     add_option($secr_opt,$nxtctmLogin);
                 }else if(!empty($disrightclick)){
@@ -469,7 +469,7 @@ class Nxt_Panel_Ajax_Router {
                             unset($get_option['login_page_message']);
                         }
                         if(isset($nxtctmLogin['custom_login_url']) && !empty($nxtctmLogin['custom_login_url'])){
-                            $nxtctmLogin['custom_login_url'] = sanitize_key($nxtctmLogin['custom_login_url']);
+                            $nxtctmLogin['custom_login_url'] = $this->sanitize_custom_login_path($nxtctmLogin['custom_login_url']);
                         }
                         if(isset($nxtctmLogin['login_page_message']) && !empty($nxtctmLogin['login_page_message'])){
                             $nxtctmLogin['login_page_message'] = sanitize_text_field( wp_unslash($nxtctmLogin['login_page_message']));
@@ -638,6 +638,26 @@ class Nxt_Panel_Ajax_Router {
         }
 
         wp_send_json_error();
+    }
+
+    /**
+     * Sanitize the custom login path/slug.
+     * @param string $path Raw login path from the settings form.
+     * @return string Sanitized path slug without leading/trailing slashes.
+     */
+    private function sanitize_custom_login_path( $path ) {
+        $path = is_string( $path ) ? wp_unslash( $path ) : '';
+        $path = str_replace( '\\', '/', $path );
+
+        $clean = array();
+        foreach ( explode( '/', $path ) as $segment ) {
+            $segment = sanitize_title( $segment );
+            if ( '' !== $segment ) {
+                $clean[] = $segment;
+            }
+        }
+
+        return implode( '/', $clean );
     }
 
     /*

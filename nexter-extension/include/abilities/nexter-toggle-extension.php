@@ -41,7 +41,7 @@ wp_register_ability('nexter/toggle-extension', [
         ],
     ],
     'execute_callback'    => 'nexter_mcp_toggle_extension',
-    'permission_callback' => 'sprout_mcp_permission_callback',
+    'permission_callback' => 'nexter_mcp_permission_callback',
     'meta' => [
         'show_in_rest' => true,
         'mcp'          => ['public' => true],

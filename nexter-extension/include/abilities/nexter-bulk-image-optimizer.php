@@ -39,7 +39,7 @@ wp_register_ability(
 		),
 		'output_schema'       => array( 'type' => 'object' ),
 		'execute_callback'    => 'nexter_mcp_get_bulk_image_optimizer_status',
-		'permission_callback' => 'sprout_mcp_permission_callback',
+		'permission_callback' => 'nexter_mcp_permission_callback',
 		'meta'                => array(
 			'show_in_rest' => true,
 			'mcp'          => array( 'public' => true ),
@@ -78,7 +78,7 @@ wp_register_ability(
 		),
 		'output_schema'       => array( 'type' => 'object' ),
 		'execute_callback'    => 'nexter_mcp_bulk_optimize_images',
-		'permission_callback' => 'sprout_mcp_permission_callback',
+		'permission_callback' => 'nexter_mcp_permission_callback',
 		'meta'                => array(
 			'show_in_rest' => true,
 			'mcp'          => array( 'public' => true ),
@@ -105,7 +105,7 @@ wp_register_ability(
 		),
 		'output_schema'       => array( 'type' => 'object' ),
 		'execute_callback'    => 'nexter_mcp_restore_original_images',
-		'permission_callback' => 'sprout_mcp_permission_callback',
+		'permission_callback' => 'nexter_mcp_permission_callback',
 		'meta'                => array(
 			'show_in_rest' => true,
 			'mcp'          => array( 'public' => true ),

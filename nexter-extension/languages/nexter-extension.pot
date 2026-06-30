@@ -2,21 +2,21 @@
 # This file is distributed under the GPLv3.
 msgid ""
 msgstr ""
-"Project-Id-Version: Nexter Extension 4.6.14\n"
+"Project-Id-Version: Nexter Extension 4.6.15\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/nexter-extension\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-06-25T08:46:07+02:00\n"
+"POT-Creation-Date: 2026-06-30T06:04:49+02:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: nexter-extension\n"
 
 #. Plugin Name of the plugin
 #: nexter-extension.php
-#: include/abilities/class-nxt-mcp-abilities.php:80
+#: include/abilities/class-nxt-mcp-abilities.php:101
 #: include/rollback.php:199
 #: assets/js/admin/index.js:1
 #: dashboard/build/index.js:7
@@ -43,7 +43,7 @@ msgstr ""
 msgid "https://posimyth.com"
 msgstr ""
 
-#: include/abilities/class-nxt-mcp-abilities.php:81
+#: include/abilities/class-nxt-mcp-abilities.php:102
 msgid "Nexter Extension MCP abilities for templates, snippets, and site settings."
 msgstr ""
 
@@ -364,13 +364,13 @@ msgstr ""
 #: include/custom-options/class-nxt-builder-condition-ui.php:757
 #: include/custom-options/nexter-builder-condition.php:556
 #: include/custom-options/nexter-builder-condition.php:599
-#: include/panel-settings/class-nxt-panel-ajax-router.php:652
-#: include/panel-settings/class-nxt-panel-ajax-router.php:669
-#: include/panel-settings/class-nxt-panel-ajax-router.php:841
-#: include/panel-settings/class-nxt-panel-ajax-router.php:938
-#: include/panel-settings/class-nxt-panel-ajax-router.php:1070
-#: include/panel-settings/class-nxt-panel-ajax-router.php:1108
-#: include/panel-settings/class-nxt-panel-ajax-router.php:1126
+#: include/panel-settings/class-nxt-panel-ajax-router.php:672
+#: include/panel-settings/class-nxt-panel-ajax-router.php:689
+#: include/panel-settings/class-nxt-panel-ajax-router.php:861
+#: include/panel-settings/class-nxt-panel-ajax-router.php:958
+#: include/panel-settings/class-nxt-panel-ajax-router.php:1090
+#: include/panel-settings/class-nxt-panel-ajax-router.php:1128
+#: include/panel-settings/class-nxt-panel-ajax-router.php:1146
 #: include/panel-settings/extensions/nexter-ext-image-sizes.php:85
 #: include/panel-settings/extensions/nexter-ext-local-google-font.php:374
 #: include/panel-settings/extensions/nexter-ext-post-duplicator.php:449
@@ -460,7 +460,7 @@ msgid "Snippets List"
 msgstr ""
 
 #: include/classes/class-nxt-ajax-guard.php:44
-#: include/panel-settings/class-nxt-panel-ajax-router.php:1213
+#: include/panel-settings/class-nxt-panel-ajax-router.php:1233
 #: include/panel-settings/extensions/nexter-ext-rollback-manager.php:356
 #: include/panel-settings/extensions/nexter-ext-rollback-manager.php:448
 msgid "Security check failed."
@@ -1029,7 +1029,7 @@ msgstr ""
 #: include/classes/load-sections/nexter-sections-loader.php:367
 #: include/custom-options/nexter-builder-condition.php:116
 #: include/custom-options/nexter-builder-condition.php:136
-#: include/panel-settings/class-nxt-panel-ajax-router.php:954
+#: include/panel-settings/class-nxt-panel-ajax-router.php:974
 #: dashboard/build/index.js:7
 msgid "None"
 msgstr ""
@@ -2823,105 +2823,105 @@ msgstr ""
 msgid "(%s MB)"
 msgstr ""
 
-#: include/panel-settings/class-nxt-panel-ajax-router.php:681
+#: include/panel-settings/class-nxt-panel-ajax-router.php:701
 #: include/panel-settings/nexter-ext-panel-settings.php:421
 msgid "Server not found."
 msgstr ""
 
-#: include/panel-settings/class-nxt-panel-ajax-router.php:731
+#: include/panel-settings/class-nxt-panel-ajax-router.php:751
 #: include/panel-settings/nexter-ext-panel-settings.php:467
 #: dashboard/build/index.js:1
 #: dashboard/build/index.js:7
 msgid "Activated"
 msgstr ""
 
-#: include/panel-settings/class-nxt-panel-ajax-router.php:731
+#: include/panel-settings/class-nxt-panel-ajax-router.php:751
 #: include/panel-settings/nexter-ext-panel-settings.php:467
 msgid "DeActivated"
 msgstr ""
 
-#: include/panel-settings/class-nxt-panel-ajax-router.php:743
+#: include/panel-settings/class-nxt-panel-ajax-router.php:763
 msgid "You are not allowed to do this action"
 msgstr ""
 
-#: include/panel-settings/class-nxt-panel-ajax-router.php:790
+#: include/panel-settings/class-nxt-panel-ajax-router.php:810
 msgid "Invalid theme information format."
 msgstr ""
 
-#: include/panel-settings/class-nxt-panel-ajax-router.php:795
+#: include/panel-settings/class-nxt-panel-ajax-router.php:815
 msgid "Invalid theme information structure."
 msgstr ""
 
-#: include/panel-settings/class-nxt-panel-ajax-router.php:882
+#: include/panel-settings/class-nxt-panel-ajax-router.php:902
 msgid "Failed to retrieve plugin information or invalid format."
 msgstr ""
 
-#: include/panel-settings/class-nxt-panel-ajax-router.php:887
+#: include/panel-settings/class-nxt-panel-ajax-router.php:907
 msgid "Invalid plugin information structure."
 msgstr ""
 
-#: include/panel-settings/class-nxt-panel-ajax-router.php:1006
+#: include/panel-settings/class-nxt-panel-ajax-router.php:1026
 msgid "Not a permission"
 msgstr ""
 
-#: include/panel-settings/class-nxt-panel-ajax-router.php:1011
+#: include/panel-settings/class-nxt-panel-ajax-router.php:1031
 msgid "Security check failed"
 msgstr ""
 
-#: include/panel-settings/class-nxt-panel-ajax-router.php:1018
-#: include/panel-settings/class-nxt-panel-ajax-router.php:1024
+#: include/panel-settings/class-nxt-panel-ajax-router.php:1038
+#: include/panel-settings/class-nxt-panel-ajax-router.php:1044
 msgid "File Import failed"
 msgstr ""
 
-#: include/panel-settings/class-nxt-panel-ajax-router.php:1031
+#: include/panel-settings/class-nxt-panel-ajax-router.php:1051
 msgid "Valid .json file extension"
 msgstr ""
 
-#: include/panel-settings/class-nxt-panel-ajax-router.php:1037
+#: include/panel-settings/class-nxt-panel-ajax-router.php:1057
 msgid "Please upload a file"
 msgstr ""
 
-#: include/panel-settings/class-nxt-panel-ajax-router.php:1050
+#: include/panel-settings/class-nxt-panel-ajax-router.php:1070
 msgid "Invalid JSON format"
 msgstr ""
 
-#: include/panel-settings/class-nxt-panel-ajax-router.php:1055
+#: include/panel-settings/class-nxt-panel-ajax-router.php:1075
 msgid "Customizer settings imported successfully"
 msgstr ""
 
-#: include/panel-settings/class-nxt-panel-ajax-router.php:1058
+#: include/panel-settings/class-nxt-panel-ajax-router.php:1078
 msgid "No valid settings found in the file"
 msgstr ""
 
-#: include/panel-settings/class-nxt-panel-ajax-router.php:1079
+#: include/panel-settings/class-nxt-panel-ajax-router.php:1099
 msgid "Code snippet setting is already enabled."
 msgstr ""
 
-#: include/panel-settings/class-nxt-panel-ajax-router.php:1095
+#: include/panel-settings/class-nxt-panel-ajax-router.php:1115
 msgid "Code snippet setting enabled successfully."
 msgstr ""
 
-#: include/panel-settings/class-nxt-panel-ajax-router.php:1133
+#: include/panel-settings/class-nxt-panel-ajax-router.php:1153
 msgid "Invalid HTTP method."
 msgstr ""
 
-#: include/panel-settings/class-nxt-panel-ajax-router.php:1142
+#: include/panel-settings/class-nxt-panel-ajax-router.php:1162
 msgid "Unauthorized API endpoint."
 msgstr ""
 
-#: include/panel-settings/class-nxt-panel-ajax-router.php:1225
+#: include/panel-settings/class-nxt-panel-ajax-router.php:1245
 msgid "No data provided."
 msgstr ""
 
-#: include/panel-settings/class-nxt-panel-ajax-router.php:1239
+#: include/panel-settings/class-nxt-panel-ajax-router.php:1259
 msgid "Invalid data format."
 msgstr ""
 
-#: include/panel-settings/class-nxt-panel-ajax-router.php:1262
+#: include/panel-settings/class-nxt-panel-ajax-router.php:1282
 msgid "Settings saved successfully."
 msgstr ""
 
-#: include/panel-settings/class-nxt-panel-ajax-router.php:1269
+#: include/panel-settings/class-nxt-panel-ajax-router.php:1289
 msgid "Failed to save settings. No changes were made."
 msgstr ""
 

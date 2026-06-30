@@ -16,7 +16,7 @@ wp_register_ability('nexter/get-security-settings', [
     ],
     'output_schema' => ['type' => 'object'],
     'execute_callback'    => 'nexter_mcp_get_security_settings',
-    'permission_callback' => 'sprout_mcp_permission_callback',
+    'permission_callback' => 'nexter_mcp_permission_callback',
     'meta' => [
         'show_in_rest' => true,
         'mcp' => ['public' => true],
@@ -53,7 +53,7 @@ wp_register_ability('nexter/update-security-settings', [
     ],
     'output_schema' => ['type' => 'object'],
     'execute_callback'    => 'nexter_mcp_update_security_settings',
-    'permission_callback' => 'sprout_mcp_permission_callback',
+    'permission_callback' => 'nexter_mcp_permission_callback',
     'meta' => [
         'show_in_rest' => true,
         'mcp' => ['public' => true],

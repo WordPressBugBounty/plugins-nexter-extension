@@ -10,6 +10,27 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+if ( ! function_exists( 'nexter_mcp_permission_callback' ) ) {
+	/**
+	 * Permission callback for all Nexter Extension MCP abilities.
+	 *
+	 * Defined and owned by Nexter Extension so ability registration never depends on an
+	 * external (e.g. SproutOS) helper existing. The WordPress Abilities API validates the
+	 * callback at registration time via WP_Ability::prepare_properties(); when the referenced
+	 * function is missing it throws, WP_Abilities_Registry::register() swallows it with a
+	 * _doing_it_wrong() notice, and the ability is silently dropped. Every Nexter ability
+	 * operates on site-wide configuration, executable code snippets, or theme-builder
+	 * templates — all administrator-level — so a single manage_options check is the correct,
+	 * consistent gate. The optional $input argument is accepted for forward compatibility.
+	 *
+	 * @param mixed $input Ability input arguments (unused).
+	 * @return bool Whether the current user may use the ability.
+	 */
+	function nexter_mcp_permission_callback( $input = null ) {
+		return current_user_can( 'manage_options' );
+	}
+}
+
 /**
  * Registers the Nexter Extension ability category and loads each ability file.
  */

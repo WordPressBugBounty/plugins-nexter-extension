@@ -41,7 +41,7 @@ wp_register_ability('nexter/list-templates-builder', [
         ],
     ],
     'execute_callback'    => 'nexter_mcp_list_templates_builder',
-    'permission_callback' => 'sprout_mcp_permission_callback',
+    'permission_callback' => 'nexter_mcp_permission_callback',
     'meta' => [
         'show_in_rest' => true,
         'mcp'          => ['public' => true],

@@ -50,7 +50,7 @@ wp_register_ability('nexter/update-snippet', [
         ],
     ],
     'execute_callback'    => 'nexter_mcp_update_snippet',
-    'permission_callback' => 'sprout_mcp_permission_callback',
+    'permission_callback' => 'nexter_mcp_permission_callback',
     'meta' => [
         'show_in_rest' => true,
         'mcp'          => ['public' => true],

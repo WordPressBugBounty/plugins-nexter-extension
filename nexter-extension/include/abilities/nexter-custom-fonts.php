@@ -12,7 +12,7 @@ wp_register_ability('nexter/get-custom-fonts', [
     'input_schema' => ['type' => 'object', 'properties' => [], 'additionalProperties' => false],
     'output_schema' => ['type' => 'object'],
     'execute_callback'    => 'nexter_mcp_get_custom_fonts',
-    'permission_callback' => 'sprout_mcp_permission_callback',
+    'permission_callback' => 'nexter_mcp_permission_callback',
     'meta' => [
         'show_in_rest' => true,
         'mcp' => ['public' => true],
@@ -41,7 +41,7 @@ wp_register_ability('nexter/update-custom-fonts', [
     ],
     'output_schema' => ['type' => 'object'],
     'execute_callback'    => 'nexter_mcp_update_custom_fonts',
-    'permission_callback' => 'sprout_mcp_permission_callback',
+    'permission_callback' => 'nexter_mcp_permission_callback',
     'meta' => [
         'show_in_rest' => true,
         'mcp' => ['public' => true],

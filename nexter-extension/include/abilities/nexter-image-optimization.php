@@ -16,7 +16,7 @@ wp_register_ability('nexter/get-image-optimization', [
     ],
     'output_schema' => ['type' => 'object'],
     'execute_callback'    => 'nexter_mcp_get_image_optimization',
-    'permission_callback' => 'sprout_mcp_permission_callback',
+    'permission_callback' => 'nexter_mcp_permission_callback',
     'meta' => [
         'show_in_rest' => true,
         'mcp' => ['public' => true],
@@ -53,7 +53,7 @@ wp_register_ability('nexter/update-image-optimization', [
     ],
     'output_schema' => ['type' => 'object'],
     'execute_callback'    => 'nexter_mcp_update_image_optimization',
-    'permission_callback' => 'sprout_mcp_permission_callback',
+    'permission_callback' => 'nexter_mcp_permission_callback',
     'meta' => [
         'show_in_rest' => true,
         'mcp' => ['public' => true],

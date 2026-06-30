@@ -3,7 +3,7 @@ Contributors: posimyththemes, nirmalkavaiya, sagarpatel124
 Tags: security, elementor, theme-builder, code-snippet, image-optimizer
 Requires at least: 5.0
 Tested up to: 7.0
-Stable tag: 4.6.14
+Stable tag: 4.6.15
 Requires PHP: 7.4
 License: GPLv3
 License URI: https://opensource.org/licenses/GPL-3.0
@@ -219,6 +219,11 @@ Yes. [Compare Free vs Pro →](https://nexterwp.com/free-vs-pro/#Nexter-Extensio
 == Changelog ==
 
 ### View Complete Changelog at [roadmap.nexterwp.com](https://roadmap.nexterwp.com/updates?filter=Nexter+Extension+-+FREE)
+
+= V4.6.15 = 30 June 2026
+- Fixed : MCP Abilities : All abilities failed to register (none appeared in WP Abilities API) due to a missing permission callback dependency
+- Fixed : Security : Custom Login URL : "Change WP Admin Login Path" stripped "/" so multi-segment login paths were broken
+- Fixed : Bug Fixes and Improvements
 
 = V4.6.14 = 25 June 2026
 - Fixed : Translate : Missing text-domain in Dashboard, Code Snippets and Theme Builder
