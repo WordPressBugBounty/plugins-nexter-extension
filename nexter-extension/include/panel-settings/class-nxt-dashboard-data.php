@@ -337,6 +337,17 @@ class Nxt_Dashboard_Data {
 
             if(has_filter( 'nxt_dashboard_localize_data' )){
                 $locallize_data = apply_filters( 'nxt_dashboard_localize_data', $locallize_data );
+            } else {
+                // TPGB (Nexter Blocks) not active — seed settingData with the standalone MCP toggle.
+                if ( ! isset( $locallize_data['dashData']['settingData'] ) || ! is_array( $locallize_data['dashData']['settingData'] ) ) {
+                    $locallize_data['dashData']['settingData'] = array();
+                }
+
+                $locallize_data['dashData']['settingData'][] = array(
+                    'key'  => 'nxt_enable_mcp_abilities',
+                    'name' => esc_html__( 'Enable MCP Abilities', 'nexter-extension' ),
+                    'desc' => esc_html__( 'If enabled, you can utilize MCP capabilities to enhance automation, streamline workflows, and enable smarter interactions across supported features.', 'nexter-extension' ),
+                );
             }
 
 			wp_localize_script(

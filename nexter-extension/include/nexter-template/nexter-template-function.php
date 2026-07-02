@@ -60,9 +60,12 @@ if( ! function_exists('nexter_builders_register_post')){
 			'show_in_editor'        => true,
 		);
 		register_post_type( 'nxt_builder', $args );
-	
+
 	}
-	add_action( 'init', 'nexter_builders_register_post', 0 );
+	// Priority -10: register before Elementor's own init callback (bound at `init` priority 0),
+	// so the Theme Builder CPT — and its `elementor` post-type support — always exists by the
+	// time Elementor initializes its components and computes editable post types.
+	add_action( 'init', 'nexter_builders_register_post', -10 );
 }
 
 function nexter_template_frontend() {

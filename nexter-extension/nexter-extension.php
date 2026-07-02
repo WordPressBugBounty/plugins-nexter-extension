@@ -3,7 +3,7 @@
  * Plugin Name: Nexter Extension
  * Plugin URI: https://nexterwp.com
  * Description: Nexter Extension adds lightweight performance, security, and admin features to WordPress so you can improve and manage your website without installing many plugins.
- * Version: 4.6.15
+ * Version: 4.6.16
  * Author: POSIMYTH
  * Author URI: https://posimyth.com
  * Text Domain: nexter-extension
@@ -26,7 +26,12 @@ define( 'NEXTER_EXT_BASE', plugin_basename( NEXTER_EXT_FILE ) );
 define( 'NEXTER_EXT_DIR', plugin_dir_path( NEXTER_EXT_FILE ) );
 define( 'NEXTER_EXT_URL', plugins_url( '/', NEXTER_EXT_FILE ) );
 define( 'NEXTER_EXT_CPT', 'nxt_builder' );
-define( 'NEXTER_EXT_VER', '4.6.15' );
+define( 'NEXTER_EXT_VER', '4.6.16' );
+// Rewrite-rules revision for the Theme Builder CPT. Bump this whenever the CPT's slug or
+// rewrite args change to trigger a one-time automatic flush (see nxt_ext_flush_rewrite_rules
+// / nxt_ext_maybe_flush_rewrite_rules). Mirrors Elementor's activation + admin_init upgrade
+// flush model so users never have to open Settings → Permalinks.
+define( 'NEXTER_EXT_REWRITE_VER', '1' );
 
 if(!defined('NXT_BUILD_POST')){
 	define( 'NXT_BUILD_POST', 'nxt_builder' );
@@ -85,6 +90,30 @@ function nxt_ext_activate() {
 		$activation->create_login_attempt_table();
 	}
 	delete_transient( 'nxtext_cached_feed_data' );
+
+	// Auto-flush rewrite rules on activation (same concept as Elementor's Maintenance::activation).
+	nxt_ext_flush_rewrite_rules();
+}
+
+/**
+ * Register the Theme Builder CPT and flush rewrite rules.
+ *
+ * Shared by activation and the admin_init upgrade check. The CPT is registered directly
+ * because during plugin activation its own `init` hook has not fired yet, so without this
+ * the flush would omit the CPT's rules. Flushing makes the CPT permalink — and therefore
+ * Elementor's editor preview — work immediately, with no manual Settings → Permalinks save.
+ *
+ * @return void
+ */
+function nxt_ext_flush_rewrite_rules() {
+	if ( ! post_type_exists( 'nxt_builder' ) ) {
+		require_once NEXTER_EXT_DIR . 'include/nexter-template/nexter-template-function.php';
+		if ( function_exists( 'nexter_builders_register_post' ) ) {
+			nexter_builders_register_post();
+		}
+	}
+	flush_rewrite_rules();
+	update_option( 'nexter_ext_rewrite_ver', NEXTER_EXT_REWRITE_VER, true );
 }
 
 /**
@@ -103,6 +132,26 @@ function nxt_ext_deactivate() {
 // Plugin Activation and Deactivation Hooks
 register_activation_hook(__FILE__, 'nxt_ext_activate');
 register_deactivation_hook(__FILE__, 'nxt_ext_deactivate');
+
+/**
+ * Auto-flush rewrite rules after a plugin UPDATE or on an already-installed site.
+ *
+ * register_activation_hook() does not fire on plugin updates, so — exactly like Elementor's
+ * version-gated Upgrade Manager — this runs on `admin_init` (admin screens only, NEVER on
+ * front-end/visitor requests) and flushes only when the stored rewrite revision differs from
+ * NEXTER_EXT_REWRITE_VER. After it flushes once it records the current revision and never runs
+ * again until the constant is bumped. Front-end visitors trigger nothing, and no manual
+ * Settings → Permalinks save is ever required.
+ *
+ * @return void
+ */
+function nxt_ext_maybe_flush_rewrite_rules() {
+	if ( get_option( 'nexter_ext_rewrite_ver' ) === NEXTER_EXT_REWRITE_VER ) {
+		return; // Already current — cheap autoloaded-option read, no flush.
+	}
+	nxt_ext_flush_rewrite_rules();
+}
+add_action( 'admin_init', 'nxt_ext_maybe_flush_rewrite_rules' );
 /**
  * Nexter Ext notice for minimum PHP version.
  */

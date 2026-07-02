@@ -2,14 +2,14 @@
 # This file is distributed under the GPLv3.
 msgid ""
 msgstr ""
-"Project-Id-Version: Nexter Extension 4.6.15\n"
+"Project-Id-Version: Nexter Extension 4.6.16\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/nexter-extension\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-06-30T06:04:49+02:00\n"
+"POT-Creation-Date: 2026-07-02T12:00:49+02:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: nexter-extension\n"
@@ -2809,16 +2809,24 @@ msgstr ""
 msgid "Nexter"
 msgstr ""
 
-#: include/panel-settings/class-nxt-dashboard-data.php:354
+#: include/panel-settings/class-nxt-dashboard-data.php:348
+msgid "Enable MCP Abilities"
+msgstr ""
+
+#: include/panel-settings/class-nxt-dashboard-data.php:349
+msgid "If enabled, you can utilize MCP capabilities to enhance automation, streamline workflows, and enable smarter interactions across supported features."
+msgstr ""
+
+#: include/panel-settings/class-nxt-dashboard-data.php:365
 msgid "Duplicating.."
 msgstr ""
 
-#: include/panel-settings/class-nxt-dashboard-data.php:355
+#: include/panel-settings/class-nxt-dashboard-data.php:366
 msgid "Duplicated"
 msgstr ""
 
 #. translators: %s is the size of the table in megabytes
-#: include/panel-settings/class-nxt-dashboard-data.php:429
+#: include/panel-settings/class-nxt-dashboard-data.php:440
 #, php-format
 msgid "(%s MB)"
 msgstr ""
@@ -4217,7 +4225,7 @@ msgid "Rollback to Previous Version"
 msgstr ""
 
 #. translators: %s: Php Required
-#: nexter-extension.php:111
+#: nexter-extension.php:160
 #, php-format
 msgid "Nexter Extensions requires PHP version %s+, plugin is currently NOT RUNNING."
 msgstr ""
@@ -8063,7 +8071,6 @@ msgid "Easily regenerate various sizes of image thumbnails at once or individual
 msgstr ""
 
 #: dashboard/build/index.js:7
-#: dashboard/build/index.js:9
 msgid "Enter API Key"
 msgstr ""
 
@@ -9734,12 +9741,10 @@ msgid "Limit failed login attempts per IP address to help protect your site from
 msgstr ""
 
 #: dashboard/build/index.js:7
-#: dashboard/build/index.js:9
 msgid "Paste your Font Awesome PRO Kit ID below <a href = 'https://fontawesome.com/license' target='_blank' rel='noopener noreferrer'> Get ID </a>"
 msgstr ""
 
 #: dashboard/build/index.js:7
-#: dashboard/build/index.js:9
 msgid "FontAwesome Pro Kit"
 msgstr ""
 
@@ -10124,7 +10129,6 @@ msgid "Remove the wp-embed.min.js from the code, to disable embed preview."
 msgstr ""
 
 #: dashboard/build/index.js:7
-#: dashboard/build/index.js:9
 msgid "Disable Dashicons"
 msgstr ""
 
@@ -11247,158 +11251,6 @@ msgstr ""
 
 #: dashboard/build/index.js:9
 msgid "Start Using"
-msgstr ""
-
-#: dashboard/build/index.js:9
-msgid "Connect Google Maps API Key"
-msgstr ""
-
-#: dashboard/build/index.js:9
-msgid "To integrate Google Maps with your Maps Block, please enable the API, paste your Google Maps API key by clicking on the settings gear, and then save the changes."
-msgstr ""
-
-#: dashboard/build/index.js:9
-msgid "Paste your <a href = \"https://developers.google.com/maps/documentation/embed/get-api-key\" target=\"_blank\" rel=\"noopener noreferrer\"> Google Maps API Key </a>"
-msgstr ""
-
-#: dashboard/build/index.js:9
-msgid "Enable Google Fonts"
-msgstr ""
-
-#: dashboard/build/index.js:9
-msgid "To disable Google Fonts, toggle this off. It will prevent any Google Fonts from loading and instead use the system font. If you want to avoid any Google Font requests, simply disable this option."
-msgstr ""
-
-#: dashboard/build/index.js:9
-msgid "Enable Nexter Global CSS"
-msgstr ""
-
-#: dashboard/build/index.js:9
-msgid "If you do not plan to use Global CSS from Nexter Blocks and prefer to load it from your theme, you can disable it. It reduces extra CSS & JS loading on your site, ensuring faster performance and complete control over design."
-msgstr ""
-
-#: dashboard/build/index.js:9
-msgid "Show Nexter Performance in Admin Bar"
-msgstr ""
-
-#: dashboard/build/index.js:9
-msgid "This option adds the Nexter Performance menu to the WordPress top admin bar, allowing you to purge assets for individual pages or all pages directly from any screen."
-msgstr ""
-
-#: dashboard/build/index.js:9
-msgid "Load Font Awesome PRO Icons"
-msgstr ""
-
-#: dashboard/build/index.js:9
-msgid "Connect Font Awesome PRO icons by adding your Font awesome API key in the settings for access to more premium icons for your website."
-msgstr ""
-
-#: dashboard/build/index.js:9
-msgid " Enable Ajax Templates"
-msgstr ""
-
-#: dashboard/build/index.js:9
-msgid "Load templates using Ajax mode for optimal performance. This file will load after the page finishes loading and will dynamically request content as you scroll."
-msgstr ""
-
-#: dashboard/build/index.js:9
-msgid "Lazy Rendering (SEO Friendly)"
-msgstr ""
-
-#: dashboard/build/index.js:9
-msgid "If enabled, you can start using the class <b>nxt-lazy-load</b> in places where you want to lazy load content in an SEO-friendly way."
-msgstr ""
-
-#: dashboard/build/index.js:9
-msgid "If you don't need Dashicons from Nexter Blocks, you can disable them to reduce unnecessary CSS loading and improve your site's performance."
-msgstr ""
-
-#: dashboard/build/index.js:9
-msgid "Disable Template Button"
-msgstr ""
-
-#: dashboard/build/index.js:9
-msgid "Turn off the template import option in the Gutenberg Editor if you’re not planning to use it."
-msgstr ""
-
-#: dashboard/build/index.js:9
-msgid "Disable Quick Action Bar"
-msgstr ""
-
-#: dashboard/build/index.js:9
-msgid "Turn off the Quick Action Bar in the Gutenberg editor if you don’t plan to use it."
-msgstr ""
-
-#: dashboard/build/index.js:9
-msgid "Enable MCP Abilities"
-msgstr ""
-
-#: dashboard/build/index.js:9
-msgid "If enabled, you can utilize MCP capabilities to enhance automation, streamline workflows, and enable smarter interactions across supported features."
-msgstr ""
-
-#: dashboard/build/index.js:9
-msgid "Connect Mailchimp CRM"
-msgstr ""
-
-#: dashboard/build/index.js:9
-msgid " Add your Mailchimp API key to connect with our Mailchimp form block and send emails directly to your CRM."
-msgstr ""
-
-#: dashboard/build/index.js:9
-msgid "Paste your your <a href = \"https://mailchimp.com/help/about-api-keys/\" target=\"_blank\" rel=\"noopener noreferrer\"> Mailchimp API Key </a> & <a href = \"https://mailchimp.com/help/find-audience-id/\" target=\"_blank\" rel=\"noopener noreferrer\">  List ID </a>"
-msgstr ""
-
-#: dashboard/build/index.js:9
-msgid "Enter Audience / List ID"
-msgstr ""
-
-#: dashboard/build/index.js:9
-msgid "Connect Google reCAPTCHA"
-msgstr ""
-
-#: dashboard/build/index.js:9
-msgid " Add your Google reCAPTCHA Site Key and Secret Key to enable spam protection with our form blocks and secure your site."
-msgstr ""
-
-#: dashboard/build/index.js:9
-msgid "Place your <a href = \"https://www.google.com/recaptcha/about/\" target=\"_blank\" rel=\"noopener noreferrer\"> Google reCAPTCHA </a> Site Key & Secret Key"
-msgstr ""
-
-#: dashboard/build/index.js:9
-msgid "Site Key reCAPTCHA v3"
-msgstr ""
-
-#: dashboard/build/index.js:9
-msgid "Secret Key reCAPTCHA v3"
-msgstr ""
-
-#: dashboard/build/index.js:9
-msgid " Add Event Tracking ID"
-msgstr ""
-
-#: dashboard/build/index.js:9
-msgid "Add your Facebook Pixel ID and GA4 ID here to enable event tracking for your clicks. This will allow you to track events directly from WordPress for your ads and GA4 analytics."
-msgstr ""
-
-#: dashboard/build/index.js:9
-msgid "Paste your your <a href = \"https://support.google.com/analytics/answer/12270356\" target=\"_blank\" rel=\"noopener noreferrer\">  GA4 Measurement ID </a> & <a href = \"https://www.facebook.com/business/help/952192354843755?id=1205376682832142\" target=\"_blank\" rel=\"noopener noreferrer\">  Facebook Pixel </a>"
-msgstr ""
-
-#: dashboard/build/index.js:9
-msgid "GA4 ID"
-msgstr ""
-
-#: dashboard/build/index.js:9
-msgid "Facebook Pixel ID"
-msgstr ""
-
-#: dashboard/build/index.js:9
-msgid "Enable Form Submission Menu"
-msgstr ""
-
-#: dashboard/build/index.js:9
-msgid "Keep the Form Submission menu visible in the WordPress admin to view, manage, and export entries collected from Nexter form blocks.."
 msgstr ""
 
 #: dashboard/build/index.js:9
