@@ -3,7 +3,7 @@ Contributors: posimyththemes, nirmalkavaiya, sagarpatel124
 Tags: security, elementor, theme-builder, code-snippet, image-optimizer
 Requires at least: 5.0
 Tested up to: 7.0
-Stable tag: 4.6.16
+Stable tag: 4.6.17
 Requires PHP: 7.4
 License: GPLv3
 License URI: https://opensource.org/licenses/GPL-3.0
@@ -219,6 +219,10 @@ Yes. [Compare Free vs Pro →](https://nexterwp.com/free-vs-pro/#Nexter-Extensio
 == Changelog ==
 
 ### View Complete Changelog at [roadmap.nexterwp.com](https://roadmap.nexterwp.com/updates?filter=Nexter+Extension+-+FREE)
+
+= V4.6.17 = 13 July 2026
+- Fixed : Ability : Early Call Abilites Waning Fixed.
+- Fixed : Bug Fixes and Improvements
 
 = V4.6.16 = 02 July 2026
 - Fixed : Theme Builder : "Edit with Elementor" rewrite rules flush automatically

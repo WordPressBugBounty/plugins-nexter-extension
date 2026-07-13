@@ -91,11 +91,32 @@ class Nxt_MCP_Abilities {
 	 * @return void
 	 */
 	public function register_categories(): void {
-		if ( function_exists( 'wp_get_ability_category' ) && wp_get_ability_category( 'nexter-extension' ) ) {
+		$this->ensure_category_registered();
+	}
+
+	/**
+	 * Ensures the "nexter-extension" ability category exists.
+	 *
+	 * Registers directly on the categories registry object rather than via
+	 * wp_register_ability_category(), because that wrapper only registers while the
+	 * `wp_abilities_api_categories_init` hook is firing (otherwise it returns null). In some
+	 * request contexts (e.g. Media Library admin-ajax) abilities can be registered without our
+	 * categories_init callback having run first, which triggered repeated "category is not
+	 * registered" _doing_it_wrong() notices and lagged the request. The registry's own
+	 * register()/is_registered() have no such hook restriction, so this is safe to call from
+	 * both the categories_init and abilities_init hooks. Idempotent.
+	 *
+	 * @return void
+	 */
+	private function ensure_category_registered(): void {
+		if ( ! class_exists( 'WP_Ability_Categories_Registry' ) ) {
 			return;
 		}
-
-		wp_register_ability_category(
+		$registry = WP_Ability_Categories_Registry::get_instance();
+		if ( ! $registry || $registry->is_registered( 'nexter-extension' ) ) {
+			return;
+		}
+		$registry->register(
 			'nexter-extension',
 			array(
 				'label'       => __( 'Nexter Extension', 'nexter-extension' ),
@@ -110,6 +131,11 @@ class Nxt_MCP_Abilities {
 	 * @return void
 	 */
 	public function register_abilities(): void {
+		// Guarantee the category exists before any ability references it — even in request
+		// contexts where our categories_init callback did not run first (prevents the
+		// "category is not registered" _doing_it_wrong notices seen during Media Library AJAX).
+		$this->ensure_category_registered();
+
 		$base = NEXTER_EXT_DIR . 'include/abilities/';
 
 		foreach ( array(
