@@ -221,7 +221,7 @@ class Nxt_Image_Processor {
 			}
 			$optimized_size = filesize( $output_path );
 			if ( $settings['avoid_larger'] && $optimized_size >= $original_size ) {
-				@unlink( $output_path );
+				wp_delete_file( $output_path );
 				return array(
 					'success' => false,
 					'message' => __( 'Optimized file was larger than or equal to the original, so it was skipped because "Avoid Larger Files" is enabled.', 'nexter-extension' ),
@@ -326,7 +326,7 @@ class Nxt_Image_Processor {
 		}
 		$optimized_size = filesize( $output_path );
 		if ( $settings['avoid_larger'] && $optimized_size >= $original_size ) {
-			@unlink( $output_path );
+			wp_delete_file( $output_path );
 			return array(
 				'success' => false,
 				'message' => __( 'Optimized file was larger than or equal to the original, so it was skipped because "Avoid Larger Files" is enabled.', 'nexter-extension' ),
@@ -419,7 +419,7 @@ class Nxt_Image_Processor {
 				if ( file_exists( $webp_path ) ) {
 					$webp_size = filesize( $webp_path );
 					if ( $settings['avoid_larger'] && $webp_size >= $original_size ) {
-						@unlink( $webp_path );
+						wp_delete_file( $webp_path );
 						$webp_path = null;
 						$webp_size = null;
 					}
@@ -541,7 +541,7 @@ class Nxt_Image_Processor {
 					$best_path = $webp_path;
 					$best_size = $webp_size;
 				} else {
-					@unlink( $webp_path );
+					wp_delete_file( $webp_path );
 				}
 			}
 		}

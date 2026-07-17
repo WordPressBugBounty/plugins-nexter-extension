@@ -1,14 +1,14 @@
 === Nexter Extension - Security, Performance, Code Snippets & Site Toolkit ===
 Contributors: posimyththemes, nirmalkavaiya, sagarpatel124
-Tags: security, elementor, theme-builder, code-snippet, image-optimizer
-Requires at least: 5.0
+Tags: seo, security, theme-builder, code-snippet, image-optimizer
+Requires at least: 5.9
 Tested up to: 7.0
-Stable tag: 4.6.17
+Stable tag: 4.7.0
 Requires PHP: 7.4
 License: GPLv3
 License URI: https://opensource.org/licenses/GPL-3.0
 
-Replace 50+ WordPress Plugins: Free Theme Builder, Code Snippets, Image Optimizer (WebP/AVIF), SMTP Email, Security Hardening, Performance & More
+Replace 50+ WordPress Plugins: Free SEO, Theme Builder, Code Snippets, Image Optimizer (WebP/AVIF), SMTP Email, Security, Performance & More
 
 == Description ==
 
@@ -16,9 +16,28 @@ Most WordPress sites run 20–40 plugins. That means 20–40 things that slow yo
 
 **[Nexter Extension](https://nexterwp.com/nexter-extension/?utm_source=wordpress&utm_medium=readmepage&utm_campaign=nexterextension) fixes that.** One plugin. 50+ features. Every module is toggle on/off — nothing loads unless you need it. Pure Vanilla JS, zero jQuery.
 
-It's the one WordPress plugin that handles your **security**, **performance**, **email delivery**, **theme design**, **code management**, and **admin cleanup** — all in one place, completely free to start.
+It's the one WordPress plugin that handles your **SEO**, **security**, **performance**, **email delivery**, **theme design**, **code management**, and **admin cleanup** — all in one place, completely free to start.
 
-👉 [Website](https://nexterwp.com/nexter-extension/?utm_source=wordpress&utm_medium=readmepage&utm_campaign=nexterextension) | [All Features](https://nexterwp.com/nexter-extension/features/?utm_source=wordpress&utm_medium=readmepage&utm_campaign=nexterextension) | [Free vs Pro](https://nexterwp.com/free-vs-pro/?utm_source=wordpress&utm_medium=readmepage&utm_campaign=nexterextension) | [Pricing](https://nexterwp.com/pricing/?utm_source=wordpress&utm_medium=readmepage&utm_campaign=nexterextension) | [Docs](https://nexterwp.com/docs/?utm_source=wordpress&utm_medium=readmepage&utm_campaign=nexterextension) | [Roadmap](https://roadmap.nexterwp.com/) | [Support](https://wordpress.org/support/plugin/nexter-extension/) | [Premium Support](https://store.posimyth.com/helpdesk/?utm_source=wordpress&utm_medium=readmepage&utm_campaign=nexterextension) | [AI Chat](https://nexterwp.com/chat/?utm_source=wordpress&utm_medium=readmepage&utm_campaign=nexterextension)
+👉 [Website](https://nexterwp.com/nexter-extension/?utm_source=wordpress&utm_medium=readmepage&utm_campaign=nexterextension) | [All Features](https://nexterwp.com/nexter-extension/features/?utm_source=wordpress&utm_medium=readmepage&utm_campaign=nexterextension) | [Nexter SEO](https://nexterwp.com/nexter-extension/nexter-seo/?utm_source=wordpress&utm_medium=readmepage&utm_campaign=nexterextension) | [Free vs Pro](https://nexterwp.com/free-vs-pro/?utm_source=wordpress&utm_medium=readmepage&utm_campaign=nexterextension) | [Pricing](https://nexterwp.com/pricing/?utm_source=wordpress&utm_medium=readmepage&utm_campaign=nexterextension) | [Docs](https://nexterwp.com/docs/?utm_source=wordpress&utm_medium=readmepage&utm_campaign=nexterextension) | [Roadmap](https://roadmap.nexterwp.com/) | [Support](https://wordpress.org/support/plugin/nexter-extension/) | [Premium Support](https://store.posimyth.com/helpdesk/?utm_source=wordpress&utm_medium=readmepage&utm_campaign=nexterextension) | [AI Chat](https://nexterwp.com/chat/?utm_source=wordpress&utm_medium=readmepage&utm_campaign=nexterextension)
+
+---
+
+== 🔍 Nexter SEO — Built-In WordPress SEO, Schema & AI Search ==
+
+Handle your on-page SEO, schema, XML sitemaps, redirects, and AI search from one plugin. [Nexter SEO](https://nexterwp.com/nexter-extensions/nexter-seo/?utm_source=wordpress&utm_medium=readmepage&utm_campaign=nexterextension) is a complete, lightweight [WordPress SEO](https://nexterwp.com/nexter-extensions/nexter-seo/?utm_source=wordpress&utm_medium=readmepage&utm_campaign=nexterextension) toolkit built into Nexter Extension — drop your standalone SEO plugin, with no extra page weight and no plugin conflicts. **100% free.**
+
+* **[SEO Site Audit](https://nexterwp.com/nexter-extensions/nexter-seo/?utm_source=wordpress&utm_medium=readmepage&utm_campaign=nexterextension)** — Scan your site for on-page and technical issues, with a 0-100 health score and a prioritized list of top fixes.
+* **[Meta Title & Description Templates](https://nexterwp.com/nexter-extensions/nexter-seo/?utm_source=wordpress&utm_medium=readmepage&utm_campaign=nexterextension)** — Set site-wide title and meta description templates with dynamic variables and a live Google search preview.
+* **[Social / Open Graph](https://nexterwp.com/nexter-extensions/nexter-seo/?utm_source=wordpress&utm_medium=readmepage&utm_campaign=nexterextension)** — Control how your pages look when shared, with a default share image and Facebook and X (Twitter) cards.
+* **[Schema Builder](https://nexterwp.com/nexter-extensions/nexter-seo/?utm_source=wordpress&utm_medium=readmepage&utm_campaign=nexterextension)** — Add 18 structured-data types (Article, Product, FAQ Page, How-To, Local Business, Event, Recipe, Video, and more) with dynamic variables and display conditions. No code.
+* **[XML Sitemaps](https://nexterwp.com/nexter-extensions/nexter-seo/?utm_source=wordpress&utm_medium=readmepage&utm_campaign=nexterextension)** — Generate XML sitemaps, plus optional image, video, news, and HTML sitemaps, with exclude lists.
+* **[Robots & Robots.txt Editor](https://nexterwp.com/nexter-extensions/nexter-seo/?utm_source=wordpress&utm_medium=readmepage&utm_campaign=nexterextension)** — Set per-type index, follow, and archive rules and edit your virtual robots.txt right from the dashboard.
+* **[Instant Indexing (IndexNow)](https://nexterwp.com/nexter-extensions/nexter-seo/?utm_source=wordpress&utm_medium=readmepage&utm_campaign=nexterextension)** — Push new and updated URLs to search engines that support IndexNow instantly, automatically or in bulk.
+* **[LLMs.txt for AI Search](https://nexterwp.com/nexter-extensions/nexter-seo/?utm_source=wordpress&utm_medium=readmepage&utm_campaign=nexterextension)** — Generate an LLMs.txt file so AI engines like ChatGPT, Perplexity, and Google AI can find and cite your content.
+* **[Site Verification](https://nexterwp.com/nexter-extensions/nexter-seo/?utm_source=wordpress&utm_medium=readmepage&utm_campaign=nexterextension)** — Verify your site with Google, Bing, Pinterest, and Facebook in one place.
+* **[Redirects & 404 Monitor](https://nexterwp.com/nexter-extensions/nexter-seo/?utm_source=wordpress&utm_medium=readmepage&utm_campaign=nexterextension)** — Create 301, 302, and other redirects with flexible matching, and log broken URLs to fix.
+* **[Image SEO](https://nexterwp.com/nexter-extensions/nexter-seo/?utm_source=wordpress&utm_medium=readmepage&utm_campaign=nexterextension)** — Add automatic alt text from the filename or title (no AI needed) and redirect attachment pages to their parent post.
+* **[Import / Export](https://nexterwp.com/nexter-extensions/nexter-seo/?utm_source=wordpress&utm_medium=readmepage&utm_campaign=nexterextension)** — Move your entire SEO configuration between sites with a single JSON file.
 
 ---
 
@@ -164,6 +183,12 @@ Export your full WordPress Customizer configuration and all Nexter Extension set
 = Does Nexter Extension work with all WordPress themes? =
 Yes. Fully compatible with **Astra, Kadence, Blocksy, GeneratePress, OceanWP, Neve, Hello Elementor, Bricks**, and all standard WordPress themes. The Theme Builder works with Elementor, Gutenberg, and Bricks Builder. Code Snippets work with every theme regardless of editor.
 
+= Does Nexter Extension include SEO? Do I still need Yoast or Rank Math? =
+Nexter Extension now includes **Nexter SEO**, a complete built-in SEO toolkit: site audit, meta title and description templates, an 18-type schema builder, XML sitemaps, a robots.txt editor, redirects, a 404 monitor, image SEO, and site verification. For most sites it replaces a standalone SEO plugin like Yoast or Rank Math, with no extra page weight. It is **100% free**. [Explore Nexter SEO →](https://nexterwp.com/nexter-extensions/nexter-seo/?utm_source=wordpress&utm_medium=readmepage&utm_campaign=nexterextension)
+
+= Does Nexter SEO work for AI search (ChatGPT, Perplexity, Google AI)? =
+Yes. Nexter SEO generates an **LLMs.txt** file and JSON-LD schema so AI search engines like ChatGPT, Perplexity, and Google AI can discover and cite your content. It also supports **Instant Indexing (IndexNow)** to push new and updated URLs to supported search engines the moment you publish.
+
 = Does the Image Optimizer need an API key? =
 **No API key. No external account. No per-image fees.** The Image Optimizer (added in v4.6.0) compresses images locally on your server. WebP conversion is free. AVIF conversion is available in Pro. Bulk optimization runs across your entire media library in one click.
 
@@ -220,8 +245,28 @@ Yes. [Compare Free vs Pro →](https://nexterwp.com/free-vs-pro/#Nexter-Extensio
 
 ### View Complete Changelog at [roadmap.nexterwp.com](https://roadmap.nexterwp.com/updates?filter=Nexter+Extension+-+FREE)
 
-= V4.6.17 = 13 July 2026
-- Fixed : Ability : Early Call Abilites Waning Fixed.
+= V4.7.0 = 16 July 2026
+- New : Nexter SEO : Launched built-in SEO — replace your standalone SEO plugin with Nexter. On-page SEO, schema, sitemaps, redirects, robots.txt, and image SEO, all in one plugin. Enable from Dashboard → SEO; the module loads only when turned on.
+- New : Nexter SEO : SEO Site Audit — scan your site for on-page and technical issues, with a 0–100 health score and a prioritized list of top fixes.
+- New : Nexter SEO : Meta Title & Description Templates — site-wide title and meta description templates with dynamic variables and a live Google search preview.
+- New : Nexter SEO : Social / Open Graph — control how pages look when shared, with a default share image and Facebook and X (Twitter) cards.
+- New : Nexter SEO : Schema Builder — add 18 structured-data types (Article, Product, FAQ Page, How-To, Local Business, Event, Recipe, Video, and more) with dynamic variables and display conditions. No code.
+- New : Nexter SEO : XML Sitemaps — generate XML sitemaps, plus optional image, video, news, and HTML sitemaps, with exclude lists.
+- New : Nexter SEO : Robots & Robots.txt Editor — set per-type index, follow, and archive rules and edit your virtual robots.txt right from the dashboard.
+- New : Nexter SEO : Instant Indexing (IndexNow) — push new and updated URLs to search engines that support IndexNow instantly, automatically or in bulk.
+- New : Nexter SEO : LLMs.txt for AI Search — generate an LLMs.txt file so AI engines like ChatGPT, Perplexity, and Google AI can find and cite your content.
+- New : Nexter SEO : Site Verification — verify your site with Google, Bing, Pinterest, and Facebook in one place.
+- New : Nexter SEO : Redirects & 404 Monitor — create 301, 302, and other redirects with flexible matching, and log broken URLs to fix.
+- New : Nexter SEO : Image SEO — add automatic alt text from the filename or title (no AI needed) and redirect attachment pages to their parent post.
+- New : Nexter SEO : Import / Export — move your entire SEO configuration between sites with a single JSON file.
+- Fixed : Custom Font Upload : Variable Font Compatibility Register font Elementor bug fix
+- Fixed : Bug Fixes and Improvements
+
+= V4.6.17 = 08 July 2026
+- Fixed : Image Optimization : Large images (over 2560px, WordPress "-scaled") are now optimised and served as WebP/AVIF instead of the original JPEG
+- Fixed : Image Optimization : "Run in Background" now defers conversion to the cron queue so uploads are not blocked, and the queue no longer reprocesses already-optimised images
+- Fixed : Google Fonts : Self-Host Google Fonts now works on fresh installs (the local fonts directory was not created before first use)
+- Fixed : Security : iFrame Security now correctly sends the X-Frame-Options header (clickjacking protection)
 - Fixed : Bug Fixes and Improvements
 
 = V4.6.16 = 02 July 2026

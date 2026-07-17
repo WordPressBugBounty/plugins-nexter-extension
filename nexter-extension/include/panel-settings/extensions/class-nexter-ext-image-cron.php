@@ -126,10 +126,12 @@ class Nexter_Ext_Image_Cron {
 			'post_type'      => 'attachment',
 			'post_mime_type' => array( 'image/jpeg', 'image/jpg', 'image/png', 'image/gif' ),
 			'post_status'    => 'inherit',
-			'posts_per_page' => (int) $limit,
+			// Candidate pool — some rows may already be optimised (their marker gets backfilled
+			// and they are skipped below), so fetch more than $limit to still fill a batch.
+			'posts_per_page' => max( (int) $limit * 5, 25 ),
 			'fields'         => 'ids',
 			'orderby'        => 'ID',
-			'order'          => 'ASC',
+			'order'          => 'DESC', // Newest uploads first, so freshly uploaded images convert promptly.
 			'no_found_rows'  => true,
 			'update_post_meta_cache' => false,
 			'update_post_term_cache' => false,
@@ -147,9 +149,21 @@ class Nexter_Ext_Image_Cron {
 		}
 
 		foreach ( $query->posts as $attachment_id ) {
+			if ( count( $ids ) >= (int) $limit ) {
+				break;
+			}
 			$attachment_id = (int) $attachment_id;
 			$file_path = get_attached_file( $attachment_id );
 			if ( ! $file_path || ! file_exists( $file_path ) ) {
+				continue;
+			}
+
+			// Already optimised in a prior version — the data lives inside _wp_attachment_metadata
+			// but the standalone marker is missing. Backfill the marker and skip it, so the cron
+			// does not re-optimise already-done images and re-consume optimisation credits.
+			$existing_meta = wp_get_attachment_metadata( $attachment_id );
+			if ( is_array( $existing_meta ) && ! empty( $existing_meta['nxt_optimized_file'] ) ) {
+				update_post_meta( $attachment_id, 'nxt_optimized_file', $existing_meta['nxt_optimized_file'] );
 				continue;
 			}
 
@@ -276,6 +290,11 @@ class Nexter_Ext_Image_Cron {
 			}
 
 			wp_update_attachment_metadata( $attachment_id, $metadata );
+			// Standalone marker so get_unoptimized_attachment_ids() excludes this attachment on the
+			// next run. Without it the "nxt_optimized_file NOT EXISTS" query never advances (the key
+			// only lived inside the serialized _wp_attachment_metadata), so the cron would reprocess
+			// the same lowest-ID images forever and never reach newer uploads.
+			update_post_meta( $attachment_id, 'nxt_optimized_file', $optimized_relative );
 			wp_cache_delete( $attachment_id, 'post_meta' );
 			clean_post_cache( $attachment_id );
 

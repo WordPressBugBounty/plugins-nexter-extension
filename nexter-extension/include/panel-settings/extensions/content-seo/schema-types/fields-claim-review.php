@@ -1,0 +1,196 @@
+<?php
+/**
+ * Field definitions: ClaimReview (Schema.org ClaimReview).
+ *
+ * @package Nexter_Extension
+ * @subpackage Content_SEO
+ */
+
+defined( 'ABSPATH' ) || exit;
+
+require_once __DIR__ . '/claim-review-groups.php';
+
+return array(
+	array(
+		'key'     => '@id',
+		'label'   => __( 'ID', 'nexter-extension' ),
+		'input'   => 'text',
+		'tooltip' => __( 'A unique ID for this schema. You can use the page URL or leave the default value as it is.', 'nexter-extension' ),
+		'default' => '%post.url%#claimreview-%schema.item.id%',
+	),
+	array(
+		'key'     => '@type',
+		'label'   => __( 'Type', 'nexter-extension' ),
+		'input'   => 'text',
+		'tooltip' => __( 'Set the schema type. This should always be set to ClaimReview.', 'nexter-extension' ),
+		'default' => 'ClaimReview',
+	),
+	array(
+		'key'     => 'author',
+		'subkey'  => '@type',
+		'label'   => __( 'Author Type', 'nexter-extension' ),
+		'input'   => 'select_group',
+		'tooltip' => __( 'Choose whether the author is a person or an organization.', 'nexter-extension' ),
+		'default' => 'Organization',
+		'options' => nexter_content_seo_schema_claim_review_author_type_groups(),
+	),
+	array(
+		'key'     => 'author',
+		'subkey'  => 'name',
+		'label'   => __( 'Author Name', 'nexter-extension' ),
+		'input'   => 'editor',
+		'tooltip' => __( 'Enter the name of the person or organization.', 'nexter-extension' ),
+		'default' => '%site.title%',
+	),
+	array(
+		'key'     => 'author',
+		'subkey'  => 'url',
+		'label'   => __( 'Author URL', 'nexter-extension' ),
+		'input'   => 'editor',
+		'tooltip' => __( 'Add the website link of the author or organization.', 'nexter-extension' ),
+		'default' => '%site.url%',
+	),
+	array(
+		'key'     => 'claimReviewed',
+		'label'   => __( 'Claim Reviewed', 'nexter-extension' ),
+		'input'   => 'editor',
+		'tooltip' => __( 'Write a short summary of the claim being checked. Keep it brief for better display.', 'nexter-extension' ),
+		'default' => '',
+	),
+	array(
+		'key'     => 'datePublished',
+		'label'   => __( 'Date Published', 'nexter-extension' ),
+		'input'   => 'editor',
+		'tooltip' => __( 'Enter the date when the fact-check article was published.', 'nexter-extension' ),
+		'default' => '%post.date_c%',
+	),
+	array(
+		'key'     => 'itemReviewed',
+		'subkey'  => '@type',
+		'label'   => __( 'Item Reviewed Type', 'nexter-extension' ),
+		'input'   => 'text',
+		'tooltip' => __( 'Select the type of content the claim is about.', 'nexter-extension' ),
+		'default' => 'Claim',
+	),
+	array(
+		'key'     => 'itemReviewed',
+		'subkey'  => 'appearance',
+		'label'   => __( 'Appearance', 'nexter-extension' ),
+		'input'   => 'editor',
+		'tooltip' => __( 'Add a link to where the claim appears (for example, an article or post).', 'nexter-extension' ),
+		'default' => '%post.url%',
+	),
+	array(
+		'key'     => 'itemReviewed',
+		'subkey'  => 'datePublished',
+		'label'   => __( 'Claim Date Published', 'nexter-extension' ),
+		'input'   => 'editor',
+		'tooltip' => __( 'Enter the date when the claim was originally made public.', 'nexter-extension' ),
+		'default' => '%post.date_c%',
+	),
+	array(
+		'key'     => 'itemReviewed',
+		'subkey'  => 'firstAppearance',
+		'label'   => __( 'First Appearance', 'nexter-extension' ),
+		'input'   => 'editor',
+		'tooltip' => __( 'Add a link or description of where the claim first appeared.', 'nexter-extension' ),
+		'default' => '',
+	),
+	array(
+		'key'     => 'itemReviewed',
+		'subkey'  => 'sameAs',
+		'label'   => __( 'Same As', 'nexter-extension' ),
+		'input'   => 'editor',
+		'tooltip' => __( 'Add a reference link that clearly identifies the claim (for example, a trusted source or Wikipedia page).', 'nexter-extension' ),
+		'default' => '',
+	),
+	array(
+		'key'     => 'reviewRating',
+		'subkey'  => '@type',
+		'label'   => __( 'Review Rating Type', 'nexter-extension' ),
+		'input'   => 'text',
+		'default' => 'Rating',
+	),
+	array(
+		'key'     => 'reviewRating',
+		'subkey'  => 'alternateName',
+		'label'   => __( 'Alternate Name', 'nexter-extension' ),
+		'input'   => 'editor',
+		'tooltip' => __( 'Enter a short label for the rating (for example: True, False, Partly True).', 'nexter-extension' ),
+		'default' => '',
+	),
+	array(
+		'key'     => 'reviewRating',
+		'subkey'  => 'ratingValue',
+		'label'   => __( 'Rating Value', 'nexter-extension' ),
+		'input'   => 'editor',
+		'tooltip' => __( 'Enter the rating score (for example, between 1 and 5).', 'nexter-extension' ),
+		'default' => '',
+	),
+	array(
+		'key'     => 'reviewRating',
+		'subkey'  => 'bestRating',
+		'label'   => __( 'Best Rating', 'nexter-extension' ),
+		'input'   => 'editor',
+		'tooltip' => __( 'Enter the highest possible rating value.', 'nexter-extension' ),
+		'default' => '5',
+	),
+	array(
+		'key'     => 'reviewRating',
+		'subkey'  => 'worstRating',
+		'label'   => __( 'Worst Rating', 'nexter-extension' ),
+		'input'   => 'editor',
+		'tooltip' => __( 'Enter the lowest possible rating value.', 'nexter-extension' ),
+		'default' => '1',
+	),
+	array(
+		'key'     => 'reviewRating',
+		'subkey'  => 'name',
+		'label'   => __( 'Rating Name', 'nexter-extension' ),
+		'input'   => 'editor',
+		'tooltip' => __( 'Add a name for the rating if no alternate name is provided.', 'nexter-extension' ),
+		'default' => '',
+	),
+	array(
+		'key'     => 'url',
+		'label'   => __( 'URL', 'nexter-extension' ),
+		'input'   => 'editor',
+		'tooltip' => __( 'Add the link to the full fact-check article on your website.', 'nexter-extension' ),
+		'default' => '%post.url%',
+	),
+	array(
+		'key'     => 'reviewBody',
+		'label'   => __( 'Review Body', 'nexter-extension' ),
+		'input'   => 'editor',
+		'tooltip' => __( 'Write the main explanation of the fact check.', 'nexter-extension' ),
+		'default' => '%post.excerpt%',
+	),
+	array(
+		'key'     => 'positiveNotes',
+		'label'   => __( 'Positive Notes', 'nexter-extension' ),
+		'input'   => 'editor',
+		'tooltip' => __( 'Add points that support or confirm the claim.', 'nexter-extension' ),
+		'default' => '',
+	),
+	array(
+		'key'     => 'negativeNotes',
+		'label'   => __( 'Negative Notes', 'nexter-extension' ),
+		'input'   => 'editor',
+		'tooltip' => __( 'Add points that go against or disprove the claim.', 'nexter-extension' ),
+		'default' => '',
+	),
+	array(
+		'key'     => 'isPartOf',
+		'label'   => __( 'Is Part Of', 'nexter-extension' ),
+		'input'   => 'editor',
+		'tooltip' => __( 'Use this if the content belongs to a larger article or series (optional).', 'nexter-extension' ),
+		'default' => '%schemas.webpage%',
+	),
+	array(
+		'key'     => 'mainEntityOfPage',
+		'label'   => __( 'Main Entity Of Page', 'nexter-extension' ),
+		'input'   => 'editor',
+		'tooltip' => __( 'Define what the page is mainly about (for example: article, product, or event).', 'nexter-extension' ),
+		'default' => '',
+	),
+);

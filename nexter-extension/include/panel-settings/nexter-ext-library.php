@@ -62,7 +62,7 @@ if ( !class_exists( 'Nexter_Pro_Ext_Activate' ) ) {
 				
 				// retrieve the license from the database
 				if( !isset($_POST['nexter_activate_key']) || empty($_POST['nexter_activate_key']) ) {
-					wp_redirect( admin_url( 'admin.php?page=' . self::$license_page ) );
+					wp_safe_redirect( admin_url( 'admin.php?page=' . self::$license_page ) );
 					exit;
 				}
 				

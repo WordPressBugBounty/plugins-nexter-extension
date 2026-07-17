@@ -292,6 +292,21 @@ if ( ! class_exists( 'Nexter_Ext_Panel_Settings' ) ) {
                     array($this, 'nexter_code_snippet_display'),
                 );
             }
+            $seo_enabled = false;
+
+            if (isset($get_opt['seo']) && isset($get_opt['seo']['switch'])) {
+                $seo_enabled = !empty($get_opt['seo']['switch']);
+            }
+            if($seo_enabled){
+                add_submenu_page(
+                    'nexter_welcome',
+                    __( 'SEO', 'nexter-extension' ),
+                    __( 'SEO', 'nexter-extension' ),
+                    'manage_options',
+                    'nxt_content_seo',
+                    array( $this, 'nexter_ext_seo_page' )
+                );
+            }
             add_submenu_page(
                 'nexter_welcome',
                 __( 'Extensions', 'nexter-extension' ),
@@ -362,6 +377,16 @@ if ( ! class_exists( 'Nexter_Ext_Panel_Settings' ) ) {
 		public function nexter_code_snippet_display() {
 			echo '<div id="nexter-code-snippets"></div>';
 		}
+
+        /**
+         * Render Content SEO admin page.
+         */
+        public function nexter_ext_seo_page() {
+            printf(
+                '<div id="nexter-content-seo" class="%s"></div>',
+                esc_attr( 'wrap nxt-content-seo-mount' )
+            );
+        }
 
         /**
 		 * Theme Builder Render html

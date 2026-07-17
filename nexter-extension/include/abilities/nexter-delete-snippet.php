@@ -89,7 +89,8 @@ function nexter_mcp_delete_snippet(array $input): array {
     $data = $file_based->get_all_snippets([], $id, false);
     $snippet_name = (isset($data['meta']['name'])) ? $data['meta']['name'] : $id;
 
-    if (!unlink($file_path)) {
+    wp_delete_file($file_path);
+    if (file_exists($file_path)) {
         return ['success' => false, 'error' => 'Failed to delete snippet file.'];
     }
 

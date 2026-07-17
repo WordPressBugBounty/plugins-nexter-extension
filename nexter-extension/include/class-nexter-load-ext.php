@@ -372,6 +372,20 @@ if ( ! class_exists( 'Nexter_Extensions_Load' ) ) {
 			require_once NEXTER_EXT_DIR . 'include/rollback.php';
 			require_once NEXTER_EXT_DIR . 'include/classes/nexter-class-load.php';
 			require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/custom-fields/nxt-custom-fields.php';
+			$get_opt = Nxt_Options::extra_ext();
+			$seo_enabled = false;
+
+            if (isset($get_opt['seo']) && isset($get_opt['seo']['switch'])) {
+                $seo_enabled = !empty($get_opt['seo']['switch']);
+            }
+			if($seo_enabled){
+				require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/content-seorank.php';
+			} elseif ( is_admin() ) {
+				// SEO module disabled — show the promo notice inviting the user to enable it.
+				require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/class-nxt-seo-notice.php';
+				new Nxt_Seo_Notice();
+			}
+			
 			if(is_admin()){
 				require_once NEXTER_EXT_DIR . 'include/panel-settings/nxt-deactivate.php';
 				require_once NEXTER_EXT_DIR . 'include/panel-settings/nexter-whats-new.php';

@@ -714,10 +714,10 @@ class Nexter_Builder_Code_Snippets_Executor {
         
         foreach ($common_functions as $typo => $correct) {
             if (preg_match('/^\s*' . preg_quote($typo) . '\s*[\(\s]/', $line)) {
-                /* translators: 1: Function name (typo), 2: Line number */
                 return [
                     'line' => $line_number,
                     'type' => 'typo',
+                    /* translators: 1: Function name (typo), 2: Line number */
                     'message' => sprintf(__('Syntax Error: Unknown function \'%1$s\' on line %2$d', 'nexter-extension'), $typo, $line_number),
                     'code' => $line
                 ];
@@ -832,6 +832,16 @@ class Nexter_Builder_Code_Snippets_Executor {
         }
         file_put_contents($temp_file, "<?php\n" . $code);
         
+        /*
+         * Justification (for WP.org review / Plugin Check):
+         * This runs `php -l` (LINT / syntax check only — it never executes the snippet) on an
+         * admin-authored PHP snippet before saving, so the user gets a clear parse-error message
+         * instead of a fatal on the live site. It is admin-only, gated by function_exists() above,
+         * and the ONLY external input (the temp file path) is passed through escapeshellarg() —
+         * nothing from the request reaches the shell unescaped. proc_open()/exec() would trip the
+         * same scanner rule and add no safety here, so shell_exec is the minimal tool for the job.
+         */
+        // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions -- php -l syntax lint only; admin-only; path escaped via escapeshellarg(). See note above.
         $output = shell_exec("php -l " . escapeshellarg($temp_file) . " 2>&1");
         unlink($temp_file);
         

@@ -270,7 +270,13 @@ class Nexter_Ext_Custom_Upload_Font {
 			}
 		}
 		if( !empty($custom_fonts_list) ){
-			$fonts_list = array_merge($custom_fonts_list, $fonts_list);
+			// $custom_fonts_list holds the full structures WITH weights; $fonts_list is the
+			// incoming baseline (e.g. the theme's get_custom_fonts_load() seeds each font as a
+			// bare `true` with no weights). The built structures must win for shared font names,
+			// so merge the baseline FIRST and let the weighted list override — otherwise the bare
+			// `true` values clobber the weights and Elementor (which skips fonts with empty
+			// weights) drops every custom font from its family dropdown.
+			$fonts_list = array_merge($fonts_list, $custom_fonts_list);
 		}
 		return $fonts_list;
 	}

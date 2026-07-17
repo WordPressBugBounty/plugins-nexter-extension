@@ -191,7 +191,14 @@ class Nexter_Ext_Local_Google_Font {
     
         // Security: Validate directory path
         $directory = WP_CONTENT_DIR . '/nxt_assets/localfonts/';
-        $real_directory = realpath( dirname( $directory ) );
+        // Create the local fonts directory FIRST. realpath() returns false for a path that does
+        // not exist yet, so running it on dirname($directory) before the folder was created made
+        // this method bail out here — Self-Host Google Fonts then silently did nothing on any
+        // site where wp-content/nxt_assets had not already been created (i.e. fresh installs).
+        if ( ! $wp_filesystem->is_dir( $directory ) ) {
+            wp_mkdir_p( $directory );
+        }
+        $real_directory = realpath( $directory );
         $real_content_dir = realpath( WP_CONTENT_DIR );
         
         // Security: Ensure directory is within WP_CONTENT_DIR
@@ -358,7 +365,7 @@ class Nexter_Ext_Local_Google_Font {
             // Security: Double-check file is within allowed directory
             $real_file = realpath( $file );
             if ( $real_file && strpos( $real_file, $real_fonts_dir ) === 0 && is_file( $real_file ) ) {
-                @unlink( $real_file );
+                wp_delete_file( $real_file );
             }
         }
         

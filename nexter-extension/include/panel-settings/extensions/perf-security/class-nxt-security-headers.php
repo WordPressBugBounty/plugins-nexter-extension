@@ -53,18 +53,21 @@ class Nxt_Security_Headers {
 	}
 
 	public function add_x_frame_options_header() {
-		$advanced_security_options = Nxt_Options::security() ?: array();
-		if ( isset( $advanced_security_options['iframe_security'] ) && ! empty( $advanced_security_options['iframe_security'] ) ) {
-			switch ( $advanced_security_options['iframe_security'] ) {
-				case 'sameorigin':
-					if ( ! defined( 'DOING_CRON' ) ) {
-						header( 'X-Frame-Options: sameorigin' );
-					}
-					break;
-				case 'deny':
-					header( 'X-Frame-Options: deny' );
-					break;
-			}
+		// Use the advance-security values captured in the constructor. Previously this re-read
+		// Nxt_Options::security() and looked for ['iframe_security'] at the TOP level, but that
+		// key actually lives at ['advance-security']['values']['iframe_security'] — so the lookup
+		// always failed and the X-Frame-Options (clickjacking protection) header was never sent.
+		$mode = ( is_array( $this->adv_sec_opt ) && ! empty( $this->adv_sec_opt['iframe_security'] ) )
+			? $this->adv_sec_opt['iframe_security'] : '';
+		switch ( $mode ) {
+			case 'sameorigin':
+				if ( ! defined( 'DOING_CRON' ) ) {
+					header( 'X-Frame-Options: sameorigin' );
+				}
+				break;
+			case 'deny':
+				header( 'X-Frame-Options: deny' );
+				break;
 		}
 	}
 

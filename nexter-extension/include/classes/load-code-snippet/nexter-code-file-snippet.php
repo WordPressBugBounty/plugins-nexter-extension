@@ -128,6 +128,30 @@ if ( ! class_exists( 'Nexter_Code_Snippets_File_Based' ) ) {
 		 * @param string $file_path File path to validate
 		 * @return bool True if valid, false otherwise
 		 */
+		private function is_valid_php_code( $code ) {
+			if ( ! is_string( $code ) || '' === $code ) {
+				return false;
+			}
+			// token_get_all() with the TOKEN_PARSE flag (PHP 7.0+) throws ParseError on invalid
+			// syntax — the only portable way to validate PHP without executing it, since a parse
+			// error inside include is an uncatchable fatal.
+			if ( ! defined( 'TOKEN_PARSE' ) ) {
+				return true; // Cannot validate on this runtime; assume valid rather than block saves.
+			}
+			try {
+				token_get_all( $code, TOKEN_PARSE );
+			} catch ( \Throwable $e ) {
+				return false;
+			}
+			return true;
+		}
+
+		/**
+		 * Validate a file path is within the snippet storage dir (prevents traversal).
+		 *
+		 * @param string $file_path Path to validate.
+		 * @return bool
+		 */
 		private function is_valid_file_path( $file_path ) {
 			if ( empty( $file_path ) || ! is_string( $file_path ) ) {
 				return false;
@@ -808,7 +832,34 @@ PHP;
 			// Add array export with proper escaping
 			$code .= 'return ' .var_export( $data, true ) . ';';
 
-			$result = file_put_contents( $cache_file, $code );
+			// Guard: never write syntactically invalid PHP. var_export() should always produce
+			// valid code, but validate defensively so a malformed payload can never be committed
+			// to the cache file (which is include-d on every request and would fatal otherwise).
+			if ( ! $this->is_valid_php_code( $code ) ) {
+				if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) { error_log( 'Nexter Extension: Generated snippet list failed syntax validation. Save aborted.' ); }
+				return false;
+			}
+
+			// Write ATOMICALLY: write to a unique temp file with an exclusive lock, then rename()
+			// into place. rename() is atomic on the same filesystem, so a concurrent request can
+			// never observe a half-written file. The previous plain file_put_contents() had no
+			// lock and no atomic swap, so two overlapping writers (e.g. a snippet save racing a
+			// front-end index rebuild) could interleave and leave a truncated file with unbalanced
+			// parentheses — which then fatally parse-errored ("Unmatched ')'") on every request.
+			$tmp_file = $cache_file . '.' . uniqid( 'tmp', true ) . '.tmp';
+			$bytes    = file_put_contents( $tmp_file, $code, LOCK_EX );
+			if ( false === $bytes ) {
+				@unlink( $tmp_file );
+				return false;
+			}
+			if ( @rename( $tmp_file, $cache_file ) ) {
+				$result = $bytes;
+			} else {
+				// rename() can fail on some hosts (cross-device links, restrictive perms).
+				// Fall back to a direct locked write and clean up the temp file.
+				@unlink( $tmp_file );
+				$result = file_put_contents( $cache_file, $code, LOCK_EX );
+			}
 
 			// After writing new file, remove legacy index.php if it exists (one-time cleanup)
 			$legacy_cache_file = wp_normalize_path( $this->file_store . '/index.php' );
@@ -856,6 +907,25 @@ PHP;
 			// 1. Prefer new file if it exists.
 			if ( is_file( $primary_file ) && is_readable( $primary_file ) ) {
 				if ( ! $this->is_valid_file_path( $primary_file ) ) {
+					return array();
+				}
+
+				// Guard against a corrupt/truncated cache file. A parse error inside an include-d
+				// file is a fatal E_COMPILE_ERROR that CANNOT be caught with try/catch, so it would
+				// crash the whole site on every request. Validate the file's syntax first; if it is
+				// broken (e.g. left truncated by an older non-atomic write), delete it and rebuild
+				// the index from the individual snippet files instead of fataling.
+				$contents = file_get_contents( $primary_file );
+				if ( false === $contents || ! $this->is_valid_php_code( $contents ) ) {
+					@unlink( $primary_file );
+					$this->snippetIndexData(); // Regenerate from snippet source files (writes a fresh, valid file).
+					if ( is_file( $primary_file ) && is_readable( $primary_file ) ) {
+						$rebuilt = file_get_contents( $primary_file );
+						if ( false !== $rebuilt && $this->is_valid_php_code( $rebuilt ) ) {
+							$config = include $primary_file;
+							return is_array( $config ) ? $config : array();
+						}
+					}
 					return array();
 				}
 

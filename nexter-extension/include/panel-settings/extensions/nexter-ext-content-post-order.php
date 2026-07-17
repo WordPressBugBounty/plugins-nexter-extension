@@ -342,15 +342,15 @@ defined('ABSPATH') or die();
             }
             
             //retrieve a list of all objects
-            $query = $wpdb->prepare(
-                "SELECT ID FROM {$wpdb->posts} 
-                WHERE post_type = %s 
-                AND post_status IN ('publish', 'pending', 'draft', 'private', 'future', 'inherit') 
-                ORDER BY menu_order, post_date DESC",
-                $post_type
+            $posts = $wpdb->get_col(
+                $wpdb->prepare(
+                    "SELECT ID FROM {$wpdb->posts}
+                    WHERE post_type = %s
+                    AND post_status IN ('publish', 'pending', 'draft', 'private', 'future', 'inherit')
+                    ORDER BY menu_order, post_date DESC",
+                    $post_type
+                )
             );
-        
-            $posts = $wpdb->get_col( $query );
 
             if ( empty( $posts ) ) {
                 wp_send_json_error( 'No posts found.' );
@@ -499,12 +499,12 @@ defined('ABSPATH') or die();
         if ( defined ( 'FLYING_PRESS_VERSION' ) ) {
             do_action('flying_press_purge_everything:before');
 
-            @unlink(FLYING_PRESS_CACHE_DIR . '/preload.txt');
+            wp_delete_file(FLYING_PRESS_CACHE_DIR . '/preload.txt');
 
             // Delete all files and subdirectories
             FlyingPress\Purge::purge_everything();
 
-            @mkdir(FLYING_PRESS_CACHE_DIR, 0755, true);
+            wp_mkdir_p(FLYING_PRESS_CACHE_DIR);
 
             do_action('flying_press_purge_everything:after');
             

@@ -72,7 +72,7 @@ class Nexter_Ext_Custom_Login_Redirect {
 
         // Security: Sanitize REQUEST_URI to prevent XSS
         $request_uri = isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( $_SERVER['REQUEST_URI'] ) : '';
-        $request_URI = parse_url( $request_uri );
+        $request_URI = wp_parse_url( $request_uri );
         $path = !empty($request_URI['path']) ? untrailingslashit($request_URI['path']) : '';
         
         $login_slug = $this->nxt_custom_login_slug();
@@ -132,7 +132,7 @@ class Nexter_Ext_Custom_Login_Redirect {
         
         // Security: Sanitize REQUEST_URI
         $request_uri = isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( $_SERVER['REQUEST_URI'] ) : '';
-        $request_URI = parse_url( $request_uri );
+        $request_URI = wp_parse_url( $request_uri );
         $request_path = isset( $request_URI['path'] ) ? $request_URI['path'] : '';
         
         if ( ! is_user_logged_in() && $request_path === '/wp-admin/options.php' ) {

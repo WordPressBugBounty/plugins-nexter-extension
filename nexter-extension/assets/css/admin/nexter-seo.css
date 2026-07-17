@@ -1,0 +1,24 @@
+/**
+ * Nexter SEO — admin "SEO Checks" column badge + details popover.
+ * Enqueued on post/term list screens by Nexter_Content_SeoRank::seo_checks_assets().
+ */
+.column-nxt_seo_checks{width:150px;}
+.nxt-seo-checks{position:relative;}
+.nxt-seo-checks__badge{display:inline-flex;align-items:center;gap:6px;text-decoration:none;cursor:pointer;padding:2px 4px;border-radius:4px;}
+.nxt-seo-checks__badge:focus{box-shadow:0 0 0 1px #2271b1;outline:none;}
+.nxt-seo-checks__score{display:inline-flex;align-items:center;justify-content:center;min-width:26px;height:20px;padding:0 5px;border-radius:10px;font-weight:600;font-size:11px;color:#fff;background:#8c8f94;}
+.nxt-seo-checks__label{font-size:12px;color:#50575e;}
+.nxt-seo-checks__badge--good .nxt-seo-checks__score{background:#00a32a;}
+.nxt-seo-checks__badge--fair .nxt-seo-checks__score{background:#dba617;}
+.nxt-seo-checks__badge--poor .nxt-seo-checks__score{background:#d63638;}
+.nxt-seo-checks__badge--none .nxt-seo-checks__score{background:#c3c4c7;color:#50575e;}
+.nxt-seo-checks__detail{position:absolute;z-index:100;top:100%;left:0;margin-top:6px;width:360px;max-width:70vw;max-height:340px;overflow:auto;background:#fff;border:1px solid #c3c4c7;border-radius:6px;box-shadow:0 6px 20px rgba(0,0,0,.15);padding:10px 12px;}
+.nxt-seo-checks__detail-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid #f0f0f1;font-weight:600;}
+.nxt-seo-checks__items{margin:0;list-style:none;}
+.nxt-seo-checks__item{display:flex;gap:8px;align-items:flex-start;padding:5px 0;border-bottom:1px solid #f6f7f7;font-size:12px;line-height:1.5;}
+.nxt-seo-checks__item:last-child{border-bottom:none;}
+.nxt-seo-checks__ico{flex:0 0 16px;width:16px;height:16px;border-radius:50%;color:#fff;font-size:11px;line-height:16px;text-align:center;font-weight:700;}
+.nxt-seo-checks__item--pass .nxt-seo-checks__ico{background:#00a32a;}
+.nxt-seo-checks__item--warning .nxt-seo-checks__ico{background:#dba617;}
+.nxt-seo-checks__item--error .nxt-seo-checks__ico{background:#d63638;}
+.nxt-seo-checks__loading,.nxt-seo-checks__err{font-size:12px;color:#50575e;padding:6px 0;}

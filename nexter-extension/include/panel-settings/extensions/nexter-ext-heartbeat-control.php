@@ -49,7 +49,7 @@ defined('ABSPATH') or die();
 			? (is_ssl() ? 'https://' : 'http://') . $http_host . $request_uri
 			: get_admin_url() . $pagenow;
 
-		$path = parse_url($url, PHP_URL_PATH);
+		$path = wp_parse_url($url, PHP_URL_PATH);
 
 		// Only keep the part after "/wp-admin"
 		if (strpos($path, '/wp-admin/') !== false) {

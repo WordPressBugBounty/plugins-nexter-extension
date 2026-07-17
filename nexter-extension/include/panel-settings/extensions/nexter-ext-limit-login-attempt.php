@@ -383,9 +383,13 @@ defined('ABSPATH') or die();
 		$max_fails  = $nxt_ext_limit_login['failed_login'] ?? 5;
 		$max_blocks = $nxt_ext_limit_login['lockout_login'] ?? 5;
 
-		// Fetch previous login attempts for IP
-		$sql = $wpdb->prepare( "SELECT * FROM `" . $table . "` WHERE `ip_address` = %s", $ip );
-		$record = $wpdb->get_results( $sql, ARRAY_A );
+		// Fetch previous login attempts for IP. The table name is built from $wpdb->prefix
+		// (trusted, not user input) and SQL identifiers cannot be bound as placeholders, so the
+		// interpolation is safe; the value ($ip) is bound via a %s placeholder.
+		$record = $wpdb->get_results(
+			$wpdb->prepare( "SELECT * FROM `{$table}` WHERE `ip_address` = %s", $ip ), // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Table name from $wpdb->prefix; identifiers cannot use placeholders.
+			ARRAY_A
+		);
 
 		if ( $record ) {
             $record_count = count( $record );

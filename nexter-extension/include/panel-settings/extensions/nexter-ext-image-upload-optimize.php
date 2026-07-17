@@ -503,11 +503,53 @@ class Nexter_Ext_Image_Upload_Optimization {
 			return $metadata;
 		}
 		$file_path = wp_normalize_path( $file_path );
-		if ( empty( self::$pending_upload_metadata[ $file_path ] ) ) {
+
+		// Resolve the pending entry. For images larger than WordPress's big_image_size_threshold
+		// (2560px by default), WordPress creates a "-scaled" file AFTER wp_handle_upload ran — so
+		// get_attached_file() now returns the "-scaled" path while the pending entry is still keyed
+		// by the pre-scale original file. Fall back to that original key so scaled uploads aren't
+		// skipped (previously they returned here and were served as un-optimised JPEGs).
+		$pending_key = $file_path;
+		if ( empty( self::$pending_upload_metadata[ $pending_key ] ) && is_array( $metadata ) && ! empty( $metadata['original_image'] ) ) {
+			$orig_key = wp_normalize_path( dirname( $file_path ) . '/' . $metadata['original_image'] );
+			if ( ! empty( self::$pending_upload_metadata[ $orig_key ] ) ) {
+				$pending_key = $orig_key;
+			}
+		}
+		if ( empty( self::$pending_upload_metadata[ $pending_key ] ) ) {
 			return $metadata;
 		}
-		$pending = self::$pending_upload_metadata[ $file_path ];
-		unset( self::$pending_upload_metadata[ $file_path ] );
+		$pending = self::$pending_upload_metadata[ $pending_key ];
+		unset( self::$pending_upload_metadata[ $pending_key ] );
+
+		// When WordPress scaled the upload, the pending optimisation was performed on the pre-scale
+		// original, but the file actually SERVED is the "-scaled" attached file. Optimise the
+		// attached file too and repoint the stored metadata at it, so the served image (and its URL
+		// rewrite) resolves to an optimised WebP/AVIF instead of the untouched "-scaled" JPEG.
+		if ( $pending_key !== $file_path && file_exists( $file_path ) ) {
+			$scaled_settings = $this->get_settings();
+			$scaled_result   = $this->process_image( $file_path, $scaled_settings );
+			if ( $scaled_result && ! empty( $scaled_result['success'] ) && ! empty( $scaled_result['file'] ) ) {
+				$scaled_upload_dir = self::get_upload_dir();
+				$scaled_basedir    = wp_normalize_path( $scaled_upload_dir['basedir'] );
+				$scaled_rel        = ltrim( str_replace( $scaled_basedir . '/', '', $file_path ), '/' );
+				$scaled_backup     = wp_normalize_path( WP_CONTENT_DIR . '/nexter-optimizer/backups/' . $scaled_rel );
+				if ( ! is_dir( dirname( $scaled_backup ) ) ) {
+					wp_mkdir_p( dirname( $scaled_backup ) );
+				}
+				if ( ! file_exists( $scaled_backup ) ) {
+					@copy( $file_path, $scaled_backup );
+				}
+				$pending['original_size']      = $scaled_result['original_size'];
+				$pending['optimized_size']     = $scaled_result['optimized_size'];
+				$pending['original_relative']  = $scaled_rel;
+				$pending['optimized_relative'] = self::absolute_to_relative_content( $scaled_result['file'] );
+				$pending['format']             = $scaled_result['format'];
+				if ( file_exists( $scaled_backup ) ) {
+					$pending['backup_relative'] = self::absolute_to_relative_content( $scaled_backup );
+				}
+			}
+		}
 		if ( ! is_array( $metadata ) ) {
 			$metadata = array();
 		}
@@ -587,6 +629,12 @@ class Nexter_Ext_Image_Upload_Optimization {
 		if ( ! empty( $pending['needs_limit_increment'] ) ) {
 			$credit_count = 1 + ( isset( $metadata['nxt_optimized_sizes'] ) && is_array( $metadata['nxt_optimized_sizes'] ) ? count( $metadata['nxt_optimized_sizes'] ) : 0 );
 			Nexter_Ext_Image_Optimization_Limit::get_instance()->record_optimization( $attachment_id, (int) $total_original, (int) $total_optimized, $credit_count );
+		}
+
+		// Standalone marker so the background cron's "unoptimised" query (which checks for the
+		// nxt_optimized_file post meta) correctly excludes attachments already optimised here.
+		if ( ! empty( $metadata['nxt_optimized_file'] ) ) {
+			update_post_meta( $attachment_id, 'nxt_optimized_file', $metadata['nxt_optimized_file'] );
 		}
 
 		return $metadata;
@@ -968,11 +1016,14 @@ class Nexter_Ext_Image_Upload_Optimization {
 			return $upload;
 		}
 
-		// If background processing is enabled, skip immediate Optimisation.
-		// The cron job will pick up unoptimised images later.
-		/* if ( ! empty( $settings['run_in_background'] ) ) {
+		// If background processing is enabled, skip immediate optimisation here — the cron
+		// handler (Nexter_Ext_Image_Cron) picks up unoptimised attachments later. This prevents
+		// large / lossless uploads from blocking the request while WebP/AVIF encoding runs
+		// (lossless encoding of a 2560px image plus every thumbnail size can exceed PHP's time
+		// limit and make the upload appear to hang or fail).
+		if ( ! empty( $settings['run_in_background'] ) ) {
 			return $upload;
-		} */
+		}
 
 		$valid_mimes = array( 'image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp', 'image/avif' );
 		if ( ! in_array( $upload['type'], $valid_mimes, true ) ) {
@@ -1762,7 +1813,7 @@ class Nexter_Ext_Image_Upload_Optimization {
 
 			$optimized_path = self::get_absolute_path( $metadata['nxt_optimized_file'] );
 			if ( $optimized_path && file_exists( $optimized_path ) ) {
-				@unlink( $optimized_path );
+				wp_delete_file( $optimized_path );
 			}
 			// Smart mode keeps both .avif and .webp on disk — clean up the companion file too.
 			if ( $optimized_path ) {
@@ -1770,7 +1821,7 @@ class Nexter_Ext_Image_Upload_Optimization {
 				foreach ( array( '.avif', '.webp' ) as $companion_ext ) {
 					$companion = $base_no_ext . $companion_ext;
 					if ( $companion !== wp_normalize_path( $optimized_path ) && file_exists( $companion ) ) {
-						@unlink( $companion );
+						wp_delete_file( $companion );
 					}
 				}
 			}
@@ -1797,7 +1848,7 @@ class Nexter_Ext_Image_Upload_Optimization {
 					if ( ! empty( $metadata['nxt_optimized_sizes'][ $size_name ]['file'] ) ) {
 						$size_opt_path = self::get_absolute_path( $metadata['nxt_optimized_sizes'][ $size_name ]['file'] );
 						if ( $size_opt_path && file_exists( $size_opt_path ) ) {
-							@unlink( $size_opt_path );
+							wp_delete_file( $size_opt_path );
 						}
 					}
 				}
@@ -1831,7 +1882,7 @@ class Nexter_Ext_Image_Upload_Optimization {
 		wp_send_json_success( array(
 			'restored' => $restored,
 			'failed'   => $failed,
-			/* translators: 1: number of images successfully restored, 2: number of images that failed to restore */
+			/* translators: 1: Number of images restored, 2: Number of images that failed to restore */
 			'message'  => sprintf( __( 'Restored %1$d images. %2$d failed.', 'nexter-extension' ), $restored, $failed ),
 		) );
 	}
