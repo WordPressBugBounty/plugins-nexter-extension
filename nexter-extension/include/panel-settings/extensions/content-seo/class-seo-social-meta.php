@@ -682,6 +682,7 @@ class Nexter_Content_SEO_Social_Meta {
 		// 5. Genuinely remote/off-site image: fetch once with a short timeout and measure from the
 		//    bytes. Filterable off. The result (including failure) is cached below.
 		if ( empty( $dims ) && preg_match( '#^https?://#i', $url )
+			&& self::remote_probe_allowed( $url )
 			&& apply_filters( 'nexter_content_seo_og_probe_remote_image', true, $url ) ) {
 			$dims = self::remote_image_dimensions( $url );
 		}
@@ -735,9 +736,46 @@ class Nexter_Content_SEO_Social_Meta {
 	}
 
 	/**
+	 * SSRF guard for the remote OG-image probe. The image URL comes from per-post/term social-image
+	 * meta (author-controllable), so before the server fetches it we require an http(s) URL whose
+	 * host resolves EXCLUSIVELY to public IPs. Private / reserved / loopback / link-local targets
+	 * (e.g. 127.0.0.1, 10/8, 192.168/16, 169.254.169.254 cloud metadata) are refused. Fails closed:
+	 * an unresolvable or IPv6-only host is not probed.
+	 *
+	 * @param string $url URL to probe.
+	 * @return bool
+	 */
+	private static function remote_probe_allowed( $url ) {
+		$parts  = wp_parse_url( (string) $url );
+		$scheme = isset( $parts['scheme'] ) ? strtolower( $parts['scheme'] ) : '';
+		$host   = isset( $parts['host'] ) ? $parts['host'] : '';
+		if ( ( 'http' !== $scheme && 'https' !== $scheme ) || '' === $host ) {
+			return false;
+		}
+		$ips = array();
+		if ( filter_var( $host, FILTER_VALIDATE_IP ) ) {
+			$ips[] = $host;
+		} elseif ( function_exists( 'gethostbynamel' ) ) {
+			$resolved = gethostbynamel( $host );
+			if ( is_array( $resolved ) ) {
+				$ips = $resolved;
+			}
+		}
+		if ( empty( $ips ) ) {
+			return false; // Unresolvable (or IPv6-only) — do not probe.
+		}
+		foreach ( $ips as $ip ) {
+			if ( ! filter_var( $ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE ) ) {
+				return false; // Private / reserved / loopback / link-local.
+			}
+		}
+		return true;
+	}
+
+	/**
 	 * Width/height of a remote image, fetched once with a bounded timeout and measured from the
 	 * response bytes. Callers cache the result (including failure), so this runs at most once per
-	 * image per TTL.
+	 * image per TTL. Only reached for URLs cleared by remote_probe_allowed().
 	 *
 	 * @param string $url Absolute http(s) image URL.
 	 * @return array{width:int,height:int}|array{} Dimensions, or [] on failure.
@@ -751,8 +789,10 @@ class Nexter_Content_SEO_Social_Meta {
 			$url,
 			array(
 				'timeout'     => max( 2, $timeout ),
-				'redirection' => 3,
-				'sslverify'   => false,
+				// redirection => 0 so a public URL can't 302 to an internal host (SSRF bypass);
+				// sslverify => true — never disable TLS verification on a server-side fetch.
+				'redirection' => 0,
+				'sslverify'   => true,
 				'user-agent'  => 'Nexter-SEO/1.0',
 			)
 		);

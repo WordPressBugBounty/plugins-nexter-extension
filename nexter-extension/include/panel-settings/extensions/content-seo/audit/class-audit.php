@@ -507,8 +507,8 @@ class Engine {
 	 * @param string               $fix_issue_id  ID for fix endpoint.
 	 * @return array<string, mixed>
 	 */
-	private function item( $id, $status, $title, $message, $recommendation = '', $fix_available = false, $fix_issue_id = '' ) {
-		return array(
+	private function item( $id, $status, $title, $message, $recommendation = '', $fix_available = false, $fix_issue_id = '', $count = null ) {
+		$out = array(
 			'id'              => $id,
 			'status'          => $status,
 			'title'           => $title,
@@ -518,6 +518,13 @@ class Engine {
 			'fix_issue_id'    => $fix_issue_id ? (string) $fix_issue_id : '',
 			'fix_callback'    => $fix_issue_id ? 'nexter_seo_audit_fix_' . $fix_issue_id : '',
 		);
+		// Optional numeric detail (e.g. how many items failed a check) consumed by the dashboard
+		// module-status cards. Only emitted when a check supplies it, so existing callers are
+		// unaffected.
+		if ( null !== $count ) {
+			$out['count'] = (int) $count;
+		}
+		return $out;
 	}
 
 	/**
@@ -990,7 +997,8 @@ class Engine {
 			),
 			\__( 'Add descriptive ALT attributes for accessibility and image SEO.', 'nexter-extension' ),
 			false,
-			''
+			'',
+			$missing
 		);
 	}
 

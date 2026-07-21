@@ -30,7 +30,13 @@ class Nexter_Content_SEO {
 		if ( ( defined( 'NXT_PRO_EXT' ) || defined( 'TPGBP_VERSION' ) ) && class_exists( 'Nxt_Options' ) ) {
 			$wl = Nxt_Options::white_label();
 			if ( is_array( $wl ) && ! empty( $wl['brand_name'] ) ) {
-				return (string) $wl['brand_name'];
+				$brand = trim( (string) $wl['brand_name'] );
+				if ( '' !== $brand ) {
+					// Always keep the word "SEO" so the module stays identifiable as an SEO tool,
+					// but don't double it when the brand already contains it (e.g. "Rushit SEO"
+					// stays "Rushit SEO"; "Nirmal" becomes "Nirmal SEO").
+					return ( false !== stripos( $brand, 'seo' ) ) ? $brand : $brand . ' SEO';
+				}
 			}
 		}
 		return __( 'Nexter SEO', 'nexter-extension' );
@@ -1322,7 +1328,11 @@ class Nexter_Content_SEO {
 		switch ( $key ) {
 			case 'indexnow_api_key':
 				$v = sanitize_text_field( $value );
-				return preg_match( '/^[A-Za-z0-9\-]{8,128}$/', $v ) ? $v : null;
+				// Must match the canonical lowercase-hex format enforced by the serve/submit path
+				// (Nexter_Content_SEO_Indexing::get_stored_valid_key). Previously this accepted
+				// uppercase/hyphens, so an imported key passed validation but was then silently
+				// discarded (and overwritten with a freshly generated key) at serve time.
+				return preg_match( '/^[a-f0-9]{8,128}$/', $v ) ? $v : null;
 
 			case 'google_indexing_key':
 				$v          = sanitize_textarea_field( $value );

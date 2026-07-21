@@ -3,7 +3,7 @@ Contributors: posimyththemes, nirmalkavaiya, sagarpatel124
 Tags: seo, security, theme-builder, code-snippet, image-optimizer
 Requires at least: 5.9
 Tested up to: 7.0
-Stable tag: 4.7.0
+Stable tag: 4.7.1
 Requires PHP: 7.4
 License: GPLv3
 License URI: https://opensource.org/licenses/GPL-3.0
@@ -244,6 +244,18 @@ Yes. [Compare Free vs Pro →](https://nexterwp.com/free-vs-pro/#Nexter-Extensio
 == Changelog ==
 
 ### View Complete Changelog at [roadmap.nexterwp.com](https://roadmap.nexterwp.com/updates?filter=Nexter+Extension+-+FREE)
+
+= V4.7.1 = 21 July 2026
+- Fixed : Nexter SEO : Schema Builder now shows a clear validation error when saving an empty FAQ Page instead of failing silently
+- Fixed : Nexter SEO : Redirection rules with a query string in the source URL now match and redirect correctly
+- Fixed : Nexter SEO : Open Graph image-dimension probe hardened against SSRF (rejects internal/private hosts, verifies TLS)
+- Fixed : Nexter SEO : imported IndexNow API key with an invalid format is now skipped rather than silently discarded
+- Improved : Nexter SEO : JSON-LD structured data is now cached persistently and rebuilt only when content or settings change (faster front-end on all hosting)
+- Improved : Nexter SEO : REST endpoints for Redirects, 404 Monitor and Instant Indexing now respond to GET; a request for a missing post/term returns 404
+- Fixed : Security : "Disable XML-RPC" now fully blocks the XML-RPC endpoint (method listing, pingback and authentication) — the toggle could previously report enabled without taking effect
+- Fixed : White Label : the brand name now replaces "Nexter" across the SEO editor panel, Dashboard, Site Audit, Redirects and Import/Export screens, and help links respect the Hide Help Links option
+- Fixed : Translations : added missing translator comments, ordered placeholders, and corrected text-domain coverage
+- Fixed : Bug Fixes and Improvements
 
 = V4.7.0 = 16 July 2026
 - New : Nexter SEO : Launched built-in SEO — replace your standalone SEO plugin with Nexter. On-page SEO, schema, sitemaps, redirects, robots.txt, and image SEO, all in one plugin. Enable from Dashboard → SEO; the module loads only when turned on.

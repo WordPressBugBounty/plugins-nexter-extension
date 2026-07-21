@@ -53,6 +53,36 @@ class Nexter_Content_SEO_Schema {
 	}
 
 	/**
+	 * Cache key for a single post's rendered JSON-LD. SHARED by the request-time reader and the
+	 * save_post purge so the two can never drift — a mismatch would leave stale schema cached after
+	 * an edit now that the store is a persistent transient. Folds in the per-post schema meta and
+	 * the global config hash.
+	 *
+	 * @param int $post_id Post ID.
+	 * @return string
+	 */
+	private static function schema_post_cache_key( $post_id ) {
+		$post_schema = array(
+			'rows'     => self::get_post_custom_schema_rows_raw( (int) $post_id ),
+			'override' => self::post_uses_custom_page_schema( (int) $post_id ),
+		);
+		$sig = 's' . (int) $post_id . '_' . substr( md5( (string) wp_json_encode( $post_schema ) ), 0, 10 );
+		return 'nxtschema_' . $sig . '_' . self::schema_cache_config_hash();
+	}
+
+	/**
+	 * Cache key for a single term's rendered JSON-LD. Shared by the reader and the edited_term
+	 * purge (see schema_post_cache_key).
+	 *
+	 * @param string $taxonomy Taxonomy slug.
+	 * @param int    $term_id  Term ID.
+	 * @return string
+	 */
+	private static function schema_term_cache_key( $taxonomy, $term_id ) {
+		return 'nxtschema_t' . $taxonomy . '_' . (int) $term_id . '_' . self::schema_cache_config_hash();
+	}
+
+	/**
 	 * Cache key for the current request's JSON-LD output, or '' when the request must not be
 	 * cached. Only the deterministic anonymous case is cached: a logged-out, query-arg-free,
 	 * unpaged singular post or term archive (where output depends solely on the object + config).
@@ -76,27 +106,16 @@ class Nexter_Content_SEO_Schema {
 		if ( is_user_logged_in() || is_paged() || ! empty( $significant_query ) || is_preview() || ( function_exists( 'is_customize_preview' ) && is_customize_preview() ) ) {
 			return '';
 		}
-		$sig = '';
 		if ( is_singular() ) {
-			$pid = (int) get_queried_object_id();
-			$sig = 's' . $pid;
-			// Fold the post's per-post schema meta (custom rows + override flag) into the key so
-			// editing per-post schema isn't served stale from a key based only on global config.
-			$post_schema = array(
-				'rows'     => self::get_post_custom_schema_rows_raw( $pid ),
-				'override' => self::post_uses_custom_page_schema( $pid ),
-			);
-			$sig .= '_' . substr( md5( (string) wp_json_encode( $post_schema ) ), 0, 10 );
-		} elseif ( is_category() || is_tag() || is_tax() ) {
+			return self::schema_post_cache_key( (int) get_queried_object_id() );
+		}
+		if ( is_category() || is_tag() || is_tax() ) {
 			$obj = get_queried_object();
 			if ( $obj instanceof WP_Term ) {
-				$sig = 't' . $obj->taxonomy . '_' . (int) $obj->term_id;
+				return self::schema_term_cache_key( $obj->taxonomy, (int) $obj->term_id );
 			}
 		}
-		if ( '' === $sig ) {
-			return '';
-		}
-		return 'nxtschema_' . $sig . '_' . self::schema_cache_config_hash();
+		return '';
 	}
 
 	/**
@@ -105,7 +124,7 @@ class Nexter_Content_SEO_Schema {
 	 * @param int $post_id Post ID.
 	 */
 	public static function purge_post_schema_cache( $post_id ) {
-		wp_cache_delete( 'nxtschema_s' . (int) $post_id . '_' . self::schema_cache_config_hash(), self::CACHE_GROUP );
+		delete_transient( self::schema_post_cache_key( (int) $post_id ) );
 	}
 
 	/**
@@ -120,7 +139,7 @@ class Nexter_Content_SEO_Schema {
 		if ( '' === (string) $taxonomy ) {
 			return;
 		}
-		wp_cache_delete( 'nxtschema_t' . $taxonomy . '_' . (int) $term_id . '_' . self::schema_cache_config_hash(), self::CACHE_GROUP );
+		delete_transient( self::schema_term_cache_key( $taxonomy, (int) $term_id ) );
 	}
 
 	/**
@@ -1916,9 +1935,9 @@ class Nexter_Content_SEO_Schema {
 			$options[ $key ] = array(
 				'label' => $pt->labels->name,
 				'value' => array(
-					/* translators: %s: the content type name */
+					/* translators: %s: Post Label*/
 					$pt->name . '|all' => sprintf( __( 'All %s', 'nexter-extension' ), $pt->labels->name ),
-					/* translators: %s: post type or taxonomy label */
+					/* translators: %s: Post type or taxonomy archive label */
 					$pt->name . '|all|archive' => sprintf( __( 'All %s Archive', 'nexter-extension' ), $pt->labels->name ),
 				),
 			);
@@ -5002,7 +5021,11 @@ class Nexter_Content_SEO_Schema {
 		// config hash baked into the key.
 		$cache_key = self::schema_output_cache_key();
 		if ( $cache_key ) {
-			$cached_html = wp_cache_get( $cache_key, self::CACHE_GROUP );
+			// Transient (not wp_cache): persists across requests even without an external object
+			// cache, so the JSON-LD is built once per 12h per URL instead of rebuilt on every
+			// front-end hit on typical shared hosting. Invalidated by the save_post / edited_term
+			// purges (shared key builders) and by the config hash baked into the key.
+			$cached_html = get_transient( $cache_key );
 			if ( is_string( $cached_html ) ) {
 				echo $cached_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- pre-built, JSON-LD hardened on cache write.
 				return;
@@ -5209,7 +5232,7 @@ class Nexter_Content_SEO_Schema {
 
 		$html = '<script type="application/ld+json" id="nexter-content-seo-schema">' . $json . '</script>' . "\n";
 		if ( ! empty( $cache_key ) ) {
-			wp_cache_set( $cache_key, $html, self::CACHE_GROUP, 12 * HOUR_IN_SECONDS );
+			set_transient( $cache_key, $html, 12 * HOUR_IN_SECONDS );
 		}
 		echo $html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- JSON-LD hardened above.
 	}

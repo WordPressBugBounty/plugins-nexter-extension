@@ -2,14 +2,14 @@
 # This file is distributed under the GPLv3.
 msgid ""
 msgstr ""
-"Project-Id-Version: Nexter Extension 4.7.0.1\n"
+"Project-Id-Version: Nexter Extension 4.7.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/nexter-extension\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-07-16T10:23:49+02:00\n"
+"POT-Creation-Date: 2026-07-21T10:49:07+02:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: nexter-extension\n"
@@ -803,71 +803,71 @@ msgstr ""
 msgid "Syntax Error: Unexpected identifier on line %d"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-php-code-handling.php:841
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:851
 msgid "Unknown syntax error"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-php-code-handling.php:892
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:902
 msgid "CPU-intensive busy-wait loop detected"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-php-code-handling.php:898
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:908
 msgid "Infinite loop detected"
 msgstr ""
 
 #. translators: %s: Hook name
-#: include/classes/load-code-snippet/nexter-php-code-handling.php:910
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:920
 #, php-format
 msgid "Recursive hook detected: %s"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-php-code-handling.php:1000
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:1010
 msgid "Headers already sent error detected"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-php-code-handling.php:1013
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:1023
 msgid "Code execution timeout"
 msgstr ""
 
 #. translators: 1: Line number, 2: Exception message
-#: include/classes/load-code-snippet/nexter-php-code-handling.php:1082
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:1092
 #, php-format
 msgid "Runtime Exception on line %1$d: %2$s"
 msgstr ""
 
 #. translators: %d: number of search results successfully replaced
-#: include/classes/load-code-snippet/nexter-php-code-handling.php:1306
-#: include/classes/load-code-snippet/nexter-php-code-handling.php:1314
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:1316
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:1324
 #: content-seo/build/index.js:1
 #: dashboard/build/index.js:3
 msgid "Warning"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-php-code-handling.php:1308
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:1318
 msgid "Fatal Error"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-php-code-handling.php:1310
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:1320
 msgid "Exception"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-php-code-handling.php:1312
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:1322
 #: assets/js/admin/index.js:4
 msgid "Notice"
 msgstr ""
 
 #. translators: 1: Error type name, 2: Line number, 3: Error message
-#: include/classes/load-code-snippet/nexter-php-code-handling.php:1319
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:1329
 #, php-format
 msgid "%1$s on line %2$d: %3$s"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-php-code-handling.php:1321
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:1331
 msgid "unknown"
 msgstr ""
 
 #. translators: %d: Number of execution errors
-#: include/classes/load-code-snippet/nexter-php-code-handling.php:1331
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:1341
 #, php-format
 msgid "Found %d execution error:"
 msgid_plural "Found %d execution errors:"
@@ -875,31 +875,31 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: 1: Line number, 2: Parse error message
-#: include/classes/load-code-snippet/nexter-php-code-handling.php:1356
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:1366
 #, php-format
 msgid "Parse Error on line %1$d: %2$s"
 msgstr ""
 
 #. translators: 1: Line number, 2: Fatal error message
-#: include/classes/load-code-snippet/nexter-php-code-handling.php:1374
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:1384
 #, php-format
 msgid "Fatal Error on line %1$d: %2$s"
 msgstr ""
 
 #. translators: 1: Output line number, 2: Output line content, 3: Redirect line number, 4: Redirect line content
-#: include/classes/load-code-snippet/nexter-php-code-handling.php:1516
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:1526
 #, php-format
 msgid "Output on line %1$d ('%2$s') appears before redirect/header call on line %3$d ('%4$s')"
 msgstr ""
 
 #. translators: 1: Line number, 2: Syntax error message
-#: include/classes/load-code-snippet/nexter-php-code-handling.php:1536
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:1546
 #, php-format
 msgid "Syntax Error on line %1$d: %2$s"
 msgstr ""
 
 #. translators: %d: Number of syntax errors
-#: include/classes/load-code-snippet/nexter-php-code-handling.php:1557
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:1567
 #, php-format
 msgid "Found %d syntax error:"
 msgid_plural "Found %d syntax errors:"
@@ -907,7 +907,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: 1: Line number, 2: Error message
-#: include/classes/load-code-snippet/nexter-php-code-handling.php:1565
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:1575
 #, php-format
 msgid "Line %1$d: %2$s"
 msgstr ""
@@ -1070,7 +1070,7 @@ msgstr ""
 #: include/custom-options/class-nxt-builder-condition-ui.php:910
 #: include/custom-options/module/nexter-display-conditional-rules.php:249
 #: include/custom-options/nexter-builder-condition.php:132
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1901
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1920
 #: assets/js/admin/index.js:1
 #: theme-builder/build/index.js:1
 msgid "404 Page"
@@ -1416,12 +1416,12 @@ msgid "Select where you want to load the template"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:352
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2070
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2089
 msgid "Include In"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:358
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2076
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2095
 msgid "Exclude From"
 msgstr ""
 
@@ -1473,7 +1473,7 @@ msgstr ""
 #. translators: %s: Post Label
 #: include/custom-options/class-nxt-builder-condition-ui.php:876
 #: include/custom-options/module/nexter-display-conditional-rules.php:342
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1920
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1939
 #, php-format
 msgid "All %s"
 msgstr ""
@@ -1483,28 +1483,28 @@ msgstr ""
 #: include/custom-options/class-nxt-builder-condition-ui.php:887
 #: include/custom-options/module/nexter-display-conditional-rules.php:346
 #: include/custom-options/module/nexter-display-conditional-rules.php:353
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1922
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1941
 #, php-format
 msgid "All %s Archive"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:899
 #: include/custom-options/module/nexter-display-conditional-rules.php:236
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1890
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1909
 #: assets/js/admin/index.js:1
 msgid "Entire Website"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:900
 #: include/custom-options/module/nexter-display-conditional-rules.php:237
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1891
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1910
 msgid "All Singulars"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:901
 #: include/custom-options/module/nexter-display-archives-rules.php:393
 #: include/custom-options/module/nexter-display-conditional-rules.php:238
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1892
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1911
 msgid "All Archives"
 msgstr ""
 
@@ -1513,21 +1513,21 @@ msgstr ""
 #: include/custom-options/module/nexter-display-singular-rules.php:258
 #: include/custom-options/module/nexter-display-singular-rules.php:259
 #: include/custom-options/module/nexter-display-singular-rules.php:362
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1898
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1917
 #: assets/js/admin/index.js:1
 msgid "Front Page"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:906
 #: include/custom-options/module/nexter-display-conditional-rules.php:245
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1899
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1918
 msgid "Blog / Posts Page"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:907
 #: include/custom-options/module/nexter-display-conditional-rules.php:246
 #: include/custom-options/module/nexter-display-singular-archives-rules.php:416
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1903
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1922
 #: assets/js/admin/index.js:1
 msgid "Date Archive"
 msgstr ""
@@ -1535,13 +1535,13 @@ msgstr ""
 #: include/custom-options/class-nxt-builder-condition-ui.php:908
 #: include/custom-options/module/nexter-display-conditional-rules.php:247
 #: include/custom-options/module/nexter-display-singular-archives-rules.php:383
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1902
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1921
 msgid "Author Archive"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:909
 #: include/custom-options/module/nexter-display-conditional-rules.php:248
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1900
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1919
 #: assets/js/admin/index.js:1
 msgid "Search Page"
 msgstr ""
@@ -1756,7 +1756,7 @@ msgid "Select User Roles"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:1112
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2011
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2030
 msgid "Specific Pages/Posts"
 msgstr ""
 
@@ -1806,7 +1806,7 @@ msgid "Visitors Source"
 msgstr ""
 
 #: include/custom-options/module/nexter-display-conditional-rules.php:318
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1928
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1947
 msgid "Particular Posts/Pages/Taxonomies"
 msgstr ""
 
@@ -3101,549 +3101,549 @@ msgstr ""
 msgid "Once Monthly (Nexter SEO)"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:548
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:555
 msgid "Skipped on local development environment (the site is not reachable over HTTP from the server)."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:562
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:569
 msgid "WWW vs non-WWW"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:562
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:569
 msgid "Could not parse site URL."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:565
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:597
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:609
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:618
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:622
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:628
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:572
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:604
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:616
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:625
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:629
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:635
 msgid "WWW vs non-WWW redirect"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:565
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:572
 msgid "Skipped on local development host."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:598
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:605
 msgid "Could not test host redirect behavior from this server environment (loopback/self-request may be blocked)."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:599
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:606
 msgid "Verify redirect behavior with an external HTTP checker or browser dev tools."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:610
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:617
 msgid "Both WWW and non-WWW URLs return HTTP 200 without redirecting to a single canonical host. Search engines may see duplicate content."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:611
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:618
 msgid "Choose one preferred domain in hosting or WordPress and issue a 301 redirect from the other."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:618
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:625
 msgid "Alternate host responds with a redirect (good for canonical consistency)."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:622
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:629
 msgid "Only one host variant appears to return 200 for the homepage."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:629
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:636
 msgid "Could not confirm redirect behaviour (requests failed or returned unexpected status codes)."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:630
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:637
 msgid "Verify in a browser or server config that one hostname 301-redirects to the other."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:642
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:647
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:649
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:654
 msgid "HTTPS"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:642
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:649
 msgid "Site URL uses HTTPS."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:648
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:655
 msgid "WordPress site URL is not using HTTPS."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:649
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:656
 msgid "Install an SSL certificate and update WordPress Site Address to https:// in Settings → General."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:660
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:676
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:687
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:698
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:667
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:683
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:694
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:705
 msgid "robots.txt"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:677
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:684
 msgid "robots.txt returned 404. Crawlers may lack crawl guidance."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:678
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:685
 msgid "Add a robots.txt file at the site root or use a plugin that provides one."
 msgstr ""
 
 #. translators: %d: HTTP status
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:690
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:697
 #, php-format
 msgid "robots.txt could not be read reliably (HTTP %d)."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:693
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:700
 msgid "Ensure /robots.txt is publicly reachable."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:698
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:705
 msgid "robots.txt responds successfully."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:712
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:717
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:750
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:758
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:719
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:724
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:757
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:765
 msgid "XML sitemap"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:712
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:719
 msgid "XML sitemap is enabled in settings (HTTP verification skipped on local development environment)."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:718
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:725
 msgid "The Nexter XML sitemap is disabled in settings."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:719
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:726
 msgid "Enable the Nexter XML sitemap under Technical → Sitemaps."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:750
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:757
 msgid "An XML sitemap is reachable."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:759
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:766
 msgid "No XML sitemap found at /sitemap.xml or /wp-sitemap.xml (or Nexter sitemap is disabled)."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:760
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:767
 msgid "Enable the Nexter XML sitemap or ensure WordPress core sitemap is available."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:798
 #: include/panel-settings/extensions/content-seo/audit/class-audit.php:805
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:813
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:818
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:812
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:820
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:825
 msgid "Canonical tag"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:806
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:813
 msgid "Could not load the homepage HTML to check the canonical link."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:807
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:814
 msgid "Ensure the front page loads and is not blocked."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:813
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:820
 msgid "Homepage HTML includes a rel=canonical link."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:819
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:826
 msgid "No rel=canonical link was found on the homepage HTML."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:820
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:827
 msgid "Add a canonical URL via your SEO plugin or theme to avoid duplicate URL issues."
 msgstr ""
 
 #. translators: %d: title length in characters
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:831
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:835
 #: include/panel-settings/extensions/content-seo/audit/class-audit.php:838
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:844
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:849
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:842
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:845
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:851
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:856
 msgid "Title tag length"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:835
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:842
 msgid "Could not read the homepage to measure the title."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:838
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:845
 msgid "No <title> tag was found on the homepage."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:838
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:845
 msgid "Set a descriptive title in WordPress or your SEO settings."
 msgstr ""
 
 #. translators: %d: title length in characters
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:844
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:851
 #, php-format
 msgid "Title length is %d characters (within the 50–60 range)."
 msgstr ""
 
 #. translators: 1: character count
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:852
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:859
 #, php-format
 msgid "Title length is %1$d characters. Aim for roughly 50–60 for best display in search results."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:855
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:862
 msgid "Edit the site or homepage title template in On-Page → Meta Template."
 msgstr ""
 
 #. translators: %d: meta description length in characters
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:866
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:870
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:876
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:887
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:892
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:873
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:877
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:883
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:894
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:899
 msgid "Meta description"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:870
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:877
 msgid "Could not read the homepage to check meta description."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:877
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:884
 msgid "No meta description tag was found on the homepage."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:878
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:885
 msgid "Add a unique meta description for the homepage (Nexter SEO → Home Page or meta templates)."
 msgstr ""
 
 #. translators: %d: meta description length in characters
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:887
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:894
 #, php-format
 msgid "Meta description length is %d characters (within 120–160)."
 msgstr ""
 
 #. translators: %1$d: meta description length in characters
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:895
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:902
 #, php-format
 msgid "Meta description length is %1$d characters. Aim for about 120–160 characters."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:898
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:905
 msgid "Refine the homepage description for clearer snippets in search results."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:909
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:913
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:916
 #: include/panel-settings/extensions/content-seo/audit/class-audit.php:920
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:925
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:927
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:932
 msgid "H1 heading count"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:913
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:920
 msgid "Could not count H1 tags on the homepage."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:920
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:927
 msgid "Homepage has exactly one H1."
 msgstr ""
 
 #. translators: %d: number of H1 tags
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:928
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:935
 #, php-format
 msgid "Homepage has %d H1 tags. A single H1 is recommended for clarity."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:931
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:938
 msgid "Adjust your theme or front page content so only one H1 is present."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:942
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:946
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:952
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:980
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:985
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:949
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:953
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:959
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:987
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:992
 msgid "Image ALT attributes"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:946
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:953
 msgid "Could not scan images on the homepage."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:953
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:960
 msgid "No images found on the homepage HTML (neutral signal)."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:954
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:961
 msgid "If relevant to your content, add meaningful images with descriptive ALT text."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:980
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:987
 msgid "All homepage images include non-empty ALT text."
 msgstr ""
 
 #. translators: %d: count
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:988
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:995
 #, php-format
 msgid "%d image(s) on the homepage are missing usable ALT text."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:991
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:998
 msgid "Add descriptive ALT attributes for accessibility and image SEO."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1003
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1008
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1011
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1016
 msgid "Site tagline"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1003
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1011
 msgid "Tagline is set in WordPress settings."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1009
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1017
 msgid "WordPress tagline (blog description) is empty."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1010
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1018
 msgid "Set a short tagline under Settings → General."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1021
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1026
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1029
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1034
 msgid "Search engine visibility"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1021
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1029
 msgid "Site is not set to discourage search engines."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1027
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1035
 msgid "WordPress is configured to discourage search engines from indexing the site."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1028
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1036
 msgid "Uncheck “Discourage search engines…” in Settings → Reading unless you intentionally block indexing."
 msgstr ""
 
 #. translators: %d: number of items analyzed
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1203
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1211
 #, php-format
 msgid "(Analysis limited to the %d most recently modified items.)"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1216
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1237
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1252
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1224
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1245
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1260
 msgid "Duplicate titles"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1216
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1224
 msgid "No published content to analyze for duplicate titles."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1237
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1245
 msgid "All sampled pages render a unique title."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1246
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1254
 msgid "Give each page a unique SEO title (Nexter SEO meta box) or revise duplicated post titles."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1247
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1255
 msgid "Your title template has no per-page token, so every page renders the same title. Add %post_title% (and %term_title% for archives) to the title template under On-Page → Meta Template."
 msgstr ""
 
 #. translators: %d: number of items
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1257
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1265
 #, php-format
 msgid "%d published pages render the same <title> as another page. Duplicate titles confuse search engines and split ranking signals."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1287
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1292
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1295
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1300
 msgid "Duplicate meta descriptions"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1287
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1295
 msgid "No duplicate custom meta descriptions detected."
 msgstr ""
 
 #. translators: %d: number of items
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1297
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1305
 #, php-format
 msgid "%d items share an identical custom meta description."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1301
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1309
 msgid "Write a unique meta description per page for distinct search snippets."
 msgstr ""
 
 #. translators: %d: minimum word count threshold
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1313
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1325
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1332
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1321
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1333
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1340
 msgid "Thin content"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1313
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1321
 msgid "No published content to analyze."
 msgstr ""
 
 #. translators: %d: minimum word count threshold
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1325
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1333
 #, php-format
 msgid "All sampled items have at least %d words."
 msgstr ""
 
 #. translators: 1: count of thin items, 2: word threshold
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1337
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1345
 #, php-format
 msgid "%1$d sampled item(s) have fewer than %2$d words."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1342
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1350
 msgid "Expand short pages with useful, original content, or consolidate/noindex them."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1360
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1368
 msgid "Indexable content"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1360
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1368
 msgid "No published items are individually set to noindex."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1365
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1373
 msgid "Noindex content"
 msgstr ""
 
 #. translators: %d: number of items
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1370
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1378
 #, php-format
 msgid "%d published item(s) are set to noindex and will be excluded from search results."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1374
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1382
 msgid "Confirm these pages are meant to be hidden from search; remove the noindex flag if not."
 msgstr ""
 
 #. translators: 1: links checked, 2: links found
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1579
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1587
 #, php-format
 msgid "Checked %1$d of %2$d link(s) found in sampled content."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1584
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1592
 msgid "(stopped early at the time limit)"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1599
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1618
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1623
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1607
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1626
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1631
 msgid "Orphan pages"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1599
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1607
 msgid "Not enough published content to evaluate internal linking."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1618
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1626
 msgid "Every sampled page is linked from other content."
 msgstr ""
 
 #. translators: %d: number of orphan pages
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1628
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1636
 #, php-format
 msgid "%d sampled page(s) are not linked from any other sampled content (orphaned)."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1632
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1640
 msgid "Add internal links from related posts/pages so these pages are discoverable and receive link equity."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1645
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1649
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1652
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1662
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1667
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1653
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1657
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1660
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1670
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1675
 msgid "Broken links"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1649
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1657
 msgid "No links were found in the sampled content to check."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1652
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1660
 msgid "Link checking was skipped because the time budget was reached before any link could be probed."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1652
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1660
 msgid "Reduce the sampled link count or increase the probe budget, then re-run."
 msgstr ""
 
 #. translators: 1: number of broken links, 2: probe summary
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1670
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1678
 #, php-format
 msgid "%1$d link(s) returned a connection error or a 4xx/5xx status. %2$s"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1674
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1682
 msgid "Fix or remove the broken links/images so visitors and crawlers do not hit dead ends."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1688
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1698
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1703
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1696
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1706
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1711
 msgid "Redirect chains"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1688
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1696
 msgid "No links were probed for redirect chains."
 msgstr ""
 
 #. translators: 1: number of chained links, 2: probe summary
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1706
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1714
 #, php-format
 msgid "%1$d link(s) reach their destination through 2 or more redirects. %2$s"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1710
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1718
 msgid "Point links directly at the final URL to remove intermediate redirect hops."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1730
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1738
 msgid "Search visibility updated: search engines are no longer discouraged."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1741
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1749
 msgid "Nexter XML sitemap has been enabled. Flush permalinks if the sitemap URL still 404s."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1747
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1755
 msgid "Open WordPress General settings to set the tagline."
 msgstr ""
 
 #. translators: %s: connection error message
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1772
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1780
 #, php-format
 msgid "HTTPS is not reachable yet (%s). Install or repair your SSL certificate first — the URLs were NOT changed, to avoid locking you out."
 msgstr ""
 
 #. translators: %d: HTTP status code
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1784
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1792
 #, php-format
 msgid "HTTPS responded with HTTP %d, so it is not serving your site correctly. Fix SSL first — the URLs were NOT changed."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1800
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1808
 msgid "HTTPS verified reachable. Site URL and Home URL were updated to HTTPS; add a server-level http→https redirect to finish."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1804
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1812
 msgid "No automated fix is available for this issue."
 msgstr ""
 
@@ -3651,81 +3651,82 @@ msgstr ""
 msgid "404 log row not found."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:36
-#: include/panel-settings/extensions/content-seorank.php:81
-#: include/panel-settings/extensions/content-seorank.php:316
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:42
+#: include/panel-settings/extensions/content-seorank.php:82
+#: include/panel-settings/extensions/content-seorank.php:318
+#: content-seo/build/150.js:1
 #: content-seo/build/index.js:1
 msgid "Nexter SEO"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:284
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:290
 msgid "Google Analytics"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:376
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:382
 msgid "Nexter Content SEO global settings"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:1004
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:1011
 msgid "Invalid settings."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:1083
-msgid "Image SEO module unavailable."
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:1094
+msgid "The Image SEO module is not available. Make sure the Nexter Extension SEO module is enabled and updated to a version that includes Image SEO."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:1202
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:1215
 #: content-seo/build/606.js:1
 msgid "Select at least one group to export."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:1223
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:1236
 msgid "Secret credentials (IndexNow API key, Google Indexing private key) were omitted from this export for security. Re-enter them on the destination site."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:1353
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:1370
 msgid "Invalid or empty import data."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:1362
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:1379
 msgid "The file does not contain any importable SEO data."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:1370
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:1387
 msgid "Unsupported export file version."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:1378
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:1395
 msgid "This JSON file is not a Nexter Content SEO export."
 msgstr ""
 
 #. translators: 1: applied count, 2: skipped count
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:1405
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:1422
 #, php-format
 msgid "Imported %1$d credential/verification value(s); skipped %2$d invalid."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:1410
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:1427
 msgid "This file includes verification/API-key values. They were NOT applied. Re-run the import with the “Import credentials” option enabled to review and apply them."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:1719
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:1752
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:1771
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:1787
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:1951
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:1736
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:1769
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:1788
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:1804
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:1968
 msgid "Audit module not loaded."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:1732
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:1749
 msgid "Could not complete the SEO audit."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:1739
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:1756
 msgid "Audit completed successfully."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:1796
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:1813
 msgid "Schedule saved."
 msgstr ""
 
@@ -3959,47 +3960,47 @@ msgid "Improve readability (shorter sentences, simpler words)"
 msgstr ""
 
 #. translators: %s: redirect source
-#: include/panel-settings/extensions/content-seo/class-redirection.php:431
+#: include/panel-settings/extensions/content-seo/class-redirection.php:453
 #, php-format
 msgid "A rule cannot redirect a URL to itself (%s)."
 msgstr ""
 
 #. translators: %s: chain of paths
-#: include/panel-settings/extensions/content-seo/class-redirection.php:444
+#: include/panel-settings/extensions/content-seo/class-redirection.php:466
 #, php-format
 msgid "These redirect rules form a loop: %s"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-redirection.php:453
+#: include/panel-settings/extensions/content-seo/class-redirection.php:475
 msgid "Redirect chain is too long — this usually indicates a loop."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-redirection.php:576
+#: include/panel-settings/extensions/content-seo/class-redirection.php:598
 msgid "This rule matches all requests (Starts With “/”) and points to an external domain — it will send every visitor off-site."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-redirection.php:578
+#: include/panel-settings/extensions/content-seo/class-redirection.php:600
 msgid "This rule matches all requests (Starts With “/”) — it will redirect every page on your site."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-redirection.php:580
+#: include/panel-settings/extensions/content-seo/class-redirection.php:602
 msgid "This rule redirects to an external domain — visitors will be sent off-site."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-redirection.php:599
-#: include/panel-settings/extensions/content-seo/class-redirection.php:641
+#: include/panel-settings/extensions/content-seo/class-redirection.php:621
+#: include/panel-settings/extensions/content-seo/class-redirection.php:663
 msgid "A source URL is required, and a destination URL is required for redirect (3xx) rules."
 msgstr ""
 
 #. translators: %d: maximum number of redirect rules
-#: include/panel-settings/extensions/content-seo/class-redirection.php:610
+#: include/panel-settings/extensions/content-seo/class-redirection.php:632
 #, php-format
 msgid "The redirect rule limit (%d) has been reached. Delete unused rules before adding more."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-redirection.php:653
-#: include/panel-settings/extensions/content-seo/class-redirection.php:689
-#: include/panel-settings/extensions/content-seo/class-redirection.php:719
+#: include/panel-settings/extensions/content-seo/class-redirection.php:675
+#: include/panel-settings/extensions/content-seo/class-redirection.php:711
+#: include/panel-settings/extensions/content-seo/class-redirection.php:741
 msgid "Rule not found."
 msgstr ""
 
@@ -4009,31 +4010,31 @@ msgstr ""
 msgid "Search results for \"%s\""
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-indexing.php:347
+#: include/panel-settings/extensions/content-seo/class-seo-indexing.php:408
 msgid "Could not determine site host."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-indexing.php:360
+#: include/panel-settings/extensions/content-seo/class-seo-indexing.php:421
 msgid "No valid same-domain URLs to submit. IndexNow only accepts http(s) URLs on this exact host."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-indexing.php:391
+#: include/panel-settings/extensions/content-seo/class-seo-indexing.php:452
 msgid "OK"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-indexing.php:395
+#: include/panel-settings/extensions/content-seo/class-seo-indexing.php:456
 msgid "IndexNow request failed."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-indexing.php:490
+#: include/panel-settings/extensions/content-seo/class-seo-indexing.php:551
 msgid "Too many IndexNow submissions in a short window. Please try again in a few minutes."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-indexing.php:558
+#: include/panel-settings/extensions/content-seo/class-seo-indexing.php:619
 msgid "URLs required."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-indexing.php:562
+#: include/panel-settings/extensions/content-seo/class-seo-indexing.php:623
 msgid "No valid URLs after sanitization."
 msgstr ""
 
@@ -4052,301 +4053,301 @@ msgstr ""
 msgid "Nexter SEO: a physical robots.txt file exists in your site root (e.g. created by your host/HestiaCP), so WordPress cannot serve a dynamic robots.txt. Your custom robots.txt rules and the Sitemap: directive are being ignored. Remove or edit the physical robots.txt file to let Nexter manage it."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1182
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1201
 #: include/panel-settings/extensions/content-seo/class-seo-settings.php:29
 #: content-seo/build/index.js:1
 msgid "Post Title"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1183
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1202
 msgid "Post ID"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1184
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1203
 #: include/panel-settings/extensions/content-seo/class-seo-settings.php:30
 #: content-seo/build/index.js:1
 msgid "Post Excerpt"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1185
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1204
 #: include/panel-settings/extensions/content-seo/class-seo-settings.php:31
 #: content-seo/build/index.js:1
 msgid "Post Content"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1186
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1205
 #: include/panel-settings/extensions/content-seo/class-seo-settings.php:35
 #: content-seo/build/index.js:1
 msgid "Post URL"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1187
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1206
 msgid "Post Slug"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1188
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1207
 #: dashboard/build/index.js:9
 msgid "Post Date"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1189
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1208
 msgid "Post Modified Date"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1190
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1209
 msgid "Post Date (ISO 8601)"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1191
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1210
 msgid "Post Modified Date (ISO 8601)"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1192
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1211
 msgid "Post Thumbnail"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1193
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1212
 msgid "Post Comment Count"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1194
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1213
 msgid "Post Word Count"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1195
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1214
 msgid "Post Tags"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1196
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1215
 msgid "Post Categories"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1197
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1216
 msgid "Breadcrumb ListItems (JSON)"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1212
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1231
 #: include/panel-settings/extensions/content-seo/class-seo-settings.php:49
 msgid "Product SKU (WooCommerce)"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1213
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1232
 #: include/panel-settings/extensions/content-seo/class-seo-settings.php:47
 msgid "Product price (WooCommerce)"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1214
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1233
 msgid "Store currency code (WooCommerce)"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1215
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1234
 msgid "Availability schema.org URL (WooCommerce)"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1216
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1235
 msgid "Product image URL (WooCommerce)"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1217
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1236
 msgid "Product image width (WooCommerce)"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1218
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1237
 msgid "Product image height (WooCommerce)"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1219
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1238
 msgid "Low price / min variation (WooCommerce)"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1220
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1239
 msgid "High price / max variation (WooCommerce)"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1221
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1240
 msgid "Variation count (WooCommerce)"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1222
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1241
 msgid "Average rating (WooCommerce)"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1223
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1242
 msgid "Average rating value (WooCommerce)"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1224
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1243
 msgid "Rating/review count (WooCommerce)"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1225
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1244
 #: include/panel-settings/extensions/content-seo/class-seo-settings.php:50
 msgid "Product short description (WooCommerce)"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1321
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1340
 msgid "Term ID"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1322
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1341
 msgid "Term Name"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1323
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1342
 msgid "Term Slug"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1324
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1343
 msgid "Term Taxonomy"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1325
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1344
 #: include/panel-settings/extensions/content-seo/class-seo-settings.php:32
 #: include/panel-settings/extensions/content-seo/class-seo-settings.php:170
 #: content-seo/build/index.js:1
 msgid "Term Description"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1326
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1345
 msgid "Term URL"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1337
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1356
 msgid "Author ID"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1338
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1357
 msgid "Author First Name"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1339
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1358
 msgid "Author Last Name"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1340
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1359
 msgid "Author Display Name"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1341
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1360
 msgid "Author Username"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1342
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1361
 msgid "Author Nickname"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1343
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1362
 msgid "Author Website URL"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1344
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1363
 msgid "Author Nicename"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1345
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1364
 msgid "Author Description"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1346
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1365
 msgid "Author Posts URL"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1347
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1366
 msgid "Author Avatar"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1370
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1389
 msgid "Site Title"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1371
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1390
 msgid "Site Description"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1372
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1391
 msgid "Site URL"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1373
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1392
 msgid "Site search URL (SearchAction target template)"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1374
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1393
 msgid "Site Language"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1375
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1394
 msgid "Site Icon"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1376
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1395
 msgid "Primary user (ID 1) display name"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1387
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1406
 msgid "Current Page Title"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1388
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1407
 msgid "Current Page URL"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1399
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1418
 msgid "Website Name"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1400
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1419
 msgid "Business Description"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1401
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1420
 msgid "Website Owner Name"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1402
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1421
 msgid "Organization Type"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1403
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1422
 msgid "Website Owner Phone"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1404
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1423
 msgid "Website Logo"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1416
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1435
 msgid "Current schema entry ID (replaced when JSON-LD is output)"
 msgstr ""
 
 #. translators: %s: schema type name
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1422
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1441
 #, php-format
 msgid "%s Schema"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1888
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1907
 msgid "Basic"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1896
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1915
 msgid "Special Pages"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1930
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1949
 msgid "Specific Pages / Posts / Taxonomies, etc."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1988
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2007
 msgid "singulars"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1994
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2013
 msgid "archive"
 msgstr ""
 
 #. translators: %s: schema title/label
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:5354
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:5377
 #, php-format
 msgid "“%s” (FAQ Page) needs at least one question and answer before it can be saved."
 msgstr ""
@@ -4448,7 +4449,7 @@ msgid "Out of stock"
 msgstr ""
 
 #: include/panel-settings/extensions/content-seo/class-seo-settings.php:100
-#: include/panel-settings/extensions/content-seo/class-seo-social-meta.php:1081
+#: include/panel-settings/extensions/content-seo/class-seo-social-meta.php:1121
 msgid "On backorder"
 msgstr ""
 
@@ -4491,7 +4492,7 @@ msgstr ""
 msgid "A human-readable list of pages on this site."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-social-meta.php:1074
+#: include/panel-settings/extensions/content-seo/class-seo-social-meta.php:1114
 #: include/panel-settings/extensions/content-seo/schema-types/fields-event.php:103
 #: include/panel-settings/extensions/content-seo/schema-types/fields-product.php:142
 #: include/panel-settings/extensions/content-seo/schema-types/fields-service.php:103
@@ -4500,18 +4501,18 @@ msgstr ""
 msgid "Price"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-social-meta.php:1077
+#: include/panel-settings/extensions/content-seo/class-seo-social-meta.php:1117
 #: include/panel-settings/extensions/content-seo/schema-types/fields-event.php:124
 #: include/panel-settings/extensions/content-seo/schema-types/fields-product.php:157
 #: include/panel-settings/extensions/content-seo/schema-types/product-select-groups.php:24
 msgid "Availability"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-social-meta.php:1079
+#: include/panel-settings/extensions/content-seo/class-seo-social-meta.php:1119
 msgid "Out of Stock"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-social-meta.php:1083
+#: include/panel-settings/extensions/content-seo/class-seo-social-meta.php:1123
 msgid "In Stock"
 msgstr ""
 
@@ -7822,79 +7823,79 @@ msgstr ""
 msgid "ContactPage"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seorank.php:317
+#: include/panel-settings/extensions/content-seorank.php:319
 msgid "Open the Nexter SEO panel to edit title, description, social previews, and advanced settings for this archive page."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seorank.php:474
-#: include/panel-settings/extensions/content-seorank.php:493
+#: include/panel-settings/extensions/content-seorank.php:476
+#: include/panel-settings/extensions/content-seorank.php:495
 msgid "Term not found."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seorank.php:477
-#: include/panel-settings/extensions/content-seorank.php:863
-#: include/panel-settings/extensions/content-seorank.php:1061
+#: include/panel-settings/extensions/content-seorank.php:479
+#: include/panel-settings/extensions/content-seorank.php:865
+#: include/panel-settings/extensions/content-seorank.php:1063
 msgid "Not allowed."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seorank.php:754
+#: include/panel-settings/extensions/content-seorank.php:756
 msgid "Invalid post ID."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seorank.php:764
+#: include/panel-settings/extensions/content-seorank.php:766
 msgid "Post not found."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seorank.php:1247
-#: include/panel-settings/extensions/content-seorank.php:1252
-#: include/panel-settings/extensions/content-seorank.php:1436
+#: include/panel-settings/extensions/content-seorank.php:1249
+#: include/panel-settings/extensions/content-seorank.php:1254
+#: include/panel-settings/extensions/content-seorank.php:1438
 msgid "SEO Checks"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seorank.php:1288
+#: include/panel-settings/extensions/content-seorank.php:1290
 msgid "Not analyzed"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seorank.php:1291
+#: include/panel-settings/extensions/content-seorank.php:1293
 #: content-seo/build/index.js:1
 msgid "Good"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seorank.php:1294
+#: include/panel-settings/extensions/content-seorank.php:1296
 msgid "Fair"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seorank.php:1296
+#: include/panel-settings/extensions/content-seorank.php:1298
 #: content-seo/build/index.js:1
 msgid "Needs work"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seorank.php:1434
+#: include/panel-settings/extensions/content-seorank.php:1436
 msgid "Analyzing…"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seorank.php:1435
+#: include/panel-settings/extensions/content-seorank.php:1437
 msgid "Could not load SEO checks."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seorank.php:1437
+#: include/panel-settings/extensions/content-seorank.php:1439
 msgid "Score"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seorank.php:1438
+#: include/panel-settings/extensions/content-seorank.php:1440
 #: content-seo/build/index.js:1
 msgid "Edit SEO"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seorank.php:1600
+#: include/panel-settings/extensions/content-seorank.php:1602
 msgid "Search Pages"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seorank.php:1601
+#: include/panel-settings/extensions/content-seorank.php:1603
 msgid "Author Archives"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seorank.php:1602
+#: include/panel-settings/extensions/content-seorank.php:1604
 msgid "Date Archives"
 msgstr ""
 
@@ -8310,7 +8311,7 @@ msgid "This has been disabled."
 msgstr ""
 
 #: include/panel-settings/extensions/nexter-ext-custom-login-redirect.php:204
-#: include/panel-settings/extensions/perf-security/class-nxt-security-network.php:132
+#: include/panel-settings/extensions/perf-security/class-nxt-security-network.php:149
 msgid "Forbidden"
 msgstr ""
 
@@ -8874,11 +8875,11 @@ msgstr ""
 msgid "Home Page"
 msgstr ""
 
-#: include/panel-settings/extensions/perf-security/class-nxt-security-network.php:89
+#: include/panel-settings/extensions/perf-security/class-nxt-security-network.php:103
 msgid "Sorry, you do not have permission for REST API requests."
 msgstr ""
 
-#: include/panel-settings/extensions/perf-security/class-nxt-security-network.php:131
+#: include/panel-settings/extensions/perf-security/class-nxt-security-network.php:148
 msgid "XML-RPC is disabled."
 msgstr ""
 
@@ -12322,8 +12323,10 @@ msgstr ""
 msgid "Automatically creates a redirect when a post, page, category, or custom post type URL is changed."
 msgstr ""
 
+#. translators: %s: product / brand name
 #: content-seo/build/150.js:1
-msgid "Welcome to Nexter Redirection Manager"
+#, js-format
+msgid "Welcome to %s Redirection Manager"
 msgstr ""
 
 #: content-seo/build/150.js:1
@@ -14553,8 +14556,10 @@ msgstr ""
 msgid "name@example.com"
 msgstr ""
 
+#. translators: %s: product name
 #: content-seo/build/index.js:1
-msgid "Welcome to Nexter SEO"
+#, js-format
+msgid "Welcome to %s"
 msgstr ""
 
 #: content-seo/build/index.js:1
@@ -15531,20 +15536,26 @@ msgstr ""
 msgid "Import/Export Theme Customizer"
 msgstr ""
 
+#. translators: %s: brand name
 #: dashboard/build/index.js:9
-msgid "Easily import or export Nexter Theme Customizer settings to use across different sites."
+#, js-format
+msgid "Easily import or export %s Theme Customizer settings to use across different sites."
 msgstr ""
 
 #: dashboard/build/index.js:9
 msgid "Import/Export Extension Settings"
 msgstr ""
 
+#. translators: %s: brand name
 #: dashboard/build/index.js:9
-msgid "Easily import or export Nexter Extension settings to use across different sites."
+#, js-format
+msgid "Easily import or export %s Extension settings to use across different sites."
 msgstr ""
 
+#. translators: %s: brand name
 #: dashboard/build/index.js:9
-msgid "Nexter Import/Export Data"
+#, js-format
+msgid "%s Import/Export Data"
 msgstr ""
 
 #: dashboard/build/index.js:9
@@ -18825,7 +18836,15 @@ msgid "API Key"
 msgstr ""
 
 #: dashboard/build/index.js:11
+msgid "Enter your LLM API Keys to enable AI-powered content generation."
+msgstr ""
+
+#: dashboard/build/index.js:11
 msgid "Add Website Custom Context"
+msgstr ""
+
+#: dashboard/build/index.js:11
+msgid "Set the writing style, tone, and site-specific instructions. This context will be applied to all AI prompts to deliver more accurate and brand-aligned output. "
 msgstr ""
 
 #: dashboard/build/index.js:11

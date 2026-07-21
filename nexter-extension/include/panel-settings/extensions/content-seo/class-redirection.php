@@ -165,12 +165,22 @@ class Nexter_Content_SEO_Redirection {
 	 * @param string               $request_path Request path (no domain, leading slash).
 	 * @return bool
 	 */
-	public static function rule_matches_request( $rule, $request_path ) {
+	public static function rule_matches_request( $rule, $request_path, $request_query = '' ) {
 		$compare_from = self::rule_compare_from( $rule );
 		if ( '' === $compare_from ) {
 			return false;
 		}
-		$compare_path = $request_path;
+		// Mirror rule_compare_from()'s query handling on the REQUEST side so both are comparable.
+		// rule_compare_from() appends "?query" only when the rule's source URL carries a query and
+		// the rule is not in an ignore-query mode (in which case it has no "?"). Match that here:
+		// include the request query only when the rule's compare string has one; otherwise compare
+		// path-only, so a query-less rule still matches regardless of the request's query string.
+		// (Previously the request was always path-only, so any rule whose source had a query string
+		// could never match.)
+		$from_has_query = ( false !== strpos( $compare_from, '?' ) );
+		$compare_path   = ( $from_has_query && '' !== (string) $request_query )
+			? $request_path . '?' . $request_query
+			: $request_path;
 
 		$cond = isset( $rule['condition'] ) ? $rule['condition'] : 'exact_match';
 		switch ( $cond ) {
@@ -231,14 +241,26 @@ class Nexter_Content_SEO_Redirection {
 		if ( ! is_string( $path ) || '' === $path ) {
 			$path = '/';
 		}
+		$query = wp_parse_url( $uri, PHP_URL_QUERY );
+		$query = is_string( $query ) ? $query : '';
 
 		// Fast path: when every enabled rule is an exact match, resolve via the O(1) path index
 		// instead of an O(N) scan. Precedence is preserved — the index stores the first rule
-		// registered for each path key, mirroring first-match-wins in the linear scan.
+		// registered for each key, mirroring first-match-wins in the linear scan.
+		// A rule whose source URL includes a query string is keyed "path?query" (see
+		// rule_compare_from), so try the query-specific key first, then fall back to the path-only
+		// key (rules whose source had no query still match regardless of the request query).
 		if ( ! empty( $compiled['all_exact'] ) ) {
-			$key = trim( $path, '/' );
-			if ( isset( $compiled['exact_index'][ $key ] ) ) {
-				self::apply_rule( $compiled['exact_index'][ $key ], $path );
+			$keys = array();
+			if ( '' !== $query ) {
+				$keys[] = trim( $path, '/' ) . '?' . $query;
+			}
+			$keys[] = trim( $path, '/' );
+			foreach ( $keys as $key ) {
+				if ( isset( $compiled['exact_index'][ $key ] ) ) {
+					self::apply_rule( $compiled['exact_index'][ $key ], $path );
+					return;
+				}
 			}
 			return;
 		}
@@ -246,7 +268,7 @@ class Nexter_Content_SEO_Redirection {
 		// Mixed rule set (contains / starts_with / ends_with present): scan the cached ENABLED
 		// subset in order. Disabled rules were already filtered out at compile time.
 		foreach ( $compiled['enabled'] as $rule ) {
-			if ( ! self::rule_matches_request( $rule, $path ) ) {
+			if ( ! self::rule_matches_request( $rule, $path, $query ) ) {
 				continue;
 			}
 			// apply_rule() exits on a fired redirect / 410; it only returns here when the

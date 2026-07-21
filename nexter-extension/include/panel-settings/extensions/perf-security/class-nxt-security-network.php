@@ -37,9 +37,23 @@ class Nxt_Security_Network {
 		$adv_sec_opt      = self::nxt_options_to_array( $adv_sec_opt );
 		$nxt_security_raw = self::nxt_options_to_array( $nxt_security_raw );
 
-		// Disable XML-RPC
-		if ( is_array( $adv_sec_opt ) && in_array( 'disable_xml_rpc', $adv_sec_opt, true ) ) {
+		// Disable XML-RPC.
+		// The advance-security values may store this toggle either as a checked value in a flat
+		// list ( [ 'disable_xml_rpc', … ] ) or as an associative key ( [ 'disable_xml_rpc' => 1 ] ).
+		// The old check only did in_array() (value form); when the option is stored in key form —
+		// which is how the security report and the sibling headers module read it — the gate never
+		// matched, so NONE of the filters registered and XML-RPC stayed fully live (system.listMethods
+		// 200, pingback + auth pipeline reachable) even though the UI reported it disabled. Accept
+		// both shapes so enforcement matches what the report advertises.
+		$xmlrpc_disabled = is_array( $adv_sec_opt )
+			&& ( in_array( 'disable_xml_rpc', $adv_sec_opt, true ) || ! empty( $adv_sec_opt['disable_xml_rpc'] ) );
+		if ( $xmlrpc_disabled ) {
 			add_filter( 'xmlrpc_enabled', '__return_false' );
+			// Strip every XML-RPC method (pingback.ping, pingback.extensions.getPingbacks,
+			// system.multicall, system.listMethods, wp.getUsersBlogs, …) so the endpoint exposes no
+			// methods and the auth pipeline cannot be probed even if the hard block below is bypassed
+			// on an unusual server config. Defense-in-depth alongside the 403 on the endpoint.
+			add_filter( 'xmlrpc_methods', '__return_empty_array' );
 			add_filter( 'wp_headers', [ $this, 'nxt_remove_x_pingback' ] );
 			add_filter( 'pings_open', '__return_false', 9999 );
 			add_filter( 'pre_update_option_enable_xmlrpc', '__return_false' );
@@ -115,13 +129,16 @@ class Nxt_Security_Network {
 	}
 
 	public function nxt_xmlrpc_header() {
-		$script_filename = isset( $_SERVER['SCRIPT_FILENAME'] ) ? sanitize_text_field( wp_unslash( $_SERVER['SCRIPT_FILENAME'] ) ) : '';
-
-		if ( empty( $script_filename ) ) {
-			return;
+		// Canonical detection: xmlrpc.php defines XMLRPC_REQUEST before wp-load, so it is reliable
+		// across servers/proxies. basename( SCRIPT_FILENAME ) can be rewritten to index.php behind
+		// FastCGI / reverse proxies, which is why the endpoint block could silently no-op before.
+		$is_xmlrpc = ( defined( 'XMLRPC_REQUEST' ) && XMLRPC_REQUEST );
+		if ( ! $is_xmlrpc ) {
+			$script_filename = isset( $_SERVER['SCRIPT_FILENAME'] ) ? sanitize_text_field( wp_unslash( $_SERVER['SCRIPT_FILENAME'] ) ) : '';
+			$is_xmlrpc       = ( '' !== $script_filename && 'xmlrpc.php' === basename( $script_filename ) );
 		}
 
-		if ( 'xmlrpc.php' !== basename( $script_filename ) ) {
+		if ( ! $is_xmlrpc ) {
 			return;
 		}
 

@@ -78,7 +78,8 @@ class Nexter_Content_SeoRank {
 		foreach ( $post_types as $post_type ) {
 			add_meta_box(
 				'nxt_content_seo_sidebar',
-				__( 'Nexter SEO', 'nexter-extension' ),
+				// White-label aware: shows the Pro brand name when set, else "Nexter SEO".
+				class_exists( 'Nexter_Content_SEO' ) ? Nexter_Content_SEO::seo_brand_label() : __( 'Nexter SEO', 'nexter-extension' ),
 				array( $this, 'render_meta_box' ),
 				$post_type,
 				'side',
@@ -313,7 +314,8 @@ class Nexter_Content_SeoRank {
 			return;
 		}
 		echo '<div class="nxt-seo-term-edit-field">';
-		echo '<h2>' . esc_html__( 'Nexter SEO', 'nexter-extension' ) . '</h2>';
+		// White-label aware: shows the Pro brand name when set, else "Nexter SEO".
+		echo '<h2>' . esc_html( class_exists( 'Nexter_Content_SEO' ) ? Nexter_Content_SEO::seo_brand_label() : __( 'Nexter SEO', 'nexter-extension' ) ) . '</h2>';
 		echo '<p class="description">' . esc_html__( 'Open the Nexter SEO panel to edit title, description, social previews, and advanced settings for this archive page.', 'nexter-extension' ) . '</p>';
 		printf(
 			'<div id="nexter-content-seo-term" class="%s" data-term-id="%d" data-taxonomy="%s"></div>',
