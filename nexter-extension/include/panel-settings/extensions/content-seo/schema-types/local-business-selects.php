@@ -36,7 +36,7 @@ if ( ! function_exists( 'nexter_content_seo_schema_contact_point_option_groups' 
 			'opt' => array(
 				'label'   => '',
 				'options' => array(
-					'https://schema.org/TollFree'                 => __( 'Toll-free number', 'nexter-extension' ),
+					'https://schema.org/TollFree' => __( 'Toll-free number', 'nexter-extension' ),
 					'https://schema.org/HearingImpairedSupported' => __( 'Hearing-impaired support', 'nexter-extension' ),
 				),
 			),

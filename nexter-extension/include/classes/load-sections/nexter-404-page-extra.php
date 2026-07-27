@@ -14,9 +14,9 @@ if ( ! function_exists( 'nexter_404_page_disable_header_footer' ) ) {
 	function nexter_404_page_disable_header_footer() {
 		$sections_hook_404 = Nexter_Builder_Sections_Conditional::nexter_sections_condition_hooks( 'pages', 'page-404' );
 		
-		if(!empty($sections_hook_404) && is_404() ){
-			foreach ( $sections_hook_404 as $post_id) {
-				if(get_post_meta( $post_id, 'nxt-404-disable-header', 1 )){
+		if ( ! empty( $sections_hook_404 ) && is_404() ) {
+			foreach ( $sections_hook_404 as $post_id ) {
+				if ( get_post_meta( $post_id, 'nxt-404-disable-header', 1 ) ) {
 					remove_action( 'nexter_header', 'nexter_header_template' );
 					remove_action( 'nexter_breadcrumb', 'nexter_breadcrumb_template' );
 					//hello theme
@@ -36,11 +36,11 @@ if ( ! function_exists( 'nexter_404_page_disable_header_footer' ) ) {
 
 					//Blocksy
 					add_filter( 'blocksy:builder:header:enabled', function(){ return false; } );
-            		remove_action( 'blocksy:header:before', 'nexter_ext_render_header' );
+					remove_action( 'blocksy:header:before', 'nexter_ext_render_header' );
 
 					//Kadence
-					if (function_exists('Kadence\header_markup')) {
-						remove_action('kadence_header', 'Kadence\header_markup');
+					if ( function_exists( 'Kadence\header_markup' ) ) {
+						remove_action( 'kadence_header', 'Kadence\header_markup' );
 					}
 					remove_action( 'kadence_header', 'nexter_ext_render_header' );
 					//Neve
@@ -49,7 +49,7 @@ if ( ! function_exists( 'nexter_404_page_disable_header_footer' ) ) {
 					remove_action( 'neve_do_header', 'nexter_ext_render_header' );
 				}
 				
-				if(get_post_meta( $post_id, 'nxt-404-disable-footer', 1 )){
+				if ( get_post_meta( $post_id, 'nxt-404-disable-footer', 1 ) ) {
 					remove_action( 'nexter_footer', 'nexter_footer_template' );
 					remove_action( 'nexter_footer', 'nexter_ext_render_footer' );
 					//Astra theme
@@ -63,9 +63,9 @@ if ( ! function_exists( 'nexter_404_page_disable_header_footer' ) ) {
 					remove_action( 'ocean_footer', 'nexter_ext_render_footer' );
 					//Blocksy
 					add_filter( 'blocksy:builder:footer:enabled', function(){ return false; } );
-            		remove_action( 'blocksy:footer:before', 'nexter_ext_render_footer' );
+					remove_action( 'blocksy:footer:before', 'nexter_ext_render_footer' );
 					//Kadence
-					if(function_exists('Kadence\footer_markup')){
+					if ( function_exists( 'Kadence\footer_markup' ) ) {
 						remove_action( 'kadence_footer', 'Kadence\footer_markup' );
 					}
 					remove_action( 'kadence_footer', 'nexter_ext_render_footer' );
@@ -76,7 +76,7 @@ if ( ! function_exists( 'nexter_404_page_disable_header_footer' ) ) {
 			}
 		}
 	}
-	add_action( 'wp', 'nexter_404_page_disable_header_footer', 11 );	
+	add_action( 'wp', 'nexter_404_page_disable_header_footer', 11 );    
 }
 
 /**
@@ -88,17 +88,17 @@ if ( ! function_exists( 'nexter_ext_404_page_content_load' ) ) {
 		
 		$sections_hook_404 = Nexter_Builder_Sections_Conditional::nexter_sections_condition_hooks( 'pages', 'page-404' );
 		
-		if(!empty($sections_hook_404)){
-			foreach ( $sections_hook_404 as $post_id) {				
+		if ( ! empty( $sections_hook_404 ) ) {
+			foreach ( $sections_hook_404 as $post_id ) {             
 				Nexter_Builder_Sections_Conditional::get_instance()->get_action_content( $post_id );
 			}
-		}else{
+		} else {
 			get_template_part( 'template-parts/404-page/404-page' );
 		}
 	}
 	
 	add_action( 'nexter_404_page_content', 'nexter_ext_404_page_content_load' );
-	if(!defined('ASTRA_THEME_VERSION') && !defined('GENERATE_VERSION') && !defined('OCEANWP_THEME_VERSION') && !defined('KADENCE_VERSION') && !function_exists('blocksy_get_wp_theme') && !defined('NEVE_VERSION') && !defined('NXT_VERSION')){
+	if ( ! defined( 'ASTRA_THEME_VERSION' ) && ! defined( 'GENERATE_VERSION' ) && ! defined( 'OCEANWP_THEME_VERSION' ) && ! defined( 'KADENCE_VERSION' ) && ! function_exists( 'blocksy_get_wp_theme' ) && ! defined( 'NEVE_VERSION' ) && ! defined( 'NXT_VERSION' ) ) {
 		add_action( 'nexter_pages_hooks_template', 'nexter_ext_404_page_content_load' );
 	}
 }

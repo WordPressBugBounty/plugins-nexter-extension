@@ -7,10 +7,10 @@
  */
 defined( 'ABSPATH' ) || exit;
 
-if( ! function_exists('nexter_builders_register_post')){
+if ( ! function_exists( 'nexter_builders_register_post' ) ) {
 	function nexter_builders_register_post() {
 		$builder_name = 'Theme Builder';
-		$labels = array(
+		$labels       = array(
 			'name'                  => $builder_name,
 			'singular_name'         => $builder_name,
 			'menu_name'             => $builder_name,
@@ -41,23 +41,23 @@ if( ! function_exists('nexter_builders_register_post')){
 		);
 		//$builder_switch = get_option('nxt_builder_switcher', false);
 		$args = array(
-			'label'                 => __( 'Post Type', 'nexter-extension' ),
-			'description'           => __( 'Post Type Description', 'nexter-extension' ),
-			'labels'                => $labels,
-			'supports'              => array( 'title', 'editor', 'revisions','elementor' ),
-			'hierarchical'          => false,
-			'public'                => true,
-			'show_ui'               => true,
-			'show_in_menu' => false,
-			'show_in_admin_bar'     => true,
-			'show_in_nav_menus'     => true,
-			'can_export'            => true,
-			'has_archive'           => true,
-			'exclude_from_search'   => true,
-			'publicly_queryable'    => true,
-			'capability_type'       => 'page',
-			'show_in_rest'			=> true,
-			'show_in_editor'        => true,
+			'label'               => __( 'Post Type', 'nexter-extension' ),
+			'description'         => __( 'Post Type Description', 'nexter-extension' ),
+			'labels'              => $labels,
+			'supports'            => array( 'title', 'editor', 'revisions', 'elementor' ),
+			'hierarchical'        => false,
+			'public'              => true,
+			'show_ui'             => true,
+			'show_in_menu'        => false,
+			'show_in_admin_bar'   => true,
+			'show_in_nav_menus'   => true,
+			'can_export'          => true,
+			'has_archive'         => true,
+			'exclude_from_search' => true,
+			'publicly_queryable'  => true,
+			'capability_type'     => 'page',
+			'show_in_rest'        => true,
+			'show_in_editor'      => true,
 		);
 		register_post_type( 'nxt_builder', $args );
 
@@ -76,38 +76,41 @@ function nexter_template_frontend() {
 }
 add_action( 'template_redirect','nexter_template_frontend' );
 
-add_action('template_redirect', function() {
-    if (!is_singular('nxt_builder')) {
-        return;
-    }
+add_action(
+	'template_redirect',
+	function() {
+		if ( ! is_singular( 'nxt_builder' ) ) {
+			return;
+		}
 
-    // Check for preview query
-    if (!isset($_GET['preview_template'])) {
-        return;
-    }
+		// Check for preview query
+		if ( ! isset( $_GET['preview_template'] ) ) {
+			return;
+		}
 
-    global $post;
+		global $post;
 
-    // Disable admin bar and default layout
-    add_filter('show_admin_bar', '__return_false');
+		// Disable admin bar and default layout
+		add_filter( 'show_admin_bar', '__return_false' );
 
-    // Output minimal clean HTML
-    header('Content-Type: text/html; charset=utf-8');
+		// Output minimal clean HTML
+		header( 'Content-Type: text/html; charset=utf-8' );
 
-    echo '<!DOCTYPE html><html style="margin-top: 0 !important;">';
-    wp_head(); 
-    echo '<body class="nxt-builder-preview-only">';
-    
-    // Render the builder content properly
-	if(!empty($post->post_content)){
-		$content = apply_filters('the_content', $post->post_content);
-    	echo $content;
-	}else{
-		$layout = get_post_meta($post->ID, 'nxt-hooks-layout-sections', true);
-		echo '<img src="'.esc_url(NEXTER_EXT_URL.'theme-builder/assets/svg/'.esc_attr($layout).'.svg').'" alt="'.esc_attr($layout).'" style="width: 100%;" />';
+		echo '<!DOCTYPE html><html style="margin-top: 0 !important;">';
+		wp_head(); 
+		echo '<body class="nxt-builder-preview-only">';
+	
+		// Render the builder content properly
+		if ( ! empty( $post->post_content ) ) {
+			$content = apply_filters( 'the_content', $post->post_content );
+			echo $content;
+		} else {
+			$layout = get_post_meta( $post->ID, 'nxt-hooks-layout-sections', true );
+			echo '<img src="'.esc_url( NEXTER_EXT_URL.'theme-builder/assets/svg/'.esc_attr( $layout ).'.svg' ).'" alt="'.esc_attr( $layout ).'" style="width: 100%;" />';
+		}
+		wp_footer();
+		echo '</body></html>';
+
+		exit;
 	}
-     wp_footer();
-    echo '</body></html>';
-
-    exit;
-});
+);

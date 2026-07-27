@@ -4,8 +4,8 @@
  * Name: Document Base
  * Slug: nxt_builder-archives-document
  *
- * @package	Nexter
- * @since	1.0.7
+ * @package Nexter
+ * @since   1.0.7
  */
 if ( ! defined( 'WPINC' ) ) {
 	die;

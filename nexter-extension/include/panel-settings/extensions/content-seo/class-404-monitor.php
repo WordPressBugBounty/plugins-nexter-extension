@@ -21,11 +21,11 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class Nexter_Content_SEO_404_Monitor {
 
-	const OPTION_ENABLED   = 'nexter_content_seo_404_enabled';
+	const OPTION_ENABLED    = 'nexter_content_seo_404_enabled';
 	const OPTION_SCHEMA_VER = 'nexter_content_seo_404_schema_ver';
-	const SCHEMA_VERSION   = 1;
-	const TABLE_SUFFIX     = 'nexter_seo_404_log';
-	const MAX_ROWS         = 5000;
+	const SCHEMA_VERSION    = 1;
+	const TABLE_SUFFIX      = 'nexter_seo_404_log';
+	const MAX_ROWS          = 5000;
 
 	/**
 	 * @return string Full table name for the current blog.
@@ -177,6 +177,13 @@ class Nexter_Content_SEO_404_Monitor {
 			return;
 		}
 
+		// Rate-limit per client IP so a unique-URL 404 spray can't drive unbounded INSERT +
+		// COUNT + DELETE (prune) write amplification. Checked at the entry point — the cheapest
+		// place to shed load — before any DB touch.
+		if ( self::log_rate_limited() ) {
+			return;
+		}
+
 		$referrer_raw = isset( $_SERVER['HTTP_REFERER'] ) ? (string) wp_unslash( $_SERVER['HTTP_REFERER'] ) : '';
 		// Store only the referring origin (scheme + host), never the full path/query — a referer
 		// URL can carry personal data (e.g. an email or token in the query string). Domain-only is
@@ -184,6 +191,30 @@ class Nexter_Content_SEO_404_Monitor {
 		$referrer = self::referer_origin( (string) esc_url_raw( $referrer_raw ) );
 
 		self::record_hit( $uri, $referrer );
+	}
+
+	/**
+	 * Whether the current client has exceeded the 404-logging rate limit. Bounds INSERT/prune
+	 * write amplification from a unique-URL spray. Keyed on REMOTE_ADDR (the transport peer, not
+	 * spoofable X-Forwarded-For). Default 30 logs per IP per 10 minutes; both values filterable,
+	 * and a limit of 0 (or less) disables throttling.
+	 *
+	 * @return bool True when the request should be dropped without logging.
+	 */
+	private static function log_rate_limited() {
+		$limit = (int) apply_filters( 'nexter_content_seo_404_log_rate_limit', 30 );
+		if ( $limit <= 0 ) {
+			return false;
+		}
+		$window = (int) apply_filters( 'nexter_content_seo_404_log_rate_window', 10 * MINUTE_IN_SECONDS );
+		$ip     = isset( $_SERVER['REMOTE_ADDR'] ) ? (string) sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '';
+		$key    = 'nxt_404_rl_' . sha1( $ip );
+		$count  = (int) get_transient( $key );
+		if ( $count >= $limit ) {
+			return true;
+		}
+		set_transient( $key, $count + 1, max( 1, $window ) );
+		return false;
 	}
 
 	/**
@@ -284,8 +315,8 @@ class Nexter_Content_SEO_404_Monitor {
 	 */
 	public static function fetch_rows( $args ) {
 		global $wpdb;
-		$table    = self::table_name();
-		$page     = max( 1, (int) ( $args['page'] ?? 1 ) );
+		$table = self::table_name();
+		$page  = max( 1, (int) ( $args['page'] ?? 1 ) );
 		// Allow up to the table's hard cap (MAX_ROWS) so the admin UI can load the full log in
 		// one request and filter/paginate it client-side; default page size stays at 20.
 		$per_page = max( 1, min( self::MAX_ROWS, (int) ( $args['per_page'] ?? 20 ) ) );
@@ -322,7 +353,10 @@ class Nexter_Content_SEO_404_Monitor {
 			$rows = array();
 		}
 
-		return array( 'rows' => $rows, 'total' => $total );
+		return array(
+		'rows'  => $rows,
+		'total' => $total
+		);
 	}
 
 	/**

@@ -40,8 +40,8 @@ class Nexter_Content_SEO_Archives {
 		$disable_date   = ! empty( $options['disable_date_archives'] ) && is_date();
 		// Category and tag archives can be disabled explicitly (not just noindex'd), matching the
 		// author/date behavior: 301 to home when redirect_archives_to_home is on, else a clean 404.
-		$disable_cat    = ! empty( $options['disable_category_archives'] ) && is_category();
-		$disable_tag    = ! empty( $options['disable_tag_archives'] ) && is_tag();
+		$disable_cat = ! empty( $options['disable_category_archives'] ) && is_category();
+		$disable_tag = ! empty( $options['disable_tag_archives'] ) && is_tag();
 
 		if ( ! $disable_author && ! $disable_date && ! $disable_cat && ! $disable_tag ) {
 			return $preempt;
@@ -84,9 +84,11 @@ class Nexter_Content_SEO_Archives {
 		// hasn't been fully parsed.
 		$is_feed_request = is_feed();
 		if ( ! $is_feed_request ) {
-			$uri = isset( $_SERVER['REQUEST_URI'] ) ? (string) wp_unslash( $_SERVER['REQUEST_URI'] ) : '';
+			$uri  = isset( $_SERVER['REQUEST_URI'] ) ? (string) wp_unslash( $_SERVER['REQUEST_URI'] ) : '';
 			$path = (string) wp_parse_url( $uri, PHP_URL_PATH );
-			if ( false !== strpos( $path, '/feed' ) && ( '/feed/' === $path || preg_match( '#/feed/?$#', $path ) ) ) {
+			// The regex already matches a path ending in /feed or /feed/, so the earlier
+			// strpos() pre-check and the '/feed/' === $path comparison were redundant.
+			if ( preg_match( '#/feed/?$#', $path ) ) {
 				$is_feed_request = true;
 			}
 		}

@@ -48,7 +48,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
                 request.open('POST', ajaxurl, true);
                 request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
                 request.setRequestHeader('Accept', 'application/json');
-                request.send('action=nexter_ext_pro_dismiss_notice');
+                var noticeNonce = nexterProNotice.getAttribute('data-nonce') || '';
+                request.send('action=nexter_ext_pro_dismiss_notice&nexter_nonce=' + encodeURIComponent(noticeNonce));
             });
         }
         }, 500);

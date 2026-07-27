@@ -17,13 +17,13 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class Nexter_Content_SEO_Sitemap {
 
-	const REWRITE_SLUG       = 'sitemap.xml';
-	const VIDEO_SLUG         = 'sitemap-video.xml';
-	const NEWS_SLUG          = 'sitemap-news.xml';
-	const HTML_SLUG          = 'sitemap.html';
+	const REWRITE_SLUG = 'sitemap.xml';
+	const VIDEO_SLUG   = 'sitemap-video.xml';
+	const NEWS_SLUG    = 'sitemap-news.xml';
+	const HTML_SLUG    = 'sitemap.html';
 
 	/** Bump when the set of registered rewrite rules changes, to force a one-time flush on upgrade. */
-	const RULES_VERSION      = 3;
+	const RULES_VERSION = 3;
 
 	/**
 	 * Initialize rewrite rules and template redirect.
@@ -63,13 +63,60 @@ class Nexter_Content_SEO_Sitemap {
 		if ( get_option( 'nexter_content_seo_flush_rewrite' ) ) {
 			delete_option( 'nexter_content_seo_flush_rewrite' );
 			flush_rewrite_rules();
+			return;
 		}
 		// Auto-flush once after an upgrade that changed the registered rewrite rules (e.g. the
 		// new paginated child-sitemap rule), so existing installs don't 404 on child sitemaps.
 		if ( (int) get_option( 'nexter_content_seo_sitemap_rules_ver', 0 ) !== self::RULES_VERSION ) {
 			update_option( 'nexter_content_seo_sitemap_rules_ver', self::RULES_VERSION, false );
 			flush_rewrite_rules();
+			return;
 		}
+		self::maybe_selfheal_rewrite_rules();
+	}
+
+	/**
+	 * Self-heal a missing sitemap rewrite rule.
+	 *
+	 * The sitemap can be enabled out-of-band — a settings import, a site migration, or a direct
+	 * option write — without passing through the REST toggle that sets the one-shot flush flag
+	 * above. When that happens the `^sitemap.xml$` rule is never persisted and /sitemap.xml serves
+	 * the homepage HTML instead of XML. Detect the missing rule and flush once. Heavily guarded so
+	 * this never flushes on every request:
+	 *  - only with pretty permalinks (plain permalinks carry no rewrite rules at all — a flush
+	 *    would not help and would loop),
+	 *  - only while a sitemap is actually enabled and not deferred to a competing SEO plugin,
+	 *  - throttled to at most once per hour as a backstop against a persistent rule conflict.
+	 */
+	private static function maybe_selfheal_rewrite_rules() {
+		if ( ! get_option( 'permalink_structure' ) || self::defer_sitemap_to_other_seo() ) {
+			return;
+		}
+		$options     = Nexter_Content_SEO::get_options();
+		$any_sitemap = ! empty( $options['enable_xml_sitemap'] ) || ! empty( $options['enable_video_sitemap'] ) || ! empty( $options['enable_news_sitemap'] );
+		if ( ! $any_sitemap ) {
+			return;
+		}
+		$rules = get_option( 'rewrite_rules' );
+		if ( is_array( $rules ) && isset( $rules[ '^' . self::REWRITE_SLUG . '$' ] ) ) {
+			return; // Rule present — nothing to heal.
+		}
+		if ( get_transient( 'nexter_content_seo_selfheal_flush' ) ) {
+			return; // Throttled: don't re-flush on every request if a conflict keeps removing it.
+		}
+		set_transient( 'nexter_content_seo_selfheal_flush', 1, HOUR_IN_SECONDS );
+		flush_rewrite_rules();
+	}
+
+	/**
+	 * Whether Nexter should defer its sitemap to a competing SEO plugin (Yoast / Rank Math / AIOSEO
+	 * / SEOPress / …). When one is active we serve no Nexter sitemap and don't touch WP-core sitemaps,
+	 * so the competitor's sitemap is the only one exposed. Mirrors the meta/schema coexistence guard.
+	 *
+	 * @return bool
+	 */
+	private static function defer_sitemap_to_other_seo() {
+		return class_exists( 'Nexter_Content_SEO_Description' ) && Nexter_Content_SEO_Description::other_seo_plugin_active();
 	}
 
 	/**
@@ -77,7 +124,7 @@ class Nexter_Content_SEO_Sitemap {
 	 */
 	public static function disable_wp_core_sitemaps() {
 		$options = Nexter_Content_SEO::get_options();
-		if ( ! empty( $options['enable_xml_sitemap'] ) ) {
+		if ( ! empty( $options['enable_xml_sitemap'] ) && ! self::defer_sitemap_to_other_seo() ) {
 			remove_action( 'init', 'wp_sitemaps_get_server' );
 			add_filter( 'wp_sitemaps_enabled', '__return_false', PHP_INT_MAX );
 		}
@@ -93,7 +140,7 @@ class Nexter_Content_SEO_Sitemap {
 	 */
 	public static function filter_wp_sitemaps_enabled( $enabled ) {
 		$options = Nexter_Content_SEO::get_options();
-		if ( ! empty( $options['enable_xml_sitemap'] ) ) {
+		if ( ! empty( $options['enable_xml_sitemap'] ) && ! self::defer_sitemap_to_other_seo() ) {
 			return false;
 		}
 		return (bool) $enabled;
@@ -139,9 +186,40 @@ class Nexter_Content_SEO_Sitemap {
 	 * Output sitemap when requested (main XML, video, news, or HTML).
 	 */
 	public static function maybe_output_sitemap() {
+		// When Nexter's own XML sitemap is enabled, WP core's sitemap system is disabled (see
+		// disable_wp_core_sitemaps), but a core-sitemap rewrite rule already persisted in the
+		// rewrite_rules option can linger and make /wp-sitemap*.xml resolve to the blog index — a
+		// soft-404 (200 OK + duplicate homepage HTML) that Google flags as a quality problem. Don't
+		// rely solely on the one-shot rewrite flush: explicitly hard-404 the orphaned WP-core sitemap
+		// paths (index, sub-sitemaps, and .xsl stylesheets) so they're correctly treated as gone.
+		// Skipped when deferring to a competing SEO plugin (we don't manage sitemaps in that case).
+		if ( ! self::defer_sitemap_to_other_seo() ) {
+			$sitemap_options = Nexter_Content_SEO::get_options();
+			if ( ! empty( $sitemap_options['enable_xml_sitemap'] ) ) {
+				$req_uri  = isset( $_SERVER['REQUEST_URI'] ) ? (string) wp_unslash( $_SERVER['REQUEST_URI'] ) : '';
+				$req_path = (string) wp_parse_url( $req_uri, PHP_URL_PATH );
+				if ( '' !== $req_path && preg_match( '#^/wp-sitemap[^/]*\.(?:xml|xsl)$#', $req_path ) ) {
+					global $wp_query;
+					if ( $wp_query instanceof WP_Query ) {
+						$wp_query->set_404();
+					}
+					status_header( 404 );
+					nocache_headers();
+					return;
+				}
+			}
+		}
+
 		$type = get_query_var( 'nxt_sitemap' );
 		if ( ! $type ) {
 			return;
+		}
+		// Defer to a competing SEO plugin: don't serve a second Nexter sitemap alongside theirs —
+		// 404 this URL so only the competitor's sitemap is exposed.
+		if ( self::defer_sitemap_to_other_seo() ) {
+			status_header( 404 );
+			nocache_headers();
+			exit;
 		}
 		$options = Nexter_Content_SEO::get_options();
 
@@ -454,7 +532,12 @@ class Nexter_Content_SEO_Sitemap {
 			if ( ! taxonomy_exists( $slug ) || in_array( $slug, self::excluded_taxonomies( $options ), true ) ) {
 				return false;
 			}
-			$c = wp_count_terms( array( 'taxonomy' => $slug, 'hide_empty' => true ) );
+			$c = wp_count_terms(
+				array(
+				'taxonomy'   => $slug,
+				'hide_empty' => true
+				) 
+			);
 			return ! is_wp_error( $c ) && (int) $c > 0;
 		}
 		return false;
@@ -495,7 +578,12 @@ class Nexter_Content_SEO_Sitemap {
 			if ( in_array( $tax, $exclude_tax, true ) ) {
 				continue;
 			}
-			$c = wp_count_terms( array( 'taxonomy' => $tax, 'hide_empty' => true ) );
+			$c      = wp_count_terms(
+				array(
+				'taxonomy'   => $tax,
+				'hide_empty' => true
+				) 
+			);
 			$total += is_wp_error( $c ) ? 0 : (int) $c;
 		}
 		return $total;
@@ -536,7 +624,12 @@ class Nexter_Content_SEO_Sitemap {
 			if ( in_array( $tax, $exclude_tax, true ) ) {
 				continue;
 			}
-			$c = wp_count_terms( array( 'taxonomy' => $tax, 'hide_empty' => true ) );
+			$c = wp_count_terms(
+				array(
+				'taxonomy'   => $tax,
+				'hide_empty' => true
+				) 
+			);
 			$c = is_wp_error( $c ) ? 0 : (int) $c;
 			if ( $c < 1 ) {
 				continue;
@@ -566,7 +659,7 @@ class Nexter_Content_SEO_Sitemap {
 		$xml .= self::stylesheet_pi();
 		$xml .= '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . "\n";
 		foreach ( $sections as $s ) {
-			$loc  = self::child_sitemap_url( $s['obj'], $s['page'] );
+			$loc = self::child_sitemap_url( $s['obj'], $s['page'] );
 			// Per-section lastmod: the max modified date of THAT section's content, not one global
 			// site-wide date stamped on every child (which made untouched sections look freshly
 			// updated to crawlers).
@@ -662,7 +755,8 @@ class Nexter_Content_SEO_Sitemap {
 			}
 			$page = 1;
 			while ( true ) {
-				$posts = get_posts( array(
+				$posts = get_posts(
+					array(
 					'post_type'              => $pt,
 					'post_status'            => 'publish',
 					'posts_per_page'         => $batch_size,
@@ -673,7 +767,8 @@ class Nexter_Content_SEO_Sitemap {
 					'has_password'           => false,
 					'update_post_meta_cache' => false,
 					'update_post_term_cache' => false,
-				) );
+					) 
+				);
 
 				if ( empty( $posts ) ) {
 					break;
@@ -702,7 +797,12 @@ class Nexter_Content_SEO_Sitemap {
 			if ( in_array( $tax, $exclude_tax, true ) ) {
 				continue;
 			}
-			$terms = get_terms( array( 'taxonomy' => $tax, 'hide_empty' => true ) );
+			$terms = get_terms(
+				array(
+				'taxonomy'   => $tax,
+				'hide_empty' => true
+				) 
+			);
 			if ( is_wp_error( $terms ) ) {
 				continue;
 			}
@@ -769,7 +869,8 @@ class Nexter_Content_SEO_Sitemap {
 				$limit  = $per;
 				$offset = ( $page - 1 ) * $per;
 			}
-			$posts = get_posts( array(
+			$posts = get_posts(
+				array(
 				'post_type'              => $slug,
 				'post_status'            => 'publish',
 				'posts_per_page'         => $limit,
@@ -780,7 +881,8 @@ class Nexter_Content_SEO_Sitemap {
 				'has_password'           => false,
 				'update_post_meta_cache' => false,
 				'update_post_term_cache' => false,
-			) );
+				) 
+			);
 			foreach ( $posts as $post ) {
 				if ( 'publish' !== $post->post_status || self::is_post_excluded_from_sitemap( $post, $options ) ) {
 					continue;
@@ -795,12 +897,14 @@ class Nexter_Content_SEO_Sitemap {
 				self::echo_url_entry( $url, $mod, 'weekly', '0.8', $images, $alternates );
 			}
 		} elseif ( 'tax' === $kind && taxonomy_exists( $slug ) && ! in_array( $slug, self::excluded_taxonomies( $options ), true ) ) {
-			$terms = get_terms( array(
+			$terms = get_terms(
+				array(
 				'taxonomy'   => $slug,
 				'hide_empty' => true,
 				'number'     => $per,
 				'offset'     => ( $page - 1 ) * $per,
-			) );
+				) 
+			);
 			if ( ! is_wp_error( $terms ) ) {
 				foreach ( $terms as $term ) {
 					if ( class_exists( 'Nexter_Content_SEO_Robots' ) && Nexter_Content_SEO_Robots::is_term_archive_noindex( $term ) ) {
@@ -860,7 +964,7 @@ class Nexter_Content_SEO_Sitemap {
 	 * @return string[]
 	 */
 	private static function excluded_post_types( $options ) {
-		$user = ( isset( $options['sitemap_exclude_post_types'] ) && is_array( $options['sitemap_exclude_post_types'] ) )
+		$user     = ( isset( $options['sitemap_exclude_post_types'] ) && is_array( $options['sitemap_exclude_post_types'] ) )
 			? array_keys( array_filter( $options['sitemap_exclude_post_types'] ) )
 			: array();
 		$excluded = array_values( array_unique( array_merge( $user, self::builder_utility_post_types() ) ) );
@@ -883,20 +987,44 @@ class Nexter_Content_SEO_Sitemap {
 	 * @return string[]
 	 */
 	private static function builder_utility_post_types() {
-		$deny_slugs = array(
+		$deny_slugs    = array(
 			// Elementor.
-			'elementor_library', 'e-landing-page', 'elementor_font', 'elementor_icons', 'e-floating-buttons',
+			'elementor_library',
+		'e-landing-page',
+		'elementor_font',
+		'elementor_icons',
+		'e-floating-buttons',
 			// Nexter.
-			'nxt_builder', 'nexter_builder',
+			'nxt_builder',
+		'nexter_builder',
 			// Themes / other builders.
-			'oceanwp_library', 'ct_template', 'fl-builder-template', 'fl-theme-layout',
-			'fusion_template', 'fusion_element', 'fusion_tb_section',
-			'brizy_template', 'brizy-global-blocks', 'cornerstone',
+			'oceanwp_library',
+		'ct_template',
+		'fl-builder-template',
+		'fl-theme-layout',
+			'fusion_template',
+		'fusion_element',
+		'fusion_tb_section',
+			'brizy_template',
+		'brizy-global-blocks',
+		'cornerstone',
 			// JetEngine utility (not user CPTs).
-			'jet-menu', 'jet-popup', 'jet-woo-builder', 'jet-theme-core', 'jet-smart-filters', 'jet-engine',
+			'jet-menu',
+		'jet-popup',
+		'jet-woo-builder',
+		'jet-theme-core',
+		'jet-smart-filters',
+		'jet-engine',
 			// WordPress FSE / system.
-			'wp_template', 'wp_template_part', 'wp_global_styles', 'wp_navigation', 'wp_block',
-			'custom_css', 'customize_changeset', 'oembed_cache', 'user_request',
+			'wp_template',
+		'wp_template_part',
+		'wp_global_styles',
+		'wp_navigation',
+		'wp_block',
+			'custom_css',
+		'customize_changeset',
+		'oembed_cache',
+		'user_request',
 		);
 		$deny_prefixes = array( 'theplus_', 'tve_' );
 
@@ -955,7 +1083,7 @@ class Nexter_Content_SEO_Sitemap {
 	 */
 	private static function render_video_sitemap_body( $options ) {
 		$exclude_types = self::excluded_post_types( $options );
-		$batch_size = 200;
+		$batch_size    = 200;
 
 		echo '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
 		echo '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">' . "\n";
@@ -1041,7 +1169,8 @@ class Nexter_Content_SEO_Sitemap {
 		$exclude_types = self::excluded_post_types( $options );
 
 		$cutoff = gmdate( 'Y-m-d H:i:s', strtotime( '-48 hours' ) );
-		$posts  = get_posts( array(
+		$posts  = get_posts(
+			array(
 			'post_type'      => 'post',
 			'post_status'    => 'publish',
 			'posts_per_page' => 1000,
@@ -1050,10 +1179,11 @@ class Nexter_Content_SEO_Sitemap {
 					'after'     => $cutoff,
 					'inclusive' => true,
 				),
-			),
-			'orderby'        => 'date',
-			'order'          => 'DESC',
-		) );
+			 ),
+			 'orderby'       => 'date',
+			 'order'         => 'DESC',
+			) 
+		);
 
 		// Google News requires a non-empty publication name. Fall back to the site host when the
 		// blogname is empty so <news:name> is never emitted blank.
@@ -1061,7 +1191,7 @@ class Nexter_Content_SEO_Sitemap {
 		if ( '' === $pub_name ) {
 			$pub_name = (string) wp_parse_url( home_url(), PHP_URL_HOST );
 		}
-		$lang     = substr( get_bloginfo( 'language' ), 0, 2 ) ?: 'en';
+		$lang = substr( get_bloginfo( 'language' ), 0, 2 ) ?: 'en';
 
 		echo '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
 		echo '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">' . "\n";
@@ -1130,7 +1260,7 @@ class Nexter_Content_SEO_Sitemap {
 	 */
 	private static function render_html_sitemap_body( $options ) {
 		$exclude_types = self::excluded_post_types( $options );
-		$exclude_tax = isset( $options['sitemap_exclude_taxonomies'] ) && is_array( $options['sitemap_exclude_taxonomies'] )
+		$exclude_tax   = isset( $options['sitemap_exclude_taxonomies'] ) && is_array( $options['sitemap_exclude_taxonomies'] )
 			? array_keys( array_filter( $options['sitemap_exclude_taxonomies'] ) )
 			: array();
 
@@ -1142,7 +1272,7 @@ class Nexter_Content_SEO_Sitemap {
 <head>
 	<meta charset="<?php bloginfo( 'charset' ); ?>">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<?php /* translators: %s: site name */ ?>
+		<?php /* translators: %s: site name */ ?>
 	<title><?php echo esc_html( sprintf( /* translators: %s: site name (blog title). */ __( 'Sitemap - %s', 'nexter-extension' ), $site_name ) ); ?></title>
 	<style>
 		body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; max-width: 800px; margin: 40px auto; padding: 0 20px; line-height: 1.6; color: #1a1a1a; }
@@ -1164,21 +1294,32 @@ class Nexter_Content_SEO_Sitemap {
 		<li><a href="<?php echo esc_url( $home_url ); ?>"><?php echo esc_html( $site_name ); ?></a></li>
 	</ul>
 
-	<?php
-		$builtin = array( 'page' => get_post_type_object( 'page' ), 'post' => get_post_type_object( 'post' ) );
-		$custom  = get_post_types( array( 'public' => true, '_builtin' => false ), 'objects' );
+		<?php
+		$builtin    = array(
+		'page' => get_post_type_object( 'page' ),
+		'post' => get_post_type_object( 'post' )
+		);
+		$custom     = get_post_types(
+			array(
+			'public'   => true,
+			'_builtin' => false
+			),
+			'objects' 
+		);
 		$post_types = array_filter( array_merge( $builtin, $custom ) );
 		foreach ( $post_types as $pt ) {
 			if ( ! $pt || in_array( $pt->name, $exclude_types, true ) ) {
 				continue;
 			}
-			$posts = get_posts( array(
+			$posts = get_posts(
+				array(
 				'post_type'      => $pt->name,
 				'post_status'    => 'publish',
 				'posts_per_page' => 500,
 				'orderby'        => 'title',
 				'order'          => 'ASC',
-			) );
+				) 
+			);
 			if ( empty( $posts ) ) {
 				continue;
 			}
@@ -1192,15 +1333,20 @@ class Nexter_Content_SEO_Sitemap {
 			}
 			echo '</ul>';
 		}
-	?>
+		?>
 
-	<?php
+		<?php
 		$taxonomies = get_taxonomies( array( 'public' => true ), 'objects' );
 		foreach ( $taxonomies as $tax ) {
 			if ( in_array( $tax->name, $exclude_tax, true ) ) {
 				continue;
 			}
-			$terms = get_terms( array( 'taxonomy' => $tax->name, 'hide_empty' => true ) );
+			$terms = get_terms(
+				array(
+				'taxonomy'   => $tax->name,
+				'hide_empty' => true
+				) 
+			);
 			if ( is_wp_error( $terms ) || empty( $terms ) ) {
 				continue;
 			}
@@ -1214,7 +1360,7 @@ class Nexter_Content_SEO_Sitemap {
 			}
 			echo '</ul>';
 		}
-	?>
+		?>
 </body>
 </html>
 		<?php
@@ -1228,7 +1374,7 @@ class Nexter_Content_SEO_Sitemap {
 	 */
 	private static function render_html_sitemap_sections( $options ) {
 		$exclude_types = self::excluded_post_types( $options );
-		$exclude_tax = isset( $options['sitemap_exclude_taxonomies'] ) && is_array( $options['sitemap_exclude_taxonomies'] )
+		$exclude_tax   = isset( $options['sitemap_exclude_taxonomies'] ) && is_array( $options['sitemap_exclude_taxonomies'] )
 			? array_keys( array_filter( $options['sitemap_exclude_taxonomies'] ) )
 			: array();
 
@@ -1237,20 +1383,31 @@ class Nexter_Content_SEO_Sitemap {
 		echo '<h2>' . esc_html__( 'Homepage', 'nexter-extension' ) . '</h2>';
 		echo '<ul><li><a href="' . esc_url( home_url( '/' ) ) . '">' . esc_html( $site_name ) . '</a></li></ul>';
 
-		$builtin    = array( 'page' => get_post_type_object( 'page' ), 'post' => get_post_type_object( 'post' ) );
-		$custom     = get_post_types( array( 'public' => true, '_builtin' => false ), 'objects' );
+		$builtin    = array(
+		'page' => get_post_type_object( 'page' ),
+		'post' => get_post_type_object( 'post' )
+		);
+		$custom     = get_post_types(
+			array(
+			'public'   => true,
+			'_builtin' => false
+			),
+			'objects' 
+		);
 		$post_types = array_filter( array_merge( $builtin, $custom ) );
 		foreach ( $post_types as $pt ) {
 			if ( ! $pt || in_array( $pt->name, $exclude_types, true ) ) {
 				continue;
 			}
-			$posts = get_posts( array(
+			$posts = get_posts(
+				array(
 				'post_type'      => $pt->name,
 				'post_status'    => 'publish',
 				'posts_per_page' => 500,
 				'orderby'        => 'title',
 				'order'          => 'ASC',
-			) );
+				) 
+			);
 			if ( empty( $posts ) ) {
 				continue;
 			}
@@ -1269,7 +1426,12 @@ class Nexter_Content_SEO_Sitemap {
 			if ( in_array( $tax->name, $exclude_tax, true ) ) {
 				continue;
 			}
-			$terms = get_terms( array( 'taxonomy' => $tax->name, 'hide_empty' => true ) );
+			$terms = get_terms(
+				array(
+				'taxonomy'   => $tax->name,
+				'hide_empty' => true
+				) 
+			);
 			if ( is_wp_error( $terms ) || empty( $terms ) ) {
 				continue;
 			}
@@ -1308,7 +1470,7 @@ class Nexter_Content_SEO_Sitemap {
 	 * @return array Array of video data: thumbnail_loc, title, description, player_loc.
 	 */
 	private static function get_post_videos( $post ) {
-		$videos = array();
+		$videos  = array();
 		$content = $post->post_content . ( $post->post_excerpt ? "\n" . $post->post_excerpt : '' );
 
 		// YouTube: youtube.com/watch?v=ID, youtu.be/ID, youtube.com/embed/ID
@@ -1319,12 +1481,12 @@ class Nexter_Content_SEO_Sitemap {
 					continue;
 				}
 				$seen[ $vid ] = true;
-				$desc = wp_trim_words( wp_strip_all_tags( $post->post_excerpt ?: $post->post_content ), 50 );
-				$videos[] = array(
-					'thumbnail_loc' => 'https://img.youtube.com/vi/' . $vid . '/hqdefault.jpg',
-					'title'        => $post->post_title,
-					'description'  => $desc ?: $post->post_title,
-					'player_loc'   => 'https://www.youtube.com/embed/' . $vid,
+				$desc         = wp_trim_words( wp_strip_all_tags( $post->post_excerpt ?: $post->post_content ), 50 );
+				$videos[]     = array(
+					'thumbnail_loc'    => 'https://img.youtube.com/vi/' . $vid . '/hqdefault.jpg',
+					'title'            => $post->post_title,
+					'description'      => $desc ?: $post->post_title,
+					'player_loc'       => 'https://www.youtube.com/embed/' . $vid,
 					'publication_date' => $post->post_date_gmt ? self::gmt_to_iso( $post->post_date_gmt ) : '',
 				);
 			}
@@ -1338,13 +1500,13 @@ class Nexter_Content_SEO_Sitemap {
 					continue;
 				}
 				$seen[ $vid ] = true;
-				$thumb = self::get_vimeo_thumbnail( $vid );
-				$desc = wp_trim_words( wp_strip_all_tags( $post->post_excerpt ?: $post->post_content ), 50 );
-				$videos[] = array(
-					'thumbnail_loc' => $thumb ?: includes_url( 'images/blank.gif' ),
-					'title'        => $post->post_title,
-					'description'  => $desc ?: $post->post_title,
-					'player_loc'   => 'https://player.vimeo.com/video/' . $vid,
+				$thumb        = self::get_vimeo_thumbnail( $vid );
+				$desc         = wp_trim_words( wp_strip_all_tags( $post->post_excerpt ?: $post->post_content ), 50 );
+				$videos[]     = array(
+					'thumbnail_loc'    => $thumb ?: includes_url( 'images/blank.gif' ),
+					'title'            => $post->post_title,
+					'description'      => $desc ?: $post->post_title,
+					'player_loc'       => 'https://player.vimeo.com/video/' . $vid,
 					'publication_date' => $post->post_date_gmt ? self::gmt_to_iso( $post->post_date_gmt ) : '',
 				);
 			}
@@ -1361,7 +1523,7 @@ class Nexter_Content_SEO_Sitemap {
 	 */
 	private static function get_vimeo_thumbnail( $vimeo_id ) {
 		$cache_key = 'nxt_vimeo_thumb_' . $vimeo_id;
-		$cached = get_transient( $cache_key );
+		$cached    = get_transient( $cache_key );
 		if ( $cached !== false ) {
 			return $cached;
 		}
@@ -1378,7 +1540,7 @@ class Nexter_Content_SEO_Sitemap {
 	 * @return void
 	 */
 	public static function warm_vimeo_thumbnail( $vimeo_id ) {
-		$vimeo_id  = preg_replace( '/\D+/', '', (string) $vimeo_id );
+		$vimeo_id = preg_replace( '/\D+/', '', (string) $vimeo_id );
 		if ( '' === $vimeo_id ) {
 			return;
 		}
@@ -1387,7 +1549,7 @@ class Nexter_Content_SEO_Sitemap {
 		if ( $cached !== false ) {
 			return;
 		}
-		$url = 'https://vimeo.com/api/oembed.json?url=https://vimeo.com/' . $vimeo_id;
+		$url      = 'https://vimeo.com/api/oembed.json?url=https://vimeo.com/' . $vimeo_id;
 		$response = wp_remote_get(
 			$url,
 			array(
@@ -1399,7 +1561,7 @@ class Nexter_Content_SEO_Sitemap {
 			set_transient( $cache_key, '', DAY_IN_SECONDS );
 			return;
 		}
-		$body = json_decode( wp_remote_retrieve_body( $response ), true );
+		$body  = json_decode( wp_remote_retrieve_body( $response ), true );
 		$thumb = isset( $body['thumbnail_url'] ) ? $body['thumbnail_url'] : '';
 		set_transient( $cache_key, $thumb, DAY_IN_SECONDS );
 	}
@@ -1414,10 +1576,10 @@ class Nexter_Content_SEO_Sitemap {
 	 */
 	private static function get_video_candidate_post_ids( $post_type, $page, $limit ) {
 		global $wpdb;
-		$offset  = max( 0, ( (int) $page - 1 ) * (int) $limit );
-		$like_yt = '%' . $wpdb->esc_like( 'youtube' ) . '%';
+		$offset        = max( 0, ( (int) $page - 1 ) * (int) $limit );
+		$like_yt       = '%' . $wpdb->esc_like( 'youtube' ) . '%';
 		$like_yt_short = '%' . $wpdb->esc_like( 'youtu.be' ) . '%';
-		$like_vm = '%' . $wpdb->esc_like( 'vimeo' ) . '%';
+		$like_vm       = '%' . $wpdb->esc_like( 'vimeo' ) . '%';
 
 		$ids = $wpdb->get_col(
 			$wpdb->prepare(
@@ -1651,7 +1813,7 @@ class Nexter_Content_SEO_Sitemap {
 			return array();
 		}
 		$images = array();
-		$seen  = array();
+		$seen   = array();
 
 		// Featured image first.
 		$thumb_id = get_post_thumbnail_id( $post->ID );
@@ -1659,7 +1821,10 @@ class Nexter_Content_SEO_Sitemap {
 			$thumb_url = wp_get_attachment_image_url( $thumb_id, 'full' );
 			if ( $thumb_url && ! isset( $seen[ $thumb_url ] ) ) {
 				$seen[ $thumb_url ] = true;
-				$images[] = array( 'url' => $thumb_url, 'title' => get_the_title( $thumb_id ) );
+				$images[]           = array(
+				'url'   => $thumb_url,
+				'title' => get_the_title( $thumb_id )
+				);
 			}
 		}
 
@@ -1682,7 +1847,10 @@ class Nexter_Content_SEO_Sitemap {
 				}
 				if ( ! isset( $seen[ $url ] ) ) {
 					$seen[ $url ] = true;
-					$images[] = array( 'url' => $url, 'title' => '' );
+					$images[]     = array(
+					'url'   => $url,
+					'title' => ''
+					);
 				}
 			}
 		}
@@ -1727,7 +1895,7 @@ class Nexter_Content_SEO_Sitemap {
 		if ( ! empty( $q->posts ) ) {
 			$post_id = (int) $q->posts[0];
 			$gmt     = get_post_field( 'post_modified_gmt', $post_id );
-			$iso = self::gmt_to_iso( $gmt );
+			$iso     = self::gmt_to_iso( $gmt );
 			if ( '' !== $iso ) {
 				return $iso;
 			}
@@ -1788,11 +1956,13 @@ class Nexter_Content_SEO_Sitemap {
 			: '_nxt_seo_noindex';
 		$meta_val = get_post_meta( $post_id, $meta_key, true );
 
-		// Mirror robots behavior: explicit post meta wins over global defaults.
-		if ( $meta_val === '1' || $meta_val === true || $meta_val === 1 ) {
+		// Mirror robots behavior: explicit post meta wins over global defaults. get_post_meta() with
+		// $single=true always returns a string ('' when unset), so a string compare is sufficient —
+		// the former ===true/===1/===false/===0 branches could never match and were dead weight.
+		if ( '1' === $meta_val ) {
 			return true;
 		}
-		if ( $meta_val === '0' || $meta_val === false || $meta_val === 0 ) {
+		if ( '0' === $meta_val ) {
 			return false;
 		}
 
@@ -1810,17 +1980,22 @@ class Nexter_Content_SEO_Sitemap {
 	private static function is_wc_transactional_page_id( $post_id ) {
 		static $ids = null;
 		if ( null === $ids ) {
-			$ids = array_filter( array_map( 'absint', array(
-				(int) get_option( 'woocommerce_cart_page_id' ),
-				(int) get_option( 'woocommerce_checkout_page_id' ),
-				(int) get_option( 'woocommerce_myaccount_page_id' ),
-				(int) get_option( 'woocommerce_terms_page_id' ),
-				(int) get_option( 'woocommerce_pay_page_id' ),
-				(int) get_option( 'woocommerce_thanks_page_id' ),
-				(int) get_option( 'woocommerce_view_order_page_id' ),
-				(int) get_option( 'woocommerce_edit_address_page_id' ),
-				(int) get_option( 'woocommerce_lost_password_page_id' ),
-			) ) );
+			$ids = array_filter(
+				array_map(
+					'absint',
+					array(
+					(int) get_option( 'woocommerce_cart_page_id' ),
+					(int) get_option( 'woocommerce_checkout_page_id' ),
+					(int) get_option( 'woocommerce_myaccount_page_id' ),
+					(int) get_option( 'woocommerce_terms_page_id' ),
+					(int) get_option( 'woocommerce_pay_page_id' ),
+					(int) get_option( 'woocommerce_thanks_page_id' ),
+					(int) get_option( 'woocommerce_view_order_page_id' ),
+					(int) get_option( 'woocommerce_edit_address_page_id' ),
+					(int) get_option( 'woocommerce_lost_password_page_id' ),
+					) 
+				) 
+			);
 		}
 		return in_array( (int) $post_id, $ids, true );
 	}
@@ -1892,12 +2067,21 @@ class Nexter_Content_SEO_Sitemap {
 	 * @return WP_REST_Response|WP_Error
 	 */
 	public static function rest_regenerate_sitemap( $request ) {
+		// Defense in depth: the route already declares a manage_options permission_callback, but this
+		// callback also persists the entire rewrite ruleset to the DB (flush_rewrite_rules() writes
+		// the rewrite_rules option), so guard it internally too — a misconfigured route (e.g.
+		// __return_true) must never turn this into an unauthenticated, repeatable, expensive write.
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return new WP_Error( 'rest_forbidden', __( 'Sorry, you are not allowed to do that.', 'nexter-extension' ), array( 'status' => 403 ) );
+		}
 		flush_rewrite_rules();
-		return rest_ensure_response( array(
+		return rest_ensure_response(
+			array(
 			'data' => array(
 				'success'     => true,
 				'sitemap_url' => self::get_sitemap_url(),
-			),
-		) );
+			 ),
+			) 
+		);
 	}
 }

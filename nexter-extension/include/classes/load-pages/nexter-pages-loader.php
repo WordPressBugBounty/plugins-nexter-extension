@@ -11,7 +11,7 @@ class Nexter_Builder_Pages_Loader {
 	/**
 	 * Member Variable
 	 */
-	private static $instance;		
+	private static $instance;       
 	private static $template_cache = [];
 	private static $condition_rule = '';
 	
@@ -54,79 +54,79 @@ class Nexter_Builder_Pages_Loader {
 		
 		$excludes_ids = [];
 		
-		if( !empty($pages_conditions) ) {
-			if($singular_archive == 'singular'){
+		if ( ! empty( $pages_conditions ) ) {
+			if ( $singular_archive == 'singular' ) {
 				self::$condition_rule = Nexter_Builders_Singular_Conditional_Rules::$load_conditions_rule;
 			}
-			if($singular_archive == 'archives'){
+			if ( $singular_archive == 'archives' ) {
 				self::$condition_rule = Nexter_Builders_Archives_Conditional_Rules::$load_conditions_rule;
 			}
 
 			foreach ( $pages_conditions as $template_id => $conditions ) {
 				
-				foreach( $conditions['template_group'] as $key => $condition ){
+				foreach ( $conditions['template_group'] as $key => $condition ) {
 				
-					if($singular_archive == 'singular'){
-						$include = isset($condition['nxt-singular-include-exclude']) ? $condition['nxt-singular-include-exclude'] : '';
-						$rule = isset($condition['nxt-singular-conditional-rule']) ? $condition['nxt-singular-conditional-rule'] : '';
-						$type = isset($condition['nxt-singular-conditional-type']) ? $condition['nxt-singular-conditional-type'] : [];
+					if ( $singular_archive == 'singular' ) {
+						$include = isset( $condition['nxt-singular-include-exclude'] ) ? $condition['nxt-singular-include-exclude'] : '';
+						$rule    = isset( $condition['nxt-singular-conditional-rule'] ) ? $condition['nxt-singular-conditional-rule'] : '';
+						$type    = isset( $condition['nxt-singular-conditional-type'] ) ? $condition['nxt-singular-conditional-type'] : [];
 					}
-					if($singular_archive == 'archives'){
-						$include = isset($condition['nxt-archive-include-exclude']) ? $condition['nxt-archive-include-exclude'] : '';
-						$rule = isset($condition['nxt-archive-conditional-rule']) ? $condition['nxt-archive-conditional-rule'] : '';
-						$type = isset($condition['nxt-archive-conditional-type']) ? $condition['nxt-archive-conditional-type'] : [];
+					if ( $singular_archive == 'archives' ) {
+						$include = isset( $condition['nxt-archive-include-exclude'] ) ? $condition['nxt-archive-include-exclude'] : '';
+						$rule    = isset( $condition['nxt-archive-conditional-rule'] ) ? $condition['nxt-archive-conditional-rule'] : '';
+						$type    = isset( $condition['nxt-archive-conditional-type'] ) ? $condition['nxt-archive-conditional-type'] : [];
 					}
 					$get_condition = '';
 					
-					if ( !empty(self::$condition_rule) && isset(self::$condition_rule) && isset(self::$condition_rule[$rule]) ) {
+					if ( ! empty( self::$condition_rule ) && isset( self::$condition_rule ) && isset( self::$condition_rule[ $rule ] ) ) {
 					
-						$check_condition_rule = self::$condition_rule[$rule];
+						$check_condition_rule = self::$condition_rule[ $rule ];
 						
 						//check post type
-						if( isset($check_condition_rule->post_type->name) ){
+						if ( isset( $check_condition_rule->post_type->name ) ) {
 							$post_type = $check_condition_rule->post_type->name;
-						}else{
+						} else {
 							$post_type = get_post_type();
 						}
 						//check taxonomy
-						if( isset($check_condition_rule->taxonomy->name) ){
+						if ( isset( $check_condition_rule->taxonomy->name ) ) {
 							$taxonomy = $check_condition_rule->taxonomy->name;
-						}else{
+						} else {
 							$taxonomy = get_post_type();
 						}
 						
 						//check taxonomy terms
-						if( isset($check_condition_rule->taxonomy_terms->name) ){
+						if ( isset( $check_condition_rule->taxonomy_terms->name ) ) {
 							$taxonomy_terms = $check_condition_rule->taxonomy_terms->name;
-						}else{
+						} else {
 							$taxonomy_terms = get_post_type();
 						}
 						
 						//check front page
-						if( $rule === 'front_page' ){
+						if ( $rule === 'front_page' ) {
 							$get_condition = $check_condition_rule::condition_check();
 						}
 					}
 					
-					if ( isset(self::$condition_rule[$rule]) && !empty($rule) ) {
-						if( empty( $type ) ){
+					if ( isset( self::$condition_rule[ $rule ] ) && ! empty( $rule ) ) {
+						if ( empty( $type ) ) {
 							$type = ['all'];
 						}
-						foreach ($type as $key => $value ){
-							if($value == 'all'){
+						foreach ( $type as $key => $value ) {
+							if ( $value == 'all' ) {
 								$value = '';
 							}
 							
 							$args = [
-								'id' => $value,
-								'post_type' => $post_type,
-								'taxonomy' => $taxonomy,
+								'id'             => $value,
+								'post_type'      => $post_type,
+								'taxonomy'       => $taxonomy,
 								'taxonomy_terms' => $taxonomy_terms,
 							];
 							
-							$get_condition = $check_condition_rule::condition_check($args);
+							$get_condition = $check_condition_rule::condition_check( $args );
 							
-							if ( !empty($get_condition) ) {
+							if ( ! empty( $get_condition ) ) {
 							
 								$post_status = get_post_status( $template_id );
 								if ( $post_status !== 'publish' ) {
@@ -137,8 +137,7 @@ class Nexter_Builder_Pages_Loader {
 									$priority_cond[ $template_id ] = self::get_condition_rules_priority( $type,$check_condition_rule, $value );
 								} else {
 									$excludes_ids[] = $template_id;
-								}
-								
+								}                           
 							}
 						}
 					}
@@ -151,17 +150,13 @@ class Nexter_Builder_Pages_Loader {
 						}
 						
 						if ( 'include' === $include ) {
-							$priority_cond[ $template_id ] = self::get_condition_rules_priority( $type,$check_condition_rule );									
+							$priority_cond[ $template_id ] = self::get_condition_rules_priority( $type,$check_condition_rule );                                 
 						} else {
 							$excludes_ids[] = $template_id;
 						}
-					}
-					
-					
+					}               
 				}//end sub foreach
-				
 			}//end foreach
-		
 		}//end pages_conditions
 		
 		foreach ( $excludes_ids as $exclude_id ) {
@@ -170,7 +165,7 @@ class Nexter_Builder_Pages_Loader {
 		
 		asort( $priority_cond );
 		
-		return $priority_cond;			
+		return $priority_cond;          
 	}
 	
 	/**
@@ -178,10 +173,10 @@ class Nexter_Builder_Pages_Loader {
 	 */
 	private static function get_condition_rules_priority( $type, $check_condition_rule, $value ='' ) {
 		$priority = 60;
-		if($type=='singular'){
+		if ( $type == 'singular' ) {
 			$priority = Nexter_Builders_Singular_Conditional_Rules::get_condition_priority();
 		}
-		if($type=='archives'){
+		if ( $type == 'archives' ) {
 			$priority = Nexter_Builders_Archives_Conditional_Rules::get_condition_priority();
 		}
 		if ( $check_condition_rule ) {

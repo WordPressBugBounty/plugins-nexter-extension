@@ -42,25 +42,31 @@ if ( ! class_exists( 'Nexter_Class_Load' ) ) {
 			add_action( 'init', [ $this, 'theme_after_setup' ] );
 			add_action( 'plugins_loaded', [ $this, 'nexter_load_code_snippet_system' ], 20 );
 
-			if( !is_admin() ){
+			if ( ! is_admin() ) {
 				require_once __DIR__ . '/class-nxt-admin-bar-handler.php';
 				$this->admin_bar = new Nxt_Admin_Bar_Handler();
 
 				// Defer admin-bar hooks to 'init' so is_user_logged_in() is available.
 				// Avoids registering wp_footer callback (which queries post meta,
 				// snippet IDs, etc.) for logged-out visitors who never see the bar.
-				add_action( 'init', function() {
-					if ( is_user_logged_in() && current_user_can( 'manage_options' ) ) {
-						$this->admin_bar->register_hooks();
-					}
-				} );
+				add_action(
+					'init',
+					function() {
+						if ( is_user_logged_in() && current_user_can( 'manage_options' ) ) {
+							$this->admin_bar->register_hooks();
+						}
+					} 
+				);
 			}
 
-			add_action('init', function() {
-				if (has_action('wp_footer', 'wp_print_speculation_rules')) {
-					remove_action('wp_footer', 'wp_print_speculation_rules');
+			add_action(
+				'init',
+				function() {
+					if ( has_action( 'wp_footer', 'wp_print_speculation_rules' ) ) {
+						remove_action( 'wp_footer', 'wp_print_speculation_rules' );
+					}
 				}
-			});
+			);
 		}
 
 		// ── Backward-compatible delegation ─────────────────────────
@@ -118,28 +124,28 @@ if ( ! class_exists( 'Nexter_Class_Load' ) ) {
 				require_once $include_uri . 'nexter-class-singular-archives.php';
 
 				//sections load
-				if(!is_admin()){
-					if(defined('ASTRA_THEME_VERSION')){
-						require_once $include_uri . 'load-sections/theme/nxt-astra-comp.php';
-					}else if(defined('GENERATE_VERSION')){
-						require_once $include_uri . 'load-sections/theme/nxt-generatepress-comp.php';
-					}else if(defined('OCEANWP_THEME_VERSION')){
-						require_once $include_uri . 'load-sections/theme/nxt-oceanwp-comp.php';
-					}else if(defined('KADENCE_VERSION')){
-						require_once $include_uri . 'load-sections/theme/nxt-kadence-comp.php';
-					}else if(function_exists('blocksy_get_wp_theme')){
-						require_once $include_uri . 'load-sections/theme/nxt-blocksy-comp.php';
-					}else if( defined('NEVE_VERSION') ){
-						require_once $include_uri . 'load-sections/theme/nxt-neve-comp.php';
-					}
-
-					require_once $include_uri . 'load-sections/nexter-header-extra.php';
-					require_once $include_uri . 'load-sections/nexter-breadcrumb-extra.php';
-					require_once $include_uri . 'load-sections/nexter-footer-extra.php';
-					require_once $include_uri . 'load-sections/nexter-404-page-extra.php';
-				}else{
-					require_once $include_uri . 'load-sections/nexter-sections-loader.php';
+			if ( ! is_admin() ) {
+				if ( defined( 'ASTRA_THEME_VERSION' ) ) {
+					require_once $include_uri . 'load-sections/theme/nxt-astra-comp.php';
+				} else if ( defined( 'GENERATE_VERSION' ) ) {
+					require_once $include_uri . 'load-sections/theme/nxt-generatepress-comp.php';
+				} else if ( defined( 'OCEANWP_THEME_VERSION' ) ) {
+					require_once $include_uri . 'load-sections/theme/nxt-oceanwp-comp.php';
+				} else if ( defined( 'KADENCE_VERSION' ) ) {
+					require_once $include_uri . 'load-sections/theme/nxt-kadence-comp.php';
+				} else if ( function_exists( 'blocksy_get_wp_theme' ) ) {
+					require_once $include_uri . 'load-sections/theme/nxt-blocksy-comp.php';
+				} else if ( defined( 'NEVE_VERSION' ) ) {
+					require_once $include_uri . 'load-sections/theme/nxt-neve-comp.php';
 				}
+
+				require_once $include_uri . 'load-sections/nexter-header-extra.php';
+				require_once $include_uri . 'load-sections/nexter-breadcrumb-extra.php';
+				require_once $include_uri . 'load-sections/nexter-footer-extra.php';
+				require_once $include_uri . 'load-sections/nexter-404-page-extra.php';
+			} else {
+				require_once $include_uri . 'load-sections/nexter-sections-loader.php';
+			}
 
 			//}
 			require_once $include_uri . 'load-sections/nexter-sections-conditional.php';
@@ -148,11 +154,11 @@ if ( ! class_exists( 'Nexter_Class_Load' ) ) {
 		public function nexter_load_code_snippet_system() {
 			$include_uri = NEXTER_EXT_DIR . 'include/classes/';
 			// Check if code snippets are enabled before including related files
-			$get_opt = Nxt_Options::extra_ext();
+			$get_opt               = Nxt_Options::extra_ext();
 			$code_snippets_enabled = true;
 
-			if (isset($get_opt['code-snippets']) && isset($get_opt['code-snippets']['switch'])) {
-				$code_snippets_enabled = !empty($get_opt['code-snippets']['switch']);
+			if ( isset( $get_opt['code-snippets'] ) && isset( $get_opt['code-snippets']['switch'] ) ) {
+				$code_snippets_enabled = ! empty( $get_opt['code-snippets']['switch'] );
 			}
 
 			if ( $code_snippets_enabled ) {

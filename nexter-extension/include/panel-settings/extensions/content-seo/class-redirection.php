@@ -28,7 +28,7 @@ class Nexter_Content_SEO_Redirection {
 	/** Status codes that return a "content gone" response and ignore the destination URL. */
 	const GONE_STATUS_CODES = array( 410, 451 );
 
-	const DEFAULT_STATUS_CODE  = 301;
+	const DEFAULT_STATUS_CODE = 301;
 
 	/** Maximum redirect rules that can be stored, guarding unbounded growth. Filterable. */
 	const MAX_RULES = 2000;
@@ -354,7 +354,7 @@ class Nexter_Content_SEO_Redirection {
 				continue;
 			}
 			$enabled[] = $rule;
-			$cond = isset( $rule['condition'] ) ? $rule['condition'] : 'exact_match';
+			$cond      = isset( $rule['condition'] ) ? $rule['condition'] : 'exact_match';
 			if ( 'exact_match' !== $cond ) {
 				$all_exact = false;
 			}
@@ -636,12 +636,17 @@ class Nexter_Content_SEO_Redirection {
 			);
 		}
 		$rules[] = $rule;
-		$loop = self::find_redirect_loop( $rules );
+		$loop    = self::find_redirect_loop( $rules );
 		if ( '' !== $loop ) {
 			return new WP_Error( 'redirect_loop', $loop, array( 'status' => 400 ) );
 		}
 		self::save_rules( $rules );
-		return rest_ensure_response( array( 'data' => $rule, 'warnings' => self::rule_warnings( $rule ) ) );
+		return rest_ensure_response(
+			array(
+			'data'     => $rule,
+			'warnings' => self::rule_warnings( $rule )
+			) 
+		);
 	}
 
 	/**
@@ -679,7 +684,12 @@ class Nexter_Content_SEO_Redirection {
 			return new WP_Error( 'redirect_loop', $loop, array( 'status' => 400 ) );
 		}
 		self::save_rules( $rules );
-		return rest_ensure_response( array( 'data' => $rule, 'warnings' => self::rule_warnings( $rule ) ) );
+		return rest_ensure_response(
+			array(
+			'data'     => $rule,
+			'warnings' => self::rule_warnings( $rule )
+			) 
+		);
 	}
 
 	/**

@@ -50,7 +50,7 @@ if ( ! class_exists( 'Nexter_Builder_Wpml_Compatibility' ) ) {
 
 					if ( $wpml_post_id !== null ) {
 						if ( $post_id !== $wpml_post_id && isset( $wpml_posts[ $post_id ] ) ) {
-							$wpml_posts[ $wpml_post_id ] = $wpml_posts[ $post_id ];
+							$wpml_posts[ $wpml_post_id ]       = $wpml_posts[ $post_id ];
 							$wpml_posts[ $wpml_post_id ]['id'] = $wpml_post_id;
 
 							unset( $wpml_posts[ $post_id ] );

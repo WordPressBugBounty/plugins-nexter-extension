@@ -156,7 +156,11 @@ class Nexter_Content_SEO_Description {
 			|| defined( 'THE_SEO_FRAMEWORK_VERSION' ) // The SEO Framework (TSF).
 			|| defined( 'SLIM_SEO_VER' )          // Slim SEO.
 			|| defined( 'SQ_VERSION' )            // Squirrly SEO.
-			|| defined( 'RANK_READY_VERSION' )    // RankReady.
+			// NOTE: RankReady (AI/LLM SEO) is intentionally NOT listed. It emits no <title>,
+			// meta description, canonical, robots, schema or sitemap, so deferring to it would
+			// suppress Nexter's own output and leave the page with no SEO metadata at all. It
+			// defined no stable public version constant either — the previous RANK_READY_VERSION
+			// guard was dead code (never true). Nexter and RankReady coexist without duplication.
 		);
 
 		/**
@@ -230,7 +234,7 @@ class Nexter_Content_SEO_Description {
 			return;
 		}
 		self::$head_ob_level = null;
-		$html = (string) ob_get_clean();
+		$html                = (string) ob_get_clean();
 		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Re-emitting the already-built <head> markup verbatim except for removing duplicate description metas.
 		echo self::dedupe_description_meta( $html );
 	}
@@ -307,7 +311,7 @@ class Nexter_Content_SEO_Description {
 			'Insert your content here',
 			'Your Content Goes Here',
 		);
-		$text = str_ireplace( $placeholders, ' ', $text );
+		$text         = str_ireplace( $placeholders, ' ', $text );
 		return trim( (string) preg_replace( '/\s+/', ' ', $text ) );
 	}
 
@@ -449,24 +453,36 @@ class Nexter_Content_SEO_Description {
 	}
 
 	/**
-	 * Description cleanup for safe one-line output.
+	 * Description cleanup for safe one-line output: strip tags, drop page-builder placeholder copy,
+	 * collapse whitespace, and truncate to the target length on a word boundary. Public so the
+	 * social-meta module can run og:/twitter: descriptions through the exact same cleanup/truncation
+	 * as the main <meta name="description"> tag (they must not diverge).
 	 *
 	 * @param string $text Description value.
 	 * @return string
 	 */
-	private static function cleanup_text( $text ) {
+	public static function cleanup_text( $text ) {
 		$text = is_string( $text ) ? wp_strip_all_tags( $text ) : '';
 		// Every description path funnels through here, so strip page-builder placeholder copy once
 		// (covers the %post_excerpt% template path as well as the raw excerpt/content fallbacks).
 		$text = self::strip_builder_placeholders( $text );
-		$text = preg_replace( '/\s+/', ' ', $text );
+		// do_shortcode() only expands REGISTERED shortcodes; an unregistered or late-registered one
+		// (e.g. a slider plugin that hooks in after the description is resolved) is left verbatim
+		// and would leak "[rev_slider …]" into the meta/og/twitter description. Strip any remaining
+		// shortcode-shaped tokens (a bracketed tag that starts with a letter, opening or closing) so
+		// raw brackets never reach the description. Numeric refs like "[1]" are intentionally kept.
+		$text = preg_replace( '/\[\/?[a-z][a-z0-9_\-]*(?:[^\]]*)?\]/i', '', (string) $text );
+		$text = preg_replace( '/\s+/', ' ', (string) $text );
 		$text = is_string( $text ) ? trim( $text ) : '';
 		if ( '' === $text ) {
 			return '';
 		}
 		// Filterable max length with word-boundary truncation (mirrors the title cap): cut on the
 		// last space within the cap instead of mid-word, and let the ceiling be configured/removed.
-		$max = (int) apply_filters( 'nexter_content_seo_max_description_length', 320 );
+		// Default aligns with the SEO analyzer's "ideal" target (Nxt_Seo_Analyzer::META_DESC_MAX =
+		// 160) so the plugin never emits a description its own SEO Checks panel would flag as too
+		// long. Raise via this filter for a higher hard ceiling; set 0 to disable truncation.
+		$max = (int) apply_filters( 'nexter_content_seo_max_description_length', 160 );
 		if ( $max > 0 ) {
 			$len = function_exists( 'mb_strlen' ) ? mb_strlen( $text ) : strlen( $text );
 			if ( $len > $max ) {

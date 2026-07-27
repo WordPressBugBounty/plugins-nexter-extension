@@ -69,7 +69,8 @@ if ( ! class_exists( 'Nexter_Code_Snippets_Import_Data' ) ) {
 			
 			// Pre-check: Ensure WP_CONTENT_DIR is writable before attempting any file operations
 			if ( ! self::check_content_dir_writable() ) {
-				if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) { error_log( 'Nexter Extension: File-based snippets require write access. Import skipped.' ); }
+				if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+					error_log( 'Nexter Extension: File-based snippets require write access. Import skipped.' ); }
 				return;
 			}
 			
@@ -93,14 +94,15 @@ if ( ! class_exists( 'Nexter_Code_Snippets_Import_Data' ) ) {
 		private function import_data_code_snippet() {
 			// Pre-check: Ensure WP_CONTENT_DIR is writable before attempting file operations
 			if ( ! self::check_content_dir_writable() ) {
-				if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) { error_log( 'Nexter Extension: File-based snippets require write access. Import skipped.' ); }
+				if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+					error_log( 'Nexter Extension: File-based snippets require write access. Import skipped.' ); }
 				return;
 			}
 
 			// Mark as imported before processing to prevent duplicate imports
 			update_option( self::$import_option, true, 'yes' );
 
-			$file_based = new Nexter_Code_Snippets_File_Based();
+			$file_based  = new Nexter_Code_Snippets_File_Based();
 			$storage_dir = Nexter_Code_Snippets_File_Based::getfileDir();
 			
 			// Validate and ensure directory exists with proper permissions
@@ -160,7 +162,8 @@ if ( ! class_exists( 'Nexter_Code_Snippets_Import_Data' ) ) {
 		private function ensure_storage_directory( $storage_dir ) {
 			// Pre-check: Ensure WP_CONTENT_DIR is writable before attempting any directory operations
 			if ( ! self::check_content_dir_writable() ) {
-				if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) { error_log( 'Nexter Extension: File-based snippets require write access. Storage ensure skipped.' ); }
+				if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+					error_log( 'Nexter Extension: File-based snippets require write access. Storage ensure skipped.' ); }
 				return false;
 			}
 
@@ -266,7 +269,8 @@ if ( ! class_exists( 'Nexter_Code_Snippets_Import_Data' ) ) {
 		private static function import_snippet_to_file( $snippet, $file_count, $storage_dir, $env_data ) {
 			// Pre-check: Ensure WP_CONTENT_DIR is writable before attempting file write
 			if ( ! self::check_content_dir_writable() ) {
-				if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) { error_log( 'Nexter Extension: File-based snippets require write access. Snippet import item skipped.' ); }
+				if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+					error_log( 'Nexter Extension: File-based snippets require write access. Snippet import item skipped.' ); }
 				return false;
 			}
 
@@ -315,7 +319,7 @@ if ( ! class_exists( 'Nexter_Code_Snippets_Import_Data' ) ) {
 			
 			// Write file with error handling
 			$full_code = $doc_block_string . $code;
-			$result = file_put_contents( $file_path, $full_code, LOCK_EX );
+			$result    = file_put_contents( $file_path, $full_code, LOCK_EX );
 
 			// Clear variables from memory
 			unset( $doc_block_string, $code, $full_code, $meta_data );
@@ -347,14 +351,14 @@ if ( ! class_exists( 'Nexter_Code_Snippets_Import_Data' ) ) {
 
 			// Check if file exists and generate unique name if needed
 			$max_attempts = 10;
-			$attempt = 0;
+			$attempt      = 0;
 			
 			while ( is_file( $file_path ) && $attempt < $max_attempts ) {
 				$attempt++;
 				$unique_suffix = bin2hex( random_bytes( 2 ) );
-				$file_name = absint( $file_count ) . '-' . $file_title . '-' . $unique_suffix . '.php';
-				$file_name = sanitize_file_name( $file_name );
-				$file_path = wp_normalize_path( $storage_dir . '/' . $file_name );
+				$file_name     = absint( $file_count ) . '-' . $file_title . '-' . $unique_suffix . '.php';
+				$file_name     = sanitize_file_name( $file_name );
+				$file_path     = wp_normalize_path( $storage_dir . '/' . $file_name );
 			}
 
 			if ( $attempt >= $max_attempts ) {
@@ -389,8 +393,8 @@ if ( ! class_exists( 'Nexter_Code_Snippets_Import_Data' ) ) {
 				'updated_at'  => sanitize_text_field( $env_data['date'] ),
 				'updated_by'  => absint( $env_data['user_id'] ),
 				'condition'   => array(
-					'status' => 0,
-					'priority' => 10,
+					'status'       => 0,
+					'priority'     => 10,
 					'code-execute' => $code_execute,
 				),
 			);
@@ -446,17 +450,17 @@ if ( ! class_exists( 'Nexter_Code_Snippets_Import_Data' ) ) {
 		 */
 		private static function parseInputMeta( $meta_data, $convert_string = false, $default_name = '' ) {
 			$meta_defaults = array(
-				'name'         => ! empty( $default_name ) ? sanitize_text_field( $default_name ) : '',
-				'description'  => '',
-				'tags'         => '',
-				'type'         => 'php',
-				'status'       => 'draft',
-				'created_by'   => 1,
-				'created_at'   => '',
-				'updated_at'   => '',
-				'updated_by'   => 1,
-				'condition'    => array(
-					'status' => 0,
+				'name'        => ! empty( $default_name ) ? sanitize_text_field( $default_name ) : '',
+				'description' => '',
+				'tags'        => '',
+				'type'        => 'php',
+				'status'      => 'draft',
+				'created_by'  => 1,
+				'created_at'  => '',
+				'updated_at'  => '',
+				'updated_by'  => 1,
+				'condition'   => array(
+					'status'   => 0,
 					'priority' => 10,
 				),
 			);

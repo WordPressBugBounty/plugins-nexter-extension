@@ -44,6 +44,13 @@ class Nexter_Content_SEO_Robots {
 		// rewrite rule doesn't short-circuit in WP::main(). We set it at priority 0
 		// of `do_robotstxt` action (runs before WP core's output) and also detect
 		// robots.txt by REQUEST_URI at `template_redirect` as a second safety net.
+		// NOTE: In the normal request flow serve_robots_txt_fallback() (template_redirect, pri 0)
+		// intercepts and exit()s every real /robots.txt hit before WP core reaches its
+		// is_robots()/do_robots() branch, and it already calls force_robots_txt_content_type()
+		// directly before echoing. This do_robotstxt hook is therefore a no-op safety net that only
+		// becomes operative if serve_robots_txt_fallback() is unhooked by another plugin (leaving WP
+		// core's do_robots() to fire). Kept intentionally so the Content-Type header is still forced
+		// in that fallback-of-the-fallback case.
 		add_action( 'do_robotstxt', array( __CLASS__, 'force_robots_txt_content_type' ), 0 );
 		add_action( 'template_redirect', array( __CLASS__, 'serve_robots_txt_fallback' ), 0 );
 
@@ -66,7 +73,7 @@ class Nexter_Content_SEO_Robots {
 			return;
 		}
 		// Only nag when Nexter is actually trying to output robots content the file would shadow.
-		$options = Nexter_Content_SEO::get_options();
+		$options      = Nexter_Content_SEO::get_options();
 		$wants_output = ! empty( $options['robots_txt_custom'] ) || ! empty( $options['enable_xml_sitemap'] );
 		if ( ! $wants_output ) {
 			return;
@@ -103,7 +110,7 @@ class Nexter_Content_SEO_Robots {
 		if ( is_admin() || is_feed() || is_trackback() ) {
 			return;
 		}
-		$uri = isset( $_SERVER['REQUEST_URI'] ) ? (string) wp_unslash( $_SERVER['REQUEST_URI'] ) : '';
+		$uri  = isset( $_SERVER['REQUEST_URI'] ) ? (string) wp_unslash( $_SERVER['REQUEST_URI'] ) : '';
 		$path = (string) wp_parse_url( $uri, PHP_URL_PATH );
 		if ( '/robots.txt' !== $path ) {
 			return;
@@ -193,7 +200,7 @@ class Nexter_Content_SEO_Robots {
 
 		// If blog is discouraged from search engines, force noindex/nofollow.
 		if ( ! get_option( 'blog_public' ) ) {
-			$directives = array_diff( $directives, array( 'index', 'follow' ) );
+			$directives   = array_diff( $directives, array( 'index', 'follow' ) );
 			$directives[] = 'noindex';
 			$directives[] = 'nofollow';
 		}
@@ -350,7 +357,7 @@ class Nexter_Content_SEO_Robots {
 
 		// Search archive.
 		if ( is_search() ) {
-			$options = Nexter_Content_SEO::get_options();
+			$options      = Nexter_Content_SEO::get_options();
 			$directives[] = 'noindex'; // Always noindex search results.
 			if ( ! empty( $options['nofollow_archives']['search'] ) ) {
 				$directives[] = 'nofollow';
@@ -403,8 +410,8 @@ class Nexter_Content_SEO_Robots {
 		// per-type override key (`post_type_archive_{type}`) so individual CPTs can differ.
 		if ( is_post_type_archive() ) {
 			$directives = self::apply_archive_flags( 'post_type_archive', $directives );
-			$pt = get_query_var( 'post_type' );
-			$pt = is_array( $pt ) ? reset( $pt ) : $pt;
+			$pt         = get_query_var( 'post_type' );
+			$pt         = is_array( $pt ) ? reset( $pt ) : $pt;
 			if ( $pt ) {
 				$directives = self::apply_archive_flags( 'post_type_archive_' . $pt, $directives );
 			}
@@ -424,7 +431,7 @@ class Nexter_Content_SEO_Robots {
 	 */
 	private static function apply_archive_flags( $key, $directives ) {
 		$options = Nexter_Content_SEO::get_options();
-		$map = array(
+		$map     = array(
 			'noindex'   => 'noindex_archives',
 			'nofollow'  => 'nofollow_archives',
 			'noarchive' => 'noarchive_archives',
@@ -505,6 +512,47 @@ class Nexter_Content_SEO_Robots {
 	 */
 	public static function is_term_archive_noindex( WP_Term $term ) {
 		return self::get_term_directive( (int) $term->term_id, (string) $term->taxonomy, self::META_NOINDEX, 'noindex_taxonomies' );
+	}
+
+	/**
+	 * Shared noindex resolver so modules (llms.txt, sitemap, schema) don't each reimplement the
+	 * Nexter-only meta/option check.
+	 *
+	 * Called with NO argument (the current request) it reads the actual merged `wp_robots` output —
+	 * the same signal the <meta name="robots"> tag is built from — so a competing SEO plugin's
+	 * noindex is honored (mirrors Nexter_Content_SEO_Schema::current_request_is_noindex()).
+	 *
+	 * Called with a post/term being enumerated OUTSIDE its own request (sitemap / llms.txt
+	 * generators loop over many objects, so the rendered robots signal isn't available per object)
+	 * it resolves Nexter's own per-object noindex directive and exposes it through the
+	 * `nexter_content_seo_effective_noindex` filter — the extension point an integration uses to
+	 * fold in a competing plugin's per-object flag.
+	 *
+	 * @param WP_Post|WP_Term|null $object Post or term to test; null = current request.
+	 * @return bool
+	 */
+	public static function is_effectively_noindex( $object = null ) {
+		if ( ! get_option( 'blog_public' ) ) {
+			return true;
+		}
+		if ( null === $object ) {
+			/** This filter is documented in wp-includes/robots-template.php */
+			$robots = apply_filters( 'wp_robots', array() );
+			return is_array( $robots ) && ! empty( $robots['noindex'] );
+		}
+		$noindex = false;
+		if ( $object instanceof WP_Post ) {
+			$noindex = self::get_singular_directive( (int) $object->ID, self::META_NOINDEX, 'noindex_post_types', (string) $object->post_type );
+		} elseif ( $object instanceof WP_Term ) {
+			$noindex = self::get_term_directive( (int) $object->term_id, (string) $object->taxonomy, self::META_NOINDEX, 'noindex_taxonomies' );
+		}
+		/**
+		 * Filter the effective noindex decision for an enumerated (off-request) post or term.
+		 *
+		 * @param bool                 $noindex Whether Nexter resolves the object as noindex.
+		 * @param WP_Post|WP_Term|null $object  The post or term being tested.
+		 */
+		return (bool) apply_filters( 'nexter_content_seo_effective_noindex', (bool) $noindex, $object );
 	}
 
 	/**

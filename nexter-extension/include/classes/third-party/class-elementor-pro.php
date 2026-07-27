@@ -8,7 +8,7 @@
 namespace Elementor;
 
 //If check 'Elementor' Exits or not
-if ( ! class_exists( '\Elementor\Plugin' ) || ! class_exists( 'ElementorPro\Modules\ThemeBuilder\Module' )) {
+if ( ! class_exists( '\Elementor\Plugin' ) || ! class_exists( 'ElementorPro\Modules\ThemeBuilder\Module' ) ) {
 	return;
 }
 
@@ -83,11 +83,11 @@ if ( ! class_exists( 'Nexter_Elementor_Pro_Builder' ) ) {
 				$nexter_maintenance = false;
 			}
 
-			$elementor_maintenance = get_option( 'elementor_maintenance_mode_mode' ) === 'maintenance' && !is_user_logged_in();
+			$elementor_maintenance = get_option( 'elementor_maintenance_mode_mode' ) === 'maintenance' && ! is_user_logged_in();
 
 			if ( $nexter_maintenance || $elementor_maintenance ) {
 				remove_action( 'nexter_header', 'nexter_header_template' );
-			}else{
+			} else {
 				$header_location = Module::instance()->get_locations_manager()->do_location( 'header' );
 				if ( $header_location ) {
 					remove_action( 'nexter_header', 'nexter_header_template' );
@@ -106,11 +106,11 @@ if ( ! class_exists( 'Nexter_Elementor_Pro_Builder' ) ) {
 				$nexter_maintenance = false;
 			}
 
-			$elementor_maintenance = get_option( 'elementor_maintenance_mode_mode' ) === 'maintenance' && !is_user_logged_in();
+			$elementor_maintenance = get_option( 'elementor_maintenance_mode_mode' ) === 'maintenance' && ! is_user_logged_in();
 
 			if ( $nexter_maintenance || $elementor_maintenance ) {
 				remove_action( 'nexter_footer', 'nexter_footer_template' );
-			}else{
+			} else {
 				$footer_location = Module::instance()->get_locations_manager()->do_location( 'footer' );
 				if ( $footer_location ) {
 					remove_action( 'nexter_footer', 'nexter_footer_template' );

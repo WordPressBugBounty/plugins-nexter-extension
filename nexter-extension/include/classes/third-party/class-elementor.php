@@ -31,8 +31,8 @@ if ( ! class_exists( 'Nexter_Elementor_Builder' ) ) {
 		 * Render content for post.
 		 */
 		public function render_content( $post_id ) {
-			$content = Elementor\Plugin::instance()->frontend->get_builder_content_for_display( $post_id );	// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-			if(empty($content)){
+			$content = Elementor\Plugin::instance()->frontend->get_builder_content_for_display( $post_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			if ( empty( $content ) ) {
 				$content = Elementor\Plugin::instance()->frontend->get_builder_content( $post_id );
 			}
 			echo $content;

@@ -3,29 +3,29 @@
  * Wilder Admin Menu Extension
  * @since 4.2.0
  */
-defined('ABSPATH') or die();
+defined( 'ABSPATH' ) or die();
 
- class Nexter_Ext_Wilder_Admin_Menu {
-    
+class Nexter_Ext_Wilder_Admin_Menu {
+	
 	public static $admin_menu_width = 160; // Default fallback width
 
-    /**
-     * Constructor
-     */
-    public function __construct() {
+	/**
+	 * Constructor
+	 */
+	public function __construct() {
 		$option = Nxt_Options::extra_ext();
 		
-		if(!empty($option) && isset($option['wider-admin-menu']) && !empty($option['wider-admin-menu']['switch']) && !empty($option['wider-admin-menu']['values']) ){
+		if ( ! empty( $option ) && isset( $option['wider-admin-menu'] ) && ! empty( $option['wider-admin-menu']['switch'] ) && ! empty( $option['wider-admin-menu']['values'] ) ) {
 			self::$admin_menu_width = $option['wider-admin-menu']['values'];
 
 			add_action( 'admin_head', [$this, 'set_admin_menu_width'], 99 );
 		}
 
-    }
+	}
 
 	public function set_admin_menu_width() {
-		$width   = esc_attr(self::$admin_menu_width) . 'px';
-		$version = get_bloginfo('version');
+		$width   = esc_attr( self::$admin_menu_width ) . 'px';
+		$version = get_bloginfo( 'version' );
 		$is_rtl  = is_rtl();
 		$margin  = $is_rtl ? 'margin-right' : 'margin-left';
 		$pos     = $is_rtl ? 'right' : 'left';

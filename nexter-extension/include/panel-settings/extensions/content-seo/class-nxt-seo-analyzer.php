@@ -18,18 +18,18 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Nxt_Seo_Analyzer {
 
 	/** Weights for total score (sum = 100). */
-	const W_TITLE_KEYWORD    = 15;
-	const W_META_KEYWORD     = 10;
-	const W_KEYWORD_DENSITY  = 10;
-	const W_INTERNAL_LINKS   = 10;
-	const W_IMAGE_ALT        = 10;
-	const W_HEADING_USAGE    = 15;
-	const W_CONTENT_LENGTH   = 10;
-	const W_READABILITY      = 10;
-	const W_URL_SLUG         = 10;
+	const W_TITLE_KEYWORD   = 15;
+	const W_META_KEYWORD    = 10;
+	const W_KEYWORD_DENSITY = 10;
+	const W_INTERNAL_LINKS  = 10;
+	const W_IMAGE_ALT       = 10;
+	const W_HEADING_USAGE   = 15;
+	const W_CONTENT_LENGTH  = 10;
+	const W_READABILITY     = 10;
+	const W_URL_SLUG        = 10;
 
-	const TITLE_MIN = 50;
-	const TITLE_MAX = 60;
+	const TITLE_MIN     = 50;
+	const TITLE_MAX     = 60;
 	const META_DESC_MIN = 150;
 	const META_DESC_MAX = 160;
 
@@ -43,7 +43,7 @@ class Nxt_Seo_Analyzer {
 		if ( ! is_array( $analysis ) ) {
 			return 0;
 		}
-		$s = 0;
+		$s  = 0;
 		$s += ( ! empty( $analysis['title_keyword'] ) ? 1 : 0 ) * self::W_TITLE_KEYWORD;
 		$s += ( ! empty( $analysis['meta_description_keyword'] ) ? 1 : 0 ) * self::W_META_KEYWORD;
 		$s += self::normalize( $analysis['keyword_density'] ?? 0, 0, 3 ) * self::W_KEYWORD_DENSITY;
@@ -70,14 +70,28 @@ class Nxt_Seo_Analyzer {
 	 * @return float
 	 */
 	public static function analyze_keyword_density( $content, $keyword ) {
-		$text = wp_strip_all_tags( $content );
+		$text  = wp_strip_all_tags( $content );
 		$words = (int) preg_match_all( '/\p{L}[\p{L}\p{M}\p{Nd}\x27-]*/u', (string) $text );
 		if ( $words < 1 || empty( trim( $keyword ) ) ) {
 			return 0.0;
 		}
 		$keyword = trim( $keyword );
-		$pattern = '/\b' . preg_quote( $keyword, '/' ) . '\b/iu';
-		$count   = preg_match_all( $pattern, $text );
+		// PCRE's \b word boundary is defined in terms of \w, which stays ASCII-only even under the
+		// /u modifier, so a non-Latin focus keyword (CJK, Cyrillic, Arabic, …) could score 0.0 even
+		// when it is present. Scripts that separate words with spaces (Latin, Cyrillic, Greek,
+		// Arabic, …) get Unicode-aware boundary lookarounds so the keyword isn't matched inside a
+		// larger word; scripts with no inter-word separators (CJK, Thai, …) have no meaningful word
+		// boundary, so count raw occurrences instead — otherwise a present keyword scores 0.
+		$has_unspaced_script = (bool) preg_match(
+			'/[\x{3000}-\x{9FFF}\x{F900}-\x{FAFF}\x{FF00}-\x{FFEF}\x{AC00}-\x{D7AF}\x{0E00}-\x{0E7F}]/u',
+			$keyword
+		);
+		if ( $has_unspaced_script ) {
+			$pattern = '/' . preg_quote( $keyword, '/' ) . '/iu';
+		} else {
+			$pattern = '/(?<![\p{L}\p{N}])' . preg_quote( $keyword, '/' ) . '(?![\p{L}\p{N}])/iu';
+		}
+		$count = (int) preg_match_all( $pattern, $text );
 		return round( ( $count / $words ) * 100, 2 );
 	}
 
@@ -142,11 +156,14 @@ class Nxt_Seo_Analyzer {
 	 */
 	public static function check_internal_links( $content, $home = '' ) {
 		if ( empty( $content ) ) {
-			return array( 'count' => 0, 'score' => 0.0 );
+			return array(
+			'count' => 0,
+			'score' => 0.0
+			);
 		}
 		$home = $home ?: home_url( '/' );
 		preg_match_all( '/<a\s[^>]*href\s*=\s*["\']([^"\']+)["\'][^>]*>/i', $content, $matches );
-		$urls = $matches[1] ?? array();
+		$urls     = $matches[1] ?? array();
 		$internal = 0;
 		foreach ( $urls as $url ) {
 			if ( strpos( $url, $home ) === 0 || strpos( $url, '/' ) === 0 ) {
@@ -154,7 +171,10 @@ class Nxt_Seo_Analyzer {
 			}
 		}
 		$score = $internal >= 1 ? min( 1.0, $internal / 3.0 ) : 0.0;
-		return array( 'count' => $internal, 'score' => $score );
+		return array(
+		'count' => $internal,
+		'score' => $score
+		);
 	}
 
 	/**
@@ -169,12 +189,12 @@ class Nxt_Seo_Analyzer {
 		if ( empty( $text ) ) {
 			return 0;
 		}
-		$words = (int) preg_match_all( '/\p{L}[\p{L}\p{M}\p{Nd}\x27-]*/u', (string) $text );
+		$words     = (int) preg_match_all( '/\p{L}[\p{L}\p{M}\p{Nd}\x27-]*/u', (string) $text );
 		$sentences = max( 1, preg_match_all( '/[.!?]+/', $text ) );
 		$syllables = self::count_syllables( $text );
-		$asl = $words / $sentences;
-		$asw = $words > 0 ? $syllables / $words : 0;
-		$score = 206.835 - ( 1.015 * $asl ) - ( 84.6 * $asw );
+		$asl       = $words / $sentences;
+		$asw       = $words > 0 ? $syllables / $words : 0;
+		$score     = 206.835 - ( 1.015 * $asl ) - ( 84.6 * $asw );
 		return (int) max( 0, min( 100, round( $score ) ) );
 	}
 
@@ -193,7 +213,7 @@ class Nxt_Seo_Analyzer {
 				$total += 1;
 				continue;
 			}
-			$word = preg_replace( '/(?:es|ed|e)$/', '', $word );
+			$word   = preg_replace( '/(?:es|ed|e)$/', '', $word );
 			$vowels = preg_match_all( '/[aeiouy]+/', $word );
 			$total += max( 1, $vowels );
 		}
@@ -294,64 +314,58 @@ class Nxt_Seo_Analyzer {
 
 		$checklist = array(
 			array(
-				'id'          => 'page_media',
-				'status'      => $has_media ? 'pass' : 'warning',
-				'text'        => $has_media
+				'id'     => 'page_media',
+				'status' => $has_media ? 'pass' : 'warning',
+				'text'   => $has_media
 					? __( 'This page contains images or videos.', 'nexter-extension' )
 					: __( 'No images or videos found on this page.', 'nexter-extension' ),
-				'label'       => __( 'Images & video', 'nexter-extension' ),
-				'message'     => '',
-				'fix_section' => 'general',
+				'label'  => __( 'Images & video', 'nexter-extension' ),
+		'fix_section'    => 'general',
 			),
 			array(
-				'id'          => 'page_links',
-				'status'      => $has_link ? 'pass' : 'warning',
-				'text'        => $has_link
+				'id'     => 'page_links',
+				'status' => $has_link ? 'pass' : 'warning',
+				'text'   => $has_link
 					? __( 'This page contains links.', 'nexter-extension' )
 					: __( 'No links found on this page.', 'nexter-extension' ),
-				'label'       => __( 'Links', 'nexter-extension' ),
-				'message'     => '',
-				'fix_section' => 'general',
+				'label'  => __( 'Links', 'nexter-extension' ),
+		'fix_section'    => 'general',
 			),
 			array(
-				'id'          => 'page_subheading',
-				'status'      => $has_sub ? 'pass' : 'warning',
-				'text'        => $has_sub
+				'id'     => 'page_subheading',
+				'status' => $has_sub ? 'pass' : 'warning',
+				'text'   => $has_sub
 					? __( 'The page contains subheadings.', 'nexter-extension' )
 					: __( 'Page does not contain at least one subheading.', 'nexter-extension' ),
-				'label'       => __( 'Subheadings', 'nexter-extension' ),
-				'message'     => '',
-				'fix_section' => 'general',
+				'label'  => __( 'Subheadings', 'nexter-extension' ),
+		'fix_section'    => 'general',
 			),
 			array(
-				'id'          => 'page_url',
-				'status'      => $url_ok ? 'pass' : 'warning',
-				'text'        => $url_ok
+				'id'     => 'page_url',
+				'status' => $url_ok ? 'pass' : 'warning',
+				'text'   => $url_ok
 					? __( 'Page URL is short and SEO-friendly.', 'nexter-extension' )
 					: __( 'Page URL is missing, very long, or could be shortened for SEO.', 'nexter-extension' ),
-				'label'       => __( 'URL', 'nexter-extension' ),
-				'message'     => '',
-				'fix_section' => 'general',
+				'label'  => __( 'URL', 'nexter-extension' ),
+		'fix_section'    => 'general',
 			),
 			array(
-				'id'          => 'page_title_length',
-				'status'      => $title_ok ? 'pass' : 'warning',
-				'text'        => $title_ok
+				'id'     => 'page_title_length',
+				'status' => $title_ok ? 'pass' : 'warning',
+				'text'   => $title_ok
 					? __( 'Search engine title is present and under 60 characters.', 'nexter-extension' )
 					: __( 'Search engine title is missing or longer than 60 characters.', 'nexter-extension' ),
-				'label'       => __( 'Title length', 'nexter-extension' ),
-				'message'     => '',
-				'fix_section' => 'general',
+				'label'  => __( 'Title length', 'nexter-extension' ),
+		'fix_section'    => 'general',
 			),
 			array(
-				'id'          => 'page_meta_length',
-				'status'      => $meta_ok ? 'pass' : 'warning',
-				'text'        => $meta_ok
+				'id'     => 'page_meta_length',
+				'status' => $meta_ok ? 'pass' : 'warning',
+				'text'   => $meta_ok
 					? __( 'Search engine description is present and under 160 characters.', 'nexter-extension' )
 					: __( 'Search engine description is missing or longer than 160 characters.', 'nexter-extension' ),
-				'label'       => __( 'Meta description length', 'nexter-extension' ),
-				'message'     => '',
-				'fix_section' => 'general',
+				'label'  => __( 'Meta description length', 'nexter-extension' ),
+		'fix_section'    => 'general',
 			),
 		);
 
@@ -371,41 +385,38 @@ class Nxt_Seo_Analyzer {
 			$read_status    = $readability >= 50 ? 'pass' : ( $readability >= 30 ? 'warning' : 'error' );
 
 			$checklist[] = array(
-				'id'          => 'focus_title',
-				'status'      => $title_keyword ? 'pass' : 'warning',
-				'text'        => $title_keyword
+				'id'      => 'focus_title',
+				'status'  => $title_keyword ? 'pass' : 'warning',
+				'text'    => $title_keyword
 					? __( 'Focus keyword appears in the SEO title.', 'nexter-extension' )
 					: __( 'Add the focus keyword to the SEO title.', 'nexter-extension' ),
-				'label'       => __( 'Title optimization', 'nexter-extension' ),
-				'message'     => '',
-				'fix_section' => 'general',
+				'label'   => __( 'Title optimization', 'nexter-extension' ),
+			'fix_section' => 'general',
 			);
 			$checklist[] = array(
-				'id'          => 'focus_meta',
-				'status'      => $meta_keyword ? 'pass' : 'warning',
-				'text'        => $meta_keyword
+				'id'      => 'focus_meta',
+				'status'  => $meta_keyword ? 'pass' : 'warning',
+				'text'    => $meta_keyword
 					? __( 'Focus keyword appears in the meta description.', 'nexter-extension' )
 					: __( 'Add the focus keyword to the meta description.', 'nexter-extension' ),
-				'label'       => __( 'Meta description keyword', 'nexter-extension' ),
-				'message'     => '',
-				'fix_section' => 'general',
+				'label'   => __( 'Meta description keyword', 'nexter-extension' ),
+			'fix_section' => 'general',
 			);
 			$checklist[] = array(
-				'id'          => 'keyword_density',
-				'status'      => $density_status,
-				'text'        => sprintf(
+				'id'      => 'keyword_density',
+				'status'  => $density_status,
+				'text'    => sprintf(
 					/* translators: %s: keyword density percentage */
 					__( 'Keyword density is %s%% (aim for roughly 0.5%%–2.5%%).', 'nexter-extension' ),
 					number_format_i18n( $keyword_d, 2 )
 				),
-				'label'       => __( 'Keyword density', 'nexter-extension' ),
-				'message'     => '',
-				'fix_section' => 'general',
+				'label'   => __( 'Keyword density', 'nexter-extension' ),
+			'fix_section' => 'general',
 			);
 			$checklist[] = array(
-				'id'          => 'internal_links',
-				'status'      => $internal_count >= 1 ? 'pass' : 'warning',
-				'text'        => $internal_count >= 1
+				'id'      => 'internal_links',
+				'status'  => $internal_count >= 1 ? 'pass' : 'warning',
+				'text'    => $internal_count >= 1
 					? sprintf(
 						/* translators: %d: internal link count */
 						_n(
@@ -417,34 +428,31 @@ class Nxt_Seo_Analyzer {
 						$internal_count
 					)
 					: __( 'Add at least one internal link to other pages on your site.', 'nexter-extension' ),
-				'label'       => __( 'Internal links', 'nexter-extension' ),
-				'message'     => '',
-				'fix_section' => 'general',
+				'label'   => __( 'Internal links', 'nexter-extension' ),
+			'fix_section' => 'general',
 			);
 			$checklist[] = array(
-				'id'          => 'image_alt',
-				'status'      => $image_status,
-				'text'        => $image_alt >= 1
+				'id'      => 'image_alt',
+				'status'  => $image_status,
+				'text'    => $image_alt >= 1
 					? __( 'All images have alt text.', 'nexter-extension' )
 					: __( 'Some images are missing alt text.', 'nexter-extension' ),
-				'label'       => __( 'Image alt tags', 'nexter-extension' ),
-				'message'     => '',
-				'fix_section' => 'general',
+				'label'   => __( 'Image alt tags', 'nexter-extension' ),
+			'fix_section' => 'general',
 			);
 			$checklist[] = array(
-				'id'          => 'headings',
-				'status'      => $heading_s > 0 ? 'pass' : 'warning',
-				'text'        => $heading_s > 0
+				'id'      => 'headings',
+				'status'  => $heading_s > 0 ? 'pass' : 'warning',
+				'text'    => $heading_s > 0
 					? __( 'The content uses headings.', 'nexter-extension' )
 					: __( 'Add headings (H1–H6) to structure the content.', 'nexter-extension' ),
-				'label'       => __( 'Heading usage', 'nexter-extension' ),
-				'message'     => '',
-				'fix_section' => 'general',
+				'label'   => __( 'Heading usage', 'nexter-extension' ),
+			'fix_section' => 'general',
 			);
 			$checklist[] = array(
-				'id'          => 'content_length',
-				'status'      => $word_count >= 300 ? 'pass' : 'warning',
-				'text'        => $word_count >= 300
+				'id'      => 'content_length',
+				'status'  => $word_count >= 300 ? 'pass' : 'warning',
+				'text'    => $word_count >= 300
 					? sprintf(
 						/* translators: %d: word count */
 						__( 'Content length is %d words.', 'nexter-extension' ),
@@ -455,40 +463,36 @@ class Nxt_Seo_Analyzer {
 						__( 'Content is short (%d words). Consider at least 300 words for stronger SEO.', 'nexter-extension' ),
 						$word_count
 					),
-				'label'       => __( 'Content length', 'nexter-extension' ),
-				'message'     => '',
-				'fix_section' => 'general',
+				'label'   => __( 'Content length', 'nexter-extension' ),
+			'fix_section' => 'general',
 			);
 			$checklist[] = array(
-				'id'          => 'readability',
-				'status'      => $read_status,
-				'text'        => sprintf(
+				'id'      => 'readability',
+				'status'  => $read_status,
+				'text'    => sprintf(
 					/* translators: %d: readability score */
 					__( 'Readability score is %d (higher is easier to read).', 'nexter-extension' ),
 					$readability
 				),
-				'label'       => __( 'Readability', 'nexter-extension' ),
-				'message'     => '',
-				'fix_section' => 'general',
+				'label'   => __( 'Readability', 'nexter-extension' ),
+			'fix_section' => 'general',
 			);
 			$checklist[] = array(
-				'id'          => 'url_slug_keyword',
-				'status'      => $url_slug_kw ? 'pass' : 'warning',
-				'text'        => $url_slug_kw
+				'id'      => 'url_slug_keyword',
+				'status'  => $url_slug_kw ? 'pass' : 'warning',
+				'text'    => $url_slug_kw
 					? __( 'URL slug looks good for this focus keyword.', 'nexter-extension' )
 					: __( 'Consider including the focus keyword in the URL slug.', 'nexter-extension' ),
-				'label'       => __( 'URL slug & keyword', 'nexter-extension' ),
-				'message'     => '',
-				'fix_section' => 'general',
+				'label'   => __( 'URL slug & keyword', 'nexter-extension' ),
+			'fix_section' => 'general',
 			);
 		} else {
 			$checklist[] = array(
-				'id'          => 'focus_keyword_missing',
-				'status'      => 'warning',
-				'text'        => __( 'Add a focus keyword on the Optimize tab to run keyword-based checks.', 'nexter-extension' ),
-				'label'       => __( 'Focus keyword', 'nexter-extension' ),
-				'message'     => '',
-				'fix_section' => 'general',
+				'id'      => 'focus_keyword_missing',
+				'status'  => 'warning',
+				'text'    => __( 'Add a focus keyword on the Optimize tab to run keyword-based checks.', 'nexter-extension' ),
+				'label'   => __( 'Focus keyword', 'nexter-extension' ),
+			'fix_section' => 'general',
 			);
 		}
 
@@ -529,6 +533,64 @@ class Nxt_Seo_Analyzer {
 	}
 
 	/**
+	 * Resolve the content to analyze into the markup a visitor actually gets.
+	 *
+	 * Structural checks (images/video, links, subheadings, headings, word count) run on HTML, but
+	 * raw post_content often has none of it: a shortcode-based slider stores its images inside a
+	 * `[shortcode]`, and page builders (Elementor, etc.) keep almost nothing in post_content and
+	 * generate the real markup at render time. Analyzing the raw content therefore reports "no
+	 * images" on an image-full page. Expand shortcodes, and prefer a page builder's rendered
+	 * output when the post is built with one, so the analyzer sees the rendered page. Fails safe
+	 * to the raw content on any error.
+	 *
+	 * @param int    $post_id Post ID (0 when analyzing arbitrary/unsaved content, e.g. terms).
+	 * @param string $content Raw content HTML.
+	 * @return string
+	 */
+	private static function render_content_for_analysis( $post_id, $content ) {
+		$content = is_string( $content ) ? $content : '';
+		$post_id = (int) $post_id;
+
+		// Page builder: use the rendered builder output when this post is built with one.
+		if ( $post_id > 0 && did_action( 'elementor/loaded' ) && class_exists( '\Elementor\Plugin' ) ) {
+			try {
+				$documents = \Elementor\Plugin::$instance->documents;
+				$doc       = $documents ? $documents->get( $post_id ) : null;
+				if ( $doc && $doc->is_built_with_elementor() ) {
+					$built = \Elementor\Plugin::$instance->frontend->get_builder_content_for_display( $post_id, false );
+					if ( is_string( $built ) && '' !== trim( $built ) ) {
+						return $built;
+					}
+				}
+			} catch ( \Throwable $e ) {
+				// Fall through to shortcode expansion / raw content.
+			}
+		}
+
+		// No shortcodes to expand — cheapest path, avoids do_shortcode overhead.
+		if ( '' === $content || false === strpos( $content, '[' ) ) {
+			return $content;
+		}
+
+		// Classic / shortcode content: expand shortcodes ([gallery], sliders, …) so their <img>
+		// and <a> markup is present. Set up post context so shortcodes reading the current post
+		// resolve, then restore it.
+		if ( $post_id > 0 ) {
+			$post = get_post( $post_id );
+			if ( $post instanceof WP_Post ) {
+				$GLOBALS['post'] = $post; // phpcs:ignore WordPress.WP.GlobalVariablesOverride -- restored by wp_reset_postdata() below.
+				setup_postdata( $post );
+				$rendered = do_shortcode( $content );
+				wp_reset_postdata();
+				return is_string( $rendered ) && '' !== $rendered ? $rendered : $content;
+			}
+		}
+
+		$rendered = do_shortcode( $content );
+		return is_string( $rendered ) && '' !== $rendered ? $rendered : $content;
+	}
+
+	/**
 	 * Full analysis for a post (content + meta).
 	 *
 	 * @param int                $post_id   Post ID.
@@ -542,6 +604,10 @@ class Nxt_Seo_Analyzer {
 		$keywords = self::normalize_keywords( $focus_kw );
 		$primary  = isset( $keywords[0] ) ? $keywords[0] : '';
 
+		// Analyze the rendered page (shortcodes expanded / builder output), not raw post_content,
+		// so image/link/heading checks match what actually ships to visitors and search engines.
+		$content = self::render_content_for_analysis( $post_id, $content );
+
 		$content_plain = wp_strip_all_tags( $content );
 		$word_count    = (int) preg_match_all( '/\p{L}[\p{L}\p{M}\p{Nd}\x27-]*/u', (string) $content_plain );
 
@@ -553,10 +619,10 @@ class Nxt_Seo_Analyzer {
 		$per_keyword = array();
 		foreach ( $keywords as $kw ) {
 			$per_keyword[] = array(
-				'keyword'           => $kw,
-				'density'           => self::analyze_keyword_density( $content, $kw ),
-				'in_title'          => self::check_title_keyword( $title, $kw ),
-				'in_meta'           => self::check_meta_description_keyword( $meta_desc, $kw ),
+				'keyword'  => $kw,
+				'density'  => self::analyze_keyword_density( $content, $kw ),
+				'in_title' => self::check_title_keyword( $title, $kw ),
+				'in_meta'  => self::check_meta_description_keyword( $meta_desc, $kw ),
 			);
 		}
 
@@ -589,20 +655,20 @@ class Nxt_Seo_Analyzer {
 		$url_slug_ok = ! empty( $slug ) && strlen( $slug ) <= 75 && ( empty( $keywords ) || $slug_has_any_kw );
 
 		$analysis = array(
-			'focus_keyword_present'      => $primary !== '',
-			'focus_keywords'             => $keywords,
-			'per_keyword'                => $per_keyword,
-			'title_keyword'             => $title_keyword,
-			'meta_description_keyword'  => $meta_keyword,
-			'keyword_density'           => $keyword_density,
-			'internal_links_count'       => $internal['count'],
-			'internal_links_score'       => $internal['score'],
-			'image_alt_score'            => $image_alt_score,
-			'heading_usage_score'        => $heading_score,
-			'content_length_score'      => $content_length_score,
-			'readability_score'          => $readability,
-			'url_slug_ok'                => $url_slug_ok,
-			'word_count'                 => $word_count,
+			'focus_keyword_present'    => $primary !== '',
+			'focus_keywords'           => $keywords,
+			'per_keyword'              => $per_keyword,
+			'title_keyword'            => $title_keyword,
+			'meta_description_keyword' => $meta_keyword,
+			'keyword_density'          => $keyword_density,
+			'internal_links_count'     => $internal['count'],
+			'internal_links_score'     => $internal['score'],
+			'image_alt_score'          => $image_alt_score,
+			'heading_usage_score'      => $heading_score,
+			'content_length_score'     => $content_length_score,
+			'readability_score'        => $readability,
+			'url_slug_ok'              => $url_slug_ok,
+			'word_count'               => $word_count,
 		);
 
 		$score = self::calculate_seo_score( $analysis );
@@ -640,12 +706,12 @@ class Nxt_Seo_Analyzer {
 		}
 
 		return array(
-			'score'              => $score,
-			'keyword_density'    => $keyword_density,
-			'readability'        => $readability,
-			'checklist'          => $checklist,
-			'suggestions'        => $suggestions,
-			'analysis'           => $analysis,
+			'score'           => $score,
+			'keyword_density' => $keyword_density,
+			'readability'     => $readability,
+			'checklist'       => $checklist,
+			'suggestions'     => $suggestions,
+			'analysis'        => $analysis,
 		);
 	}
 }

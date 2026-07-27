@@ -18,7 +18,7 @@ class Nxt_Performance_Asset_Tweaks {
 			return;
 		}
 
-		$get_action = isset( $_GET['action'] ) ? sanitize_text_field( wp_unslash( $_GET['action'] ) ) : '';
+		$get_action      = isset( $_GET['action'] ) ? sanitize_text_field( wp_unslash( $_GET['action'] ) ) : '';
 		$allowed_actions = array( 'register', 'rp', 'lostpassword' );
 		if ( ( isset( $GLOBALS['pagenow'] ) && $GLOBALS['pagenow'] === 'wp-login.php' )
 			|| ( ! empty( $get_action ) && in_array( $get_action, $allowed_actions, true ) ) ) {

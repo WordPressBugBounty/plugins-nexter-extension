@@ -22,13 +22,13 @@ if ( ! function_exists( 'nxt_get_header_sections_cached' ) ) {
 	}
 }
 
-if( ! function_exists('get_nexter_header_sections') ){
+if ( ! function_exists( 'get_nexter_header_sections' ) ) {
 	
 	function get_nexter_header_sections( $sections ){
 		//Normal Header
 		$section_normal_header_id = nxt_get_header_sections_cached();
-		if(!empty($section_normal_header_id)){
-			$sections = array_merge($sections, $section_normal_header_id);
+		if ( ! empty( $section_normal_header_id ) ) {
+			$sections = array_merge( $sections, $section_normal_header_id );
 		}
 		return $sections;
 	}
@@ -44,7 +44,7 @@ function nexter_ext_render_header() {
 	?>
 		<header id="masthead" itemscope="itemscope" itemtype="https://schema.org/WPHeader">
 			<p class="main-title hide" itemprop="headline" style="display:none"><a href="<?php echo bloginfo( 'url' ); ?>" title="<?php echo esc_attr( get_bloginfo( 'name', 'display' ) ); ?>" rel="home"><?php bloginfo( 'name' ); ?></a></p>
-			<?php do_action('nexter_normal_header_content'); ?>
+			<?php do_action( 'nexter_normal_header_content' ); ?>
 		</header>
 	<?php
 }
@@ -54,16 +54,16 @@ function nexter_ext_render_header() {
  * 
  * @since 1.0.6
  */
-if( ! function_exists('nexter_normal_header_content_load') ){
+if ( ! function_exists( 'nexter_normal_header_content_load' ) ) {
 	
 	function nexter_normal_header_content_load(){
 		
 		$section_normal_header_id = nxt_get_header_sections_cached();
 		
-		if(!empty($section_normal_header_id)){
-			foreach ( $section_normal_header_id as $post_id) {
+		if ( ! empty( $section_normal_header_id ) ) {
+			foreach ( $section_normal_header_id as $post_id ) {
 				$header_type = get_post_meta( $post_id, 'nxt-normal-sticky-header', true );
-				if( empty($header_type) || (!empty($header_type) && $header_type!= 'sticky')){
+				if ( empty( $header_type ) || ( ! empty( $header_type ) && $header_type != 'sticky') ) {
 					Nexter_Builder_Sections_Conditional::get_instance()->get_action_content( $post_id );
 				}
 			}
@@ -77,17 +77,17 @@ if( ! function_exists('nexter_normal_header_content_load') ){
  * 
  * @since 1.0.5
  */
-if( ! function_exists('nexter_sticky_header_content_load') ){
+if ( ! function_exists( 'nexter_sticky_header_content_load' ) ) {
 	
 	function nexter_sticky_header_content_load(){
-		$sticky_header_display = false;
+		$sticky_header_display    = false;
 		$section_sticky_header_id = nxt_get_header_sections_cached();
 		
-		if(!empty($section_sticky_header_id)){
-			foreach ( $section_sticky_header_id as $post_id) {
+		if ( ! empty( $section_sticky_header_id ) ) {
+			foreach ( $section_sticky_header_id as $post_id ) {
 				
 				$header_type = get_post_meta( $post_id, 'nxt-normal-sticky-header', true );
-				if(!empty($header_type) && $header_type== 'sticky'){
+				if ( ! empty( $header_type ) && $header_type == 'sticky' ) {
 					Nexter_Builder_Sections_Conditional::get_instance()->get_action_content( $post_id );
 				}
 			}
@@ -145,7 +145,7 @@ function nexter_header_sticky_load_scripts() {
 	$sections = nxt_get_header_sections_cached();
 	
 	$transparent_display = false;
-	$sticky_display	= false;
+	$sticky_display      = false;
 
 	if ( ! empty( $sections ) ) {
 		foreach ( $sections as $post_id ) {
@@ -217,8 +217,8 @@ function nexter_header_sticky_load_scripts() {
 		);
 	}
 
-	if(function_exists('nexter_minify_css_generate')){
-		wp_add_inline_style( 'nexter-style', nexter_minify_css_generate($header_css) );
+	if ( function_exists( 'nexter_minify_css_generate' ) ) {
+		wp_add_inline_style( 'nexter-style', nexter_minify_css_generate( $header_css ) );
 	}
 }
 add_action( 'wp_enqueue_scripts', 'nexter_header_sticky_load_scripts' );

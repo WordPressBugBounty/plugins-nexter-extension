@@ -5,11 +5,11 @@
  * @package Nexter Extensions
  * @since 3.0.0
  */
-if (!defined('ABSPATH')) {
+if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
 }
 
-if (!class_exists('Nexter_Builder_Shortcode')) {
+if ( ! class_exists( 'Nexter_Builder_Shortcode' ) ) {
 
 	class Nexter_Builder_Shortcode
 	{
@@ -26,7 +26,7 @@ if (!class_exists('Nexter_Builder_Shortcode')) {
 		 */
 		public static function get_instance()
 		{
-			if (!isset(self::$instance)) {
+			if ( ! isset( self::$instance ) ) {
 				self::$instance = new self;
 			}
 			return self::$instance;
@@ -42,28 +42,29 @@ if (!class_exists('Nexter_Builder_Shortcode')) {
 
 		private function add_actions_shortcode()
 		{
-			if (is_admin()) {
-				add_action('manage_' . NXT_BUILD_POST . '_posts_columns', [$this, 'admin_columns_shortcode'], 15);
-				add_action('manage_' . NXT_BUILD_POST . '_posts_custom_column', [$this, 'admin_columns_shortcode_content'], 15, 2);
+			if ( is_admin() ) {
+				add_action( 'manage_' . NXT_BUILD_POST . '_posts_columns', [$this, 'admin_columns_shortcode'], 15 );
+				add_action( 'manage_' . NXT_BUILD_POST . '_posts_custom_column', [$this, 'admin_columns_shortcode_content'], 15, 2 );
 			}
 
-			add_shortcode(self::NXT_SHORTCODE, [$this, 'create_shortcode']);
+			add_shortcode( self::NXT_SHORTCODE, [$this, 'create_shortcode'] );
 			
 		}
 
 		public function admin_columns_shortcode($columns)
 		{
-			$columns['nxt_shortcode'] = __('Shortcode', 'nexter-extension');
+			$columns['nxt_shortcode'] = __( 'Shortcode', 'nexter-extension' );
 
 			return $columns;
 		}
 
 		public function admin_columns_shortcode_content($column, $post_id)
 		{
-			if ('nxt_shortcode' === $column) {
+			if ( 'nxt_shortcode' === $column ) {
 				//translator %s = shortcode, %d = post_id
-				$shortcode = esc_attr(sprintf('[%s id="%d"]', self::NXT_SHORTCODE, $post_id));
-				printf('<div class="nxt-shortcode-wrap">
+				$shortcode = esc_attr( sprintf( '[%s id="%d"]', self::NXT_SHORTCODE, $post_id ) );
+				printf(
+					'<div class="nxt-shortcode-wrap">
         					<input type="text" class="nexter1-input-box my-ccs-class" onfocus="this.select()" value="%s" readonly />
 							<button id="clear" class="nxt-shortcode-copy-btn">
 								<svg xmlns="http://www.w3.org/2000/svg" width="9" height="9" viewBox="0 0 9 9" fill="none" class="nexter-input-box-button-svg active">
@@ -73,28 +74,30 @@ if (!class_exists('Nexter_Builder_Shortcode')) {
 									<path d="M1.24976 6L4.24976 9L12.2498 1" stroke="white" stroke-linecap="round" stroke-linejoin="round"/>
 								</svg>
 							</button>
-						</div>', esc_attr($shortcode));
+						</div>',
+					esc_attr( $shortcode )
+				);
 			}
 		}
 
 		public function create_shortcode($option = [])
 		{
-			if (empty($option['id'])) {
+			if ( empty( $option['id'] ) ) {
 				return '';
 			}
-			if (class_exists('Nexter_Gutenberg_Editor')) {
+			if ( class_exists( 'Nexter_Gutenberg_Editor' ) ) {
 				$load_css = new Nexter_Gutenberg_Editor();
-				$load_css->enqueue_scripts($option['id']);
+				$load_css->enqueue_scripts( $option['id'] );
 			}
 
 			if ( get_post_status( $option['id'] ) === 'private' ) {
-				if ( ! current_user_can('manage_options') ) {
+				if ( ! current_user_can( 'manage_options' ) ) {
 					return;
 				}
 			}
 			
 			ob_start();
-			Nexter_Builder_Sections_Conditional::get_instance()->get_action_content($option['id']);
+			Nexter_Builder_Sections_Conditional::get_instance()->get_action_content( $option['id'] );
 			return ob_get_clean();
 		}
 	}

@@ -102,40 +102,40 @@ class Nexter_Ext_Bulk_Images {
 				'restoreNonce' => wp_create_nonce( 'nexter_admin_nonce' ),
 				'convertNonce' => wp_create_nonce( 'nxt_ext_image_convert' ),
 				'i18n'         => array(
-					'startBulk'        => __( 'Start Bulk Optimisation', 'nexter-extension' ),
-					'optimizing'       => __( 'Optimising Images', 'nexter-extension' ),
-					'reoptimise'       => __( 'Reoptimise Images', 'nexter-extension' ),
+					'startBulk'             => __( 'Start Bulk Optimisation', 'nexter-extension' ),
+					'optimizing'            => __( 'Optimising Images', 'nexter-extension' ),
+					'reoptimise'            => __( 'Reoptimise Images', 'nexter-extension' ),
 					/* translators: %d: Number of images ready to be optimised */
-					'readyToOptimize'  => __( 'Ready to optimise %d images and save storage space', 'nexter-extension' ),
+					'readyToOptimize'       => __( 'Ready to optimise %d images and save storage space', 'nexter-extension' ),
 					/* translators: 1: number of images optimised so far, 2: total number of images in queue */
-					'imagesOptimized'  => __( '%1$d of %2$d images optimised', 'nexter-extension' ),
-					'needToOptimise'   => __( 'Need to Optimise', 'nexter-extension' ),
-					'done'             => __( 'Done', 'nexter-extension' ),
-					'failed'           => __( 'Failed', 'nexter-extension' ),
-					'readyToOptimise'  => __( 'Ready to Optimise', 'nexter-extension' ),
-					'completed'        => __( 'Completed', 'nexter-extension' ),
-					'errorsFound'      => __( 'Errors Found', 'nexter-extension' ),
-					'optimising'       => __( 'Optimising...', 'nexter-extension' ),
-					'before'           => __( 'Before', 'nexter-extension' ),
-					'after'            => __( 'After', 'nexter-extension' ),
-					'originalSize'     => __( 'Original Size', 'nexter-extension' ),
+					'imagesOptimized'       => __( '%1$d of %2$d images optimised', 'nexter-extension' ),
+					'needToOptimise'        => __( 'Need to Optimise', 'nexter-extension' ),
+					'done'                  => __( 'Done', 'nexter-extension' ),
+					'failed'                => __( 'Failed', 'nexter-extension' ),
+					'readyToOptimise'       => __( 'Ready to Optimise', 'nexter-extension' ),
+					'completed'             => __( 'Completed', 'nexter-extension' ),
+					'errorsFound'           => __( 'Errors Found', 'nexter-extension' ),
+					'optimising'            => __( 'Optimising...', 'nexter-extension' ),
+					'before'                => __( 'Before', 'nexter-extension' ),
+					'after'                 => __( 'After', 'nexter-extension' ),
+					'originalSize'          => __( 'Original Size', 'nexter-extension' ),
 					/* translators: %s: Percentage of file size saved */
-					'saved'            => __( '%s% saved', 'nexter-extension' ),
+					'saved'                 => __( '%s% saved', 'nexter-extension' ),
 					/* translators: %d: Number of items remaining */
-					'itemsLeft'        => __( '%d items left', 'nexter-extension' ),
+					'itemsLeft'             => __( '%d items left', 'nexter-extension' ),
 					/* translators: %d: Number of failed items */
-					'retryFailedCount' => __( 'Retry Failed (%d)', 'nexter-extension' ),
-					'toastAllComplete' => __( 'All Optimised Successfully', 'nexter-extension' ),
-					'toastError'       => __( 'An error occurred. Please try again.', 'nexter-extension' ),
-					'noImages'         => __( 'No images to optimise.', 'nexter-extension' ),
-					'loadMore'          => __( 'Load More', 'nexter-extension' ),
-					'loadingMore'       => __( 'Loading...', 'nexter-extension' ),
-					'unlimited'         => __( 'Unlimited', 'nexter-extension' ),
-					'monthlyLimitReached' => __( 'Monthly Limit Reached', 'nexter-extension' ),
+					'retryFailedCount'      => __( 'Retry Failed (%d)', 'nexter-extension' ),
+					'toastAllComplete'      => __( 'All Optimised Successfully', 'nexter-extension' ),
+					'toastError'            => __( 'An error occurred. Please try again.', 'nexter-extension' ),
+					'noImages'              => __( 'No images to optimise.', 'nexter-extension' ),
+					'loadMore'              => __( 'Load More', 'nexter-extension' ),
+					'loadingMore'           => __( 'Loading...', 'nexter-extension' ),
+					'unlimited'             => __( 'Unlimited', 'nexter-extension' ),
+					'monthlyLimitReached'   => __( 'Monthly Limit Reached', 'nexter-extension' ),
 					/* translators: %d: Monthly image optimisation limit */
-					'monthlyLimitNotice' => __( 'You have reached your monthly limit of %d images. Upgrade to Pro for unlimited optimisation or wait until next month.', 'nexter-extension' ),
-					'upgradeToPro'      => __( 'Upgrade to Pro', 'nexter-extension' ),
-					'failedLoadQueue'   => __( 'Failed to load queue.', 'nexter-extension' ),
+					'monthlyLimitNotice'    => __( 'You have reached your monthly limit of %d images. Upgrade to Pro for unlimited optimisation or wait until next month.', 'nexter-extension' ),
+					'upgradeToPro'          => __( 'Upgrade to Pro', 'nexter-extension' ),
+					'failedLoadQueue'       => __( 'Failed to load queue.', 'nexter-extension' ),
 					'bulkRunningInOtherTab' => __( 'Optimisation in progress in another tab or window. Only one bulk optimisation can run at a time. This page will update when it finishes.', 'nexter-extension' ),
 					'bulkAlreadyRunning'    => __( 'Optimisation is already running in another tab or window. Please wait for it to complete.', 'nexter-extension' ),
 				),
@@ -148,23 +148,39 @@ class Nexter_Ext_Bulk_Images {
 	 */
 	public function render_page() {
 		$settings_url = admin_url( 'admin.php?page=nexter_welcome#/performance/image-upload-optimize' );
-		$queue_data = array( 'queue' => array(), 'stats' => array( 'total' => 0, 'optimized' => 0, 'unoptimized' => 0, 'skipped' => 0, 'storage_saved' => 0, 'avg_compression' => 0, 'total_savings_mb' => 0, 'monthly_count' => 0, 'monthly_limit' => Nexter_Ext_Image_Optimization_Limit::get_instance()->get_monthly_limit(), 'is_pro' => false ), 'total_unoptimized' => 0, 'has_more' => false );
+		$queue_data   = array(
+		'queue'             => array(),
+		'stats'             => array(
+		'total'            => 0,
+		'optimized'        => 0,
+		'unoptimized'      => 0,
+		'skipped'          => 0,
+		'storage_saved'    => 0,
+		'avg_compression'  => 0,
+		'total_savings_mb' => 0,
+		'monthly_count'    => 0,
+		'monthly_limit'    => Nexter_Ext_Image_Optimization_Limit::get_instance()->get_monthly_limit(),
+		'is_pro'           => false
+		),
+		'total_unoptimized' => 0,
+		'has_more'          => false
+		);
 		if ( current_user_can( 'upload_files' ) ) {
 			$queue_data = $this->get_queue_data( 6, array() );
 		}
-		$s = $queue_data['stats'];
-		$stat_saved     = ( ! empty( $s['storage_saved'] ) && $s['storage_saved'] > 0 ) ? size_format( (int) $s['storage_saved'], 2 ) : '-';
+		$s                = $queue_data['stats'];
+		$stat_saved       = ( ! empty( $s['storage_saved'] ) && $s['storage_saved'] > 0 ) ? size_format( (int) $s['storage_saved'], 2 ) : '-';
 		$stat_compression = ( ! empty( $s['avg_compression'] ) && $s['avg_compression'] > 0 ) ? $s['avg_compression'] . '%' : '-';
-		$stat_count     = ( isset( $s['optimized'], $s['total'] ) ) ? (int) $s['optimized'] . '/' . (int) $s['total'] : '0/0';
-		$stat_remaining = isset( $s['unoptimized'] ) ? (int) $s['unoptimized'] : 0;
-		$stat_skipped   = isset( $s['skipped'] ) ? (int) $s['skipped'] : 0;
-		$stat_savings   = ( ! empty( $s['total_savings_mb'] ) && $s['total_savings_mb'] > 0 ) ? $s['total_savings_mb'] . ' MB' : '-';
-		$monthly_count  = isset( $s['monthly_count'] ) ? (int) $s['monthly_count'] : 0;
-		$monthly_limit  = isset( $s['monthly_limit'] ) ? (int) $s['monthly_limit'] : Nexter_Ext_Image_Optimization_Limit::get_instance()->get_monthly_limit();
-		$is_pro         = ! empty( $s['is_pro'] );
-		$monthly_usage  = $is_pro ? __( 'Unlimited', 'nexter-extension' ) : $monthly_count . ' / ' . $monthly_limit;
-		$remaining      = $is_pro ? 999999 : max( 0, $monthly_limit - $monthly_count );
-		$resets_in_days = isset( $s['resets_in_days'] ) ? (int) $s['resets_in_days'] : 0;
+		$stat_count       = ( isset( $s['optimized'], $s['total'] ) ) ? (int) $s['optimized'] . '/' . (int) $s['total'] : '0/0';
+		$stat_remaining   = isset( $s['unoptimized'] ) ? (int) $s['unoptimized'] : 0;
+		$stat_skipped     = isset( $s['skipped'] ) ? (int) $s['skipped'] : 0;
+		$stat_savings     = ( ! empty( $s['total_savings_mb'] ) && $s['total_savings_mb'] > 0 ) ? $s['total_savings_mb'] . ' MB' : '-';
+		$monthly_count    = isset( $s['monthly_count'] ) ? (int) $s['monthly_count'] : 0;
+		$monthly_limit    = isset( $s['monthly_limit'] ) ? (int) $s['monthly_limit'] : Nexter_Ext_Image_Optimization_Limit::get_instance()->get_monthly_limit();
+		$is_pro           = ! empty( $s['is_pro'] );
+		$monthly_usage    = $is_pro ? __( 'Unlimited', 'nexter-extension' ) : $monthly_count . ' / ' . $monthly_limit;
+		$remaining        = $is_pro ? 999999 : max( 0, $monthly_limit - $monthly_count );
+		$resets_in_days   = isset( $s['resets_in_days'] ) ? (int) $s['resets_in_days'] : 0;
 
 		// Check Nexter Pro plugin status for CTA button.
 		$pro_plugin_file = 'nexter-pro-extensions/nexter-pro-extensions.php';
@@ -179,11 +195,11 @@ class Nexter_Ext_Bulk_Images {
 		$limit_cta_target = $show_activate_button ? '_self' : '_blank';
 		$limit_cta_label  = $show_activate_button ? __( 'Activate Now', 'nexter-extension' ) : __( 'Upgrade to Pro', 'nexter-extension' );
 		
-		$queue_count    = count( $queue_data['queue'] );
-		$has_optimized   = ! empty( $s['optimized'] ) && (int) $s['optimized'] > 0;
-		$has_unoptimized = $queue_count > 0 || ( ! empty( $s['unoptimized'] ) && (int) $s['unoptimized'] > 0 );
-		$all_optimized   = $has_optimized && empty( $s['unoptimized'] );
-		$show_start      = ! $all_optimized && $has_unoptimized;
+		$queue_count      = count( $queue_data['queue'] );
+		$has_optimized    = ! empty( $s['optimized'] ) && (int) $s['optimized'] > 0;
+		$has_unoptimized  = $queue_count > 0 || ( ! empty( $s['unoptimized'] ) && (int) $s['unoptimized'] > 0 );
+		$all_optimized    = $has_optimized && empty( $s['unoptimized'] );
+		$show_start       = ! $all_optimized && $has_unoptimized;
 		$stat_status      = $all_optimized ? __( 'Completed', 'nexter-extension' ) : __( 'Ready to Optimise', 'nexter-extension' );
 		$stat_status_icon = $all_optimized ? 'icon-completed' : 'icon-ready';
 		$stat_status_svg  = $all_optimized
@@ -207,25 +223,25 @@ class Nexter_Ext_Bulk_Images {
 						<div class="nxt-bulk-center-icon">
 							<?php 
 							$theme_logo = '';
-							if(defined('NXT_PRO_EXT') || defined('TPGBP_VERSION')){
+							if ( defined( 'NXT_PRO_EXT' ) || defined( 'TPGBP_VERSION' ) ) {
 								$options = Nxt_Options::white_label();
-								if(isset($options['theme_logo']) && !empty($options['theme_logo'])){
+								if ( isset( $options['theme_logo'] ) && ! empty( $options['theme_logo'] ) ) {
 									$theme_logo = $options['theme_logo'];
 								}
 							}
-							if(empty($theme_logo)){
+							if ( empty( $theme_logo ) ) {
 								echo '<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="none" viewBox="0 0 40 40"><path fill="#f5f7fe" d="M0 10C0 4.477 4.477 0 10 0h20c5.523 0 10 4.477 10 10v20c0 5.523-4.477 10-10 10H10C4.477 40 0 35.523 0 30z"/><path stroke="#1717cc" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 22a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 21 18h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 19 22z"/></svg>';
-							}else{
-								echo '<img src="'.esc_url($theme_logo).'" alt="'.esc_attr__( 'Image Optimisation Center', 'nexter-extension' ).'" style="width: 40px;height: 40px;object-fit: cover;" />';
+							} else {
+								echo '<img src="'.esc_url( $theme_logo ).'" alt="'.esc_attr__( 'Image Optimisation Center', 'nexter-extension' ).'" style="width: 40px;height: 40px;object-fit: cover;" />';
 							}
 							?>
 						</div>
 						<div class="nxt-bulk-center-text">
 							<?php 
 							$brand_name = __( 'Nexter', 'nexter-extension' );
-							if(defined('NXT_PRO_EXT') || defined('TPGBP_VERSION')){
-							$options = Nxt_Options::white_label();
-								if(isset($options['brand_name']) && !empty($options['brand_name'])){
+							if ( defined( 'NXT_PRO_EXT' ) || defined( 'TPGBP_VERSION' ) ) {
+								$options = Nxt_Options::white_label();
+								if ( isset( $options['brand_name'] ) && ! empty( $options['brand_name'] ) ) {
 									$brand_name = $options['brand_name'];
 								}
 							}
@@ -265,10 +281,10 @@ class Nexter_Ext_Bulk_Images {
 						<div class="nxt-bulk-stat-content">
 							<span class="nxt-bulk-stat-label" style="display: flex; align-items: center; gap: 5px;"><?php esc_html_e( 'Monthly Usage', 'nexter-extension' ); ?><div class='nxp-tooltip-wrap' data-position="top">
 							<span class="nxp-ftc__info-icon" tabindex="0" role="button" aria-label="About Disable Admin Settings"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><circle cx="7" cy="7" r="6.25" stroke="currentColor" stroke-width="1.5"></circle><path d="M7 6.5v3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path><circle cx="7" cy="4.25" r="0.875" fill="currentColor"></circle></svg></span>
-                    <div class="nxp-tooltip"><?php echo ( $is_pro ) ? esc_html__( 'You have unlimited image optimization credits with Nexter Pro.', 'nexter-extension' ) :
+					<div class="nxp-tooltip"><?php echo ( $is_pro ) ? esc_html__( 'You have unlimited image optimization credits with Nexter Pro.', 'nexter-extension' ) :
 								/* translators: %d: Monthly image optimisation credit limit */
 								sprintf( esc_html__( 'Free version includes %d image optimization credits per month. This resets at the start of each month.', 'nexter-extension' ), (int) $monthly_limit ); ?></div>
-                  </div></span>
+				  </div></span>
 							<span class="nxt-bulk-stat-value" id="nxt-bulk-stat-monthly-usage"><?php echo esc_html( $monthly_usage ); ?></span>
 							<?php /* if ( ! $is_pro && $resets_in_days > 0 ) : ?>
 								<span class="nxt-bulk-stat-reset" style="font-size: 11px; color: #666; display: block; margin-top: 4px;"><?php printf( esc_html__( 'Resets in %d days', 'nexter-extension' ), (int) $resets_in_days ); ?></span>
@@ -306,7 +322,7 @@ class Nexter_Ext_Bulk_Images {
 								<p><?php printf( esc_html__( 'You have reached your monthly limit of %d images. Upgrade to Pro for unlimited optimisation or wait until next month.', 'nexter-extension' ), (int) $monthly_limit ); ?></p>
 							<?php endif; ?>
 						</div>
-						<a href="<?php echo esc_url( $limit_cta_url ); ?>" target="<?php echo esc_attr( $limit_cta_target ); ?>" class="<?php echo $show_activate_button ? esc_attr('nxt-bulk-btn-primary') : esc_attr('nxt-bulk-upgrade-btn'); ?>"><?php echo esc_html( $limit_cta_label ); ?></a>
+						<a href="<?php echo esc_url( $limit_cta_url ); ?>" target="<?php echo esc_attr( $limit_cta_target ); ?>" class="<?php echo $show_activate_button ? esc_attr( 'nxt-bulk-btn-primary' ) : esc_attr( 'nxt-bulk-upgrade-btn' ); ?>"><?php echo esc_html( $limit_cta_label ); ?></a>
 					</div>
 				<?php endif; ?>
 
@@ -404,12 +420,17 @@ class Nexter_Ext_Bulk_Images {
 	public function get_queue_data( $limit = 6, $exclude_ids = array() ) {
 		$queue = array();
 		if ( ! current_user_can( 'upload_files' ) ) {
-			return array( 'queue' => $queue, 'stats' => array(), 'total_unoptimized' => 0, 'has_more' => false );
+			return array(
+			'queue'             => $queue,
+			'stats'             => array(),
+			'total_unoptimized' => 0,
+			'has_more'          => false
+			);
 		}
 
-		$ids = $this->get_unoptimized_attachment_ids( 1000, $exclude_ids );
+		$ids               = $this->get_unoptimized_attachment_ids( 1000, $exclude_ids );
 		$total_unoptimized = count( $ids );
-		$ids = array_slice( $ids, 0, max( 1, (int) $limit ) );
+		$ids               = array_slice( $ids, 0, max( 1, (int) $limit ) );
 
 		foreach ( $ids as $attachment_id ) {
 			$file_path = get_attached_file( $attachment_id );
@@ -417,8 +438,8 @@ class Nexter_Ext_Bulk_Images {
 				continue;
 			}
 			$filename = basename( $file_path );
-			$thumb = wp_get_attachment_image_src( $attachment_id, array( 80, 80 ) );
-			$queue[] = array(
+			$thumb    = wp_get_attachment_image_src( $attachment_id, array( 80, 80 ) );
+			$queue[]  = array(
 				'id'            => $attachment_id,
 				'filename'      => $filename,
 				'status'        => 'pending',
@@ -427,9 +448,14 @@ class Nexter_Ext_Bulk_Images {
 			);
 		}
 
-		$stats = $this->compute_stats();
+		$stats    = $this->compute_stats();
 		$has_more = $total_unoptimized > count( $queue );
-		return array( 'queue' => $queue, 'stats' => $stats, 'total_unoptimized' => $total_unoptimized, 'has_more' => $has_more );
+		return array(
+		'queue'             => $queue,
+		'stats'             => $stats,
+		'total_unoptimized' => $total_unoptimized,
+		'has_more'          => $has_more
+		);
 	}
 
 	/**
@@ -441,7 +467,7 @@ class Nexter_Ext_Bulk_Images {
 		if ( ! current_user_can( 'upload_files' ) ) {
 			wp_send_json_error( array( 'message' => __( 'Permission denied.', 'nexter-extension' ) ) );
 		}
-		$limit = isset( $_POST['limit'] ) ? max( 1, min( 50, (int) $_POST['limit'] ) ) : 6;
+		$limit       = isset( $_POST['limit'] ) ? max( 1, min( 50, (int) $_POST['limit'] ) ) : 6;
 		$exclude_ids = array();
 		if ( isset( $_POST['exclude_ids'] ) && is_string( $_POST['exclude_ids'] ) ) {
 			$decoded = json_decode( stripslashes( $_POST['exclude_ids'] ), true );
@@ -464,26 +490,26 @@ class Nexter_Ext_Bulk_Images {
 	 */
 	private function get_unoptimized_attachment_ids( $limit = 1000, $exclude_ids = array() ) {
 		$args = array(
-			'post_type'      => 'attachment',
-			'post_mime_type' => array( 'image/jpeg', 'image/jpg', 'image/png', 'image/gif' ),
-			'post_status'    => 'inherit',
-			'posts_per_page' => min( 1000, max( (int) $limit, 100 ) ),
-			'fields'         => 'ids',
-			'orderby'        => 'ID',
-			'order'          => 'DESC',
-			'no_found_rows'  => true,
+			'post_type'              => 'attachment',
+			'post_mime_type'         => array( 'image/jpeg', 'image/jpg', 'image/png', 'image/gif' ),
+			'post_status'            => 'inherit',
+			'posts_per_page'         => min( 1000, max( (int) $limit, 100 ) ),
+			'fields'                 => 'ids',
+			'orderby'                => 'ID',
+			'order'                  => 'DESC',
+			'no_found_rows'          => true,
 			'update_post_meta_cache' => true,
 		);
 		if ( ! empty( $exclude_ids ) ) {
 			$args['post__not_in'] = array_map( 'absint', $exclude_ids );
 		}
 		$query = new WP_Query( $args );
-		$ids = array();
+		$ids   = array();
 		if ( empty( $query->posts ) || ! is_array( $query->posts ) ) {
 			return $ids;
 		}
 		foreach ( $query->posts as $id ) {
-			$id = (int) $id;
+			$id        = (int) $id;
 			$file_path = get_attached_file( $id );
 			if ( ! $file_path || ! file_exists( $file_path ) ) {
 				continue;

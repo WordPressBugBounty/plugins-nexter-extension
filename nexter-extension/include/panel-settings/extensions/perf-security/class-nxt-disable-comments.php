@@ -33,10 +33,13 @@ class Nxt_Disable_Comments {
 		if ( ! empty( $disable_comments ) && $disable_comments['disable_comments'] === 'all' ) {
 
 			// Disable Built-in Recent Comments Widget
-			add_action( 'widgets_init', function() {
-				unregister_widget( 'WP_Widget_Recent_Comments' );
-				add_filter( 'show_recent_comments_widget_style', '__return_false' );
-			} );
+			add_action(
+				'widgets_init',
+				function() {
+					unregister_widget( 'WP_Widget_Recent_Comments' );
+					add_filter( 'show_recent_comments_widget_style', '__return_false' );
+				} 
+			);
 
 			$is_rss_disabled = in_array( 'disable_rss_feed_link', $perf_option, true )
 				|| ( ! empty( $adv_perfor ) && in_array( 'disable_rss_feed_link', $adv_perfor, true ) );
@@ -46,11 +49,15 @@ class Nxt_Disable_Comments {
 			}
 
 			// Disable 403 for all comment feed requests
-			add_action( 'template_redirect', function() {
-				if ( is_comment_feed() ) {
-					wp_die( esc_html__( 'Comments are disabled.', 'nexter-extension' ), '', array( 'response' => 403 ) );
-				}
-			}, 9 );
+			add_action(
+				'template_redirect',
+				function() {
+					if ( is_comment_feed() ) {
+						wp_die( esc_html__( 'Comments are disabled.', 'nexter-extension' ), '', array( 'response' => 403 ) );
+					}
+				},
+				9 
+			);
 
 			// Remove Comment Admin bar filtering
 			add_action( 'template_redirect', [ $this, 'nxt_filter_admin_bar' ] );
@@ -116,47 +123,68 @@ class Nxt_Disable_Comments {
 			}
 		}
 
-		add_filter( 'comments_array', function( $comments, $post_id ) {
-			$disable_comments = $this->nxt_comments_enabled();
-			$post_type = get_post_type( $post_id );
-			return ( ! empty( $disable_comments )
+		add_filter(
+			'comments_array',
+			function( $comments, $post_id ) {
+				$disable_comments = $this->nxt_comments_enabled();
+				$post_type        = get_post_type( $post_id );
+				return ( ! empty( $disable_comments )
 				&& ( $disable_comments['disable_comments'] === 'all' || $this->nxt_comment_post_type_disabled( $post_type ) )
 				? array() : $comments );
-		}, 20, 2 );
+			},
+			20,
+			2 
+		);
 
-		add_filter( 'comments_open', function( $open, $post_id ) {
-			$disable_comments = $this->nxt_comments_enabled();
-			$post_type = get_post_type( $post_id );
-			return ( ! empty( $disable_comments )
+		add_filter(
+			'comments_open',
+			function( $open, $post_id ) {
+				$disable_comments = $this->nxt_comments_enabled();
+				$post_type        = get_post_type( $post_id );
+				return ( ! empty( $disable_comments )
 				&& ( $disable_comments['disable_comments'] === 'all' || $this->nxt_comment_post_type_disabled( $post_type ) )
 				? false : $open );
-		}, 20, 2 );
+			},
+			20,
+			2 
+		);
 
-		add_filter( 'pings_open', function( $count, $post_id ) {
-			$disable_comments = $this->nxt_comments_enabled();
-			$post_type = get_post_type( $post_id );
-			return ( ! empty( $disable_comments )
+		add_filter(
+			'pings_open',
+			function( $count, $post_id ) {
+				$disable_comments = $this->nxt_comments_enabled();
+				$post_type        = get_post_type( $post_id );
+				return ( ! empty( $disable_comments )
 				&& ( $disable_comments['disable_comments'] === 'all' || $this->nxt_comment_post_type_disabled( $post_type ) )
 				? 0 : $count );
-		}, 20, 2 );
+			},
+			20,
+			2 
+		);
 
 		if ( is_admin() ) {
 			if ( $disable_comments['disable_comments'] === 'all' ) {
 				add_action( 'admin_menu', [ $this, 'nxt_admin_menu_comments' ], 9999 );
 
-				add_action( 'admin_print_styles-index.php', function() {
-					echo "<style>#dashboard_right_now .comment-count, #dashboard_right_now .comment-mod-count, #latest-comments, #welcome-panel .welcome-comments {
+				add_action(
+					'admin_print_styles-index.php',
+					function() {
+						echo "<style>#dashboard_right_now .comment-count, #dashboard_right_now .comment-mod-count, #latest-comments, #welcome-panel .welcome-comments {
 							display: none !important;
 						}
 					</style>";
-				} );
+					} 
+				);
 
-				add_action( 'admin_print_styles-profile.php', function() {
-					echo "<style>.user-comment-shortcuts-wrap {
+				add_action(
+					'admin_print_styles-profile.php',
+					function() {
+						echo "<style>.user-comment-shortcuts-wrap {
 							display: none !important;
 						}
 					</style>";
-				} );
+					} 
+				);
 
 				add_action( 'wp_dashboard_setup', [ $this, 'nxt_recent_comments_dashboard' ] );
 				add_filter( 'pre_option_default_pingback_flag', '__return_zero' );
@@ -171,7 +199,7 @@ class Nxt_Disable_Comments {
 	}
 
 	public function nxt_get_disabled_post_types() {
-		$data = $this->nxt_comments_enabled();
+		$data       = $this->nxt_comments_enabled();
 		$post_types = [];
 		if ( ! empty( $data['disable_comments'] ) && $data['disable_comments'] === 'custom' ) {
 			if ( isset( $data['disble_custom_post_comments'] ) && ! empty( $data['disble_custom_post_comments'] ) ) {

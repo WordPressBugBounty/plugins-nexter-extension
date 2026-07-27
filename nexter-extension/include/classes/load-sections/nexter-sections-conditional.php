@@ -19,9 +19,9 @@ if ( ! class_exists( 'Nexter_Builder_Sections_Conditional' ) ) {
 		/**
 		 * Conditional Sections
 		 */
-		 public static $sections_ids =array();
+		public static $sections_ids = array();
 
-		 public static $section_get_type = [];
+		public static $section_get_type = [];
 
 		/**
 		 * Frontend runtime bootstrap guard cache.
@@ -46,7 +46,7 @@ if ( ! class_exists( 'Nexter_Builder_Sections_Conditional' ) ) {
 		public function __construct() {
 			if ( ! is_admin() && $this->should_boot_frontend_runtime() ) {
 				add_action( 'wp', array( $this, 'get_sections_ids' ), 1 );
-				if(!defined('ASTRA_THEME_VERSION') && !defined('GENERATE_VERSION') && !defined('OCEANWP_THEME_VERSION') && !defined('KADENCE_VERSION') && !function_exists('blocksy_get_wp_theme') && !defined('NEVE_VERSION') && !defined('NXT_VERSION')){
+				if ( ! defined( 'ASTRA_THEME_VERSION' ) && ! defined( 'GENERATE_VERSION' ) && ! defined( 'OCEANWP_THEME_VERSION' ) && ! defined( 'KADENCE_VERSION' ) && ! function_exists( 'blocksy_get_wp_theme' ) && ! defined( 'NEVE_VERSION' ) && ! defined( 'NXT_VERSION' ) ) {
 					add_action( 'wp', array( $this, 'theme_hooks' ) );
 				}
 				add_action( 'template_redirect', array( $this, 'nexter_builder_template_frontend' ) );
@@ -64,7 +64,7 @@ if ( ! class_exists( 'Nexter_Builder_Sections_Conditional' ) ) {
 				return self::$should_boot_frontend_runtime;
 			}
 
-			$counts = wp_count_posts( NXT_BUILD_POST );
+			$counts                             = wp_count_posts( NXT_BUILD_POST );
 			self::$should_boot_frontend_runtime = ( isset( $counts->publish ) && intval( $counts->publish ) > 0 );
 
 			return self::$should_boot_frontend_runtime;
@@ -96,7 +96,7 @@ if ( ! class_exists( 'Nexter_Builder_Sections_Conditional' ) ) {
 		}
 		
 		public static function load_sections_id(){
-			if(isset(self::$sections_ids) && !empty(self::$sections_ids)){
+			if ( isset( self::$sections_ids ) && ! empty( self::$sections_ids ) ) {
 				return self::$sections_ids;
 			}
 			return array();
@@ -106,27 +106,27 @@ if ( ! class_exists( 'Nexter_Builder_Sections_Conditional' ) ) {
 		 * Load Hooks Enqueue Styles
 		 */
 		public function load_sections_enqueue_styles() {
-			if(!empty(self::$sections_ids)){
+			if ( ! empty( self::$sections_ids ) ) {
 				$post_ids = array_keys( self::$sections_ids );
 				if ( ! empty( $post_ids ) ) {
 					update_meta_cache( 'post', $post_ids );
 				}
 
 				foreach ( self::$sections_ids as $post_id => $post_data ) {
-					$nxt_hooks_layout = get_post_meta( $post_id, 'nxt-hooks-layout', true );
-					$hook_layout_sections = get_post_meta(  $post_id, 'nxt-hooks-layout-sections', true );
-					$pages = [];
-					if(!empty($nxt_hooks_layout) && $nxt_hooks_layout=='pages'){
+					$nxt_hooks_layout     = get_post_meta( $post_id, 'nxt-hooks-layout', true );
+					$hook_layout_sections = get_post_meta( $post_id, 'nxt-hooks-layout-sections', true );
+					$pages                = [];
+					if ( ! empty( $nxt_hooks_layout ) && $nxt_hooks_layout == 'pages' ) {
 						$pages = (array) get_post_meta( $post_id, 'nxt-hooks-layout-pages', true );
-						if(!empty($pages) && in_array('page-404',$pages) && !is_404()){
+						if ( ! empty( $pages ) && in_array( 'page-404',$pages ) && ! is_404() ) {
 							continue;
 						}
-					}else if($hook_layout_sections=='page-404' && !is_404()){
+					} else if ( $hook_layout_sections == 'page-404' && ! is_404() ) {
 						continue;
 					}
-					if ( ((!empty($nxt_hooks_layout) && $nxt_hooks_layout!='none') || !empty($hook_layout_sections)) && class_exists( 'Nexter_Builder_Compatibility' ) ) {
-						$page_base_instance = Nexter_Builder_Compatibility::get_instance();
-						$post_id = apply_filters( 'wpml_object_id', $post_id, NXT_BUILD_POST, TRUE  );
+					if ( (( ! empty( $nxt_hooks_layout ) && $nxt_hooks_layout != 'none') || ! empty( $hook_layout_sections )) && class_exists( 'Nexter_Builder_Compatibility' ) ) {
+						$page_base_instance    = Nexter_Builder_Compatibility::get_instance();
+						$post_id               = apply_filters( 'wpml_object_id', $post_id, NXT_BUILD_POST, TRUE );
 						$page_builder_instance = $page_base_instance->get_active_page_builder( $post_id );
 
 						if ( is_callable( array( $page_builder_instance, 'enqueue_scripts' ) ) ) {
@@ -153,25 +153,25 @@ if ( ! class_exists( 'Nexter_Builder_Sections_Conditional' ) ) {
 		 * @since 3.2.0
 		 */
 		public function theme_hooks(){
-			$header_id = self::nexter_sections_condition_hooks( 'sections', 'header' );
+			$header_id      = self::nexter_sections_condition_hooks( 'sections', 'header' );
 			$breadcrumb_ids = self::nexter_sections_condition_hooks( 'sections', 'breadcrumb' );
 			
-			if(!empty($header_id) || !empty($breadcrumb_ids)){
+			if ( ! empty( $header_id ) || ! empty( $breadcrumb_ids ) ) {
 				
 				// Replace header.php template.
 				add_action( 'get_header', [ $this, 'header_template_override' ], 9 );
-				if(!empty($header_id)){
+				if ( ! empty( $header_id ) ) {
 					// Display header template.
 					add_action( 'nexter_header', 'nexter_ext_render_header' );
 				}
-				if(!empty($breadcrumb_ids)){
+				if ( ! empty( $breadcrumb_ids ) ) {
 					// Display Breadcrumb
 					add_action( 'nexter_breadcrumb', 'nexter_ext_render_breadcrumb' );
 				}
 			}
 
 			$footer_id = self::nexter_sections_condition_hooks( 'sections', 'footer' );
-			if(!empty($footer_id)){
+			if ( ! empty( $footer_id ) ) {
 				// Replace footer.php template.
 				add_action( 'get_footer', [ $this, 'footer_template_override' ] );
 				//Display Footer template
@@ -219,8 +219,8 @@ if ( ! class_exists( 'Nexter_Builder_Sections_Conditional' ) ) {
 				return self::$section_get_type[$sections_pages];
 			}*/
 			
-			$get_result=array();
-			if( !empty(self::$sections_ids) ) {
+			$get_result = array();
+			if ( ! empty( self::$sections_ids ) ) {
 				$post_ids = array_map( 'intval', array_keys( self::$sections_ids ) );
 				if ( ! empty( $post_ids ) ) {
 					update_meta_cache( 'post', $post_ids );
@@ -230,27 +230,26 @@ if ( ! class_exists( 'Nexter_Builder_Sections_Conditional' ) ) {
 				foreach ( self::$sections_ids as $post_id => $post_data ) {
 					
 					if ( NXT_BUILD_POST != $current_post_type ) {
-						$nxt_hooks_layout   = get_post_meta( $post_id, 'nxt-hooks-layout', true );
-						$sections   = (array) get_post_meta( $post_id, 'nxt-hooks-layout-sections', true );
+						$nxt_hooks_layout = get_post_meta( $post_id, 'nxt-hooks-layout', true );
+						$sections         = (array) get_post_meta( $post_id, 'nxt-hooks-layout-sections', true );
 
-						if( (!empty( $nxt_layout ) && !empty($nxt_hooks_layout) && $nxt_hooks_layout == $nxt_layout && !empty( $sections_pages )) || !empty($sections)){
-							if(('sections' === $nxt_hooks_layout) || (!empty($sections) && empty($nxt_hooks_layout) && $nxt_hooks_layout != 'page' )){
-								if(!empty($sections) && $sections[0] == $sections_pages){
+						if ( ( ! empty( $nxt_layout ) && ! empty( $nxt_hooks_layout ) && $nxt_hooks_layout == $nxt_layout && ! empty( $sections_pages )) || ! empty( $sections ) ) {
+							if ( ('sections' === $nxt_hooks_layout) || ( ! empty( $sections ) && empty( $nxt_hooks_layout ) && $nxt_hooks_layout != 'page' ) ) {
+								if ( ! empty( $sections ) && $sections[0] == $sections_pages ) {
 									$get_result[] = $post_id;
 								}
-							}else if('pages' === $nxt_hooks_layout){
+							} else if ( 'pages' === $nxt_hooks_layout ) {
 								$pages = (array) get_post_meta( $post_id, 'nxt-hooks-layout-pages', true );
-								if(!empty($pages) && $pages[0] == $sections_pages){
+								if ( ! empty( $pages ) && $pages[0] == $sections_pages ) {
 									$get_result[] = $post_id;
 								}
-							}else if('code_snippet' === $nxt_hooks_layout){
-								$codes_snippet   = (array) get_post_meta( $post_id, 'nxt-hooks-layout-code-snippet', true );
-								if(!empty($codes_snippet) && $codes_snippet[0] == $sections_pages){
+							} else if ( 'code_snippet' === $nxt_hooks_layout ) {
+								$codes_snippet = (array) get_post_meta( $post_id, 'nxt-hooks-layout-code-snippet', true );
+								if ( ! empty( $codes_snippet ) && $codes_snippet[0] == $sections_pages ) {
 									$get_result[] = $post_id;
 								}
 							}
-						}
-						
+						}                   
 					}
 				}
 			}
@@ -266,22 +265,22 @@ if ( ! class_exists( 'Nexter_Builder_Sections_Conditional' ) ) {
 		 * Nexter Builder Conditional get template content
 		 */
 		public function get_action_content( $post_id ) {
-			if(function_exists('pll_get_post')){	
-				$translated_post_id = pll_get_post($post_id, pll_current_language());
-				if($post_id != $translated_post_id){
+			if ( function_exists( 'pll_get_post' ) ) {    
+				$translated_post_id = pll_get_post( $post_id, pll_current_language() );
+				if ( $post_id != $translated_post_id ) {
 					return;
 				}
 			}
 			$action = get_post_meta( $post_id, 'nxt-display-hooks-action', true );
 			
 			// Exclude div wrapper if selected hook is from below list.
-			$exclude_hooks = array( 'nxt_html_before', 'nxt_body_top', 'nxt_head_top', 'wp_head', 'nxt_head_bottom',  'nxt_body_bottom', 'wp_footer' );
-			$nxt_hook_wrapper	= ! in_array( $action, $exclude_hooks );
+			$exclude_hooks    = array( 'nxt_html_before', 'nxt_body_top', 'nxt_head_top', 'wp_head', 'nxt_head_bottom', 'nxt_body_bottom', 'wp_footer' );
+			$nxt_hook_wrapper = ! in_array( $action, $exclude_hooks );
 			if ( $nxt_hook_wrapper ) {
-				echo '<div class="nxt-template-load nxt-load-hook-' . esc_attr($post_id) . '" data-id="' . esc_attr($post_id) . '">';
+				echo '<div class="nxt-template-load nxt-load-hook-' . esc_attr( $post_id ) . '" data-id="' . esc_attr( $post_id ) . '">';
 			}
 			
-			if ( function_exists('nexter_content_load') ) {
+			if ( function_exists( 'nexter_content_load' ) ) {
 				nexter_content_load( $post_id );
 			}
 			

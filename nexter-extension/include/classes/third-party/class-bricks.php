@@ -47,8 +47,8 @@ if ( ! class_exists( 'Nexter_Bricks_Builder' ) ) {
 		 */
 		public function enqueue_scripts( $post_id ) {
 
-			if ( $post_id !== '' && class_exists( 'Bricks\Database' ) && class_exists( 'Bricks\Templates' )) {
-				$bricks_data = Bricks\Database::get_data( $post_id, 'content' );
+			if ( $post_id !== '' && class_exists( 'Bricks\Database' ) && class_exists( 'Bricks\Templates' ) ) {
+				$bricks_data         = Bricks\Database::get_data( $post_id, 'content' );
 				$template_inline_css = Bricks\Templates::generate_inline_css( $post_id, $bricks_data );
 
 				$template_inline_css .= Bricks\Assets::$inline_css_dynamic_data;

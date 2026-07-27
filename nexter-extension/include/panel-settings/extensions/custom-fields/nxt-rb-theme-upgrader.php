@@ -28,7 +28,7 @@ class Nxt_Ext_RB_Theme_Upgrader extends Theme_Upgrader {
 
 			return false;
 		}
-		$theme_slug = $this->skin->theme;
+		$theme_slug    = $this->skin->theme;
 		$theme_version = $this->skin->options['version'];
 
 		$package_url = sprintf(
@@ -41,7 +41,8 @@ class Nxt_Ext_RB_Theme_Upgrader extends Theme_Upgrader {
 		add_filter( 'upgrader_post_install', array( $this, 'current_after' ), 10, 2 );
 		add_filter( 'upgrader_clear_destination', array( $this, 'delete_old_theme' ), 10, 4 );
 
-		$this->run( array(
+		$this->run(
+			array(
 			'package'           => $package_url,
 			'destination'       => get_theme_root(),
 			'clear_destination' => true,
@@ -50,8 +51,9 @@ class Nxt_Ext_RB_Theme_Upgrader extends Theme_Upgrader {
 				'theme'  => $theme,
 				'type'   => 'theme',
 				'action' => 'update',
-			),
-		) );
+			 ),
+			) 
+		);
 
 		// Remove upgrade hooks.
 		remove_filter( 'upgrader_pre_install', array( $this, 'current_before' ) );

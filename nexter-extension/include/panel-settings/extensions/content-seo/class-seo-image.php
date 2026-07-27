@@ -32,12 +32,21 @@ class Nexter_Content_SEO_Image {
 		}
 
 		$hooks = array(
-			'the_content' => array( 'priority' => 11, 'args' => 1 ),
-			'post_thumbnail_html' => array( 'priority' => 11, 'args' => 5 ),
+			'the_content'         => array(
+		'priority' => 11,
+		'args'     => 1
+		),
+			'post_thumbnail_html' => array(
+		'priority' => 11,
+		'args'     => 5
+		),
 		);
 
 		if ( class_exists( 'WooCommerce', false ) ) {
-			$hooks['woocommerce_single_product_image_thumbnail_html'] = array( 'priority' => 11, 'args' => 2 );
+			$hooks['woocommerce_single_product_image_thumbnail_html'] = array(
+			'priority' => 11,
+			'args'     => 2
+			);
 		}
 
 		foreach ( $hooks as $hook => $cfg ) {
@@ -51,7 +60,7 @@ class Nexter_Content_SEO_Image {
 	 * @return bool
 	 */
 	public static function is_content_processing_enabled() {
-		$options = Nexter_Content_SEO::get_options();
+		$options     = Nexter_Content_SEO::get_options();
 		$from_option = ! empty( $options['auto_alt_text'] );
 		/**
 		 * Enable Nexter content image enhancement (missing alt in rendered HTML).
@@ -213,8 +222,8 @@ class Nexter_Content_SEO_Image {
 		}
 
 		// Needs at least a few actual letters — rejects "1920 1080", "20240101", etc.
-		$letters     = preg_replace( '/[^\p{L}]+/u', '', $text );
-		$letter_len  = is_string( $letters ) ? ( function_exists( 'mb_strlen' ) ? mb_strlen( $letters ) : strlen( $letters ) ) : 0;
+		$letters    = preg_replace( '/[^\p{L}]+/u', '', $text );
+		$letter_len = is_string( $letters ) ? ( function_exists( 'mb_strlen' ) ? mb_strlen( $letters ) : strlen( $letters ) ) : 0;
 		if ( $letter_len < 3 ) {
 			return false;
 		}
@@ -323,10 +332,10 @@ class Nexter_Content_SEO_Image {
 			return;
 		}
 
-		$options   = Nexter_Content_SEO::get_options();
-		$no_ai     = ! empty( $options['auto_alt_text'] );
+		$options          = Nexter_Content_SEO::get_options();
+		$auto_alt_enabled = ! empty( $options['auto_alt_text'] );
 
-		if ( $no_ai ) {
+		if ( $auto_alt_enabled ) {
 			$alt = self::suggest_alt_without_ai( $attachment_id );
 			if ( '' !== $alt ) {
 				update_post_meta( $attachment_id, '_wp_attachment_image_alt', $alt );
@@ -345,7 +354,8 @@ class Nexter_Content_SEO_Image {
 	public static function bulk_fill_missing_alt( $limit = 50 ) {
 		$limit = max( 1, min( 200, (int) $limit ) );
 
-		$query = new WP_Query( array(
+		$query = new WP_Query(
+			array(
 			'post_type'              => 'attachment',
 			'post_status'            => 'inherit',
 			'post_mime_type'         => 'image',
@@ -356,10 +366,18 @@ class Nexter_Content_SEO_Image {
 			// Only attachments with no alt meta or an empty one.
 			'meta_query'             => array(
 				'relation' => 'OR',
-				array( 'key' => '_wp_attachment_image_alt', 'compare' => 'NOT EXISTS' ),
-				array( 'key' => '_wp_attachment_image_alt', 'value' => '', 'compare' => '=' ),
+				array(
+			'key'     => '_wp_attachment_image_alt',
+			'compare' => 'NOT EXISTS'
 			),
-		) );
+				array(
+			'key'     => '_wp_attachment_image_alt',
+			'value'   => '',
+			'compare' => '='
+			),
+			 ),
+			) 
+		);
 
 		$ids     = $query->posts;
 		$scanned = count( $ids );
@@ -380,15 +398,23 @@ class Nexter_Content_SEO_Image {
 		}
 
 		$total_missing = (int) $query->found_posts;
-		// Remaining = still-missing after this batch. `done` is true when no full batch came back
-		// or nothing new could be filled (prevents an endless loop on un-fillable images).
-		$remaining = max( 0, $total_missing - $updated );
+		$remaining     = max( 0, $total_missing - $updated );
+		// A FULL batch that filled nothing means the images still missing alt are un-fillable by
+		// the heuristic (no descriptive filename, no usable parent title). We must stop — the same
+		// rows would come back next batch and loop forever — but that's NOT "complete": flag it as
+		// `stalled` with the true `remaining` count so the UI can show "N images couldn't be
+		// auto-filled" instead of silently reporting done with a positive backlog.
+		$stalled = ( $scanned === $limit && 0 === $updated && $remaining > 0 );
+		// Done only when the queue is genuinely exhausted (partial batch or nothing left), or when
+		// stalled on un-fillable rows (loop guard). Distinguished from `stalled` above.
+		$done = ( $scanned < $limit ) || ( 0 === $remaining ) || $stalled;
 
 		return array(
 			'scanned'   => $scanned,
 			'updated'   => $updated,
 			'remaining' => $remaining,
-			'done'      => ( $scanned < $limit ) || ( 0 === $updated ),
+			'stalled'   => $stalled,
+			'done'      => $done,
 		);
 	}
 
@@ -409,12 +435,12 @@ class Nexter_Content_SEO_Image {
 		// non-descriptive junk (IMG_1234, DSC0001, hashes, pure numbers) — previously the parent
 		// title was used for EVERY image, giving them all the same alt.
 		$filename_alt = '';
-		$file = get_attached_file( $attachment_id );
+		$file         = get_attached_file( $attachment_id );
 		if ( $file && is_string( $file ) ) {
-			$base = basename( $file );
-			$base = preg_replace( '/\.[^.]+$/', '', $base );
-			$base = str_replace( array( '-', '_' ), ' ', $base );
-			$base = preg_replace( '/\s+/', ' ', $base );
+			$base         = basename( $file );
+			$base         = preg_replace( '/\.[^.]+$/', '', $base );
+			$base         = str_replace( array( '-', '_' ), ' ', $base );
+			$base         = preg_replace( '/\s+/', ' ', $base );
 			$filename_alt = trim( (string) $base );
 		}
 

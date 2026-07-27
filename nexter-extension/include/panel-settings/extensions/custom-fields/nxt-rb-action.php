@@ -31,12 +31,12 @@ function nxt_ext_sanitize_plugin_path( $path ) {
 
 // Theme rollback
 $theme_file_raw = isset( $_GET['theme_file'] ) ? wp_unslash( $_GET['theme_file'] ) : '';
-$theme = ! empty( $theme_file_raw ) ? nxt_ext_sanitize_plugin_path( $theme_file_raw ) : '';
+$theme          = ! empty( $theme_file_raw ) ? nxt_ext_sanitize_plugin_path( $theme_file_raw ) : '';
 
 if ( ! empty( $theme ) && file_exists( WP_CONTENT_DIR . '/themes/' . $theme ) ) {
 
-	$title     = isset( $_GET['rollback_name'] ) ? sanitize_text_field( wp_unslash( $_GET['rollback_name'] ) ) : '';
-	$version   = isset( $_GET['theme_version'] ) ? sanitize_text_field( wp_unslash( $_GET['theme_version'] ) ) : '';
+	$title   = isset( $_GET['rollback_name'] ) ? sanitize_text_field( wp_unslash( $_GET['rollback_name'] ) ) : '';
+	$version = isset( $_GET['theme_version'] ) ? sanitize_text_field( wp_unslash( $_GET['theme_version'] ) ) : '';
 	
 	// Security: Additional capability check for themes
 	if ( ! current_user_can( 'update_themes' ) ) {
@@ -44,7 +44,7 @@ if ( ! empty( $theme ) && file_exists( WP_CONTENT_DIR . '/themes/' . $theme ) ) 
 	}
 	
 	// Security: Validate theme file path to prevent directory traversal
-	$theme_path = WP_CONTENT_DIR . '/themes/' . $theme;
+	$theme_path      = WP_CONTENT_DIR . '/themes/' . $theme;
 	$real_theme_path = realpath( $theme_path );
 	$real_themes_dir = realpath( WP_CONTENT_DIR . '/themes' );
 	
@@ -52,10 +52,10 @@ if ( ! empty( $theme ) && file_exists( WP_CONTENT_DIR . '/themes/' . $theme ) ) 
 		wp_die( esc_html__( 'Invalid theme path detected.', 'nexter-extension' ) );
 	}
 	
-	$nonce     = 'upgrade-theme_' . $theme;
-	$url       = 'admin.php?page=nxt-rollback&theme_file=' . urlencode( $theme ) . '&action=upgrade-theme';
+	$nonce = 'upgrade-theme_' . $theme;
+	$url   = 'admin.php?page=nxt-rollback&theme_file=' . urlencode( $theme ) . '&action=upgrade-theme';
 
-	$upgrader  = new Nxt_Ext_RB_Theme_Upgrader(
+	$upgrader = new Nxt_Ext_RB_Theme_Upgrader(
 		new Theme_Upgrader_Skin( compact( 'title', 'nonce', 'url', 'theme', 'version' ) )
 	);
 
@@ -71,7 +71,7 @@ if ( ! empty( $theme ) && file_exists( WP_CONTENT_DIR . '/themes/' . $theme ) ) 
 } else {
 	// Plugin rollback - sanitize path while preserving slashes
 	$plugin_file_raw = isset( $_GET['plugin_file'] ) ? wp_unslash( $_GET['plugin_file'] ) : '';
-	$plugin_file = ! empty( $plugin_file_raw ) ? nxt_ext_sanitize_plugin_path( $plugin_file_raw ) : '';
+	$plugin_file     = ! empty( $plugin_file_raw ) ? nxt_ext_sanitize_plugin_path( $plugin_file_raw ) : '';
 	
 	if ( ! empty( $plugin_file ) && file_exists( WP_PLUGIN_DIR . '/' . $plugin_file ) ) {
 	
@@ -81,7 +81,7 @@ if ( ! empty( $theme ) && file_exists( WP_CONTENT_DIR . '/themes/' . $theme ) ) 
 		}
 		
 		// Security: Validate plugin file path to prevent directory traversal
-		$plugin_path = WP_PLUGIN_DIR . '/' . $plugin_file;
+		$plugin_path      = WP_PLUGIN_DIR . '/' . $plugin_file;
 		$real_plugin_path = realpath( $plugin_path );
 		$real_plugins_dir = realpath( WP_PLUGIN_DIR );
 		
@@ -90,22 +90,27 @@ if ( ! empty( $theme ) && file_exists( WP_CONTENT_DIR . '/themes/' . $theme ) ) 
 		}
 	
 		$plugin  = self::set_plugin_slug();
-		$title       = isset( $_GET['rollback_name'] ) ? sanitize_text_field( wp_unslash( $_GET['rollback_name'] ) ) : '';
-		$version     = isset( $_GET['plugin_version'] ) ? sanitize_text_field( wp_unslash( $_GET['plugin_version'] ) ) : '';
-		$nonce       = 'upgrade-plugin_' . $plugin;
-		$url         = 'admin.php?page=nxt-rollback&plugin_file=' . urlencode( $plugin_file ) . '&action=upgrade-plugin';
+		$title   = isset( $_GET['rollback_name'] ) ? sanitize_text_field( wp_unslash( $_GET['rollback_name'] ) ) : '';
+		$version = isset( $_GET['plugin_version'] ) ? sanitize_text_field( wp_unslash( $_GET['plugin_version'] ) ) : '';
+		$nonce   = 'upgrade-plugin_' . $plugin;
+		$url     = 'admin.php?page=nxt-rollback&plugin_file=' . urlencode( $plugin_file ) . '&action=upgrade-plugin';
 
-		$skin     = new Nxt_Ext_RB_Silent_Skin( array(
+		$skin = new Nxt_Ext_RB_Silent_Skin(
+			array(
 			'plugin'  => $plugin,
 			'version' => $version,
-		) );
+			) 
+		);
 		
 		$upgrader = new Nxt_Ext_RB_Plugin_Upgrader( $skin );
 
-		$result = $upgrader->nxt_ext_rollback_module( $plugin, array(
+		$result = $upgrader->nxt_ext_rollback_module(
+			$plugin,
+			array(
 			'slug'    => $plugin,
 			'version' => $version,
-		) );
+			) 
+		);
 
 		/* $upgrader    = new Nxt_Ext_RB_Plugin_Upgrader(
 			new Plugin_Upgrader_Skin( compact( 'title', 'nonce', 'url', 'plugin', 'version' ) )

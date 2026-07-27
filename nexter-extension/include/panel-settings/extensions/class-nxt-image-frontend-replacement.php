@@ -78,7 +78,7 @@ class Nxt_Image_Frontend_Replacement {
 
 		// Check browser support for optimised formats (avif/webp); original format works in all browsers.
 		if ( null === self::$browser_support ) {
-			$accept = isset( $_SERVER['HTTP_ACCEPT'] ) ? (string) $_SERVER['HTTP_ACCEPT'] : '';
+			$accept                = isset( $_SERVER['HTTP_ACCEPT'] ) ? (string) $_SERVER['HTTP_ACCEPT'] : '';
 			self::$browser_support = array(
 				'avif' => ( strpos( $accept, 'image/avif' ) !== false ),
 				'webp' => ( strpos( $accept, 'image/webp' ) !== false ),
@@ -159,19 +159,19 @@ class Nxt_Image_Frontend_Replacement {
 
 		// First pass: Replace src and srcset for images with original formats (jpg/jpeg/png)
 		$img_pattern = '/<img([^>]*?)src=["\']([^"\']+)\.(jpg|jpeg|png)([^"\']*)["\']([^>]*?)>/i';
-		$content = preg_replace_callback( $img_pattern, array( $this, 'direct_replacement_callback' ), $content );
+		$content     = preg_replace_callback( $img_pattern, array( $this, 'direct_replacement_callback' ), $content );
 
 		// Second pass: Replace srcset for images that already have optimised src (webp/avif) but srcset still has original formats
 		$img_with_srcset_pattern = '/<img([^>]*?)src=["\']([^"\']+)\.(webp|avif)([^"\']*)["\']([^>]*?)>/i';
-		$content = preg_replace_callback( $img_with_srcset_pattern, array( $this, 'optimize_srcset_callback' ), $content );
+		$content                 = preg_replace_callback( $img_with_srcset_pattern, array( $this, 'optimize_srcset_callback' ), $content );
 
 		// Third pass: Revert optimised URLs back to original if optimised files don't exist
 		$img_optimized_pattern = '/<img([^>]*?)src=["\']([^"\']*nexter-optimizer[^"\']+)\.(webp|avif|jpg|jpeg|png)([^"\']*)["\']([^>]*?)>/i';
-		$content = preg_replace_callback( $img_optimized_pattern, array( $this, 'revert_optimized_url_callback' ), $content );
+		$content               = preg_replace_callback( $img_optimized_pattern, array( $this, 'revert_optimized_url_callback' ), $content );
 
 		// Replace background-image URLs
 		$bg_pattern = '/url\(\s*["\']?([^"\'\)]+)\.(jpg|jpeg|png)([^"\'\)]*)["\']?\s*\)/i';
-		$content = preg_replace_callback( $bg_pattern, array( $this, 'background_replacement_callback' ), $content );
+		$content    = preg_replace_callback( $bg_pattern, array( $this, 'background_replacement_callback' ), $content );
 
 		return $content;
 	}
@@ -184,7 +184,7 @@ class Nxt_Image_Frontend_Replacement {
 	 */
 	private function direct_replacement_callback( $matches ) {
 		$full_path = $matches[2] . '.' . $matches[3] . $matches[4];
-		$new_url = $this->get_optimized_url_for_url( $full_path );
+		$new_url   = $this->get_optimized_url_for_url( $full_path );
 		if ( ! $new_url ) {
 			return $matches[0];
 		}
@@ -227,10 +227,10 @@ class Nxt_Image_Frontend_Replacement {
 	 */
 	private function revert_optimized_url_callback( $matches ) {
 		$optimized_url = $matches[2] . '.' . $matches[3] . $matches[4];
-		$tag = $matches[0];
-		$format = strtolower( $matches[3] );
+		$tag           = $matches[0];
+		$format        = strtolower( $matches[3] );
 
-		$upload_dir = Nexter_Ext_Image_Upload_Optimization::get_upload_dir();
+		$upload_dir  = Nexter_Ext_Image_Upload_Optimization::get_upload_dir();
 		$content_url = content_url();
 
 		$rel_path = '';
@@ -242,7 +242,7 @@ class Nxt_Image_Frontend_Replacement {
 			return $tag;
 		}
 
-		$rel_path = preg_replace( '/\?.*$/', '', $rel_path );
+		$rel_path          = preg_replace( '/\?.*$/', '', $rel_path );
 		$original_rel_path = preg_replace( '/\.(webp|avif)$/i', '', $rel_path );
 
 		$opt_abs_path = wp_normalize_path( WP_CONTENT_DIR . '/nexter-optimizer/uploads/' . $rel_path );
@@ -250,8 +250,8 @@ class Nxt_Image_Frontend_Replacement {
 		if ( ! file_exists( $opt_abs_path ) ) {
 			// Optimised file gone: revert src to original upload URL.
 			$original_url = $upload_dir['baseurl'] . '/' . $original_rel_path;
-			$tag = str_replace( $optimized_url, $original_url, $tag );
-			$tag = preg_replace_callback(
+			$tag          = str_replace( $optimized_url, $original_url, $tag );
+			$tag          = preg_replace_callback(
 				'/srcset=["\']([^"\']+)["\']/i',
 				array( $this, 'revert_srcset_urls' ),
 				$tag
@@ -263,7 +263,7 @@ class Nxt_Image_Frontend_Replacement {
 		// Initialise browser support detection if not done yet (Admin pages skip this normally, but the
 		// output buffer can fire on any request).
 		if ( null === self::$browser_support ) {
-			$accept = isset( $_SERVER['HTTP_ACCEPT'] ) ? (string) $_SERVER['HTTP_ACCEPT'] : '';
+			$accept                = isset( $_SERVER['HTTP_ACCEPT'] ) ? (string) $_SERVER['HTTP_ACCEPT'] : '';
 			self::$browser_support = array(
 				'avif' => ( strpos( $accept, 'image/avif' ) !== false ),
 				'webp' => ( strpos( $accept, 'image/webp' ) !== false ),
@@ -277,12 +277,12 @@ class Nxt_Image_Frontend_Replacement {
 			$webp_abs    = $base_no_ext . '.webp';
 			if ( self::$browser_support['webp'] && file_exists( $webp_abs ) ) {
 				$webp_url = preg_replace( '/\.avif(\?|$)/i', '.webp$1', $optimized_url );
-				$tag = str_replace( $optimized_url, $webp_url, $tag );
+				$tag      = str_replace( $optimized_url, $webp_url, $tag );
 			} else {
 				// No WebP available (or browser doesn't support it): serve original.
 				$original_url = $upload_dir['baseurl'] . '/' . $original_rel_path;
-				$tag = str_replace( $optimized_url, $original_url, $tag );
-				$tag = preg_replace_callback(
+				$tag          = str_replace( $optimized_url, $original_url, $tag );
+				$tag          = preg_replace_callback(
 					'/srcset=["\']([^"\']+)["\']/i',
 					array( $this, 'revert_srcset_urls' ),
 					$tag
@@ -300,10 +300,10 @@ class Nxt_Image_Frontend_Replacement {
 	 * @return string
 	 */
 	private function revert_srcset_urls( $matches ) {
-		$srcset = $matches[1];
-		$parts = explode( ',', $srcset );
-		$new_parts = array();
-		$upload_dir = Nexter_Ext_Image_Upload_Optimization::get_upload_dir();
+		$srcset      = $matches[1];
+		$parts       = explode( ',', $srcset );
+		$new_parts   = array();
+		$upload_dir  = Nexter_Ext_Image_Upload_Optimization::get_upload_dir();
 		$content_url = content_url();
 
 		foreach ( $parts as $part ) {
@@ -311,8 +311,8 @@ class Nxt_Image_Frontend_Replacement {
 			if ( '' === $part ) {
 				continue;
 			}
-			$bits = preg_split( '/\s+/', $part, 2 );
-			$url = trim( $bits[0] );
+			$bits       = preg_split( '/\s+/', $part, 2 );
+			$url        = trim( $bits[0] );
 			$descriptor = isset( $bits[1] ) ? ' ' . trim( $bits[1] ) : '';
 
 			$rel_path = '';
@@ -323,11 +323,11 @@ class Nxt_Image_Frontend_Replacement {
 			}
 
 			if ( ! empty( $rel_path ) ) {
-				$rel_path = preg_replace( '/\?.*$/', '', $rel_path );
+				$rel_path     = preg_replace( '/\?.*$/', '', $rel_path );
 				$opt_abs_path = wp_normalize_path( WP_CONTENT_DIR . '/nexter-optimizer/uploads/' . $rel_path );
 				if ( ! file_exists( $opt_abs_path ) ) {
 					$original_rel_path = preg_replace( '/\.(webp|avif)$/i', '', $rel_path );
-					$url = $upload_dir['baseurl'] . '/' . $original_rel_path;
+					$url               = $upload_dir['baseurl'] . '/' . $original_rel_path;
 				}
 			}
 
@@ -344,20 +344,20 @@ class Nxt_Image_Frontend_Replacement {
 	 * @return string
 	 */
 	private function replace_srcset_urls( $matches ) {
-		$srcset = $matches[1];
-		$parts = explode( ',', $srcset );
+		$srcset    = $matches[1];
+		$parts     = explode( ',', $srcset );
 		$new_parts = array();
 		foreach ( $parts as $part ) {
 			$part = trim( $part );
 			if ( '' === $part ) {
 				continue;
 			}
-			$bits = preg_split( '/\s+/', $part, 2 );
-			$url = trim( $bits[0] );
+			$bits       = preg_split( '/\s+/', $part, 2 );
+			$url        = trim( $bits[0] );
 			$descriptor = isset( $bits[1] ) ? ' ' . trim( $bits[1] ) : '';
 
 			$clean_url = preg_replace( '/[?#].*$/', '', $url );
-			$opt_url = $this->get_optimized_url_for_url( $clean_url );
+			$opt_url   = $this->get_optimized_url_for_url( $clean_url );
 			if ( $opt_url ) {
 				$query_fragment = '';
 				if ( preg_match( '/[?#].*$/', $url, $qf_matches ) ) {
@@ -378,7 +378,7 @@ class Nxt_Image_Frontend_Replacement {
 	 */
 	private function background_replacement_callback( $matches ) {
 		$full_url = $matches[1] . '.' . $matches[2] . $matches[3];
-		$new_url = $this->get_optimized_url_for_url( $full_url );
+		$new_url  = $this->get_optimized_url_for_url( $full_url );
 		if ( ! $new_url ) {
 			return $matches[0];
 		}

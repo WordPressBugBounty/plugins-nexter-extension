@@ -66,7 +66,7 @@ class Nexter_Content_SEO_Schema {
 			'rows'     => self::get_post_custom_schema_rows_raw( (int) $post_id ),
 			'override' => self::post_uses_custom_page_schema( (int) $post_id ),
 		);
-		$sig = 's' . (int) $post_id . '_' . substr( md5( (string) wp_json_encode( $post_schema ) ), 0, 10 );
+		$sig         = 's' . (int) $post_id . '_' . substr( md5( (string) wp_json_encode( $post_schema ) ), 0, 10 );
 		return 'nxtschema_' . $sig . '_' . self::schema_cache_config_hash();
 	}
 
@@ -97,9 +97,25 @@ class Nexter_Content_SEO_Schema {
 		// so don't let them bust the cache — otherwise ad/UTM traffic rebuilds JSON-LD every hit.
 		// Any *other* query arg still disables caching (it may legitimately alter output).
 		$ignorable_query_args = array(
-			'utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'utm_id',
-			'gclid', 'gad_source', 'gbraid', 'wbraid', 'fbclid', 'msclkid', 'yclid', 'dclid',
-			'mc_cid', 'mc_eid', '_ga', 'ref', 'igshid',
+			'utm_source',
+		'utm_medium',
+		'utm_campaign',
+		'utm_term',
+		'utm_content',
+		'utm_id',
+			'gclid',
+		'gad_source',
+		'gbraid',
+		'wbraid',
+		'fbclid',
+		'msclkid',
+		'yclid',
+		'dclid',
+			'mc_cid',
+		'mc_eid',
+		'_ga',
+		'ref',
+		'igshid',
 		);
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only cache-key decision, no state change.
 		$significant_query = is_array( $_GET ) ? array_diff_key( $_GET, array_flip( $ignorable_query_args ) ) : array();
@@ -847,7 +863,7 @@ class Nexter_Content_SEO_Schema {
 				if ( '' === $id ) {
 					$id = wp_generate_password( 12, false, false );
 				}
-				$title = isset( $row['title'] ) ? sanitize_text_field( $row['title'] ) : $type;
+				$title  = isset( $row['title'] ) ? sanitize_text_field( $row['title'] ) : $type;
 				$fields = self::sanitize_fields_recursive( isset( $row['fields'] ) ? $row['fields'] : array() );
 				if ( 'Organization' === $type ) {
 					$fields = self::sanitize_organization_schema_fields( $fields );
@@ -928,7 +944,11 @@ class Nexter_Content_SEO_Schema {
 						'posts' => array(),
 						'tax'   => array(),
 					),
-					'not_show_on' => array( 'rules' => array(), 'posts' => array(), 'tax' => array() ),
+					'not_show_on' => array(
+				'rules' => array(),
+				'posts' => array(),
+				'tax'   => array()
+				),
 				),
 				array(
 					'id'          => 'default_webpage',
@@ -936,6 +956,10 @@ class Nexter_Content_SEO_Schema {
 					'title'       => 'WebPage',
 					'enabled'     => true,
 					'fields'      => array(
+						// Give the WebPage node a stable @id (home/#webpage) so Article's
+						// isPartOf / mainEntityOfPage (both %schemas.webpage%) resolve to it instead
+						// of matching no node and being pruned.
+						'@id'         => '%schemas.webpage%',
 						'name'        => '%post.title%',
 						'url'         => '%post.url%',
 						'description' => '%post.excerpt%',
@@ -945,7 +969,11 @@ class Nexter_Content_SEO_Schema {
 						'posts' => array(),
 						'tax'   => array(),
 					),
-					'not_show_on' => array( 'rules' => array(), 'posts' => array(), 'tax' => array() ),
+					'not_show_on' => array(
+				'rules' => array(),
+				'posts' => array(),
+				'tax'   => array()
+				),
 				),
 				array(
 					'id'          => 'default_organization',
@@ -963,7 +991,11 @@ class Nexter_Content_SEO_Schema {
 						'posts' => array(),
 						'tax'   => array(),
 					),
-					'not_show_on' => array( 'rules' => array(), 'posts' => array(), 'tax' => array() ),
+					'not_show_on' => array(
+				'rules' => array(),
+				'posts' => array(),
+				'tax'   => array()
+				),
 				),
 				array(
 					'id'          => 'default_searchaction',
@@ -979,7 +1011,11 @@ class Nexter_Content_SEO_Schema {
 						'posts' => array(),
 						'tax'   => array(),
 					),
-					'not_show_on' => array( 'rules' => array(), 'posts' => array(), 'tax' => array() ),
+					'not_show_on' => array(
+				'rules' => array(),
+				'posts' => array(),
+				'tax'   => array()
+				),
 				),
 				array(
 					'id'          => 'default_person',
@@ -996,7 +1032,11 @@ class Nexter_Content_SEO_Schema {
 						'posts' => array(),
 						'tax'   => array(),
 					),
-					'not_show_on' => array( 'rules' => array(), 'posts' => array(), 'tax' => array() ),
+					'not_show_on' => array(
+				'rules' => array(),
+				'posts' => array(),
+				'tax'   => array()
+				),
 				),
 			),
 			'page_specific' => array(
@@ -1011,7 +1051,11 @@ class Nexter_Content_SEO_Schema {
 						'posts' => array(),
 						'tax'   => array(),
 					),
-					'not_show_on' => array( 'rules' => array(), 'posts' => array(), 'tax' => array() ),
+					'not_show_on' => array(
+				'rules' => array(),
+				'posts' => array(),
+				'tax'   => array()
+				),
 				),
 				array(
 					'id'          => 'default_article',
@@ -1032,7 +1076,11 @@ class Nexter_Content_SEO_Schema {
 					// Never emit Article on WooCommerce products — they get the Product rule below
 					// (or WooCommerce's own Product structured data). `product|all` only matches when
 					// the product post type exists, so this is a no-op on non-Woo sites.
-					'not_show_on' => array( 'rules' => array( 'product|all' ), 'posts' => array(), 'tax' => array() ),
+					'not_show_on' => array(
+				'rules' => array( 'product|all' ),
+				'posts' => array(),
+				'tax'   => array()
+				),
 				),
 				array(
 					'id'          => 'default_product',
@@ -1049,7 +1097,11 @@ class Nexter_Content_SEO_Schema {
 						'posts' => array(),
 						'tax'   => array(),
 					),
-					'not_show_on' => array( 'rules' => array(), 'posts' => array(), 'tax' => array() ),
+					'not_show_on' => array(
+				'rules' => array(),
+				'posts' => array(),
+				'tax'   => array()
+				),
 				),
 				// Archives (category/tag/custom-taxonomy) previously emitted only the site-wide
 				// Organization + Person nodes. Seed a CollectionPage describing the archive and a
@@ -1070,7 +1122,11 @@ class Nexter_Content_SEO_Schema {
 						'posts' => array(),
 						'tax'   => array(),
 					),
-					'not_show_on' => array( 'rules' => array(), 'posts' => array(), 'tax' => array() ),
+					'not_show_on' => array(
+				'rules' => array(),
+				'posts' => array(),
+				'tax'   => array()
+				),
 				),
 				array(
 					'id'          => 'default_archive_breadcrumblist',
@@ -1087,7 +1143,11 @@ class Nexter_Content_SEO_Schema {
 						'posts' => array(),
 						'tax'   => array(),
 					),
-					'not_show_on' => array( 'rules' => array(), 'posts' => array(), 'tax' => array() ),
+					'not_show_on' => array(
+				'rules' => array(),
+				'posts' => array(),
+				'tax'   => array()
+				),
 				),
 			),
 		);
@@ -1136,8 +1196,8 @@ class Nexter_Content_SEO_Schema {
 			if ( empty( $item['title'] ) && ! empty( $item['type'] ) ) {
 				$item['title'] = $item['type'];
 			}
-			$rules    = isset( $item['show_on']['rules'] ) ? (array) $item['show_on']['rules'] : array();
-			$is_wide  = in_array( 'basic-global', $rules, true );
+			$rules   = isset( $item['show_on']['rules'] ) ? (array) $item['show_on']['rules'] : array();
+			$is_wide = in_array( 'basic-global', $rules, true );
 			if ( $is_wide ) {
 				$site[] = $item;
 			} else {
@@ -1171,7 +1231,7 @@ class Nexter_Content_SEO_Schema {
 		$taxonomies = get_taxonomies( array( 'public' => true ), 'objects' );
 		$tax_vars   = array();
 		foreach ( $taxonomies as $tax ) {
-			$key = sanitize_key( $tax->name );
+			$key                                   = sanitize_key( $tax->name );
 			$tax_vars[ '%post.tax.' . $key . '%' ] = $tax->labels->name;
 		}
 
@@ -1198,22 +1258,22 @@ class Nexter_Content_SEO_Schema {
 	 */
 	private static function get_post_variables() {
 		$base = array(
-			'%post.title%'         => __( 'Post Title', 'nexter-extension' ),
-			'%post.ID%'            => __( 'Post ID', 'nexter-extension' ),
-			'%post.excerpt%'       => __( 'Post Excerpt', 'nexter-extension' ),
-			'%post.content%'       => __( 'Post Content', 'nexter-extension' ),
-			'%post.url%'           => __( 'Post URL', 'nexter-extension' ),
-			'%post.slug%'          => __( 'Post Slug', 'nexter-extension' ),
+			'%post.title%'           => __( 'Post Title', 'nexter-extension' ),
+			'%post.ID%'              => __( 'Post ID', 'nexter-extension' ),
+			'%post.excerpt%'         => __( 'Post Excerpt', 'nexter-extension' ),
+			'%post.content%'         => __( 'Post Content', 'nexter-extension' ),
+			'%post.url%'             => __( 'Post URL', 'nexter-extension' ),
+			'%post.slug%'            => __( 'Post Slug', 'nexter-extension' ),
 			'%post.date%'            => __( 'Post Date', 'nexter-extension' ),
 			'%post.modified_date%'   => __( 'Post Modified Date', 'nexter-extension' ),
 			'%post.date_c%'          => __( 'Post Date (ISO 8601)', 'nexter-extension' ),
 			'%post.modified_date_c%' => __( 'Post Modified Date (ISO 8601)', 'nexter-extension' ),
-			'%post.thumbnail%'     => __( 'Post Thumbnail', 'nexter-extension' ),
-			'%post.comment_count%' => __( 'Post Comment Count', 'nexter-extension' ),
-			'%post.word_count%'    => __( 'Post Word Count', 'nexter-extension' ),
-			'%post.tags%'          => __( 'Post Tags', 'nexter-extension' ),
-			'%post.categories%'   => __( 'Post Categories', 'nexter-extension' ),
-			'%current.breadcrumbs%' => __( 'Breadcrumb ListItems (JSON)', 'nexter-extension' ),
+			'%post.thumbnail%'       => __( 'Post Thumbnail', 'nexter-extension' ),
+			'%post.comment_count%'   => __( 'Post Comment Count', 'nexter-extension' ),
+			'%post.word_count%'      => __( 'Post Word Count', 'nexter-extension' ),
+			'%post.tags%'            => __( 'Post Tags', 'nexter-extension' ),
+			'%post.categories%'      => __( 'Post Categories', 'nexter-extension' ),
+			'%current.breadcrumbs%'  => __( 'Breadcrumb ListItems (JSON)', 'nexter-extension' ),
 		);
 		if ( class_exists( 'WooCommerce' ) ) {
 			$base = array_merge( $base, self::get_woocommerce_product_variable_labels() );
@@ -1279,8 +1339,8 @@ class Nexter_Content_SEO_Schema {
 
 		$out['%product.currency%'] = function_exists( 'get_woocommerce_currency' ) ? (string) get_woocommerce_currency() : '';
 
-		$status = method_exists( $product, 'get_stock_status' ) ? $product->get_stock_status() : 'instock';
-		$stock_map               = array(
+		$status                 = method_exists( $product, 'get_stock_status' ) ? $product->get_stock_status() : 'instock';
+		$stock_map              = array(
 			'instock'     => 'https://schema.org/InStock',
 			'outofstock'  => 'https://schema.org/OutOfStock',
 			'onbackorder' => 'https://schema.org/BackOrder',
@@ -1317,14 +1377,14 @@ class Nexter_Content_SEO_Schema {
 			$out['%product.offer_count%'] = '1';
 		}
 
-		$avg   = method_exists( $product, 'get_average_rating' ) ? (float) $product->get_average_rating() : 0.0;
-		$rc    = method_exists( $product, 'get_rating_count' ) ? (int) $product->get_rating_count() : 0;
-		$avg_s = ( $avg > 0 ) ? (string) $avg : '';
-		$out['%product.rating%']        = $avg_s;
-		$out['%product.rating_value%']  = $avg_s;
-		$out['%product.review_count%']  = $rc > 0 ? (string) $rc : '';
+		$avg                           = method_exists( $product, 'get_average_rating' ) ? (float) $product->get_average_rating() : 0.0;
+		$rc                            = method_exists( $product, 'get_rating_count' ) ? (int) $product->get_rating_count() : 0;
+		$avg_s                         = ( $avg > 0 ) ? (string) $avg : '';
+		$out['%product.rating%']       = $avg_s;
+		$out['%product.rating_value%'] = $avg_s;
+		$out['%product.review_count%'] = $rc > 0 ? (string) $rc : '';
 
-		$short = method_exists( $product, 'get_short_description' ) ? $product->get_short_description() : '';
+		$short                              = method_exists( $product, 'get_short_description' ) ? $product->get_short_description() : '';
 		$out['%product.short_description%'] = $short ? wp_strip_all_tags( $short ) : '';
 
 		return $out;
@@ -1357,7 +1417,7 @@ class Nexter_Content_SEO_Schema {
 			'%author.first_name%'   => __( 'Author First Name', 'nexter-extension' ),
 			'%author.last_name%'    => __( 'Author Last Name', 'nexter-extension' ),
 			'%author.display_name%' => __( 'Author Display Name', 'nexter-extension' ),
-			'%author.username%'      => __( 'Author Username', 'nexter-extension' ),
+			'%author.username%'     => __( 'Author Username', 'nexter-extension' ),
 			'%author.nickname%'     => __( 'Author Nickname', 'nexter-extension' ),
 			'%author.website_url%'  => __( 'Author Website URL', 'nexter-extension' ),
 			'%author.nicename%'     => __( 'Author Nicename', 'nexter-extension' ),
@@ -1386,13 +1446,13 @@ class Nexter_Content_SEO_Schema {
 	 */
 	private static function get_site_variables() {
 		return array(
-			'%site.title%'                         => __( 'Site Title', 'nexter-extension' ),
-			'%site.description%'                   => __( 'Site Description', 'nexter-extension' ),
-			'%site.url%'                           => __( 'Site URL', 'nexter-extension' ),
-			'%site.search_url%'                    => __( 'Site search URL (SearchAction target template)', 'nexter-extension' ),
-			'%site.language%'                      => __( 'Site Language', 'nexter-extension' ),
-			'%site.icon%'                          => __( 'Site Icon', 'nexter-extension' ),
-			'%schema.primary_user_display_name%'   => __( 'Primary user (ID 1) display name', 'nexter-extension' ),
+			'%site.title%'                       => __( 'Site Title', 'nexter-extension' ),
+			'%site.description%'                 => __( 'Site Description', 'nexter-extension' ),
+			'%site.url%'                         => __( 'Site URL', 'nexter-extension' ),
+			'%site.search_url%'                  => __( 'Site search URL (SearchAction target template)', 'nexter-extension' ),
+			'%site.language%'                    => __( 'Site Language', 'nexter-extension' ),
+			'%site.icon%'                        => __( 'Site Icon', 'nexter-extension' ),
+			'%schema.primary_user_display_name%' => __( 'Primary user (ID 1) display name', 'nexter-extension' ),
 		);
 	}
 
@@ -1416,11 +1476,11 @@ class Nexter_Content_SEO_Schema {
 	private static function get_website_details_variables() {
 		return array(
 			'%website_details.website_name%'         => __( 'Website Name', 'nexter-extension' ),
-			'%website_details.business_description%'  => __( 'Business Description', 'nexter-extension' ),
-			'%website_details.website_owner_name%'    => __( 'Website Owner Name', 'nexter-extension' ),
-			'%website_details.organization_type%'     => __( 'Organization Type', 'nexter-extension' ),
-			'%website_details.website_owner_phone%'    => __( 'Website Owner Phone', 'nexter-extension' ),
-			'%website_details.website_logo%'           => __( 'Website Logo', 'nexter-extension' ),
+			'%website_details.business_description%' => __( 'Business Description', 'nexter-extension' ),
+			'%website_details.website_owner_name%'   => __( 'Website Owner Name', 'nexter-extension' ),
+			'%website_details.organization_type%'    => __( 'Organization Type', 'nexter-extension' ),
+			'%website_details.website_owner_phone%'  => __( 'Website Owner Phone', 'nexter-extension' ),
+			'%website_details.website_logo%'         => __( 'Website Logo', 'nexter-extension' ),
 		);
 	}
 
@@ -1435,7 +1495,7 @@ class Nexter_Content_SEO_Schema {
 			'%schema.item.id%' => __( 'Current schema entry ID (replaced when JSON-LD is output)', 'nexter-extension' ),
 		);
 		foreach ( $types as $type => $label ) {
-			$key = strtolower( $type );
+			$key                              = strtolower( $type );
 			$vars[ '%schemas.' . $key . '%' ] = sprintf(
 				/* translators: %s: schema type name */
 				__( '%s Schema', 'nexter-extension' ),
@@ -1509,7 +1569,7 @@ class Nexter_Content_SEO_Schema {
 		if ( ! $best instanceof WP_Term ) {
 			return;
 		}
-		$chain = array_reverse( array_map( 'intval', get_ancestors( $best->term_id, 'product_cat', 'taxonomy' ) ) );
+		$chain   = array_reverse( array_map( 'intval', get_ancestors( $best->term_id, 'product_cat', 'taxonomy' ) ) );
 		$chain[] = (int) $best->term_id;
 		foreach ( $chain as $tid ) {
 			$t = get_term( $tid, 'product_cat' );
@@ -1581,9 +1641,9 @@ class Nexter_Content_SEO_Schema {
 		if ( ! $post instanceof WP_Post || ! $post->ID ) {
 			return '[]';
 		}
-		$items = array();
-		$pos   = 1;
-		$home  = home_url( '/' );
+		$items   = array();
+		$pos     = 1;
+		$home    = home_url( '/' );
 		$items[] = array(
 			'@type'    => 'ListItem',
 			'position' => $pos++,
@@ -1641,17 +1701,19 @@ class Nexter_Content_SEO_Schema {
 			$author_id = (int) $post->post_author;
 		}
 		if ( ! $author_id ) {
-			$primary = get_users( array(
+			$primary   = get_users(
+				array(
 				'role'    => 'administrator',
 				'number'  => 1,
 				'orderby' => 'ID',
 				'order'   => 'ASC',
 				'fields'  => 'ID',
-			) );
+				) 
+			);
 			$author_id = ! empty( $primary[0] ) ? (int) $primary[0] : 1;
 		}
-		$term     = get_queried_object();
-		$is_term  = $term instanceof WP_Term;
+		$term    = get_queried_object();
+		$is_term = $term instanceof WP_Term;
 
 		$r = array(
 			'%current.breadcrumbs%' => '[]',
@@ -1659,33 +1721,33 @@ class Nexter_Content_SEO_Schema {
 
 		// Post.
 		if ( $post ) {
-			$r['%post.title%']         = $post->post_title;
-			$r['%post.ID%']           = (string) $post->ID;
-			$r['%post.excerpt%']      = has_excerpt( $post->ID ) ? get_the_excerpt( $post ) : wp_trim_words( $post->post_content, 55 );
-			$r['%post.content%']       = wp_strip_all_tags( $post->post_content );
-			$r['%post.url%']          = get_permalink( $post );
-			$r['%post.slug%']         = $post->post_name;
+			$r['%post.title%']           = $post->post_title;
+			$r['%post.ID%']              = (string) $post->ID;
+			$r['%post.excerpt%']         = has_excerpt( $post->ID ) ? get_the_excerpt( $post ) : wp_trim_words( $post->post_content, 55 );
+			$r['%post.content%']         = wp_strip_all_tags( $post->post_content );
+			$r['%post.url%']             = get_permalink( $post );
+			$r['%post.slug%']            = $post->post_name;
 			$r['%post.date%']            = get_the_date( '', $post );
-			$r['%post.modified_date%']    = get_the_modified_date( '', $post );
+			$r['%post.modified_date%']   = get_the_modified_date( '', $post );
 			$r['%post.date_c%']          = get_the_date( 'c', $post );
 			$r['%post.modified_date_c%'] = get_the_modified_date( 'c', $post );
-			$thumb_id = get_post_thumbnail_id( $post->ID );
-			$r['%post.thumbnail%']    = $thumb_id ? wp_get_attachment_image_url( $thumb_id, 'full' ) : '';
-			$r['%post.comment_count%'] = (string) get_comments_number( $post->ID );
+			$thumb_id                    = get_post_thumbnail_id( $post->ID );
+			$r['%post.thumbnail%']       = $thumb_id ? wp_get_attachment_image_url( $thumb_id, 'full' ) : '';
+			$r['%post.comment_count%']   = (string) get_comments_number( $post->ID );
 			// wp_check_invalid_utf8( …, true ) strips malformed bytes first; without it the /u
 			// pattern would return false on invalid UTF-8 and the count would silently be 0.
-			$wc_text = wp_check_invalid_utf8( wp_strip_all_tags( $post->post_content ), true );
-			$wc      = preg_match_all( '/\p{L}[\p{L}\p{M}\p{Nd}\x27-]*/u', $wc_text );
-			$r['%post.word_count%']   = (string) ( false === $wc ? 0 : (int) $wc );
-			$terms_tags = get_the_terms( $post->ID, 'post_tag' );
-			$r['%post.tags%']         = $terms_tags && ! is_wp_error( $terms_tags ) ? implode( ', ', wp_list_pluck( $terms_tags, 'name' ) ) : '';
-			$terms_cat = get_the_terms( $post->ID, 'category' );
-			$r['%post.categories%']   = $terms_cat && ! is_wp_error( $terms_cat ) ? implode( ', ', wp_list_pluck( $terms_cat, 'name' ) ) : '';
+			$wc_text                = wp_check_invalid_utf8( wp_strip_all_tags( $post->post_content ), true );
+			$wc                     = preg_match_all( '/\p{L}[\p{L}\p{M}\p{Nd}\x27-]*/u', $wc_text );
+			$r['%post.word_count%'] = (string) ( false === $wc ? 0 : (int) $wc );
+			$terms_tags             = get_the_terms( $post->ID, 'post_tag' );
+			$r['%post.tags%']       = $terms_tags && ! is_wp_error( $terms_tags ) ? implode( ', ', wp_list_pluck( $terms_tags, 'name' ) ) : '';
+			$terms_cat              = get_the_terms( $post->ID, 'category' );
+			$r['%post.categories%'] = $terms_cat && ! is_wp_error( $terms_cat ) ? implode( ', ', wp_list_pluck( $terms_cat, 'name' ) ) : '';
 
 			$taxonomies = get_taxonomies( array( 'public' => true ), 'names' );
 			foreach ( $taxonomies as $tax ) {
-				$terms = get_the_terms( $post->ID, $tax );
-				$key   = '%post.tax.' . sanitize_key( $tax ) . '%';
+				$terms     = get_the_terms( $post->ID, $tax );
+				$key       = '%post.tax.' . sanitize_key( $tax ) . '%';
 				$r[ $key ] = $terms && ! is_wp_error( $terms ) ? implode( ', ', wp_list_pluck( $terms, 'name' ) ) : '';
 			}
 
@@ -1697,7 +1759,7 @@ class Nexter_Content_SEO_Schema {
 
 		// Term (archive context).
 		if ( $is_term ) {
-			$term_link = get_term_link( $term );
+			$term_link               = get_term_link( $term );
 			$r['%term.ID%']          = (string) $term->term_id;
 			$r['%term.name%']        = $term->name;
 			$r['%term.slug%']        = $term->slug;
@@ -1722,27 +1784,27 @@ class Nexter_Content_SEO_Schema {
 				// %author.email% intentionally not resolved: emitting a real email into public
 				// JSON-LD exposes PII to crawlers/aggregators permanently. Use explicit per-post
 				// schema meta if an email is genuinely required for a given entity.
-				$r['%author.website_url%']  = $user->user_url;
-				$r['%author.nicename%']     = $user->user_nicename;
-				$r['%author.description%']  = get_user_meta( $user->ID, 'description', true );
-				$r['%author.posts_url%']    = get_author_posts_url( $user->ID );
-				$r['%author.avatar%']       = get_avatar_url( $user->ID, array( 'size' => 96 ) );
+				$r['%author.website_url%'] = $user->user_url;
+				$r['%author.nicename%']    = $user->user_nicename;
+				$r['%author.description%'] = get_user_meta( $user->ID, 'description', true );
+				$r['%author.posts_url%']   = get_author_posts_url( $user->ID );
+				$r['%author.avatar%']      = get_avatar_url( $user->ID, array( 'size' => 96 ) );
 			}
 		}
 
 		// Site.
-		$r['%site.title%']      = get_bloginfo( 'name' );
-		$r['%site.description%'] = get_bloginfo( 'description' );
-		$r['%site.url%']         = home_url( '/' );
-		$default_search_url      = esc_url( home_url( '/' ) ) . '?s={search_term_string}';
-		$r['%site.search_url%']  = apply_filters( 'nexter_content_seo_search_action_target_url', $default_search_url );
-		$r['%site.language%']    = get_bloginfo( 'language' );
-		$primary_user            = get_userdata( 1 );
+		$r['%site.title%']                       = get_bloginfo( 'name' );
+		$r['%site.description%']                 = get_bloginfo( 'description' );
+		$r['%site.url%']                         = home_url( '/' );
+		$default_search_url                      = esc_url( home_url( '/' ) ) . '?s={search_term_string}';
+		$r['%site.search_url%']                  = apply_filters( 'nexter_content_seo_search_action_target_url', $default_search_url );
+		$r['%site.language%']                    = get_bloginfo( 'language' );
+		$primary_user                            = get_userdata( 1 );
 		$r['%schema.primary_user_display_name%'] = ( $primary_user && $primary_user->display_name )
 			? $primary_user->display_name
 			: get_bloginfo( 'name' );
-		$site_icon = get_site_icon_url();
-		$r['%site.icon%']        = $site_icon ?: '';
+		$site_icon                               = get_site_icon_url();
+		$r['%site.icon%']                        = $site_icon ?: '';
 
 		// Current page. Build the URL from the trusted site host (home_url), NOT the client-
 		// supplied Host header — a spoofed Host could otherwise be injected into rendered
@@ -1763,13 +1825,13 @@ class Nexter_Content_SEO_Schema {
 		// Website details. The static front page's per-post Nexter SEO meta is the
 		// source of truth for homepage SEO; the schema-level website name and
 		// description fall back to the WordPress site name and tagline.
-		$opts = class_exists( 'Nexter_Content_SEO' ) ? Nexter_Content_SEO::get_options() : array();
+		$opts                                        = class_exists( 'Nexter_Content_SEO' ) ? Nexter_Content_SEO::get_options() : array();
 		$r['%website_details.website_name%']         = get_bloginfo( 'name' );
-		$r['%website_details.business_description%']  = get_bloginfo( 'description' );
-		$r['%website_details.website_owner_name%']    = '';
+		$r['%website_details.business_description%'] = get_bloginfo( 'description' );
+		$r['%website_details.website_owner_name%']   = '';
 		$r['%website_details.organization_type%']    = 'Organization';
-		$r['%website_details.website_owner_phone%']    = '';
-		$r['%website_details.website_logo%']           = isset( $opts['default_social_image'] ) && $opts['default_social_image'] ? $opts['default_social_image'] : get_site_icon_url();
+		$r['%website_details.website_owner_phone%']  = '';
+		$r['%website_details.website_logo%']         = isset( $opts['default_social_image'] ) && $opts['default_social_image'] ? $opts['default_social_image'] : get_site_icon_url();
 
 		// Resolve %schemas.{type}% to home URL + /#fragment. Must match the exact form used by the
 		// seeded node @ids (%site.url%#organization → "https://site/#organization") and the
@@ -1777,7 +1839,7 @@ class Nexter_Content_SEO_Schema {
 		// dangle and get pruned. %site.url% carries a trailing slash, so mirror it with "/#".
 		$root = isset( $r['%site.url%'] ) ? untrailingslashit( $r['%site.url%'] ) : untrailingslashit( home_url( '/' ) );
 		foreach ( array_keys( self::get_schema_types() ) as $stype ) {
-			$slug = strtolower( $stype );
+			$slug                           = strtolower( $stype );
 			$r[ '%schemas.' . $slug . '%' ] = $root . '/#' . $slug;
 		}
 
@@ -1876,7 +1938,7 @@ class Nexter_Content_SEO_Schema {
 			return $data;
 		}
 		if ( null === $replacements ) {
-			$post = is_singular() ? get_post() : null;
+			$post         = is_singular() ? get_post() : null;
 			$replacements = self::get_replacements( $post );
 		}
 		foreach ( $data as $key => &$value ) {
@@ -1903,7 +1965,7 @@ class Nexter_Content_SEO_Schema {
 	 */
 	public static function get_schema_rules_selections() {
 		$options = array(
-			'basic' => array(
+			'basic'         => array(
 				'label' => __( 'Basic', 'nexter-extension' ),
 				'value' => array(
 					'basic-global'    => __( 'Entire Website', 'nexter-extension' ),
@@ -1924,19 +1986,25 @@ class Nexter_Content_SEO_Schema {
 			),
 		);
 
-		$post_types = get_post_types( array( 'public' => true, '_builtin' => false ), 'objects' );
+		$post_types         = get_post_types(
+			array(
+			'public'   => true,
+			'_builtin' => false
+			),
+			'objects' 
+		);
 		$post_types['post'] = get_post_type_object( 'post' );
 		$post_types['page'] = get_post_type_object( 'page' );
 		unset( $post_types['attachment'] );
 
 		foreach ( $post_types as $pt ) {
 			if ( ! $pt ) continue;
-			$key = sanitize_key( $pt->name );
+			$key             = sanitize_key( $pt->name );
 			$options[ $key ] = array(
 				'label' => $pt->labels->name,
 				'value' => array(
 					/* translators: %s: Post Label*/
-					$pt->name . '|all' => sprintf( __( 'All %s', 'nexter-extension' ), $pt->labels->name ),
+					$pt->name . '|all'         => sprintf( __( 'All %s', 'nexter-extension' ), $pt->labels->name ),
 					/* translators: %s: Post type or taxonomy archive label */
 					$pt->name . '|all|archive' => sprintf( __( 'All %s Archive', 'nexter-extension' ), $pt->labels->name ),
 				),
@@ -2024,9 +2092,9 @@ class Nexter_Content_SEO_Schema {
 	 * @return string
 	 */
 	private static function build_schema_specific_posts_markup( $bucket, $selected_particular ) {
-		$bucket = ( 'exclude' === $bucket ) ? 'exclude' : 'include';
-		$id     = 'nxt-seo-schema-' . $bucket . '-specific';
-		$output = '<div class="nxt-layout-specific-post-wrap nxt-seo-schema-specific-wrap" data-nxt-seo-specific-bucket="' . esc_attr( $bucket ) . '">';
+		$bucket  = ( 'exclude' === $bucket ) ? 'exclude' : 'include';
+		$id      = 'nxt-seo-schema-' . $bucket . '-specific';
+		$output  = '<div class="nxt-layout-specific-post-wrap nxt-seo-schema-specific-wrap" data-nxt-seo-specific-bucket="' . esc_attr( $bucket ) . '">';
 		$output .= '<label class="nxt-main-label">' . esc_html__( 'Specific Pages/Posts', 'nexter-extension' ) . '</label>';
 		$output .= '<select class="nxt-temp-select nxt-layout-user-roles nxt-seo-schema-specific-select" multiple="multiple" name="' . esc_attr( $id ) . '[]" id="' . esc_attr( $id ) . '">';
 		foreach ( (array) $selected_particular as $rid ) {
@@ -2122,7 +2190,7 @@ class Nexter_Content_SEO_Schema {
 		// show_on: empty = match all; otherwise at least one rule must match.
 		$show_match = empty( $show_on_rules ) || self::evaluate_rules( $show_on_rules, $post_type, $post_id );
 		// not_show_on: if any rule matches, exclude.
-		$not_match  = ! empty( $not_show_on_rules ) && self::evaluate_rules( $not_show_on_rules, $post_type, $post_id );
+		$not_match = ! empty( $not_show_on_rules ) && self::evaluate_rules( $not_show_on_rules, $post_type, $post_id );
 
 		return $show_match && ! $not_match;
 	}
@@ -2239,9 +2307,9 @@ class Nexter_Content_SEO_Schema {
 
 		return array(
 			array(
-				'type'    => 'Organization',
-				'enabled' => true,
-				'fields'  => array(
+				'type'        => 'Organization',
+				'enabled'     => true,
+				'fields'      => array(
 					'@id'     => '%site.url%#organization',
 					'@type'   => 'Organization',
 					'name'    => '%site.title%',
@@ -2255,29 +2323,29 @@ class Nexter_Content_SEO_Schema {
 						),
 					),
 				),
-				'show_on' => array( 'rules' => array( 'basic-global' ) ),
+				'show_on'     => array( 'rules' => array( 'basic-global' ) ),
 				'not_show_on' => array( 'rules' => array() ),
 			),
 			array(
-				'type'    => 'Person',
-				'enabled' => true,
-				'fields'  => $person_fields,
-				'show_on' => array( 'rules' => array( 'basic-global' ) ),
+				'type'        => 'Person',
+				'enabled'     => true,
+				'fields'      => $person_fields,
+				'show_on'     => array( 'rules' => array( 'basic-global' ) ),
 				'not_show_on' => array( 'rules' => array() ),
 			),
 			array(
-				'type'    => 'WebSite',
-				'enabled' => true,
-				'fields'  => array(
-					'@id'               => '%site.url%#website',
-					'name'              => '%site.title%',
-					'url'               => '%site.url%',
-					'author'            => '%schemas.person%',
-					'copyrightHolder'   => '%schemas.person%',
-					'potentialAction'   => '%schemas.searchaction%',
-					'publisher'         => array( '@id' => '%site.url%#organization' ),
+				'type'        => 'WebSite',
+				'enabled'     => true,
+				'fields'      => array(
+					'@id'             => '%site.url%#website',
+					'name'            => '%site.title%',
+					'url'             => '%site.url%',
+					'author'          => '%schemas.person%',
+					'copyrightHolder' => '%schemas.person%',
+					'potentialAction' => '%schemas.searchaction%',
+					'publisher'       => array( '@id' => '%site.url%#organization' ),
 				),
-				'show_on' => array( 'rules' => array( 'basic-global' ) ),
+				'show_on'     => array( 'rules' => array( 'basic-global' ) ),
 				'not_show_on' => array( 'rules' => array() ),
 			),
 		);
@@ -2620,7 +2688,7 @@ class Nexter_Content_SEO_Schema {
 		$result = array();
 		self::append_enabled_schema_rows_to_result( $lists['site_wide'], $result );
 
-		$term_archive_rows = array();
+		$term_archive_rows               = array();
 		$term_skips_global_page_specific = false;
 		if ( is_category() || is_tag() || is_tax() ) {
 			$q = get_queried_object();
@@ -2656,8 +2724,8 @@ class Nexter_Content_SEO_Schema {
 			}
 		}
 
-		$post_custom_rows    = $post_id ? self::get_post_custom_schema_rows_raw( $post_id ) : array();
-		$post_uses_override  = $post_id && self::post_uses_custom_page_schema( $post_id );
+		$post_custom_rows     = $post_id ? self::get_post_custom_schema_rows_raw( $post_id ) : array();
+		$post_uses_override   = $post_id && self::post_uses_custom_page_schema( $post_id );
 		$post_has_custom_rows = ! empty( $post_custom_rows );
 
 		if ( $post_uses_override ) {
@@ -2757,50 +2825,6 @@ class Nexter_Content_SEO_Schema {
 	}
 
 	/**
-	 * Build a WebPage node for the current singular (matches common @graph patterns).
-	 *
-	 * @param WP_Post $post          Post.
-	 * @param array   $replacements  Variable replacements from get_replacements().
-	 * @return array|null
-	 */
-	private static function build_automatic_webpage_node( $post, $replacements ) {
-		if ( ! $post instanceof WP_Post || empty( $post->ID ) ) {
-			return null;
-		}
-		$permalink = get_permalink( $post );
-		if ( ! $permalink ) {
-			return null;
-		}
-		$base = isset( $replacements['%site.url%'] ) ? $replacements['%site.url%'] : home_url( '/' );
-		$site_root = untrailingslashit( $base );
-		$website_id = $site_root . '/#website';
-		$org_id     = $site_root . '/#organization';
-		$person_id  = isset( $replacements['%schemas.person%'] ) ? $replacements['%schemas.person%'] : ( $site_root . '#person' );
-
-		$node = array(
-			'@type'           => 'WebPage',
-			'@id'             => untrailingslashit( $permalink ) . '#webpage',
-			'name'            => get_the_title( $post ),
-			'url'             => $permalink,
-			'inLanguage'      => str_replace( '-', '_', get_locale() ),
-			'author'          => array( '@id' => $person_id ),
-			'contributor'     => array( '@id' => $person_id ),
-			'copyrightHolder' => array( '@id' => $person_id ),
-			'datePublished'   => get_the_date( 'c', $post ),
-			'dateModified'    => get_the_modified_date( 'c', $post ),
-			'isPartOf'        => array( '@id' => $website_id ),
-			'publisher'       => array( '@id' => $org_id ),
-		);
-
-		$thumb = get_the_post_thumbnail_url( $post, 'full' );
-		if ( $thumb ) {
-			$node['thumbnailUrl'] = $thumb;
-		}
-
-		return $node;
-	}
-
-	/**
 	 * Whether an array is a JSON-style list (0..n-1 keys).
 	 *
 	 * @param array $arr Array.
@@ -2886,13 +2910,28 @@ class Nexter_Content_SEO_Schema {
 				if ( '' === $name ) {
 					continue;
 				}
-				$clean[] = array_merge( $item, array( '@type' => 'Person', 'name' => $name ) );
+				$clean[] = array_merge(
+					$item,
+					array(
+					'@type' => 'Person',
+					'name'  => $name
+					) 
+				);
 			}
 			if ( empty( $clean ) ) {
 				unset( $fields['founder'] );
 			} else {
 				$fields['founder'] = $clean;
 			}
+		}
+		// Let other modules (e.g. Social Meta's profile URLs) contribute to this single, @id-bearing
+		// Organization node's sameAs, so social profiles flow into the one Organization entity in the
+		// @graph instead of a second, disconnected Organization JSON-LD block. finalize_schema_same_as_urls()
+		// then normalizes / de-dupes / escapes the merged result.
+		$existing_same_as = isset( $fields['sameAs'] ) ? $fields['sameAs'] : array();
+		$merged_same_as   = apply_filters( 'nexter_content_seo_organization_same_as', $existing_same_as );
+		if ( ! empty( $merged_same_as ) ) {
+			$fields['sameAs'] = $merged_same_as;
 		}
 		self::finalize_schema_same_as_urls( $fields );
 	}
@@ -2964,15 +3003,15 @@ class Nexter_Content_SEO_Schema {
 				}
 				$free = $part['isAccessibleForFree'] ?? true;
 				if ( is_string( $free ) ) {
-					$low = strtolower( $free );
+					$low  = strtolower( $free );
 					$free = ( 'true' === $low || '1' === $low || 'yes' === $low );
 				} else {
 					$free = (bool) $free;
 				}
 				$clean[] = array(
-					'@type'                 => 'WebPageElement',
-					'isAccessibleForFree'   => $free,
-					'cssSelector'           => $sel,
+					'@type'               => 'WebPageElement',
+					'isAccessibleForFree' => $free,
+					'cssSelector'         => $sel,
 				);
 			}
 			if ( empty( $clean ) ) {
@@ -3145,7 +3184,7 @@ class Nexter_Content_SEO_Schema {
 					$fields['reviewRating'][ $rk ] = strpos( $v, '.' ) !== false ? (float) $v : (int) $v;
 				}
 			}
-			$rr = $fields['reviewRating'];
+			$rr   = $fields['reviewRating'];
 			$keep = false;
 			foreach ( $rr as $ik => $iv ) {
 				if ( '@type' === $ik ) {
@@ -3443,7 +3482,10 @@ class Nexter_Content_SEO_Schema {
 				if ( '' === $n ) {
 					continue;
 				}
-				$clean[] = array( '@type' => 'Person', 'name' => $n );
+				$clean[] = array(
+				'@type' => 'Person',
+				'name'  => $n
+				);
 			}
 			if ( empty( $clean ) ) {
 				unset( $fields['performer'] );
@@ -3560,14 +3602,14 @@ class Nexter_Content_SEO_Schema {
 					continue;
 				}
 				$item = array(
-					'@type' => 'Question',
-					'name'  => $qname,
+					'@type'          => 'Question',
+					'name'           => $qname,
 					'acceptedAnswer' => array(
 						'@type' => 'Answer',
 						'text'  => $atext,
 					),
 				);
-				$url = isset( $row['url'] ) ? trim( (string) $row['url'] ) : '';
+				$url  = isset( $row['url'] ) ? trim( (string) $row['url'] ) : '';
 				if ( '' !== $url ) {
 					$item['url'] = $url;
 				}
@@ -3658,7 +3700,10 @@ class Nexter_Content_SEO_Schema {
 			}
 		}
 
-		foreach ( array( 'supply' => 'HowToSupply', 'tool' => 'HowToTool' ) as $prop => $stype ) {
+		foreach ( array(
+		'supply' => 'HowToSupply',
+		'tool'   => 'HowToTool'
+		) as $prop => $stype ) {
 			if ( ! isset( $fields[ $prop ] ) ) {
 				continue;
 			}
@@ -4088,11 +4133,11 @@ class Nexter_Content_SEO_Schema {
 			'https://schema.org/CommentAction',
 		);
 		if ( isset( $fields['interactionStatistic'] ) && is_array( $fields['interactionStatistic'] ) ) {
-			$b    = $fields['interactionStatistic'];
-			$it   = isset( $b['interactionType'] ) ? trim( (string) $b['interactionType'] ) : '';
-			$uc   = isset( $b['userInteractionCount'] ) ? trim( (string) $b['userInteractionCount'] ) : '';
-			$one  = array( '@type' => 'InteractionCounter' );
-			$has  = false;
+			$b   = $fields['interactionStatistic'];
+			$it  = isset( $b['interactionType'] ) ? trim( (string) $b['interactionType'] ) : '';
+			$uc  = isset( $b['userInteractionCount'] ) ? trim( (string) $b['userInteractionCount'] ) : '';
+			$one = array( '@type' => 'InteractionCounter' );
+			$has = false;
 			if ( '' !== $it && in_array( $it, $interaction_allow, true ) ) {
 				$one['interactionType'] = $it;
 				$has                    = true;
@@ -4124,7 +4169,7 @@ class Nexter_Content_SEO_Schema {
 					'@type' => 'Organization',
 					'name'  => $pn,
 				);
-				$lg = isset( $fields['publisher']['logo'] ) ? trim( (string) $fields['publisher']['logo'] ) : '';
+				$lg  = isset( $fields['publisher']['logo'] ) ? trim( (string) $fields['publisher']['logo'] ) : '';
 				if ( '' !== $lg ) {
 					$pub['logo'] = $lg;
 				}
@@ -4141,7 +4186,7 @@ class Nexter_Content_SEO_Schema {
 					'@type' => 'Person',
 					'name'  => $an,
 				);
-				$au = isset( $fields['author']['url'] ) ? trim( (string) $fields['author']['url'] ) : '';
+				$au   = isset( $fields['author']['url'] ) ? trim( (string) $fields['author']['url'] ) : '';
 				if ( '' !== $au ) {
 					$auth['url'] = $au;
 				}
@@ -4348,7 +4393,10 @@ class Nexter_Content_SEO_Schema {
 			if ( '' === $name ) {
 				continue;
 			}
-			$clean[] = array( '@type' => 'Person', 'name' => $name );
+			$clean[] = array(
+			'@type' => 'Person',
+			'name'  => $name
+			);
 		}
 		if ( empty( $clean ) ) {
 			unset( $fields[ $prop ] );
@@ -4550,7 +4598,10 @@ class Nexter_Content_SEO_Schema {
 				if ( '' === $n ) {
 					continue;
 				}
-				$b = array( '@type' => 'Brand', 'name' => $n );
+				$b = array(
+				'@type' => 'Brand',
+				'name'  => $n
+				);
 				if ( isset( $row['logo'] ) ) {
 					$lg = trim( (string) $row['logo'] );
 					if ( '' !== $lg ) {
@@ -4639,7 +4690,10 @@ class Nexter_Content_SEO_Schema {
 				if ( '' === $n ) {
 					continue;
 				}
-				$p = array( '@type' => 'Person', 'name' => $n );
+				$p = array(
+				'@type' => 'Person',
+				'name'  => $n
+				);
 				foreach ( array( 'jobTitle', 'email', 'telephone' ) as $ek ) {
 					if ( isset( $row[ $ek ] ) ) {
 						$ev = trim( (string) $row[ $ek ] );
@@ -4681,7 +4735,7 @@ class Nexter_Content_SEO_Schema {
 				$p = self::local_business_place_from_storage_row( $row );
 				if ( null !== $p ) {
 					$fields['foundingLocation'] = $p;
-					$set = true;
+					$set                        = true;
 					break;
 				}
 			}
@@ -4703,11 +4757,35 @@ class Nexter_Content_SEO_Schema {
 		}
 
 		$trim_scalars = array(
-			'name', 'description', 'url', 'logo', 'servesCuisine', 'areaServed', 'hasMap',
-			'currenciesAccepted', 'paymentAccepted', 'priceRange', 'telephone', 'email', 'faxNumber',
-			'parentOrganization', 'duns', 'globalLocationNumber', 'isicV4', 'iso6523Code', 'leiCode',
-			'naics', 'taxID', 'vatID', 'award', 'foundingDate', 'keywords', 'knowsLanguage',
-			'legalName', 'slogan', 'mainEntityOfPage',
+			'name',
+		'description',
+		'url',
+		'logo',
+		'servesCuisine',
+		'areaServed',
+		'hasMap',
+			'currenciesAccepted',
+		'paymentAccepted',
+		'priceRange',
+		'telephone',
+		'email',
+		'faxNumber',
+			'parentOrganization',
+		'duns',
+		'globalLocationNumber',
+		'isicV4',
+		'iso6523Code',
+		'leiCode',
+			'naics',
+		'taxID',
+		'vatID',
+		'award',
+		'foundingDate',
+		'keywords',
+		'knowsLanguage',
+			'legalName',
+		'slogan',
+		'mainEntityOfPage',
 		);
 		foreach ( $trim_scalars as $sk ) {
 			if ( ! isset( $fields[ $sk ] ) ) {
@@ -4884,11 +4962,11 @@ class Nexter_Content_SEO_Schema {
 		// When blogname is empty (%site.title% → ''), fall back to the site host, then home URL —
 		// this keeps the sitelinks-searchbox WebSite present even on unconfigured installs.
 		if ( empty( $fields['name'] ) ) {
-			$host = wp_parse_url( home_url( '/' ), PHP_URL_HOST );
+			$host           = wp_parse_url( home_url( '/' ), PHP_URL_HOST );
 			$fields['name'] = get_bloginfo( 'name' ) ?: ( $host ? $host : home_url( '/' ) );
 		}
 		if ( empty( $fields['potentialAction'] ) ) {
-			$search_url = apply_filters(
+			$search_url                = apply_filters(
 				'nexter_content_seo_search_action_target_url',
 				home_url( '/' ) . '?s={search_term_string}'
 			);
@@ -4972,11 +5050,14 @@ class Nexter_Content_SEO_Schema {
 		if ( ! get_option( 'blog_public' ) ) {
 			return true;
 		}
-		if ( class_exists( 'Nexter_Content_SEO_Robots' ) && method_exists( 'Nexter_Content_SEO_Robots', 'get_robots_directives' ) ) {
-			$directives = Nexter_Content_SEO_Robots::get_robots_directives();
-			return is_array( $directives ) && in_array( 'noindex', $directives, true );
-		}
-		return false;
+		// Read the ACTUAL rendered robots signal, not Nexter's private opinion. `wp_robots` is the
+		// core filter every SEO plugin (Nexter, Yoast, Rank Math, …) and WP core itself feed into,
+		// and it's exactly what the <meta name="robots"> tag is built from. Querying Nexter's own
+		// get_robots_directives() would disagree with reality whenever a competing plugin owns the
+		// tag — suppressing schema on a page the competitor indexes, or emitting it on a page the
+		// competitor noindexes. The merged array is associative ( e.g. [ 'noindex' => true ] ).
+		$robots = apply_filters( 'wp_robots', array() );
+		return is_array( $robots ) && ! empty( $robots['noindex'] );
 	}
 
 	/**
@@ -5000,6 +5081,12 @@ class Nexter_Content_SEO_Schema {
 	 */
 	public static function print_schema() {
 		if ( is_admin() && ! defined( 'DOING_AJAX' ) ) {
+			return;
+		}
+		// Defer structured data to a competing SEO plugin (Yoast / Rank Math / AIOSEO / SEOPress / …)
+		// so we don't emit a duplicate JSON-LD @graph alongside theirs. Mirrors the coexistence guard
+		// already applied to <title>, meta description, canonical, robots and OG/Twitter output.
+		if ( class_exists( 'Nexter_Content_SEO_Description' ) && Nexter_Content_SEO_Description::other_seo_plugin_active() ) {
 			return;
 		}
 		$options = class_exists( 'Nexter_Content_SEO' ) ? Nexter_Content_SEO::get_options() : array();
@@ -5032,16 +5119,16 @@ class Nexter_Content_SEO_Schema {
 			}
 		}
 
-		$schemas    = self::get_active_schemas();
-		$post_obj   = is_singular() ? get_post() : null;
+		$schemas           = self::get_active_schemas();
+		$post_obj          = is_singular() ? get_post() : null;
 		$base_replacements = self::get_replacements( $post_obj );
-		$post_type  = '';
-		$post_id    = 0;
+		$post_type         = '';
+		$post_id           = 0;
 		if ( is_singular() && $post_obj instanceof WP_Post ) {
 			$post_type = (string) $post_obj->post_type;
 			$post_id   = (int) $post_obj->ID;
 		}
-		$rendered   = array();
+		$rendered    = array();
 		$seen_at_ids = array();
 
 		foreach ( $schemas as $schema ) {
@@ -5189,14 +5276,14 @@ class Nexter_Content_SEO_Schema {
 			$search_url = isset( $base_replacements['%site.search_url%'] ) ? $base_replacements['%site.search_url%'] : home_url( '/' ) . '?s={search_term_string}';
 			// Name falls back to host → home URL when blogname is empty, so the site-identity
 			// WebSite (and its sitelinks searchbox) is present even on an unconfigured install.
-			$auto_host = wp_parse_url( home_url( '/' ), PHP_URL_HOST );
-			$auto_name = get_bloginfo( 'name' ) ?: ( $auto_host ? $auto_host : home_url( '/' ) );
+			$auto_host    = wp_parse_url( home_url( '/' ), PHP_URL_HOST );
+			$auto_name    = get_bloginfo( 'name' ) ?: ( $auto_host ? $auto_host : home_url( '/' ) );
 			$website_node = array(
-				'@type' => 'WebSite',
-				'@id'   => home_url( '/#website' ),
-				'url'   => home_url( '/' ),
-				'name'  => $auto_name,
-				'description' => get_bloginfo( 'description' ),
+				'@type'           => 'WebSite',
+				'@id'             => home_url( '/#website' ),
+				'url'             => home_url( '/' ),
+				'name'            => $auto_name,
+				'description'     => get_bloginfo( 'description' ),
 				'potentialAction' => array(
 					array(
 						'@type'       => 'SearchAction',
@@ -5204,9 +5291,9 @@ class Nexter_Content_SEO_Schema {
 						'query-input' => 'required name=search_term_string',
 					),
 				),
-				'inLanguage' => get_bloginfo( 'language' ),
+				'inLanguage'      => get_bloginfo( 'language' ),
 			);
-			$rendered[] = $website_node;
+			$rendered[]   = $website_node;
 		}
 
 		$rendered = apply_filters( 'nexter_content_seo_schema_graph', $rendered );
@@ -5226,9 +5313,10 @@ class Nexter_Content_SEO_Schema {
 
 		// Harden JSON-LD for output inside an HTML <script> context: JSON_HEX_TAG hex-encodes
 		// < and > (so a stray "</script>" in any value becomes "</script>" and cannot
-		// break out), JSON_HEX_AMP covers &. We intentionally do NOT use JSON_UNESCAPED_SLASHES,
-		// so "/" is escaped too. Unicode stays unescaped for readable, valid JSON-LD.
-		$json = wp_json_encode( $schema_data, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP );
+		// break out), JSON_HEX_AMP covers &, and JSON_HEX_QUOT | JSON_HEX_APOS encode " and ' for
+		// defense in depth. We intentionally do NOT use JSON_UNESCAPED_SLASHES, so "/" is escaped
+		// too. Unicode stays unescaped for readable, valid JSON-LD.
+		$json = wp_json_encode( $schema_data, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_QUOT | JSON_HEX_APOS );
 
 		$html = '<script type="application/ld+json" id="nexter-content-seo-schema">' . $json . '</script>' . "\n";
 		if ( ! empty( $cache_key ) ) {
@@ -5247,7 +5335,8 @@ class Nexter_Content_SEO_Schema {
 		$option = get_option( self::OPTION_SCHEMA, array() );
 		$lists  = self::normalize_schema_lists( $option );
 		$static = self::get_cached_static_schema_config();
-		return rest_ensure_response( array(
+		return rest_ensure_response(
+			array(
 			'data' => array(
 				'schema'                   => array(
 					'site_wide'     => $lists['site_wide'],
@@ -5259,8 +5348,9 @@ class Nexter_Content_SEO_Schema {
 				// they are built live (cheap: sub-millisecond) rather than cached.
 				'schema_rules'             => self::get_schema_rules_selections(),
 				'schema_field_definitions' => $static['schema_field_definitions'],
-			),
-		) );
+			 ),
+			) 
+		);
 	}
 
 	/**
@@ -5394,6 +5484,9 @@ class Nexter_Content_SEO_Schema {
 	 */
 	private static function schema_required_fields() {
 		return array(
+			// Article's one genuinely-required property is headline; a user who blanks it produces
+			// an incomplete node, so gate it out (default Article is post-derived and always has one).
+			'Article'             => array( 'headline' ),
 			'Product'             => array( 'name', 'image' ),
 			'Event'               => array( 'name', 'startDate', 'location' ),
 			'Recipe'              => array( 'name', 'image', 'recipeIngredient', 'recipeInstructions' ),

@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class Nexter_Content_SEO {
 
-	const OPTION_NAME   = 'nexter_content_seo_options';
+	const OPTION_NAME    = 'nexter_content_seo_options';
 	const REST_NAMESPACE = 'nexter/v1';
 
 	/**
@@ -111,7 +111,7 @@ class Nexter_Content_SEO {
 	 * Load Content SEO sub-modules.
 	 */
 	private function load_modules() {
-		$dir = dirname( __FILE__ );
+		$dir   = dirname( __FILE__ );
 		$files = array(
 			'class-seo-settings.php',
 			'class-seo-title.php',
@@ -178,6 +178,11 @@ class Nexter_Content_SEO {
 			if ( \class_exists( '\NexterSEO\Audit\Engine' ) ) {
 				\add_filter( 'cron_schedules', array( '\NexterSEO\Audit\Engine', 'filter_cron_schedules' ) );
 				\add_action( \NexterSEO\Audit\Engine::CRON_HOOK, array( '\NexterSEO\Audit\Engine', 'cron_run' ) );
+				// Fallback for hosts with WP-Cron disabled (DISABLE_WP_CRON): trigger the overdue
+				// recurring audit on an admin request behind a transient lock.
+				if ( defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON ) {
+					\add_action( 'admin_init', array( '\NexterSEO\Audit\Engine', 'maybe_run_due_cron' ) );
+				}
 			}
 		}
 	}
@@ -323,10 +328,10 @@ class Nexter_Content_SEO {
 					if ( false !== stripos( $rm[0], 'nofollow' ) ) {
 						return $m[0];
 					}
-					$quote   = substr( $rm[1], 0, 1 );
+					$quote    = substr( $rm[1], 0, 1 );
 					$existing = trim( substr( $rm[1], 1, -1 ) );
-					$new_rel = $quote . trim( $existing . ' nofollow ugc' ) . $quote;
-					$attrs   = str_replace( $rm[0], 'rel=' . $new_rel, $attrs );
+					$new_rel  = $quote . trim( $existing . ' nofollow ugc' ) . $quote;
+					$attrs    = str_replace( $rm[0], 'rel=' . $new_rel, $attrs );
 					return '<a ' . $attrs . '>';
 				}
 				return '<a ' . trim( $attrs ) . ' rel="nofollow ugc">';
@@ -426,6 +431,23 @@ class Nexter_Content_SEO {
 		// Run the same field-level sanitizers used by the REST save path so options persisted via
 		// the Settings API / options.php are validated too (previously this was a no-op passthrough
 		// that stored whatever was submitted).
+		return self::sanitize_full_options( $value );
+	}
+
+	/**
+	 * Single source of truth for full-options sanitization. Every persistence path — the Settings
+	 * API sanitize_callback (sanitize_options), the REST save (rest_update_settings) and settings
+	 * import (apply_global_import) — routes through this, so a sanitizer added here applies
+	 * everywhere at once. The three sites previously duplicated the identical 8-step sequence and
+	 * could silently diverge if one was updated without the others.
+	 *
+	 * @param array $value Raw options.
+	 * @return array Sanitized options.
+	 */
+	public static function sanitize_full_options( $value ) {
+		if ( ! is_array( $value ) ) {
+			return array();
+		}
 		$value = self::sanitize_social_settings( $value );
 		$value = self::sanitize_homepage_settings( $value );
 		$value = self::sanitize_robots_settings( $value );
@@ -444,11 +466,18 @@ class Nexter_Content_SEO {
 	 */
 	public static function get_options( $option = '' ) {
 		if ( null === self::$options_cache ) {
-			$saved                = get_option( self::OPTION_NAME, array() );
-			$defaults             = apply_filters( 'nexter_content_seo_default_options', self::default_options() );
-			self::$options_cache  = wp_parse_args( $saved, $defaults );
+			$saved               = get_option( self::OPTION_NAME, array() );
+			$defaults            = apply_filters( 'nexter_content_seo_default_options', self::default_options() );
+			self::$options_cache = wp_parse_args( $saved, $defaults );
 		}
 		if ( $option ) {
+			// Under WP_DEBUG, surface a request for a key that isn't a known option (a typo, or a
+			// key renamed/removed in a later version) — otherwise it returns '' indistinguishably
+			// from a legitimately-empty value and silently masks the broken caller. Production
+			// behavior is unchanged (still returns '').
+			if ( ! array_key_exists( $option, self::$options_cache ) && defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+				_doing_it_wrong( __METHOD__, esc_html( sprintf( 'Unknown Content SEO option key "%s".', $option ) ), '4.7.2' );
+			}
 			return isset( self::$options_cache[ $option ] ) ? self::$options_cache[ $option ] : '';
 		}
 		return self::$options_cache;
@@ -469,119 +498,119 @@ class Nexter_Content_SEO {
 	public static function default_options() {
 		return array(
 			// Data-shape version stamp for the migration layer (see migrate_options()).
-			'_data_version'              => self::DATA_VERSION,
+			'_data_version'                 => self::DATA_VERSION,
 			// General.
-			'search_title_template'      => '%post_title% - %site_name%',
-			'search_description_template' => '%post_excerpt%',
+			'search_title_template'         => '%post_title% - %site_name%',
+			'search_description_template'   => '%post_excerpt%',
 			// Social.
-			'default_social_image'       => '',
+			'default_social_image'          => '',
 			'default_social_image_filename' => '',
-			'default_social_image_filesize'  => '',
-			'facebook_page_url'          => '',
-			'facebook_author_url'        => '',
-			'twitter_card_layout'        => 'summary_large_image',
-			'twitter_site'               => '',
-			'twitter_author'             => '',
-			'linkedin_url'               => '',
-			'instagram_url'             => '',
-			'youtube_url'                => '',
-			'pinterest_url'              => '',
-			'tiktok_url'                 => '',
-			'whatsapp_url'               => '',
-			'telegram_url'               => '',
-			'yelp_url'                   => '',
-			'bluesky_url'                => '',
+			'default_social_image_filesize' => '',
+			'facebook_page_url'             => '',
+			'facebook_author_url'           => '',
+			'twitter_card_layout'           => 'summary_large_image',
+			'twitter_site'                  => '',
+			'twitter_author'                => '',
+			'linkedin_url'                  => '',
+			'instagram_url'                 => '',
+			'youtube_url'                   => '',
+			'pinterest_url'                 => '',
+			'tiktok_url'                    => '',
+			'whatsapp_url'                  => '',
+			'telegram_url'                  => '',
+			'yelp_url'                      => '',
+			'bluesky_url'                   => '',
 			// Homepage SEO. Used directly for the blog-index ("Your latest posts") case,
 			// where there is no front-page post to attach the Nexter SEO meta box to. For a
 			// static front page the per-post meta box still takes precedence; these act as a
 			// fallback. Title/description support template tokens (%site_name%, %tagline%, …).
-			'home_title'                 => '',
-			'home_description'           => '',
-			'home_og_title'              => '',
-			'home_og_description'        => '',
-			'home_og_image'              => '',
-			'home_og_image_id'           => 0,
+			'home_title'                    => '',
+			'home_description'              => '',
+			'home_og_title'                 => '',
+			'home_og_description'           => '',
+			'home_og_image'                 => '',
+			'home_og_image_id'              => 0,
 			// Archives. Enabled by default — author/date archives duplicate blog content
 			// and harm SEO on single-author sites (matches RankMath / Yoast defaults).
-			'disable_author_archives'    => true,
-			'disable_date_archives'      => true,
+			'disable_author_archives'       => true,
+			'disable_date_archives'         => true,
 			// Category/tag archives are useful navigation by default, so opt-in (false).
-			'disable_category_archives'  => false,
-			'disable_tag_archives'       => false,
-			'redirect_archives_to_home'  => true,
+			'disable_category_archives'     => false,
+			'disable_tag_archives'          => false,
+			'redirect_archives_to_home'     => true,
 			// Archive title/description templates. Use the Term Title / Term Description tokens
 			// (in the variable dropdown). On term archives they resolve to the term name/
 			// description; on author/date/post-type archives they fall back to WordPress's own
 			// archive title/description — so all archive types get clean, type-appropriate output
 			// instead of the post template (which produced artifacts like "Cat Name by | | 2026").
-			'archive_title_template'      => '%term_title% - %site_name%',
-			'archive_description_template' => '%term_description%',
+			'archive_title_template'        => '%term_title% - %site_name%',
+			'archive_description_template'  => '%term_description%',
 			// Sitemaps.
-			'enable_xml_sitemap'         => true,
-			'sitemap_include_images'     => true,
+			'enable_xml_sitemap'            => true,
+			'sitemap_include_images'        => true,
 			// Attach a human-readable XSLT stylesheet to sitemap XML (opt-out).
-			'sitemap_stylesheet'         => true,
-			'enable_video_sitemap'       => false,
-			'enable_html_sitemap'        => false,
-			'enable_news_sitemap'        => false,
-			'sitemap_exclude_post_types' => array(),
-			'sitemap_exclude_taxonomies' => array(),
+			'sitemap_stylesheet'            => true,
+			'enable_video_sitemap'          => false,
+			'enable_html_sitemap'           => false,
+			'enable_news_sitemap'           => false,
+			'sitemap_exclude_post_types'    => array(),
+			'sitemap_exclude_taxonomies'    => array(),
 			// Robots (No Index / No Follow / No Archive) – slug => bool.
-			'noindex_post_types'         => array(),
-			'noindex_taxonomies'          => array(),
-			'noindex_archives'            => array(),
-			'nofollow_post_types'        => array(),
-			'nofollow_taxonomies'         => array(),
-			'nofollow_archives'          => array(),
-			'noarchive_post_types'       => array(),
-			'noarchive_taxonomies'        => array(),
-			'noarchive_archives'         => array(),
+			'noindex_post_types'            => array(),
+			'noindex_taxonomies'            => array(),
+			'noindex_archives'              => array(),
+			'nofollow_post_types'           => array(),
+			'nofollow_taxonomies'           => array(),
+			'nofollow_archives'             => array(),
+			'noarchive_post_types'          => array(),
+			'noarchive_taxonomies'          => array(),
+			'noarchive_archives'            => array(),
 			// Image SEO.
-			'redirect_attachment_pages' => true,
-			'auto_alt_text'             => false,
+			'redirect_attachment_pages'     => true,
+			'auto_alt_text'                 => false,
 			// Instant Indexing (IndexNow).
-			'enable_indexnow'            => false,
-			'indexnow_exclude_types'     => array(),
-			'indexnow_api_key'           => '',
+			'enable_indexnow'               => false,
+			'indexnow_exclude_types'        => array(),
+			'indexnow_api_key'              => '',
 			// Google Indexing API.
-			'enable_google_indexing'     => false,
-			'google_indexing_key'        => '',
+			'enable_google_indexing'        => false,
+			'google_indexing_key'           => '',
 			// Analytics.
-			'enable_ga'                  => false,
-			'ga_measurement_id'          => '',
+			'enable_ga'                     => false,
+			'ga_measurement_id'             => '',
 			// Crawling.
-			'remove_replytocom'          => true,
-			'remove_noreferrer'          => false,
-			'remove_hentry'              => false,
-			'remove_comment_author_url'   => false,
-			'remove_website_field'       => false,
-			'nofollow_comments'         => true,
+			'remove_replytocom'             => true,
+			'remove_noreferrer'             => false,
+			'remove_hentry'                 => false,
+			'remove_comment_author_url'     => false,
+			'remove_website_field'          => false,
+			'nofollow_comments'             => true,
 			// Verification.
-			'google_verification'        => '',
-			'bing_verification'          => '',
-			'pinterest_verification'     => '',
-			'facebook_verification'     => '',
+			'google_verification'           => '',
+			'bing_verification'             => '',
+			'pinterest_verification'        => '',
+			'facebook_verification'         => '',
 			// Schema.
-			'schema_types'               => array(),
-			'disable_website_schema'     => false,
+			'schema_types'                  => array(),
+			'disable_website_schema'        => false,
 			// LLMs.txt.
-			'enable_llms_txt'            => false,
-			'llms_txt_include_homepage'  => true,
-			'llms_txt_pages'             => array(),
-			'llms_txt_posts_count'       => 20,
-			'llms_txt_post_types'        => array( 'post' => true ),
-			'llms_txt_taxonomies'        => array(),
-			'llms_txt_terms_limit'       => 20,
-			'llms_txt_respect_noindex'   => true,
-			'llms_txt_cache_ttl'         => 24,
-			'llms_txt_freshness_months'  => 0,
+			'enable_llms_txt'               => false,
+			'llms_txt_include_homepage'     => true,
+			'llms_txt_pages'                => array(),
+			'llms_txt_posts_count'          => 20,
+			'llms_txt_post_types'           => array( 'post' => true ),
+			'llms_txt_taxonomies'           => array(),
+			'llms_txt_terms_limit'          => 20,
+			'llms_txt_respect_noindex'      => true,
+			'llms_txt_cache_ttl'            => 24,
+			'llms_txt_freshness_months'     => 0,
 			// Advanced.
-			'no_image_index'             => false,
-			'no_snippet'                => false,
-			'pagination_signals'         => false,
-			'noindex_attachments'       => true,
+			'no_image_index'                => false,
+			'no_snippet'                    => false,
+			'pagination_signals'            => false,
+			'noindex_attachments'           => true,
 			// Robots.txt (empty = use WordPress default virtual file; non-empty replaces output via filter).
-			'robots_txt_custom'         => '',
+			'robots_txt_custom'             => '',
 		);
 	}
 
@@ -684,8 +713,14 @@ class Nexter_Content_SEO {
 					'callback'            => array( 'Nexter_Content_SEO_Indexing', 'rest_bulk_index' ),
 					'permission_callback' => $permission,
 					'args'                => array(
-						'urls'   => array( 'type' => 'array', 'items' => array( 'type' => 'string' ) ),
-						'action' => array( 'type' => 'string', 'enum' => array( 'update', 'remove' ) ),
+						'urls'   => array(
+			'type'  => 'array',
+			'items' => array( 'type' => 'string' )
+					),
+						'action' => array(
+					'type' => 'string',
+					'enum' => array( 'update', 'remove' )
+					),
 					),
 				),
 			)
@@ -851,14 +886,34 @@ class Nexter_Content_SEO {
 						'callback'            => array( 'Nexter_Content_SEO_404_Monitor', 'rest_get' ),
 						'permission_callback' => $permission,
 						'args'                => array(
-							'page'     => array( 'type' => 'integer', 'default' => 1, 'minimum' => 1 ),
+							'page'     => array(
+				'type'    => 'integer',
+				'default' => 1,
+				'minimum' => 1
+						),
 							// Allow loading the full log in one request (default stays 20). The admin UI
 							// fetches everything once and filters/paginates client-side; fetch_rows still
 							// clamps to MAX_ROWS, which equals the table's hard row cap.
-							'per_page' => array( 'type' => 'integer', 'default' => 20, 'minimum' => 1, 'maximum' => Nexter_Content_SEO_404_Monitor::MAX_ROWS ),
-							'orderby'  => array( 'type' => 'string', 'default' => 'last_seen', 'enum' => array( 'last_seen', 'first_seen', 'hits', 'url' ) ),
-							'order'    => array( 'type' => 'string', 'default' => 'desc', 'enum' => array( 'asc', 'desc' ) ),
-							'search'   => array( 'type' => 'string', 'default' => '' ),
+							'per_page' => array(
+						'type'    => 'integer',
+						'default' => 20,
+						'minimum' => 1,
+						'maximum' => Nexter_Content_SEO_404_Monitor::MAX_ROWS
+						),
+							'orderby'  => array(
+						'type'    => 'string',
+						'default' => 'last_seen',
+						'enum'    => array( 'last_seen', 'first_seen', 'hits', 'url' )
+						),
+							'order'    => array(
+						'type'    => 'string',
+						'default' => 'desc',
+						'enum'    => array( 'asc', 'desc' )
+						),
+							'search'   => array(
+						'type'    => 'string',
+						'default' => ''
+						),
 						),
 					),
 					array(
@@ -892,7 +947,10 @@ class Nexter_Content_SEO {
 					'callback'            => array( 'Nexter_Content_SEO_404_Monitor', 'rest_delete' ),
 					'permission_callback' => $permission,
 					'args'                => array(
-						'id' => array( 'type' => 'integer', 'required' => true ),
+						'id' => array(
+				'type'     => 'integer',
+				'required' => true
+					),
 					),
 				)
 			);
@@ -983,7 +1041,9 @@ class Nexter_Content_SEO {
 	 */
 	public function rest_get_settings( $request ) {
 		$options = self::get_options();
-		$data    = array_merge( $options, array(
+		$data    = array_merge(
+			$options,
+			array(
 			'preview_data'           => Nexter_Content_SEO_Settings::get_preview_data(),
 			'sitemap_url'            => Nexter_Content_SEO_Sitemap::get_sitemap_url(),
 			'sitemap_video_url'      => Nexter_Content_SEO_Sitemap::get_video_sitemap_url(),
@@ -994,7 +1054,8 @@ class Nexter_Content_SEO {
 			'robots_txt_url'         => home_url( '/robots.txt' ),
 			'blog_public'            => get_option( 'blog_public' ),
 			'show_on_front'          => get_option( 'show_on_front' ),
-		) );
+			) 
+		);
 		return rest_ensure_response( array( 'data' => $data ) );
 	}
 
@@ -1015,12 +1076,16 @@ class Nexter_Content_SEO {
 		unset( $settings['search_title_templates_by_type'], $settings['search_description_templates_by_type'] );
 
 		// Serialize concurrent saves so two simultaneous submissions can't lost-update each other's
-		// unrelated keys (classic read-modify-write race). Best-effort transient lock with a short
-		// bounded spin; proceeds anyway if the wait elapses so a stale lock never blocks saving.
-		$have_lock = false;
+		// unrelated keys (classic read-modify-write race). wp_cache_add() is an atomic add-if-absent
+		// (returns false when the key already exists) on a persistent object cache (Redis/Memcached),
+		// so it closes the TOCTOU window the previous get_transient()+set_transient() pair had, where
+		// two contenders could both read "unlocked" before either wrote. Without a persistent cache
+		// it degrades to a best-effort lock; the freshest-read-inside-lock below limits damage either
+		// way. Bounded spin, then proceed regardless so a stale lock can never block saving.
+		$lock_group = 'nexter_content_seo';
+		$have_lock  = false;
 		for ( $i = 0; $i < 20; $i++ ) {
-			if ( false === get_transient( self::SAVE_LOCK_KEY ) ) {
-				set_transient( self::SAVE_LOCK_KEY, 1, 10 );
+			if ( wp_cache_add( self::SAVE_LOCK_KEY, 1, $lock_group, 10 ) ) {
 				$have_lock = true;
 				break;
 			}
@@ -1034,30 +1099,23 @@ class Nexter_Content_SEO {
 		$merged  = array_diff_key(
 			$merged,
 			array(
-				'preview_data'          => true,
-				'content_seo_is_pro'    => true,
-				'sitemap_url'           => true,
-				'sitemap_video_url'     => true,
-				'sitemap_news_url'      => true,
-				'sitemap_html_url'      => true,
+				'preview_data'           => true,
+				'content_seo_is_pro'     => true,
+				'sitemap_url'            => true,
+				'sitemap_video_url'      => true,
+				'sitemap_news_url'       => true,
+				'sitemap_html_url'       => true,
 				'robots_txt_url'         => true,
 				'robots_txt_placeholder' => true,
 				'blog_public'            => true,
 				'show_on_front'          => true,
 			)
 		);
-		$merged  = self::sanitize_social_settings( $merged );
-		$merged  = self::sanitize_homepage_settings( $merged );
-		$merged  = self::sanitize_robots_settings( $merged );
-		$merged  = self::sanitize_robots_txt_custom( $merged );
-		$merged  = self::sanitize_sitemap_settings( $merged );
-		$merged  = self::sanitize_image_seo_settings( $merged );
-		$merged  = self::sanitize_indexing_settings( $merged );
-		$merged  = self::sanitize_llms_settings( $merged );
+		$merged  = self::sanitize_full_options( $merged );
 		update_option( self::OPTION_NAME, $merged );
 		self::flush_options_cache();
 		if ( $have_lock ) {
-			delete_transient( self::SAVE_LOCK_KEY );
+			wp_cache_delete( self::SAVE_LOCK_KEY, $lock_group );
 		}
 		if ( class_exists( 'Nexter_Content_SEO_LLMs' ) ) {
 			Nexter_Content_SEO_LLMs::clear_cache();
@@ -1201,9 +1259,9 @@ class Nexter_Content_SEO {
 			? $params['include']
 			: array();
 
-		$global_on    = ! empty( $include['global'] );
-		$schema_on    = ! empty( $include['schema'] );
-		$required_on  = ! empty( $include['required_resources'] );
+		$global_on   = ! empty( $include['global'] );
+		$schema_on   = ! empty( $include['schema'] );
+		$required_on = ! empty( $include['required_resources'] );
 		// Off-by-default opt-in: secret credentials (e.g. IndexNow key) are only exported when
 		// the caller explicitly sets include.credentials. The Google private key is never
 		// exported even then. A filter lets advanced setups force-disable secret export.
@@ -1218,8 +1276,8 @@ class Nexter_Content_SEO {
 		}
 
 		$bundle = array(
-			'version'      => 1,
-			'source'       => 'nexter-content-seo',
+			'version'     => 1,
+			'source'      => 'nexter-content-seo',
 			'exported_at' => gmdate( 'c' ),
 		);
 
@@ -1227,7 +1285,7 @@ class Nexter_Content_SEO {
 			$bundle['global'] = $this->build_global_export_slice();
 		}
 		if ( $schema_on ) {
-			$schema = get_option( Nexter_Content_SEO_Schema::OPTION_SCHEMA, array() );
+			$schema           = get_option( Nexter_Content_SEO_Schema::OPTION_SCHEMA, array() );
 			$bundle['schema'] = is_array( $schema ) ? $schema : array();
 		}
 		if ( $required_on ) {
@@ -1257,14 +1315,7 @@ class Nexter_Content_SEO {
 		$current = self::get_options();
 		$merged  = array_merge( $current, $settings );
 		$merged  = array_diff_key( $merged, self::get_settings_virtual_keys_map() );
-		$merged  = self::sanitize_social_settings( $merged );
-		$merged  = self::sanitize_homepage_settings( $merged );
-		$merged  = self::sanitize_robots_settings( $merged );
-		$merged  = self::sanitize_robots_txt_custom( $merged );
-		$merged  = self::sanitize_sitemap_settings( $merged );
-		$merged  = self::sanitize_image_seo_settings( $merged );
-		$merged  = self::sanitize_indexing_settings( $merged );
-		$merged  = self::sanitize_llms_settings( $merged );
+		$merged  = self::sanitize_full_options( $merged );
 
 		update_option( self::OPTION_NAME, $merged );
 		self::flush_options_cache();
@@ -1457,7 +1508,7 @@ class Nexter_Content_SEO {
 			}
 		}
 		if ( isset( $options['home_og_image'] ) ) {
-			$val = trim( (string) $options['home_og_image'] );
+			$val                      = trim( (string) $options['home_og_image'] );
 			$options['home_og_image'] = $val ? esc_url_raw( $val ) : '';
 		}
 		if ( isset( $options['home_og_image_id'] ) ) {
@@ -1514,7 +1565,7 @@ class Nexter_Content_SEO {
 		}
 
 		if ( isset( $options['twitter_card_layout'] ) ) {
-			$allowed = array( 'summary', 'summary_large_image' );
+			$allowed                        = array( 'summary', 'summary_large_image' );
 			$options['twitter_card_layout'] = in_array( $options['twitter_card_layout'], $allowed, true )
 				? $options['twitter_card_layout']
 				: 'summary_large_image';
@@ -1531,15 +1582,21 @@ class Nexter_Content_SEO {
 	 * @return array Sanitized options.
 	 */
 	public static function sanitize_robots_settings( $options ) {
-		$keys = array(
-			'noindex_post_types', 'noindex_taxonomies', 'noindex_archives',
-			'nofollow_post_types', 'nofollow_taxonomies', 'nofollow_archives',
-			'noarchive_post_types', 'noarchive_taxonomies', 'noarchive_archives',
+		$keys             = array(
+			'noindex_post_types',
+		'noindex_taxonomies',
+		'noindex_archives',
+			'nofollow_post_types',
+		'nofollow_taxonomies',
+		'nofollow_archives',
+			'noarchive_post_types',
+		'noarchive_taxonomies',
+		'noarchive_archives',
 		);
 		$valid_post_types = array_keys( get_post_types( array( 'public' => true ), 'names' ) );
 		$valid_taxonomies = array_keys( get_taxonomies( array( 'public' => true ), 'names' ) );
 		// Blanket archive keys plus the two blog-index contexts and CPT-archive blanket.
-		$valid_archives   = array( 'search', 'author', 'date', 'front', 'blog', 'post_type_archive' );
+		$valid_archives = array( 'search', 'author', 'date', 'front', 'blog', 'post_type_archive' );
 		// Per-CPT archive override keys: post_type_archive_{public_post_type}.
 		foreach ( $valid_post_types as $pt ) {
 			$valid_archives[] = 'post_type_archive_' . $pt;
@@ -1587,8 +1644,8 @@ class Nexter_Content_SEO {
 		if ( strlen( $raw ) > 102400 ) {
 			$raw = substr( $raw, 0, 102400 );
 		}
-		$normalized = str_replace( array( "\r\n", "\r" ), "\n", $raw );
-		$normalized = str_replace(
+		$normalized                   = str_replace( array( "\r\n", "\r" ), "\n", $raw );
+		$normalized                   = str_replace(
 			array(
 				'https://yourdomain.com/sitemap_index.xml',
 				'http://yourdomain.com/sitemap_index.xml',
@@ -1670,7 +1727,7 @@ class Nexter_Content_SEO {
 			}
 		}
 		if ( isset( $options['indexnow_api_key'] ) ) {
-			$key = sanitize_text_field( (string) $options['indexnow_api_key'] );
+			$key                         = sanitize_text_field( (string) $options['indexnow_api_key'] );
 			$options['indexnow_api_key'] = strlen( $key ) > 128 ? substr( $key, 0, 128 ) : $key;
 		}
 		if ( isset( $options['google_indexing_key'] ) ) {
@@ -1735,9 +1792,15 @@ class Nexter_Content_SEO {
 		if ( ! class_exists( '\NexterSEO\Audit\Engine' ) ) {
 			return new \WP_Error( 'audit_missing', __( 'Audit module not loaded.', 'nexter-extension' ), array( 'status' => 500 ) );
 		}
+		// Route through the same single-flight/debounce guard the AJAX handler uses
+		// (NexterSEO\Audit\Ajax::run()) instead of calling $engine->run(true) synchronously. run()
+		// performs many outbound HTTP probes and samples site content with no internal lock or
+		// re-run interval, so repeated POSTs would each execute a full, expensive, network-bound
+		// audit on a PHP worker — a self-inflicted DoS. request_async_run() queues the run in the
+		// background and we return the last snapshot, keeping REST and AJAX behavior identical.
 		try {
-			$engine = new \NexterSEO\Audit\Engine();
-			$data   = $engine->run( true );
+			$async = \NexterSEO\Audit\Engine::request_async_run();
+			$last  = \NexterSEO\Audit\Engine::get_last_result();
 		} catch ( \Throwable $e ) {
 			if ( defined( 'WP_DEBUG' ) && WP_DEBUG && defined( 'WP_DEBUG_LOG' ) && WP_DEBUG_LOG ) {
 				// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- debug only.
@@ -1752,8 +1815,10 @@ class Nexter_Content_SEO {
 		}
 		return rest_ensure_response(
 			array(
-				'data'    => $data,
-				'message' => __( 'Audit completed successfully.', 'nexter-extension' ),
+				'data'       => $last,
+				'async'      => $async,
+				'from_cache' => true,
+				'message'    => __( 'Audit queued in background. Showing last available snapshot until the run completes.', 'nexter-extension' ),
 			)
 		);
 	}
@@ -1768,10 +1833,10 @@ class Nexter_Content_SEO {
 		if ( ! class_exists( '\NexterSEO\Audit\Engine' ) ) {
 			return new \WP_Error( 'audit_missing', __( 'Audit module not loaded.', 'nexter-extension' ), array( 'status' => 500 ) );
 		}
-		$last     = \NexterSEO\Audit\Engine::get_last_result();
-		$schedule = \NexterSEO\Audit\Engine::get_schedule();
-		$history  = \NexterSEO\Audit\Engine::get_history();
-		$payload  = is_array( $last ) ? $last : array();
+		$last                 = \NexterSEO\Audit\Engine::get_last_result();
+		$schedule             = \NexterSEO\Audit\Engine::get_schedule();
+		$history              = \NexterSEO\Audit\Engine::get_history();
+		$payload              = is_array( $last ) ? $last : array();
 		$payload['scan_info'] = array(
 			'audits_count' => count( $history ),
 			'schedule'     => $schedule,
@@ -1788,12 +1853,14 @@ class Nexter_Content_SEO {
 			return new \WP_Error( 'audit_missing', __( 'Audit module not loaded.', 'nexter-extension' ), array( 'status' => 500 ) );
 		}
 		$schedule = \NexterSEO\Audit\Engine::get_schedule();
-		return rest_ensure_response( array(
+		return rest_ensure_response(
+			array(
 			'data' => array(
 				'schedule'    => $schedule,
 				'next_run_at' => \NexterSEO\Audit\Engine::next_run_timestamp( $schedule ),
-			),
-		) );
+			 ),
+			) 
+		);
 	}
 
 	/**
@@ -1805,13 +1872,15 @@ class Nexter_Content_SEO {
 		}
 		$input    = (array) $request->get_json_params();
 		$schedule = \NexterSEO\Audit\Engine::save_schedule( $input );
-		return rest_ensure_response( array(
-			'data' => array(
+		return rest_ensure_response(
+			array(
+			'data'     => array(
 				'schedule'    => $schedule,
 				'next_run_at' => \NexterSEO\Audit\Engine::next_run_timestamp( $schedule ),
-			),
-			'message' => __( 'Schedule saved.', 'nexter-extension' ),
-		) );
+			 ),
+			 'message' => __( 'Schedule saved.', 'nexter-extension' ),
+			) 
+		);
 	}
 
 	/**
@@ -1825,7 +1894,8 @@ class Nexter_Content_SEO {
 		$history  = class_exists( '\NexterSEO\Audit\Engine' ) ? \NexterSEO\Audit\Engine::get_history() : array();
 		$next_run = class_exists( '\NexterSEO\Audit\Engine' ) ? \NexterSEO\Audit\Engine::next_run_timestamp( $schedule ) : null;
 
-		return rest_ensure_response( array(
+		return rest_ensure_response(
+			array(
 			'data' => array(
 				'audit'           => is_array( $audit ) ? $audit : null,
 				'scan_info'       => array(
@@ -1834,8 +1904,9 @@ class Nexter_Content_SEO {
 					'next_run_at'  => $next_run,
 				),
 				'module_statuses' => $this->collect_module_statuses( is_array( $audit ) ? $audit : array() ),
-			),
-		) );
+			 ),
+			) 
+		);
 	}
 
 	/**
@@ -1853,11 +1924,11 @@ class Nexter_Content_SEO {
 		$out['meta-template'] = array(
 			'state' => ( $opts['search_title_template'] !== '%post_title% - %site_name%' || $opts['search_description_template'] !== '%post_excerpt%' ) ? 'active' : 'setup',
 		);
-		$social_set = ! empty( $opts['default_social_image'] )
+		$social_set           = ! empty( $opts['default_social_image'] )
 			|| ! empty( $opts['facebook_page_url'] ) || ! empty( $opts['twitter_site'] )
 			|| ! empty( $opts['linkedin_url'] ) || ! empty( $opts['instagram_url'] )
 			|| ! empty( $opts['youtube_url'] );
-		$out['social'] = array( 'state' => $social_set ? 'active' : 'setup' );
+		$out['social']        = array( 'state' => $social_set ? 'active' : 'setup' );
 		// Schema is "active" whenever it is actually emitting output — which it always is unless the
 		// user explicitly disabled the site-identity schema. schema_types only holds CUSTOM builder
 		// templates (default empty), so checking it alone wrongly showed "Setup" on sites that emit
@@ -1866,8 +1937,8 @@ class Nexter_Content_SEO {
 			'state' => ( ! empty( $opts['schema_types'] ) || empty( $opts['disable_website_schema'] ) ) ? 'active' : 'setup',
 		);
 
-		$image_alt_check = $this->find_audit_check( $audit, 'image_alt' );
-		$alt_issues = ( $image_alt_check && ( $image_alt_check['status'] ?? '' ) !== 'passed' )
+		$image_alt_check  = $this->find_audit_check( $audit, 'image_alt' );
+		$alt_issues       = ( $image_alt_check && ( $image_alt_check['status'] ?? '' ) !== 'passed' )
 			? (int) ( $image_alt_check['count'] ?? 0 )
 			: 0;
 		$out['image-seo'] = array(
@@ -1875,7 +1946,7 @@ class Nexter_Content_SEO {
 			'count' => $alt_issues,
 		);
 		// Home Page: "active" once any home-specific field has been filled in (all default empty).
-		$home_set = ! empty( $opts['home_title'] )
+		$home_set         = ! empty( $opts['home_title'] )
 			|| ! empty( $opts['home_description'] )
 			|| ! empty( $opts['home_og_image'] );
 		$out['home-page'] = array( 'state' => $home_set ? 'active' : 'setup' );
@@ -1883,34 +1954,34 @@ class Nexter_Content_SEO {
 		// Archive Pages: "active" once either archive template differs from its default. NOTE: the
 		// description template defaults to '%term_description%' (not empty), so we compare against
 		// that default rather than using ! empty() — otherwise it would always read as configured.
-		$archive_configured = $opts['archive_title_template'] !== '%term_title% - %site_name%'
+		$archive_configured   = $opts['archive_title_template'] !== '%term_title% - %site_name%'
 			|| $opts['archive_description_template'] !== '%term_description%';
 		$out['archive-pages'] = array( 'state' => $archive_configured ? 'active' : 'setup' );
 
 		// Technical.
-		$out['sitemaps'] = array(
+		$out['sitemaps']            = array(
 			'state' => ! empty( $opts['enable_xml_sitemap'] ) ? 'active' : 'off',
 		);
-		$robots_set = ! empty( $opts['noindex_post_types'] ) || ! empty( $opts['noindex_taxonomies'] )
+		$robots_set                 = ! empty( $opts['noindex_post_types'] ) || ! empty( $opts['noindex_taxonomies'] )
 			|| ! empty( $opts['nofollow_post_types'] ) || ! empty( $opts['nofollow_taxonomies'] )
 			|| ! empty( $opts['noarchive_post_types'] ) || ! empty( $opts['noarchive_taxonomies'] );
 		$out['robots-instructions'] = array( 'state' => $robots_set ? 'active' : 'default' );
 		$out['robots-txt-editor']   = array( 'state' => ! empty( $opts['robots_txt_custom'] ) ? 'active' : 'default' );
 
-		$indexing_on = ! empty( $opts['enable_indexnow'] ) || ! empty( $opts['enable_google_indexing'] );
+		$indexing_on             = ! empty( $opts['enable_indexnow'] ) || ! empty( $opts['enable_google_indexing'] );
 		$out['instant-indexing'] = array( 'state' => $indexing_on ? 'active' : 'setup' );
 		$out['llms']             = array( 'state' => ! empty( $opts['enable_llms_txt'] ) ? 'active' : 'setup' );
 		$out['validation']       = array( 'state' => 'ready' );
 
 		// Redirects.
-		$rule_rows = get_option( 'nexter_content_seo_redirect_rules', array() );
-		$rule_count = is_array( $rule_rows ) ? count( $rule_rows ) : 0;
+		$rule_rows                  = get_option( 'nexter_content_seo_redirect_rules', array() );
+		$rule_count                 = is_array( $rule_rows ) ? count( $rule_rows ) : 0;
 		$out['redirection-manager'] = array(
 			'state' => $rule_count > 0 ? 'active' : 'setup',
 			'count' => $rule_count,
 		);
 
-		$hits_404 = $this->count_404_hits();
+		$hits_404           = $this->count_404_hits();
 		$out['404-monitor'] = array(
 			'state' => $hits_404 > 0 ? 'active' : 'ready',
 			'count' => $hits_404,
@@ -1982,7 +2053,11 @@ class Nexter_Content_SEO {
 	 * @return bool
 	 */
 	public static function content_seo_is_pro_active() {
-		return defined( 'NXT_PRO_EXT' );
+		// Accept BOTH Pro activation constants — mirrors every other Pro gate in the plugin
+		// (seo_brand_label/logo, notices, dashboard data, bulk images, import/export). Without
+		// TPGBP_VERSION, a site on the legacy white-label Pro path reported is_pro:false only in
+		// Content SEO and hid Pro-only SEO features while being branded Pro everywhere else.
+		return defined( 'NXT_PRO_EXT' ) || defined( 'TPGBP_VERSION' );
 	}
 
 	/**
@@ -2000,10 +2075,13 @@ class Nexter_Content_SEO {
 			unset( $options[ $k ] );
 		}
 
-		$bool_keys = apply_filters( 'nexter_content_seo_image_seo_bool_keys', array(
+		$bool_keys = apply_filters(
+			'nexter_content_seo_image_seo_bool_keys',
+			array(
 			'redirect_attachment_pages',
 			'auto_alt_text',
-		) );
+			) 
+		);
 		foreach ( $bool_keys as $key ) {
 			if ( isset( $options[ $key ] ) ) {
 				$options[ $key ] = ! empty( $options[ $key ] );
@@ -2035,7 +2113,7 @@ class Nexter_Content_SEO {
 
 		// Posts count: integer 1–100.
 		if ( isset( $options['llms_txt_posts_count'] ) ) {
-			$count = (int) $options['llms_txt_posts_count'];
+			$count                           = (int) $options['llms_txt_posts_count'];
 			$options['llms_txt_posts_count'] = max( 1, min( 100, $count ) );
 		}
 

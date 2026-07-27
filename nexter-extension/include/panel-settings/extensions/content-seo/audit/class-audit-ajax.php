@@ -39,10 +39,10 @@ class Ajax {
 		$last  = Engine::get_last_result();
 		\wp_send_json_success(
 			array(
-				'data'         => $last,
-				'async'        => $async,
-				'from_cache'   => true,
-				'message'      => \__( 'Audit queued in background. Showing last available snapshot until the run completes.', 'nexter-extension' ),
+				'data'       => $last,
+				'async'      => $async,
+				'from_cache' => true,
+				'message'    => \__( 'Audit queued in background. Showing last available snapshot until the run completes.', 'nexter-extension' ),
 			)
 		);
 	}

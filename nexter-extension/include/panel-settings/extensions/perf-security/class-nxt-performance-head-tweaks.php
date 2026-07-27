@@ -22,17 +22,25 @@ class Nxt_Performance_Head_Tweaks {
 		remove_filter( 'comment_text_rss', 'wp_staticize_emoji' );
 		remove_filter( 'wp_mail', 'wp_staticize_emoji_for_email' );
 
-		add_filter( 'tiny_mce_plugins', function( $plugins ) {
-			return is_array( $plugins ) ? array_diff( $plugins, array( 'wpemoji' ) ) : array();
-		} );
+		add_filter(
+			'tiny_mce_plugins',
+			function( $plugins ) {
+				return is_array( $plugins ) ? array_diff( $plugins, array( 'wpemoji' ) ) : array();
+			} 
+		);
 
-		add_filter( 'wp_resource_hints', function( $urls, $relation_type ) {
-			if ( 'dns-prefetch' === $relation_type ) {
-				$emoji_svg_url = apply_filters( 'emoji_svg_url', 'https://s.w.org/images/core/emoji/2/svg/' );
-				$urls = array_diff( $urls, array( $emoji_svg_url ) );
-			}
-			return $urls;
-		}, 10, 2 );
+		add_filter(
+			'wp_resource_hints',
+			function( $urls, $relation_type ) {
+				if ( 'dns-prefetch' === $relation_type ) {
+					$emoji_svg_url = apply_filters( 'emoji_svg_url', 'https://s.w.org/images/core/emoji/2/svg/' );
+					$urls          = array_diff( $urls, array( $emoji_svg_url ) );
+				}
+				return $urls;
+			},
+			10,
+			2 
+		);
 	}
 
 	/**
@@ -47,17 +55,23 @@ class Nxt_Performance_Head_Tweaks {
 		remove_filter( 'oembed_dataparse', 'wp_filter_oembed_result', 10 );
 		remove_action( 'wp_head', 'wp_oembed_add_discovery_links' );
 		remove_action( 'wp_head', 'wp_oembed_add_host_js' );
-		add_filter( 'tiny_mce_plugins', function( $plugins ) {
-			return array_diff( $plugins, array( 'wpembed' ) );
-		} );
-		add_filter( 'rewrite_rules_array', function( $rules ) {
-			foreach ( $rules as $rule => $rewrite ) {
-				if ( false !== strpos( $rewrite, 'embed=true' ) ) {
-					unset( $rules[ $rule ] );
+		add_filter(
+			'tiny_mce_plugins',
+			function( $plugins ) {
+				return array_diff( $plugins, array( 'wpembed' ) );
+			} 
+		);
+		add_filter(
+			'rewrite_rules_array',
+			function( $rules ) {
+				foreach ( $rules as $rule => $rewrite ) {
+					if ( false !== strpos( $rewrite, 'embed=true' ) ) {
+						unset( $rules[ $rule ] );
+					}
 				}
-			}
-			return $rules;
-		} );
+				return $rules;
+			} 
+		);
 		remove_filter( 'pre_oembed_result', 'wp_filter_pre_oembed_result', 10 );
 	}
 }

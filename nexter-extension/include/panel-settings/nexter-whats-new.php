@@ -14,15 +14,15 @@ if ( ! class_exists( 'Nxt_Ext_Whats_New' ) ) {
 	class Nxt_Ext_Whats_New {
 
 
-        /**
+		/**
 		 * Member Variable
 		 */
 		private static $instance;
 
-        const FEED_URL = 'https://nexterwp.com/wp-content/nxt-feed-cache.json';
-        const TRANSIENT_ITEM = 'nxtext_latest_whats_new_item';
-        const OPTION_NAME      = 'nxt_ext_menu_notice_count';
-        const TRANSIENT_FEED   = 'nxtext_cached_feed_data';
+		const FEED_URL       = 'https://nexterwp.com/wp-content/nxt-feed-cache.json';
+		const TRANSIENT_ITEM = 'nxtext_latest_whats_new_item';
+		const OPTION_NAME    = 'nxt_ext_menu_notice_count';
+		const TRANSIENT_FEED = 'nxtext_cached_feed_data';
 
 		/**
 		 *  Initiator
@@ -45,7 +45,7 @@ if ( ! class_exists( 'Nxt_Ext_Whats_New' ) ) {
 			add_action( 'wp_ajax_nxtext_fetch_whats_new', [ $this, 'nxtext_fetch_whats_new_data' ] );
 		}
 
-        /**
+		/**
 		 * Initialize option with default values if not exists
 		 */
 		private function initialize_notice_data() {
@@ -59,11 +59,11 @@ if ( ! class_exists( 'Nxt_Ext_Whats_New' ) ) {
 			}
 		}
 
-        /**
+		/**
 		 * Unified function to fetch or return cached feed data
 		 */
 		private function get_or_fetch_feed_items() {
-            
+			
 			$cached = get_transient( self::TRANSIENT_FEED );
 			if ( $cached && is_array( $cached ) ) {
 				return $cached;
@@ -81,14 +81,14 @@ if ( ! class_exists( 'Nxt_Ext_Whats_New' ) ) {
 				return [];
 			}
 
-			$results = isset($data['all']) ? $data['all'] : (isset($data['nexter-extension']) ? $data['nexter-extension'] : []);
+			$results = isset( $data['all'] ) ? $data['all'] : (isset( $data['nexter-extension'] ) ? $data['nexter-extension'] : []);
 
 			set_transient( self::TRANSIENT_FEED, $results, 4 * DAY_IN_SECONDS );
 
 			return $results;
 		}
 
-        /**
+		/**
 		 * Caches the feed when the welcome page is accessed
 		 */
 		public function nxtext_cache_whats_new_feed() {
@@ -98,7 +98,7 @@ if ( ! class_exists( 'Nxt_Ext_Whats_New' ) ) {
 			$this->get_or_fetch_feed_items(); // Will set the transient if not present
 		}
 
-        /**
+		/**
 		 * AJAX: Return cached feed data
 		 */
 		public function nxtext_fetch_whats_new_data() {
@@ -116,7 +116,7 @@ if ( ! class_exists( 'Nxt_Ext_Whats_New' ) ) {
 			wp_send_json_success( $cached );
 		}
 
-        /**
+		/**
 		 * Weekly: Checks for new item and stores if different
 		 */
 		public function check_and_store_latest_item() {
@@ -156,7 +156,7 @@ if ( ! class_exists( 'Nxt_Ext_Whats_New' ) ) {
 			}
 		}
 
-    }
+	}
 
-    Nxt_Ext_Whats_New::get_instance();
+	Nxt_Ext_Whats_New::get_instance();
 }

@@ -34,19 +34,19 @@ class Nxt_Options {
 	 * Maps a short alias to the real wp_options option_name.
 	 */
 	private static $keys = [
-		'extra_ext'        => 'nexter_extra_ext_options',
-		'performance'      => 'nexter_site_performance',
-		'security'         => 'nexter_site_security',
-		'white_label'      => 'nexter_white_label',
-		'disabled_images'  => 'nexter_disabled_images',
-		'custom_img_sizes' => 'nexter_custom_image_sizes',
-		'elementor_icons'  => 'nexter_elementor_icons',
-		'google_fonts'     => 'nexter_google_fonts',
-		'activate'         => 'nexter_activate',
-		'settings_opts'    => 'nexter_settings_opts',
-		'builder_switcher' => 'nxt_builder_switcher',
-		'tpgb_white_label' => 'tpgb_white_label',
-		'notice_count'     => 'nxt_ext_menu_notice_count',
+		'extra_ext'            => 'nexter_extra_ext_options',
+		'performance'          => 'nexter_site_performance',
+		'security'             => 'nexter_site_security',
+		'white_label'          => 'nexter_white_label',
+		'disabled_images'      => 'nexter_disabled_images',
+		'custom_img_sizes'     => 'nexter_custom_image_sizes',
+		'elementor_icons'      => 'nexter_elementor_icons',
+		'google_fonts'         => 'nexter_google_fonts',
+		'activate'             => 'nexter_activate',
+		'settings_opts'        => 'nexter_settings_opts',
+		'builder_switcher'     => 'nxt_builder_switcher',
+		'tpgb_white_label'     => 'tpgb_white_label',
+		'notice_count'         => 'nxt_ext_menu_notice_count',
 		'tpgb_connection_data' => 'tpgb_connection_data',
 	];
 
@@ -204,7 +204,7 @@ class Nxt_Options {
 		self::$hooks_registered = true;
 
 		foreach ( self::$keys as $option_name ) {
-			$name = $option_name; // capture for closure
+			$name     = $option_name; // capture for closure
 			$flush_cb = function() use ( $name ) {
 				self::flush( $name );
 			};
@@ -223,7 +223,7 @@ class Nxt_Options {
 		self::register_hooks();
 
 		if ( ! array_key_exists( $alias, self::$cache ) ) {
-			$raw = get_option( self::$keys[ $alias ] );
+			$raw                   = get_option( self::$keys[ $alias ] );
 			self::$cache[ $alias ] = in_array( $alias, self::$tree_option_aliases, true )
 				? self::coerce_option_tree_to_array( $raw )
 				: $raw;

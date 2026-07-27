@@ -30,7 +30,15 @@ class Nexter_Content_SEO_Social_Meta {
 	const META_TITLE       = '_nxt_seo_title';
 	const META_DESCRIPTION = '_nxt_seo_description';
 	/** Matches Nexter_Content_SeoRank Twitter creator meta (singular + term). */
-	const META_TW_CREATOR  = '_nxt_seo_tw_creator';
+	const META_TW_CREATOR = '_nxt_seo_tw_creator';
+
+	/**
+	 * CURLOPT_RESOLVE entries ("host:port:ip") pinned around the OG-image fetch. Populated only
+	 * for the duration of the single wp_remote_get() call in remote_image_dimensions().
+	 *
+	 * @var string[]
+	 */
+	private static $og_probe_curl_resolve = array();
 
 	/**
 	 * Social profile URL keys (matches Social.jsx OTHER_ACCOUNTS).
@@ -56,7 +64,12 @@ class Nexter_Content_SEO_Social_Meta {
 	 */
 	public static function init() {
 		add_action( 'wp_head', array( __CLASS__, 'output_social_meta' ), 5 );
-		add_action( 'wp_head', array( __CLASS__, 'output_social_profiles' ), 6 );
+		// Contribute social-profile URLs to the schema module's single Organization node's sameAs.
+		// Registered as a filter (not a wp_head emitter) because Nexter_Content_SEO_Schema::print_schema
+		// runs at wp_head priority 1 — a filter added inside a priority-6 action would register too
+		// late to be read. This replaces the standalone Organization JSON-LD block this class used to
+		// print, which produced a second, @id-less Organization entity uncoordinated with the graph.
+		add_filter( 'nexter_content_seo_organization_same_as', array( __CLASS__, 'add_profiles_to_organization_same_as' ) );
 	}
 
 	/**
@@ -67,9 +80,8 @@ class Nexter_Content_SEO_Social_Meta {
 			return;
 		}
 		list( $og_image_url, $twitter_image_url ) = self::get_og_and_twitter_image_urls();
-		/* if ( empty( $og_image_url ) && empty( $twitter_image_url ) ) {
-			return;
-		} */
+		// No early return when both image URLs are empty: title/description-only social output is
+		// intentionally still emitted for pages that have no social image.
 		if ( empty( $og_image_url ) ) {
 			$og_image_url = $twitter_image_url;
 		}
@@ -77,7 +89,7 @@ class Nexter_Content_SEO_Social_Meta {
 			$twitter_image_url = $og_image_url;
 		}
 
-		$options   = Nexter_Content_SEO::get_options();
+		$options     = Nexter_Content_SEO::get_options();
 		$card_layout = ! empty( $options['twitter_card_layout'] ) ? $options['twitter_card_layout'] : 'summary_large_image';
 
 		// Home Page panel OG image overrides the default for the homepage / blog index.
@@ -103,27 +115,44 @@ class Nexter_Content_SEO_Social_Meta {
 		// fallback as the <title> tag instead of resolving the global template
 		// against the static page (which would leak its post title into og:title).
 		$front_id = (int) get_option( 'page_on_front' );
-		if ( is_front_page() && $front_id > 0 && self::front_page_has_explicit_seo_meta( $front_id ) ) {
-			$post_obj = get_post( $front_id );
-			if ( $post_obj instanceof WP_Post ) {
-				$og_title  = self::get_open_graph_title_for_post( $post_obj );
-				$tw_title  = self::get_twitter_title_for_post( $post_obj );
-				$og_desc   = self::get_open_graph_description_for_post( $post_obj );
-				$tw_desc   = self::get_twitter_description_for_post( $post_obj );
-			} else {
-				$og_title = $tw_title = self::get_social_title();
-				$og_desc  = $tw_desc = self::get_social_description();
+		if ( is_front_page() || is_home() ) {
+			// Homepage / blog index. Resolve each of the four social outputs INDEPENDENTLY against
+			// the real <title> / <meta description> the page actually emits, overridden only by an
+			// EXPLICIT per-network social field (Facebook / Twitter tab on the static front page),
+			// with og<->twitter cross-fill so setting one network's value matches both cards.
+			// Previously a single non-empty field among six (including the main SEO
+			// title/description meta) flipped ALL four tags onto a per-post/global-template
+			// resolution that diverged from the actual <title>/<meta description> — so a stray
+			// value in one field silently corrupted every social tag.
+			$real_title = ( class_exists( 'Nexter_Content_SEO_Title' ) && method_exists( 'Nexter_Content_SEO_Title', 'filter_document_title' ) )
+				? (string) Nexter_Content_SEO_Title::filter_document_title( '' )
+				: self::get_social_title();
+			if ( '' === trim( $real_title ) ) {
+				$real_title = self::get_social_title();
 			}
-		} elseif ( is_front_page() || is_home() ) {
-			$og_title = $tw_title = self::get_social_title();
-			$og_desc  = $tw_desc = self::get_social_description();
+			$real_desc = self::get_social_description();
+
+			$fb_t = $tw_t = $fb_d = $tw_d = '';
+			if ( is_front_page() && $front_id > 0 ) {
+				$post_obj = get_post( $front_id );
+				if ( $post_obj instanceof WP_Post ) {
+					$fb_t = self::resolve_post_meta_title( get_post_meta( $front_id, self::META_FB_TITLE, true ), $post_obj );
+					$tw_t = self::resolve_post_meta_title( get_post_meta( $front_id, self::META_TW_TITLE, true ), $post_obj );
+					$fb_d = self::resolve_post_meta_description( get_post_meta( $front_id, self::META_FB_DESC, true ), $post_obj );
+					$tw_d = self::resolve_post_meta_description( get_post_meta( $front_id, self::META_TW_DESC, true ), $post_obj );
+				}
+			}
+			$og_title = '' !== $fb_t ? $fb_t : ( '' !== $tw_t ? $tw_t : $real_title );
+			$tw_title = '' !== $tw_t ? $tw_t : ( '' !== $fb_t ? $fb_t : $real_title );
+			$og_desc  = '' !== $fb_d ? $fb_d : ( '' !== $tw_d ? $tw_d : $real_desc );
+			$tw_desc  = '' !== $tw_d ? $tw_d : ( '' !== $fb_d ? $fb_d : $real_desc );
 		} elseif ( is_singular() ) {
 			$post_obj = get_queried_object();
 			if ( $post_obj instanceof WP_Post ) {
-				$og_title  = self::get_open_graph_title_for_post( $post_obj );
-				$tw_title  = self::get_twitter_title_for_post( $post_obj );
-				$og_desc   = self::get_open_graph_description_for_post( $post_obj );
-				$tw_desc   = self::get_twitter_description_for_post( $post_obj );
+				$og_title = self::get_open_graph_title_for_post( $post_obj );
+				$tw_title = self::get_twitter_title_for_post( $post_obj );
+				$og_desc  = self::get_open_graph_description_for_post( $post_obj );
+				$tw_desc  = self::get_twitter_description_for_post( $post_obj );
 			} else {
 				$og_title = $tw_title = self::get_social_title();
 				$og_desc  = $tw_desc = self::get_social_description();
@@ -184,7 +213,7 @@ class Nexter_Content_SEO_Social_Meta {
 		if ( ! empty( $og_desc ) ) {
 			echo '<meta property="og:description" content="' . esc_attr( $og_desc ) . '" />' . "\n";
 		}
-		if( ! empty( $og_image_url ) ) {
+		if ( ! empty( $og_image_url ) ) {
 			echo '<meta property="og:image" content="' . esc_url( $og_image_url ) . '" />' . "\n";
 			echo '<meta property="og:image:secure_url" content="' . esc_url( $og_image_url ) . '" />' . "\n";
 			
@@ -212,7 +241,7 @@ class Nexter_Content_SEO_Social_Meta {
 		if ( ! empty( $tw_desc ) ) {
 			echo '<meta name="twitter:description" content="' . esc_attr( $tw_desc ) . '" />' . "\n";
 		}
-		if( ! empty( $twitter_image_url ) ) {
+		if ( ! empty( $twitter_image_url ) ) {
 			echo '<meta name="twitter:image" content="' . esc_url( $twitter_image_url ) . '" />' . "\n";
 			$tw_image_alt = self::resolve_og_image_alt( $twitter_image_url, $tw_title );
 			if ( '' !== $tw_image_alt ) {
@@ -266,31 +295,31 @@ class Nexter_Content_SEO_Social_Meta {
 	}
 
 	/**
-	 * Output social profile meta tags (og:see_also, sameAs-compatible).
-	 * Uses profile URLs from Social settings (OTHER_ACCOUNTS + Facebook, X).
+	 * Feed configured social-profile URLs into the schema module's Organization node `sameAs`, so
+	 * they attach to the single, @id-bearing Organization entity in the JSON-LD @graph instead of a
+	 * second, standalone Organization script this class used to emit (which produced two
+	 * uncoordinated Organization entities on the homepage). Hooked on the
+	 * nexter_content_seo_organization_same_as filter from init(). `og:see_also` was previously
+	 * emitted here too but was dropped: it is not a valid global Open Graph property, and social
+	 * profiles belong in JSON-LD sameAs, which is what Google / consumers actually read.
+	 *
+	 * @param mixed $existing Existing sameAs value (string, array, or empty) from the schema row.
+	 * @return mixed Merged, de-duplicated list of profile URLs, or the original value when none.
 	 */
-	public static function output_social_profiles() {
+	public static function add_profiles_to_organization_same_as( $existing ) {
 		$urls       = self::get_social_profile_urls();
 		$valid_urls = array_values( array_filter( array_map( 'esc_url_raw', $urls ) ) );
 		if ( empty( $valid_urls ) ) {
-			return;
+			return $existing;
 		}
-		if ( ! is_front_page() && ! is_home() ) {
-			return;
+		if ( is_array( $existing ) ) {
+			$existing_list = $existing;
+		} elseif ( is_string( $existing ) && '' !== trim( $existing ) ) {
+			$existing_list = array( $existing );
+		} else {
+			$existing_list = array();
 		}
-		// Note: `og:see_also` was removed — it is not a valid global Open Graph property (OGP
-		// defines it only on specific object types). Social profiles belong in JSON-LD sameAs,
-		// which is emitted below and is what Google/consumers actually read.
-
-		// JSON-LD sameAs for Organization (search engine compatibility).
-		echo '<script type="application/ld+json">' . "\n";
-		echo wp_json_encode( array(
-			'@context' => 'https://schema.org',
-			'@type'    => 'Organization',
-			'url'      => home_url( '/' ),
-			'sameAs'   => $valid_urls,
-		) ) . "\n";
-		echo '</script>' . "\n";
+		return array_values( array_unique( array_merge( $existing_list, $valid_urls ) ) );
 	}
 
 	/**
@@ -470,6 +499,12 @@ class Nexter_Content_SEO_Social_Meta {
 		if ( '' !== $t ) {
 			return $t;
 		}
+		// Cross-fill from the Twitter title so og:title / twitter:title stay in sync (same cascade
+		// as singular posts). Only fills when the FB field is empty.
+		$t = self::resolve_term_meta_title( get_term_meta( $tid, self::META_TW_TITLE, true ), $term );
+		if ( '' !== $t ) {
+			return $t;
+		}
 		$t = self::resolve_term_meta_title( get_term_meta( $tid, self::META_TITLE, true ), $term );
 		if ( '' !== $t ) {
 			return $t;
@@ -487,6 +522,12 @@ class Nexter_Content_SEO_Social_Meta {
 	private static function get_twitter_title_for_term( WP_Term $term ) {
 		$tid = (int) $term->term_id;
 		$t   = self::resolve_term_meta_title( get_term_meta( $tid, self::META_TW_TITLE, true ), $term );
+		if ( '' !== $t ) {
+			return $t;
+		}
+		// Cross-fill from the Facebook title so twitter:title / og:title stay in sync (same cascade
+		// as singular posts). Only fills when the TW field is empty.
+		$t = self::resolve_term_meta_title( get_term_meta( $tid, self::META_FB_TITLE, true ), $term );
 		if ( '' !== $t ) {
 			return $t;
 		}
@@ -510,12 +551,18 @@ class Nexter_Content_SEO_Social_Meta {
 		if ( '' !== $d ) {
 			return $d;
 		}
+		// Cross-fill from the Twitter description so og / twitter descriptions stay in sync (same
+		// cascade as singular posts). Only fills when the FB field is empty.
+		$d = self::resolve_term_meta_description( get_term_meta( $tid, self::META_TW_DESC, true ), $term );
+		if ( '' !== $d ) {
+			return $d;
+		}
 		$d = self::resolve_term_meta_description( get_term_meta( $tid, self::META_DESCRIPTION, true ), $term );
 		if ( '' !== $d ) {
 			return $d;
 		}
 		list( , $global_desc ) = self::get_resolved_global_title_and_description_for_term( $term );
-		$global_desc = is_string( $global_desc ) ? trim( $global_desc ) : '';
+		$global_desc           = is_string( $global_desc ) ? trim( $global_desc ) : '';
 		if ( '' !== $global_desc ) {
 			return $global_desc;
 		}
@@ -534,12 +581,18 @@ class Nexter_Content_SEO_Social_Meta {
 		if ( '' !== $d ) {
 			return $d;
 		}
+		// Cross-fill from the Facebook description so twitter / og descriptions stay in sync (same
+		// cascade as singular posts). Only fills when the TW field is empty.
+		$d = self::resolve_term_meta_description( get_term_meta( $tid, self::META_FB_DESC, true ), $term );
+		if ( '' !== $d ) {
+			return $d;
+		}
 		$d = self::resolve_term_meta_description( get_term_meta( $tid, self::META_DESCRIPTION, true ), $term );
 		if ( '' !== $d ) {
 			return $d;
 		}
 		list( , $global_desc ) = self::get_resolved_global_title_and_description_for_term( $term );
-		$global_desc = is_string( $global_desc ) ? trim( $global_desc ) : '';
+		$global_desc           = is_string( $global_desc ) ? trim( $global_desc ) : '';
 		if ( '' !== $global_desc ) {
 			return $global_desc;
 		}
@@ -597,29 +650,34 @@ class Nexter_Content_SEO_Social_Meta {
 			return '';
 		}
 		if ( strpos( $raw, '%' ) !== false || strpos( $raw, '@' ) !== false ) {
-			$t = self::normalize_template_for_variables( $raw );
-			return trim( wp_strip_all_tags( Nexter_Content_SEO_Settings::replace_variables( $t, array( 'post' => $post ) ) ) );
+			$t   = self::normalize_template_for_variables( $raw );
+			$raw = (string) Nexter_Content_SEO_Settings::replace_variables( $t, array( 'post' => $post ) );
 		}
-		return trim( wp_strip_all_tags( $raw ) );
+		// Run through the SAME cleanup/truncation as <meta name="description"> (builder-placeholder
+		// stripping + word-boundary length cap), so a raw value that renders cleanly in the plain
+		// description tag can't leak page-builder placeholder text or an over-long, mid-word-cut
+		// string into og:description / twitter:description.
+		return self::clean_social_description( $raw );
 	}
 
 	/**
-	 * Excerpt / product short description / trimmed content when no meta or global template applies.
+	 * Apply the main meta-description cleanup/truncation to a social description string so
+	 * og:/twitter: descriptions match what <meta name="description"> emits (shared placeholder
+	 * stripping + length cap). Falls back to a local tag-strip + whitespace collapse when the
+	 * description module isn't loaded.
 	 *
-	 * @param WP_Post $post Post.
+	 * @param string $text Raw description text.
 	 * @return string
 	 */
-	/**
-	 * Resolve og:image width/height for a social image URL.
-	 *
-	 * A resized image URL carries its dimensions in the filename (e.g. name-1200x630.jpg), which
-	 * attachment_url_to_postid() can't match against the stored full-size URL. Read the size from
-	 * the suffix first (it's the actual served size), then fall back to the attachment metadata
-	 * for a full-size URL.
-	 *
-	 * @param string $url Image URL.
-	 * @return array{width?:int,height?:int}
-	 */
+	private static function clean_social_description( $text ) {
+		$text = (string) $text;
+		if ( class_exists( 'Nexter_Content_SEO_Description' ) && method_exists( 'Nexter_Content_SEO_Description', 'cleanup_text' ) ) {
+			return Nexter_Content_SEO_Description::cleanup_text( $text );
+		}
+		$text = trim( wp_strip_all_tags( $text ) );
+		return (string) preg_replace( '/\s+/', ' ', $text );
+	}
+
 	/**
 	 * Resolve alt text for a social image: the attachment's stored alt when the URL maps to a
 	 * local attachment (size suffix tolerated), otherwise the given title fallback.
@@ -643,6 +701,17 @@ class Nexter_Content_SEO_Social_Meta {
 		return trim( (string) $fallback_title );
 	}
 
+	/**
+	 * Resolve og:image width/height for a social image URL.
+	 *
+	 * A resized image URL carries its dimensions in the filename (e.g. name-1200x630.jpg), which
+	 * attachment_url_to_postid() can't match against the stored full-size URL. Read the size from
+	 * the suffix first (it's the actual served size), then fall back to the attachment metadata
+	 * for a full-size URL.
+	 *
+	 * @param string $url Image URL.
+	 * @return array{width?:int,height?:int}
+	 */
 	private static function resolve_og_image_dimensions( $url ) {
 		$url = (string) $url;
 		if ( '' === $url ) {
@@ -651,7 +720,10 @@ class Nexter_Content_SEO_Social_Meta {
 
 		// 1. WP resize suffix in the URL (-WxH.ext) — cheapest, no I/O, no cache needed.
 		if ( preg_match( '/-(\d+)x(\d+)\.(?:jpe?g|png|gif|webp|avif)(?:\?.*)?$/i', $url, $m ) ) {
-			return array( 'width' => (int) $m[1], 'height' => (int) $m[2] );
+			return array(
+			'width'  => (int) $m[1],
+			'height' => (int) $m[2]
+			);
 		}
 
 		// 2. Cache for every I/O-bound branch below (including a negative result), keyed on the URL
@@ -659,7 +731,10 @@ class Nexter_Content_SEO_Social_Meta {
 		$cache_key = 'nxt_oging_dim_' . md5( $url );
 		$cached    = get_transient( $cache_key );
 		if ( is_array( $cached ) ) {
-			return ! empty( $cached['width'] ) ? array( 'width' => (int) $cached['width'], 'height' => (int) $cached['height'] ) : array();
+			return ! empty( $cached['width'] ) ? array(
+			'width'  => (int) $cached['width'],
+			'height' => (int) $cached['height']
+			) : array();
 		}
 
 		$dims = array();
@@ -669,7 +744,10 @@ class Nexter_Content_SEO_Social_Meta {
 		if ( $attachment_id ) {
 			$metadata = wp_get_attachment_metadata( $attachment_id );
 			if ( ! empty( $metadata['width'] ) && ! empty( $metadata['height'] ) ) {
-				$dims = array( 'width' => (int) $metadata['width'], 'height' => (int) $metadata['height'] );
+				$dims = array(
+				'width'  => (int) $metadata['width'],
+				'height' => (int) $metadata['height']
+				);
 			}
 		}
 
@@ -689,7 +767,10 @@ class Nexter_Content_SEO_Social_Meta {
 
 		set_transient(
 			$cache_key,
-			! empty( $dims ) ? $dims : array( 'width' => 0, 'height' => 0 ),
+			! empty( $dims ) ? $dims : array(
+			'width'  => 0,
+			'height' => 0
+			),
 			(int) apply_filters( 'nexter_content_seo_og_image_dim_ttl', DAY_IN_SECONDS )
 		);
 
@@ -730,7 +811,10 @@ class Nexter_Content_SEO_Social_Meta {
 		}
 		$size = @getimagesize( $real_path ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged -- bad image returns false, handled below.
 		if ( is_array( $size ) && ! empty( $size[0] ) && ! empty( $size[1] ) ) {
-			return array( 'width' => (int) $size[0], 'height' => (int) $size[1] );
+			return array(
+			'width'  => (int) $size[0],
+			'height' => (int) $size[1]
+			);
 		}
 		return array();
 	}
@@ -746,30 +830,73 @@ class Nexter_Content_SEO_Social_Meta {
 	 * @return bool
 	 */
 	private static function remote_probe_allowed( $url ) {
+		return ! empty( self::resolve_validated_public_ips( $url ) );
+	}
+
+	/**
+	 * Resolve a URL's host to the set of public IPs it points at, or [] if the target is not
+	 * safe to fetch. Resolves BOTH A (IPv4) and AAAA (IPv6) records so an IPv6-only host can't
+	 * slip past an IPv4-only guard, and fails closed: if the host is unresolvable, or ANY of its
+	 * resolved addresses is private / reserved / loopback / link-local (e.g. 127.0.0.1, 10/8,
+	 * 169.254.169.254, ::1, fc00::/7, fe80::/10), the whole URL is refused. The returned IPs are
+	 * pinned into the connection by remote_image_dimensions() to close the DNS-rebinding window.
+	 *
+	 * @param string $url URL to resolve.
+	 * @return string[] Validated public IPs, or [] when the URL must not be probed.
+	 */
+	private static function resolve_validated_public_ips( $url ) {
 		$parts  = wp_parse_url( (string) $url );
 		$scheme = isset( $parts['scheme'] ) ? strtolower( $parts['scheme'] ) : '';
 		$host   = isset( $parts['host'] ) ? $parts['host'] : '';
 		if ( ( 'http' !== $scheme && 'https' !== $scheme ) || '' === $host ) {
-			return false;
+			return array();
 		}
 		$ips = array();
 		if ( filter_var( $host, FILTER_VALIDATE_IP ) ) {
 			$ips[] = $host;
-		} elseif ( function_exists( 'gethostbynamel' ) ) {
-			$resolved = gethostbynamel( $host );
-			if ( is_array( $resolved ) ) {
-				$ips = $resolved;
+		} else {
+			if ( function_exists( 'gethostbynamel' ) ) {
+				$v4 = gethostbynamel( $host );
+				if ( is_array( $v4 ) ) {
+					$ips = array_merge( $ips, $v4 );
+				}
+			}
+			if ( function_exists( 'dns_get_record' ) ) {
+				$aaaa = @dns_get_record( $host, DNS_AAAA ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged -- returns false on failure, handled below.
+				if ( is_array( $aaaa ) ) {
+					foreach ( $aaaa as $rec ) {
+						if ( ! empty( $rec['ipv6'] ) ) {
+							$ips[] = $rec['ipv6'];
+						}
+					}
+				}
 			}
 		}
 		if ( empty( $ips ) ) {
-			return false; // Unresolvable (or IPv6-only) — do not probe.
+			return array(); // Unresolvable — do not probe.
 		}
+		$ips = array_unique( $ips );
 		foreach ( $ips as $ip ) {
 			if ( ! filter_var( $ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE ) ) {
-				return false; // Private / reserved / loopback / link-local.
+				return array(); // Any private / reserved / loopback / link-local address → fail closed.
 			}
 		}
-		return true;
+		return array_values( $ips );
+	}
+
+	/**
+	 * cURL pin: force the OG-image fetch to connect to exactly the IPs we already validated, so a
+	 * DNS record that changes between validation and connection (DNS rebinding / TOCTOU) can't
+	 * redirect the request to an internal address. Scoped: only fires while $og_probe_curl_resolve
+	 * is populated around the single wp_remote_get() call in remote_image_dimensions().
+	 *
+	 * @param resource $handle cURL handle.
+	 * @return void
+	 */
+	public static function og_probe_pin_curl( $handle ) {
+		if ( ! empty( self::$og_probe_curl_resolve ) && function_exists( 'curl_setopt' ) ) {
+			curl_setopt( $handle, CURLOPT_RESOLVE, self::$og_probe_curl_resolve ); // phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_setopt -- pinning validated IPs on the WP HTTP cURL handle.
+		}
 	}
 
 	/**
@@ -784,18 +911,39 @@ class Nexter_Content_SEO_Social_Meta {
 		if ( ! function_exists( 'getimagesizefromstring' ) ) {
 			return array();
 		}
+		// Re-resolve + validate here (not just at the earlier gate) and pin the connection to
+		// exactly these IPs, so a host that rebinds to an internal address between the check and
+		// the fetch can't be reached. Empty means the target is no longer safe — bail.
+		$ips = self::resolve_validated_public_ips( $url );
+		if ( empty( $ips ) ) {
+			return array();
+		}
+		$parts                       = wp_parse_url( $url );
+		$host                        = isset( $parts['host'] ) ? $parts['host'] : '';
+		$port                        = isset( $parts['port'] ) ? (int) $parts['port'] : ( ( isset( $parts['scheme'] ) && 'http' === strtolower( $parts['scheme'] ) ) ? 80 : 443 );
+		self::$og_probe_curl_resolve = array();
+		foreach ( $ips as $ip ) {
+			self::$og_probe_curl_resolve[] = $host . ':' . $port . ':' . $ip;
+		}
 		$timeout = (int) apply_filters( 'nexter_content_seo_og_remote_probe_timeout', 5 );
-		$resp    = wp_remote_get(
+		// Cap the download: image dimensions live in the first bytes, so we never need a large
+		// body. Stops a hostile/oversized target from spilling memory. Default 5 MB, filterable.
+		$max_bytes = (int) apply_filters( 'nexter_content_seo_og_remote_probe_max_bytes', 5 * MB_IN_BYTES );
+		add_action( 'http_api_curl', array( __CLASS__, 'og_probe_pin_curl' ), 10, 1 );
+		$resp = wp_remote_get(
 			$url,
 			array(
-				'timeout'     => max( 2, $timeout ),
+				'timeout'             => max( 2, $timeout ),
 				// redirection => 0 so a public URL can't 302 to an internal host (SSRF bypass);
 				// sslverify => true — never disable TLS verification on a server-side fetch.
-				'redirection' => 0,
-				'sslverify'   => true,
-				'user-agent'  => 'Nexter-SEO/1.0',
+				'redirection'         => 0,
+				'sslverify'           => true,
+				'limit_response_size' => max( 1, $max_bytes ),
+				'user-agent'          => 'Nexter-SEO/1.0',
 			)
 		);
+		remove_action( 'http_api_curl', array( __CLASS__, 'og_probe_pin_curl' ), 10 );
+		self::$og_probe_curl_resolve = array();
 		if ( is_wp_error( $resp ) ) {
 			return array();
 		}
@@ -809,7 +957,10 @@ class Nexter_Content_SEO_Social_Meta {
 		}
 		$size = @getimagesizefromstring( $body ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged -- non-image returns false, handled below.
 		if ( is_array( $size ) && ! empty( $size[0] ) && ! empty( $size[1] ) ) {
-			return array( 'width' => (int) $size[0], 'height' => (int) $size[1] );
+			return array(
+			'width'  => (int) $size[0],
+			'height' => (int) $size[1]
+			);
 		}
 		return array();
 	}
@@ -820,18 +971,22 @@ class Nexter_Content_SEO_Social_Meta {
 			if ( $wc_product && is_a( $wc_product, 'WC_Product' ) ) {
 				$short = $wc_product->get_short_description();
 				if ( is_string( $short ) && '' !== trim( $short ) ) {
-					return wp_strip_all_tags( $short );
+					return self::clean_social_description( $short );
 				}
 			}
 		}
-		// Strip page-builder placeholder copy so it never leaks into og:/twitter: descriptions.
-		$auto = has_excerpt( $post )
-			? wp_strip_all_tags( get_the_excerpt( $post ) )
-			: wp_trim_words( wp_strip_all_tags( $post->post_content ), 30 );
-		if ( class_exists( 'Nexter_Content_SEO_Description' ) && method_exists( 'Nexter_Content_SEO_Description', 'strip_builder_placeholders' ) ) {
-			$auto = Nexter_Content_SEO_Description::strip_builder_placeholders( $auto );
+		// Expand shortcodes in the raw content fallback so a shortcode-built page yields real text
+		// (not literal [shortcode] markup), then run the shared cleanup: strips page-builder
+		// placeholder copy and applies the same length cap as the main meta description, so none of
+		// it leaks into og:/twitter: descriptions.
+		if ( has_excerpt( $post ) ) {
+			$auto = get_the_excerpt( $post );
+		} else {
+			$raw  = (string) $post->post_content;
+			$raw  = ( false !== strpos( $raw, '[' ) ) ? strip_shortcodes( $raw ) : $raw;
+			$auto = wp_trim_words( wp_strip_all_tags( $raw ), 30 );
 		}
-		return $auto;
+		return self::clean_social_description( $auto );
 	}
 
 	/**
@@ -846,10 +1001,12 @@ class Nexter_Content_SEO_Social_Meta {
 		if ( '' !== $t ) {
 			return $t;
 		}
-		/* $t = self::resolve_post_meta_title( get_post_meta( $pid, self::META_TW_TITLE, true ), $post );
+		// Cross-fill from the Twitter title so setting only one network's value keeps og:title and
+		// twitter:title in sync (as the docblock promises). Only fills when the FB field is empty.
+		$t = self::resolve_post_meta_title( get_post_meta( $pid, self::META_TW_TITLE, true ), $post );
 		if ( '' !== $t ) {
 			return $t;
-		} */
+		}
 		$t = self::resolve_post_meta_title( get_post_meta( $pid, self::META_TITLE, true ), $post );
 		if ( '' !== $t ) {
 			return $t;
@@ -870,10 +1027,12 @@ class Nexter_Content_SEO_Social_Meta {
 		if ( '' !== $t ) {
 			return $t;
 		}
-		/* $t = self::resolve_post_meta_title( get_post_meta( $pid, self::META_FB_TITLE, true ), $post );
+		// Cross-fill from the Facebook title so a single network value keeps twitter:title and
+		// og:title in sync (as the docblock promises). Only fills when the TW field is empty.
+		$t = self::resolve_post_meta_title( get_post_meta( $pid, self::META_FB_TITLE, true ), $post );
 		if ( '' !== $t ) {
 			return $t;
-		} */
+		}
 		$t = self::resolve_post_meta_title( get_post_meta( $pid, self::META_TITLE, true ), $post );
 		if ( '' !== $t ) {
 			return $t;
@@ -894,16 +1053,18 @@ class Nexter_Content_SEO_Social_Meta {
 		if ( '' !== $d ) {
 			return $d;
 		}
-		/* $d = self::resolve_post_meta_description( get_post_meta( $pid, self::META_TW_DESC, true ), $post );
+		// Cross-fill from the Twitter description so a single network value keeps og:description
+		// and twitter:description in sync. Only fills when the FB field is empty.
+		$d = self::resolve_post_meta_description( get_post_meta( $pid, self::META_TW_DESC, true ), $post );
 		if ( '' !== $d ) {
 			return $d;
-		} */
+		}
 		$d = self::resolve_post_meta_description( get_post_meta( $pid, self::META_DESCRIPTION, true ), $post );
 		if ( '' !== $d ) {
 			return $d;
 		}
 		list( , $global_desc ) = self::get_resolved_global_title_and_description_for_post( $post );
-		$global_desc = is_string( $global_desc ) ? trim( $global_desc ) : '';
+		$global_desc           = is_string( $global_desc ) ? trim( $global_desc ) : '';
 		if ( '' !== $global_desc ) {
 			return $global_desc;
 		}
@@ -922,16 +1083,18 @@ class Nexter_Content_SEO_Social_Meta {
 		if ( '' !== $d ) {
 			return $d;
 		}
-		/* $d = self::resolve_post_meta_description( get_post_meta( $pid, self::META_FB_DESC, true ), $post );
+		// Cross-fill from the Facebook description so a single network value keeps
+		// twitter:description and og:description in sync. Only fills when the TW field is empty.
+		$d = self::resolve_post_meta_description( get_post_meta( $pid, self::META_FB_DESC, true ), $post );
 		if ( '' !== $d ) {
 			return $d;
-		} */
+		}
 		$d = self::resolve_post_meta_description( get_post_meta( $pid, self::META_DESCRIPTION, true ), $post );
 		if ( '' !== $d ) {
 			return $d;
 		}
 		list( , $global_desc ) = self::get_resolved_global_title_and_description_for_post( $post );
-		$global_desc = is_string( $global_desc ) ? trim( $global_desc ) : '';
+		$global_desc           = is_string( $global_desc ) ? trim( $global_desc ) : '';
 		if ( '' !== $global_desc ) {
 			return $global_desc;
 		}
@@ -1020,7 +1183,7 @@ class Nexter_Content_SEO_Social_Meta {
 	private static function get_twitter_creator() {
 		if ( is_singular() ) {
 			$post_id = get_queried_object_id();
-			$meta   = get_post_meta( $post_id, self::META_TW_CREATOR, true );
+			$meta    = get_post_meta( $post_id, self::META_TW_CREATOR, true );
 			if ( ! empty( $meta ) && is_string( $meta ) ) {
 				return trim( $meta );
 			}
@@ -1158,9 +1321,9 @@ class Nexter_Content_SEO_Social_Meta {
 		if ( strpos( $locale, '_' ) === false ) {
 			$locale = strtolower( $locale ) . '_' . strtoupper( $locale );
 		} else {
-			$parts = explode( '_', $locale );
-			$lang  = strtolower( (string) $parts[0] );
-			$reg   = isset( $parts[1] ) ? strtoupper( (string) $parts[1] ) : strtoupper( $lang );
+			$parts  = explode( '_', $locale );
+			$lang   = strtolower( (string) $parts[0] );
+			$reg    = isset( $parts[1] ) ? strtoupper( (string) $parts[1] ) : strtoupper( $lang );
 			$locale = $lang . '_' . $reg;
 		}
 
@@ -1285,32 +1448,6 @@ class Nexter_Content_SEO_Social_Meta {
 		}
 
 		return array( $og, $twitter );
-	}
-
-	/**
-	 * Whether the static front page has any explicit Nexter SEO title/description
-	 * meta set via the per-post meta box. When false, the homepage uses the
-	 * site-level title/description fallback for social meta to match <title>.
-	 *
-	 * @param int $post_id Front-page post ID.
-	 * @return bool
-	 */
-	private static function front_page_has_explicit_seo_meta( $post_id ) {
-		$keys = array(
-			self::META_FB_TITLE,
-			self::META_TW_TITLE,
-			self::META_TITLE,
-			self::META_FB_DESC,
-			self::META_TW_DESC,
-			self::META_DESCRIPTION,
-		);
-		foreach ( $keys as $key ) {
-			$value = get_post_meta( (int) $post_id, $key, true );
-			if ( is_string( $value ) && '' !== trim( $value ) ) {
-				return true;
-			}
-		}
-		return false;
 	}
 
 	/**

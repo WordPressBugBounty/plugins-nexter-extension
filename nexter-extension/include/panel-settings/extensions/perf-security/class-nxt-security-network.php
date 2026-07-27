@@ -79,34 +79,38 @@ class Nxt_Security_Network {
 		// Disable REST API
 		if ( isset( $adv_sec_opt['disable_rest_api'] ) && ! empty( $adv_sec_opt['disable_rest_api'] ) ) {
 			$rest_api_mode = $adv_sec_opt['disable_rest_api'];
-			add_filter( 'rest_authentication_errors', function( $result ) use ( $rest_api_mode ) {
-				if ( ! empty( $result ) ) {
+			add_filter(
+				'rest_authentication_errors',
+				function( $result ) use ( $rest_api_mode ) {
+					if ( ! empty( $result ) ) {
+						return $result;
+					}
+
+					$check_disabled = false;
+					$rest_route     = isset( $GLOBALS['wp']->query_vars['rest_route'] ) ? $GLOBALS['wp']->query_vars['rest_route'] : '';
+
+					if ( ! empty( $rest_route ) && strpos( $rest_route, 'contact-form-7' ) !== false ) {
+						return $result;
+					}
+
+					if ( $rest_api_mode === 'non_admin' && ! current_user_can( 'manage_options' ) ) {
+						$check_disabled = true;
+					} elseif ( $rest_api_mode === 'logged_out' && ! is_user_logged_in() ) {
+						$check_disabled = true;
+					}
+
+					if ( $check_disabled ) {
+						return new WP_Error(
+							'rest_authentication_error',
+							__( 'Sorry, you do not have permission for REST API requests.', 'nexter-extension' ),
+							array( 'status' => 401 )
+						);
+					}
+
 					return $result;
-				}
-
-				$check_disabled = false;
-				$rest_route = isset( $GLOBALS['wp']->query_vars['rest_route'] ) ? $GLOBALS['wp']->query_vars['rest_route'] : '';
-
-				if ( ! empty( $rest_route ) && strpos( $rest_route, 'contact-form-7' ) !== false ) {
-					return $result;
-				}
-
-				if ( $rest_api_mode === 'non_admin' && ! current_user_can( 'manage_options' ) ) {
-					$check_disabled = true;
-				} elseif ( $rest_api_mode === 'logged_out' && ! is_user_logged_in() ) {
-					$check_disabled = true;
-				}
-
-				if ( $check_disabled ) {
-					return new WP_Error(
-						'rest_authentication_error',
-						__( 'Sorry, you do not have permission for REST API requests.', 'nexter-extension' ),
-						array( 'status' => 401 )
-					);
-				}
-
-				return $result;
-			}, 20 );
+				},
+				20 
+			);
 		}
 
 		// SVG Upload

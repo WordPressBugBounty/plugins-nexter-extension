@@ -6,7 +6,7 @@
  * @since 4.5.0
  */
 
-if (!defined('ABSPATH')) {
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
@@ -67,7 +67,8 @@ if ( ! class_exists( 'Nexter_Code_Snippets_File_Based' ) ) {
 		private function ensure_directory( $dir = '' ) {
 			// Pre-check: Ensure WP_CONTENT_DIR is writable before attempting any file operations
 			if ( ! $this->check_content_dir_writable() ) {
-				if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) { error_log( 'Nexter Extension: File-based snippets require write access. Directory ensure skipped.' ); }
+				if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+					error_log( 'Nexter Extension: File-based snippets require write access. Directory ensure skipped.' ); }
 				return false;
 			}
 
@@ -157,7 +158,7 @@ if ( ! class_exists( 'Nexter_Code_Snippets_File_Based' ) ) {
 				return false;
 			}
 
-			$file_path = wp_normalize_path( $file_path );
+			$file_path   = wp_normalize_path( $file_path );
 			$storage_dir = wp_normalize_path( $this->file_store );
 			
 			// Ensure storage directory is set
@@ -171,7 +172,7 @@ if ( ! class_exists( 'Nexter_Code_Snippets_File_Based' ) ) {
 			}
 			
 			// Ensure file path doesn't contain dangerous patterns
-			$dangerous_patterns = array( '..', '//', '\\', chr(0), "\0" );
+			$dangerous_patterns = array( '..', '//', '\\', chr( 0 ), "\0" );
 			foreach ( $dangerous_patterns as $pattern ) {
 				if ( strpos( $file_path, $pattern ) !== false ) {
 					return false;
@@ -194,7 +195,7 @@ if ( ! class_exists( 'Nexter_Code_Snippets_File_Based' ) ) {
 			}
 			
 			// Additional check: ensure realpath matches (prevents symlink attacks)
-			$real_path = realpath( $file_path );
+			$real_path    = realpath( $file_path );
 			$real_storage = realpath( $storage_dir );
 			
 			if ( false === $real_path || false === $real_storage ) {
@@ -320,19 +321,22 @@ if ( ! class_exists( 'Nexter_Code_Snippets_File_Based' ) ) {
 			
 			// Additional execution context check (must be in WordPress context)
 			if ( ! defined( 'ABSPATH' ) ) {
-				if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) { error_log( 'Nexter Extension: safe_include_file called outside WordPress context' ); }
+				if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+					error_log( 'Nexter Extension: safe_include_file called outside WordPress context' ); }
 				return false;
 			}
 
 			// Use static validation methods (more efficient than creating instance)
 			if ( ! self::is_valid_file_path_static( $file_path ) ) {
-				if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) { error_log( sprintf( 'Nexter Extension: Blocked invalid file execution attempt: %s', $file_path ) ); }
+				if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+					error_log( sprintf( 'Nexter Extension: Blocked invalid file execution attempt: %s', $file_path ) ); }
 				return false;
 			}
 
 			// Validate file content using static method
 			if ( ! self::is_valid_file_content_static( $file_path ) ) {
-				if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) { error_log( sprintf( 'Nexter Extension: Blocked file with invalid content: %s', $file_path ) ); }
+				if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+					error_log( sprintf( 'Nexter Extension: Blocked file with invalid content: %s', $file_path ) ); }
 				return false;
 			}
 
@@ -341,10 +345,12 @@ if ( ! class_exists( 'Nexter_Code_Snippets_File_Based' ) ) {
 				require_once $file_path;
 				return true;
 			} catch ( Exception $e ) {
-				if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) { error_log( sprintf( 'Nexter Extension: Error executing snippet file %s: %s', $file_path, $e->getMessage() ) ); }
+				if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+					error_log( sprintf( 'Nexter Extension: Error executing snippet file %s: %s', $file_path, $e->getMessage() ) ); }
 				return false;
 			} catch ( Error $e ) {
-				if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) { error_log( sprintf( 'Nexter Extension: Fatal error executing snippet file %s: %s', $file_path, $e->getMessage() ) ); }
+				if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+					error_log( sprintf( 'Nexter Extension: Fatal error executing snippet file %s: %s', $file_path, $e->getMessage() ) ); }
 				return false;
 			}
 		}
@@ -360,7 +366,7 @@ if ( ! class_exists( 'Nexter_Code_Snippets_File_Based' ) ) {
 				return false;
 			}
 
-			$file_path = wp_normalize_path( $file_path );
+			$file_path   = wp_normalize_path( $file_path );
 			$storage_dir = self::getfileDir(); // Use static method to get directory
 			
 			// Ensure storage directory is set
@@ -376,7 +382,7 @@ if ( ! class_exists( 'Nexter_Code_Snippets_File_Based' ) ) {
 			}
 			
 			// Ensure file path doesn't contain dangerous patterns
-			$dangerous_patterns = array( '..', '//', '\\', chr(0), "\0" );
+			$dangerous_patterns = array( '..', '//', '\\', chr( 0 ), "\0" );
 			foreach ( $dangerous_patterns as $pattern ) {
 				if ( strpos( $file_path, $pattern ) !== false ) {
 					return false;
@@ -399,7 +405,7 @@ if ( ! class_exists( 'Nexter_Code_Snippets_File_Based' ) ) {
 			}
 			
 			// Additional check: ensure realpath matches (prevents symlink attacks)
-			$real_path = realpath( $file_path );
+			$real_path    = realpath( $file_path );
 			$real_storage = realpath( $storage_dir );
 			
 			if ( false === $real_path || false === $real_storage ) {
@@ -506,12 +512,13 @@ if ( ! class_exists( 'Nexter_Code_Snippets_File_Based' ) ) {
 				
 				// Suppress warnings and capture errors for permission issues
 				$previous_error = error_get_last();
-				$file_content = @file_get_contents( $specific_file );
+				$file_content   = @file_get_contents( $specific_file );
 				if ( false === $file_content ) {
 					$error = error_get_last();
 					// Check if this is a new permission error
 					if ( $error !== $previous_error && isset( $error['message'] ) && strpos( $error['message'], 'Permission denied' ) !== false ) {
-						if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) { error_log( sprintf( 'Permission denied: Unable to read file %s. Please check file permissions.', $specific_file ) ); }
+						if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+							error_log( sprintf( 'Permission denied: Unable to read file %s. Please check file permissions.', $specific_file ) ); }
 					}
 					return array();
 				}
@@ -564,16 +571,17 @@ if ( ! class_exists( 'Nexter_Code_Snippets_File_Based' ) ) {
 
 					// Suppress warnings and capture errors for permission issues
 					$previous_error = error_get_last();
-					$file_content = @file_get_contents( $file );
+					$file_content   = @file_get_contents( $file );
 					if ( false === $file_content ) {
 						$error = error_get_last();
 						// Check if this is a new permission error
 						if ( $error !== $previous_error && isset( $error['message'] ) && strpos( $error['message'], 'Permission denied' ) !== false ) {
-							if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) { error_log( sprintf( 'Permission denied: Unable to read file %s. Please check file permissions.', $file ) ); }
+							if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+								error_log( sprintf( 'Permission denied: Unable to read file %s. Please check file permissions.', $file ) ); }
 						}
 						continue;
 					}
-                    
+					
 					$parse_result = $this->parseBlock( $file_content, $include_code ? false : 'meta_only' );
 					
 					if ( empty( $parse_result[0] ) ) {
@@ -631,13 +639,13 @@ if ( ! class_exists( 'Nexter_Code_Snippets_File_Based' ) ) {
 			);
 
 			$doc_block = null;
-			$code = null;
+			$code      = null;
 
 			foreach ( $end_markers as $marker ) {
 				$parts = explode( $marker, $file_parts[1], 2 );
 				if ( count( $parts ) > 1 ) {
 					$doc_block = $parts[0];
-					$code = $parts[1];
+					$code      = $parts[1];
 					break;
 				}
 			}
@@ -652,18 +660,18 @@ if ( ! class_exists( 'Nexter_Code_Snippets_File_Based' ) ) {
 			if ( $code_only ) {
 				return $code;
 			}
-            
+			
 			// Parse docblock
 			$doc_block_parts = explode( '*', $doc_block );
 			$doc_block_array = array(
-				'name'         => '',
-				'status'       => '',
-				'tags'         => '',
-				'description'  => '',
-				'type'         => '',
-				'condition'    => '',
-				'updated_at'   => '',
-				'created_at'   => '',
+				'name'        => '',
+				'status'      => '',
+				'tags'        => '',
+				'description' => '',
+				'type'        => '',
+				'condition'   => '',
+				'updated_at'  => '',
+				'created_at'  => '',
 			);
 
 			foreach ( $doc_block_parts as $part ) {
@@ -738,22 +746,25 @@ if ( ! class_exists( 'Nexter_Code_Snippets_File_Based' ) ) {
 
 			// Get snippets without code to save memory
 			$snippets = $this->get_all_snippets();
-            
+			
 			if ( ! empty( $snippets ) && is_array( $snippets ) ) {
 				// Sort by priority
-				usort( $snippets, function ( $a, $b ) {
-					$priority_a = isset( $a['meta']['condition']['priority'] ) ? (int) $a['meta']['condition']['priority'] : 10;
-					$priority_b = isset( $b['meta']['condition']['priority'] ) ? (int) $b['meta']['condition']['priority'] : 10;
-					return $priority_a <=> $priority_b;
-				} );
+				usort(
+					$snippets,
+					function ( $a, $b ) {
+						$priority_a = isset( $a['meta']['condition']['priority'] ) ? (int) $a['meta']['condition']['priority'] : 10;
+						$priority_b = isset( $b['meta']['condition']['priority'] ) ? (int) $b['meta']['condition']['priority'] : 10;
+						return $priority_a <=> $priority_b;
+					} 
+				);
 			}
-            
+			
 			foreach ( $snippets as $snippet ) {
 				if ( empty( $snippet['meta'] ) || empty( $snippet['file'] ) ) {
 					continue;
 				}
 
-				$meta = $snippet['meta'];
+				$meta      = $snippet['meta'];
 				$file_name = basename( $snippet['file'] );
 
 				// Sanitize description
@@ -776,9 +787,9 @@ if ( ! class_exists( 'Nexter_Code_Snippets_File_Based' ) ) {
 					$meta['condition']['priority'] = (int) $meta['condition']['priority'];
 				}
 
-				$meta['file_name'] = sanitize_file_name( $file_name );
+				$meta['file_name']  = sanitize_file_name( $file_name );
 				$meta['updated_at'] = isset( $meta['updated_at'] ) ? $meta['updated_at'] : (isset( $meta['created_at'] ) ? $meta['created_at'] : '');
-				$meta['status'] = $status;
+				$meta['status']     = $status;
 
 				$data[ $status ][ $file_name ] = $meta;
 			}
@@ -797,7 +808,8 @@ if ( ! class_exists( 'Nexter_Code_Snippets_File_Based' ) ) {
 		public function saveSnippetData( $data, $cache_file = '' ) {
 			// Pre-check: Ensure WP_CONTENT_DIR is writable before attempting file operations
 			if ( ! $this->check_content_dir_writable() ) {
-				if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) { error_log( 'Nexter Extension: File-based snippets require write access. Save skipped.' ); }
+				if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+					error_log( 'Nexter Extension: File-based snippets require write access. Save skipped.' ); }
 				return false;
 			}
 
@@ -836,7 +848,8 @@ PHP;
 			// valid code, but validate defensively so a malformed payload can never be committed
 			// to the cache file (which is include-d on every request and would fatal otherwise).
 			if ( ! $this->is_valid_php_code( $code ) ) {
-				if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) { error_log( 'Nexter Extension: Generated snippet list failed syntax validation. Save aborted.' ); }
+				if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+					error_log( 'Nexter Extension: Generated snippet list failed syntax validation. Save aborted.' ); }
 				return false;
 			}
 
@@ -915,12 +928,24 @@ PHP;
 				// crash the whole site on every request. Validate the file's syntax first; if it is
 				// broken (e.g. left truncated by an older non-atomic write), delete it and rebuild
 				// the index from the individual snippet files instead of fataling.
-				$contents = file_get_contents( $primary_file );
-				if ( false === $contents || ! $this->is_valid_php_code( $contents ) ) {
+				// The read is @-suppressed like every other read in this class: is_readable() can
+				// still be followed by a failed read (a transient permission/IO error — errno=13 —
+				// or a lock), and that warning would otherwise spam the log on every request.
+				$contents = @file_get_contents( $primary_file ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged -- failure handled below; avoids per-request warning on transient read errors.
+				if ( false === $contents ) {
+					// The read FAILED (permission/IO error), which is NOT the same as a corrupt file.
+					// Do NOT delete the cache here — it is very likely still valid and just
+					// momentarily unreadable; unlinking it would destroy a good cache over a
+					// transient hiccup. Degrade gracefully and let a later request read it.
+					return array();
+				}
+				if ( ! $this->is_valid_php_code( $contents ) ) {
+					// Read succeeded but the contents are not valid PHP (truncated/corrupt from an
+					// old non-atomic write) — safe to delete and rebuild from the snippet sources.
 					@unlink( $primary_file );
 					$this->snippetIndexData(); // Regenerate from snippet source files (writes a fresh, valid file).
 					if ( is_file( $primary_file ) && is_readable( $primary_file ) ) {
-						$rebuilt = file_get_contents( $primary_file );
+						$rebuilt = @file_get_contents( $primary_file ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged -- failure handled below.
 						if ( false !== $rebuilt && $this->is_valid_php_code( $rebuilt ) ) {
 							$config = include $primary_file;
 							return is_array( $config ) ? $config : array();
@@ -967,7 +992,7 @@ PHP;
 		 * @return array List of snippets
 		 */
 		public function getListCode( $reverse = false ) {
-			$data = $this->getIndexedConfig();
+			$data           = $this->getIndexedConfig();
 			$file_code_list = array();
 
 			if ( ! isset( $data['publish'] ) || ! is_array( $data['publish'] ) ) {
@@ -981,19 +1006,19 @@ PHP;
 
 				$id = preg_replace( '/\.php$/', '', sanitize_file_name( $file_key ) );
 				
-				$updated_at = isset( $item['updated_at'] ) && ! empty( $item['updated_at'] ) ? $item['updated_at'] : '';
+				$updated_at           = isset( $item['updated_at'] ) && ! empty( $item['updated_at'] ) ? $item['updated_at'] : '';
 				$updated_at_timestamp = ! empty( $updated_at ) ? strtotime( $updated_at ) : 0;
 				
 				$file_code_list[] = array(
-					'id'            => $id,
-					'name'          => isset( $item['name'] ) ? sanitize_text_field( $item['name'] ) : '',
-					'description'   => isset( $item['description'] ) ? sanitize_text_field( $item['description'] ) : '',
-					'type'          => isset( $item['type'] ) ? sanitize_text_field( $item['type'] ) : '',
-					'tags'          => isset( $item['tags'] ) && is_array( $item['tags'] ) ? $item['tags'] : array(),
-					'code-execute'  => isset( $item['condition']['code-execute'] ) ? sanitize_text_field( $item['condition']['code-execute'] ) : 'global',
-					'status'        => isset( $item['condition']['status'] ) ? absint( $item['condition']['status'] ) : 0,
-					'priority'      => isset( $item['condition']['priority'] ) ? absint( $item['condition']['priority'] ) : 10,
-					'last_updated'  => ! empty( $updated_at )
+					'id'                   => $id,
+					'name'                 => isset( $item['name'] ) ? sanitize_text_field( $item['name'] ) : '',
+					'description'          => isset( $item['description'] ) ? sanitize_text_field( $item['description'] ) : '',
+					'type'                 => isset( $item['type'] ) ? sanitize_text_field( $item['type'] ) : '',
+					'tags'                 => isset( $item['tags'] ) && is_array( $item['tags'] ) ? $item['tags'] : array(),
+					'code-execute'         => isset( $item['condition']['code-execute'] ) ? sanitize_text_field( $item['condition']['code-execute'] ) : 'global',
+					'status'               => isset( $item['condition']['status'] ) ? absint( $item['condition']['status'] ) : 0,
+					'priority'             => isset( $item['condition']['priority'] ) ? absint( $item['condition']['priority'] ) : 10,
+					'last_updated'         => ! empty( $updated_at )
 					? human_time_diff( $updated_at_timestamp, current_time( 'timestamp' ) ) . ' ago'
 					: '',
 					'updated_at_timestamp' => $updated_at_timestamp,
@@ -1001,11 +1026,14 @@ PHP;
 			}
 
 			// Sort by updated_at date (newest first)
-			usort( $file_code_list, function( $a, $b ) {
-				$timestamp_a = isset( $a['updated_at_timestamp'] ) ? $a['updated_at_timestamp'] : 0;
-				$timestamp_b = isset( $b['updated_at_timestamp'] ) ? $b['updated_at_timestamp'] : 0;
-				return $timestamp_b - $timestamp_a; // Descending order (newest first)
-			} );
+			usort(
+				$file_code_list,
+				function( $a, $b ) {
+					$timestamp_a = isset( $a['updated_at_timestamp'] ) ? $a['updated_at_timestamp'] : 0;
+					$timestamp_b = isset( $b['updated_at_timestamp'] ) ? $b['updated_at_timestamp'] : 0;
+					return $timestamp_b - $timestamp_a; // Descending order (newest first)
+				} 
+			);
 
 			if ( $reverse ) {
 				$file_code_list = array_reverse( $file_code_list );
@@ -1050,7 +1078,7 @@ PHP;
 						}
 
 						$snippet_status = isset( $snippet['meta']['condition']['status'] ) ? absint( $snippet['meta']['condition']['status'] ) : 0;
-						$type = isset( $snippet['meta']['type'] ) ? sanitize_text_field( $snippet['meta']['type'] ) : '';
+						$type           = isset( $snippet['meta']['type'] ) ? sanitize_text_field( $snippet['meta']['type'] ) : '';
 						
 						// Validate file exists
 						if ( ! is_file( $snippet['file'] ) || ! $this->is_valid_file_path( $snippet['file'] ) ) {
@@ -1094,7 +1122,7 @@ PHP;
 					$tags = $meta['tags'];
 				} elseif ( is_string( $meta['tags'] ) ) {
 					$decoded = json_decode( $meta['tags'], true );
-					$tags = is_array( $decoded ) ? $decoded : array();
+					$tags    = is_array( $decoded ) ? $decoded : array();
 				}
 			}
 			
@@ -1110,38 +1138,38 @@ PHP;
 			}
 
 			return array(
-				'id'                    => sanitize_text_field( $snippet_id ),
-				'file_name'             => isset( $meta['file_name'] ) ? sanitize_file_name( $meta['file_name'] ) : '',
-				'file_path'             => isset( $data['file'] ) ? wp_normalize_path( $data['file'] ) : '',
-				'name'                  => isset( $meta['name'] ) ? sanitize_text_field( $meta['name'] ) : '',
-				'description'           => isset( $meta['description'] ) ? sanitize_textarea_field( $meta['description'] ) : '',
-				'type'                  => isset( $meta['type'] ) ? sanitize_text_field( $meta['type'] ) : '',
-				'tags'                  => $tags,
-				'post_type'             => isset( $meta['post_type'] ) ? sanitize_text_field( $meta['post_type'] ) : 'nxt-code-snippet',
-				'langCode'              => isset( $data['code'] ) ? $data['code'] : '',
-				'status'                => isset( $cond['status'] ) ? absint( $cond['status'] ) : 0,
-				'insertion'             => isset( $cond['insertion'] ) ? sanitize_text_field( $cond['insertion'] ) : 'auto',
-				'location'              => isset( $cond['location'] ) ? sanitize_text_field( $cond['location'] ) : '',
-				'customname'            => isset( $cond['customname'] ) ? sanitize_text_field( $cond['customname'] ) : '',
-				'compresscode'          => isset( $cond['compresscode'] ) ? rest_sanitize_boolean( $cond['compresscode'] ) : false,
-				'on_ajax_work'          => isset( $cond['on_ajax_work'] ) ? rest_sanitize_boolean( $cond['on_ajax_work'] ) : false,
-				'startDate'             => isset( $cond['startDate'] ) ? sanitize_text_field( $cond['startDate'] ) : '',
-				'endDate'               => isset( $cond['endDate'] ) ? sanitize_text_field( $cond['endDate'] ) : '',
-				'shortcodeattr'         => isset( $cond['shortcodeattr'] ) && is_array( $cond['shortcodeattr'] ) ? $cond['shortcodeattr'] : array(),
-				'codeExecute'           => isset( $cond['code-execute'] ) ? sanitize_text_field( $cond['code-execute'] ) : 'global',
-				'htmlHooks'             => isset( $cond['html_hooks'] ) ? sanitize_text_field( $cond['html_hooks'] ) : '',
-				'hooksPriority'         => isset( $cond['priority'] ) ? absint( $cond['priority'] ) : 10,
-				'include_data'          => isset( $cond['add-display-rule'] ) && is_array( $cond['add-display-rule'] ) ? $cond['add-display-rule'] : array(),
-				'exclude_data'          => isset( $cond['exclude-display-rule'] ) && is_array( $cond['exclude-display-rule'] ) ? $cond['exclude-display-rule'] : array(),
-				'in_sub_data'           => isset( $cond['in-sub-rule'] ) && is_array( $cond['in-sub-rule'] ) ? $cond['in-sub-rule'] : array(),
-				'ex_sub_data'           => isset( $cond['ex-sub-rule'] ) && is_array( $cond['ex-sub-rule'] ) ? $cond['ex-sub-rule'] : array(),
-				'word_count'            => isset( $cond['word_count'] ) ? absint( $cond['word_count'] ) : 100,
-				'word_interval'         => isset( $cond['word_interval'] ) ? absint( $cond['word_interval'] ) : 200,
-				'post_number'           => isset( $cond['post_number'] ) ? absint( $cond['post_number'] ) : 1,
+				'id'                      => sanitize_text_field( $snippet_id ),
+				'file_name'               => isset( $meta['file_name'] ) ? sanitize_file_name( $meta['file_name'] ) : '',
+				'file_path'               => isset( $data['file'] ) ? wp_normalize_path( $data['file'] ) : '',
+				'name'                    => isset( $meta['name'] ) ? sanitize_text_field( $meta['name'] ) : '',
+				'description'             => isset( $meta['description'] ) ? sanitize_textarea_field( $meta['description'] ) : '',
+				'type'                    => isset( $meta['type'] ) ? sanitize_text_field( $meta['type'] ) : '',
+				'tags'                    => $tags,
+				'post_type'               => isset( $meta['post_type'] ) ? sanitize_text_field( $meta['post_type'] ) : 'nxt-code-snippet',
+				'langCode'                => isset( $data['code'] ) ? $data['code'] : '',
+				'status'                  => isset( $cond['status'] ) ? absint( $cond['status'] ) : 0,
+				'insertion'               => isset( $cond['insertion'] ) ? sanitize_text_field( $cond['insertion'] ) : 'auto',
+				'location'                => isset( $cond['location'] ) ? sanitize_text_field( $cond['location'] ) : '',
+				'customname'              => isset( $cond['customname'] ) ? sanitize_text_field( $cond['customname'] ) : '',
+				'compresscode'            => isset( $cond['compresscode'] ) ? rest_sanitize_boolean( $cond['compresscode'] ) : false,
+				'on_ajax_work'            => isset( $cond['on_ajax_work'] ) ? rest_sanitize_boolean( $cond['on_ajax_work'] ) : false,
+				'startDate'               => isset( $cond['startDate'] ) ? sanitize_text_field( $cond['startDate'] ) : '',
+				'endDate'                 => isset( $cond['endDate'] ) ? sanitize_text_field( $cond['endDate'] ) : '',
+				'shortcodeattr'           => isset( $cond['shortcodeattr'] ) && is_array( $cond['shortcodeattr'] ) ? $cond['shortcodeattr'] : array(),
+				'codeExecute'             => isset( $cond['code-execute'] ) ? sanitize_text_field( $cond['code-execute'] ) : 'global',
+				'htmlHooks'               => isset( $cond['html_hooks'] ) ? sanitize_text_field( $cond['html_hooks'] ) : '',
+				'hooksPriority'           => isset( $cond['priority'] ) ? absint( $cond['priority'] ) : 10,
+				'include_data'            => isset( $cond['add-display-rule'] ) && is_array( $cond['add-display-rule'] ) ? $cond['add-display-rule'] : array(),
+				'exclude_data'            => isset( $cond['exclude-display-rule'] ) && is_array( $cond['exclude-display-rule'] ) ? $cond['exclude-display-rule'] : array(),
+				'in_sub_data'             => isset( $cond['in-sub-rule'] ) && is_array( $cond['in-sub-rule'] ) ? $cond['in-sub-rule'] : array(),
+				'ex_sub_data'             => isset( $cond['ex-sub-rule'] ) && is_array( $cond['ex-sub-rule'] ) ? $cond['ex-sub-rule'] : array(),
+				'word_count'              => isset( $cond['word_count'] ) ? absint( $cond['word_count'] ) : 100,
+				'word_interval'           => isset( $cond['word_interval'] ) ? absint( $cond['word_interval'] ) : 200,
+				'post_number'             => isset( $cond['post_number'] ) ? absint( $cond['post_number'] ) : 1,
 				'smart_conditional_logic' => isset( $cond['smart-logic'] ) && is_array( $cond['smart-logic'] ) ? $cond['smart-logic'] : array(),
-				'css_selector'          => isset( $cond['css_selector'] ) ? sanitize_text_field( $cond['css_selector'] ) : '',
-				'element_index'         => isset( $cond['element_index'] ) ? absint( $cond['element_index'] ) : 0,
-				'php_hidden_execute'    => isset( $cond['php-hidden-execute'] ) ? sanitize_text_field( $cond['php-hidden-execute'] ) : 'no',
+				'css_selector'            => isset( $cond['css_selector'] ) ? sanitize_text_field( $cond['css_selector'] ) : '',
+				'element_index'           => isset( $cond['element_index'] ) ? absint( $cond['element_index'] ) : 0,
+				'php_hidden_execute'      => isset( $cond['php-hidden-execute'] ) ? sanitize_text_field( $cond['php-hidden-execute'] ) : 'no',
 			);
 		}
 
@@ -1193,31 +1221,31 @@ PHP;
 			return $results;
 		}
 
-	public function getSnippetPostIDBySnippetName( $post_id= '' ) {
-		if(empty($post_id) || !is_numeric($post_id)){
-			return 0;
-		}
-		$config = $this->getIndexedConfig();
+		public function getSnippetPostIDBySnippetName( $post_id= '' ) {
+			if ( empty( $post_id ) || ! is_numeric( $post_id ) ) {
+				return 0;
+			}
+			$config = $this->getIndexedConfig();
 		
-		// Check if post_id exists in condition args and return file name
-		if ( ! empty( $config['publish'] ) && is_array( $config['publish'] ) ) {
-			foreach ( $config['publish'] as $file_key => $snippet ) {
-				if ( ! is_array( $snippet ) || empty( $snippet['condition'] ) || ! is_array( $snippet['condition'] ) ) {
-					continue;
-				}
+			// Check if post_id exists in condition args and return file name
+			if ( ! empty( $config['publish'] ) && is_array( $config['publish'] ) ) {
+				foreach ( $config['publish'] as $file_key => $snippet ) {
+					if ( ! is_array( $snippet ) || empty( $snippet['condition'] ) || ! is_array( $snippet['condition'] ) ) {
+						continue;
+					}
 				
-				// Check if post_id exists in condition and matches the provided post_id
-				if ( isset( $snippet['condition']['post_id'] ) && 
+					// Check if post_id exists in condition and matches the provided post_id
+					if ( isset( $snippet['condition']['post_id'] ) && 
 					 ! empty( $snippet['condition']['post_id'] ) && 
 					 (int) $snippet['condition']['post_id'] === (int) $post_id ) {
-					// Return file name without .php extension
-					$file_name = isset( $snippet['file_name'] ) ? $snippet['file_name'] : $file_key;
-					return preg_replace( '/\.php$/', '', $file_name );
+						// Return file name without .php extension
+						$file_name = isset( $snippet['file_name'] ) ? $snippet['file_name'] : $file_key;
+						return preg_replace( '/\.php$/', '', $file_name );
+					}
 				}
 			}
-		}
 		
-		return 0;
-	}
+			return 0;
+		}
 	}
 }

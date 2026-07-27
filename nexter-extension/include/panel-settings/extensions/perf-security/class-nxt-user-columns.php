@@ -34,11 +34,11 @@ class Nxt_User_Columns {
 
 	public function render_registered_column( $output, $column_name, $user_id ) {
 		if ( 'nxt_registered_date' === $column_name ) {
-			$user = get_userdata( $user_id );
+			$user                 = get_userdata( $user_id );
 			$user_registered_date = strtotime( $user->user_registered );
-			$date_format = get_option( 'date_format', 'F j, Y' );
-			$time_format = get_option( 'time_format', 'g:i a' );
-			$output = function_exists( 'wp_date' )
+			$date_format          = get_option( 'date_format', 'F j, Y' );
+			$time_format          = get_option( 'time_format', 'g:i a' );
+			$output               = function_exists( 'wp_date' )
 				? wp_date( "$date_format $time_format", $user_registered_date )
 				: date_i18n( "$date_format $time_format", $user_registered_date );
 		}

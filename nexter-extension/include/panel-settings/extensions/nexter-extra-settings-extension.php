@@ -3,99 +3,98 @@
  * Nexter Extension Extra Settings
  * @since 1.1.0
  */
-defined('ABSPATH') or die();
+defined( 'ABSPATH' ) or die();
 
 class Nexter_Ext_Extra_Settings {
-    
-    /**
-     * Constructor
-     */
-    public function __construct() {
+	
+	/**
+	 * Constructor
+	 */
+	public function __construct() {
 		
 		$extension_option = $this->nxt_options_to_array( Nxt_Options::extra_ext() );
-		$security_option = $this->nxt_options_to_array( Nxt_Options::security() );
+		$security_option  = $this->nxt_options_to_array( Nxt_Options::security() );
 
-		if( !empty($extension_option)){
+		if ( ! empty( $extension_option ) ) {
 			//Adobe Font
-			if( isset($extension_option['adobe-font']) && !empty($extension_option['adobe-font']['switch']) ){
+			if ( isset( $extension_option['adobe-font'] ) && ! empty( $extension_option['adobe-font']['switch'] ) ) {
 				require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-adobe-font.php';
 			}
 			
 			//Custom Upload Font
-			if( isset($extension_option['custom-upload-font']) && !empty($extension_option['custom-upload-font']['switch']) ){
+			if ( isset( $extension_option['custom-upload-font'] ) && ! empty( $extension_option['custom-upload-font']['switch'] ) ) {
 				require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-custom-upload-font.php';
 				// Font MIME types only needed when custom font uploads are enabled
-				add_filter( 'upload_mimes', [$this, 'nxt_allow_mime_types']);
-				add_filter('wp_check_filetype_and_ext', [$this, 'nxt_check_file_ext'], 10, 4);
+				add_filter( 'upload_mimes', [$this, 'nxt_allow_mime_types'] );
+				add_filter( 'wp_check_filetype_and_ext', [$this, 'nxt_check_file_ext'], 10, 4 );
 			}
 			//Disable Admin Settings
-			if( isset($extension_option['disable-admin-setting']) && !empty($extension_option['disable-admin-setting']['switch']) ){
+			if ( isset( $extension_option['disable-admin-setting'] ) && ! empty( $extension_option['disable-admin-setting']['switch'] ) ) {
 				require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-disable-admin-settings.php';
 			}
 
 			//Content Post Order
-			if( isset($extension_option['content-post-order']) && !empty($extension_option['content-post-order']['switch'])){
+			if ( isset( $extension_option['content-post-order'] ) && ! empty( $extension_option['content-post-order']['switch'] ) ) {
 				require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-content-post-order.php';
 			}
 
 			//Clean-Up Admin Bar
-			if( isset($extension_option['clean-up-admin-bar']) && !empty($extension_option['clean-up-admin-bar']['switch']) ){
+			if ( isset( $extension_option['clean-up-admin-bar'] ) && ! empty( $extension_option['clean-up-admin-bar']['switch'] ) ) {
 				require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-clean-up-admin-bar.php';
 			}
 
 			//Wilder Admin Menu Width
-			if( isset($extension_option['wider-admin-menu']) && !empty($extension_option['wider-admin-menu']['switch']) ){
+			if ( isset( $extension_option['wider-admin-menu'] ) && ! empty( $extension_option['wider-admin-menu']['switch'] ) ) {
 				require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-wider-admin-menu.php';
 			}
 			
 			//Disable Gutenberg
-			if( isset($extension_option['disable-gutenberg']) && !empty($extension_option['disable-gutenberg']['switch'])){
+			if ( isset( $extension_option['disable-gutenberg'] ) && ! empty( $extension_option['disable-gutenberg']['switch'] ) ) {
 				require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-disable-gutenberg.php';
 			}
 
 			//Redirect 404 Page
-			if( isset($extension_option['redirect-404-page']) && !empty($extension_option['redirect-404-page']['switch']) && !defined( 'NXT_PRO_EXT' ) ){
+			if ( isset( $extension_option['redirect-404-page'] ) && ! empty( $extension_option['redirect-404-page']['switch'] ) && ! defined( 'NXT_PRO_EXT' ) ) {
 				require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-redirect-404-page.php';
 			}
 			
 			//Rollback Manager
-			if( isset($extension_option['rollback-manager']) && !empty($extension_option['rollback-manager']['switch']) ){
+			if ( isset( $extension_option['rollback-manager'] ) && ! empty( $extension_option['rollback-manager']['switch'] ) ) {
 				require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-rollback-manager.php';
 			}
 
 			//SMTP Email
-			if( isset($extension_option['smtp-email']) && !empty($extension_option['smtp-email']['switch']) ){
+			if ( isset( $extension_option['smtp-email'] ) && ! empty( $extension_option['smtp-email']['switch'] ) ) {
 				require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-smtp-email.php';
 			}
 
 			//View Admin Switcher
-			if( isset($extension_option['view-admin-role']) && !empty($extension_option['view-admin-role']['switch']) ){
+			if ( isset( $extension_option['view-admin-role'] ) && ! empty( $extension_option['view-admin-role']['switch'] ) ) {
 				require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-view-admin-role.php';
 			}
 
 			//Elementor AdFree
-			if( isset($extension_option['elementor-adfree']) && !empty($extension_option['elementor-adfree']['switch']) && class_exists( '\Elementor\Plugin' )){
+			if ( isset( $extension_option['elementor-adfree'] ) && ! empty( $extension_option['elementor-adfree']['switch'] ) && class_exists( '\Elementor\Plugin' ) ) {
 				require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-elementor-adfree.php';
 			}
 
 			//WP Debug Mode
-			if( isset($extension_option['wp-debug-mode']) && !empty($extension_option['wp-debug-mode']['switch'])){
+			if ( isset( $extension_option['wp-debug-mode'] ) && ! empty( $extension_option['wp-debug-mode']['switch'] ) ) {
 				require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-wp-debug-mode.php';
-			}
-
+			}       
 		}
 		
 		//Local Google Font — load when the extension toggle is on OR when performance google-fonts settings are active
-		$perf_option = $this->nxt_options_to_array( Nxt_Options::performance() );
+		$perf_option       = $this->nxt_options_to_array( Nxt_Options::performance() );
 		$local_gfont_ext   = ! empty( ( $extension_option['local-google-font'] ?? array() )['switch'] );
 		$perf_gfont_active = ! empty( ( $perf_option['google-fonts'] ?? array() )['switch'] )
 			|| ! empty( $perf_option['nexter_google_fonts'] );
-		if ( $local_gfont_ext || $perf_gfont_active || defined('NXT_VERSION') ) {
+		if ( $local_gfont_ext || $perf_gfont_active || defined( 'NXT_VERSION' ) ) {
 			require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-local-google-font.php';
 		}
 
 		//Post Duplicator (admin-only: row actions, admin scripts, AJAX)
-		if( is_admin() && !empty($extension_option) && isset($extension_option['wp-duplicate-post']) && !empty($extension_option['wp-duplicate-post']['switch']) ){
+		if ( is_admin() && ! empty( $extension_option ) && isset( $extension_option['wp-duplicate-post'] ) && ! empty( $extension_option['wp-duplicate-post']['switch'] ) ) {
 			require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-post-duplicator.php';
 		}
 
@@ -103,29 +102,29 @@ class Nexter_Ext_Extra_Settings {
 		if ( is_admin() && ! empty( $extension_option ) && isset( $extension_option['wp-replace-url']['switch'] ) && $extension_option['wp-replace-url']['switch'] ) {
 			require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-replace-url.php';
 		}
-		if(!empty($security_option)){
-			if( isset($security_option['captcha-security']) && !empty($security_option['captcha-security']['switch']) && isset( $security_option['captcha-security']['values'] ) &&  !empty( $security_option['captcha-security']['values'] ) ){
+		if ( ! empty( $security_option ) ) {
+			if ( isset( $security_option['captcha-security'] ) && ! empty( $security_option['captcha-security']['switch'] ) && isset( $security_option['captcha-security']['values'] ) && ! empty( $security_option['captcha-security']['values'] ) ) {
 
-				$captcha_type = (isset($security_option['captcha-security']['values']['captcha_type']) && !empty($security_option['captcha-security']['values']['captcha_type'])) ? $security_option['captcha-security']['values']['captcha_type'] : 'google';
+				$captcha_type = (isset( $security_option['captcha-security']['values']['captcha_type'] ) && ! empty( $security_option['captcha-security']['values']['captcha_type'] )) ? $security_option['captcha-security']['values']['captcha_type'] : 'google';
 
 				$reoption = $security_option['captcha-security']['values'];
 
-				if( ( $captcha_type == 'google' && ( isset($reoption['siteKey']) && !empty($reoption['siteKey'] ) ) && ( isset($reoption['secretKey']) && !empty($reoption['secretKey'] ) ) && ( ( isset($reoption['formType']) && !empty($reoption['formType']) ) ))  || ( $captcha_type == 'cloudflare' && ( isset($reoption['turnSiteKey']) && !empty($reoption['turnSiteKey'] ) ) && ( isset($reoption['turnSecretKey']) && !empty($reoption['turnSecretKey'] ) ) && ( ( isset($reoption['formType']) && !empty($reoption['formType']) ) ))){
-					switch ($captcha_type) {
-					case 'google':
-						require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-google-captcha.php';
+				if ( ( $captcha_type == 'google' && ( isset( $reoption['siteKey'] ) && ! empty( $reoption['siteKey'] ) ) && ( isset( $reoption['secretKey'] ) && ! empty( $reoption['secretKey'] ) ) && ( ( isset( $reoption['formType'] ) && ! empty( $reoption['formType'] ) ) )) || ( $captcha_type == 'cloudflare' && ( isset( $reoption['turnSiteKey'] ) && ! empty( $reoption['turnSiteKey'] ) ) && ( isset( $reoption['turnSecretKey'] ) && ! empty( $reoption['turnSecretKey'] ) ) && ( ( isset( $reoption['formType'] ) && ! empty( $reoption['formType'] ) ) )) ) {
+					switch ( $captcha_type ) {
+						case 'google':
+							require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-google-captcha.php';
 						break;
 
-					case 'cloudflare':
-						require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-cloudflare-captcha.php';
+						case 'cloudflare':
+							require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-cloudflare-captcha.php';
 						break;
 					}
 				}
 			}
 		}
 
-		if(!empty($security_option)){
-			if( isset($security_option['limit-login-attempt']['switch']) && !empty($security_option['limit-login-attempt']['switch']) ){
+		if ( ! empty( $security_option ) ) {
+			if ( isset( $security_option['limit-login-attempt']['switch'] ) && ! empty( $security_option['limit-login-attempt']['switch'] ) ) {
 				require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-limit-login-attempt.php';
 			}
 		}
@@ -142,7 +141,7 @@ class Nexter_Ext_Extra_Settings {
 		if ( class_exists( '\Elementor\Plugin' ) && ! empty( ( $perf_option['disable-elementor-icons'] ?? array() )['switch'] ) ) {
 			require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-disable-elementor-icons.php';
 		}
-    }
+	}
 
 	/**
 	 * Nexter Check Filetype and Extension File Woff, ttf, woff2
@@ -150,19 +149,19 @@ class Nexter_Ext_Extra_Settings {
 	 */
 	public function nxt_check_file_ext($types, $file, $filename, $mimes) {
 		
-		if (false !== strpos($filename, '.ttf')) {
+		if ( false !== strpos( $filename, '.ttf' ) ) {
 			$types['ext']  = 'ttf';
 			$types['type'] = 'font/ttf';
 		}
-		if (false !== strpos($filename, '.otf')) {
-			$types['ext'] = 'otf';
+		if ( false !== strpos( $filename, '.otf' ) ) {
+			$types['ext']  = 'otf';
 			$types['type'] = 'font/otf';
 		}
-		if (false !== strpos($filename, '.woff') && false === strpos($filename, '.woff2')) {
+		if ( false !== strpos( $filename, '.woff' ) && false === strpos( $filename, '.woff2' ) ) {
 			$types['ext']  = 'woff';
 			$types['type'] = 'font/woff';
 		}
-		if (false !== strpos($filename, '.woff2')) {
+		if ( false !== strpos( $filename, '.woff2' ) ) {
 			$types['ext']  = 'woff2';
 			$types['type'] = 'font/woff2';
 		}
@@ -184,11 +183,11 @@ class Nexter_Ext_Extra_Settings {
 	}
 
 	public function convert_object_to_array($data) {
-		if (is_object($data)) {
+		if ( is_object( $data ) ) {
 			$data = (array) $data;
 		}
-		if (is_array($data)) {
-			return array_map([$this, 'convert_object_to_array'], $data);
+		if ( is_array( $data ) ) {
+			return array_map( [$this, 'convert_object_to_array'], $data );
 		}
 		return $data;
 	}

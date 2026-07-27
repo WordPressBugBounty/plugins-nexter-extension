@@ -160,11 +160,11 @@ function nxt_get_reoption() {
  */
 function nxt_get_captcha_css( $selector, $margin = '15px' ) {
 	static $css_cache = array();
-	$cache_key = $selector . '_' . $margin;
+	$cache_key        = $selector . '_' . $margin;
 	
 	if ( ! isset( $css_cache[ $cache_key ] ) ) {
 		$reoption = nxt_get_reoption();
-		$css = $selector . ' .nxtcaptch { margin: 0 0 ' . esc_html( $margin ) . ';}';
+		$css      = $selector . ' .nxtcaptch { margin: 0 0 ' . esc_html( $margin ) . ';}';
 		
 		if ( is_array( $reoption ) && ! empty( $reoption['invisi'] ) ) {
 			$css .= '.grecaptcha-badge { visibility: hidden;}';
@@ -201,8 +201,8 @@ function nxt_recaptch_render( $reData = null ) {
 		$api_url_cache[ $site_key ] = sprintf( 'https://www.google.com/recaptcha/api.js?render=%s', esc_attr( $site_key ) );
 	}
 	
-	$id = wp_generate_password( 8, false );
-	$output = '<div class="nxtcaptch nexter-recaptcha-v3" data-id="nexter-recaptcha-' . esc_attr( $id ) . '">';
+	$id      = wp_generate_password( 8, false );
+	$output  = '<div class="nxtcaptch nexter-recaptcha-v3" data-id="nexter-recaptcha-' . esc_attr( $id ) . '">';
 	$output .= '<input type="hidden" id="g-recaptcha-response" name="g-recaptcha-response" />';
 	$output .= '</div>';
 	
@@ -218,7 +218,7 @@ function nxt_recaptch_render( $reData = null ) {
 	}
 	
 	// Add login footer action if needed
-	$form_types = isset( $reoption['formType'] ) ? (array) $reoption['formType'] : array();
+	$form_types  = isset( $reoption['formType'] ) ? (array) $reoption['formType'] : array();
 	$login_forms = array( 'login_form', 'registration_form', 'reset_pwd_form' );
 	if ( array_intersect( $login_forms, $form_types ) && ! has_action( 'login_footer', 'nxtcptch_add_scripts' ) ) {
 		add_action( 'login_footer', 'nxtcptch_add_scripts' );
@@ -344,8 +344,8 @@ function nxt_recaptch_check( $form = 'general', $debug = false ) {
 		$errors->add( 'nxtcptch_error', nxttch_get_error_message() );
 		return array(
 			'response' => false,
-			'reason'  => 'ERROR_NO_KEYS',
-			'errors'  => $errors,
+			'reason'   => 'ERROR_NO_KEYS',
+			'errors'   => $errors,
 		);
 	}
 	
@@ -373,7 +373,7 @@ function nxt_recaptch_check( $form = 'general', $debug = false ) {
 				'reason'   => '',
 			);
 		} else {
-			$error_codes = isset( $response['error-codes'] ) ? (array) $response['error-codes'] : array();
+			$error_codes   = isset( $response['error-codes'] ) ? (array) $response['error-codes'] : array();
 			$secret_errors = array( 'missing-input-secret', 'invalid-input-secret' );
 			
 			if ( ! $debug && array_intersect( $secret_errors, $error_codes ) ) {
@@ -684,7 +684,7 @@ function nxt_woo_pay_for_order_display() {
 function nxt_woo_pay_for_order_check() {
 	// Security: Sanitize input
 	$get_pay_for_order = isset( $_GET['pay_for_order'] ) ? sanitize_text_field( wp_unslash( $_GET['pay_for_order'] ) ) : '';
-	$get_key = isset( $_GET['key'] ) ? sanitize_text_field( wp_unslash( $_GET['key'] ) ) : '';
+	$get_key           = isset( $_GET['key'] ) ? sanitize_text_field( wp_unslash( $_GET['key'] ) ) : '';
 	if ( empty( $get_pay_for_order ) || empty( $get_key ) ) {
 		return;
 	}

@@ -34,18 +34,18 @@ return array(
 		'default' => '%post.title%',
 	),
 	array(
-		'key'      => 'url',
-		'label'    => __( 'URL', 'nexter-extension' ),
-		'input'    => 'editor',
-		'tooltip'  => __( 'Canonical URL of the article.', 'nexter-extension' ),
-		'default'  => '%post.url%',
+		'key'     => 'url',
+		'label'   => __( 'URL', 'nexter-extension' ),
+		'input'   => 'editor',
+		'tooltip' => __( 'Canonical URL of the article.', 'nexter-extension' ),
+		'default' => '%post.url%',
 	),
 	array(
-		'key'      => 'headline',
-		'label'    => __( 'Headline', 'nexter-extension' ),
-		'input'    => 'editor',
-		'tooltip'  => __( 'Enter a clear and short headline for the article. Try to keep it under 110 characters for better display in search results.', 'nexter-extension' ),
-		'default'  => '%post.title%',
+		'key'     => 'headline',
+		'label'   => __( 'Headline', 'nexter-extension' ),
+		'input'   => 'editor',
+		'tooltip' => __( 'Enter a clear and short headline for the article. Try to keep it under 110 characters for better display in search results.', 'nexter-extension' ),
+		'default' => '%post.title%',
 	),
 	array(
 		'key'     => 'description',
@@ -129,8 +129,12 @@ return array(
 		'key'     => 'mainEntityOfPage',
 		'label'   => __( 'Main Entity Of Page', 'nexter-extension' ),
 		'input'   => 'editor',
-		'tooltip' => __( 'Define what this page is mainly about (for example: an article or product).', 'nexter-extension' ),
-		'default' => '%post.url%',
+		/* translators: %schemas.webpage% is a literal schema-variable token, not a format placeholder — leave it unchanged. */
+		'tooltip' => __( 'The WebPage this article is the main entity of (e.g. %schemas.webpage%).', 'nexter-extension' ),
+		// Link to the WebPage node's @id (same token as isPartOf), which is Google-recommended and
+		// resolves reliably. The old '%post.url%' token was not resolved by the schema replacer, so
+		// mainEntityOfPage came out empty and was pruned — the node never rendered.
+		'default' => '%schemas.webpage%',
 	),
 	array(
 		'key'     => 'publisher',

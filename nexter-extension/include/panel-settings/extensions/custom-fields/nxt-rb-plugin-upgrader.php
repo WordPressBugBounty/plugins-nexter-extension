@@ -45,7 +45,7 @@ class Nxt_Ext_RB_Plugin_Upgrader extends Plugin_Upgrader {
 			'version'            => '',
 			'clear_update_cache' => true,
 		);
-		$args = wp_parse_args( $args, $defaults );
+		$args     = wp_parse_args( $args, $defaults );
 
 		if ( empty( $plugin ) || empty( $args['slug'] ) || empty( $args['version'] ) ) {
 			$this->skin->before();
@@ -65,7 +65,8 @@ class Nxt_Ext_RB_Plugin_Upgrader extends Plugin_Upgrader {
 		add_filter( 'upgrader_pre_install', array( $this, 'active_before' ), 10, 2 );
 		add_filter( 'upgrader_post_install', array( $this, 'active_after' ), 10, 2 );
 
-		$this->run( array(
+		$this->run(
+			array(
 			'package'           => $package,
 			'destination'       => WP_PLUGIN_DIR,
 			'clear_destination' => true,
@@ -75,8 +76,9 @@ class Nxt_Ext_RB_Plugin_Upgrader extends Plugin_Upgrader {
 				'type'   => 'plugin',
 				'action' => 'update',
 				'bulk'   => false,
-			),
-		) );
+			 ),
+			) 
+		);
 
 		remove_filter( 'upgrader_pre_install', array( $this, 'active_before' ) );
 		remove_filter( 'upgrader_post_install', array( $this, 'active_after' ) );

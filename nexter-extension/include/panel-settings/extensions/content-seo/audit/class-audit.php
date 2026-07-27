@@ -20,12 +20,12 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class Engine {
 
-	const OPTION_LAST     = 'nexter_content_seo_audit_last';
+	const OPTION_LAST      = 'nexter_content_seo_audit_last';
 	const OPTION_RUN_STATE = 'nexter_content_seo_audit_run_state';
-	const OPTION_HISTORY  = 'nexter_content_seo_audit_history';
-	const OPTION_SCHEDULE = 'nexter_content_seo_audit_schedule';
+	const OPTION_HISTORY   = 'nexter_content_seo_audit_history';
+	const OPTION_SCHEDULE  = 'nexter_content_seo_audit_schedule';
 
-	const CRON_HOOK = 'nexter_seo_audit_cron';
+	const CRON_HOOK     = 'nexter_seo_audit_cron';
 	const HISTORY_LIMIT = 50;
 
 	/** @var string|null */
@@ -125,7 +125,7 @@ class Engine {
 			}
 		);
 
-		$lines   = array();
+		$lines = array();
 		/* translators: %s: site URL */
 		$lines[] = sprintf( \__( 'SEO audit completed for %s', 'nexter-extension' ), \home_url( '/' ) );
 		/* translators: %d: overall score out of 100 */
@@ -166,10 +166,55 @@ class Engine {
 			);
 		}
 		$scheduled = \wp_schedule_single_event( time() + 5, self::CRON_HOOK );
+
+		// Fallback for hosts with WP-Cron disabled (DISABLE_WP_CRON): the queued "run now" event may
+		// never fire. This is a user-triggered action (Run Audit), so run it on shutdown — after the
+		// response is flushed (fastcgi_finish_request when available) — and unschedule the
+		// now-duplicate event. Mirrors class-seo-indexing.php maybe_ping_indexnow_on_save().
+		if ( defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON ) {
+			\add_action(
+				'shutdown',
+				static function () {
+					$timestamp = \wp_next_scheduled( self::CRON_HOOK );
+					if ( $timestamp ) {
+						\wp_unschedule_event( $timestamp, self::CRON_HOOK );
+					}
+					if ( \function_exists( 'fastcgi_finish_request' ) ) {
+						\fastcgi_finish_request();
+					}
+					self::cron_run();
+				}
+			);
+		}
+
 		return array(
 			'scheduled' => (bool) $scheduled,
 			'running'   => false,
 		);
+	}
+
+	/**
+	 * Admin-only catch-up for the recurring audit cron when WP-Cron is disabled. If the scheduled
+	 * event is overdue, run it once behind a short transient lock so concurrent admin requests can't
+	 * double-run it. cron_run() has its own running-state guard. Real cron / front-end are untouched.
+	 */
+	public static function maybe_run_due_cron() {
+		if ( ! ( defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON ) ) {
+			return;
+		}
+		if ( \function_exists( 'wp_doing_cron' ) && \wp_doing_cron() ) {
+			return;
+		}
+		$next = \wp_next_scheduled( self::CRON_HOOK );
+		if ( ! $next || $next > time() ) {
+			return;
+		}
+		$lock_key = 'nexter_seo_audit_catchup_lock';
+		if ( \get_transient( $lock_key ) ) {
+			return;
+		}
+		\set_transient( $lock_key, 1, 5 * MINUTE_IN_SECONDS );
+		self::cron_run();
 	}
 
 	/**
@@ -351,7 +396,7 @@ class Engine {
 		if ( $schedule['frequency'] === 'off' ) {
 			return;
 		}
-		$first = self::compute_first_run( $schedule );
+		$first      = self::compute_first_run( $schedule );
 		$recurrence = self::recurrence_for_frequency( $schedule['frequency'] );
 		\wp_schedule_event( $first, $recurrence, self::CRON_HOOK );
 	}
@@ -362,17 +407,25 @@ class Engine {
 	 */
 	private static function compute_first_run( array $schedule ) {
 		list( $hour, $minute ) = explode( ':', $schedule['time'] );
-		$hour   = (int) $hour;
-		$minute = (int) $minute;
-		$tz     = \wp_timezone();
-		$now    = new \DateTimeImmutable( 'now', $tz );
-		$today  = $now->setTime( $hour, $minute, 0 );
+		$hour                  = (int) $hour;
+		$minute                = (int) $minute;
+		$tz                    = \wp_timezone();
+		$now                   = new \DateTimeImmutable( 'now', $tz );
+		$today                 = $now->setTime( $hour, $minute, 0 );
 		switch ( $schedule['frequency'] ) {
 			case 'daily':
 				$target = $today > $now ? $today : $today->modify( '+1 day' );
 				break;
 			case 'weekly':
-				$dayMap = array( 'sun' => 0, 'mon' => 1, 'tue' => 2, 'wed' => 3, 'thu' => 4, 'fri' => 5, 'sat' => 6 );
+				$dayMap = array(
+				'sun' => 0,
+				'mon' => 1,
+				'tue' => 2,
+				'wed' => 3,
+				'thu' => 4,
+				'fri' => 5,
+				'sat' => 6
+				);
 				$want   = $dayMap[ $schedule['day'] ] ?? 0;
 				$delta  = ( $want - (int) $today->format( 'w' ) + 7 ) % 7;
 				$target = $today->modify( '+' . $delta . ' day' );
@@ -509,14 +562,14 @@ class Engine {
 	 */
 	private function item( $id, $status, $title, $message, $recommendation = '', $fix_available = false, $fix_issue_id = '', $count = null ) {
 		$out = array(
-			'id'              => $id,
-			'status'          => $status,
-			'title'           => $title,
-			'message'         => $message,
-			'recommendation'  => $recommendation,
-			'fix_available'   => (bool) $fix_available,
-			'fix_issue_id'    => $fix_issue_id ? (string) $fix_issue_id : '',
-			'fix_callback'    => $fix_issue_id ? 'nexter_seo_audit_fix_' . $fix_issue_id : '',
+			'id'             => $id,
+			'status'         => $status,
+			'title'          => $title,
+			'message'        => $message,
+			'recommendation' => $recommendation,
+			'fix_available'  => (bool) $fix_available,
+			'fix_issue_id'   => $fix_issue_id ? (string) $fix_issue_id : '',
+			'fix_callback'   => $fix_issue_id ? 'nexter_seo_audit_fix_' . $fix_issue_id : '',
 		);
 		// Optional numeric detail (e.g. how many items failed a check) consumed by the dashboard
 		// module-status cards. Only emitted when a check supplies it, so existing callers are
@@ -573,10 +626,10 @@ class Engine {
 		}
 		$host = $part['host'];
 
-		$scheme = ! empty( $part['scheme'] ) ? $part['scheme'] : 'https';
-		$is_www = ( \stripos( $host, 'www.' ) === 0 );
-		$alt_host = $is_www ? \substr( $host, 4 ) : 'www.' . $host;
-		$primary  = $scheme . '://' . $host . '/';
+		$scheme    = ! empty( $part['scheme'] ) ? $part['scheme'] : 'https';
+		$is_www    = ( \stripos( $host, 'www.' ) === 0 );
+		$alt_host  = $is_www ? \substr( $host, 4 ) : 'www.' . $host;
+		$primary   = $scheme . '://' . $host . '/';
 		$alternate = $scheme . '://' . $alt_host . '/';
 
 		$http_args = array(
@@ -675,7 +728,7 @@ class Engine {
 				'headers'   => array( 'User-Agent' => 'NexterSEO-Audit/1.0' ),
 			)
 		);
-		$code = \is_wp_error( $r ) ? 0 : (int) \wp_remote_retrieve_response_code( $r );
+		$code   = \is_wp_error( $r ) ? 0 : (int) \wp_remote_retrieve_response_code( $r );
 		if ( $code === 404 ) {
 			return $this->item(
 				'robots_txt',
@@ -792,7 +845,7 @@ class Engine {
 			// subsequent homepage-based check in this run; let each one retry the fetch.
 			return $r;
 		}
-		$body                    = (string) \wp_remote_retrieve_body( $r );
+		$body                  = (string) \wp_remote_retrieve_body( $r );
 		$this->home_html_cache = $body;
 		return $body;
 	}
@@ -952,7 +1005,13 @@ class Engine {
 		if ( \is_wp_error( $html ) ) {
 			return $this->item( 'image_alt', 'warning', \__( 'Image ALT attributes', 'nexter-extension' ), \__( 'Could not scan images on the homepage.', 'nexter-extension' ), '', false, '' );
 		}
-		if ( ! \preg_match_all( '/<img\b[^>]*>/i', $html, $tags ) || empty( $tags[0] ) ) {
+		// Drop <noscript> blocks first — they hold lazy-load fallback <img> copies that duplicate
+		// the real image and would otherwise be counted (and flagged) twice.
+		$scan_html = \preg_replace( '#<noscript\b[^>]*>.*?</noscript>#is', '', $html );
+		if ( ! \is_string( $scan_html ) ) {
+			$scan_html = $html;
+		}
+		if ( ! \preg_match_all( '/<img\b[^>]*>/i', $scan_html, $tags ) || empty( $tags[0] ) ) {
 			return $this->item(
 				'image_alt',
 				'suggestion',
@@ -965,26 +1024,23 @@ class Engine {
 		}
 		$missing = 0;
 		foreach ( $tags[0] as $tag ) {
-			// Match alt in double-quoted, single-quoted, OR unquoted form — the old quoted-only
-			// regex flagged a valid unquoted alt=foo as missing (false positive).
-			if ( ! \preg_match( '/\balt\s*=\s*(?:"([^"]*)"|\'([^\']*)\'|([^\s"\'>]+))/i', $tag, $am ) ) {
-				++$missing;
+			// Lazy-loaded / slider images defer their real source (and frequently their ALT) to
+			// JavaScript, so the server-rendered tag legitimately has no usable ALT yet — auditing
+			// it produces a false "missing ALT". Skip images carrying lazy-load markers
+			// (data-src / data-lazy-src / data-srcset / data-lazy-*).
+			if ( \preg_match( '/\bdata-(?:lazy-)?src(?:set)?\s*=/i', $tag ) || \preg_match( '/\bdata-lazy(?:-[a-z-]+)?\s*=/i', $tag ) ) {
 				continue;
 			}
-			$val = '';
-			if ( isset( $am[1] ) && '' !== $am[1] ) {
-				$val = $am[1];
-			} elseif ( isset( $am[2] ) && '' !== $am[2] ) {
-				$val = $am[2];
-			} elseif ( isset( $am[3] ) ) {
-				$val = $am[3];
-			}
-			if ( '' === \trim( $val ) ) {
+			// A PRESENT alt attribute is intentional authoring — INCLUDING alt="" on a decorative
+			// image, which is valid per WCAG and must NOT be reported as a problem. Only a
+			// completely ABSENT alt attribute counts as missing. (The old code flagged intentional
+			// empty alt="" as "missing usable ALT", a false positive.)
+			if ( ! \preg_match( '/\balt\s*=/i', $tag ) ) {
 				++$missing;
 			}
 		}
 		if ( 0 === $missing ) {
-			return $this->item( 'image_alt', 'passed', \__( 'Image ALT attributes', 'nexter-extension' ), \__( 'All homepage images include non-empty ALT text.', 'nexter-extension' ), '', false, '' );
+			return $this->item( 'image_alt', 'passed', \__( 'Image ALT attributes', 'nexter-extension' ), \__( 'All homepage images include an ALT attribute (empty alt="" on decorative images is allowed).', 'nexter-extension' ), '', false, '' );
 		}
 		return $this->item(
 			'image_alt',
@@ -1112,7 +1168,7 @@ class Engine {
 			$internal_targets = array();
 			foreach ( $abs_links as $lnk ) {
 				$link_pool[ $lnk ] = true;
-				$ipath = $this->to_internal_path( $lnk, $home_host );
+				$ipath             = $this->to_internal_path( $lnk, $home_host );
 				if ( null !== $ipath && $ipath !== $self_path ) {
 					$internal_targets[ $ipath ] = true;
 				}
@@ -1173,7 +1229,7 @@ class Engine {
 			'%page%'             => '',
 			'%current_year%'     => \gmdate( 'Y' ),
 		);
-		$out = \strtr( $template, $repl );
+		$out  = \strtr( $template, $repl );
 		// Drop any remaining unresolved %tokens% and collapse whitespace/dangling separators.
 		$out = \preg_replace( '/%[a-z0-9_.]+%/i', '', (string) $out );
 		$out = \preg_replace( '/\s{2,}/', ' ', (string) $out );
@@ -1247,9 +1303,9 @@ class Engine {
 
 		// Root-cause hint: if the global title template carries no per-item token, EVERY page
 		// renders the same <title>. Surface that instead of a generic "revise post titles".
-		$opts         = \class_exists( 'Nexter_Content_SEO' ) ? Nexter_Content_SEO::get_options() : array();
-		$title_tpl    = ! empty( $opts['search_title_template'] ) ? (string) $opts['search_title_template'] : '';
-		$has_item_tok = (bool) \preg_match( '/%(post_title|post\.title|title|term_title)%/i', $title_tpl );
+		$opts           = \class_exists( 'Nexter_Content_SEO' ) ? Nexter_Content_SEO::get_options() : array();
+		$title_tpl      = ! empty( $opts['search_title_template'] ) ? (string) $opts['search_title_template'] : '';
+		$has_item_tok   = (bool) \preg_match( '/%(post_title|post\.title|title|term_title)%/i', $title_tpl );
 		$recommendation = $has_item_tok
 			? \__( 'Give each page a unique SEO title (Nexter SEO meta box) or revise duplicated post titles.', 'nexter-extension' )
 			: \__( 'Your title template has no per-page token, so every page renders the same title. Add %post_title% (and %term_title% for archives) to the title template under On-Page → Meta Template.', 'nexter-extension' );
@@ -1322,7 +1378,7 @@ class Engine {
 		}
 		$threshold = (int) \apply_filters( 'nexter_seo_audit_thin_word_threshold', self::THIN_WORD_THRESHOLD );
 		$threshold = \max( 50, $threshold );
-		$thin = 0;
+		$thin      = 0;
 		foreach ( $sample['posts'] as $p ) {
 			if ( (int) $p['words'] < $threshold ) {
 				++$thin;
@@ -1540,22 +1596,44 @@ class Engine {
 		$args    = array(
 			'timeout'     => $timeout,
 			'redirection' => 0,
-			'sslverify'   => false,
+			'sslverify'   => true,
 			'user-agent'  => 'Nexter-SEO-Audit/1.0',
 		);
 
 		while ( $hops <= self::REDIRECT_MAX_HOPS ) {
 			if ( isset( $seen[ $current ] ) ) {
-				return array( 'ok' => false, 'status' => 0, 'hops' => $hops, 'loop' => true );
+				return array(
+				'ok'     => false,
+				'status' => 0,
+				'hops'   => $hops,
+				'loop'   => true
+				);
 			}
 			$seen[ $current ] = true;
+
+			// SSRF guard: sampled page links are author-controllable, so never probe a URL whose
+			// host resolves to a private/reserved/loopback address (internal services, cloud
+			// metadata). Re-checked on every hop since redirects are followed manually.
+			if ( ! self::url_host_is_public( $current ) ) {
+				return array(
+				'ok'      => false,
+				'status'  => 0,
+				'hops'    => $hops,
+				'blocked' => true
+				);
+			}
 
 			$resp = \wp_remote_head( $current, $args );
 			if ( \is_wp_error( $resp ) ) {
 				$resp = \wp_remote_get( $current, $args ); // Some servers reject HEAD.
 			}
 			if ( \is_wp_error( $resp ) ) {
-				return array( 'ok' => false, 'status' => 0, 'hops' => $hops, 'error' => $resp->get_error_message() );
+				return array(
+				'ok'     => false,
+				'status' => 0,
+				'hops'   => $hops,
+				'error'  => $resp->get_error_message()
+				);
 			}
 			$code = (int) \wp_remote_retrieve_response_code( $resp );
 			if ( $code >= 300 && $code < 400 ) {
@@ -1564,15 +1642,62 @@ class Engine {
 					$loc = \end( $loc );
 				}
 				if ( '' === (string) $loc ) {
-					return array( 'ok' => true, 'status' => $code, 'hops' => $hops );
+					return array(
+					'ok'     => true,
+					'status' => $code,
+					'hops'   => $hops
+					);
 				}
 				$current = $this->resolve_redirect_url( (string) $loc, $current );
 				++$hops;
 				continue;
 			}
-			return array( 'ok' => ( $code >= 200 && $code < 400 ), 'status' => $code, 'hops' => $hops );
+			return array(
+			'ok'     => ( $code >= 200 && $code < 400 ),
+			'status' => $code,
+			'hops'   => $hops
+			);
 		}
-		return array( 'ok' => false, 'status' => 0, 'hops' => $hops, 'chain_exceeded' => true );
+		return array(
+		'ok'             => false,
+		'status'         => 0,
+		'hops'           => $hops,
+		'chain_exceeded' => true
+		);
+	}
+
+	/**
+	 * SSRF guard for the link probe: true only when the URL is http(s) and its host resolves
+	 * EXCLUSIVELY to public IPs. Fails closed (unresolvable / IPv6-only hosts are not probed).
+	 *
+	 * @param string $url URL to check.
+	 * @return bool
+	 */
+	private static function url_host_is_public( $url ) {
+		$parts  = \wp_parse_url( (string) $url );
+		$scheme = isset( $parts['scheme'] ) ? strtolower( $parts['scheme'] ) : '';
+		$host   = isset( $parts['host'] ) ? $parts['host'] : '';
+		if ( ( 'http' !== $scheme && 'https' !== $scheme ) || '' === $host ) {
+			return false;
+		}
+		$ips = array();
+		if ( \filter_var( $host, FILTER_VALIDATE_IP ) ) {
+			$ips[] = $host;
+		} elseif ( \function_exists( 'gethostbynamel' ) ) {
+			$resolved = \gethostbynamel( $host );
+			if ( \is_array( $resolved ) ) {
+				$ips = $resolved;
+			}
+		}
+		if ( empty( $ips ) ) {
+			return false;
+		}
+		foreach ( $ips as $ip ) {
+			if ( ! \filter_var( $ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE ) ) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	/**
@@ -1739,9 +1864,9 @@ class Engine {
 				);
 
 			case 'enable_nexter_sitemap':
-				$merged = Nexter_Content_SEO::get_options();
+				$merged                       = Nexter_Content_SEO::get_options();
 				$merged['enable_xml_sitemap'] = true;
-				$merged = Nexter_Content_SEO::sanitize_sitemap_settings( $merged );
+				$merged                       = Nexter_Content_SEO::sanitize_sitemap_settings( $merged );
 				\update_option( Nexter_Content_SEO::OPTION_NAME, $merged );
 				\flush_rewrite_rules( false );
 				return array(
@@ -1794,6 +1919,40 @@ class Engine {
 						),
 						array( 'status' => 409 )
 					);
+				}
+
+				// Split-host installs can run siteurl (the WordPress/wp-admin address) on a
+				// different host than home. We flip BOTH below, so when siteurl is on a different
+				// host it must be verified on its OWN HTTPS endpoint — otherwise switching it could
+				// white-screen wp-admin even though the public home host serves HTTPS fine. Same
+				// host → the home probe above already covered it. Refuse the whole op (change
+				// nothing) on failure; a partial flip is itself a lockout risk.
+				if ( $site && \strpos( $site, 'http://' ) === 0 ) {
+					$https_site = \preg_replace( '#^http://#i', 'https://', $site );
+					$home_host  = strtolower( (string) \wp_parse_url( $https_home, PHP_URL_HOST ) );
+					$site_host  = strtolower( (string) \wp_parse_url( $https_site, PHP_URL_HOST ) );
+					if ( $site_host && $site_host !== $home_host ) {
+						$site_probe = \wp_remote_get(
+							$https_site,
+							array(
+							'timeout'     => 10,
+							'redirection' => 2,
+							'sslverify'   => true
+							) 
+						);
+						$site_code  = \is_wp_error( $site_probe ) ? 0 : (int) \wp_remote_retrieve_response_code( $site_probe );
+						if ( \is_wp_error( $site_probe ) || $site_code < 200 || $site_code >= 400 ) {
+							return new \WP_Error(
+								'https_unreachable',
+								sprintf(
+									/* translators: %s: WordPress-address host */
+									\__( 'HTTPS is not serving your WordPress Address host (%s) yet. Fix SSL there first — the URLs were NOT changed, to avoid locking you out of wp-admin.', 'nexter-extension' ),
+									$site_host
+								),
+								array( 'status' => 409 )
+							);
+						}
+					}
 				}
 
 				// HTTPS verified reachable — safe to switch.

@@ -102,19 +102,19 @@ class Nexter_Content_SEO_Title {
 			$built     = '' !== $tagline ? $site_name . ' – ' . $tagline : $site_name;
 			// Trim separators too: when the blogname is empty this fallback yields "– Tagline",
 			// so strip the leading dangling separator (the user-template path already does this).
-			$cleaned   = self::trim_template_separators( self::cleanup_title( $built ) );
+			$cleaned = self::trim_template_separators( self::cleanup_title( $built ) );
 			return '' !== $cleaned ? $cleaned : $title;
 		}
 
 		if ( is_singular() ) {
 			$post = get_queried_object();
 			if ( $post instanceof WP_Post ) {
-				$meta = get_post_meta( $post->ID, self::META_TITLE, true );
+				$meta     = get_post_meta( $post->ID, self::META_TITLE, true );
 				$resolved = self::resolve_string_with_context( $meta, array( 'post' => $post ) );
 				if ( '' !== $resolved ) {
 					return $resolved;
 				}
-				$tpl = isset( $options['search_title_template'] ) ? (string) $options['search_title_template'] : '%post_title% - %site_name%';
+				$tpl      = isset( $options['search_title_template'] ) ? (string) $options['search_title_template'] : '%post_title% - %site_name%';
 				$resolved = self::resolve_string_with_context( $tpl, array( 'post' => $post ) );
 				if ( '' !== $resolved ) {
 					return $resolved;
@@ -140,7 +140,7 @@ class Nexter_Content_SEO_Title {
 					}
 				}
 			}
-			$tpl = ( isset( $options['archive_title_template'] ) && '' !== $options['archive_title_template'] )
+			$tpl      = ( isset( $options['archive_title_template'] ) && '' !== $options['archive_title_template'] )
 				? (string) $options['archive_title_template']
 				: '%term_title% - %site_name%';
 			$resolved = self::resolve_string_with_context( $tpl, $term_ctx );
@@ -226,8 +226,8 @@ class Nexter_Content_SEO_Title {
 		if ( $max > 0 ) {
 			$len = function_exists( 'mb_strlen' ) ? mb_strlen( $title ) : strlen( $title );
 			if ( $len > $max ) {
-				$cut  = function_exists( 'mb_substr' ) ? mb_substr( $title, 0, $max ) : substr( $title, 0, $max );
-				$sp   = strrpos( $cut, ' ' );
+				$cut   = function_exists( 'mb_substr' ) ? mb_substr( $title, 0, $max ) : substr( $title, 0, $max );
+				$sp    = strrpos( $cut, ' ' );
 				$title = ( false !== $sp && $sp > 0 ) ? rtrim( substr( $cut, 0, $sp ) ) : rtrim( $cut );
 			}
 		}

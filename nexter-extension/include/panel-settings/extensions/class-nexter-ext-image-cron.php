@@ -22,10 +22,58 @@ class Nexter_Ext_Image_Cron {
 	 */
 	const TIMEOUT = 60;
 
+	/**
+	 * How many consecutive failures with the configured format (avif/smart/webp)
+	 * before giving up on it. For avif/smart this triggers a fallback to webp;
+	 * for webp itself (already the fallback target) it triggers a permanent skip.
+	 */
+	const MAX_PRIMARY_RETRIES = 3;
+
+	/**
+	 * How many consecutive webp fallback failures before permanently skipping the file.
+	 */
+	const MAX_FALLBACK_RETRIES = 3;
+
 	public function __construct() {
 		add_filter( 'cron_schedules', array( $this, 'register_cron_interval' ) );
 		add_action( 'init', array( $this, 'check_schedule' ) );
 		add_action( self::RECURRING_HOOK, array( $this, 'process_scheduled_optimization' ) );
+
+		// Fallback for hosts with WP-Cron disabled (DISABLE_WP_CRON) and no system cron: the queued
+		// recurring event can sit unfired indefinitely, so background optimisation silently never
+		// runs. On admin requests, if the event is overdue, trigger the runner once behind a short
+		// transient lock so concurrent admin loads can't double-run it. Front-end and real cron are
+		// untouched.
+		if ( defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON ) {
+			add_action( 'admin_init', array( $this, 'maybe_run_due_cron' ) );
+		}
+	}
+
+	/**
+	 * Admin-only catch-up for the recurring optimiser cron when WP-Cron is disabled.
+	 */
+	public function maybe_run_due_cron() {
+		if ( ! ( defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON ) ) {
+			return;
+		}
+		if ( ! is_admin() ) {
+			return;
+		}
+		if ( function_exists( 'wp_doing_cron' ) && wp_doing_cron() ) {
+			return;
+		}
+		$next = wp_next_scheduled( self::RECURRING_HOOK );
+		if ( ! $next || $next > time() ) {
+			return;
+		}
+		// Short lock so overlapping admin requests don't run the batch twice; not deleted on success
+		// so it also rate-limits the catch-up to at most once per lock window.
+		$lock_key = 'nxt_ext_image_cron_catchup_lock';
+		if ( get_transient( $lock_key ) ) {
+			return;
+		}
+		set_transient( $lock_key, 1, 5 * MINUTE_IN_SECONDS );
+		$this->process_scheduled_optimization();
 	}
 
 	/**
@@ -46,10 +94,10 @@ class Nexter_Ext_Image_Cron {
 		if ( function_exists( 'wp_doing_cron' ) && wp_doing_cron() ) {
 			return;
 		}
-		$settings = Nexter_Ext_Image_Upload_Optimization::get_instance()->get_settings();
+		$settings      = Nexter_Ext_Image_Upload_Optimization::get_instance()->get_settings();
 		$limit_handler = Nexter_Ext_Image_Optimization_Limit::get_instance();
 
-		$enabled  = ! empty( $settings['enabled'] ) && ! empty( $settings['run_in_background'] );
+		$enabled       = ! empty( $settings['enabled'] ) && ! empty( $settings['run_in_background'] );
 		$limit_reached = $limit_handler->is_limit_reached();
 
 		if ( ! $enabled || $limit_reached ) {
@@ -123,27 +171,34 @@ class Nexter_Ext_Image_Cron {
 	 */
 	private function get_unoptimized_attachment_ids( $limit = 5 ) {
 		$args = array(
-			'post_type'      => 'attachment',
-			'post_mime_type' => array( 'image/jpeg', 'image/jpg', 'image/png', 'image/gif' ),
-			'post_status'    => 'inherit',
+			'post_type'              => 'attachment',
+			'post_mime_type'         => array( 'image/jpeg', 'image/jpg', 'image/png', 'image/gif' ),
+			'post_status'            => 'inherit',
 			// Candidate pool — some rows may already be optimised (their marker gets backfilled
 			// and they are skipped below), so fetch more than $limit to still fill a batch.
-			'posts_per_page' => max( (int) $limit * 5, 25 ),
-			'fields'         => 'ids',
-			'orderby'        => 'ID',
-			'order'          => 'DESC', // Newest uploads first, so freshly uploaded images convert promptly.
-			'no_found_rows'  => true,
+			'posts_per_page'         => max( (int) $limit * 5, 25 ),
+			'fields'                 => 'ids',
+			'orderby'                => 'ID',
+			'order'                  => 'DESC', // Newest uploads first, so freshly uploaded images convert promptly.
+			'no_found_rows'          => true,
 			'update_post_meta_cache' => false,
 			'update_post_term_cache' => false,
-			'meta_query' => array(
+			'meta_query'             => array(
+				'relation' => 'AND',
 				array(
 					'key'     => 'nxt_optimized_file',
+					'compare' => 'NOT EXISTS',
+				),
+				array(
+					// Permanently-failed files (avif + webp fallback both failed) are
+					// excluded so the cron does not retry them forever.
+					'key'     => 'nxt_optimize_failed',
 					'compare' => 'NOT EXISTS',
 				),
 			),
 		);
 		$query = new WP_Query( $args );
-		$ids = array();
+		$ids   = array();
 		if ( empty( $query->posts ) || ! is_array( $query->posts ) ) {
 			return $ids;
 		}
@@ -153,7 +208,7 @@ class Nexter_Ext_Image_Cron {
 				break;
 			}
 			$attachment_id = (int) $attachment_id;
-			$file_path = get_attached_file( $attachment_id );
+			$file_path     = get_attached_file( $attachment_id );
 			if ( ! $file_path || ! file_exists( $file_path ) ) {
 				continue;
 			}
@@ -179,7 +234,7 @@ class Nexter_Ext_Image_Cron {
 	 * @param array $settings Settings.
 	 */
 	private function process_batch( $batch, $settings ) {
-		$optimizer = Nexter_Ext_Image_Upload_Optimization::get_instance();
+		$optimizer     = Nexter_Ext_Image_Upload_Optimization::get_instance();
 		$limit_handler = Nexter_Ext_Image_Optimization_Limit::get_instance();
 		$optimizer->create_optimizer_folders();
 
@@ -192,22 +247,37 @@ class Nexter_Ext_Image_Cron {
 				continue;
 			}
 
-			$result = $optimizer->process_image( $file_path, $settings );
+			$attempt_settings = $settings;
+			$phase            = get_post_meta( $attachment_id, 'nxt_optimize_phase', true );
+			$phase            = $phase ? $phase : 'primary';
+
+			// Once the configured format has failed too many times in a row, fall
+			// back to plain webp for this attachment (regardless of global setting).
+			if ( 'fallback' === $phase && in_array( $settings['output_format'], array( 'smart', 'avif' ), true ) ) {
+				$attempt_settings['output_format'] = 'webp';
+			}
+
+			$result = $optimizer->process_image( $file_path, $attempt_settings );
 
 			if ( ! $result || empty( $result['success'] ) || empty( $result['file'] ) ) {
+				$this->handle_failed_attempt( $attachment_id, $phase, $attempt_settings['output_format'] );
 				continue;
 			}
 
-			$upload_dir = wp_get_upload_dir();
-			$basedir    = wp_normalize_path( $upload_dir['basedir'] );
-			$original_path = $file_path;
-			$optimized_path = $result['file'];
-			$original_relative = str_replace( $basedir . '/', '', wp_normalize_path( str_replace( '\\', '/', $original_path ) ) );
-			$original_relative = ltrim( $original_relative, '/' );
+			// Success — clear any retry bookkeeping from earlier failed attempts.
+			delete_post_meta( $attachment_id, 'nxt_optimize_attempts' );
+			delete_post_meta( $attachment_id, 'nxt_optimize_phase' );
+
+			$upload_dir         = wp_get_upload_dir();
+			$basedir            = wp_normalize_path( $upload_dir['basedir'] );
+			$original_path      = $file_path;
+			$optimized_path     = $result['file'];
+			$original_relative  = str_replace( $basedir . '/', '', wp_normalize_path( str_replace( '\\', '/', $original_path ) ) );
+			$original_relative  = ltrim( $original_relative, '/' );
 			$optimized_relative = Nexter_Ext_Image_Upload_Optimization::absolute_to_relative_content( $optimized_path );
 
-			$backup_dir = WP_CONTENT_DIR . '/nexter-optimizer/backups';
-			$backup_path = wp_normalize_path( $backup_dir . '/' . $original_relative );
+			$backup_dir    = WP_CONTENT_DIR . '/nexter-optimizer/backups';
+			$backup_path   = wp_normalize_path( $backup_dir . '/' . $original_relative );
 			$backup_parent = dirname( $backup_path );
 			if ( ! is_dir( $backup_parent ) ) {
 				wp_mkdir_p( $backup_parent );
@@ -221,23 +291,23 @@ class Nexter_Ext_Image_Cron {
 			if ( ! is_array( $metadata ) ) {
 				$metadata = array();
 			}
-			$metadata['nxt_main_original_size'] = $result['original_size'];
+			$metadata['nxt_main_original_size']  = $result['original_size'];
 			$metadata['nxt_main_optimized_size'] = $result['optimized_size'];
-			$metadata['nxt_original_size'] = $result['original_size'];
-			$metadata['nxt_optimized_size'] = $result['optimized_size'];
-			$metadata['nxt_original_file'] = $original_relative;
-			$metadata['nxt_optimized_file'] = $optimized_relative;
-			$metadata['nxt_optimized_format'] = $result['format'];
-			$metadata['nxt_original_mime'] = isset( $result['original_mime'] ) ? $result['original_mime'] : get_post_mime_type( $attachment_id );
+			$metadata['nxt_original_size']       = $result['original_size'];
+			$metadata['nxt_optimized_size']      = $result['optimized_size'];
+			$metadata['nxt_original_file']       = $original_relative;
+			$metadata['nxt_optimized_file']      = $optimized_relative;
+			$metadata['nxt_optimized_format']    = $result['format'];
+			$metadata['nxt_original_mime']       = isset( $result['original_mime'] ) ? $result['original_mime'] : get_post_mime_type( $attachment_id );
 			if ( $backup_relative ) {
 				$metadata['nxt_backup_file'] = $backup_relative;
 			}
 
 			// Thumbnails.
-			$total_original = $result['original_size'];
+			$total_original  = $result['original_size'];
 			$total_optimized = $result['optimized_size'];
-			$base_dir = dirname( $file_path );
-			$valid_mimes = array( 'image/jpeg', 'image/jpg', 'image/png', 'image/gif' );
+			$base_dir        = dirname( $file_path );
+			$valid_mimes     = array( 'image/jpeg', 'image/jpg', 'image/png', 'image/gif' );
 
 			if ( isset( $metadata['sizes'] ) && is_array( $metadata['sizes'] ) ) {
 				$metadata['nxt_optimized_sizes'] = isset( $metadata['nxt_optimized_sizes'] ) ? $metadata['nxt_optimized_sizes'] : array();
@@ -249,7 +319,7 @@ class Nexter_Ext_Image_Cron {
 					if ( ! file_exists( $size_file_path ) ) {
 						continue;
 					}
-					$ft = function_exists( 'wp_check_filetype' ) ? wp_check_filetype( $size_file_path, null ) : null;
+					$ft        = function_exists( 'wp_check_filetype' ) ? wp_check_filetype( $size_file_path, null ) : null;
 					$size_mime = is_array( $ft ) && ! empty( $ft['type'] ) ? $ft['type'] : '';
 					if ( ! in_array( $size_mime, $valid_mimes, true ) ) {
 						continue;
@@ -260,9 +330,9 @@ class Nexter_Ext_Image_Cron {
 					}
 
 					// Backup thumbnail.
-					$size_relative = str_replace( $basedir . '/', '', wp_normalize_path( str_replace( '\\', '/', $size_file_path ) ) );
-					$size_relative = ltrim( $size_relative, '/' );
-					$size_backup_path = wp_normalize_path( $backup_dir . '/' . $size_relative );
+					$size_relative      = str_replace( $basedir . '/', '', wp_normalize_path( str_replace( '\\', '/', $size_file_path ) ) );
+					$size_relative      = ltrim( $size_relative, '/' );
+					$size_backup_path   = wp_normalize_path( $backup_dir . '/' . $size_relative );
 					$size_backup_parent = dirname( $size_backup_path );
 					if ( ! is_dir( $size_backup_parent ) ) {
 						wp_mkdir_p( $size_backup_parent );
@@ -274,8 +344,8 @@ class Nexter_Ext_Image_Cron {
 
 					$size_result = $optimizer->process_image( $size_file_path, $settings );
 					if ( $size_result && ! empty( $size_result['success'] ) && ! empty( $size_result['file'] ) ) {
-						$total_original += $size_result['original_size'];
-						$total_optimized += $size_result['optimized_size'];
+						$total_original                               += $size_result['original_size'];
+						$total_optimized                              += $size_result['optimized_size'];
 						$metadata['nxt_optimized_sizes'][ $size_name ] = array(
 							'file'           => Nexter_Ext_Image_Upload_Optimization::absolute_to_relative_content( $size_result['file'] ),
 							'format'         => $size_result['format'],
@@ -302,6 +372,63 @@ class Nexter_Ext_Image_Cron {
 			$credit_count = 1 + ( isset( $metadata['nxt_optimized_sizes'] ) && is_array( $metadata['nxt_optimized_sizes'] ) ? count( $metadata['nxt_optimized_sizes'] ) : 0 );
 			$limit_handler->record_optimization( $attachment_id, (int) $total_original, (int) $total_optimized, $credit_count );
 		}
+	}
+
+	/**
+	 * Record a failed optimisation attempt and advance retry state.
+	 *
+	 * primary phase (avif/smart/webp, whatever is configured):
+	 *   - under MAX_PRIMARY_RETRIES: just count the attempt, try again next run.
+	 *   - at MAX_PRIMARY_RETRIES:
+	 *       - if the format tried was avif/smart, switch to the webp fallback phase.
+	 *       - if the format tried was already webp (no fallback left), skip permanently.
+	 * fallback phase (webp):
+	 *   - under MAX_FALLBACK_RETRIES: just count the attempt.
+	 *   - at MAX_FALLBACK_RETRIES: skip permanently.
+	 *
+	 * @param int    $attachment_id Attachment ID.
+	 * @param string $phase         'primary' or 'fallback'.
+	 * @param string $format_tried  Output format used for the failed attempt.
+	 */
+	private function handle_failed_attempt( $attachment_id, $phase, $format_tried ) {
+		$attempts = (int) get_post_meta( $attachment_id, 'nxt_optimize_attempts', true ) + 1;
+
+		if ( 'fallback' === $phase ) {
+			if ( $attempts >= self::MAX_FALLBACK_RETRIES ) {
+				$this->mark_optimize_failed( $attachment_id, 'webp_fallback_failed' );
+				return;
+			}
+			update_post_meta( $attachment_id, 'nxt_optimize_attempts', $attempts );
+			return;
+		}
+
+		// Primary phase.
+		if ( $attempts < self::MAX_PRIMARY_RETRIES ) {
+			update_post_meta( $attachment_id, 'nxt_optimize_attempts', $attempts );
+			return;
+		}
+
+		if ( in_array( $format_tried, array( 'avif', 'smart' ), true ) ) {
+			// avif/smart exhausted its retries — fall back to webp with a fresh counter.
+			update_post_meta( $attachment_id, 'nxt_optimize_phase', 'fallback' );
+			update_post_meta( $attachment_id, 'nxt_optimize_attempts', 0 );
+			return;
+		}
+
+		// Already webp, or 'original' (no format to fall back to) — nothing left to try.
+		$this->mark_optimize_failed( $attachment_id, 'webp' === $format_tried ? 'webp_failed' : 'original_failed' );
+	}
+
+	/**
+	 * Permanently mark an attachment as un-optimisable so the cron stops retrying it.
+	 *
+	 * @param int    $attachment_id Attachment ID.
+	 * @param string $reason        Short machine-readable failure reason.
+	 */
+	private function mark_optimize_failed( $attachment_id, $reason ) {
+		update_post_meta( $attachment_id, 'nxt_optimize_failed', $reason );
+		delete_post_meta( $attachment_id, 'nxt_optimize_attempts' );
+		delete_post_meta( $attachment_id, 'nxt_optimize_phase' );
 	}
 
 	/**

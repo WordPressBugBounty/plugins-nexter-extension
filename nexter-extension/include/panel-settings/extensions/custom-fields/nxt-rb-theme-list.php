@@ -1,13 +1,13 @@
 <?php
 
 if ( ! defined( 'ABSPATH' ) ) {
-    exit;
+	exit;
 }
 
 include_once ABSPATH . WPINC . '/version.php';
 
 if ( defined( 'WP_INSTALLING' ) || ! is_admin() ) {
-    return false;
+	return false;
 }
 
 $expiration       = 12 * HOUR_IN_SECONDS;
@@ -15,37 +15,37 @@ $installed_themes = wp_get_themes();
 $last_update      = get_site_transient( 'update_themes' );
 
 if ( ! is_object( $last_update ) ) {
-    set_site_transient( 'nxt_ext_rollback_themes', time(), $expiration );
+	set_site_transient( 'nxt_ext_rollback_themes', time(), $expiration );
 }
 
 $request = [
-    'active' => get_option( 'stylesheet' ),
-    'themes' => [],
+	'active' => get_option( 'stylesheet' ),
+	'themes' => [],
 ];
 
 $checked = [];
 
 foreach ( $installed_themes as $theme ) {
-    $stylesheet = $theme->get_stylesheet();
-    $checked[ $stylesheet ] = $theme->get( 'Version' );
-    $request['themes'][ $stylesheet ] = [
-        'Name'       => $theme->get( 'Name' ),
-        'Title'      => $theme->get( 'Name' ),
-        'Version'    => '0.0.0.0.0.0',
-        'Author'     => $theme->get( 'Author' ),
-        'Author URI' => $theme->get( 'AuthorURI' ),
-        'Template'   => $theme->get_template(),
-        'Stylesheet' => $stylesheet,
-    ];
+	$stylesheet                       = $theme->get_stylesheet();
+	$checked[ $stylesheet ]           = $theme->get( 'Version' );
+	$request['themes'][ $stylesheet ] = [
+		'Name'       => $theme->get( 'Name' ),
+		'Title'      => $theme->get( 'Name' ),
+		'Version'    => '0.0.0.0.0.0',
+		'Author'     => $theme->get( 'Author' ),
+		'Author URI' => $theme->get( 'AuthorURI' ),
+		'Template'   => $theme->get_template(),
+		'Stylesheet' => $stylesheet,
+	];
 }
 
 $timeout = 3 + (int) ( count( $request['themes'] ) / 10 );
 
 global $wp_version;
 $options = [
-    'timeout'    => $timeout,
-    'body'       => [ 'themes' => wp_json_encode( $request ) ],
-    'user-agent' => 'WordPress/' . $wp_version . '; ' . get_bloginfo( 'url' ),
+	'timeout'    => $timeout,
+	'body'       => [ 'themes' => wp_json_encode( $request ) ],
+	'user-agent' => 'WordPress/' . $wp_version . '; ' . get_bloginfo( 'url' ),
 ];
 
 // Determine request URL.
@@ -57,11 +57,11 @@ $response = wp_remote_post( $url, $options );
 
 // Fallback to HTTP if SSL fails (e.g. local/dev without valid SSL).
 if ( is_wp_error( $response ) && wp_http_supports( [ 'ssl' ] ) ) {
-    $response = wp_remote_post( $http_url, $options );
+	$response = wp_remote_post( $http_url, $options );
 }
 
 if ( is_wp_error( $response ) || 200 !== wp_remote_retrieve_response_code( $response ) ) {
-    return false;
+	return false;
 }
 
 $body = json_decode( wp_remote_retrieve_body( $response ), true );
@@ -71,7 +71,7 @@ $update_data->last_checked = time();
 $update_data->checked      = $checked;
 
 if ( is_array( $body ) && isset( $body['themes'] ) ) {
-    $update_data->response = $body['themes'];
+	$update_data->response = $body['themes'];
 }
 
 set_site_transient( 'nxt_ext_rollback_themes', $update_data, $expiration );

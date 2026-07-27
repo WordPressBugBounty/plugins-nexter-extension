@@ -3,16 +3,16 @@
  * SVG Upload Extension
  * @since 4.2.0
  */
-defined('ABSPATH') or die();
+defined( 'ABSPATH' ) or die();
 
- class Nexter_Ext_SVG_Upload {
-    
+class Nexter_Ext_SVG_Upload {
+	
 	public static $svg_upload_opt = [];
 
-    /**
-     * Constructor
-     */
-    public function __construct() {
+	/**
+	 * Constructor
+	 */
+	public function __construct() {
 		$this->nxt_get_svg_upload_settings();
 
 		add_filter( 'upload_mimes', [$this, 'add_svg_mime'] );
@@ -38,7 +38,7 @@ defined('ABSPATH') or die();
 			3
 		);
 		add_filter( 'wp_calculate_image_srcset', [$this, 'disable_svg_srcset'] );
-		if ( !in_array( 'auto-sizes/auto-sizes.php', get_option( 'active_plugins', array() ) ) ) {
+		if ( ! in_array( 'auto-sizes/auto-sizes.php', get_option( 'active_plugins', array() ) ) ) {
 			// Only add this filter when https://wordpress.org/plugins/auto-sizes/ is not active to prevent PHP deprecation notice
 			add_filter(
 				'wp_calculate_image_sizes',
@@ -51,42 +51,42 @@ defined('ABSPATH') or die();
 		// Security: Remove unauthenticated access
 		// add_action( 'wp_ajax_nopriv_svg_get_attachment_url', [$this, 'get_svg_attachment_url'] );
 		add_filter( 'wp_prepare_attachment_for_js', [$this, 'get_svg_url_in_media_library'] );
-    }
+	}
 
 	private function nxt_get_svg_upload_settings(){
 
-		if(isset(self::$svg_upload_opt) && !empty(self::$svg_upload_opt)){
+		if ( isset( self::$svg_upload_opt ) && ! empty( self::$svg_upload_opt ) ) {
 			return self::$svg_upload_opt;
 		}
 		
 		$option = Nxt_Options::security();
 		
-		if(!empty($option) && isset($option['svg-upload']) && !empty($option['svg-upload']['switch']) && !empty( (array) $option['svg-upload']['values']) ){
+		if ( ! empty( $option ) && isset( $option['svg-upload'] ) && ! empty( $option['svg-upload']['switch'] ) && ! empty( (array) $option['svg-upload']['values'] ) ) {
 			self::$svg_upload_opt = (array) $option['svg-upload']['values'];
 		}
 		return self::$svg_upload_opt;
 	}
 
 	/**
-     * Add SVG mime type for media library uploads
-     */
-    public function add_svg_mime( $mimes ) {
+	 * Add SVG mime type for media library uploads
+	 */
+	public function add_svg_mime( $mimes ) {
 
-        $current_user = wp_get_current_user();
-        $current_user_roles = (array) $current_user->roles; // single dimensional array of role slugs
+		$current_user       = wp_get_current_user();
+		$current_user_roles = (array) $current_user->roles; // single dimensional array of role slugs
 
-        if ( count( self::$svg_upload_opt ) > 0 ) {
-            // Add mime type for user roles set to enable SVG upload
-            foreach ( $current_user_roles as $role ) {
-                if ( in_array( $role, self::$svg_upload_opt ) ) {
-                    $mimes['svg'] = 'image/svg+xml';
-                }
-            }
-        }
+		if ( count( self::$svg_upload_opt ) > 0 ) {
+			// Add mime type for user roles set to enable SVG upload
+			foreach ( $current_user_roles as $role ) {
+				if ( in_array( $role, self::$svg_upload_opt ) ) {
+					$mimes['svg'] = 'image/svg+xml';
+				}
+			}
+		}
 
-        return $mimes;
+		return $mimes;
 
-    }
+	}
 
 	/**
 	 * Confirm the real file type is SVG for allowed user roles.
@@ -116,16 +116,16 @@ defined('ABSPATH') or die();
 		}
 
 		$file_tmp_name = $file['tmp_name']; // full path
-        $file_name = isset( $file['name'] ) ? sanitize_file_name( $file['name'] ) : '';
-        
-        // Security: Validate file is actually an uploaded file
-        if ( ! is_uploaded_file( $file_tmp_name ) ) {
-            $file['error'] = __( 'Invalid file upload.', 'nexter-extension' );
-            return $file;
-        }
-        
-        $file_type_ext = wp_check_filetype_and_ext( $file_tmp_name, $file_name );
-        $file_type = ! empty( $file_type_ext['type'] ) ? $file_type_ext['type'] : '';
+		$file_name     = isset( $file['name'] ) ? sanitize_file_name( $file['name'] ) : '';
+		
+		// Security: Validate file is actually an uploaded file
+		if ( ! is_uploaded_file( $file_tmp_name ) ) {
+			$file['error'] = __( 'Invalid file upload.', 'nexter-extension' );
+			return $file;
+		}
+		
+		$file_type_ext = wp_check_filetype_and_ext( $file_tmp_name, $file_name );
+		$file_type     = ! empty( $file_type_ext['type'] ) ? $file_type_ext['type'] : '';
 		
 		if ( 'image/svg+xml' === $file_type ) {
 			// Security: Read file with size limit
@@ -158,7 +158,7 @@ defined('ABSPATH') or die();
 
 	public function sanitize_xmlrpc_svg_upload( $media_item, $post ) {
 		if ( is_object( $post ) && property_exists( $post, 'ID' ) && get_post_mime_type( $post ) === 'image/svg+xml' ) {
-			$file_path     = get_attached_file( $post->ID );
+			$file_path = get_attached_file( $post->ID );
 			
 			// Security: Validate file path
 			if ( ! $file_path || ! file_exists( $file_path ) ) {
@@ -166,15 +166,15 @@ defined('ABSPATH') or die();
 			}
 			
 			// Security: Verify file is within uploads directory
-			$real_file_path = realpath( $file_path );
-			$uploads_dir = wp_upload_dir();
+			$real_file_path   = realpath( $file_path );
+			$uploads_dir      = wp_upload_dir();
 			$real_uploads_dir = realpath( $uploads_dir['basedir'] );
 			
 			if ( ! $real_file_path || ! $real_uploads_dir || strpos( $real_file_path, $real_uploads_dir ) !== 0 ) {
 				return $media_item;
 			}
 			
-			$original_svg  = file_get_contents( $file_path );
+			$original_svg = file_get_contents( $file_path );
 			
 			// Security: Validate file was read successfully
 			if ( $original_svg === false ) {
@@ -197,7 +197,7 @@ defined('ABSPATH') or die();
 	public function get_svg_sanitizer() {
 		if ( ! class_exists( '\enshrined\svgSanitize\Sanitizer' ) ) {
 			$base_dir = NEXTER_EXT_DIR . 'vendor/enshrined/svg-sanitize/src/';
-			$files = [
+			$files    = [
 				'data/AttributeInterface.php',
 				'data/TagInterface.php',
 				'data/AllowedAttributes.php',
@@ -223,7 +223,7 @@ defined('ABSPATH') or die();
 	 */
 	public function sanitize_after_upload( $attachment, $request, $creating ) {
 		if ( $creating && $attachment instanceof WP_Post ) {
-			$file_path     = get_attached_file( $attachment->ID );
+			$file_path = get_attached_file( $attachment->ID );
 			
 			// Security: Validate file path
 			if ( ! $file_path || ! file_exists( $file_path ) ) {
@@ -231,15 +231,15 @@ defined('ABSPATH') or die();
 			}
 			
 			// Security: Verify file is within uploads directory
-			$real_file_path = realpath( $file_path );
-			$uploads_dir = wp_upload_dir();
+			$real_file_path   = realpath( $file_path );
+			$uploads_dir      = wp_upload_dir();
 			$real_uploads_dir = realpath( $uploads_dir['basedir'] );
 			
 			if ( ! $real_file_path || ! $real_uploads_dir || strpos( $real_file_path, $real_uploads_dir ) !== 0 ) {
 				return;
 			}
 			
-			$original_svg  = file_get_contents( $file_path );
+			$original_svg = file_get_contents( $file_path );
 			
 			// Security: Validate file was read successfully
 			if ( $original_svg === false ) {
@@ -268,7 +268,7 @@ defined('ABSPATH') or die();
 			
 			// Security: Disable external entity loading to prevent XXE attacks
 			$old_value = libxml_disable_entity_loader( true );
-			$svg      = @simplexml_load_file( $svg_path );
+			$svg       = @simplexml_load_file( $svg_path );
 			libxml_disable_entity_loader( $old_value );
 
 			$width = $height = 0;
@@ -290,8 +290,8 @@ defined('ABSPATH') or die();
 			$metadata['width']  = $width;
 			$metadata['height'] = $height;
 
-			$url_path          = str_replace( wp_upload_dir()['baseurl'] . '/', '', wp_get_original_image_url( $attachment_id ) );
-			$metadata['file']  = $url_path;
+			$url_path         = str_replace( wp_upload_dir()['baseurl'] . '/', '', wp_get_original_image_url( $attachment_id ) );
+			$metadata['file'] = $url_path;
 		}
 
 		return $metadata;

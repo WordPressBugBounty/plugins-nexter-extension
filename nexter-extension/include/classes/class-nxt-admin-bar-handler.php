@@ -46,21 +46,25 @@ class Nxt_Admin_Bar_Handler {
 			return;
 		}
 
-		$wp_admin_bar->add_node( [
+		$wp_admin_bar->add_node(
+			[
 			'id'    => 'nxt_edit_template',
 			'meta'  => array(
 				'class' => 'nxt_edit_template',
 			),
 			'title' => esc_html__( 'Template List', 'nexter-extension' ),
-		] );
+			 ] 
+		);
 
-		$wp_admin_bar->add_node( [
+		$wp_admin_bar->add_node(
+			[
 			'id'    => 'nxt_edit_snippets',
 			'meta'  => array(
 				'class' => 'nxt_edit_snippets',
 			),
 			'title' => esc_html__( 'Snippets List', 'nexter-extension' ),
-		] );
+			 ] 
+		);
 	}
 
 	// ── Admin Bar Scripts ──────────────────────────────────────────
@@ -87,8 +91,8 @@ class Nxt_Admin_Bar_Handler {
 			$post_ids = apply_filters( 'nexter_template_load_ids', $post_ids );
 		}
 
-		$snippets_ids    = [];
-		$get_opt         = Nxt_Options::extra_ext();
+		$snippets_ids     = [];
+		$get_opt          = Nxt_Options::extra_ext();
 		$adminbar_enabled = false;
 
 		// Check if code snippets are enabled.
@@ -167,8 +171,8 @@ class Nxt_Admin_Bar_Handler {
 						$template_list[ $post_id ]['edit_url'] = esc_url( get_edit_post_link( $post_id ) );
 					}
 					if ( isset( $posts->post_type ) ) {
-						$template_list[ $post_id ]['post_type'] = $posts->post_type;
-						$post_type_obj = get_post_type_object( $posts->post_type );
+						$template_list[ $post_id ]['post_type']      = $posts->post_type;
+						$post_type_obj                               = get_post_type_object( $posts->post_type );
 						$template_list[ $post_id ]['post_type_name'] = ( $post_type_obj && isset( $post_type_obj->labels ) && isset( $post_type_obj->labels->singular_name ) ) ? $post_type_obj->labels->singular_name : '';
 
 						if ( $posts->post_type === 'nxt_builder' ) {
@@ -427,8 +431,8 @@ class Nxt_Admin_Bar_Handler {
 	private function validate_woocommerce_location_context( $location ) {
 		if ( strpos( $location, 'shop' ) !== false || strpos( $location, 'list_products' ) !== false ) {
 			return ( function_exists( 'is_shop' ) && is_shop() ) ||
-			       ( function_exists( 'is_product_category' ) && is_product_category() ) ||
-			       ( function_exists( 'is_product_tag' ) && is_product_tag() );
+				   ( function_exists( 'is_product_category' ) && is_product_category() ) ||
+				   ( function_exists( 'is_product_tag' ) && is_product_tag() );
 		}
 
 		if ( strpos( $location, 'single_product' ) !== false ) {
@@ -477,17 +481,17 @@ class Nxt_Admin_Bar_Handler {
 	private function validate_memberpress_location_context( $location ) {
 		if ( strpos( $location, 'checkout' ) !== false ) {
 			return function_exists( 'is_page' ) && function_exists( 'get_query_var' ) &&
-			       is_page() && get_query_var( 'action' ) === 'checkout';
+				   is_page() && get_query_var( 'action' ) === 'checkout';
 		}
 
 		if ( strpos( $location, 'account' ) !== false ) {
 			return function_exists( 'is_page' ) && function_exists( 'get_query_var' ) &&
-			       is_page() && get_query_var( 'action' ) === 'account';
+				   is_page() && get_query_var( 'action' ) === 'account';
 		}
 
 		if ( strpos( $location, 'login' ) !== false ) {
 			return function_exists( 'is_page' ) && function_exists( 'get_query_var' ) &&
-			       is_page() && get_query_var( 'action' ) === 'login';
+				   is_page() && get_query_var( 'action' ) === 'login';
 		}
 
 		if ( strpos( $location, 'unauthorized' ) !== false ) {
@@ -512,14 +516,17 @@ class Nxt_Admin_Bar_Handler {
 			'after_post',
 		];
 
-		$singular_only_locations = array_merge( [
+		$singular_only_locations = array_merge(
+			[
 			'insert_before_content',
 			'insert_after_content',
 			'insert_before_paragraph',
 			'insert_after_paragraph',
 			'insert_before_post',
 			'insert_after_post',
-		], Nexter_Page_Specific_Code_Handler::get_advanced_content_locations() );
+			 ],
+			Nexter_Page_Specific_Code_Handler::get_advanced_content_locations() 
+		);
 
 		if ( in_array( $location, $archive_only_locations ) ) {
 			return ! is_singular();
@@ -546,8 +553,8 @@ class Nxt_Admin_Bar_Handler {
 		$keys   = array_unique( array_merge( array_keys( $base ), array_keys( $append ) ) );
 
 		foreach ( $keys as $key ) {
-			$base_items   = $base[ $key ] ?? [];
-			$append_items = $append[ $key ] ?? [];
+			$base_items     = $base[ $key ] ?? [];
+			$append_items   = $append[ $key ] ?? [];
 			$merged[ $key ] = array_values( array_unique( array_merge( $base_items, $append_items ) ) );
 		}
 

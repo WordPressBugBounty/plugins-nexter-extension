@@ -40,6 +40,42 @@ class Nexter_Content_SEO_LLMs {
 		add_action( 'deleted_post', array( __CLASS__, 'maybe_clear_cache_for_post' ) );
 		add_action( 'edited_term', array( __CLASS__, 'clear_cache' ) );
 		add_action( 'delete_term', array( __CLASS__, 'clear_cache' ) );
+		// Warn admins when /llms.txt can't actually be served — a physical llms.txt on disk shadows
+		// the generated one, or a "Plain" permalink structure means WordPress never routes the URL
+		// to PHP. Mirrors maybe_notice_physical_robots_txt() for robots.txt.
+		if ( is_admin() ) {
+			add_action( 'admin_notices', array( __CLASS__, 'maybe_notice_llms_txt_unreachable' ) );
+		}
+	}
+
+	/**
+	 * Admin notice: /llms.txt is enabled but cannot be served on this site.
+	 *
+	 * Unlike robots.txt, /llms.txt has no WordPress-core rewrite rule, so it only reaches the
+	 * template_redirect handler when the site uses a pretty permalink structure (which writes the
+	 * front-controller rewrite). On the "Plain" structure the web server 404s /llms.txt before PHP
+	 * runs, and a physical llms.txt at the site root shadows the generated one the same way — in
+	 * both cases enable_llms_txt still reads as "on" with no other indication anything is wrong.
+	 */
+	public static function maybe_notice_llms_txt_unreachable() {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+		$options = Nexter_Content_SEO::get_options();
+		if ( empty( $options['enable_llms_txt'] ) ) {
+			return;
+		}
+		if ( file_exists( ABSPATH . 'llms.txt' ) ) {
+			echo '<div class="notice notice-warning"><p>';
+			echo esc_html__( 'Nexter SEO: a physical llms.txt file exists in your site root, so WordPress cannot serve the generated llms.txt. Remove the physical file to let Nexter manage it.', 'nexter-extension' );
+			echo '</p></div>';
+			return;
+		}
+		if ( '' === (string) get_option( 'permalink_structure' ) ) {
+			echo '<div class="notice notice-warning"><p>';
+			echo esc_html__( 'Nexter SEO: llms.txt is enabled but your site uses the "Plain" permalink structure, which prevents WordPress from serving /llms.txt. Choose any other option in Settings → Permalinks to make it reachable.', 'nexter-extension' );
+			echo '</p></div>';
+		}
 	}
 
 	/**
@@ -128,7 +164,7 @@ class Nexter_Content_SEO_LLMs {
 	 * @return string
 	 */
 	private static function cache_fingerprint( array $options ) {
-		$keys = array(
+		$keys     = array(
 			'llms_txt_include_homepage',
 			'llms_txt_pages',
 			'llms_txt_posts_count',
@@ -319,13 +355,15 @@ class Nexter_Content_SEO_LLMs {
 			if ( ! $tax_obj ) {
 				continue;
 			}
-			$terms = get_terms( array(
+			$terms = get_terms(
+				array(
 				'taxonomy'   => $tax_slug,
 				'number'     => $terms_limit,
 				'orderby'    => 'count',
 				'order'      => 'DESC',
 				'hide_empty' => true,
-			) );
+				) 
+			);
 			if ( is_wp_error( $terms ) || empty( $terms ) ) {
 				continue;
 			}
@@ -376,19 +414,21 @@ class Nexter_Content_SEO_LLMs {
 		if ( ! $post instanceof WP_Post ) {
 			return false;
 		}
+		// Delegate to the shared resolver so llms.txt, sitemap and schema all agree, and so a
+		// competing SEO plugin's per-object noindex can be folded in via the
+		// nexter_content_seo_effective_noindex filter instead of only ever reading Nexter's own meta.
+		if ( class_exists( 'Nexter_Content_SEO_Robots' ) ) {
+			return Nexter_Content_SEO_Robots::is_effectively_noindex( $post );
+		}
+		// Fallback when the Robots module is unavailable: honor blog_public + Nexter meta/option.
 		if ( ! get_option( 'blog_public' ) ) {
 			return true;
 		}
-		if ( class_exists( 'Nexter_Content_SEO_Robots' ) ) {
-			$meta_key = Nexter_Content_SEO_Robots::META_NOINDEX;
-		} else {
-			$meta_key = '_nxt_seo_noindex';
-		}
-		$meta_val = get_post_meta( $post->ID, $meta_key, true );
-		if ( '1' === $meta_val || 1 === $meta_val || true === $meta_val ) {
+		$meta_val = get_post_meta( $post->ID, '_nxt_seo_noindex', true );
+		if ( '1' === $meta_val ) {
 			return true;
 		}
-		if ( '0' === $meta_val || 0 === $meta_val || false === $meta_val ) {
+		if ( '0' === $meta_val ) {
 			return false;
 		}
 		$options = Nexter_Content_SEO::get_options();
@@ -402,19 +442,20 @@ class Nexter_Content_SEO_LLMs {
 	 * @return bool
 	 */
 	private static function is_term_noindex( WP_Term $term ) {
+		// Delegate to the shared resolver (see is_post_noindex) so the noindex decision is consistent
+		// across modules and open to the nexter_content_seo_effective_noindex filter.
+		if ( class_exists( 'Nexter_Content_SEO_Robots' ) ) {
+			return Nexter_Content_SEO_Robots::is_effectively_noindex( $term );
+		}
+		// Fallback when the Robots module is unavailable.
 		if ( ! get_option( 'blog_public' ) ) {
 			return true;
 		}
-		if ( class_exists( 'Nexter_Content_SEO_Robots' ) ) {
-			$meta_key = Nexter_Content_SEO_Robots::META_NOINDEX;
-		} else {
-			$meta_key = '_nxt_seo_noindex';
-		}
-		$meta_val = get_term_meta( $term->term_id, $meta_key, true );
-		if ( '1' === $meta_val || 1 === $meta_val || true === $meta_val ) {
+		$meta_val = get_term_meta( $term->term_id, '_nxt_seo_noindex', true );
+		if ( '1' === $meta_val ) {
 			return true;
 		}
-		if ( '0' === $meta_val || 0 === $meta_val || false === $meta_val ) {
+		if ( '0' === $meta_val ) {
 			return false;
 		}
 		$options = Nexter_Content_SEO::get_options();

@@ -24,7 +24,7 @@ class Nexter_Builder_Import_Export {
 	public static function get_instance() {
 		if ( ! isset( self::$instance ) ) {
 			self::$instance = new self();
-			}
+		}
 		return self::$instance;
 	}
 	
@@ -41,7 +41,7 @@ class Nexter_Builder_Import_Export {
 	 * @access private
 	 */
 	private function add_actions() {
-		if( is_admin() ){
+		if ( is_admin() ) {
 			add_filter( 'admin_footer', [ $this, 'nxt_import_template_form' ] );
 			add_filter( 'post_row_actions', [ $this, 'post_row_actions_builder_export_link' ], 10, 2 );
 		}
@@ -123,8 +123,8 @@ class Nexter_Builder_Import_Export {
 			$this->handle_direct_action_error( 'Access Denied' );
 		}
 
-		$nxt_action = (isset($_REQUEST['nxt_action'])) ? sanitize_text_field( wp_unslash($_REQUEST['nxt_action'])) : '';
-		$after_import = (isset($_REQUEST['after_import'])) ? sanitize_text_field( wp_unslash($_REQUEST['after_import'])) : '';
+		$nxt_action   = (isset( $_REQUEST['nxt_action'] )) ? sanitize_text_field( wp_unslash( $_REQUEST['nxt_action'] ) ) : '';
+		$after_import = (isset( $_REQUEST['after_import'] )) ? sanitize_text_field( wp_unslash( $_REQUEST['after_import'] ) ) : '';
 
 		$result = $this->$nxt_action( $_REQUEST );
 
@@ -132,14 +132,14 @@ class Nexter_Builder_Import_Export {
 			/** @var \WP_Error $result */
 			$this->handle_direct_action_error( $result->get_error_message() . '.' );
 		}
-		if(empty($after_import) || $after_import!='no'){
+		if ( empty( $after_import ) || $after_import != 'no' ) {
 			$callback = "successful_{$nxt_action}_redirect";
 
 			if ( method_exists( $this, $callback ) ) {
 				$this->$callback( $result );
 			}
-		}else{
-			wp_send_json_success(esc_html__( 'Imported Successfully', 'nexter-extension' ));
+		} else {
+			wp_send_json_success( esc_html__( 'Imported Successfully', 'nexter-extension' ) );
 		}
 
 		die;
@@ -154,18 +154,18 @@ class Nexter_Builder_Import_Export {
 		
 		return add_query_arg(
 			[
-				'action' => 'nxt_builder_export_actions',
+				'action'     => 'nxt_builder_export_actions',
 				'nxt_action' => 'export_template',
-				'source' => 'nxt',
-				'_nonce' => wp_create_nonce( 'nxt_ajax' ),
-				'post_id' => $template_id,
+				'source'     => 'nxt',
+				'_nonce'     => wp_create_nonce( 'nxt_ajax' ),
+				'post_id'    => $template_id,
 			],
 			admin_url( 'admin-ajax.php' )
 		);
 	}
 	
 	public function verify_request_nonce() {
-		return ! empty( $_REQUEST['_nonce'] ) && wp_verify_nonce( sanitize_key(wp_unslash($_REQUEST['_nonce'])), self::NXT_NONCE_KEY );
+		return ! empty( $_REQUEST['_nonce'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_REQUEST['_nonce'] ) ), self::NXT_NONCE_KEY );
 	}
 	
 	/**
@@ -216,12 +216,12 @@ class Nexter_Builder_Import_Export {
 		global $wpdb;
 		if ( stripos( $query, NEXTER_EXT_CPT ) ) {
 			remove_filter( 'query', array( $this, 'filter_query' ) );
-			$post_id = ( isset($_GET['post_id']) ) ? (int) sanitize_key(wp_unslash($_GET['post_id'])) : '';
+			$post_id  = ( isset( $_GET['post_id'] ) ) ? (int) sanitize_key( wp_unslash( $_GET['post_id'] ) ) : '';
 			$post_ids = array( $post_id );
-			// Now get fields			
+			// Now get fields           
 			if ( ! empty( $post_ids ) ) {
 				$post_ids = implode( ',', array_map( 'intval', $post_ids ) );
-				$query = preg_replace( "#post_type.*=.*('|\").*?('|\")#i", "ID in ({$post_ids}) ", $query );
+				$query    = preg_replace( "#post_type.*=.*('|\").*?('|\")#i", "ID in ({$post_ids}) ", $query );
 			}
 		}
 		return $query;
@@ -247,22 +247,22 @@ class Nexter_Builder_Import_Export {
 		if ( ! self::check_current_screen_templates() ) {
 			return;
 		}
-		$builder_switch = get_option('nxt_builder_switcher', true);
-		$theme_logo = '';
+		$builder_switch  = get_option( 'nxt_builder_switcher', true );
+		$theme_logo      = '';
 		$wdk_integration = '';
-		if(defined('NXT_PRO_EXT') || defined('TPGBP_VERSION')){
-			$options = Nxt_Options::white_label();
-			$theme_logo = (!empty($options['theme_logo'])) ? '<img src="'.esc_url($options['theme_logo']).'" alt="'.esc_html__( 'Theme Logo', 'nexter-extension' ).'" style="max-width:40px;">' : '';
-			$wdk_integration = (!empty($options['nxt_wdk_integration'])) ? $options['nxt_wdk_integration'] : '';
+		if ( defined( 'NXT_PRO_EXT' ) || defined( 'TPGBP_VERSION' ) ) {
+			$options         = Nxt_Options::white_label();
+			$theme_logo      = ( ! empty( $options['theme_logo'] )) ? '<img src="'.esc_url( $options['theme_logo'] ).'" alt="'.esc_html__( 'Theme Logo', 'nexter-extension' ).'" style="max-width:40px;">' : '';
+			$wdk_integration = ( ! empty( $options['nxt_wdk_integration'] )) ? $options['nxt_wdk_integration'] : '';
 		}
 		?>
 		<div id="nxt-hidden-area">
 			<div id="nxt-import-template-form" style="display:none;">
 				<div id="nxt-import-title"><?php echo esc_html__( 'Choose a Nexter Builder template XML file of Builder templates, and add them to the list of templates available in your builder.', 'nexter-extension' ); ?></div>
-				<form id="nxt-import-temp-form" method="post" action="<?php echo esc_url(admin_url( 'admin-ajax.php' )); ?>" enctype="multipart/form-data">
+				<form id="nxt-import-temp-form" method="post" action="<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>" enctype="multipart/form-data">
 					<input type="hidden" name="action" value="nxt_builder_import_actions">
 					<input type="hidden" name="nxt_action" value="import_template">
-					<input type="hidden" name="_nonce" value="<?php echo esc_attr(wp_create_nonce( 'nxt_ajax' )); ?>">
+					<input type="hidden" name="_nonce" value="<?php echo esc_attr( wp_create_nonce( 'nxt_ajax' ) ); ?>">
 					<fieldset id="nxt-import-template-inputs">
 						<input type="file" name="file" required>
 						<input type="submit" class="button" value="<?php echo esc_attr__( 'Import Now', 'nexter-extension' ); ?>">
@@ -270,11 +270,11 @@ class Nexter_Builder_Import_Export {
 				</form>
 			</div>
 			<div class="nxt-theme-builder-left-header">
-				<h1 class="wp-heading-inline"><?php echo !empty($theme_logo) ? $theme_logo : '<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="none" viewBox="0 0 28 28"><rect width="28" height="28" fill="#1717cc" rx="5.833"></rect><path fill="#fff" d="M12.834 5.32h2.917v11.958a.875.875 0 0 1-.875.875h-2.042zM12.834 19.903h2.042c.483 0 .875.391.875.875v2.041h-2.917z"></path></svg>'; ?> <?php echo esc_html__( 'Theme Builder', 'nexter-extension' ); ?></h1>
+				<h1 class="wp-heading-inline"><?php echo ! empty( $theme_logo ) ? $theme_logo : '<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="none" viewBox="0 0 28 28"><rect width="28" height="28" fill="#1717cc" rx="5.833"></rect><path fill="#fff" d="M12.834 5.32h2.917v11.958a.875.875 0 0 1-.875.875h-2.042zM12.834 19.903h2.042c.483 0 .875.391.875.875v2.041h-2.917z"></path></svg>'; ?> <?php echo esc_html__( 'Theme Builder', 'nexter-extension' ); ?></h1>
 				<a id="nxt-import-template-button" class="page-title-action nxt-btn-action"><?php echo esc_html__( 'Import Templates', 'nexter-extension' ); ?></a>
 			</div>
 			<div class="nxt-theme-builder-right-header">
-				<?php if($wdk_integration !== 'on'){ ?>
+				<?php if ( $wdk_integration !== 'on' ) { ?>
 					<a id="nxt-import-wdk-template-button" class="page-title-action nxt-btn-action"><?php echo esc_html__( 'Import Pre-Designed Section', 'nexter-extension' ); ?></a>
 				<?php } ?>
 				<div id="nxt-builder-switcher-toggle" class="nxt-builder-switcher-wrap">
@@ -284,7 +284,7 @@ class Nexter_Builder_Import_Export {
 							<label class="nxt-temp-sw-lbl" for="nxt_thtgl_sw">
 							</label>
 						</div>
-						<label for="nxt_thtgl_sw" class="nxt-temp-sw-nm"><?php echo esc_html__('Switch to grid view', 'nexter-extension'); ?></label>
+						<label for="nxt_thtgl_sw" class="nxt-temp-sw-nm"><?php echo esc_html__( 'Switch to grid view', 'nexter-extension' ); ?></label>
 					</div>
 				</div>
 			</div>
@@ -296,8 +296,8 @@ class Nexter_Builder_Import_Export {
 	 * Import template actions
 	 */
 	public function import_template( array $args ) {
-		$file_name = (isset($_FILES['file']['name'])) ? $_FILES['file']['name'] : '';	// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash
-		$tmp_name = (isset($_FILES['file']['tmp_name'])) ? $_FILES['file']['tmp_name'] : '';	// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+		$file_name = (isset( $_FILES['file']['name'] )) ? $_FILES['file']['name'] : '';   // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+		$tmp_name  = (isset( $_FILES['file']['tmp_name'] )) ? $_FILES['file']['tmp_name'] : '';    // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash
 		return $this->import_template_data( $file_name,$tmp_name );
 	}
 	
@@ -310,31 +310,31 @@ class Nexter_Builder_Import_Export {
 		}
 		
 		$file_extension = pathinfo( $name, PATHINFO_EXTENSION );
-		if($file_extension == 'xml'){	
+		if ( $file_extension == 'xml' ) {   
 		
 			ob_start();
 			$wp_importer = ABSPATH . 'wp-admin/includes/class-wp-importer.php';
 			
-			if ( file_exists( $wp_importer ) ){			
+			if ( file_exists( $wp_importer ) ) {         
 				require $wp_importer;
 			}
 			
 			require_once NEXTER_EXT_DIR .'include/nexter-template/importer/class.wordpress-importer.php';
 			
 			$nxt_import = new WP_Import();
-			set_time_limit(0);
+			set_time_limit( 0 );
 			
 			$nxt_import->fetch_attachments = true;
 			$nxt_import->allow_fetch_attachments();
 			$data_value = $nxt_import->import( $path );
 			
-			if(is_wp_error($data_value)){
+			if ( is_wp_error( $data_value ) ) {
 				return $data_value;
 			}
 			
 			ob_get_clean();
 		
-		}else{
+		} else {
 			return new \WP_Error( 'file_error', 'Please upload a file .xml Extension' );
 		}
 	}

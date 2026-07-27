@@ -307,7 +307,10 @@ class Nexter_Content_SEO_Indexing {
 			}
 		}
 		if ( ! $has_exclusions ) {
-			return array( 'allowed' => $urls, 'excluded' => array() );
+			return array(
+			'allowed'  => $urls,
+			'excluded' => array()
+			);
 		}
 
 		$allowed  = array();
@@ -338,7 +341,10 @@ class Nexter_Content_SEO_Indexing {
 			}
 			$allowed[] = $url;
 		}
-		return array( 'allowed' => $allowed, 'excluded' => $excluded );
+		return array(
+		'allowed'  => $allowed,
+		'excluded' => $excluded
+		);
 	}
 
 	/**
@@ -412,9 +418,9 @@ class Nexter_Content_SEO_Indexing {
 		// IndexNow rejects the ENTIRE batch if any single URL is malformed or off-domain, so
 		// validate each URL (http/https + same host as the site) and submit only the valid
 		// remainder. Skipped URLs are recorded for reporting.
-		$filtered            = self::filter_submittable_urls( $urls, $host );
-		$urls                = $filtered['valid'];
-		self::$last_skipped  = $filtered['skipped'];
+		$filtered           = self::filter_submittable_urls( $urls, $host );
+		$urls               = $filtered['valid'];
+		self::$last_skipped = $filtered['skipped'];
 		if ( empty( $urls ) ) {
 			return new WP_Error(
 				'no_urls',
@@ -427,7 +433,7 @@ class Nexter_Content_SEO_Indexing {
 		}
 		$key          = self::ensure_api_key();
 		$key_location = home_url( '/' . $key . '.txt' );
-		$body = wp_json_encode(
+		$body         = wp_json_encode(
 			array(
 				'host'        => $host,
 				'key'         => $key,
@@ -435,7 +441,7 @@ class Nexter_Content_SEO_Indexing {
 				'urlList'     => $urls,
 			)
 		);
-		$response = wp_remote_post(
+		$response     = wp_remote_post(
 			self::INDEXNOW_ENDPOINT,
 			array(
 				'timeout' => 20,
@@ -512,6 +518,26 @@ class Nexter_Content_SEO_Indexing {
 		if ( ! wp_next_scheduled( self::AUTO_PING_HOOK, array( $url ) ) ) {
 			wp_schedule_single_event( time() + 1, self::AUTO_PING_HOOK, array( $url ) );
 		}
+		// Fallback for hosts with WP-Cron disabled (DISABLE_WP_CRON — Kinsta, WP Engine,
+		// Cloudways, Pantheon, …): the queued event can sit unfired indefinitely when external
+		// system cron isn't hitting wp-cron.php, so the auto-ping silently never happens. Run it
+		// on shutdown instead — after the response is flushed to the client (fastcgi_finish_request
+		// when available, so publishing isn't blocked) — and unschedule the now-duplicate event.
+		if ( defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON ) {
+			add_action(
+				'shutdown',
+				static function () use ( $url ) {
+					$timestamp = wp_next_scheduled( self::AUTO_PING_HOOK, array( $url ) );
+					if ( $timestamp ) {
+						wp_unschedule_event( $timestamp, self::AUTO_PING_HOOK, array( $url ) );
+					}
+					if ( function_exists( 'fastcgi_finish_request' ) ) {
+						fastcgi_finish_request();
+					}
+					self::cron_submit_auto( $url );
+				} 
+			);
+		}
 	}
 
 	/**
@@ -534,18 +560,44 @@ class Nexter_Content_SEO_Indexing {
 
 		$user_id = get_current_user_id();
 		$key     = 'nxt_seo_indexnow_rl_' . ( $user_id ? (int) $user_id : 'anon' );
-		$now     = time();
-		$bucket  = get_transient( $key );
+
+		// Best-effort mutex around the read-modify-write below. get_transient()+set_transient() is
+		// a classic TOCTOU race: two concurrent bulk requests from the same user (two tabs, or a
+		// parallel script) can both read the same counts before either writes back, undercounting
+		// and slipping past the cap. wp_cache_add() is an atomic add-if-absent on a persistent
+		// object cache (Redis/Memcached — most production hosts), so it serializes them. Without a
+		// persistent cache it degrades to a soft limit (this is a rate limiter, not a security
+		// boundary). Spin briefly for the lock, then proceed regardless so a crashed request that
+		// left a stale lock can never block submissions; the lock also self-expires after 10s.
+		$lock_key  = $key . '_lock';
+		$have_lock = false;
+		for ( $i = 0; $i < 20; $i++ ) {
+			if ( wp_cache_add( $lock_key, 1, 'nexter_seo_indexnow', 10 ) ) {
+				$have_lock = true;
+				break;
+			}
+			usleep( 15000 ); // 15ms
+		}
+
+		$now    = time();
+		$bucket = get_transient( $key );
 		// Start a fresh fixed window on first use, or once the current window has elapsed.
 		// (Previously the TTL was reset to the full window on every call, so a steady client
 		// pushed the expiry forward indefinitely and stayed locked out far longer than $window.)
 		if ( ! is_array( $bucket ) || empty( $bucket['start'] ) || ( $now - (int) $bucket['start'] ) >= $window ) {
-			$bucket = array( 'start' => $now, 'requests' => 0, 'urls' => 0 );
+			$bucket = array(
+			'start'    => $now,
+			'requests' => 0,
+			'urls'     => 0
+			);
 		}
 		$requests_after = (int) $bucket['requests'] + 1;
 		$urls_after     = (int) $bucket['urls'] + (int) $url_count;
 
 		if ( ( $max_req > 0 && $requests_after > $max_req ) || ( $max_urls > 0 && $urls_after > $max_urls ) ) {
+			if ( $have_lock ) {
+				wp_cache_delete( $lock_key, 'nexter_seo_indexnow' );
+			}
 			return new WP_Error(
 				'rate_limited',
 				__( 'Too many IndexNow submissions in a short window. Please try again in a few minutes.', 'nexter-extension' ),
@@ -561,6 +613,9 @@ class Nexter_Content_SEO_Indexing {
 			$remaining = 1;
 		}
 		set_transient( $key, $bucket, $remaining );
+		if ( $have_lock ) {
+			wp_cache_delete( $lock_key, 'nexter_seo_indexnow' );
+		}
 		return true;
 	}
 

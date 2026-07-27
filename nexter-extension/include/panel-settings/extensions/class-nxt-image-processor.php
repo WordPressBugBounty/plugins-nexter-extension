@@ -37,7 +37,10 @@ class Nxt_Image_Processor {
 	 */
 	public static function calculate_dimensions( $width, $height, $max_width, $max_height ) {
 		if ( $width <= $max_width && $height <= $max_height ) {
-			return array( 'width' => $width, 'height' => $height );
+			return array(
+			'width'  => $width,
+			'height' => $height
+			);
 		}
 		$aspect_ratio = $width / $height;
 		$new_width    = $width;
@@ -92,7 +95,7 @@ class Nxt_Image_Processor {
 			return false;
 		}
 		$base_output_path = $this->parent->get_output_path( $file_path );
-		$out_dir         = dirname( $base_output_path );
+		$out_dir          = dirname( $base_output_path );
 		if ( ! is_dir( $out_dir ) ) {
 			wp_mkdir_p( $out_dir );
 		}
@@ -128,8 +131,8 @@ class Nxt_Image_Processor {
 		if ( false === $original_size || $original_size < 1 ) {
 			return false;
 		}
-		$output_path   = $this->parent->get_output_path( $file_path );
-		$out_dir       = dirname( $output_path );
+		$output_path = $this->parent->get_output_path( $file_path );
+		$out_dir     = dirname( $output_path );
 		if ( ! is_dir( $out_dir ) ) {
 			wp_mkdir_p( $out_dir );
 		}
@@ -158,9 +161,9 @@ class Nxt_Image_Processor {
 	 * @return array|false Result array or false.
 	 */
 	private function process_image_original_imagick( $file_path, $settings, $original_size, $output_path ) {
-		$file_info  = pathinfo( $file_path );
-		$extension  = isset( $file_info['extension'] ) ? strtolower( $file_info['extension'] ) : '';
-		$supported  = array( 'jpg', 'jpeg', 'png', 'gif' );
+		$file_info = pathinfo( $file_path );
+		$extension = isset( $file_info['extension'] ) ? strtolower( $file_info['extension'] ) : '';
+		$supported = array( 'jpg', 'jpeg', 'png', 'gif' );
 		if ( ! in_array( $extension, $supported, true ) ) {
 			return false;
 		}
@@ -177,7 +180,7 @@ class Nxt_Image_Processor {
 			$original_height = $imagick->getImageHeight();
 			$this->fix_imagick_orientation( $imagick );
 
-			$dims        = self::calculate_dimensions( $original_width, $original_height, $settings['max_width'], $settings['max_height'] );
+			$dims         = self::calculate_dimensions( $original_width, $original_height, $settings['max_width'], $settings['max_height'] );
 			$needs_resize = $settings['resize_large'] && ( $dims['width'] !== $original_width || $dims['height'] !== $original_height );
 			if ( ! $is_animated_gif ) {
 				if ( 'strip' === $settings['exif_data'] ) {
@@ -188,7 +191,7 @@ class Nxt_Image_Processor {
 				}
 			}
 
-			$format_map = array(
+			$format_map     = array(
 				'jpg'  => 'JPEG',
 				'jpeg' => 'JPEG',
 				'png'  => 'PNG',
@@ -197,7 +200,7 @@ class Nxt_Image_Processor {
 			$imagick_format = isset( $format_map[ $extension ] ) ? $format_map[ $extension ] : 'JPEG';
 			if ( $is_animated_gif ) {
 				$imagick = $imagick->coalesceImages();
-				$n = $imagick->getNumberImages();
+				$n       = $imagick->getNumberImages();
 				for ( $i = 0; $i < $n; $i++ ) {
 					$imagick->setImageIndex( $i );
 					$imagick->setImageFormat( $imagick_format );
@@ -361,16 +364,16 @@ class Nxt_Image_Processor {
 	 */
 	private function process_image_imagick( $file_path, $settings, $original_size, $base_output_path ) {
 		$file_info = pathinfo( $file_path );
-		$ext      = isset( $file_info['extension'] ) ? strtolower( $file_info['extension'] ) : '';
-		$is_png   = ( 'png' === $ext );
-		$is_gif   = ( 'gif' === $ext );
+		$ext       = isset( $file_info['extension'] ) ? strtolower( $file_info['extension'] ) : '';
+		$is_png    = ( 'png' === $ext );
+		$is_gif    = ( 'gif' === $ext );
 
 		try {
 			@set_time_limit( 300 );
 			$imagick = new Imagick();
 			$imagick->readImage( $file_path );
-			$num_frames       = (int) $imagick->getNumberImages();
-			$is_animated_gif  = $is_gif && $num_frames > 1;
+			$num_frames      = (int) $imagick->getNumberImages();
+			$is_animated_gif = $is_gif && $num_frames > 1;
 
 			$imagick->setCompressionQuality( max( $settings['webp_quality'], $settings['avif_quality'] ) );
 
@@ -378,7 +381,7 @@ class Nxt_Image_Processor {
 			$original_height = $imagick->getImageHeight();
 			$this->fix_imagick_orientation( $imagick );
 
-			$dims        = self::calculate_dimensions( $original_width, $original_height, $settings['max_width'], $settings['max_height'] );
+			$dims         = self::calculate_dimensions( $original_width, $original_height, $settings['max_width'], $settings['max_height'] );
 			$needs_resize = $settings['resize_large'] && ( $dims['width'] !== $original_width || $dims['height'] !== $original_height );
 			if ( ! $is_animated_gif ) {
 				if ( 'strip' === $settings['exif_data'] ) {
@@ -394,7 +397,7 @@ class Nxt_Image_Processor {
 			if ( null === self::$imagick_formats_cache ) {
 				self::$imagick_formats_cache = $imagick->queryFormats();
 			}
-			$webp_ok = in_array( 'WEBP', self::$imagick_formats_cache, true );
+			$webp_ok  = in_array( 'WEBP', self::$imagick_formats_cache, true );
 			$try_webp = ( 'webp' === $output_format ) && $settings['webp_enabled'] && $webp_ok && ! ( $is_png && $settings['exclude_png_webp'] );
 
 			$webp_path = $base_output_path . '.webp';
@@ -404,7 +407,7 @@ class Nxt_Image_Processor {
 				if ( $is_animated_gif ) {
 					// Preserve animation: coalesce frames then write as animated WebP.
 					$imagick = $imagick->coalesceImages();
-					$n = $imagick->getNumberImages();
+					$n       = $imagick->getNumberImages();
 					for ( $i = 0; $i < $n; $i++ ) {
 						$imagick->setImageIndex( $i );
 						$imagick->setImageFormat( 'webp' );
@@ -450,14 +453,14 @@ class Nxt_Image_Processor {
 					}
 				}
 				return array(
-					'success'         => true,
-					'file'            => $best_path,
-					'original_file'   => $file_path,
-					'mime_type'       => $best_mime,
-					'format'          => $best_format,
-					'original_size'   => $original_size,
-					'optimized_size'  => $best_size,
-					'original_mime'   => $original_mime,
+					'success'        => true,
+					'file'           => $best_path,
+					'original_file'  => $file_path,
+					'mime_type'      => $best_mime,
+					'format'         => $best_format,
+					'original_size'  => $original_size,
+					'optimized_size' => $best_size,
+					'original_mime'  => $original_mime,
 				);
 			}
 		} catch ( Exception $e ) {
@@ -529,10 +532,10 @@ class Nxt_Image_Processor {
 		if ( 'avif' === $output_format && function_exists( 'imagewebp' ) ) {
 			$try_webp = true;
 		}
-		$webp_path     = $base_output_path . '.webp';
-		$best_path     = null;
-		$best_size     = $original_size;
-		$best_mime     = 'image/webp';
+		$webp_path = $base_output_path . '.webp';
+		$best_path = null;
+		$best_size = $original_size;
+		$best_mime = 'image/webp';
 
 		if ( $try_webp ) {
 			if ( @imagewebp( $image, $webp_path, $settings['webp_quality'] ) && file_exists( $webp_path ) ) {
@@ -557,14 +560,14 @@ class Nxt_Image_Processor {
 				}
 			}
 			return array(
-				'success'         => true,
-				'file'            => $best_path,
-				'original_file'   => $file_path,
-				'mime_type'       => $best_mime,
-				'format'          => 'webp',
-				'original_size'   => $original_size,
-				'optimized_size'  => $best_size,
-				'original_mime'   => $original_mime,
+				'success'        => true,
+				'file'           => $best_path,
+				'original_file'  => $file_path,
+				'mime_type'      => $best_mime,
+				'format'         => 'webp',
+				'original_size'  => $original_size,
+				'optimized_size' => $best_size,
+				'original_mime'  => $original_mime,
 			);
 		}
 		return false;

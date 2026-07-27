@@ -90,7 +90,7 @@ class Nexter_Ext_Image_Optimization_Limit {
 			'cs'  => 0.0,
 			'csb' => 0,
 		);
-		$data = wp_parse_args( $data, $defaults );
+		$data     = wp_parse_args( $data, $defaults );
 
 		// Repair: when Storage Saved / Total Savings (ts) is zero, recalc lifetime stats from attachments so they are restored. Do not touch monthly usage (m, c, csb).
 		if ( (int) ( $data['ts'] ?? 0 ) === 0 ) {
@@ -137,15 +137,17 @@ class Nexter_Ext_Image_Optimization_Limit {
 		$total_opt = 0;
 		$sum_orig  = 0.0;
 		$sum_opt   = 0.0;
-		$query = new WP_Query( array(
-			'post_type'      => 'attachment',
-			'post_mime_type' => array( 'image/jpeg', 'image/jpg', 'image/png', 'image/gif' ),
-			'post_status'    => 'inherit',
-			'posts_per_page' => -1,
-			'fields'         => 'ids',
-			'no_found_rows'  => true,
+		$query     = new WP_Query(
+			array(
+			'post_type'              => 'attachment',
+			'post_mime_type'         => array( 'image/jpeg', 'image/jpg', 'image/png', 'image/gif' ),
+			'post_status'            => 'inherit',
+			'posts_per_page'         => -1,
+			'fields'                 => 'ids',
+			'no_found_rows'          => true,
 			'update_post_meta_cache' => true,
-		) );
+			) 
+		);
 		if ( ! empty( $query->posts ) && is_array( $query->posts ) ) {
 			foreach ( $query->posts as $post_id ) {
 				$meta = wp_get_attachment_metadata( (int) $post_id );
@@ -159,7 +161,7 @@ class Nexter_Ext_Image_Optimization_Limit {
 			}
 		}
 		$total_ts = (int) max( 0, $sum_orig - $sum_opt );
-		$cs = 0.0;
+		$cs       = 0.0;
 		if ( $total_opt > 0 && $sum_orig > 0 ) {
 			$cs = ( ( $sum_orig - $sum_opt ) / $sum_orig ) * 100 * $total_opt;
 		}
@@ -269,8 +271,8 @@ class Nexter_Ext_Image_Optimization_Limit {
 	 * @param int $credit_count   Number of credits used (1 original + each size; default 1).
 	 */
 	public function record_optimization( int $attachment_id, int $original_size, int $optimized_size, int $credit_count = 1 ) : void {
-		$credit_count = max( 1, (int) $credit_count );
-		$data = $this->get_stored_data();
+		$credit_count  = max( 1, (int) $credit_count );
+		$data          = $this->get_stored_data();
 		$current_month = $this->get_current_month_key();
 
 		// 1. Handle monthly counter (first time per image per month): add credit_count (original + sizes) – free version only.
@@ -285,7 +287,7 @@ class Nexter_Ext_Image_Optimization_Limit {
 
 		// 2. Handle global statistics - Only increment 'total optimized' if it's new
 		$ever_optimized = get_post_meta( $attachment_id, 'nxt_ever_optimized', true );
-		$is_first_time = empty( $ever_optimized );
+		$is_first_time  = empty( $ever_optimized );
 		
 		// Fallback: If stats are empty but this image succeeded, ensure we have at least 1 in stats
 		if ( (int) ( $data['to'] ?? 0 ) === 0 ) {
@@ -299,7 +301,7 @@ class Nexter_Ext_Image_Optimization_Limit {
 			// Only add to average compression on first-time optimization
 			if ( $original_size > 0 ) {
 				$data['tc'] = (int) ( $data['tc'] ?? 0 ) + 1;
-				$saved = max( 0, $original_size - $optimized_size );
+				$saved      = max( 0, $original_size - $optimized_size );
 				$data['cs'] = (float) ( $data['cs'] ?? 0 ) + ( ( $saved / $original_size ) * 100 );
 			}
 		}
@@ -352,7 +354,7 @@ class Nexter_Ext_Image_Optimization_Limit {
 	 * Legacy/Simplified increment (just count).
 	 */
 	public function increment_count( $attachment_id ) : void {
-		$data = $this->get_stored_data();
+		$data          = $this->get_stored_data();
 		$current_month = $this->get_current_month_key();
 		
 		$attachment_id = absint( $attachment_id );
@@ -406,7 +408,7 @@ class Nexter_Ext_Image_Optimization_Limit {
 			'fields'         => 'ids',
 			'no_found_rows'  => true,
 		);
-		$q = new \WP_Query( $args );
+		$q    = new \WP_Query( $args );
 		if ( empty( $q->posts ) || ! is_array( $q->posts ) ) {
 			return 0;
 		}
@@ -441,7 +443,7 @@ class Nexter_Ext_Image_Optimization_Limit {
 			'fields'         => 'ids',
 			'no_found_rows'  => true,
 		);
-		$q = new \WP_Query( $args );
+		$q    = new \WP_Query( $args );
 		if ( empty( $q->posts ) || ! is_array( $q->posts ) ) {
 			return 0;
 		}
@@ -466,7 +468,7 @@ class Nexter_Ext_Image_Optimization_Limit {
 		$total_images    = $this->count_total_images();
 		$optimized_count = $this->count_optimized_attachments();
 		$skipped         = $this->count_native_webp_avif();
-		$unoptimized = max( 0, $total_images - $optimized_count - $skipped );
+		$unoptimized     = max( 0, $total_images - $optimized_count - $skipped );
 
 		$avg_compression = ( isset( $data['tc'] ) && $data['tc'] > 0 ) ? round( (float) $data['cs'] / (int) $data['tc'], 1 ) : 0;
 
@@ -475,18 +477,18 @@ class Nexter_Ext_Image_Optimization_Limit {
 		$resets_in_days = max( 1, ceil( ( $next_month - $now ) / DAY_IN_SECONDS ) );
 
 		return array(
-			'total'            => $total_images,
-			'optimized'        => $optimized_count,
-			'unoptimized'      => $unoptimized,
-			'skipped'          => $skipped,
-			'storage_saved'    => (int) ( $data['ts'] ?? 0 ),
-			'avg_compression'  => $avg_compression,
-			'total_savings_mb' => isset( $data['ts'] ) ? round( (int) $data['ts'] / ( 1024 * 1024 ), 2 ) : 0,
-			'monthly_count'    => (int) ( $data['c'] ?? 0 ),
-			'monthly_limit'    => $this->get_monthly_limit(),
-			'resets_in_days'   => (int) $resets_in_days,
+			'total'              => $total_images,
+			'optimized'          => $optimized_count,
+			'unoptimized'        => $unoptimized,
+			'skipped'            => $skipped,
+			'storage_saved'      => (int) ( $data['ts'] ?? 0 ),
+			'avg_compression'    => $avg_compression,
+			'total_savings_mb'   => isset( $data['ts'] ) ? round( (int) $data['ts'] / ( 1024 * 1024 ), 2 ) : 0,
+			'monthly_count'      => (int) ( $data['c'] ?? 0 ),
+			'monthly_limit'      => $this->get_monthly_limit(),
+			'resets_in_days'     => (int) $resets_in_days,
 			'cron_limit_reached' => ! empty( $data['csb'] ),
-			'is_pro'           => $this->is_pro(),
+			'is_pro'             => $this->is_pro(),
 		);
 	}
 
@@ -496,7 +498,7 @@ class Nexter_Ext_Image_Optimization_Limit {
 	 * @param bool $stopped
 	 */
 	public function mark_cron_stopped( bool $stopped = true ) : void {
-		$data = $this->get_stored_data();
+		$data        = $this->get_stored_data();
 		$data['csb'] = $stopped ? 1 : 0;
 		$this->save_data( $data );
 	}

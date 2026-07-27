@@ -23,32 +23,32 @@ class Nexter_Content_SEO_Settings {
 	 */
 	public static function get_template_variables() {
 		$vars = array(
-			'site_name'           => __( 'Site Name', 'nexter-extension' ),
-			'tagline'             => __( 'Tagline', 'nexter-extension' ),
-			'term_title'          => __( 'Term Title', 'nexter-extension' ),
-			'post_title'          => __( 'Post Title', 'nexter-extension' ),
-			'post_excerpt'        => __( 'Post Excerpt', 'nexter-extension' ),
-			'post_content'        => __( 'Post Content', 'nexter-extension' ),
-			'term_description'    => __( 'Term Description', 'nexter-extension' ),
-			'date_published'      => __( 'Date Published', 'nexter-extension' ),
-			'date_modified'       => __( 'Date Modified', 'nexter-extension' ),
-			'post_url'            => __( 'Post URL', 'nexter-extension' ),
-			'current_date'         => __( 'Current Date', 'nexter-extension' ),
-			'current_day'          => __( 'Current Day', 'nexter-extension' ),
-			'current_month'        => __( 'Current Month', 'nexter-extension' ),
-			'current_year'         => __( 'Current Year', 'nexter-extension' ),
-			'current_time'         => __( 'Current Time', 'nexter-extension' ),
-			'organization_name'   => __( 'Organization Name', 'nexter-extension' ),
-			'organization_logo'   => __( 'Organization Logo', 'nexter-extension' ),
-			'organization_url'     => __( 'Organization URL', 'nexter-extension' ),
-			'post_author_name'     => __( 'Post Author Name', 'nexter-extension' ),
+			'site_name'         => __( 'Site Name', 'nexter-extension' ),
+			'tagline'           => __( 'Tagline', 'nexter-extension' ),
+			'term_title'        => __( 'Term Title', 'nexter-extension' ),
+			'post_title'        => __( 'Post Title', 'nexter-extension' ),
+			'post_excerpt'      => __( 'Post Excerpt', 'nexter-extension' ),
+			'post_content'      => __( 'Post Content', 'nexter-extension' ),
+			'term_description'  => __( 'Term Description', 'nexter-extension' ),
+			'date_published'    => __( 'Date Published', 'nexter-extension' ),
+			'date_modified'     => __( 'Date Modified', 'nexter-extension' ),
+			'post_url'          => __( 'Post URL', 'nexter-extension' ),
+			'current_date'      => __( 'Current Date', 'nexter-extension' ),
+			'current_day'       => __( 'Current Day', 'nexter-extension' ),
+			'current_month'     => __( 'Current Month', 'nexter-extension' ),
+			'current_year'      => __( 'Current Year', 'nexter-extension' ),
+			'current_time'      => __( 'Current Time', 'nexter-extension' ),
+			'organization_name' => __( 'Organization Name', 'nexter-extension' ),
+			'organization_logo' => __( 'Organization Logo', 'nexter-extension' ),
+			'organization_url'  => __( 'Organization URL', 'nexter-extension' ),
+			'post_author_name'  => __( 'Post Author Name', 'nexter-extension' ),
 		);
 		if ( class_exists( 'WooCommerce' ) ) {
-			$vars['wc_price']            = __( 'Product price (WooCommerce)', 'nexter-extension' );
-			$vars['wc_currency']         = __( 'Product currency code (WooCommerce)', 'nexter-extension' );
-			$vars['wc_sku']              = __( 'Product SKU (WooCommerce)', 'nexter-extension' );
+			$vars['wc_price']             = __( 'Product price (WooCommerce)', 'nexter-extension' );
+			$vars['wc_currency']          = __( 'Product currency code (WooCommerce)', 'nexter-extension' );
+			$vars['wc_sku']               = __( 'Product SKU (WooCommerce)', 'nexter-extension' );
 			$vars['wc_short_description'] = __( 'Product short description (WooCommerce)', 'nexter-extension' );
-			$vars['wc_stock_status']     = __( 'Stock status label (WooCommerce)', 'nexter-extension' );
+			$vars['wc_stock_status']      = __( 'Stock status label (WooCommerce)', 'nexter-extension' );
 		}
 		return $vars;
 	}
@@ -65,26 +65,26 @@ class Nexter_Content_SEO_Settings {
 			return '';
 		}
 		$replace = array(
-			'%site_name%'           => get_bloginfo( 'name' ),
-			'%tagline%'             => get_bloginfo( 'description' ),
-			'%current_date%'        => current_time( get_option( 'date_format' ) ),
-			'%current_day%'         => current_time( 'd' ),
-			'%current_month%'       => current_time( 'm' ),
-			'%current_year%'        => current_time( 'Y' ),
-			'%current_time%'        => current_time( get_option( 'time_format' ) ),
+			'%site_name%'     => get_bloginfo( 'name' ),
+			'%tagline%'       => get_bloginfo( 'description' ),
+			'%current_date%'  => current_time( get_option( 'date_format' ) ),
+			'%current_day%'   => current_time( 'd' ),
+			'%current_month%' => current_time( 'm' ),
+			'%current_year%'  => current_time( 'Y' ),
+			'%current_time%'  => current_time( get_option( 'time_format' ) ),
 		);
 		if ( ! empty( $context['post'] ) && $context['post'] instanceof WP_Post ) {
-			$post = $context['post'];
-			$replace['%post_title%']     = $post->post_title;
-			$replace['%post_excerpt%']   = has_excerpt( $post ) ? get_the_excerpt( $post ) : wp_trim_words( wp_strip_all_tags( $post->post_content ), 25 );
-			$replace['%post_content%']  = wp_strip_all_tags( $post->post_content );
-			$replace['%post_url%']      = get_permalink( $post );
-			$replace['%date_published%'] = get_the_date( '', $post );
-			$replace['%date_modified%']  = get_the_modified_date( '', $post );
+			$post                          = $context['post'];
+			$replace['%post_title%']       = $post->post_title;
+			$replace['%post_excerpt%']     = has_excerpt( $post ) ? get_the_excerpt( $post ) : wp_trim_words( wp_strip_all_tags( $post->post_content ), 25 );
+			$replace['%post_content%']     = wp_strip_all_tags( $post->post_content );
+			$replace['%post_url%']         = get_permalink( $post );
+			$replace['%date_published%']   = get_the_date( '', $post );
+			$replace['%date_modified%']    = get_the_modified_date( '', $post );
 			$replace['%post_author_name%'] = get_the_author_meta( 'display_name', $post->post_author );
 
 			if ( 'product' === $post->post_type && class_exists( 'Nexter_Content_SEO_Schema' ) ) {
-				$sr = Nexter_Content_SEO_Schema::get_replacements( $post );
+				$sr                                = Nexter_Content_SEO_Schema::get_replacements( $post );
 				$replace['%wc_price%']             = isset( $sr['%product.price%'] ) ? $sr['%product.price%'] : '';
 				$replace['%wc_currency%']          = isset( $sr['%product.currency%'] ) ? $sr['%product.currency%'] : '';
 				$replace['%wc_sku%']               = isset( $sr['%product.sku%'] ) ? $sr['%product.sku%'] : '';
@@ -106,18 +106,18 @@ class Nexter_Content_SEO_Settings {
 			}
 		}
 		if ( ! empty( $context['term'] ) && $context['term'] instanceof WP_Term ) {
-			$term        = $context['term'];
-			$desc_plain  = wp_strip_all_tags( $term->description );
-			$term_link   = get_term_link( $term );
-			$replace['%term_title%']          = $term->name;
-			$replace['%term_description%']    = $desc_plain;
-			$replace['%post_title%']           = $term->name;
-			$replace['%post_excerpt%']         = wp_trim_words( $desc_plain, 25 );
-			$replace['%post_content%']         = $desc_plain;
-			$replace['%post_url%']             = is_wp_error( $term_link ) ? '' : $term_link;
-			$replace['%date_published%']       = '';
-			$replace['%date_modified%']        = '';
-			$replace['%post_author_name%']     = '';
+			$term                          = $context['term'];
+			$desc_plain                    = wp_strip_all_tags( $term->description );
+			$term_link                     = get_term_link( $term );
+			$replace['%term_title%']       = $term->name;
+			$replace['%term_description%'] = $desc_plain;
+			$replace['%post_title%']       = $term->name;
+			$replace['%post_excerpt%']     = wp_trim_words( $desc_plain, 25 );
+			$replace['%post_content%']     = $desc_plain;
+			$replace['%post_url%']         = is_wp_error( $term_link ) ? '' : $term_link;
+			$replace['%date_published%']   = '';
+			$replace['%date_modified%']    = '';
+			$replace['%post_author_name%'] = '';
 		}
 		// Archive context: make %term_title% / %term_description% resolve for ALL archive types.
 		// Term archives already set these from the term above; author/date/post-type archives
@@ -143,12 +143,25 @@ class Nexter_Content_SEO_Settings {
 			$replace = array_merge( $replace, Nexter_Content_SEO_Schema::get_organization_token_values() );
 		}
 
-		$output = str_replace( array_keys( $replace ), array_values( $replace ), $template );
+		// Single-pass token substitution against the ORIGINAL template only. str_replace() with
+		// cumulative array replacement re-scanned its own output: a %post_title% (or excerpt /
+		// content / WooCommerce field) whose value contained the literal text "%post_excerpt%"
+		// was spliced in during the title pass, then that reintroduced literal was replaced again
+		// by the excerpt pass — letting author/content-controlled text silently corrupt the
+		// resolved title/description. A callback resolves each %token% from the template exactly
+		// once; the replacement text is never re-interpreted. Unknown tokens (a typo or a removed
+		// variable) resolve to '' so they never leak verbatim, while %token%-looking text that
+		// appears INSIDE a resolved value is left untouched (it's content, not a directive).
+		$output = preg_replace_callback(
+			'/%([a-z0-9_]+)%/i',
+			function ( $m ) use ( $replace ) {
+				$key = '%' . $m[1] . '%';
+				return isset( $replace[ $key ] ) ? (string) $replace[ $key ] : '';
+			},
+			(string) $template
+		);
 
-		// Strip any unresolved %token% placeholders (a typo or a variable removed from a
-		// template) so they never leak verbatim into the <title> / meta description, then
-		// collapse the whitespace the removal may leave behind.
-		$output = preg_replace( '/%[a-z0-9_]+%/i', '', (string) $output );
+		// Collapse any double spaces a stripped token may have left behind.
 		$output = preg_replace( '/[ \t]{2,}/', ' ', (string) $output );
 
 		return is_string( $output ) ? trim( $output ) : '';
@@ -161,26 +174,26 @@ class Nexter_Content_SEO_Settings {
 	 */
 	public static function get_preview_data() {
 		$data = array(
-			'%site_name%'           => get_bloginfo( 'name' ) ?: __( 'Site Name', 'nexter-extension' ),
-			'%tagline%'             => get_bloginfo( 'description' ) ?: __( 'Tagline', 'nexter-extension' ),
-			'%term_title%'          => __( 'Term Title', 'nexter-extension' ),
-			'%post_title%'          => __( 'Sample Post', 'nexter-extension' ),
-			'%post_excerpt%'        => __( 'This content will be set as the meta description tag and may appear in search results. Keep it short and clearly explain what the page is about.', 'nexter-extension' ),
-			'%post_content%'        => __( 'This content will be set as the meta description tag and may appear in search results. Keep it short and clearly explain what the page is about.', 'nexter-extension' ),
-			'%term_description%'    => __( 'Term Description', 'nexter-extension' ),
-			'%date_published%'     => current_time( get_option( 'date_format' ) ),
-			'%date_modified%'      => current_time( get_option( 'date_format' ) ),
-			'%post_url%'           => home_url( '/sample-post/' ),
-			'%site_url%'           => home_url( '/' ),
-			'%current_date%'       => current_time( get_option( 'date_format' ) ),
-			'%current_day%'         => current_time( 'd' ),
-			'%current_month%'       => current_time( 'm' ),
-			'%current_year%'        => current_time( 'Y' ),
-			'%current_time%'       => current_time( get_option( 'time_format' ) ),
-			'%organization_name%'  => get_bloginfo( 'name' ) ?: __( 'Organization Name', 'nexter-extension' ),
-			'%organization_logo%'   => '',
-			'%organization_url%'   => home_url( '/' ),
-			'%post_author_name%'   => __( 'Author Name', 'nexter-extension' ),
+			'%site_name%'         => get_bloginfo( 'name' ) ?: __( 'Site Name', 'nexter-extension' ),
+			'%tagline%'           => get_bloginfo( 'description' ) ?: __( 'Tagline', 'nexter-extension' ),
+			'%term_title%'        => __( 'Term Title', 'nexter-extension' ),
+			'%post_title%'        => __( 'Sample Post', 'nexter-extension' ),
+			'%post_excerpt%'      => __( 'This content will be set as the meta description tag and may appear in search results. Keep it short and clearly explain what the page is about.', 'nexter-extension' ),
+			'%post_content%'      => __( 'This content will be set as the meta description tag and may appear in search results. Keep it short and clearly explain what the page is about.', 'nexter-extension' ),
+			'%term_description%'  => __( 'Term Description', 'nexter-extension' ),
+			'%date_published%'    => current_time( get_option( 'date_format' ) ),
+			'%date_modified%'     => current_time( get_option( 'date_format' ) ),
+			'%post_url%'          => home_url( '/sample-post/' ),
+			'%site_url%'          => home_url( '/' ),
+			'%current_date%'      => current_time( get_option( 'date_format' ) ),
+			'%current_day%'       => current_time( 'd' ),
+			'%current_month%'     => current_time( 'm' ),
+			'%current_year%'      => current_time( 'Y' ),
+			'%current_time%'      => current_time( get_option( 'time_format' ) ),
+			'%organization_name%' => get_bloginfo( 'name' ) ?: __( 'Organization Name', 'nexter-extension' ),
+			'%organization_logo%' => '',
+			'%organization_url%'  => home_url( '/' ),
+			'%post_author_name%'  => __( 'Author Name', 'nexter-extension' ),
 		);
 
 		// Preview reflects the stored Organization schema row (with site fallbacks) so the
@@ -190,35 +203,37 @@ class Nexter_Content_SEO_Settings {
 		}
 
 		// Use a recent post for more realistic preview when available.
-		$sample = get_posts( array(
+		$sample = get_posts(
+			array(
 			'post_type'      => 'post',
 			'post_status'    => 'publish',
 			'posts_per_page' => 1,
 			'orderby'        => 'date',
-		) );
+			) 
+		);
 		if ( ! empty( $sample[0] ) ) {
-			$post = $sample[0];
-			$data['%post_title%']     = $post->post_title;
-			$data['%post_excerpt%']   = has_excerpt( $post ) ? get_the_excerpt( $post ) : wp_trim_words( wp_strip_all_tags( $post->post_content ), 25 );
-			$data['%post_content%']  = wp_trim_words( wp_strip_all_tags( $post->post_content ), 30 );
-			$data['%post_url%']       = get_permalink( $post );
-			$data['%date_published%'] = get_the_date( '', $post );
-			$data['%date_modified%']  = get_the_modified_date( '', $post );
+			$post                       = $sample[0];
+			$data['%post_title%']       = $post->post_title;
+			$data['%post_excerpt%']     = has_excerpt( $post ) ? get_the_excerpt( $post ) : wp_trim_words( wp_strip_all_tags( $post->post_content ), 25 );
+			$data['%post_content%']     = wp_trim_words( wp_strip_all_tags( $post->post_content ), 30 );
+			$data['%post_url%']         = get_permalink( $post );
+			$data['%date_published%']   = get_the_date( '', $post );
+			$data['%date_modified%']    = get_the_modified_date( '', $post );
 			$data['%post_author_name%'] = get_the_author_meta( 'display_name', $post->post_author );
 		}
 
 		// Front page preview tokens. Homepage SEO meta is configured directly on
 		// the static front page via the per-post Nexter SEO meta box, so these
 		// tokens fall back to the WordPress site name and tagline.
-		$front_id     = (int) get_option( 'page_on_front' );
-		$front_title  = '';
-		$front_desc   = '';
+		$front_id    = (int) get_option( 'page_on_front' );
+		$front_title = '';
+		$front_desc  = '';
 		if ( $front_id > 0 ) {
 			$front_title = (string) get_post_meta( $front_id, '_nxt_seo_title', true );
 			$front_desc  = (string) get_post_meta( $front_id, '_nxt_seo_description', true );
 		}
 		$data['%homepage_title%']       = $front_title !== '' ? $front_title : ( get_bloginfo( 'name' ) ?: __( 'Site Name', 'nexter-extension' ) );
-		$data['%homepage_description%'] = $front_desc !== ''  ? $front_desc  : ( get_bloginfo( 'description' ) ?: __( 'Tagline', 'nexter-extension' ) );
+		$data['%homepage_description%'] = $front_desc !== '' ? $front_desc : ( get_bloginfo( 'description' ) ?: __( 'Tagline', 'nexter-extension' ) );
 		$data['%homepage_url%']         = home_url( '/' );
 
 		if ( class_exists( 'WooCommerce' ) && class_exists( 'Nexter_Content_SEO_Schema' ) ) {
@@ -227,14 +242,16 @@ class Nexter_Content_SEO_Settings {
 			$data['%wc_sku%']               = 'SKU-001';
 			$data['%wc_short_description%'] = __( 'Short product summary for search and social previews.', 'nexter-extension' );
 			$data['%wc_stock_status%']      = __( 'In stock', 'nexter-extension' );
-			$sample_product                 = get_posts( array(
+			$sample_product                 = get_posts(
+				array(
 				'post_type'      => 'product',
 				'post_status'    => 'publish',
 				'posts_per_page' => 1,
 				'orderby'        => 'date',
-			) );
+				) 
+			);
 			if ( ! empty( $sample_product[0] ) ) {
-				$p = $sample_product[0];
+				$p  = $sample_product[0];
 				$sr = Nexter_Content_SEO_Schema::get_replacements( $p );
 				if ( isset( $sr['%product.price%'] ) && '' !== $sr['%product.price%'] ) {
 					$data['%wc_price%'] = $sr['%product.price%'];
@@ -248,7 +265,7 @@ class Nexter_Content_SEO_Settings {
 				if ( isset( $sr['%product.short_description%'] ) && '' !== $sr['%product.short_description%'] ) {
 					$data['%wc_short_description%'] = $sr['%product.short_description%'];
 				}
-				$ctx  = array( 'post' => $p );
+				$ctx                       = array( 'post' => $p );
 				$data['%wc_stock_status%'] = self::replace_variables( '%wc_stock_status%', $ctx );
 			}
 		}

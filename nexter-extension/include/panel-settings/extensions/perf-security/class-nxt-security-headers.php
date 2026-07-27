@@ -33,9 +33,13 @@ class Nxt_Security_Headers {
 
 		// XSS Protection
 		if ( is_array( $adv_sec_opt ) && in_array( 'xss_protection', $adv_sec_opt, true ) ) {
-			add_action( 'send_headers', function() {
-				header( 'X-XSS-Protection: 1; mode=block' );
-			}, 99 );
+			add_action(
+				'send_headers',
+				function() {
+					header( 'X-XSS-Protection: 1; mode=block' );
+				},
+				99 
+			);
 		}
 	}
 
@@ -74,11 +78,15 @@ class Nxt_Security_Headers {
 	public function remove_meta_generator() {
 		if ( ! headers_sent() ) {
 			add_action( 'get_header', [ $this, 'clean_generated_header' ], 50 );
-			add_action( 'wp_footer', function() {
-				if ( ob_get_level() > 0 ) {
-					ob_end_flush();
-				}
-			}, 100 );
+			add_action(
+				'wp_footer',
+				function() {
+					if ( ob_get_level() > 0 ) {
+						ob_end_flush();
+					}
+				},
+				100 
+			);
 		}
 	}
 

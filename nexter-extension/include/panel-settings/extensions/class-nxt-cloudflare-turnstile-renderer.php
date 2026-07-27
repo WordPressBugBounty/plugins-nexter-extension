@@ -20,7 +20,8 @@ class Nxt_Cloudflare_Turnstile_Renderer {
 		do_action( 'nxt_turnstile_enqueue_scripts' );
 		do_action( 'nxt_turnstile_before_field', esc_attr( $unique_id ) );
 		?>
-		<div id="<?php echo esc_attr( $widget_id ); ?>" class="cf-turnstile<?php echo $css_class ? ' ' . esc_attr( $css_class ) : ''; ?>" <?php if ( $disable_submit_btn ) : ?>data-callback="<?php echo esc_attr( $callback_function ); ?>"<?php endif; ?> data-sitekey="<?php echo esc_attr( $site_key ); ?>" data-theme="<?php echo esc_attr( $theme ); ?>" data-language="auto" data-size="<?php echo esc_attr( $size ); ?>" data-retry="auto" data-retry-interval="1500" data-action="<?php echo esc_attr( $form_action ); ?>" data-appearance="always"></div>
+		<div id="<?php echo esc_attr( $widget_id ); ?>" class="cf-turnstile<?php echo $css_class ? ' ' . esc_attr( $css_class ) : ''; ?>" <?php if ( $disable_submit_btn ) :
+			?>data-callback="<?php echo esc_attr( $callback_function ); ?>"<?php endif; ?> data-sitekey="<?php echo esc_attr( $site_key ); ?>" data-theme="<?php echo esc_attr( $theme ); ?>" data-language="auto" data-size="<?php echo esc_attr( $size ); ?>" data-retry="auto" data-retry-interval="1500" data-action="<?php echo esc_attr( $form_action ); ?>" data-appearance="always"></div>
 		<?php if ( $form_action == 'wordpress-login' ) : ?>
 			<style>#login{min-width:350px!important;}</style>
 		<?php endif; ?>

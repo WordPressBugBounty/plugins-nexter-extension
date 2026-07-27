@@ -3,40 +3,40 @@
  * Clean Up Admin Bar Extension
  * @since 4.2.0
  */
-defined('ABSPATH') or die();
+defined( 'ABSPATH' ) or die();
 
- class Nexter_Ext_CleanUp_Admin_Bar {
-    
-	public static $clean_up_opt = [];
+class Nexter_Ext_CleanUp_Admin_Bar {
+	
+	public static $clean_up_opt           = [];
 	private static $admin_bar_nodes_cache = null;
-	private static $collecting_nodes = false;
+	private static $collecting_nodes      = false;
 
-    /**
-     * Constructor
-     */
-    public function __construct() {
+	/**
+	 * Constructor
+	 */
+	public function __construct() {
 		$this->nxt_get_clean_admin_bar_settings();
 
 		add_action( 'admin_bar_menu', [$this, 'capture_admin_bar_nodes'], PHP_INT_MAX - 200 );
 		add_action( 'admin_bar_menu', [$this, 'remove_admin_bar_nodes'], PHP_INT_MAX - 100 );
 		add_action( 'admin_bar_menu', [$this, 'remove_howdy'], PHP_INT_MAX - 90 );
-		if ( !empty(self::$clean_up_opt) && in_array("adminbar-help-tab",self::$clean_up_opt) ) {
+		if ( ! empty( self::$clean_up_opt ) && in_array( "adminbar-help-tab",self::$clean_up_opt ) ) {
 			add_action( 'admin_head', [$this, 'hide_help_drawer'] );
 		}
 		if ( is_admin() ) {
 			add_filter( 'nxt_dashboard_localize_data', [ $this, 'add_adminbar_nodes_to_localize' ] );
 		}
-    }
+	}
 
 	private function nxt_get_clean_admin_bar_settings(){
 
-		if(isset(self::$clean_up_opt) && !empty(self::$clean_up_opt)){
+		if ( isset( self::$clean_up_opt ) && ! empty( self::$clean_up_opt ) ) {
 			return self::$clean_up_opt;
 		}
 
 		$option = Nxt_Options::extra_ext();
 		
-		if(!empty($option) && isset($option['clean-up-admin-bar']) && !empty($option['clean-up-admin-bar']['switch']) && !empty($option['clean-up-admin-bar']['values']) ){
+		if ( ! empty( $option ) && isset( $option['clean-up-admin-bar'] ) && ! empty( $option['clean-up-admin-bar']['switch'] ) && ! empty( $option['clean-up-admin-bar']['values'] ) ) {
 			self::$clean_up_opt = $option['clean-up-admin-bar']['values'];
 		}
 
@@ -57,43 +57,45 @@ defined('ABSPATH') or die();
 			}
 			$wp_admin_bar->remove_node( $node_id );
 		}
-    }
+	}
 
 	public function remove_howdy( $wp_admin_bar ) {
-        // Hide 'Howdy' text
-        if ( self::$collecting_nodes ) {
+		// Hide 'Howdy' text
+		if ( self::$collecting_nodes ) {
 			return;
 		}
-		if ( !empty(self::$clean_up_opt) && in_array("adminbar-howdy",self::$clean_up_opt) ) {
-            remove_action( 'admin_bar_menu', 'wp_admin_bar_my_account_item', 7 );
-            // Up to WP v6.5.5
-            remove_action( 'admin_bar_menu', 'wp_admin_bar_my_account_item', 9991 );
-            // Since WP v6.6
-            $current_user = wp_get_current_user();
-            $user_id = get_current_user_id();
-            $profile_url = get_edit_profile_url( $user_id );
-            $avatar = get_avatar( $user_id, 26 );
-            // size 26x26 pixels
-            $display_name = $current_user->display_name;
-            $class = ( $avatar ? 'with-avatar' : 'no-avatar' );
-            $wp_admin_bar->add_menu( array(
-                'id'     => 'my-account',
-                'parent' => 'top-secondary',
-                'title'  => $display_name . $avatar,
-                'href'   => $profile_url,
-                'meta'   => array(
-                    'class' => $class,
-                ),
-            ) );
-        }
-    }
+		if ( ! empty( self::$clean_up_opt ) && in_array( "adminbar-howdy",self::$clean_up_opt ) ) {
+			remove_action( 'admin_bar_menu', 'wp_admin_bar_my_account_item', 7 );
+			// Up to WP v6.5.5
+			remove_action( 'admin_bar_menu', 'wp_admin_bar_my_account_item', 9991 );
+			// Since WP v6.6
+			$current_user = wp_get_current_user();
+			$user_id      = get_current_user_id();
+			$profile_url  = get_edit_profile_url( $user_id );
+			$avatar       = get_avatar( $user_id, 26 );
+			// size 26x26 pixels
+			$display_name = $current_user->display_name;
+			$class        = ( $avatar ? 'with-avatar' : 'no-avatar' );
+			$wp_admin_bar->add_menu(
+				array(
+				'id'     => 'my-account',
+				'parent' => 'top-secondary',
+				'title'  => $display_name . $avatar,
+				'href'   => $profile_url,
+				'meta'   => array(
+					'class' => $class,
+				 ),
+				) 
+			);
+		}
+	}
 
 	public function hide_help_drawer() {
-        if ( is_admin() ) {
-            $screen = get_current_screen();
-            $screen->remove_help_tabs();
-        }
-    }
+		if ( is_admin() ) {
+			$screen = get_current_screen();
+			$screen->remove_help_tabs();
+		}
+	}
 
 	public function capture_admin_bar_nodes( $wp_admin_bar ) {
 		if ( self::$collecting_nodes || ! is_admin() ) {
@@ -106,7 +108,7 @@ defined('ABSPATH') or die();
 		}
 
 		self::$admin_bar_nodes_cache = $items;
-		$stored = get_option( 'nexter_admin_bar_nodes', [] );
+		$stored                      = get_option( 'nexter_admin_bar_nodes', [] );
 		if ( $stored !== $items ) {
 			update_option( 'nexter_admin_bar_nodes', $items );
 		}
@@ -119,12 +121,12 @@ defined('ABSPATH') or die();
 		}
 
 		$legacy_map = [
-			'adminbar-wp-logo' => 'wp-logo',
-			'adminbar-site-name' => 'site-name',
+			'adminbar-wp-logo'        => 'wp-logo',
+			'adminbar-site-name'      => 'site-name',
 			'adminbar-customize-menu' => 'customize',
-			'adminbar-updates-link' => 'updates',
-			'adminbar-comments-link' => 'comments',
-			'adminbar-new-content' => 'new-content',
+			'adminbar-updates-link'   => 'updates',
+			'adminbar-comments-link'  => 'comments',
+			'adminbar-new-content'    => 'new-content',
 		];
 
 		foreach ( $legacy_map as $legacy_id => $node_id ) {
@@ -143,7 +145,7 @@ defined('ABSPATH') or die();
 		if ( null !== self::$admin_bar_nodes_cache ) {
 			$data['dashData']['adminBarNodes'] = self::$admin_bar_nodes_cache;
 		} else {
-			$stored_nodes = get_option( 'nexter_admin_bar_nodes', [] );
+			$stored_nodes                      = get_option( 'nexter_admin_bar_nodes', [] );
 			$data['dashData']['adminBarNodes'] = ! empty( $stored_nodes ) ? $stored_nodes : self::get_adminbar_nodes_list();
 		}
 		return $data;
@@ -161,7 +163,7 @@ defined('ABSPATH') or die();
 		$admin_bar = new WP_Admin_Bar();
 		$admin_bar->initialize();
 
-		$old_admin_bar = isset( $GLOBALS['wp_admin_bar'] ) ? $GLOBALS['wp_admin_bar'] : null;
+		$old_admin_bar           = isset( $GLOBALS['wp_admin_bar'] ) ? $GLOBALS['wp_admin_bar'] : null;
 		$GLOBALS['wp_admin_bar'] = $admin_bar;
 
 		self::$collecting_nodes = true;
@@ -201,22 +203,25 @@ defined('ABSPATH') or die();
 				$title = $node->id;
 			}
 			$items[ $node->id ] = [
-				'id' => $node->id,
+				'id'    => $node->id,
 				'title' => $title,
 			];
 		}
 
 		// remove legacy nodes
-		unset($items['wp-logo']);
-		unset($items['site-name']);
-		unset($items['customize']);
-		unset($items['updates']);
-		unset($items['comments']);
-		unset($items['new-content']);
+		unset( $items['wp-logo'] );
+		unset( $items['site-name'] );
+		unset( $items['customize'] );
+		unset( $items['updates'] );
+		unset( $items['comments'] );
+		unset( $items['new-content'] );
 		
-		uasort( $items, function( $a, $b ) {
-			return strcasecmp( $a['title'], $b['title'] );
-		} );
+		uasort(
+			$items,
+			function( $a, $b ) {
+				return strcasecmp( $a['title'], $b['title'] );
+			} 
+		);
 
 		return array_values( $items );
 	}

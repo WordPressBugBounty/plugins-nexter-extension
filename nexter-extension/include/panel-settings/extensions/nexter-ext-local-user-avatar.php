@@ -3,14 +3,14 @@
  * Local User Avatar Extension
  * @since 4.2.0
  */
-defined('ABSPATH') or die();
+defined( 'ABSPATH' ) or die();
 
- class Nexter_Ext_Local_User_Avatar {
-    
+class Nexter_Ext_Local_User_Avatar {
+	
 	/**
-     * Constructor
-     */
-    public function __construct() {
+	 * Constructor
+	 */
+	public function __construct() {
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_assets' ) );
 
 		// For when current user edits their own profile
@@ -30,11 +30,11 @@ defined('ABSPATH') or die();
 		// Override avatar with the local one uploaded
 		add_filter( 'get_avatar', [ $this, 'filter_user_avatar_html' ], 5, 5 );
 		add_filter( 'get_avatar_url', [ $this, 'get_local_avatar_url' ], 10, 3 );
-    }
+	}
 
 	/*
-	 * Get the default WordPress avatar URL based on user email.
-	 * */
+	* Get the default WordPress avatar URL based on user email.
+	* */
 	public function get_default_avatar_url_by_email( $user_email = '', $size = 94 ) {
 		if ( empty( $user_email ) || ! is_email( $user_email ) ) {
 			return null;
@@ -87,18 +87,18 @@ defined('ABSPATH') or die();
 		$localize_data = [
 			'avatarUrl'    => $default_avatar_url,
 			'avatarSrcset' => $this->get_default_avatar_url_by_email( $current_user->user_email, 192 ) . ' 2x',
-			'title'       => __( 'Select Profile Picture', 'nexter-extension' ),
-			'button'           => __( 'Use as Profile Picture', 'nexter-extension' ),
+			'title'        => __( 'Select Profile Picture', 'nexter-extension' ),
+			'button'       => __( 'Use as Profile Picture', 'nexter-extension' ),
 		];
 
 		wp_localize_script( 'nxt-local-user-avatar', 'nxt_local_avatar', $localize_data );
 	}
 
 	/**
-     * Render the custom profile avatar fields on user profile edit screen.
-     */
-    public function render_profile_avatar_fields( $user ) {
-        $avatar_attachment_id = get_user_meta( $user->ID, 'nxt_user_avatar_attach_id', true );
+	 * Render the custom profile avatar fields on user profile edit screen.
+	 */
+	public function render_profile_avatar_fields( $user ) {
+		$avatar_attachment_id = get_user_meta( $user->ID, 'nxt_user_avatar_attach_id', true );
 		$has_custom_avatar    = ! empty( $avatar_attachment_id );
 		?>
 	<style>
@@ -156,7 +156,7 @@ defined('ABSPATH') or die();
 
 		<input type="hidden" name="nxt_user_avatar_attach_id" value="<?php echo esc_attr( $avatar_attachment_id ); ?>" />
 		<?php
-    }
+	}
 
 	/**
 	 * Update the user's avatar meta data.
@@ -227,8 +227,8 @@ defined('ABSPATH') or die();
 
 		if ( is_array( $avatar_src ) && ! empty( $avatar_src[0] ) ) {
 			// Security: Escape URL in src attribute
-		$avatar_src_escaped = esc_url( $avatar_src[0] );
-		$avatar_html = preg_replace( '/src=("|\').*?("|\')/', "src='{$avatar_src_escaped}'", $avatar_html );
+			$avatar_src_escaped = esc_url( $avatar_src[0] );
+			$avatar_html        = preg_replace( '/src=("|\').*?("|\')/', "src='{$avatar_src_escaped}'", $avatar_html );
 		}
 
 		$avatar_srcset = wp_get_attachment_image_srcset( $avatar_attachment_id );
@@ -236,16 +236,16 @@ defined('ABSPATH') or die();
 		if ( $avatar_srcset ) {
 			// Security: Escape srcset attribute
 			$avatar_srcset_escaped = esc_attr( $avatar_srcset );
-			$avatar_html = preg_replace( '/srcset=("|\').*?("|\')/', "srcset='{$avatar_srcset_escaped}'", $avatar_html );
+			$avatar_html           = preg_replace( '/srcset=("|\').*?("|\')/', "srcset='{$avatar_srcset_escaped}'", $avatar_html );
 		}
 
 		return $avatar_html;
 	}
 
 	/**
-     * Get the local uploaded avatar URL for a user, if available.
-     */
-    public function get_local_avatar_url( $avatar_url, $user_identifier, $args ) {
+	 * Get the local uploaded avatar URL for a user, if available.
+	 */
+	public function get_local_avatar_url( $avatar_url, $user_identifier, $args ) {
 		$user_id = $this->get_user_id_from_identifier( $user_identifier );
 	
 		if ( ! $user_id ) {
@@ -263,10 +263,10 @@ defined('ABSPATH') or die();
 		return ( is_array( $attachment_src ) && ! empty( $attachment_src[0] ) ) ? esc_url( $attachment_src[0] ) : $avatar_url;
 	}
 
-    /**
-     * Get user ID from $id_or_email
-     */
-    public function get_user_id_from_identifier( $identifier ) {
+	/**
+	 * Get user ID from $id_or_email
+	 */
+	public function get_user_id_from_identifier( $identifier ) {
 		if ( is_numeric( $identifier ) ) {
 			return (int) $identifier;
 		}

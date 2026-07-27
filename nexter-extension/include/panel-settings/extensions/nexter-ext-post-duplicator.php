@@ -1,7 +1,7 @@
 <?php
 /*
- *	Nexter Duplicate Post/Page
- *	@since 1.1.0
+ *  Nexter Duplicate Post/Page
+ *  @since 1.1.0
 **/
 defined( 'ABSPATH' ) || exit;
 
@@ -13,37 +13,38 @@ if ( ! is_admin() ) {
 
 $extension_option = Nxt_Options::extra_ext();
 
-if( !empty($extension_option['wp-duplicate-post']['values']) ){
+if ( ! empty( $extension_option['wp-duplicate-post']['values'] ) ) {
 
-	if( !function_exists('nxt_duplicate_post_action_link')){
+	if ( ! function_exists( 'nxt_duplicate_post_action_link' ) ) {
 		function nxt_duplicate_post_action_link( $post ) {
 
 			$extension_option = Nxt_Options::extra_ext();
-			$wpDupPostSet = $extension_option['wp-duplicate-post']['values'];
-			if(!empty($wpDupPostSet)){
+			$wpDupPostSet     = $extension_option['wp-duplicate-post']['values'];
+			if ( ! empty( $wpDupPostSet ) ) {
 	
-				$duplicate_access = (!empty($wpDupPostSet['nxt-duppost-access'])) ? $wpDupPostSet['nxt-duppost-access'] : 'all_users';
-				$duplicate_author = (!empty($wpDupPostSet['nxt-duppost-author'])) ? $wpDupPostSet['nxt-duppost-author'] : 'current_author';
-				$duplicate_date = (!empty($wpDupPostSet['nxt-duppost-date'])) ? $wpDupPostSet['nxt-duppost-date'] : 'original_date';
-				$duplicate_status = (!empty($wpDupPostSet['nxt-duppost-status'])) ? $wpDupPostSet['nxt-duppost-status'] : 'same';
-				$duplicate_postfix = (!empty($wpDupPostSet['nxt-duplicate-postfix'])) ? $wpDupPostSet['nxt-duplicate-postfix'] : 'Copy';
-				$duplicate_slug = (!empty($wpDupPostSet['nxt-duplicate-slug'])) ? $wpDupPostSet['nxt-duplicate-slug'] : 'copy';
+				$duplicate_access  = ( ! empty( $wpDupPostSet['nxt-duppost-access'] )) ? $wpDupPostSet['nxt-duppost-access'] : 'all_users';
+				$duplicate_author  = ( ! empty( $wpDupPostSet['nxt-duppost-author'] )) ? $wpDupPostSet['nxt-duppost-author'] : 'current_author';
+				$duplicate_date    = ( ! empty( $wpDupPostSet['nxt-duppost-date'] )) ? $wpDupPostSet['nxt-duppost-date'] : 'original_date';
+				$duplicate_status  = ( ! empty( $wpDupPostSet['nxt-duppost-status'] )) ? $wpDupPostSet['nxt-duppost-status'] : 'same';
+				$duplicate_postfix = ( ! empty( $wpDupPostSet['nxt-duplicate-postfix'] )) ? $wpDupPostSet['nxt-duplicate-postfix'] : 'Copy';
+				$duplicate_slug    = ( ! empty( $wpDupPostSet['nxt-duplicate-slug'] )) ? $wpDupPostSet['nxt-duplicate-slug'] : 'copy';
 			
-				$settings = ['duplicate_access' => $duplicate_access,
+				$settings = [
+				'duplicate_access'        => $duplicate_access,
 							'post_author' => $duplicate_author,
-							'timestamp' => $duplicate_date,
-							'status' => $duplicate_status,
-							'title' => $duplicate_postfix,
-							'slug' => $duplicate_slug];
+							'timestamp'   => $duplicate_date,
+							'status'      => $duplicate_status,
+							'title'       => $duplicate_postfix,
+							'slug'        => $duplicate_slug];
 				
 				// Hide on trash page
-				$post_status = isset( $_GET['post_status'] ) ? sanitize_text_field( wp_unslash( $_GET['post_status']) ) : false;
-				if ( $post_status=='trash' ) {
+				$post_status = isset( $_GET['post_status'] ) ? sanitize_text_field( wp_unslash( $_GET['post_status'] ) ) : false;
+				if ( $post_status == 'trash' ) {
 					return false;
 				}
 	
 				if ( $settings['duplicate_access'] == 'original_user' ) {
-					if ( $post->post_author!=get_current_user_id() ) {
+					if ( $post->post_author != get_current_user_id() ) {
 						return false;
 					}
 				}
@@ -53,19 +54,19 @@ if( !empty($extension_option['wp-duplicate-post']['values']) ){
 				
 				// Security: Create and Return Link with proper escaping
 				$post_type_label = isset( $post_type->labels->singular_name ) ? esc_html( $post_type->labels->singular_name ) : '';
-				return '<a class="nxt-post-duplicate" href="" data-postid="'.esc_attr( $post->ID ).'">'. esc_html__( 'Duplicate', 'nexter-extension' ).'</a><div class="nxt-dp-post-modal"><div class="nxt-post-modal-inner"><div class="nxt-post-dp-input-wrap"><input class="nxt-dp-post-input" type="number" min="1" value="1"/><span class="nxt-dp-post-total-text">: '.esc_html($post_type_label).'(s)</span></div><a class="nxt-dp-post-btn" href="">'.esc_html__('Duplicate','nexter-extension').'</a></div></div>';
+				return '<a class="nxt-post-duplicate" href="" data-postid="'.esc_attr( $post->ID ).'">'. esc_html__( 'Duplicate', 'nexter-extension' ).'</a><div class="nxt-dp-post-modal"><div class="nxt-post-modal-inner"><div class="nxt-post-dp-input-wrap"><input class="nxt-dp-post-input" type="number" min="1" value="1"/><span class="nxt-dp-post-total-text">: '.esc_html( $post_type_label ).'(s)</span></div><a class="nxt-dp-post-btn" href="">'.esc_html__( 'Duplicate','nexter-extension' ).'</a></div></div>';
 			}
 		}
 	}
 	
-	if( !function_exists('nxt_duplicator_post_action')){
+	if ( ! function_exists( 'nxt_duplicator_post_action' ) ) {
 		// Duplicate Post Link Action
 		function nxt_duplicator_post_action( $actions, $post ){
 			
-			if( function_exists('nxt_duplicate_post_action_link') && current_user_can( 'edit_posts' ) ) {
+			if ( function_exists( 'nxt_duplicate_post_action_link' ) && current_user_can( 'edit_posts' ) ) {
 				if ( $link = nxt_duplicate_post_action_link( $post ) ) {
 					$actions['nexter_duplicate_post'] = $link;
-				}	
+				}   
 			}
 			return $actions;
 		}
@@ -74,11 +75,14 @@ if( !empty($extension_option['wp-duplicate-post']['values']) ){
 		add_filter( 'cuar/core/admin/content-list-table/row-actions', 'nxt_duplicator_post_action', 10, 2 );
 	}
 
-	add_action( 'admin_enqueue_scripts', function(){
-		$minified = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
-		wp_enqueue_style( 'nxt-duplicate-post-css', NEXTER_EXT_URL .'assets/css/admin/nxt-duplicate-post'. $minified .'.css', array(), NEXTER_EXT_VER );
-		wp_enqueue_script( 'nexter-duplicate-post-js', NEXTER_EXT_URL . 'assets/js/admin/nexter-duplicate-post'. $minified .'.js', array(), NEXTER_EXT_VER, true);
-	} );
+	add_action(
+		'admin_enqueue_scripts',
+		function(){
+			$minified = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
+			wp_enqueue_style( 'nxt-duplicate-post-css', NEXTER_EXT_URL .'assets/css/admin/nxt-duplicate-post'. $minified .'.css', array(), NEXTER_EXT_VER );
+			wp_enqueue_script( 'nexter-duplicate-post-js', NEXTER_EXT_URL . 'assets/js/admin/nexter-duplicate-post'. $minified .'.js', array(), NEXTER_EXT_VER, true );
+		} 
+	);
 
 	/**
 	 * Meta keys to skip when duplicating (locks, stale generated CSS).
@@ -212,7 +216,7 @@ if( !empty($extension_option['wp-duplicate-post']['values']) ){
 				if ( ! empty( $element['children'] ) && is_array( $element['children'] ) ) {
 					$new_children = array();
 					foreach ( $element['children'] as $child_id ) {
-						$child_id = (string) $child_id;
+						$child_id       = (string) $child_id;
 						$new_children[] = isset( $id_map[ $child_id ] ) ? $id_map[ $child_id ] : $child_id;
 					}
 					$elements[ $index ]['children'] = $new_children;
@@ -330,29 +334,30 @@ if( !empty($extension_option['wp-duplicate-post']['values']) ){
 	/*
 	 * Nexter Function For Ajax Call
 	 */
-	if( !function_exists('nxt_post_duplicate')){
+	if ( ! function_exists( 'nxt_post_duplicate' ) ) {
 		function nxt_post_duplicate( $original_id,$p) {
 			$extension_option = Nxt_Options::extra_ext();
-			$wpDupPostSet = $extension_option['wp-duplicate-post']['values'];
-			if(!empty($wpDupPostSet)){
+			$wpDupPostSet     = $extension_option['wp-duplicate-post']['values'];
+			if ( ! empty( $wpDupPostSet ) ) {
 
-				$args=array(); $do_action=true ;
+				$args = array(); $do_action = true ;
 
-				$duplicate_access = (!empty($wpDupPostSet['nxt-duppost-access'])) ? $wpDupPostSet['nxt-duppost-access'] : 'all_users';
-				$duplicate_author = (!empty($wpDupPostSet['nxt-duppost-author'])) ? $wpDupPostSet['nxt-duppost-author'] : 'current_author';
-				$duplicate_date = (!empty($wpDupPostSet['nxt-duppost-date'])) ? $wpDupPostSet['nxt-duppost-date'] : 'original_date';
-				$duplicate_status = (!empty($wpDupPostSet['nxt-duppost-status'])) ? $wpDupPostSet['nxt-duppost-status'] : 'same';
-				$duplicate_postfix = (!empty($wpDupPostSet['nxt-duplicate-postfix'])) ? $wpDupPostSet['nxt-duplicate-postfix'] : 'Copy';
-				$duplicate_slug = (!empty($wpDupPostSet['nxt-duplicate-slug'])) ? $wpDupPostSet['nxt-duplicate-slug'] : 'copy';
+				$duplicate_access  = ( ! empty( $wpDupPostSet['nxt-duppost-access'] )) ? $wpDupPostSet['nxt-duppost-access'] : 'all_users';
+				$duplicate_author  = ( ! empty( $wpDupPostSet['nxt-duppost-author'] )) ? $wpDupPostSet['nxt-duppost-author'] : 'current_author';
+				$duplicate_date    = ( ! empty( $wpDupPostSet['nxt-duppost-date'] )) ? $wpDupPostSet['nxt-duppost-date'] : 'original_date';
+				$duplicate_status  = ( ! empty( $wpDupPostSet['nxt-duppost-status'] )) ? $wpDupPostSet['nxt-duppost-status'] : 'same';
+				$duplicate_postfix = ( ! empty( $wpDupPostSet['nxt-duplicate-postfix'] )) ? $wpDupPostSet['nxt-duplicate-postfix'] : 'Copy';
+				$duplicate_slug    = ( ! empty( $wpDupPostSet['nxt-duplicate-slug'] )) ? $wpDupPostSet['nxt-duplicate-slug'] : 'copy';
 			
-				$new_settings  = ['duplicate_access' => $duplicate_access,
-					'post_author' => $duplicate_author,
-					'timestamp' => $duplicate_date,
-					'status' => $duplicate_status,
-					'title' => $duplicate_postfix,
-					'slug' => $duplicate_slug
+				$new_settings = [
+				'duplicate_access' => $duplicate_access,
+					'post_author'  => $duplicate_author,
+					'timestamp'    => $duplicate_date,
+					'status'       => $duplicate_status,
+					'title'        => $duplicate_postfix,
+					'slug'         => $duplicate_slug
 				];
-				$settings = wp_parse_args( $args, $new_settings );
+				$settings     = wp_parse_args( $args, $new_settings );
 				
 				$original_post = get_post( $original_id );
 				if ( ! $original_post ) {
@@ -442,22 +447,22 @@ if( !empty($extension_option['wp-duplicate-post']['values']) ){
 	/******
 	Nexter Duplicate Ajax Function
 	******/
-	if( !function_exists('nxt_duplicate_post_ajax') ){
+	if ( ! function_exists( 'nxt_duplicate_post_ajax' ) ) {
 		function nxt_duplicate_post_ajax() {
 			check_ajax_referer( 'nexter_admin_nonce', 'nexter_nonce' );
 			if ( ! is_user_logged_in() || ! current_user_can( 'edit_posts' ) ) {
-				wp_send_json_error( __('Insufficient permissions.','nexter-extension') );
+				wp_send_json_error( __( 'Insufficient permissions.','nexter-extension' ) );
 			}
 			
-			$original_id  = ( isset( $_POST['original_id'] ) ) ? sanitize_text_field( intval( $_POST['original_id'] ) ) : '';
+			$original_id = ( isset( $_POST['original_id'] ) ) ? sanitize_text_field( intval( $_POST['original_id'] ) ) : '';
 
 			if ( ! current_user_can( 'edit_post', $original_id ) ) {
-				wp_send_json_error( __('You do not have permission to duplicate this post.','nexter-extension') );
+				wp_send_json_error( __( 'You do not have permission to duplicate this post.','nexter-extension' ) );
 			}
 
-			$total  = ( isset( $_POST['total'] ) ) ? sanitize_text_field( intval( $_POST['total'] ) ) : '';
+			$total = ( isset( $_POST['total'] ) ) ? sanitize_text_field( intval( $_POST['total'] ) ) : '';
 
-			for($p=1; $p<=$total;$p++){
+			for ( $p = 1; $p <= $total;$p++ ) {
 				nxt_post_duplicate( $original_id,$p );
 			}
 			wp_send_json_success();

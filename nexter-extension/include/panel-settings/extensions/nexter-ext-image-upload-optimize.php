@@ -72,14 +72,14 @@ class Nexter_Ext_Image_Upload_Optimization {
 	 */
 	public static function get_default_values() {
 		return array(
-			'max_width'        => 1920,
-			'max_height'       => 1920,
-			'image_format'     => 'webp',
-			'quality_mode'     => 'balanced',
-			'auto_convert'     => false,
-			'exif_data'        => 'strip',
-			'resize_large'     => false,
-			'processing_speed' => 'fast',
+			'max_width'         => 1920,
+			'max_height'        => 1920,
+			'image_format'      => 'webp',
+			'quality_mode'      => 'balanced',
+			'auto_convert'      => false,
+			'exif_data'         => 'strip',
+			'resize_large'      => false,
+			'processing_speed'  => 'fast',
 			'avoid_larger'      => false,
 			'exclude_paths'     => array(),
 			'run_in_background' => false,
@@ -126,7 +126,7 @@ class Nexter_Ext_Image_Upload_Optimization {
 			$allowed_formats = array( 'webp', 'original' );
 		}
 
-		$raw_format = isset( $values['image_format'] ) ? $values['image_format'] : 'webp';
+		$raw_format   = isset( $values['image_format'] ) ? $values['image_format'] : 'webp';
 		$image_format = in_array( $raw_format, $allowed_formats, true ) ? $raw_format : ( in_array( 'webp', $allowed_formats, true ) ? 'webp' : 'original' );
 
 		$quality_mode = isset( $values['quality_mode'] ) && in_array( $values['quality_mode'], array( 'balanced', 'lossless', 'aggressive' ), true )
@@ -134,11 +134,19 @@ class Nexter_Ext_Image_Upload_Optimization {
 			: 'balanced';
 
 		// WebP quality: higher value = better quality / less compressed.
-		$webp_quality_map = array( 'balanced' => 80, 'lossless' => 90, 'aggressive' => 70 );
+		$webp_quality_map = array(
+		'balanced'   => 80,
+		'lossless'   => 90,
+		'aggressive' => 70
+		);
 		// AVIF quality: AVIF uses a different perceptual scale — quality 80 in AVIF produces
 		// larger files than WebP at 80.  Use lower quality values so AVIF is actually more
 		// compressed (and competes with WebP in Smart mode).
-		$avif_quality_map = array( 'balanced' => 70, 'lossless' => 80, 'aggressive' => 60 );
+		$avif_quality_map   = array(
+		'balanced'   => 70,
+		'lossless'   => 80,
+		'aggressive' => 60
+		);
 		$quality_value      = isset( $webp_quality_map[ $quality_mode ] ) ? $webp_quality_map[ $quality_mode ] : 80;
 		$avif_quality_value = isset( $avif_quality_map[ $quality_mode ] ) ? $avif_quality_map[ $quality_mode ] : 70;
 
@@ -158,8 +166,8 @@ class Nexter_Ext_Image_Upload_Optimization {
 			}
 		}
 
-		$result = array(
-			'enabled'          => $switch,
+		$result               = array(
+			'enabled'           => $switch,
 			'output_format'     => $image_format,
 			'webp_enabled'      => $webp_enabled,
 			'avif_enabled'      => $avif_enabled,
@@ -173,10 +181,10 @@ class Nexter_Ext_Image_Upload_Optimization {
 			'exif_data'         => $exif_data,
 			'avoid_larger'      => ! empty( $values['avoid_larger'] ),
 			'processing_speed'  => isset( $values['processing_speed'] ) && in_array( $values['processing_speed'], array( 'fast', 'balanced', 'slow' ), true ) ? $values['processing_speed'] : 'fast',
-			'exclude_paths'       => $exclude_paths,
-			'run_in_background'   => ! empty( $values['run_in_background'] ),
-			'exclude_png_webp'    => false,
-			'exclude_png_avif'    => false,
+			'exclude_paths'     => $exclude_paths,
+			'run_in_background' => ! empty( $values['run_in_background'] ),
+			'exclude_png_webp'  => false,
+			'exclude_png_avif'  => false,
 		);
 		self::$settings_cache = $result;
 		return $result;
@@ -197,7 +205,7 @@ class Nexter_Ext_Image_Upload_Optimization {
 		$upload_dir = wp_upload_dir();
 		$base       = isset( $upload_dir['basedir'] ) ? wp_normalize_path( $upload_dir['basedir'] ) : '';
 	
-		$file_path  = wp_normalize_path( $file_path );
+		$file_path = wp_normalize_path( $file_path );
 	
 		// Convert to relative uploads path
 		$relative = $base ? str_replace( $base . '/', '', $file_path ) : $file_path;
@@ -229,7 +237,7 @@ class Nexter_Ext_Image_Upload_Optimization {
 	
 			// 3️⃣ Wildcard support (*)
 			if ( strpos( $exclude, '*' ) !== false ) {
-				$pattern = '#^' . str_replace('\*', '.*', preg_quote($exclude, '#')) . '$#i';
+				$pattern = '#^' . str_replace( '\*', '.*', preg_quote( $exclude, '#' ) ) . '$#i';
 				if ( preg_match( $pattern, $relative ) ) {
 					return true;
 				}
@@ -257,10 +265,10 @@ class Nexter_Ext_Image_Upload_Optimization {
 	 * @return string Full path in nexter-optimizer/uploads (same relative path as uploads).
 	 */
 	public function get_output_path( $original_path ) {
-		$upload_dir   = self::get_upload_dir();
-		$basedir      = isset( $upload_dir['basedir'] ) ? wp_normalize_path( $upload_dir['basedir'] ) : '';
+		$upload_dir    = self::get_upload_dir();
+		$basedir       = isset( $upload_dir['basedir'] ) ? wp_normalize_path( $upload_dir['basedir'] ) : '';
 		$original_path = wp_normalize_path( str_replace( '\\', '/', $original_path ) );
-		$relative     = '';
+		$relative      = '';
 
 		if ( $basedir && strpos( $original_path, $basedir ) === 0 ) {
 			$relative = trim( substr( $original_path, strlen( $basedir ) ), '/\\' );
@@ -339,12 +347,12 @@ class Nexter_Ext_Image_Upload_Optimization {
 		if ( empty( $path ) || ! is_string( $path ) ) {
 			return false;
 		}
-		$normalized = wp_normalize_path( $path );
+		$normalized  = wp_normalize_path( $path );
 		$content_dir = wp_normalize_path( WP_CONTENT_DIR );
 		if ( strpos( $normalized, $content_dir ) === 0 && file_exists( $normalized ) ) {
 			return $normalized;
 		}
-		$relative = ltrim( str_replace( '\\', '/', $path ), '/' );
+		$relative   = ltrim( str_replace( '\\', '/', $path ), '/' );
 		$by_content = $content_dir . '/' . $relative;
 		if ( file_exists( $by_content ) ) {
 			return wp_normalize_path( $by_content );
@@ -387,7 +395,7 @@ class Nexter_Ext_Image_Upload_Optimization {
 		if ( empty( $absolute_path ) || ! is_string( $absolute_path ) ) {
 			return '';
 		}
-		$path = wp_normalize_path( $absolute_path );
+		$path        = wp_normalize_path( $absolute_path );
 		$content_dir = wp_normalize_path( WP_CONTENT_DIR );
 		if ( strpos( $path, $content_dir ) === 0 ) {
 			$rel = ltrim( str_replace( $content_dir, '', $path ), '/' );
@@ -554,26 +562,26 @@ class Nexter_Ext_Image_Upload_Optimization {
 			$metadata = array();
 		}
 		$metadata['nxt_main_original_size']  = $pending['original_size'];
-		$metadata['nxt_main_optimized_size']  = $pending['optimized_size'];
+		$metadata['nxt_main_optimized_size'] = $pending['optimized_size'];
 		$metadata['nxt_original_size']       = $pending['original_size'];
 		$metadata['nxt_optimized_size']      = $pending['optimized_size'];
 		$metadata['nxt_original_file']       = $pending['original_relative'];
 		$metadata['nxt_optimized_file']      = $pending['optimized_relative'];
-		$metadata['nxt_optimized_format']     = $pending['format'];
-		$metadata['nxt_original_mime']        = $pending['original_mime'];
+		$metadata['nxt_optimized_format']    = $pending['format'];
+		$metadata['nxt_original_mime']       = $pending['original_mime'];
 		if ( ! empty( $pending['backup_relative'] ) ) {
 			$metadata['nxt_backup_file'] = $pending['backup_relative'];
 		}
 
 		// Process all thumbnail sizes (medium, large, thumbnail, etc.).
 		// Credit counting: record once after sizes with credits = 1 (original) + number of sizes optimized.
-		$settings = $this->get_settings();
-		$base_dir = dirname( $file_path );
-		$upload_dir = self::get_upload_dir();
+		$settings           = $this->get_settings();
+		$base_dir           = dirname( $file_path );
+		$upload_dir         = self::get_upload_dir();
 		$basedir_normalized = wp_normalize_path( $upload_dir['basedir'] );
-		$backup_dir = WP_CONTENT_DIR . '/nexter-optimizer/backups';
-		$total_original = $pending['original_size'];
-		$total_optimized = $pending['optimized_size'];
+		$backup_dir         = WP_CONTENT_DIR . '/nexter-optimizer/backups';
+		$total_original     = $pending['original_size'];
+		$total_optimized    = $pending['optimized_size'];
 
 		if ( isset( $metadata['sizes'] ) && is_array( $metadata['sizes'] ) ) {
 			$metadata['nxt_optimized_sizes'] = isset( $metadata['nxt_optimized_sizes'] ) ? $metadata['nxt_optimized_sizes'] : array();
@@ -585,8 +593,8 @@ class Nexter_Ext_Image_Upload_Optimization {
 				if ( ! file_exists( $size_file_path ) ) {
 					continue;
 				}
-				$size_mime = function_exists( 'wp_check_filetype' ) ? wp_check_filetype( $size_file_path, null ) : null;
-				$size_mime = is_array( $size_mime ) && ! empty( $size_mime['type'] ) ? $size_mime['type'] : '';
+				$size_mime   = function_exists( 'wp_check_filetype' ) ? wp_check_filetype( $size_file_path, null ) : null;
+				$size_mime   = is_array( $size_mime ) && ! empty( $size_mime['type'] ) ? $size_mime['type'] : '';
 				$valid_mimes = array( 'image/jpeg', 'image/jpg', 'image/png', 'image/gif' );
 				if ( ! in_array( $size_mime, $valid_mimes, true ) ) {
 					continue;
@@ -595,9 +603,9 @@ class Nexter_Ext_Image_Upload_Optimization {
 					continue;
 				}
 				// Backup this size.
-				$size_relative = str_replace( $basedir_normalized . '/', '', wp_normalize_path( str_replace( '\\', '/', $size_file_path ) ) );
-				$size_relative = ltrim( $size_relative, '/' );
-				$size_backup_path = wp_normalize_path( $backup_dir . '/' . $size_relative );
+				$size_relative      = str_replace( $basedir_normalized . '/', '', wp_normalize_path( str_replace( '\\', '/', $size_file_path ) ) );
+				$size_relative      = ltrim( $size_relative, '/' );
+				$size_backup_path   = wp_normalize_path( $backup_dir . '/' . $size_relative );
 				$size_backup_parent = dirname( $size_backup_path );
 				if ( ! is_dir( $size_backup_parent ) ) {
 					wp_mkdir_p( $size_backup_parent );
@@ -606,12 +614,12 @@ class Nexter_Ext_Image_Upload_Optimization {
 					@copy( $size_file_path, $size_backup_path );
 				}
 				$size_backup_relative = file_exists( $size_backup_path ) ? self::absolute_to_relative_content( $size_backup_path ) : '';
-				$size_result = $this->process_image( $size_file_path, $settings );
+				$size_result          = $this->process_image( $size_file_path, $settings );
 				if ( $size_result && ! empty( $size_result['success'] ) && ! empty( $size_result['file'] ) ) {
-					$size_orig = (int) $size_result['original_size'];
-					$size_opt  = (int) $size_result['optimized_size'];
-					$total_original += $size_orig;
-					$total_optimized += $size_opt;
+					$size_orig                                     = (int) $size_result['original_size'];
+					$size_opt                                      = (int) $size_result['optimized_size'];
+					$total_original                               += $size_orig;
+					$total_optimized                              += $size_opt;
 					$metadata['nxt_optimized_sizes'][ $size_name ] = array(
 						'file'           => self::absolute_to_relative_content( $size_result['file'] ),
 						'format'         => $size_result['format'],
@@ -672,9 +680,9 @@ class Nexter_Ext_Image_Upload_Optimization {
 			return $form_fields;
 		}
 
-		$has_imagick = extension_loaded( 'imagick' );
-		$has_gd      = extension_loaded( 'gd' );
-		$has_webp    = $has_gd && function_exists( 'imagewebp' );
+		$has_imagick  = extension_loaded( 'imagick' );
+		$has_gd       = extension_loaded( 'gd' );
+		$has_webp     = $has_gd && function_exists( 'imagewebp' );
 		$can_optimize = $has_imagick || $has_webp || ( $has_gd && 'original' === $settings['output_format'] );
 		if ( ! $can_optimize ) {
 			return $form_fields;
@@ -730,18 +738,18 @@ class Nexter_Ext_Image_Upload_Optimization {
 			.nxt-opt-reset-days svg { width: 14px; height: 14px; }
 		</style>';
 
-		$stats = Nexter_Ext_Image_Optimization_Limit::get_instance()->get_ui_stats();
+		$stats      = Nexter_Ext_Image_Optimization_Limit::get_instance()->get_ui_stats();
 		$show_usage = empty( $stats['is_pro'] );
 
-		$usage_count = (int) ( $stats['monthly_count'] ?? 0 );
-		$usage_limit = (int) ( $stats['monthly_limit'] ?? 500 );
+		$usage_count   = (int) ( $stats['monthly_count'] ?? 0 );
+		$usage_limit   = (int) ( $stats['monthly_limit'] ?? 500 );
 		$limit_reached = ( ! empty( $show_usage ) && $usage_count >= $usage_limit );
 
 		$usage_html = '';
 		if ( $show_usage ) {
-			$usage_pct   = $usage_limit > 0 ? min( 100, ( $usage_count / $usage_limit ) * 100 ) : 0;
-			$reset_days  = (int) $stats['resets_in_days'];
-			$fill_color  = $limit_reached ? '#FF1400' : '#1717CC';
+			$usage_pct  = $usage_limit > 0 ? min( 100, ( $usage_count / $usage_limit ) * 100 ) : 0;
+			$reset_days = (int) $stats['resets_in_days'];
+			$fill_color = $limit_reached ? '#FF1400' : '#1717CC';
 			
 			$usage_html .= '<div class="nxt-opt-usage-wrap">';
 			$usage_html .= '<div class="nxt-opt-usage-hdr"><span>' . esc_html__( 'Monthly Usage', 'nexter-extension' ) . '</span><span>' . $usage_count . ' / ' . $usage_limit . '</span></div>';
@@ -1045,18 +1053,18 @@ class Nexter_Ext_Image_Upload_Optimization {
 		$result = $this->process_image( $upload['file'], $settings );
 		
 		if ( $result && ! empty( $result['success'] ) && ! empty( $result['file'] ) ) {
-			$original_path = $upload['file'];
-			$optimized_path = $result['file'];
-			$upload_dir = self::get_upload_dir();
-			$basedir = wp_normalize_path( $upload_dir['basedir'] );
-			$original_relative = str_replace( $basedir . '/', '', wp_normalize_path( str_replace( '\\', '/', $original_path ) ) );
-			$original_relative = ltrim( $original_relative, '/' );
+			$original_path      = $upload['file'];
+			$optimized_path     = $result['file'];
+			$upload_dir         = self::get_upload_dir();
+			$basedir            = wp_normalize_path( $upload_dir['basedir'] );
+			$original_relative  = str_replace( $basedir . '/', '', wp_normalize_path( str_replace( '\\', '/', $original_path ) ) );
+			$original_relative  = ltrim( $original_relative, '/' );
 			$optimized_relative = str_replace( wp_normalize_path( WP_CONTENT_DIR ), '', wp_normalize_path( $optimized_path ) );
 			$optimized_relative = ltrim( str_replace( '\\', '/', $optimized_relative ), '/' );
 
 			// Backup original to nexter-optimizer/backups (same structure as uploads).
-			$backup_dir = WP_CONTENT_DIR . '/nexter-optimizer/backups';
-			$backup_path = wp_normalize_path( $backup_dir . '/' . $original_relative );
+			$backup_dir    = WP_CONTENT_DIR . '/nexter-optimizer/backups';
+			$backup_path   = wp_normalize_path( $backup_dir . '/' . $original_relative );
 			$backup_parent = dirname( $backup_path );
 			if ( ! is_dir( $backup_parent ) ) {
 				wp_mkdir_p( $backup_parent );
@@ -1072,13 +1080,13 @@ class Nexter_Ext_Image_Upload_Optimization {
 
 			// Keep original in uploads; store pending metadata for wp_generate_attachment_metadata.
 			self::$pending_upload_metadata[ wp_normalize_path( $original_path ) ] = array(
-				'original_size'     => $result['original_size'],
-				'optimized_size'    => $result['optimized_size'],
-				'original_relative' => $original_relative,
-				'optimized_relative' => $optimized_relative,
-				'format'            => $result['format'],
-				'original_mime'     => isset( $result['original_mime'] ) ? $result['original_mime'] : $upload['type'],
-				'backup_relative'   => $backup_relative,
+				'original_size'         => $result['original_size'],
+				'optimized_size'        => $result['optimized_size'],
+				'original_relative'     => $original_relative,
+				'optimized_relative'    => $optimized_relative,
+				'format'                => $result['format'],
+				'original_mime'         => isset( $result['original_mime'] ) ? $result['original_mime'] : $upload['type'],
+				'backup_relative'       => $backup_relative,
 				'needs_limit_increment' => true,
 			);
 			// Do not change $upload['file'] or $upload['url'] — attachment stays as original; rewrite will serve optimised.
@@ -1138,11 +1146,11 @@ class Nexter_Ext_Image_Upload_Optimization {
 	 * @return string URL base for optimised file (without .webp/.avif).
 	 */
 	public function get_output_url( $original_path ) {
-		$upload_dir = self::get_upload_dir();
-		$basedir    = wp_normalize_path( $upload_dir['basedir'] );
+		$upload_dir    = self::get_upload_dir();
+		$basedir       = wp_normalize_path( $upload_dir['basedir'] );
 		$original_path = wp_normalize_path( $original_path );
-		$relative   = str_replace( $basedir . '/', '', str_replace( '\\', '/', $original_path ) );
-		$relative   = ltrim( $relative, '/' );
+		$relative      = str_replace( $basedir . '/', '', str_replace( '\\', '/', $original_path ) );
+		$relative      = ltrim( $relative, '/' );
 		return content_url( '/nexter-optimizer/uploads/' . $relative );
 	}
 
@@ -1182,7 +1190,7 @@ class Nexter_Ext_Image_Upload_Optimization {
 			}
 			$format = isset( $metadata['nxt_optimized_format'] ) ? $metadata['nxt_optimized_format'] : 'webp';
 			// For original format, optimised file has same extension (e.g. .jpg) in nexter-optimizer/uploads.
-			$optimized_url = ( 'original' === $format )
+			$optimized_url                            = ( 'original' === $format )
 				? $this->get_output_url( $original_file )
 				: $this->get_output_url( $original_file ) . '.' . $format;
 			self::$attachment_url_cache[ $cache_key ] = $optimized_url;
@@ -1204,11 +1212,11 @@ class Nexter_Ext_Image_Upload_Optimization {
 			self::$attachment_url_cache[ $cache_key ] = false;
 			return false;
 		}
-		$size_data = $metadata['sizes'][ $size_name ];
-		$base_dir = dirname( $original_file );
-		$size_file_path = wp_normalize_path( $base_dir . '/' . $size_data['file'] );
-		$size_format = isset( $metadata['nxt_optimized_sizes'][ $size_name ]['format'] ) ? $metadata['nxt_optimized_sizes'][ $size_name ]['format'] : 'webp';
-		$optimized_url = $this->get_output_url( $size_file_path ) . '.' . $size_format;
+		$size_data                                = $metadata['sizes'][ $size_name ];
+		$base_dir                                 = dirname( $original_file );
+		$size_file_path                           = wp_normalize_path( $base_dir . '/' . $size_data['file'] );
+		$size_format                              = isset( $metadata['nxt_optimized_sizes'][ $size_name ]['format'] ) ? $metadata['nxt_optimized_sizes'][ $size_name ]['format'] : 'webp';
+		$optimized_url                            = $this->get_output_url( $size_file_path ) . '.' . $size_format;
 		self::$attachment_url_cache[ $cache_key ] = $optimized_url;
 		return $optimized_url;
 	}
@@ -1292,8 +1300,8 @@ class Nexter_Ext_Image_Upload_Optimization {
 			return $response;
 		}
 		
-		$format = isset( $metadata['nxt_optimized_format'] ) ? $metadata['nxt_optimized_format'] : 'webp';
-		$optimized_url = ( 'original' === $format )
+		$format          = isset( $metadata['nxt_optimized_format'] ) ? $metadata['nxt_optimized_format'] : 'webp';
+		$optimized_url   = ( 'original' === $format )
 			? $this->get_output_url( $original_file )
 			: $this->get_output_url( $original_file ) . '.' . $format;
 		$response['url'] = $optimized_url;
@@ -1303,21 +1311,21 @@ class Nexter_Ext_Image_Upload_Optimization {
 
 		// Update response with optimized image data (mime, filesize, dimensions) for Media Library.
 		$response['filename'] = wp_basename( $optimized_path );
-		$optimized_mimes = array(
-			'webp'    => 'image/webp',
-			'avif'    => 'image/avif',
+		$optimized_mimes      = array(
+			'webp'     => 'image/webp',
+			'avif'     => 'image/avif',
 			'original' => ( isset( $response['mime'] ) && is_string( $response['mime'] ) ) ? $response['mime'] : 'image/jpeg',
 		);
-		$response['mime']  = isset( $optimized_mimes[ $format ] ) ? $optimized_mimes[ $format ] : 'image/webp';
-		$response['type']  = 'image';
-		$response['subtype'] = ( 'original' === $format && isset( $response['subtype'] ) ) ? $response['subtype'] : $format;
+		$response['mime']     = isset( $optimized_mimes[ $format ] ) ? $optimized_mimes[ $format ] : 'image/webp';
+		$response['type']     = 'image';
+		$response['subtype']  = ( 'original' === $format && isset( $response['subtype'] ) ) ? $response['subtype'] : $format;
 		$optimized_size_bytes = (int) ( $metadata['nxt_main_optimized_size'] ?? $metadata['nxt_optimized_size'] ?? 0 );
 		if ( $optimized_size_bytes <= 0 && $optimized_path && file_exists( $optimized_path ) ) {
 			$optimized_size_bytes = (int) filesize( $optimized_path );
 		}
 		if ( $optimized_size_bytes > 0 ) {
-			$response['filesizeInBytes']        = $optimized_size_bytes;
-			$response['filesizeHumanReadable']  = size_format( $optimized_size_bytes, 2 );
+			$response['filesizeInBytes']       = $optimized_size_bytes;
+			$response['filesizeHumanReadable'] = size_format( $optimized_size_bytes, 2 );
 		}
 		if ( $optimized_path && file_exists( $optimized_path ) && function_exists( 'getimagesize' ) ) {
 			$dims = @getimagesize( $optimized_path );
@@ -1351,8 +1359,8 @@ class Nexter_Ext_Image_Upload_Optimization {
 					if ( ! $size_opt_path || ! file_exists( $size_opt_path ) ) {
 						continue;
 					}
-					$size_file_path = wp_normalize_path( $base_dir . '/' . $metadata['sizes'][ $size_name ]['file'] );
-					$size_format    = isset( $metadata['nxt_optimized_sizes'][ $size_name ]['format'] ) ? $metadata['nxt_optimized_sizes'][ $size_name ]['format'] : 'webp';
+					$size_file_path                         = wp_normalize_path( $base_dir . '/' . $metadata['sizes'][ $size_name ]['file'] );
+					$size_format                            = isset( $metadata['nxt_optimized_sizes'][ $size_name ]['format'] ) ? $metadata['nxt_optimized_sizes'][ $size_name ]['format'] : 'webp';
 					$response['sizes'][ $size_name ]['url'] = $this->get_output_url( $size_file_path ) . '.' . $size_format;
 				}
 			}
@@ -1394,7 +1402,7 @@ class Nexter_Ext_Image_Upload_Optimization {
 		}
 		
 		// Check exclusions
-		$settings = $this->get_settings();
+		$settings  = $this->get_settings();
 		$file_path = get_attached_file( $post_id );
 		if ( $file_path && $this->is_path_excluded( $file_path, $settings['exclude_paths'] ) ) {
 			echo '<span class="dashicons dashicons-no-alt" title="' . esc_attr__( 'Excluded via settings', 'nexter-extension' ) . '"></span>';
@@ -1429,7 +1437,7 @@ class Nexter_Ext_Image_Upload_Optimization {
 			$original_size  = isset( $metadata['nxt_main_original_size'] ) ? (int) $metadata['nxt_main_original_size'] : 0;
 			$optimized_size = isset( $metadata['nxt_main_optimized_size'] ) ? (int) $metadata['nxt_main_optimized_size'] : 0;
 			if ( $original_size > 0 ) {
-				$saved = $original_size - $optimized_size;
+				$saved     = $original_size - $optimized_size;
 				$saved_pct = round( ( $saved / $original_size ) * 100, 2 );
 				
 				// Percentage in Blue
@@ -1493,8 +1501,8 @@ class Nexter_Ext_Image_Upload_Optimization {
 		if ( ! $original_file ) {
 			return $response;
 		}
-		$format = isset( $metadata['nxt_optimized_format'] ) ? $metadata['nxt_optimized_format'] : 'webp';
-		$optimized_full_url = ( 'original' === $format )
+		$format                       = isset( $metadata['nxt_optimized_format'] ) ? $metadata['nxt_optimized_format'] : 'webp';
+		$optimized_full_url           = ( 'original' === $format )
 			? $this->get_output_url( $original_file )
 			: $this->get_output_url( $original_file ) . '.' . $format;
 		$response->data['source_url'] = $optimized_full_url;
@@ -1555,56 +1563,84 @@ class Nexter_Ext_Image_Upload_Optimization {
 	 */
 	public function get_optimization_skip_reason( $attachment_id ) {
 		if ( ! $attachment_id ) {
-			return array( 'skip' => true, 'message' => __( 'Invalid attachment ID.', 'nexter-extension' ) );
+			return array(
+			'skip'    => true,
+			'message' => __( 'Invalid attachment ID.', 'nexter-extension' )
+			);
 		}
 
 		$file_path = get_attached_file( $attachment_id );
 		if ( ! $file_path || ! file_exists( $file_path ) ) {
-			return array( 'skip' => true, 'message' => __( 'File not found.', 'nexter-extension' ) );
+			return array(
+			'skip'    => true,
+			'message' => __( 'File not found.', 'nexter-extension' )
+			);
 		}
 
 		$file_size = filesize( $file_path );
 		if ( false === $file_size || $file_size < 1 ) {
-			return array( 'skip' => true, 'message' => __( 'File is empty or invalid. Skipped.', 'nexter-extension' ) );
+			return array(
+			'skip'    => true,
+			'message' => __( 'File is empty or invalid. Skipped.', 'nexter-extension' )
+			);
 		}
 
 		$max_size = apply_filters( 'nexter_image_optimizer_max_file_size', 20 * 1024 * 1024 );
 		if ( $max_size > 0 && $file_size > $max_size ) {
-			/* translators: %s: Maximum file size (e.g. "20 MB") */
-			return array( 'skip' => true, 'message' => sprintf( __( 'File exceeds maximum size for optimisation (%s). Skipped.', 'nexter-extension' ), size_format( $max_size ) ) );
+			return array(
+			'skip'    => true,
+			'message' => sprintf( /* translators: %s: Maximum file size (e.g. "20 MB") */ __( 'File exceeds maximum size for optimisation (%s). Skipped.', 'nexter-extension' ), size_format( $max_size ) )
+			);
 		}
 
 		$mime_type = get_post_mime_type( $attachment_id );
 		if ( 'image/webp' === $mime_type || 'image/avif' === $mime_type ) {
-			return array( 'skip' => true, 'message' => __( 'Already optimised.', 'nexter-extension' ) );
+			return array(
+			'skip'    => true,
+			'message' => __( 'Already optimised.', 'nexter-extension' )
+			);
 		}
 
 		$valid_mimes = array( 'image/jpeg', 'image/jpg', 'image/png', 'image/gif' );
 		if ( ! in_array( $mime_type, $valid_mimes, true ) ) {
-			return array( 'skip' => true, 'message' => __( 'Unsupported image format. Skipped.', 'nexter-extension' ) );
+			return array(
+			'skip'    => true,
+			'message' => __( 'Unsupported image format. Skipped.', 'nexter-extension' )
+			);
 		}
 
 		$settings = $this->get_settings();
 		if ( $file_path && $this->is_path_excluded( $file_path, $settings['exclude_paths'] ) ) {
-			return array( 'skip' => true, 'message' => __( 'Image path is excluded from optimisation in settings. Skipped.', 'nexter-extension' ) );
+			return array(
+			'skip'    => true,
+			'message' => __( 'Image path is excluded from optimisation in settings. Skipped.', 'nexter-extension' )
+			);
 		}
 
 		if ( ! $settings['enabled'] ) {
-			return array( 'skip' => true, 'message' => __( 'Image Optimisation is disabled.', 'nexter-extension' ) );
+			return array(
+			'skip'    => true,
+			'message' => __( 'Image Optimisation is disabled.', 'nexter-extension' )
+			);
 		}
 
-		$has_imagick = extension_loaded( 'imagick' );
-		$has_gd      = extension_loaded( 'gd' );
-		$has_webp    = $has_gd && function_exists( 'imagewebp' );
+		$has_imagick  = extension_loaded( 'imagick' );
+		$has_gd       = extension_loaded( 'gd' );
+		$has_webp     = $has_gd && function_exists( 'imagewebp' );
 		$can_optimize = $has_imagick || $has_webp || ( $has_gd && 'original' === ( isset( $settings['output_format'] ) ? $settings['output_format'] : 'webp' ) );
 		if ( ! $can_optimize ) {
-			return array( 'skip' => true, 'message' => __( 'Imagick or GD is required for image optimisation. Skipped.', 'nexter-extension' ) );
+			return array(
+			'skip'    => true,
+			'message' => __( 'Imagick or GD is required for image optimisation. Skipped.', 'nexter-extension' )
+			);
 		}
 
 		$limit_handler = Nexter_Ext_Image_Optimization_Limit::get_instance();
 		if ( ! $limit_handler->can_optimize( $attachment_id ) ) {
-			/* translators: %d: Monthly image optimisation limit */
-			return array( 'skip' => true, 'message' => sprintf( __( 'Monthly Optimisation limit reached (%d images). Upgrade to Pro for unlimited Optimisation.', 'nexter-extension' ), $limit_handler->get_monthly_limit() ) );
+			return array(
+			'skip'    => true,
+			'message' => sprintf( /* translators: %d: Monthly image optimisation limit */ __( 'Monthly Optimisation limit reached (%d images). Upgrade to Pro for unlimited Optimisation.', 'nexter-extension' ), $limit_handler->get_monthly_limit() )
+			);
 		}
 
 		return array( 'skip' => false );
@@ -1620,15 +1656,15 @@ class Nexter_Ext_Image_Upload_Optimization {
 		}
 
 		$attachment_id = isset( $_POST['attachment_id'] ) ? absint( $_POST['attachment_id'] ) : 0;
-		$skip_reason = $this->get_optimization_skip_reason( $attachment_id );
+		$skip_reason   = $this->get_optimization_skip_reason( $attachment_id );
 		if ( ! empty( $skip_reason['skip'] ) && ! empty( $skip_reason['message'] ) ) {
 			wp_send_json_error( array( 'message' => $skip_reason['message'] ) );
 		}
 
-		$file_path = get_attached_file( $attachment_id );
-		$mime_type = get_post_mime_type( $attachment_id );
-		$valid_mimes = array( 'image/jpeg', 'image/jpg', 'image/png', 'image/gif' );
-		$settings = $this->get_settings();
+		$file_path     = get_attached_file( $attachment_id );
+		$mime_type     = get_post_mime_type( $attachment_id );
+		$valid_mimes   = array( 'image/jpeg', 'image/jpg', 'image/png', 'image/gif' );
+		$settings      = $this->get_settings();
 		$limit_handler = Nexter_Ext_Image_Optimization_Limit::get_instance();
 
 		$this->create_optimizer_folders();
@@ -1652,8 +1688,8 @@ class Nexter_Ext_Image_Upload_Optimization {
 		$original_relative  = ltrim( $original_relative, '/' );
 		$optimized_relative = self::absolute_to_relative_content( $optimized_path );
 
-		$backup_dir   = WP_CONTENT_DIR . '/nexter-optimizer/backups';
-		$backup_path  = wp_normalize_path( $backup_dir . '/' . $original_relative );
+		$backup_dir    = WP_CONTENT_DIR . '/nexter-optimizer/backups';
+		$backup_path   = wp_normalize_path( $backup_dir . '/' . $original_relative );
 		$backup_parent = dirname( $backup_path );
 		if ( ! is_dir( $backup_parent ) ) {
 			wp_mkdir_p( $backup_parent );
@@ -1668,20 +1704,20 @@ class Nexter_Ext_Image_Upload_Optimization {
 			$metadata = array();
 		}
 		$metadata['nxt_main_original_size']  = $result['original_size'];
-		$metadata['nxt_main_optimized_size']  = $result['optimized_size'];
+		$metadata['nxt_main_optimized_size'] = $result['optimized_size'];
 		$metadata['nxt_original_size']       = $result['original_size'];
 		$metadata['nxt_optimized_size']      = $result['optimized_size'];
 		$metadata['nxt_original_file']       = $original_relative;
 		$metadata['nxt_optimized_file']      = $optimized_relative;
 		$metadata['nxt_optimized_format']    = $result['format'];
-		$metadata['nxt_original_mime']      = isset( $result['original_mime'] ) ? $result['original_mime'] : $mime_type;
+		$metadata['nxt_original_mime']       = isset( $result['original_mime'] ) ? $result['original_mime'] : $mime_type;
 		if ( $backup_relative ) {
 			$metadata['nxt_backup_file'] = $backup_relative;
 		}
 
 		// Convert all thumbnail sizes.
 		$total_original  = $result['original_size'];
-		$total_optimized  = $result['optimized_size'];
+		$total_optimized = $result['optimized_size'];
 		$sizes_converted = 0;
 		$base_dir        = dirname( $file_path );
 
@@ -1695,7 +1731,7 @@ class Nexter_Ext_Image_Upload_Optimization {
 				if ( ! file_exists( $size_file_path ) ) {
 					continue;
 				}
-				$ft = function_exists( 'wp_check_filetype' ) ? wp_check_filetype( $size_file_path, null ) : null;
+				$ft        = function_exists( 'wp_check_filetype' ) ? wp_check_filetype( $size_file_path, null ) : null;
 				$size_mime = is_array( $ft ) && ! empty( $ft['type'] ) ? $ft['type'] : '';
 				if ( ! in_array( $size_mime, $valid_mimes, true ) ) {
 					continue;
@@ -1703,9 +1739,9 @@ class Nexter_Ext_Image_Upload_Optimization {
 				if ( $this->is_path_excluded( $size_file_path, $settings['exclude_paths'] ) ) {
 					continue;
 				}
-				$size_relative = str_replace( $basedir . '/', '', wp_normalize_path( str_replace( '\\', '/', $size_file_path ) ) );
-				$size_relative = ltrim( $size_relative, '/' );
-				$size_backup_path = wp_normalize_path( $backup_dir . '/' . $size_relative );
+				$size_relative      = str_replace( $basedir . '/', '', wp_normalize_path( str_replace( '\\', '/', $size_file_path ) ) );
+				$size_relative      = ltrim( $size_relative, '/' );
+				$size_backup_path   = wp_normalize_path( $backup_dir . '/' . $size_relative );
 				$size_backup_parent = dirname( $size_backup_path );
 				if ( ! is_dir( $size_backup_parent ) ) {
 					wp_mkdir_p( $size_backup_parent );
@@ -1714,9 +1750,9 @@ class Nexter_Ext_Image_Upload_Optimization {
 					@copy( $size_file_path, $size_backup_path );
 				}
 				$size_backup_rel = file_exists( $size_backup_path ) ? self::absolute_to_relative_content( $size_backup_path ) : '';
-				$size_result = $this->process_image( $size_file_path, $settings );
+				$size_result     = $this->process_image( $size_file_path, $settings );
 				if ( $size_result && ! empty( $size_result['success'] ) && ! empty( $size_result['file'] ) ) {
-					$total_original += $size_result['original_size'];
+					$total_original  += $size_result['original_size'];
 					$total_optimized += $size_result['optimized_size'];
 					$sizes_converted++;
 					$metadata['nxt_optimized_sizes'][ $size_name ] = array(
@@ -1743,10 +1779,10 @@ class Nexter_Ext_Image_Upload_Optimization {
 
 		$this->is_bulk_run = false;
 
-		$saved = $result['original_size'] - $result['optimized_size'];
-		$saved_pct = $result['original_size'] > 0 ? round( ( $saved / $result['original_size'] ) * 100, 2 ) : 0;
+		$saved       = $result['original_size'] - $result['optimized_size'];
+		$saved_pct   = $result['original_size'] > 0 ? round( ( $saved / $result['original_size'] ) * 100, 2 ) : 0;
 		$sizes_count = $sizes_converted + 1;
-		$data = array(
+		$data        = array(
 			/* translators: %d: Number of image sizes converted */
 			'message'         => sprintf( __( 'Image Optimised (%d sizes converted).', 'nexter-extension' ), $sizes_count ),
 			'format'          => isset( $result['format'] ) ? $result['format'] : 'webp',
@@ -1771,17 +1807,17 @@ class Nexter_Ext_Image_Upload_Optimization {
 			wp_send_json_error( array( 'message' => __( 'Permission denied.', 'nexter-extension' ) ) );
 		}
 
-		$args = array(
-			'post_type'               => 'attachment',
-			'post_mime_type'          => 'image',
-			'post_status'             => 'inherit',
-			'posts_per_page'          => -1,
-			'fields'                  => 'ids',
-			'no_found_rows'           => true,
-			'update_post_meta_cache'  => false,
-			'update_post_term_cache'  => false,
+		$args     = array(
+			'post_type'              => 'attachment',
+			'post_mime_type'         => 'image',
+			'post_status'            => 'inherit',
+			'posts_per_page'         => -1,
+			'fields'                 => 'ids',
+			'no_found_rows'          => true,
+			'update_post_meta_cache' => false,
+			'update_post_term_cache' => false,
 		);
-		$query   = new WP_Query( $args );
+		$query    = new WP_Query( $args );
 		$restored = 0;
 		$failed   = 0;
 
@@ -1797,7 +1833,7 @@ class Nexter_Ext_Image_Upload_Optimization {
 				continue;
 			}
 			$restore_target = wp_normalize_path( $restore_target );
-			$backup_path   = ! empty( $metadata['nxt_backup_file'] ) ? self::get_absolute_path( $metadata['nxt_backup_file'] ) : null;
+			$backup_path    = ! empty( $metadata['nxt_backup_file'] ) ? self::get_absolute_path( $metadata['nxt_backup_file'] ) : null;
 
 			if ( $backup_path && file_exists( $backup_path ) ) {
 				$target_dir = dirname( $restore_target );
@@ -1879,12 +1915,14 @@ class Nexter_Ext_Image_Upload_Optimization {
 		// This prevents stale optimised URLs from being used after optimised files are deleted
 		self::$direct_replacement_cache = array();
 
-		wp_send_json_success( array(
+		wp_send_json_success(
+			array(
 			'restored' => $restored,
 			'failed'   => $failed,
 			/* translators: 1: number of images successfully restored, 2: number of images that failed to restore */
 			'message'  => sprintf( __( 'Restored %1$d images. %2$d failed.', 'nexter-extension' ), $restored, $failed ),
-		) );
+			) 
+		);
 	}
 }
 

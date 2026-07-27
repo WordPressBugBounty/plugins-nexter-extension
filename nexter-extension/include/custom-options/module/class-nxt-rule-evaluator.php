@@ -45,41 +45,41 @@ class Nxt_Rule_Evaluator {
 
 			foreach ( $conditions as $key => $condition ) {
 
-				if(is_array($condition) && isset($condition['value'])){
-					if(strrpos( $condition['value'], 'entire' ) !== false){
+				if ( is_array( $condition ) && isset( $condition['value'] ) ) {
+					if ( strrpos( $condition['value'], 'entire' ) !== false ) {
 						$check_cond = 'entire';
-					}else{
+					} else {
 						$check_cond = $condition['value'];
 					}
-				}else if ( !is_array($condition) && strrpos( $condition, 'entire' ) !== false ) {
+				} else if ( ! is_array( $condition ) && strrpos( $condition, 'entire' ) !== false ) {
 					$check_cond = 'entire';
 				} else {
 					$check_cond = $condition;
 				}
 
-				if( !empty($check_cond) ){
-					if( $check_cond == 'standard-universal' ){
+				if ( ! empty( $check_cond ) ) {
+					if ( $check_cond == 'standard-universal' ) {
 						$display = true;
-					}else if( $check_cond == 'entire' ){
+					} else if ( $check_cond == 'entire' ) {
 
 						// Fix: Handle array condition properly before explode
 						$condition_value = $condition;
-						if (is_array($condition) && isset($condition['value'])) {
+						if ( is_array( $condition ) && isset( $condition['value'] ) ) {
 							$condition_value = $condition['value'];
 						}
 
 						// Ensure we have a string before using explode
-						if (!is_string($condition_value)) {
+						if ( ! is_string( $condition_value ) ) {
 							continue; // Skip this condition if it's not a string
 						}
 
 						$condition_data = explode( '|', $condition_value );
 
-						$post_type     = isset( $condition_data[0] ) ? $condition_data[0] : false;
-						$archive  = isset( $condition_data[2] ) ? $condition_data[2] : false;
-						$taxonomy      = isset( $condition_data[3] ) ? $condition_data[3] : false;
+						$post_type = isset( $condition_data[0] ) ? $condition_data[0] : false;
+						$archive   = isset( $condition_data[2] ) ? $condition_data[2] : false;
+						$taxonomy  = isset( $condition_data[3] ) ? $condition_data[3] : false;
 
-						if ( $archive  === false ) {
+						if ( $archive === false ) {
 							$current_post_type = get_post_type( $post_id );
 
 							if ( $post_id !== false && $current_post_type == $post_type ) {
@@ -90,13 +90,13 @@ class Nxt_Rule_Evaluator {
 							if ( is_archive() ) {
 								$current_post_type = get_post_type();
 								if ( $current_post_type == $post_type ) {
-									if ( $archive  == 'archive' ) {
+									if ( $archive == 'archive' ) {
 										$display = true;
-									} else if ( $archive  == 'tax-archive' ) {
+									} else if ( $archive == 'tax-archive' ) {
 
-										$object	= get_queried_object();
+										$object          = get_queried_object();
 										$object_taxonomy = '';
-										if ( $object !== '' && $object !== null) {
+										if ( $object !== '' && $object !== null ) {
 											$object_taxonomy = $object->taxonomy;
 										}
 
@@ -107,65 +107,65 @@ class Nxt_Rule_Evaluator {
 								}
 							}
 						}
-					}else if(!empty($check_cond) && !empty($conditions)){
-						if( $check_cond == 'standard-singulars' && is_singular() ) {
+					} else if ( ! empty( $check_cond ) && ! empty( $conditions ) ) {
+						if ( $check_cond == 'standard-singulars' && is_singular() ) {
 							$display = true;
-						}else if( $check_cond == 'standard-archives' && is_archive() ) {
+						} else if ( $check_cond == 'standard-archives' && is_archive() ) {
 							$display = true;
-						}else if($check_cond == 'default-front' && is_front_page()) {
+						} else if ( $check_cond == 'default-front' && is_front_page() ) {
 							$display = true;
-						}else if($check_cond == 'default-blog' && is_home()) {
+						} else if ( $check_cond == 'default-blog' && is_home() ) {
 							$display = true;
-						}else if($check_cond == 'default-date' && is_date()) {
+						} else if ( $check_cond == 'default-date' && is_date() ) {
 							$display = true;
-						}else if($check_cond == 'default-author' && is_author()) {
+						} else if ( $check_cond == 'default-author' && is_author() ) {
 							$display = true;
-						}else if($check_cond == 'default-search' && is_search()) {
+						} else if ( $check_cond == 'default-search' && is_search() ) {
 							$display = true;
-						}else if( $check_cond == 'default-404' && is_404() ) {
+						} else if ( $check_cond == 'default-404' && is_404() ) {
 							$display = true;
-						}else if( $check_cond == 'default-woo-shop' ) {
+						} else if ( $check_cond == 'default-woo-shop' ) {
 							if ( function_exists( 'is_shop' ) && is_shop() ) {
 								$display = true;
 							}
-						}else if($check_cond == 'particular-post' && isset( $conditions['specific'] ) && is_array( $conditions['specific'] )) {
+						} else if ( $check_cond == 'particular-post' && isset( $conditions['specific'] ) && is_array( $conditions['specific'] ) ) {
 							foreach ( $conditions['specific'] as $specific_page ) {
 
 								$specific_data = explode( '-', $specific_page );
 
 								$specific_post_type = isset( $specific_data[0] ) ? $specific_data[0] : false;
 								$specific_post_id   = isset( $specific_data[1] ) ? $specific_data[1] : false;
-								if( $specific_post_type == 'post') {
-									if( $specific_post_id == $post_id ) {
+								if ( $specific_post_type == 'post' ) {
+									if ( $specific_post_id == $post_id ) {
 										$display = true;
 									}
-								}else if( isset( $specific_data[2] ) && ( $specific_data[2] == 'singular' ) && $specific_post_type == 'taxonomy' ) {
+								} else if ( isset( $specific_data[2] ) && ( $specific_data[2] == 'singular' ) && $specific_post_type == 'taxonomy' ) {
 
-									if( is_singular() ) {
+									if ( is_singular() ) {
 										$terms = get_term( $specific_post_id );
 
-										if( isset( $terms->taxonomy ) ) {
-											if( has_term( (int) $specific_post_id, $terms->taxonomy, $post_id ) ) {
+										if ( isset( $terms->taxonomy ) ) {
+											if ( has_term( (int) $specific_post_id, $terms->taxonomy, $post_id ) ) {
 												$display = true;
 											}
 										}
 									}
-								}else if( $specific_post_type == 'taxonomy' ) {
-									if( $specific_post_id == get_queried_object_id() ) {
+								} else if ( $specific_post_type == 'taxonomy' ) {
+									if ( $specific_post_id == get_queried_object_id() ) {
 										$display = true;
 									}
 								}
 							}
-						}else if($check_cond == 'set-day' && isset( $conditions['set-day'] ) && is_array( $conditions['set-day'] ) ) {
+						} else if ( $check_cond == 'set-day' && isset( $conditions['set-day'] ) && is_array( $conditions['set-day'] ) ) {
 							$display = Nexter_Builder_Display_Conditional_Rules::check_condition_set_day( $conditions['set-day'], $display );
-						}else if($check_cond == 'os' && isset( $conditions['os'] ) && is_array( $conditions['os'] ) ) {
-							$display = Nexter_Builder_Display_Conditional_Rules::check_condition_os($conditions['os'], $display);
-						}else if($check_cond == 'browser' && isset( $conditions['browser'] ) && is_array( $conditions['browser'] ) ) {
-							$display = Nexter_Builder_Display_Conditional_Rules::check_condition_browser($conditions['browser'], $display);
-						}else if($check_cond == 'login-status' && isset( $conditions['login-status'] ) && is_array( $conditions['login-status'] ) ) {
-							$display = Nexter_Builder_Display_Conditional_Rules::check_condition_login_status($conditions['login-status'], $display);
-						}else if($check_cond == 'user-roles' && isset( $conditions['user-roles'] ) && is_array( $conditions['user-roles'] ) ) {
-							$display = Nexter_Builder_Display_Conditional_Rules::check_condition_user_roles($conditions['user-roles'], $display);
+						} else if ( $check_cond == 'os' && isset( $conditions['os'] ) && is_array( $conditions['os'] ) ) {
+							$display = Nexter_Builder_Display_Conditional_Rules::check_condition_os( $conditions['os'], $display );
+						} else if ( $check_cond == 'browser' && isset( $conditions['browser'] ) && is_array( $conditions['browser'] ) ) {
+							$display = Nexter_Builder_Display_Conditional_Rules::check_condition_browser( $conditions['browser'], $display );
+						} else if ( $check_cond == 'login-status' && isset( $conditions['login-status'] ) && is_array( $conditions['login-status'] ) ) {
+							$display = Nexter_Builder_Display_Conditional_Rules::check_condition_login_status( $conditions['login-status'], $display );
+						} else if ( $check_cond == 'user-roles' && isset( $conditions['user-roles'] ) && is_array( $conditions['user-roles'] ) ) {
+							$display = Nexter_Builder_Display_Conditional_Rules::check_condition_user_roles( $conditions['user-roles'], $display );
 						}
 					}
 				}
@@ -193,27 +193,27 @@ class Nxt_Rule_Evaluator {
 		foreach ( Nexter_Builder_Display_Conditional_Rules::$current_load_page_data[ $type ] as $c_post_id => $c_data ) {
 
 			$exclusion_rules = get_post_meta( $c_post_id, $exclusion, true );
-			if( !empty($exclusion_rules) && !empty($c_post_id)){
+			if ( ! empty( $exclusion_rules ) && ! empty( $c_post_id ) ) {
 				$code_condition = [];
-				$get_sub_field = [];
-				if(isset($exclusion_rules[0]) && isset($exclusion_rules[0]['value'])){
-					$code_condition = array_column($exclusion_rules, 'value');
-					$get_sub_field = get_post_meta( $c_post_id, 'nxt-ex-sub-rule', true );
+				$get_sub_field  = [];
+				if ( isset( $exclusion_rules[0] ) && isset( $exclusion_rules[0]['value'] ) ) {
+					$code_condition = array_column( $exclusion_rules, 'value' );
+					$get_sub_field  = get_post_meta( $c_post_id, 'nxt-ex-sub-rule', true );
 				}
 
-				if(!empty($code_condition) && in_array('particular-post',$code_condition) && !empty($get_sub_field) && isset($get_sub_field['specific'])){
-					$exclusion_rules['specific'] = array_column($get_sub_field['specific'], 'value');
-				}else if( !empty($exclusion_rules) && in_array('particular-post',$exclusion_rules) ){
+				if ( ! empty( $code_condition ) && in_array( 'particular-post',$code_condition ) && ! empty( $get_sub_field ) && isset( $get_sub_field['specific'] ) ) {
+					$exclusion_rules['specific'] = array_column( $get_sub_field['specific'], 'value' );
+				} else if ( ! empty( $exclusion_rules ) && in_array( 'particular-post',$exclusion_rules ) ) {
 					$exclusion_rules['specific'] = get_post_meta( $c_post_id, 'nxt-hooks-layout-exclude-specific', true );
 				}
 
 				$exclude_array = [ 'set-day', 'os', 'browser', 'login-status', 'user-roles' ];
 
-				foreach ($exclude_array as $exclude) {
-					if(!empty($code_condition) && !empty($get_sub_field) && isset($get_sub_field[$exclude]) ){
-						$exclusion_rules[$exclude] = array_column($get_sub_field[$exclude], 'value');
-					}else if( !empty($exclusion_rules) && in_array($exclude, $exclusion_rules) ){
-						$exclusion_rules[$exclude]   = get_post_meta( $c_post_id, 'nxt-hooks-layout-exclude-'.$exclude, true );
+				foreach ( $exclude_array as $exclude ) {
+					if ( ! empty( $code_condition ) && ! empty( $get_sub_field ) && isset( $get_sub_field[ $exclude ] ) ) {
+						$exclusion_rules[ $exclude ] = array_column( $get_sub_field[ $exclude ], 'value' );
+					} else if ( ! empty( $exclusion_rules ) && in_array( $exclude, $exclusion_rules ) ) {
+						$exclusion_rules[ $exclude ] = get_post_meta( $c_post_id, 'nxt-hooks-layout-exclude-'.$exclude, true );
 					}
 				}
 			}

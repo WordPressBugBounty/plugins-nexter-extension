@@ -75,12 +75,15 @@ class Nxt_Performance_Tweaks {
 
 		/* Disable DashIcons */
 		if ( $is_active( 'disable_dashicons' ) ) {
-			add_action( 'wp_enqueue_scripts', function() {
-				if ( ! is_user_logged_in() ) {
-					wp_dequeue_style( 'dashicons' );
-					wp_deregister_style( 'dashicons' );
-				}
-			} );
+			add_action(
+				'wp_enqueue_scripts',
+				function() {
+					if ( ! is_user_logged_in() ) {
+						wp_dequeue_style( 'dashicons' );
+						wp_deregister_style( 'dashicons' );
+					}
+				} 
+			);
 		}
 
 		/**

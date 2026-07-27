@@ -2,8 +2,8 @@
 /**
  * Theme Page Builder Compatibility 
  *
- * @package	Nexter Extension
- * @since	3.2.0
+ * @package Nexter Extension
+ * @since   3.2.0
  */
 defined( 'ABSPATH' ) || exit;
 
@@ -32,11 +32,11 @@ if ( ! class_exists( 'Nexter_Builder_Compatibility' ) ) {
 		 * Constructor
 		 */
 		public function __construct() {
-			add_filter( 'nexter_template_load_ids', array($this,'nexter_template_list_ids'), 10, 1 );
+			add_filter( 'nexter_template_load_ids', array($this, 'nexter_template_list_ids'), 10, 1 );
 		}
 		
 		public function nexter_template_list_ids( $post_ids ){
-			if( !empty( $this->template_post_ids ) ){
+			if ( ! empty( $this->template_post_ids ) ) {
 				$post_ids = array_unique( array_merge( array_keys( $this->template_post_ids ), $post_ids ) );
 			}
 			return $post_ids;
@@ -53,53 +53,53 @@ if ( ! class_exists( 'Nexter_Builder_Compatibility' ) ) {
 				
 				$this->template_post_ids[ (int) $post_id ] = true;
 
-				if ( function_exists( 'ultimate_post' ) ) {
-					$ultp = ultimate_post();
+			if ( function_exists( 'ultimate_post' ) ) {
+				$ultp = ultimate_post();
 
-					// Common method across versions (if it exists)
-					if ( method_exists( $ultp, 'register_scripts_common' ) ) {
-						$ultp->register_scripts_common();
-					}
-
-					// If old version defines set_css_style()
-					if ( method_exists( $ultp, 'set_css_style' ) ) {
-						$ultp->set_css_style( $post_id );
-					}
-					// Otherwise, if new version has enqueue_styles()
-					elseif ( method_exists( $ultp, 'enqueue_styles' ) ) {
-						$ultp->enqueue_styles();
-					}
-					// As a fallback, possibly enqueue scripts common
-					elseif ( method_exists( $ultp, 'enqueue_scripts_common' ) ) {
-						$ultp->enqueue_scripts_common();
-					}
+				// Common method across versions (if it exists)
+				if ( method_exists( $ultp, 'register_scripts_common' ) ) {
+					$ultp->register_scripts_common();
 				}
+
+				// If old version defines set_css_style()
+				if ( method_exists( $ultp, 'set_css_style' ) ) {
+					$ultp->set_css_style( $post_id );
+				}
+				// Otherwise, if new version has enqueue_styles()
+				elseif ( method_exists( $ultp, 'enqueue_styles' ) ) {
+					$ultp->enqueue_styles();
+				}
+				// As a fallback, possibly enqueue scripts common
+				elseif ( method_exists( $ultp, 'enqueue_scripts_common' ) ) {
+					$ultp->enqueue_scripts_common();
+				}
+			}
 				
 				//Activate Visual Composer
 				$vc_status = get_post_meta( $post_id, '_wpb_vc_js_status', true );
-				if ( class_exists( 'Vc_Manager' ) && ( $vc_status == 'true' || has_shortcode( $post->post_content, 'vc_row' ) ) ) {
-					return Nexter_Visual_Composer_Builder::get_instance();
-				}
+			if ( class_exists( 'Vc_Manager' ) && ( $vc_status == 'true' || has_shortcode( $post->post_content, 'vc_row' ) ) ) {
+				return Nexter_Visual_Composer_Builder::get_instance();
+			}
 				
-				if(! empty( get_post_meta( $post_id, '_bricks_template_type', true ) ) && class_exists( 'Bricks\Frontend' )){
-					return Nexter_Bricks_Builder::get_instance();
-				}
+			if ( ! empty( get_post_meta( $post_id, '_bricks_template_type', true ) ) && class_exists( 'Bricks\Frontend' ) ) {
+				return Nexter_Bricks_Builder::get_instance();
+			}
 				
 				//Activate Elementor
-				if ( class_exists( '\Elementor\Plugin' ) && $this->check_elementor_build($post_id) ) {
-					return Nexter_Elementor_Builder::get_instance();
-				}
+			if ( class_exists( '\Elementor\Plugin' ) && $this->check_elementor_build( $post_id ) ) {
+				return Nexter_Elementor_Builder::get_instance();
+			}
 				
 				//Activate Beaver
-				if ( class_exists( 'FLBuilderModel' )){
-					if(apply_filters( 'fl_builder_do_render_content', true, FLBuilderModel::get_post_id() ) && get_post_meta( $post_id, '_fl_builder_enabled', true ) ) {
-						return Nexter_Beaver_Builder::get_instance();
-					}
+			if ( class_exists( 'FLBuilderModel' ) ) {
+				if ( apply_filters( 'fl_builder_do_render_content', true, FLBuilderModel::get_post_id() ) && get_post_meta( $post_id, '_fl_builder_enabled', true ) ) {
+					return Nexter_Beaver_Builder::get_instance();
 				}
+			}
 			
 			$has_rest_support = false;
-			if (defined('NXT_BUILD_POST') && isset($wp_post_types[NXT_BUILD_POST])) {
-				$has_rest_support = $wp_post_types[NXT_BUILD_POST]->show_in_rest;
+			if ( defined( 'NXT_BUILD_POST' ) && isset( $wp_post_types[ NXT_BUILD_POST ] ) ) {
+				$has_rest_support = $wp_post_types[ NXT_BUILD_POST ]->show_in_rest;
 			}
 			
 			
@@ -115,7 +115,7 @@ if ( ! class_exists( 'Nexter_Builder_Compatibility' ) ) {
 		 * @since 2.0.3
 		 */
 		public function check_elementor_build( $post_id ) {
-			if(class_exists( '\Elementor\Plugin' ) ){
+			if ( class_exists( '\Elementor\Plugin' ) ) {
 				if ( version_compare( ELEMENTOR_VERSION, '1.5.0', '<' ) ) {
 					return ( 'builder' === Elementor\Plugin::$instance->db->get_edit_mode( $post_id ) );
 				} else {
@@ -126,7 +126,7 @@ if ( ! class_exists( 'Nexter_Builder_Compatibility' ) ) {
 						return false;
 					}
 				}
-			}else{
+			} else {
 				return false;
 			}
 		}
@@ -138,8 +138,8 @@ if ( ! class_exists( 'Nexter_Builder_Compatibility' ) ) {
 
 			$cur_post = get_post( $post_id, OBJECT );
 			ob_start();
-				echo apply_filters('the_content', wp_kses_post($cur_post->post_content) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-			$output =  ob_get_clean();
+				echo apply_filters( 'the_content', wp_kses_post( $cur_post->post_content ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			$output = ob_get_clean();
 			echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
 

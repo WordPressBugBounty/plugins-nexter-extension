@@ -145,7 +145,7 @@ new Nexter_Ext_Performance_Security_Settings();
  */
 if ( ! function_exists( 'nxt_remove_meta_tags' ) ) {
 	function nxt_remove_meta_tags( $generated_html ) {
-		$regex = '/<meta\s+name\s*=\s*["\']generator["\']\s+content\s*=\s*["\'][^"\']*["\']\s*\/?>/i';
+		$regex          = '/<meta\s+name\s*=\s*["\']generator["\']\s+content\s*=\s*["\'][^"\']*["\']\s*\/?>/i';
 		$generated_html = preg_replace( $regex, '', $generated_html );
 		return $generated_html;
 	}

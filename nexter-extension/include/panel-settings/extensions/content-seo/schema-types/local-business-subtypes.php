@@ -14,7 +14,7 @@ if ( ! function_exists( 'nexter_content_seo_schema_local_business_subtype_groups
 	 */
 	function nexter_content_seo_schema_local_business_subtype_groups() {
 		return array(
-			'general'     => array(
+			'general'    => array(
 				'label'   => __( 'General', 'nexter-extension' ),
 				'options' => array(
 					'LocalBusiness'            => __( 'Local business', 'nexter-extension' ),
@@ -36,7 +36,7 @@ if ( ! function_exists( 'nexter_content_seo_schema_local_business_subtype_groups
 					'TravelAgency'             => __( 'Travel agency', 'nexter-extension' ),
 				),
 			),
-			'automotive'  => array(
+			'automotive' => array(
 				'label'   => __( 'Automotive business', 'nexter-extension' ),
 				'options' => array(
 					'AutoBodyShop'       => __( 'Auto body shop', 'nexter-extension' ),
@@ -51,7 +51,7 @@ if ( ! function_exists( 'nexter_content_seo_schema_local_business_subtype_groups
 					'AutomotiveBusiness' => __( 'Other automotive', 'nexter-extension' ),
 				),
 			),
-			'emergency'   => array(
+			'emergency'  => array(
 				'label'   => __( 'Emergency service', 'nexter-extension' ),
 				'options' => array(
 					'FireStation'      => __( 'Fire station', 'nexter-extension' ),
@@ -60,7 +60,7 @@ if ( ! function_exists( 'nexter_content_seo_schema_local_business_subtype_groups
 					'EmergencyService' => __( 'Other emergency', 'nexter-extension' ),
 				),
 			),
-			'entertain'   => array(
+			'entertain'  => array(
 				'label'   => __( 'Entertainment business', 'nexter-extension' ),
 				'options' => array(
 					'AdultEntertainment'    => __( 'Adult entertainment', 'nexter-extension' ),
@@ -73,7 +73,7 @@ if ( ! function_exists( 'nexter_content_seo_schema_local_business_subtype_groups
 					'EntertainmentBusiness' => __( 'Other entertainment', 'nexter-extension' ),
 				),
 			),
-			'financial'   => array(
+			'financial'  => array(
 				'label'   => __( 'Financial service', 'nexter-extension' ),
 				'options' => array(
 					'AccountingService' => __( 'Accounting service', 'nexter-extension' ),
@@ -83,7 +83,7 @@ if ( ! function_exists( 'nexter_content_seo_schema_local_business_subtype_groups
 					'FinancialService'  => __( 'Other financial', 'nexter-extension' ),
 				),
 			),
-			'food'        => array(
+			'food'       => array(
 				'label'   => __( 'Food establishment', 'nexter-extension' ),
 				'options' => array(
 					'Bakery'             => __( 'Bakery', 'nexter-extension' ),
@@ -98,14 +98,14 @@ if ( ! function_exists( 'nexter_content_seo_schema_local_business_subtype_groups
 					'FoodEstablishment'  => __( 'Other food', 'nexter-extension' ),
 				),
 			),
-			'government'  => array(
+			'government' => array(
 				'label'   => __( 'Government office', 'nexter-extension' ),
 				'options' => array(
 					'PostOffice'       => __( 'Post office', 'nexter-extension' ),
 					'GovernmentOffice' => __( 'Other government', 'nexter-extension' ),
 				),
 			),
-			'healthbeat'  => array(
+			'healthbeat' => array(
 				'label'   => __( 'Health and beauty business', 'nexter-extension' ),
 				'options' => array(
 					'BeautySalon'             => __( 'Beauty salon', 'nexter-extension' ),
@@ -117,7 +117,7 @@ if ( ! function_exists( 'nexter_content_seo_schema_local_business_subtype_groups
 					'HealthAndBeautyBusiness' => __( 'Other health & beauty', 'nexter-extension' ),
 				),
 			),
-			'homeconst'   => array(
+			'homeconst'  => array(
 				'label'   => __( 'Home and construction business', 'nexter-extension' ),
 				'options' => array(
 					'Electrician'                 => __( 'Electrician', 'nexter-extension' ),
@@ -131,7 +131,7 @@ if ( ! function_exists( 'nexter_content_seo_schema_local_business_subtype_groups
 					'HomeAndConstructionBusiness' => __( 'Other home & construction', 'nexter-extension' ),
 				),
 			),
-			'legal'       => array(
+			'legal'      => array(
 				'label'   => __( 'Legal service', 'nexter-extension' ),
 				'options' => array(
 					'Attorney'     => __( 'Attorney', 'nexter-extension' ),
@@ -139,7 +139,7 @@ if ( ! function_exists( 'nexter_content_seo_schema_local_business_subtype_groups
 					'LegalService' => __( 'Other legal', 'nexter-extension' ),
 				),
 			),
-			'lodging'     => array(
+			'lodging'    => array(
 				'label'   => __( 'Lodging business', 'nexter-extension' ),
 				'options' => array(
 					'BedAndBreakfast' => __( 'Bed and breakfast', 'nexter-extension' ),
@@ -151,7 +151,7 @@ if ( ! function_exists( 'nexter_content_seo_schema_local_business_subtype_groups
 					'LodgingBusiness' => __( 'Other lodging', 'nexter-extension' ),
 				),
 			),
-			'medicalbiz'  => array(
+			'medicalbiz' => array(
 				'label'   => __( 'Medical business', 'nexter-extension' ),
 				'options' => array(
 					'CommunityHealth' => __( 'Community health', 'nexter-extension' ),
@@ -181,7 +181,7 @@ if ( ! function_exists( 'nexter_content_seo_schema_local_business_subtype_groups
 					'MedicalBusiness' => __( 'Other medical', 'nexter-extension' ),
 				),
 			),
-			'sportsact'   => array(
+			'sportsact'  => array(
 				'label'   => __( 'Sports activity location', 'nexter-extension' ),
 				'options' => array(
 					'BowlingAlley'           => __( 'Bowling alley', 'nexter-extension' ),
@@ -195,7 +195,7 @@ if ( ! function_exists( 'nexter_content_seo_schema_local_business_subtype_groups
 					'SportsActivityLocation' => __( 'Other sports activity', 'nexter-extension' ),
 				),
 			),
-			'store'       => array(
+			'store'      => array(
 				'label'   => __( 'Store', 'nexter-extension' ),
 				'options' => array(
 					'BikeStore'            => __( 'Bike store', 'nexter-extension' ),

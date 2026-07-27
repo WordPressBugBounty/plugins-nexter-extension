@@ -121,8 +121,8 @@ abstract class Nexter_Ext_Base {
 	 * Load settings from Nxt_Options using the declared group + key.
 	 */
 	private function load_settings(): void {
-		$group  = $this->options_group();
-		$key    = $this->settings_key();
+		$group = $this->options_group();
+		$key   = $this->settings_key();
 
 		if ( ! class_exists( 'Nxt_Options' ) || ! method_exists( 'Nxt_Options', $group ) ) {
 			$this->settings = [];

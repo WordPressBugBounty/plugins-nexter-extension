@@ -2,7 +2,7 @@
 /**
  * Nexter Pro Advanced Singular/Archives Rules
  *
- * @package	Nexter Pro Extensions
+ * @package Nexter Pro Extensions
  * @since  1.0.0
  */
 if ( ! defined( 'ABSPATH' ) ) {
@@ -31,7 +31,7 @@ class Nexter_Singular_Archives_Rules {
 	 * Constructor
 	 */
 	public function __construct() {
-		add_action('wp_ajax_nxt_singular_archives_filters_ajax', [ $this, 'nexter_ajax_singular_archives_filters' ] );
+		add_action( 'wp_ajax_nxt_singular_archives_filters_ajax', [ $this, 'nexter_ajax_singular_archives_filters' ] );
 	}
 	
 	public static function sanitize_array_recursive( $data ) {
@@ -49,91 +49,88 @@ class Nexter_Singular_Archives_Rules {
 	//Ajax Get Data Singular/Archive Condition Rules
 	public static function nexter_ajax_singular_archives_filters( $get_data ='' ){
 
-		if(!empty($get_data)){
+		if ( ! empty( $get_data ) ) {
 			$data = $get_data;
-		}else{
+		} else {
 			
-			$data = (!empty($_POST['data'])) ? self::sanitize_array_recursive( json_decode( stripslashes_deep( $_POST['data'] ), true ) ) : []; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+			$data = ( ! empty( $_POST['data'] )) ? self::sanitize_array_recursive( json_decode( stripslashes_deep( $_POST['data'] ), true ) ) : []; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 			// ensure we always work with an array to avoid string offset notices
-			$data = is_array( $data ) ? $data : [];
-			$data["rules"] = (isset($_POST['rules']) && !empty($_POST['rules'])) ? sanitize_text_field( wp_unslash($_POST['rules']) ) : '';
+			$data          = is_array( $data ) ? $data : [];
+			$data["rules"] = (isset( $_POST['rules'] ) && ! empty( $_POST['rules'] )) ? sanitize_text_field( wp_unslash( $_POST['rules'] ) ) : '';
 		}
 		
-		if(empty($data)){
-			return __('Empty Data','nexter-extension');
+		if ( empty( $data ) ) {
+			return __( 'Empty Data','nexter-extension' );
 		}
 
 		$query_data = Nexter_Builder_Pages_Conditional::get_query_singular_archive_data( $data );
 
-		if ( is_wp_error( $query_data ) ) {				
+		if ( is_wp_error( $query_data ) ) {             
 			throw new \Exception( $query_data->get_error_code() . ':' . $query_data->get_error_message() );
 		}
 		
-		$results = [];
+		$results      = [];
 		$results_data = [];
-		$query_args = $query_data['query'];
+		$query_args   = $query_data['query'];
 		
 		//Query Type Taxonomy/Attachment/Posts/Authors/user
-		if(!empty($query_data['object'])){
+		if ( ! empty( $query_data['object'] ) ) {
 		
-			if( $query_data['object'] == 'tax' ) {
+			if ( $query_data['object'] == 'tax' ) {
 			
 				$field_name = ! empty( $query_data['field_name'] ) ? $query_data['field_name'] : 'term_taxonomy_id';
-				$terms = get_terms( $query_args );					
-				if ( !is_wp_error( $terms ) ) {
+				$terms      = get_terms( $query_args );                  
+				if ( ! is_wp_error( $terms ) ) {
 					global $wp_taxonomies;
 					foreach ( $terms as $term ) {
-						if( $data['query']['taxonomy'] == $term->taxonomy ){
+						if ( $data['query']['taxonomy'] == $term->taxonomy ) {
 							$term_name = self::nexter_term_name_with_parents( $term );
-							$text = $wp_taxonomies[ $term->taxonomy ]->labels->name . ': ' . $term_name;
+							$text      = $wp_taxonomies[ $term->taxonomy ]->labels->name . ': ' . $term_name;
 							$results[] = [
-								'id' => $term->{$field_name},
+								'id'   => $term->{$field_name},
 								'text' => $text,
 							];
 						}
 					}
 				}
-			}else if( $query_data['object'] == 'post' ) {
+			} else if ( $query_data['object'] == 'post' ) {
 
 				$post_query = new \WP_Query( $query_args );
 
 				foreach ( $post_query->posts as $post ) {
 					$post_type_obj = get_post_type_object( $post->post_type );
-					$text = ( $post_type_obj->hierarchical ) ? self::nexter_post_name_with_parents( $post ) : $post->post_title;
+					$text          = ( $post_type_obj->hierarchical ) ? self::nexter_post_name_with_parents( $post ) : $post->post_title;
 						$results[] = [
-							'id' => $post->ID,
+							'id'   => $post->ID,
 							'text' => $text,
 						];
-				}
-				
-			}else if( $query_data['object'] == 'author' || $query_data['object'] == 'user' ) {
+				}           
+			} else if ( $query_data['object'] == 'author' || $query_data['object'] == 'user' ) {
 			
 				$user_query = new \WP_User_Query( $query_args );
 				foreach ( $user_query->get_results() as $user ) {
 					$results[] = [
-						'id' => $user->ID,
+						'id'   => $user->ID,
 						'text' => $user->display_name,
 					];
-				}
-				
-			}
-			
-		}else{
+				}           
+			}       
+		} else {
 			$results = false;
 		}
 		
-		if(!empty($results)){
+		if ( ! empty( $results ) ) {
 			$results_data['response'] = true;
-			$results_data['results'] = $results;				
-		}else{
+			$results_data['results']  = $results;                
+		} else {
 			$results_data['response'] = false;
-			$results_data['results'] = $results;				
+			$results_data['results']  = $results;                
 		}
 		
-		if(!empty($get_data)){
-			return json_encode($results_data);
-		}else{
-			echo json_encode($results_data);
+		if ( ! empty( $get_data ) ) {
+			return json_encode( $results_data );
+		} else {
+			echo json_encode( $results_data );
 		}
 		
 		wp_die();
@@ -148,7 +145,7 @@ class Nexter_Singular_Archives_Rules {
 		}
 		
 		$check_term = $term;
-		$names = [];
+		$names      = [];
 		while ( $check_term->parent > 0 ) {
 			$check_term = get_term_by( 'term_taxonomy_id', $check_term->parent );
 			if ( ! $check_term ) {
@@ -180,7 +177,7 @@ class Nexter_Singular_Archives_Rules {
 		}
 		
 		$check_post = $post;
-		$names = [];
+		$names      = [];
 		while ( $check_post->post_parent > 0 ) {
 			$check_post = get_post( $check_post->post_parent );
 			if ( ! $check_post ) {
@@ -205,29 +202,36 @@ class Nexter_Singular_Archives_Rules {
 	
 	public static function nexter_post_singular_sub_conditions( $post_type ){
 	
-		$post_type_object = get_post_type_object( $post_type );
+		$post_type_object  = get_post_type_object( $post_type );
 		$object_taxonomies = get_object_taxonomies( $post_type, 'objects' );
-		$post_taxonomies = wp_filter_object_list( $object_taxonomies, [
-			'public' => true,
+		$post_taxonomies   = wp_filter_object_list(
+			$object_taxonomies,
+			[
+			'public'            => true,
 			'show_in_nav_menus' => true,
-		] );
+			 ] 
+		);
 		
 		foreach ( $post_taxonomies as $slug => $object ) {
-			if(class_exists('Nexter_Singular_Taxonomy')){
-				$in_taxonomy = new Nexter_Singular_Taxonomy( [
+			if ( class_exists( 'Nexter_Singular_Taxonomy' ) ) {
+				$in_taxonomy = new Nexter_Singular_Taxonomy(
+					[
 					'object' => $object,
-				] );
+					 ] 
+				);
 				Nexter_Builders_Singular_Conditional_Rules::register_post_sub_condition( $in_taxonomy, $post_type );
 			}
 			
-			if ( $object->hierarchical && class_exists('Nexter_Singular_Sub_Term')) {
-				$in_sub_term = new Nexter_Singular_Sub_Term( [
+			if ( $object->hierarchical && class_exists( 'Nexter_Singular_Sub_Term' ) ) {
+				$in_sub_term = new Nexter_Singular_Sub_Term(
+					[
 					'object' => $object,
-				] );
-				Nexter_Builders_Singular_Conditional_Rules::register_post_sub_condition( $in_sub_term , $post_type);				
+					 ] 
+				);
+				Nexter_Builders_Singular_Conditional_Rules::register_post_sub_condition( $in_sub_term , $post_type );                
 			}
 		}
-		if(class_exists('Nexter_Singular_Post_By_Author')){
+		if ( class_exists( 'Nexter_Singular_Post_By_Author' ) ) {
 			$by_author = new Nexter_Singular_Post_By_Author( $post_type_object );
 			Nexter_Builders_Singular_Conditional_Rules::register_post_sub_condition( $by_author , $post_type );
 		}
@@ -237,7 +241,7 @@ class Nexter_Singular_Archives_Rules {
 
 new Nexter_Singular_Archives_Rules();
 
-if( (!defined('NXT_PRO_EXT_VER') && !class_exists('Nexter_Singular_Taxonomy')) || (defined('NXT_PRO_EXT_VER') && version_compare( NXT_PRO_EXT_VER, '2.0.4', '>' )) ){
+if ( ( ! defined( 'NXT_PRO_EXT_VER' ) && ! class_exists( 'Nexter_Singular_Taxonomy' )) || (defined( 'NXT_PRO_EXT_VER' ) && version_compare( NXT_PRO_EXT_VER, '2.0.4', '>' )) ) {
 
 	class Nexter_Singular_Taxonomy {
 
@@ -246,16 +250,16 @@ if( (!defined('NXT_PRO_EXT_VER') && !class_exists('Nexter_Singular_Taxonomy')) |
 		public static $post_type_data;
 	
 		public function __construct( $data ) {
-			$this->taxonomy = $data['object'];
+			$this->taxonomy      = $data['object'];
 			self::$taxonomy_data = $data['object'];
-			if(!empty($this->taxonomy->object_type) && $this->taxonomy->object_type[0]){
+			if ( ! empty( $this->taxonomy->object_type ) && $this->taxonomy->object_type[0] ) {
 				self::$post_type_data = get_post_type_object( $this->taxonomy->object_type[0] );
 			}
 		}
 	
 		public function get_post_type_name() {
 			$post_name = '';
-			if(isset(self::$post_type_data) && self::$post_type_data->name){
+			if ( isset( self::$post_type_data ) && self::$post_type_data->name ) {
 				$post_name = self::$post_type_data->name;
 			}
 			return $post_name .'_'. $this->taxonomy->name;
@@ -263,7 +267,7 @@ if( (!defined('NXT_PRO_EXT_VER') && !class_exists('Nexter_Singular_Taxonomy')) |
 	
 		public function get_post_type_label() {
 			$post_name = '';
-			if(isset(self::$post_type_data) && self::$post_type_data->label){
+			if ( isset( self::$post_type_data ) && self::$post_type_data->label ) {
 				$post_name = self::$post_type_data->label;
 			}
 			/* translators: %s: Taxonomy Label */
@@ -276,12 +280,12 @@ if( (!defined('NXT_PRO_EXT_VER') && !class_exists('Nexter_Singular_Taxonomy')) |
 		
 		public static function query_control(){
 			return [
-				'query' => [
+				'query'      => [
 					'taxonomy' => self::$taxonomy_data->name,
 				],
-				'display' => 'detailed',
+				'display'    => 'detailed',
 				'field_name' => 'term_id',
-				'object' => 'tax',
+				'object'     => 'tax',
 			];
 		}
 		
@@ -291,7 +295,7 @@ if( (!defined('NXT_PRO_EXT_VER') && !class_exists('Nexter_Singular_Taxonomy')) |
 	}
 }
 
-if( (!defined('NXT_PRO_EXT_VER') && !class_exists('Nexter_Singular_Sub_Term')) || (defined('NXT_PRO_EXT_VER') && version_compare( NXT_PRO_EXT_VER, '2.0.4', '>' )) ){
+if ( ( ! defined( 'NXT_PRO_EXT_VER' ) && ! class_exists( 'Nexter_Singular_Sub_Term' )) || (defined( 'NXT_PRO_EXT_VER' ) && version_compare( NXT_PRO_EXT_VER, '2.0.4', '>' )) ) {
 	class Nexter_Singular_Sub_Term extends Nexter_Singular_Taxonomy {
 
 		public $taxonomy_terms;
@@ -302,7 +306,7 @@ if( (!defined('NXT_PRO_EXT_VER') && !class_exists('Nexter_Singular_Sub_Term')) |
 
 		public function get_post_type_name() {
 			$post_name = '';
-			if(isset(self::$post_type_data) && self::$post_type_data->name){
+			if ( isset( self::$post_type_data ) && self::$post_type_data->name ) {
 				$post_name = self::$post_type_data->name;
 			}
 			return $post_name.'_child_' . $this->taxonomy_terms->name;
@@ -310,7 +314,7 @@ if( (!defined('NXT_PRO_EXT_VER') && !class_exists('Nexter_Singular_Sub_Term')) |
 
 		public function get_post_type_label() {
 			$post_name = '';
-			if(isset(self::$post_type_data) && self::$post_type_data->label){
+			if ( isset( self::$post_type_data ) && self::$post_type_data->label ) {
 				$post_name = self::$post_type_data->label;
 			}
 			/* translators: 1: Post type label, 2: Taxonomy singular name */
@@ -331,7 +335,7 @@ if( (!defined('NXT_PRO_EXT_VER') && !class_exists('Nexter_Singular_Sub_Term')) |
 	}
 }
 
-if( (!defined('NXT_PRO_EXT_VER') && !class_exists('Nexter_Singular_Post_By_Author')) || (defined('NXT_PRO_EXT_VER') && version_compare( NXT_PRO_EXT_VER, '2.0.4', '>' )) ){
+if ( ( ! defined( 'NXT_PRO_EXT_VER' ) && ! class_exists( 'Nexter_Singular_Post_By_Author' )) || (defined( 'NXT_PRO_EXT_VER' ) && version_compare( NXT_PRO_EXT_VER, '2.0.4', '>' )) ) {
 	class Nexter_Singular_Post_By_Author {
 
 		public $post_type;
@@ -355,7 +359,7 @@ if( (!defined('NXT_PRO_EXT_VER') && !class_exists('Nexter_Singular_Post_By_Autho
 		
 		public static function query_control() {
 			return [
-				'query' => [],
+				'query'  => [],
 				'object' => 'author',
 			];
 		}
@@ -368,7 +372,7 @@ if( (!defined('NXT_PRO_EXT_VER') && !class_exists('Nexter_Singular_Post_By_Autho
 
 
 /*Archives Posts*/
-if( (!defined('NXT_PRO_EXT_VER') && !class_exists('Nexter_Author')) || (defined('NXT_PRO_EXT_VER') && version_compare( NXT_PRO_EXT_VER, '2.0.4', '>' )) ){
+if ( ( ! defined( 'NXT_PRO_EXT_VER' ) && ! class_exists( 'Nexter_Author' )) || (defined( 'NXT_PRO_EXT_VER' ) && version_compare( NXT_PRO_EXT_VER, '2.0.4', '>' )) ) {
 	class Nexter_Author {
 
 		public function get_type_name() {
@@ -389,8 +393,8 @@ if( (!defined('NXT_PRO_EXT_VER') && !class_exists('Nexter_Author')) || (defined(
 
 		public function query_control() {
 			return [
-				'query' => [],
-				'object' => 'author',			
+				'query'          => [],
+				'object'         => 'author',           
 				'condition_type' => 'yes',
 			];
 		}
@@ -401,7 +405,7 @@ if( (!defined('NXT_PRO_EXT_VER') && !class_exists('Nexter_Author')) || (defined(
 	}
 }
 
-if( (!defined('NXT_PRO_EXT_VER') && !class_exists('Nexter_Date')) || (defined('NXT_PRO_EXT_VER') && version_compare( NXT_PRO_EXT_VER, '2.0.4', '>' )) ){
+if ( ( ! defined( 'NXT_PRO_EXT_VER' ) && ! class_exists( 'Nexter_Date' )) || (defined( 'NXT_PRO_EXT_VER' ) && version_compare( NXT_PRO_EXT_VER, '2.0.4', '>' )) ) {
 	class Nexter_Date {
 
 		public function get_type_name() {
@@ -422,7 +426,7 @@ if( (!defined('NXT_PRO_EXT_VER') && !class_exists('Nexter_Date')) || (defined('N
 		
 		public function query_control() {
 			return [
-				'query' => [],
+				'query'          => [],
 				'condition_type' => 'no',
 			];
 		}
@@ -433,7 +437,7 @@ if( (!defined('NXT_PRO_EXT_VER') && !class_exists('Nexter_Date')) || (defined('N
 	}
 }
 
-if( (!defined('NXT_PRO_EXT_VER') && !class_exists('Nexter_Search')) || (defined('NXT_PRO_EXT_VER') && version_compare( NXT_PRO_EXT_VER, '2.0.4', '>' )) ){
+if ( ( ! defined( 'NXT_PRO_EXT_VER' ) && ! class_exists( 'Nexter_Search' )) || (defined( 'NXT_PRO_EXT_VER' ) && version_compare( NXT_PRO_EXT_VER, '2.0.4', '>' )) ) {
 	class Nexter_Search {
 
 		public function get_type_name() {
@@ -454,7 +458,7 @@ if( (!defined('NXT_PRO_EXT_VER') && !class_exists('Nexter_Search')) || (defined(
 		
 		public function query_control() {
 			return [
-				'query' => [],
+				'query'          => [],
 				'condition_type' => 'no',
 			];
 		}

@@ -7,37 +7,37 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-if(!class_exists('NxtExt_Rollback')){
+if ( ! class_exists( 'NxtExt_Rollback' ) ) {
 
 	class NxtExt_Rollback {
 		
 		/**
-         * Member Variable
-         * @var instance
-         */
-        private static $instance;
-        
+		 * Member Variable
+		 * @var instance
+		 */
+		private static $instance;
+		
 		protected $version;
 		protected $plugin_slug;
 		protected $plugin_name;
 		protected $pakg_url;
 
-        /**
-         * Initiator
-         */
-        public static function get_instance() {
-            if ( !isset( self::$instance ) ) {
-                self::$instance = new self;
-            } 
-            return self::$instance;
-        }
-        
-        /**
-         * Constructor
-         */
-        public function __construct() {
+		/**
+		 * Initiator
+		 */
+		public static function get_instance() {
+			if ( ! isset( self::$instance ) ) {
+				self::$instance = new self;
+			} 
+			return self::$instance;
+		}
+		
+		/**
+		 * Constructor
+		 */
+		public function __construct() {
 			add_action( 'admin_post_nxtext_rollback', [ $this, 'nxtext_rollback_check_func' ] );
-        }
+		}
 
 		private function rollback_page_style() {
 			?>
@@ -75,7 +75,7 @@ if(!class_exists('NxtExt_Rollback')){
 				}
 				.nxtext-rb-subtitle{
 					font-size: 18px;
-    				font-family: monospace;
+					font-family: monospace;
 				}
 			</style>
 			<?php
@@ -88,7 +88,8 @@ if(!class_exists('NxtExt_Rollback')){
 				require_once ABSPATH . 'wp-admin/includes/plugin-install.php';
 	
 				$plugin_info = plugins_api(
-					'plugin_information', [
+					'plugin_information',
+					[
 						'slug' => 'nexter-extension',
 					]
 				);
@@ -107,7 +108,7 @@ if(!class_exists('NxtExt_Rollback')){
 						break;
 					}
 	
-					$lowercase_version = strtolower( $version );
+					$lowercase_version      = strtolower( $version );
 					$check_rollback_version = ! preg_match( '/(beta|rc|trunk|dev)/i', $lowercase_version );
 	
 					$check_rollback_version = apply_filters(
@@ -141,23 +142,23 @@ if(!class_exists('NxtExt_Rollback')){
 				wp_die( esc_html__( 'Rollback versions not allowed', 'nexter-extension' ) );
 			}
 
-			$rv = self::get_rollback_versions();
-			$version = isset($_GET['version']) && !empty($_GET['version']) ? sanitize_text_field( wp_unslash( $_GET['version'] ) ) : '';
+			$rv      = self::get_rollback_versions();
+			$version = isset( $_GET['version'] ) && ! empty( $_GET['version'] ) ? sanitize_text_field( wp_unslash( $_GET['version'] ) ) : '';
 			if ( empty( $version ) || ! in_array( $version, $rv ) ) {
 				wp_die( esc_html__( 'Error, Try selecting another version.', 'nexter-extension' ) );
 			}
 
 			$plugin_slug = basename( NEXTER_EXT_FILE, '.php' );
 			
-			$this->version = $version;
+			$this->version     = $version;
 			$this->plugin_name = NEXTER_EXT_BASE;
 			$this->plugin_slug = $plugin_slug;
-			$this->pakg_url = sprintf( 'https://downloads.wordpress.org/plugin/%s.%s.zip', $this->plugin_slug, $this->version );
+			$this->pakg_url    = sprintf( 'https://downloads.wordpress.org/plugin/%s.%s.zip', $this->plugin_slug, $this->version );
 			
 			$plugin_info = [
 				'plugin_name' => $this->plugin_name,
 				'plugin_slug' => $this->plugin_slug,
-				'version' 	  => $this->version,
+				'version'     => $this->version,
 				'package_url' => $this->pakg_url,
 			];
 
@@ -173,11 +174,11 @@ if(!class_exists('NxtExt_Rollback')){
 				$update_plugins_data = new \stdClass();
 			}
 
-			$plugin_info = new \stdClass();
+			$plugin_info              = new \stdClass();
 			$plugin_info->new_version = $this->version;
-			$plugin_info->slug = $this->plugin_slug;
-			$plugin_info->package = $this->pakg_url;
-			$plugin_info->url = 'http://nexterwp.com/';
+			$plugin_info->slug        = $this->plugin_slug;
+			$plugin_info->package     = $this->pakg_url;
+			$plugin_info->url         = 'http://nexterwp.com/';
 
 			$update_plugins_data->response[ $this->plugin_name ] = $plugin_info;
 			set_site_transient( 'update_plugins', $update_plugins_data );
@@ -192,11 +193,11 @@ if(!class_exists('NxtExt_Rollback')){
 			// $logo_url = NEXTER_EXT_DIR . 'assets/images/nexter-builder.svg';
 
 			$args = [
-				'url' => 'update.php?action=upgrade-plugin&plugin=' . rawurlencode( $this->plugin_name ),
+				'url'    => 'update.php?action=upgrade-plugin&plugin=' . rawurlencode( $this->plugin_name ),
 				'plugin' => $this->plugin_name,
-				'nonce' => 'upgrade-plugin_' . $this->plugin_name,
+				'nonce'  => 'upgrade-plugin_' . $this->plugin_name,
 				// 'title' => '<img src="' . $logo_url . '" alt="nxtext-logo"><div class="nxtext-rb-subtitle">' . esc_html__( 'Rollback to Previous Version', 'nexter-extension' ).'</div>',
-				'title' => esc_html__( 'Nexter Extension', 'nexter-extension' ).'<div class="nxtext-rb-subtitle">' . esc_html__( 'Rollback to Previous Version', 'nexter-extension' ).'</div>',
+				'title'  => esc_html__( 'Nexter Extension', 'nexter-extension' ).'<div class="nxtext-rb-subtitle">' . esc_html__( 'Rollback to Previous Version', 'nexter-extension' ).'</div>',
 			];
 
 			$upgrader_plugin = new \Plugin_Upgrader( new \Plugin_Upgrader_Skin( $args ) );

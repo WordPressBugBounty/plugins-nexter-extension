@@ -37,7 +37,11 @@ if ( ! class_exists( 'Nxt_Seo_Notice' ) ) {
 			if ( ! current_user_can( 'manage_options' ) ) {
 				return;
 			}
-			if ( get_option( 'nexter_seo_notice_dismissed' ) ) {
+			// Per-user dismissal (this is a promo notice): one admin hiding it must not hide it for
+			// every other admin. The shared dismiss handler stores this in user meta for the
+			// per-user notice allowlist (see nexter_ext_dismiss_notice_data / the
+			// nexter_per_user_dismiss_notice_ids filter).
+			if ( get_user_meta( get_current_user_id(), 'nexter_seo_notice_dismissed', true ) ) {
 				return;
 			}
 
@@ -61,7 +65,7 @@ if ( ! class_exists( 'Nxt_Seo_Notice' ) ) {
 			$enable_url = admin_url( 'admin.php?page=nexter_welcome#/seo' );
 			// Include UTM tracking on the outbound "Learn More" link, matching the campaign format
 			// used by Nexter's other admin CTAs (utm_source=wpbackend&utm_medium=admin&utm_campaign).
-			$learn_url  = 'https://nexterwp.com/nexter-extension/?utm_source=wpbackend&utm_medium=admin&utm_campaign=seonotice';
+			$learn_url = 'https://nexterwp.com/nexter-extension/?utm_source=wpbackend&utm_medium=admin&utm_campaign=seonotice';
 
 			echo '<div class="notice notice-info is-dismissible nxt-notice-wrap" data-notice-id="nexter_seo_notice">';
 				echo '<div class="nexter-license-activate">';

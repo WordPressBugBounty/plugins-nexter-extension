@@ -3,7 +3,7 @@
  * Nexter Gutenberg Compatibility
  *
  * @package Nexter
- * @since	1.0.0
+ * @since   1.0.0
  */
 
 if ( ! class_exists( 'Nexter_Gutenberg_Editor' ) ) {
@@ -17,8 +17,8 @@ if ( ! class_exists( 'Nexter_Gutenberg_Editor' ) ) {
 		 */
 		public function render_content( $post_id ) {
 
-			$output       = '';
-			if(!empty($post_id) && $post_id != 'none'){
+			$output = '';
+			if ( ! empty( $post_id ) && $post_id != 'none' ) {
 				$current_post = get_post( $post_id, OBJECT );
 				
 				if ( has_blocks( $current_post ) ) {
@@ -33,7 +33,7 @@ if ( ! class_exists( 'Nexter_Gutenberg_Editor' ) ) {
 
 			ob_start();
 			echo do_shortcode( $output );
-			echo ob_get_clean();	// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo ob_get_clean();    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
 		
 		/**
@@ -45,13 +45,13 @@ if ( ! class_exists( 'Nexter_Gutenberg_Editor' ) ) {
 				/*The Plus Addon*/
 				if ( class_exists( 'Tpgb_Core_Init_Blocks' ) ) {
 					$css_file = Tpgb_Core_Init_Blocks::get_instance();
-					if ( !empty($css_file) && is_callable( array( $css_file, 'enqueue_post_css' ) ) ) {
+					if ( ! empty( $css_file ) && is_callable( array( $css_file, 'enqueue_post_css' ) ) ) {
 						$css_file->enqueue_post_css( $post_id );
 					}
 				}
 				if ( class_exists( 'Tp_Core_Init_Blocks' ) ) {
 					$css_file = Tp_Core_Init_Blocks::get_instance();
-					if ( !empty($css_file) && is_callable( array( $css_file, 'enqueue_post_css' ) ) ) {
+					if ( ! empty( $css_file ) && is_callable( array( $css_file, 'enqueue_post_css' ) ) ) {
 						$css_file->enqueue_post_css( $post_id );
 					}
 				}
@@ -59,7 +59,7 @@ if ( ! class_exists( 'Nexter_Gutenberg_Editor' ) ) {
 				/*Ultimate Addon*/
 				if ( class_exists( 'UAGB_Post_Assets' ) ) {
 					$ultimate_instance = new UAGB_Post_Assets( $post_id );
-					if ( !empty($ultimate_instance) && is_callable( array( $ultimate_instance, 'enqueue_scripts' ) ) ) {
+					if ( ! empty( $ultimate_instance ) && is_callable( array( $ultimate_instance, 'enqueue_scripts' ) ) ) {
 						$ultimate_instance->enqueue_scripts();
 					}
 				}
@@ -67,9 +67,9 @@ if ( ! class_exists( 'Nexter_Gutenberg_Editor' ) ) {
 				/*Gutentor blocks*/
 				if ( class_exists( 'Gutentor_Dynamic_CSS' ) ) {
 					$gutentor_instance = Gutentor_Dynamic_CSS::instance();
-					if ( !empty($gutentor_instance) && is_callable( array( $gutentor_instance, 'get_singular_dynamic_css' ) ) ) {
+					if ( ! empty( $gutentor_instance ) && is_callable( array( $gutentor_instance, 'get_singular_dynamic_css' ) ) ) {
 						global $post;
-						$post = get_post( $post_id, OBJECT );
+						$post  = get_post( $post_id, OBJECT );
 						$style = $gutentor_instance->get_singular_dynamic_css( $post );
 						echo '<style>'.$style.'</style>';
 						wp_reset_postdata();
@@ -77,12 +77,12 @@ if ( ! class_exists( 'Nexter_Gutenberg_Editor' ) ) {
 				}
 				
 				/*GenerateBlocks*/
-				if( class_exists( 'GenerateBlocks_Enqueue_CSS' ) ){
+				if ( class_exists( 'GenerateBlocks_Enqueue_CSS' ) ) {
 					$generate_instance = GenerateBlocks_Enqueue_CSS::get_instance();
-					if( !empty($generate_instance) && function_exists('generateblocks_get_frontend_block_css') ){
+					if ( ! empty( $generate_instance ) && function_exists( 'generateblocks_get_frontend_block_css' ) ) {
 						global $post;
 						$post = get_post( $post_id, OBJECT );
-						$css = generateblocks_get_frontend_block_css();
+						$css  = generateblocks_get_frontend_block_css();
 						if ( empty( $css ) ) {
 							return;
 						}
@@ -95,11 +95,11 @@ if ( ! class_exists( 'Nexter_Gutenberg_Editor' ) ) {
 				}
 				
 				/*Essential Blocks*/
-				if(class_exists('EbStyleHandler')){
+				if ( class_exists( 'EbStyleHandler' ) ) {
 					$essential_instance = EbStyleHandler::init();
-					if ( !empty($essential_instance) && is_callable( array( $essential_instance, 'enqueue_frontend_css' ) ) ) {
+					if ( ! empty( $essential_instance ) && is_callable( array( $essential_instance, 'enqueue_frontend_css' ) ) ) {
 						global $post;
-						$post = get_post( $post_id, OBJECT );
+						$post  = get_post( $post_id, OBJECT );
 						$style = $essential_instance->enqueue_frontend_css( $post );
 						wp_reset_postdata();
 					}
@@ -108,11 +108,11 @@ if ( ! class_exists( 'Nexter_Gutenberg_Editor' ) ) {
 				/*GSPB GreenShift*/
 				if ( function_exists( 'gspb_get_final_css' ) ) {
 					$gspb_css_content = get_post_meta( $post_id, '_gspb_post_css', true );
-					if ( !empty( $gspb_css_content ) ) {
+					if ( ! empty( $gspb_css_content ) ) {
 						$gspb_saved_css_content = gspb_get_final_css( $gspb_css_content );
-						$final_css = $gspb_saved_css_content;
+						$final_css              = $gspb_saved_css_content;
 						
-						if ( !empty( $final_css ) ) {
+						if ( ! empty( $final_css ) ) {
 							wp_register_style( 'greenshift-post-css-' . $post_id, false );
 							wp_enqueue_style( 'greenshift-post-css-' . $post_id );
 							wp_add_inline_style( 'greenshift-post-css-' . $post_id, $final_css );

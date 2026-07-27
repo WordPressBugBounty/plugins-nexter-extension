@@ -2,8 +2,8 @@
 /**
  * Nexter Theme Page Builder Load
  *
- * @package	Nexter
- * @since	1.0.7
+ * @package Nexter
+ * @since   1.0.7
  */
 defined( 'ABSPATH' ) || exit;
 
@@ -32,7 +32,7 @@ if ( ! class_exists( 'Nexter_Theme_Builder_Load' ) ) {
 		}
 		
 		public function __construct() {
-			if (  did_action( 'elementor/loaded' ) && class_exists( '\Elementor\Plugin' ) ) {
+			if ( did_action( 'elementor/loaded' ) && class_exists( '\Elementor\Plugin' ) ) {
 				add_action( 'init', array( $this, 'init_elementor' ), -999 );
 			}
 			/*
@@ -40,15 +40,15 @@ if ( ! class_exists( 'Nexter_Theme_Builder_Load' ) ) {
 			if(in_array( $pagenow, array( 'post.php', 'post-new.php' ) ) && isset($_GET['post']) && NXT_BUILD_POST === get_post_type( $_GET['post'] )){
 				add_action( 'init', array( $this, 'init_block_editor' ), 10 );
 			}*/
-			add_filter( 'preview_post_link', array( $this, 'nxt_preview_post_link' ) , 10, 2);
+			add_filter( 'preview_post_link', array( $this, 'nxt_preview_post_link' ) , 10, 2 );
 		}
 		
 		/*
 		 * Initialize Elementor Documents
-		 */	
+		 */ 
 		public function init_elementor(){
 			$this->load_files();
-			$this->documents     = new Nexter_Builder_Elementor_Documents();
+			$this->documents = new Nexter_Builder_Elementor_Documents();
 		}
 		
 		/*
@@ -63,53 +63,53 @@ if ( ! class_exists( 'Nexter_Theme_Builder_Load' ) ) {
 		 */
 		public function nxt_preview_post_link( $link, \WP_Post $post ){
 			
-			if( isset($post->post_type) && NXT_BUILD_POST != $post->post_type){
+			if ( isset( $post->post_type ) && NXT_BUILD_POST != $post->post_type ) {
 				return $link;
 			}
 			$current_post_id = $post->ID;
-			$NexterPreview = [];
+			$NexterPreview   = [];
 
 			$all_meta = get_post_meta( $current_post_id );
 			$get_meta = static function ( $key ) use ( $all_meta ) {
 				return isset( $all_meta[ $key ][0] ) ? maybe_unserialize( $all_meta[ $key ][0] ) : '';
 			};
 
-			$hook_layout = $get_meta( 'nxt-hooks-layout' );
-			$hook_layout_pages = $get_meta( 'nxt-hooks-layout-pages' );
+			$hook_layout          = $get_meta( 'nxt-hooks-layout' );
+			$hook_layout_pages    = $get_meta( 'nxt-hooks-layout-pages' );
 			$hook_layout_sections = $get_meta( 'nxt-hooks-layout-sections' );
-			if( ($hook_layout == 'pages' && $hook_layout_pages == 'singular') || $hook_layout_sections == 'singular'){
+			if ( ($hook_layout == 'pages' && $hook_layout_pages == 'singular') || $hook_layout_sections == 'singular' ) {
 				$singular_preview_type = $get_meta( 'nxt-singular-preview-type' );
-				$singular_preview_id = $get_meta( 'nxt-singular-preview-id' );
-				if( !empty($singular_preview_type) && !empty($singular_preview_id)){
-					$NexterPreview['type'] = 'singular'; 
+				$singular_preview_id   = $get_meta( 'nxt-singular-preview-id' );
+				if ( ! empty( $singular_preview_type ) && ! empty( $singular_preview_id ) ) {
+					$NexterPreview['type']         = 'singular'; 
 					$NexterPreview['preview_type'] = $singular_preview_type; 
-					$NexterPreview['preview_id'] = $singular_preview_id; 
+					$NexterPreview['preview_id']   = $singular_preview_id; 
 				}
-			}else if(($hook_layout == 'pages' && $hook_layout_pages == 'archives') || $hook_layout_sections == 'archives'){
+			} else if ( ($hook_layout == 'pages' && $hook_layout_pages == 'archives') || $hook_layout_sections == 'archives' ) {
 				$archive_preview_type = $get_meta( 'nxt-archive-preview-type' );
-				$archive_preview_id = $get_meta( 'nxt-archive-preview-id' );
-				if( !empty($archive_preview_type) && !empty($archive_preview_id)){
-					$NexterPreview['type'] = 'archives'; 
+				$archive_preview_id   = $get_meta( 'nxt-archive-preview-id' );
+				if ( ! empty( $archive_preview_type ) && ! empty( $archive_preview_id ) ) {
+					$NexterPreview['type']         = 'archives'; 
 					$NexterPreview['preview_type'] = $archive_preview_type; 
-					$NexterPreview['preview_id'] = $archive_preview_id; 
+					$NexterPreview['preview_id']   = $archive_preview_id; 
 				}
 			}
 			
-			if( isset($NexterPreview) && empty($NexterPreview)){
+			if ( isset( $NexterPreview ) && empty( $NexterPreview ) ) {
 				return $link;
 			}
 			
-			if( isset($NexterPreview['type']) && $NexterPreview['type']=='singular' ){
-				$post_id = (isset($NexterPreview['preview_id']) && !empty($NexterPreview['preview_id'])) ? $NexterPreview['preview_id'] : $current_post_id;
-				$link = get_permalink( $post_id );
-			}else if( isset($NexterPreview['type']) && $NexterPreview['type']=='archives' ){
-				$category_id = (isset($NexterPreview['preview_id']) && !empty($NexterPreview['preview_id'])) ? $NexterPreview['preview_id'] : $current_post_id;
-				$link = esc_url( get_category_link( $category_id ) );
+			if ( isset( $NexterPreview['type'] ) && $NexterPreview['type'] == 'singular' ) {
+				$post_id = (isset( $NexterPreview['preview_id'] ) && ! empty( $NexterPreview['preview_id'] )) ? $NexterPreview['preview_id'] : $current_post_id;
+				$link    = get_permalink( $post_id );
+			} else if ( isset( $NexterPreview['type'] ) && $NexterPreview['type'] == 'archives' ) {
+				$category_id = (isset( $NexterPreview['preview_id'] ) && ! empty( $NexterPreview['preview_id'] )) ? $NexterPreview['preview_id'] : $current_post_id;
+				$link        = esc_url( get_category_link( $category_id ) );
 			}
 			
 			return add_query_arg(
 				[
-					'preview_nonce'    => wp_create_nonce( 'post_preview_' . $current_post_id ),
+					'preview_nonce'      => wp_create_nonce( 'post_preview_' . $current_post_id ),
 					'nxt_build_template' => $current_post_id,
 				],
 				$link

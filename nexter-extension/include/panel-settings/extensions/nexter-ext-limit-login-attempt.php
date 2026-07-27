@@ -3,17 +3,17 @@
  * Limit Login Attempts Extension
  * @since 4.3.0
  */
-defined('ABSPATH') or die();
+defined( 'ABSPATH' ) or die();
 
- class Nexter_Ext_Limit_Login_Attempt {
-    
+class Nexter_Ext_Limit_Login_Attempt {
+	
 	public static $limit_login_opt = [];
 
 	public static $custom_login_url = '';
-    /**
-     * Constructor
-     */
-    public function __construct() {
+	/**
+	 * Constructor
+	 */
+	public function __construct() {
 		$this->nxt_get_login_security_settings();
 
 		add_filter( 'authenticate', [ $this, 'maybe_allow_login' ], 999, 3 );
@@ -28,28 +28,28 @@ defined('ABSPATH') or die();
 		add_action( 'updated_option', [ $this, 'maybe_schedule_failed_login_cleanup' ] );
 		add_action( 'plugins_loaded', [ $this, 'schedule_failed_login_log_cleanup' ] );
 		add_action( 'nxt_ext_login_log_cleanup', [ $this, 'clean_old_login_logs' ] ); */
-		if( is_admin() ){
-			add_action('wp_ajax_nexter_ext_get_login_attempt_data', [ $this, 'nexter_ext_get_login_attempt'] );
+		if ( is_admin() ) {
+			add_action( 'wp_ajax_nexter_ext_get_login_attempt_data', [ $this, 'nexter_ext_get_login_attempt'] );
 		}
-    }
+	}
 
 	private function nxt_get_login_security_settings(){
 		
-		if(isset(self::$limit_login_opt) && !empty(self::$limit_login_opt)){
+		if ( isset( self::$limit_login_opt ) && ! empty( self::$limit_login_opt ) ) {
 			return self::$limit_login_opt;
 		}
 
 		$option = Nxt_Options::security();
 		
-		if(!empty($option) && isset($option['custom_login_url']) && !empty($option['custom_login_url'])){
+		if ( ! empty( $option ) && isset( $option['custom_login_url'] ) && ! empty( $option['custom_login_url'] ) ) {
 			self::$custom_login_url = $option['custom_login_url'];
-		}else if(isset($option['custom-login']) && !empty($option['custom-login']) && isset($option['custom-login']['switch']) && !empty($option['custom-login']['switch'])){
-            if(isset($option['custom-login']['values']) && !empty($option['custom-login']['values'])){
-                self::$custom_login_url = (array) $option['custom-login']['values'];
-            }
-        }
+		} else if ( isset( $option['custom-login'] ) && ! empty( $option['custom-login'] ) && isset( $option['custom-login']['switch'] ) && ! empty( $option['custom-login']['switch'] ) ) {
+			if ( isset( $option['custom-login']['values'] ) && ! empty( $option['custom-login']['values'] ) ) {
+				self::$custom_login_url = (array) $option['custom-login']['values'];
+			}
+		}
 
-		if(!empty($option) && isset($option['limit-login-attempt']) && !empty($option['limit-login-attempt']['switch']) && !empty($option['limit-login-attempt']['values']) ){
+		if ( ! empty( $option ) && isset( $option['limit-login-attempt'] ) && ! empty( $option['limit-login-attempt']['switch'] ) && ! empty( $option['limit-login-attempt']['values'] ) ) {
 			self::$limit_login_opt = (array) $option['limit-login-attempt']['values'];
 		}
 
@@ -67,33 +67,33 @@ defined('ABSPATH') or die();
 		// Check if the log table exists
 		$table_exists = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $wpdb->esc_like( $table ) ) ) === $table;
 
-		if( !$table_exists ){
-			if( !class_exists('Nexter_Ext_Activation') ){
+		if ( ! $table_exists ) {
+			if ( ! class_exists( 'Nexter_Ext_Activation' ) ) {
 				require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/class-activation.php';
 			}
-			if(class_exists('Nexter_Ext_Activation')){
+			if ( class_exists( 'Nexter_Ext_Activation' ) ) {
 				$activation = new Nexter_Ext_Activation();
 				$activation->create_login_attempt_table();
 			}
 		}
 
 		// Defaults
-		$failed_limit  = isset(self::$limit_login_opt['failed_login']) ? self::$limit_login_opt['failed_login'] : 5;
-		$lockout_limit = isset(self::$limit_login_opt['lockout_login']) ? self::$limit_login_opt['lockout_login'] : 5;
-		$ip_list_raw   = isset(self::$limit_login_opt['ip_address_list']) ? self::$limit_login_opt['ip_address_list'] : '';
+		$failed_limit  = isset( self::$limit_login_opt['failed_login'] ) ? self::$limit_login_opt['failed_login'] : 5;
+		$lockout_limit = isset( self::$limit_login_opt['lockout_login'] ) ? self::$limit_login_opt['lockout_login'] : 5;
+		$ip_list_raw   = isset( self::$limit_login_opt['ip_address_list'] ) ? self::$limit_login_opt['ip_address_list'] : '';
 		$whitelist     = array_map( 'trim', explode( PHP_EOL, $ip_list_raw ) );
 
 		$ip = $this->get_client_ip( 'ip', 'limit-login-attempt' );
 
 		// Setup login config
-		$request_uri = isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( $_SERVER['REQUEST_URI'] ) : '';
+		$request_uri         = isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( $_SERVER['REQUEST_URI'] ) : '';
 		$nxt_ext_limit_login = array(
 			'ip_address'               => $ip,
 			'request_uri'              => sanitize_text_field( $request_uri ),
 			'ip_address_log'           => array(),
-			'failed_count'               => 0,
+			'failed_count'             => 0,
 			'lockout_count'            => 0,
-			'maybe_lockout'           => false,
+			'maybe_lockout'            => false,
 			'extended_lockout'         => false,
 			'within_lockout_period'    => false,
 			'lockout_period'           => 0,
@@ -102,11 +102,11 @@ defined('ABSPATH') or die();
 			'lockout_login'            => $lockout_limit,
 			'default_lockout_period'   => 15 * 60,
 			'extended_lockout_period'  => 30 * 60,
-			'custom_login_url'         => self::$custom_login_url  ?? '',
+			'custom_login_url'         => self::$custom_login_url ?? '',
 		);
 
 		// Skip checks if IP is whitelisted
-		if ( (defined('NXT_PRO_EXT') && in_array( $ip, $whitelist, true )) || ! $table_exists ) {
+		if ( (defined( 'NXT_PRO_EXT' ) && in_array( $ip, $whitelist, true )) || ! $table_exists ) {
 			return $user_or_error;
 		}
 
@@ -118,11 +118,11 @@ defined('ABSPATH') or die();
  
 		if ( $log ) {
 			$nxt_ext_limit_login['ip_address_log'] = $log;
-			$nxt_ext_limit_login['failed_count']     = (int) $log['failed_count'];
+			$nxt_ext_limit_login['failed_count']   = (int) $log['failed_count'];
 			$nxt_ext_limit_login['lockout_count']  = (int) $log['lockout_count'];
 			$last_fail                             = (int) $log['unixtime'];
-		}else{
-			$last_fail                             = '';
+		} else {
+			$last_fail = '';
 		}
 		
 		// Check lockout trigger
@@ -182,7 +182,7 @@ defined('ABSPATH') or die();
 
 		if ( ! empty( $header_key ) && isset( $_SERVER[ $header_key ] ) ) {
 			 $ip_raw = $_SERVER[ $header_key ];
-			$ips = array_map( 'trim', explode( ',', $ip_raw ) );
+			$ips     = array_map( 'trim', explode( ',', $ip_raw ) );
 
 			foreach ( $ips as $ip ) {
 				if ( $return === 'ip' ) {
@@ -194,12 +194,12 @@ defined('ABSPATH') or die();
 		}
 
 		$remote_ip = '';
-		if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
-        	$remote_ip = sanitize_text_field( wp_unslash( $_SERVER['HTTP_CLIENT_IP'] ) );
-		} elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-			$ipList = explode(',', sanitize_text_field( wp_unslash( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) );
-			$remote_ip = trim($ipList[0]);
-		} else if (!empty($_SERVER['REMOTE_ADDR'])) {
+		if ( ! empty( $_SERVER['HTTP_CLIENT_IP'] ) ) {
+			$remote_ip = sanitize_text_field( wp_unslash( $_SERVER['HTTP_CLIENT_IP'] ) );
+		} elseif ( ! empty( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) {
+			$ipList    = explode( ',', sanitize_text_field( wp_unslash( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) );
+			$remote_ip = trim( $ipList[0] );
+		} else if ( ! empty( $_SERVER['REMOTE_ADDR'] ) ) {
 			$remote_ip = sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) );
 		}
 
@@ -320,7 +320,7 @@ defined('ABSPATH') or die();
 			// Get options and check for reload condition
 			$failed_login = isset( self::$limit_login_opt['failed_login'] ) ? (int) self::$limit_login_opt['failed_login'] : 5;
 			// Security: Sanitize input
-			$get_ne = isset( $_GET['ne'] ) ? absint( $_GET['ne'] ) : 0;
+			$get_ne            = isset( $_GET['ne'] ) ? absint( $_GET['ne'] ) : 0;
 			$page_was_reloaded = ( $get_ne === 1 );
 
 			if ( isset( $nxt_ext_limit_login['failed_count'] ) ) {
@@ -328,7 +328,7 @@ defined('ABSPATH') or die();
 
 				// Check if fail count is close to the allowed login failures
 				if ( in_array( $failed_count, range( $failed_login - 1, 6 * $failed_login - 1, $failed_login ) ) ) {
-					if ( ! isset( self::$custom_login_url  ) || ! self::$custom_login_url ) {
+					if ( ! isset( self::$custom_login_url ) || ! self::$custom_login_url ) {
 						// If custom login URL is not set, reload the page to get updated data
 						if ( ! $page_was_reloaded ) {
 							?>
@@ -353,7 +353,7 @@ defined('ABSPATH') or die();
 
 		// Security: Sanitize input - prefer $_GET over $_REQUEST for better security
 		$failed_login_param = isset( $_GET['failed_login'] ) ? sanitize_text_field( wp_unslash( $_GET['failed_login'] ) ) : '';
-		$is_failed = ( $failed_login_param === 'true' );
+		$is_failed          = ( $failed_login_param === 'true' );
 
 		if ( $is_failed && ! empty( $nxt_ext_limit_login ) && empty( $nxt_ext_limit_login['within_lockout_period'] ) ) {
 			$msg = sprintf(
@@ -392,10 +392,10 @@ defined('ABSPATH') or die();
 		);
 
 		if ( $record ) {
-            $record_count = count( $record );
-        } else {
-            $record_count = 0;
-        }
+			$record_count = count( $record );
+		} else {
+			$record_count = 0;
+		}
 
 		if ( $record_count ) {
 			$failed_count = (int) $record[0]['failed_count'] + 1;
@@ -406,21 +406,21 @@ defined('ABSPATH') or die();
 		$lockout_count  = $record_count ? (int) floor( $failed_count / $max_fails ) : 0;
 		$last_fail_time = $record[0]['unixtime'] ?? 0;
 
-		$timestamp  = time();
-		$datetime   = function_exists( 'wp_date' ) ? wp_date( 'Y-m-d H:i:s', $timestamp ) : date_i18n( 'Y-m-d H:i:s', $timestamp );
+		$timestamp = time();
+		$datetime  = function_exists( 'wp_date' ) ? wp_date( 'Y-m-d H:i:s', $timestamp ) : date_i18n( 'Y-m-d H:i:s', $timestamp );
 
 		$data = [
 			'ip_address'    => $ip,
 			'username'      => $username,
-			'failed_count'    => $failed_count,
+			'failed_count'  => $failed_count,
 			'lockout_count' => $lockout_count,
 			'request_uri'   => $uri,
 			'unixtime'      => $timestamp,
-			'cur_datetime'   => $datetime
+			'cur_datetime'  => $datetime
 		];
 
-		$format = [ '%s', '%s', '%d', '%d', '%s', '%d', '%s' ];
-		$where  = [ 'ip_address' => $ip ];
+		$format       = [ '%s', '%s', '%d', '%d', '%s', '%d', '%s' ];
+		$where        = [ 'ip_address' => $ip ];
 		$where_format = [ '%s' ];
 
 		// Set current state to global
@@ -428,15 +428,15 @@ defined('ABSPATH') or die();
 
 		if ( $record_count == 0 ) {
 			$wpdb->insert( $table, $data, $format );
-		}else{
-			$failed_count = (int) $record[0]['failed_count'];
-			$lockout_count = $record[0]['lockout_count'];
+		} else {
+			$failed_count   = (int) $record[0]['failed_count'];
+			$lockout_count  = $record[0]['lockout_count'];
 			$last_fail_time = $record[0]['unixtime'];
 
 			// If failed attempts match a lockout trigger
 			if ( ! empty( $failed_count ) 
 					&& $max_fails > 0 && $failed_count % $max_fails === 0 ) {
-				$is_extended = $lockout_count >= $max_blocks;
+				$is_extended      = $lockout_count >= $max_blocks;
 				$lockout_duration = $is_extended
 					? $nxt_ext_limit_login['extended_lockout_period'] ?? 1800
 					: $nxt_ext_limit_login['default_lockout_period'] ?? 900;
@@ -447,7 +447,7 @@ defined('ABSPATH') or die();
 				// If still within lockout window, don't update record
 				if ( ( time() - (int) $last_fail_time ) <= $lockout_duration ) {
 					//do nothing
-				}else if ( $lockout_count < $max_blocks ) {
+				} else if ( $lockout_count < $max_blocks ) {
 						// Update existing data in the database
 						$wpdb->update(
 							$table,
@@ -457,8 +457,8 @@ defined('ABSPATH') or die();
 							$where_format
 						);
 
-					}
-			}else{
+				}
+			} else {
 				// Update failed login log
 				$wpdb->update( $table, $data, $where, $format, $where_format );
 			}
@@ -490,57 +490,57 @@ defined('ABSPATH') or die();
 	 * Trigger log cleanup scheduling when the corresponding option is updated.
 	 */
 	/* public function maybe_schedule_failed_login_cleanup( $option_name ) {
-		if ( 'fail_login_schedule_cleanup' === $option_name ) {
-			$this->schedule_failed_login_log_cleanup();
-		}
+	   if ( 'fail_login_schedule_cleanup' === $option_name ) {
+		   $this->schedule_failed_login_log_cleanup();
+	   }
 	} */
 
 	/**
 	 * Schedule or clear the failed login attempts cleanup event based on settings.
 	 */
 	/* public function schedule_failed_login_log_cleanup() {
-		$enabled = self::$limit_login_opt['fail_login_schedule_cleanup'] ?? false;
+	   $enabled = self::$limit_login_opt['fail_login_schedule_cleanup'] ?? false;
 
-		$hook = 'nxt_ext_login_log_cleanup';
+	   $hook = 'nxt_ext_login_log_cleanup';
 
-		if ( ! $enabled ) {
-			// Unschedule if the feature is disabled
-			wp_clear_scheduled_hook( $hook );
-			return;
-		}
+	   if ( ! $enabled ) {
+		   // Unschedule if the feature is disabled
+		   wp_clear_scheduled_hook( $hook );
+		   return;
+	   }
 
-		// Schedule cleanup event if not already scheduled
-		if ( ! wp_next_scheduled( $hook ) ) {
-			wp_schedule_event( time(), 'hourly', $hook );
-		}
+	   // Schedule cleanup event if not already scheduled
+	   if ( ! wp_next_scheduled( $hook ) ) {
+		   wp_schedule_event( time(), 'hourly', $hook );
+	   }
 	} */
 
 	/**
 	 * Clean up old failed login attempts, keeping only the latest N entries.
 	 */
 	/* public function clean_old_login_logs() {
-		global $wpdb;
+	   global $wpdb;
 
-		$enabled  = self::$limit_login_opt['fail_login_schedule_cleanup'] ?? false;
-		$keep_max = 1000;
+	   $enabled  = self::$limit_login_opt['fail_login_schedule_cleanup'] ?? false;
+	   $keep_max = 1000;
 
-		if ( ! $enabled || ! is_numeric( $keep_max ) || $keep_max <= 0 ) {
-			return;
-		}
+	   if ( ! $enabled || ! is_numeric( $keep_max ) || $keep_max <= 0 ) {
+		   return;
+	   }
 
-		$table = $wpdb->prefix . 'nxtext_login_failed';
+	   $table = $wpdb->prefix . 'nxtext_login_failed';
 
-		// Run cleanup using a DELETE with JOIN to keep only recent records
-		$cleanup_sql = "
-			DELETE log_old FROM {$table} AS log_old
-			JOIN (
-				SELECT id FROM {$table}
-				ORDER BY id DESC
-				LIMIT 1 OFFSET %d
-			) AS log_limit ON log_old.id <= log_limit.id
-		";
+	   // Run cleanup using a DELETE with JOIN to keep only recent records
+	   $cleanup_sql = "
+		   DELETE log_old FROM {$table} AS log_old
+		   JOIN (
+			   SELECT id FROM {$table}
+			   ORDER BY id DESC
+			   LIMIT 1 OFFSET %d
+		   ) AS log_limit ON log_old.id <= log_limit.id
+	   ";
 
-		$wpdb->query( $wpdb->prepare( $cleanup_sql, $keep_max ) );
+	   $wpdb->query( $wpdb->prepare( $cleanup_sql, $keep_max ) );
 	} */
 
 	public function nexter_ext_get_login_attempt() {
@@ -568,8 +568,9 @@ defined('ABSPATH') or die();
 			wp_send_json_error( [] ); // Return empty array if no data
 		}
 
-		$data = array_map( function( $row ) {
-			return [
+		$data = array_map(
+			function( $row ) {
+				return [
 				'ip_address' => esc_html( $row['ip_address'] ),
 				'username'   => esc_html( $row['username'] ),
 				'attempt'    => (int) $row['failed_count'],
@@ -578,8 +579,10 @@ defined('ABSPATH') or die();
 					get_option( 'date_format' ) . ' ' . get_option( 'time_format' ),
 					$row['cur_datetime']
 				),
-			];
-		}, $results );
+				];
+			},
+			$results 
+		);
 
 		wp_send_json_success( $data );
 	}

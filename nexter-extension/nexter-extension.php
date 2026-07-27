@@ -3,7 +3,7 @@
  * Plugin Name: Nexter Extension
  * Plugin URI: https://nexterwp.com
  * Description: Nexter Extension adds lightweight performance, security, and admin features to WordPress so you can improve and manage your website without installing many plugins.
- * Version: 4.7.1
+ * Version: 4.7.2
  * Author: POSIMYTH
  * Author URI: https://posimyth.com
  * Text Domain: nexter-extension
@@ -26,14 +26,14 @@ define( 'NEXTER_EXT_BASE', plugin_basename( NEXTER_EXT_FILE ) );
 define( 'NEXTER_EXT_DIR', plugin_dir_path( NEXTER_EXT_FILE ) );
 define( 'NEXTER_EXT_URL', plugins_url( '/', NEXTER_EXT_FILE ) );
 define( 'NEXTER_EXT_CPT', 'nxt_builder' );
-define( 'NEXTER_EXT_VER', '4.7.1' );
+define( 'NEXTER_EXT_VER', '4.7.2' );
 // Rewrite-rules revision for the Theme Builder CPT. Bump this whenever the CPT's slug or
 // rewrite args change to trigger a one-time automatic flush (see nxt_ext_flush_rewrite_rules
 // / nxt_ext_maybe_flush_rewrite_rules). Mirrors Elementor's activation + admin_init upgrade
 // flush model so users never have to open Settings → Permalinks.
 define( 'NEXTER_EXT_REWRITE_VER', '1' );
 
-if(!defined('NXT_BUILD_POST')){
+if ( ! defined( 'NXT_BUILD_POST' ) ) {
 	define( 'NXT_BUILD_POST', 'nxt_builder' );
 }
 
@@ -78,14 +78,17 @@ add_action( 'plugins_loaded', 'nexter_extension_plugins_loaded' );
 function nxt_ext_activate() {
 
 	if ( ! get_option( 'nexter-ext-install-data' ) ) {
-        update_option( 'nexter-ext-install-data', [
+		update_option(
+			'nexter-ext-install-data',
+			[
 			"install-version" => NEXTER_EXT_VER, 
-            'install-date' => wp_date( 'd-m-Y' )
-        ] );
-    }
+			'install-date'    => wp_date( 'd-m-Y' )
+			 ] 
+		);
+	}
 
 	require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/class-activation.php';
-	if(class_exists('Nexter_Ext_Activation')){
+	if ( class_exists( 'Nexter_Ext_Activation' ) ) {
 		$activation = new Nexter_Ext_Activation();
 		$activation->create_login_attempt_table();
 	}
@@ -130,8 +133,8 @@ function nxt_ext_deactivate() {
 }
 
 // Plugin Activation and Deactivation Hooks
-register_activation_hook(__FILE__, 'nxt_ext_activate');
-register_deactivation_hook(__FILE__, 'nxt_ext_deactivate');
+register_activation_hook( __FILE__, 'nxt_ext_activate' );
+register_deactivation_hook( __FILE__, 'nxt_ext_deactivate' );
 
 /**
  * Auto-flush rewrite rules after a plugin UPDATE or on an already-installed site.
@@ -157,7 +160,7 @@ add_action( 'admin_init', 'nxt_ext_maybe_flush_rewrite_rules' );
  */
 function nexter_ext_php_version_notice() {
 	/* translators: %s: Php Required */
-	$message = sprintf( esc_html__( 'Nexter Extensions requires PHP version %s+, plugin is currently NOT RUNNING.', 'nexter-extension' ), '7.4' );
+	$message      = sprintf( esc_html__( 'Nexter Extensions requires PHP version %s+, plugin is currently NOT RUNNING.', 'nexter-extension' ), '7.4' );
 	$html_message = sprintf( '<div class="error">%s</div>', wpautop( $message ) );
 	echo wp_kses_post( $html_message );
 }
@@ -165,12 +168,12 @@ function nexter_ext_php_version_notice() {
 add_action( 'upgrader_process_complete', 'nxt_ext_after_update', 10, 2 );
 function nxt_ext_after_update( $upgrader_object, $options ) {
 
-    if ( $options['action'] === 'update' && $options['type'] === 'plugin' ) {
+	if ( $options['action'] === 'update' && $options['type'] === 'plugin' ) {
 
-        $plugin_slug = 'nexter-extension/nexter-extension.php';
+		$plugin_slug = 'nexter-extension/nexter-extension.php';
 
-        if ( isset( $options['plugins'] ) && in_array( $plugin_slug, $options['plugins'], true ) ) {
-            delete_transient( 'nxtext_cached_feed_data' );
-        }
-    }
+		if ( isset( $options['plugins'] ) && in_array( $plugin_slug, $options['plugins'], true ) ) {
+			delete_transient( 'nxtext_cached_feed_data' );
+		}
+	}
 }

@@ -22,28 +22,28 @@ Nexter_Content_SEO::get_instance();
  */
 class Nexter_Content_SeoRank {
 
-	const META_TITLE       = '_nxt_seo_title';
-	const META_DESCRIPTION = '_nxt_seo_description';
-	const FOCUS_KEYWORD    = '_nxt_focus_keyword';
-	const SEO_SCORE        = '_nxt_seo_score';
-	const READABILITY      = '_nxt_readability_score';
-	const META_FB_TITLE    = '_nxt_seo_fb_title';
-	const META_FB_DESC     = '_nxt_seo_fb_desc';
-	const META_FB_IMAGE    = '_nxt_seo_fb_image';
-	const META_TW_TITLE    = '_nxt_seo_tw_title';
-	const META_TW_DESC     = '_nxt_seo_tw_desc';
-	const META_TW_IMAGE    = '_nxt_seo_tw_image';
-	const META_NOINDEX     = '_nxt_seo_noindex';
-	const META_NOFOLLOW    = '_nxt_seo_nofollow';
-	const META_NOARCHIVE   = '_nxt_seo_noarchive';
-	const META_CANONICAL   = '_nxt_seo_canonical';
-	const META_SCHEMA_TYPE = '_nxt_seo_schema_type';
+	const META_TITLE         = '_nxt_seo_title';
+	const META_DESCRIPTION   = '_nxt_seo_description';
+	const FOCUS_KEYWORD      = '_nxt_focus_keyword';
+	const SEO_SCORE          = '_nxt_seo_score';
+	const READABILITY        = '_nxt_readability_score';
+	const META_FB_TITLE      = '_nxt_seo_fb_title';
+	const META_FB_DESC       = '_nxt_seo_fb_desc';
+	const META_FB_IMAGE      = '_nxt_seo_fb_image';
+	const META_TW_TITLE      = '_nxt_seo_tw_title';
+	const META_TW_DESC       = '_nxt_seo_tw_desc';
+	const META_TW_IMAGE      = '_nxt_seo_tw_image';
+	const META_NOINDEX       = '_nxt_seo_noindex';
+	const META_NOFOLLOW      = '_nxt_seo_nofollow';
+	const META_NOARCHIVE     = '_nxt_seo_noarchive';
+	const META_CANONICAL     = '_nxt_seo_canonical';
+	const META_SCHEMA_TYPE   = '_nxt_seo_schema_type';
 	const META_SCHEMA_CUSTOM = '_nxt_seo_schema_custom';
 	const META_SCHEMA_ROWS   = '_nxt_seo_schema_rows';
-	const REST_NAMESPACE   = 'nexter/v1';
+	const REST_NAMESPACE     = 'nexter/v1';
 
 	/** Cron hook that recomputes the stored SEO/readability score off the save request. */
-	const SCORE_CRON_HOOK  = 'nxt_seo_recalc_score';
+	const SCORE_CRON_HOOK = 'nxt_seo_recalc_score';
 
 	private static $instance = null;
 
@@ -366,7 +366,7 @@ class Nexter_Content_SeoRank {
 				'callback'            => array( $this, 'rest_save_seo' ),
 				'permission_callback' => array( $this, 'rest_permission' ),
 				'args'                => array(
-					'id' => array(
+					'id'               => array(
 						'validate_callback' => function ( $v ) {
 							return is_numeric( $v ) && (int) $v > 0;
 						},
@@ -399,21 +399,21 @@ class Nexter_Content_SeoRank {
 					'post_id'          => array( 'type' => 'integer' ),
 					'content'          => array( 'type' => 'string' ),
 					'title'            => array( 'type' => 'string' ),
-					'meta_description'  => array( 'type' => 'string' ),
+					'meta_description' => array( 'type' => 'string' ),
 					'focus_keyword'    => array( 'type' => 'string' ),
 				),
 			)
 		);
-		$term_id_arg = array(
+		$term_id_arg  = array(
 			'validate_callback' => function ( $v ) {
 				return is_numeric( $v ) && (int) $v > 0;
 			},
 		);
 		$taxonomy_arg = array(
-			'required'            => true,
-			'type'                => 'string',
-			'sanitize_callback'   => 'sanitize_key',
-			'validate_callback'   => function ( $tax ) {
+			'required'          => true,
+			'type'              => 'string',
+			'sanitize_callback' => 'sanitize_key',
+			'validate_callback' => function ( $tax ) {
 				return is_string( $tax ) && taxonomy_exists( $tax );
 			},
 		);
@@ -438,8 +438,8 @@ class Nexter_Content_SeoRank {
 				'callback'            => array( $this, 'rest_save_seo_term' ),
 				'permission_callback' => array( $this, 'rest_term_permission' ),
 				'args'                => array(
-					'id'       => $term_id_arg,
-					'taxonomy' => $taxonomy_arg,
+					'id'               => $term_id_arg,
+					'taxonomy'         => $taxonomy_arg,
 					'meta_title'       => array( 'type' => 'string' ),
 					'meta_description' => array( 'type' => 'string' ),
 					'focus_keyword'    => array( 'type' => 'string' ),
@@ -528,10 +528,10 @@ class Nexter_Content_SeoRank {
 			'schema_field_definitions' => class_exists( 'Nexter_Content_SEO_Schema' ) ? Nexter_Content_SEO_Schema::get_cached_static_schema_config()['schema_field_definitions'] : array(),
 		);
 		require_once dirname( __FILE__ ) . '/content-seo/class-nxt-seo-analyzer.php';
-		$title = $data['meta_title'] ? $data['meta_title'] : ( $default_title ? $default_title : $term->name );
-		$desc  = $data['meta_description'] ? $data['meta_description'] : ( $default_desc ? $default_desc : wp_trim_words( wp_strip_all_tags( $term->description ), 25 ) );
-		$content_plain = wp_strip_all_tags( $term->description );
-		$result        = Nxt_Seo_Analyzer::analyze_post_content( 0, $content_plain, $title, $desc, $data['focus_keyword'] );
+		$title                     = $data['meta_title'] ? $data['meta_title'] : ( $default_title ? $default_title : $term->name );
+		$desc                      = $data['meta_description'] ? $data['meta_description'] : ( $default_desc ? $default_desc : wp_trim_words( wp_strip_all_tags( $term->description ), 25 ) );
+		$content_plain             = wp_strip_all_tags( $term->description );
+		$result                    = Nxt_Seo_Analyzer::analyze_post_content( 0, $content_plain, $title, $desc, $data['focus_keyword'] );
 		$data['seo_score']         = $result['score'];
 		$data['readability_score'] = $result['readability'];
 		$data['keyword_density']   = $result['keyword_density'];
@@ -643,7 +643,7 @@ class Nexter_Content_SeoRank {
 			if ( null === $v || '' === $v ) {
 				delete_term_meta( $term_id, self::FOCUS_KEYWORD );
 			} elseif ( is_string( $v ) ) {
-				update_term_meta( $term_id, self::FOCUS_KEYWORD, sanitize_text_field( $v ) );
+				update_term_meta( $term_id, self::FOCUS_KEYWORD, self::sanitize_focus_keyword_field( $v ) );
 			}
 		}
 		if ( array_key_exists( 'fb_title', $body ) ) {
@@ -694,26 +694,19 @@ class Nexter_Content_SeoRank {
 				update_term_meta( $term_id, self::META_TW_IMAGE, esc_url_raw( $v ) );
 			}
 		}
+		// Tri-state write (mirrors the post-side save): store an explicit '0' on uncheck rather
+		// than deleting the meta. get_term_directive() treats '1' as noindex, '0' as an explicit
+		// index override, and only an ABSENT value falls back to the global noindex_taxonomies
+		// option — so deleting on uncheck made it impossible to opt a single term OUT of a
+		// globally-noindexed taxonomy (it silently reverted to the global directive).
 		if ( array_key_exists( 'noindex', $body ) ) {
-			if ( ! empty( $body['noindex'] ) ) {
-				update_term_meta( $term_id, self::META_NOINDEX, '1' );
-			} else {
-				delete_term_meta( $term_id, self::META_NOINDEX );
-			}
+			update_term_meta( $term_id, self::META_NOINDEX, empty( $body['noindex'] ) ? '0' : '1' );
 		}
 		if ( array_key_exists( 'nofollow', $body ) ) {
-			if ( ! empty( $body['nofollow'] ) ) {
-				update_term_meta( $term_id, self::META_NOFOLLOW, '1' );
-			} else {
-				delete_term_meta( $term_id, self::META_NOFOLLOW );
-			}
+			update_term_meta( $term_id, self::META_NOFOLLOW, empty( $body['nofollow'] ) ? '0' : '1' );
 		}
 		if ( array_key_exists( 'noarchive', $body ) ) {
-			if ( ! empty( $body['noarchive'] ) ) {
-				update_term_meta( $term_id, self::META_NOARCHIVE, '1' );
-			} else {
-				delete_term_meta( $term_id, self::META_NOARCHIVE );
-			}
+			update_term_meta( $term_id, self::META_NOARCHIVE, empty( $body['noarchive'] ) ? '0' : '1' );
 		}
 		if ( array_key_exists( 'canonical_url', $body ) ) {
 			$v = $body['canonical_url'];
@@ -765,34 +758,34 @@ class Nexter_Content_SeoRank {
 		if ( ! get_post( $post_id ) ) {
 			return new WP_Error( 'not_found', __( 'Post not found.', 'nexter-extension' ), array( 'status' => 404 ) );
 		}
-		$post = get_post( $post_id );
+		$post                                 = get_post( $post_id );
 		list( $default_title, $default_desc ) = $this->get_resolved_default_title_description( $post );
 
 		$data = array(
-			'focus_keyword'     => get_post_meta( $post_id, self::FOCUS_KEYWORD, true ),
-			'meta_title'        => get_post_meta( $post_id, self::META_TITLE, true ),
-			'meta_description'  => get_post_meta( $post_id, self::META_DESCRIPTION, true ),
+			'focus_keyword'            => get_post_meta( $post_id, self::FOCUS_KEYWORD, true ),
+			'meta_title'               => get_post_meta( $post_id, self::META_TITLE, true ),
+			'meta_description'         => get_post_meta( $post_id, self::META_DESCRIPTION, true ),
 			'default_meta_title'       => $default_title,
 			'default_meta_description' => $default_desc,
-			'seo_score'         => (int) get_post_meta( $post_id, self::SEO_SCORE, true ),
-			'readability_score' => (int) get_post_meta( $post_id, self::READABILITY, true ),
-			'keyword_density'   => 0,
-			'checklist'         => array(),
-			'suggestions'       => array(),
-			'fb_title'          => get_post_meta( $post_id, self::META_FB_TITLE, true ),
-			'fb_description'   => get_post_meta( $post_id, self::META_FB_DESC, true ),
-			'fb_image'          => get_post_meta( $post_id, self::META_FB_IMAGE, true ),
-			'tw_title'          => get_post_meta( $post_id, self::META_TW_TITLE, true ),
-			'tw_description'    => get_post_meta( $post_id, self::META_TW_DESC, true ),
-			'tw_image'          => get_post_meta( $post_id, self::META_TW_IMAGE, true ),
-			'noindex'           => (bool) get_post_meta( $post_id, self::META_NOINDEX, true ),
-			'nofollow'          => (bool) get_post_meta( $post_id, self::META_NOFOLLOW, true ),
-			'noarchive'         => (bool) get_post_meta( $post_id, self::META_NOARCHIVE, true ),
-			'canonical_url'     => get_post_meta( $post_id, self::META_CANONICAL, true ),
-			'schema_type'       => get_post_meta( $post_id, self::META_SCHEMA_TYPE, true ),
-			'schema_post_custom' => (bool) get_post_meta( $post_id, self::META_SCHEMA_CUSTOM, true ),
-			'schema_post_rows'    => self::get_schema_post_rows_for_rest( $post_id ),
-			'schema_inherited_rows' => class_exists( 'Nexter_Content_SEO_Schema' )
+			'seo_score'                => (int) get_post_meta( $post_id, self::SEO_SCORE, true ),
+			'readability_score'        => (int) get_post_meta( $post_id, self::READABILITY, true ),
+			'keyword_density'          => 0,
+			'checklist'                => array(),
+			'suggestions'              => array(),
+			'fb_title'                 => get_post_meta( $post_id, self::META_FB_TITLE, true ),
+			'fb_description'           => get_post_meta( $post_id, self::META_FB_DESC, true ),
+			'fb_image'                 => get_post_meta( $post_id, self::META_FB_IMAGE, true ),
+			'tw_title'                 => get_post_meta( $post_id, self::META_TW_TITLE, true ),
+			'tw_description'           => get_post_meta( $post_id, self::META_TW_DESC, true ),
+			'tw_image'                 => get_post_meta( $post_id, self::META_TW_IMAGE, true ),
+			'noindex'                  => (bool) get_post_meta( $post_id, self::META_NOINDEX, true ),
+			'nofollow'                 => (bool) get_post_meta( $post_id, self::META_NOFOLLOW, true ),
+			'noarchive'                => (bool) get_post_meta( $post_id, self::META_NOARCHIVE, true ),
+			'canonical_url'            => get_post_meta( $post_id, self::META_CANONICAL, true ),
+			'schema_type'              => get_post_meta( $post_id, self::META_SCHEMA_TYPE, true ),
+			'schema_post_custom'       => (bool) get_post_meta( $post_id, self::META_SCHEMA_CUSTOM, true ),
+			'schema_post_rows'         => self::get_schema_post_rows_for_rest( $post_id ),
+			'schema_inherited_rows'    => class_exists( 'Nexter_Content_SEO_Schema' )
 				? Nexter_Content_SEO_Schema::get_inherited_page_schema_rows_for_post( $post_id )
 				: array(),
 			'schema_types'             => class_exists( 'Nexter_Content_SEO_Schema' ) ? Nexter_Content_SEO_Schema::get_cached_static_schema_config()['schema_types'] : array(),
@@ -801,9 +794,9 @@ class Nexter_Content_SeoRank {
 		);
 		if ( $post ) {
 			require_once dirname( __FILE__ ) . '/content-seo/class-nxt-seo-analyzer.php';
-			$title = $data['meta_title'] ? $data['meta_title'] : ( $default_title ? $default_title : $post->post_title );
-			$desc  = $data['meta_description'] ? $data['meta_description'] : ( $default_desc ? $default_desc : wp_trim_words( wp_strip_all_tags( $post->post_content ), 25 ) );
-			$result = Nxt_Seo_Analyzer::analyze_post_content( $post_id, $post->post_content, $title, $desc, $data['focus_keyword'] );
+			$title                     = $data['meta_title'] ? $data['meta_title'] : ( $default_title ? $default_title : $post->post_title );
+			$desc                      = $data['meta_description'] ? $data['meta_description'] : ( $default_desc ? $default_desc : wp_trim_words( wp_strip_all_tags( $post->post_content ), 25 ) );
+			$result                    = Nxt_Seo_Analyzer::analyze_post_content( $post_id, $post->post_content, $title, $desc, $data['focus_keyword'] );
 			$data['seo_score']         = $result['score'];
 			$data['readability_score'] = $result['readability'];
 			$data['keyword_density']   = $result['keyword_density'];
@@ -841,22 +834,47 @@ class Nexter_Content_SeoRank {
 	}
 
 	private function get_global_default_templates() {
-		$opts = Nexter_Content_SEO::get_options();
-		$title_t = ! empty( $opts['search_title_template'] ) ? $opts['search_title_template'] : '%post_title% - %site_name%';
-		$desc_t  = ! empty( $opts['search_description_template'] ) ? $opts['search_description_template'] : '%post_excerpt%';
-		$title_t = self::normalize_template_for_variables( $title_t );
-		$desc_t  = self::normalize_template_for_variables( $desc_t );
+		$opts       = Nexter_Content_SEO::get_options();
+		$title_t    = ! empty( $opts['search_title_template'] ) ? $opts['search_title_template'] : '%post_title% - %site_name%';
+		$desc_t     = ! empty( $opts['search_description_template'] ) ? $opts['search_description_template'] : '%post_excerpt%';
+		$title_t    = self::normalize_template_for_variables( $title_t );
+		$desc_t     = self::normalize_template_for_variables( $desc_t );
 		$social_img = isset( $opts['default_social_image'] ) ? trim( (string) $opts['default_social_image'] ) : '';
 		// Open Graph / X use the same templates when no per-post override exists.
 		return array(
-			'meta_title'        => $title_t,
-			'meta_description'  => $desc_t,
-			'fb_title'          => $title_t,
-			'fb_description'    => $desc_t,
-			'tw_title'          => $title_t,
-			'tw_description'    => $desc_t,
-			'social_image'      => $social_img,
+			'meta_title'       => $title_t,
+			'meta_description' => $desc_t,
+			'fb_title'         => $title_t,
+			'fb_description'   => $desc_t,
+			'tw_title'         => $title_t,
+			'tw_description'   => $desc_t,
+			'social_image'     => $social_img,
 		);
+	}
+
+	/**
+	 * Sanitize the focus-keyword field while preserving newline delimiters.
+	 *
+	 * The analyzer (Nxt_Seo_Analyzer::normalize_keywords) supports comma/pipe/newline-separated
+	 * keyword lists. sanitize_text_field() collapses every \r\n\t run into a single space, so
+	 * newline-separated input ("keyword one\nkeyword two") was stored as one merged phrase. Split
+	 * on line breaks, sanitize each line individually, drop blanks, and rejoin with "\n" so the
+	 * newline delimiter the analyzer advertises actually survives storage.
+	 *
+	 * @param mixed $v Raw field value.
+	 * @return string
+	 */
+	private static function sanitize_focus_keyword_field( $v ) {
+		$v     = wp_strip_all_tags( (string) $v );
+		$lines = preg_split( '/\r\n|\r|\n/', $v );
+		$lines = array_map( 'sanitize_text_field', is_array( $lines ) ? $lines : array() );
+		$lines = array_filter(
+			$lines,
+			static function ( $l ) {
+				return '' !== $l;
+			} 
+		);
+		return implode( "\n", $lines );
 	}
 
 	public function rest_save_seo( $request ) {
@@ -891,7 +909,7 @@ class Nexter_Content_SeoRank {
 			if ( null === $v || '' === $v ) {
 				delete_post_meta( $post_id, self::FOCUS_KEYWORD );
 			} elseif ( is_string( $v ) ) {
-				update_post_meta( $post_id, self::FOCUS_KEYWORD, sanitize_text_field( $v ) );
+				update_post_meta( $post_id, self::FOCUS_KEYWORD, self::sanitize_focus_keyword_field( $v ) );
 			}
 		}
 		if ( array_key_exists( 'fb_title', $body ) ) {
@@ -1072,17 +1090,56 @@ class Nexter_Content_SeoRank {
 			$content = substr( $content, 0, 2097152 );
 		}
 
+		// Audit the EFFECTIVE (rendered) title/description, not the raw override. When the editor
+		// leaves a field blank the front end falls back to the default template (e.g. the
+		// "%post_excerpt%" / "Post Excerpt" chip), so an empty override still produces a real
+		// description on the live page. Mirror rest_get_seo()'s fallback here — otherwise a
+		// perfectly valid template-driven description is wrongly flagged "missing" in the SEO
+		// Audit tab even while the Google preview shows it at 149/160.
+		if ( $post_id && ( '' === $title || '' === $meta_desc ) ) {
+			$post = get_post( $post_id );
+			if ( $post instanceof WP_Post ) {
+				// Prefer the SAVED per-post override (what the editor field shows and the front end
+				// emits) before the global template default. Otherwise a stored over-long description
+				// is never measured: the check resolves the short template default and wrongly passes
+				// the length row even while the field shows e.g. 1039/160 in red.
+				if ( '' === $title ) {
+					$saved_title = trim( (string) get_post_meta( $post_id, self::META_TITLE, true ) );
+					if ( '' !== $saved_title ) {
+						$title = $saved_title;
+					}
+				}
+				if ( '' === $meta_desc ) {
+					$saved_desc = trim( (string) get_post_meta( $post_id, self::META_DESCRIPTION, true ) );
+					if ( '' !== $saved_desc ) {
+						$meta_desc = $saved_desc;
+					}
+				}
+				if ( '' === $title || '' === $meta_desc ) {
+					list( $default_title, $default_desc ) = $this->get_resolved_default_title_description( $post );
+					if ( '' === $title ) {
+						$title = $default_title ? $default_title : $post->post_title;
+					}
+					if ( '' === $meta_desc ) {
+						$meta_desc = $default_desc ? $default_desc : wp_trim_words( wp_strip_all_tags( strip_shortcodes( $post->post_content ) ), 25 );
+					}
+				}
+			}
+		}
+
 		require_once dirname( __FILE__ ) . '/content-seo/class-nxt-seo-analyzer.php';
 		$result = Nxt_Seo_Analyzer::analyze_post_content( $post_id ?: 0, $content, $title, $meta_desc, $focus_kw );
-		return rest_ensure_response( array(
+		return rest_ensure_response(
+			array(
 			'data' => array(
 				'score'           => $result['score'],
 				'keyword_density' => $result['keyword_density'],
 				'readability'     => $result['readability'],
 				'checklist'       => $result['checklist'],
 				'suggestions'     => $result['suggestions'],
-			),
-		) );
+			 ),
+			) 
+		);
 	}
 
 	/**
@@ -1127,6 +1184,26 @@ class Nexter_Content_SeoRank {
 		if ( ! wp_next_scheduled( self::SCORE_CRON_HOOK, $args ) ) {
 			wp_schedule_single_event( time() + 30, self::SCORE_CRON_HOOK, $args );
 		}
+		// Fallback for hosts with WP-Cron disabled (DISABLE_WP_CRON): the queued event can sit
+		// unfired indefinitely, so the stored score never refreshes. Run the recalc on shutdown —
+		// after the response is flushed (fastcgi_finish_request when available, so saving isn't
+		// blocked) — and unschedule the now-duplicate event for just this post. Mirrors
+		// class-seo-indexing.php maybe_ping_indexnow_on_save().
+		if ( defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON ) {
+			add_action(
+				'shutdown',
+				static function () use ( $post_id, $args ) {
+					$timestamp = wp_next_scheduled( self::SCORE_CRON_HOOK, $args );
+					if ( $timestamp ) {
+						wp_unschedule_event( $timestamp, self::SCORE_CRON_HOOK, $args );
+					}
+					if ( function_exists( 'fastcgi_finish_request' ) ) {
+						fastcgi_finish_request();
+					}
+					self::get_instance()->cron_recalc_score( $post_id );
+				}
+			);
+		}
 	}
 
 	/**
@@ -1144,7 +1221,10 @@ class Nexter_Content_SeoRank {
 		$title_meta = get_post_meta( $post_id, self::META_TITLE, true );
 		$desc_meta  = get_post_meta( $post_id, self::META_DESCRIPTION, true );
 		$title      = $title_meta ?: $post->post_title;
-		$desc       = $desc_meta ?: wp_trim_words( wp_strip_all_tags( $post->post_content ), 25 );
+		// strip_shortcodes() before wp_strip_all_tags(): the latter only removes HTML tags, not
+		// [shortcode] bracket syntax, so a slider/gallery shortcode in the first ~25 words would
+		// otherwise leak its raw markup into the auto-generated description (matches class-audit.php).
+		$desc = $desc_meta ?: wp_trim_words( wp_strip_all_tags( strip_shortcodes( $post->post_content ) ), 25 );
 		require_once dirname( __FILE__ ) . '/content-seo/class-nxt-seo-analyzer.php';
 		$result = Nxt_Seo_Analyzer::analyze_post_content( $post_id, $post->post_content, $title, $desc, $focus );
 		update_post_meta( $post_id, self::SEO_SCORE, $result['score'] );
@@ -1170,7 +1250,9 @@ class Nexter_Content_SeoRank {
 		$title_meta = get_term_meta( $term_id, self::META_TITLE, true );
 		$desc_meta  = get_term_meta( $term_id, self::META_DESCRIPTION, true );
 		$title      = $title_meta ? $title_meta : $term->name;
-		$desc       = $desc_meta ? $desc_meta : wp_trim_words( wp_strip_all_tags( $term->description ), 25 );
+		// strip_shortcodes() before wp_strip_all_tags() so a shortcode in the term description
+		// doesn't leak raw [shortcode] markup into the auto-generated description.
+		$desc = $desc_meta ? $desc_meta : wp_trim_words( wp_strip_all_tags( strip_shortcodes( $term->description ) ), 25 );
 		require_once dirname( __FILE__ ) . '/content-seo/class-nxt-seo-analyzer.php';
 		$result = Nxt_Seo_Analyzer::analyze_post_content( 0, wp_strip_all_tags( $term->description ), $title, $desc, $focus );
 		update_term_meta( $term_id, self::SEO_SCORE, $result['score'] );
@@ -1201,7 +1283,13 @@ class Nexter_Content_SeoRank {
 	 * @return string[]
 	 */
 	public function seo_checks_taxonomies() {
-		$taxes = get_taxonomies( array( 'public' => true, 'show_ui' => true ), 'names' );
+		$taxes = get_taxonomies(
+			array(
+			'public'  => true,
+			'show_ui' => true
+			),
+			'names' 
+		);
 		unset( $taxes['post_format'] );
 		/**
 		 * Filter which taxonomies show the "SEO Checks" term-list column.
@@ -1268,13 +1356,13 @@ class Nexter_Content_SeoRank {
 	private function seo_checks_markup( $attrs, $has_score, $score ) {
 		$badge     = $this->seo_score_badge( (int) $score, (bool) $has_score );
 		$score_txt = $has_score ? (string) (int) $score : '—';
-		$html  = '<div class="nxt-seo-checks" ' . $attrs . '>';
-		$html .= '<button type="button" class="button-link nxt-seo-checks__badge nxt-seo-checks__badge--' . esc_attr( $badge['level'] ) . '" aria-expanded="false">';
-		$html .= '<span class="nxt-seo-checks__score">' . esc_html( $score_txt ) . '</span>';
-		$html .= '<span class="nxt-seo-checks__label">' . esc_html( $badge['label'] ) . '</span>';
-		$html .= '</button>';
-		$html .= '<div class="nxt-seo-checks__detail" hidden></div>';
-		$html .= '</div>';
+		$html      = '<div class="nxt-seo-checks" ' . $attrs . '>';
+		$html     .= '<button type="button" class="button-link nxt-seo-checks__badge nxt-seo-checks__badge--' . esc_attr( $badge['level'] ) . '" aria-expanded="false">';
+		$html     .= '<span class="nxt-seo-checks__score">' . esc_html( $score_txt ) . '</span>';
+		$html     .= '<span class="nxt-seo-checks__label">' . esc_html( $badge['label'] ) . '</span>';
+		$html     .= '</button>';
+		$html     .= '<div class="nxt-seo-checks__detail" hidden></div>';
+		$html     .= '</div>';
 		return $html;
 	}
 
@@ -1287,15 +1375,27 @@ class Nexter_Content_SeoRank {
 	 */
 	private function seo_score_badge( $score, $has_score ) {
 		if ( ! $has_score ) {
-			return array( 'level' => 'none', 'label' => __( 'Not analyzed', 'nexter-extension' ) );
+			return array(
+			'level' => 'none',
+			'label' => __( 'Not analyzed', 'nexter-extension' )
+			);
 		}
 		if ( $score >= 70 ) {
-			return array( 'level' => 'good', 'label' => __( 'Good', 'nexter-extension' ) );
+			return array(
+			'level' => 'good',
+			'label' => __( 'Good', 'nexter-extension' )
+			);
 		}
 		if ( $score >= 40 ) {
-			return array( 'level' => 'fair', 'label' => __( 'Fair', 'nexter-extension' ) );
+			return array(
+			'level' => 'fair',
+			'label' => __( 'Fair', 'nexter-extension' )
+			);
 		}
-		return array( 'level' => 'poor', 'label' => __( 'Needs work', 'nexter-extension' ) );
+		return array(
+		'level' => 'poor',
+		'label' => __( 'Needs work', 'nexter-extension' )
+		);
 	}
 
 	/**
@@ -1331,20 +1431,17 @@ class Nexter_Content_SeoRank {
 		if ( ! $post instanceof WP_Post ) {
 			return null;
 		}
-		require_once dirname( __FILE__ ) . '/content-seo/class-nxt-seo-analyzer.php';
-		list( $default_title, $default_desc ) = $this->get_resolved_default_title_description( $post );
-		$focus = get_post_meta( $post_id, self::FOCUS_KEYWORD, true );
-		$title = get_post_meta( $post_id, self::META_TITLE, true );
-		$desc  = get_post_meta( $post_id, self::META_DESCRIPTION, true );
-		$title = $title ? $title : ( $default_title ? $default_title : $post->post_title );
-		$desc  = $desc ? $desc : ( $default_desc ? $default_desc : wp_trim_words( wp_strip_all_tags( $post->post_content ), 25 ) );
-		$result = Nxt_Seo_Analyzer::analyze_post_content( $post_id, $post->post_content, $title, $desc, $focus );
-		$score  = (int) $result['score'];
-		if ( ! metadata_exists( 'post', $post_id, self::SEO_SCORE ) || (int) get_post_meta( $post_id, self::SEO_SCORE, true ) !== $score ) {
-			update_post_meta( $post_id, self::SEO_SCORE, $score );
-			update_post_meta( $post_id, self::READABILITY, (int) $result['readability'] );
+		// READ-ONLY on list render. edit.php calls this for EVERY visible row, for every editor;
+		// the previous code ran a full regex content analysis (and up to two update_post_meta
+		// writes) per row on a plain GET — N analyses plus racy writes on what should be a
+		// read-only page, and incompatible with admin page caching. Persistence is owned by the
+		// debounced cron (schedule_score_recalc on save → cron_recalc_score). Here we only READ
+		// the stored score, and schedule a one-time backfill when a post has never been scored.
+		if ( ! metadata_exists( 'post', $post_id, self::SEO_SCORE ) ) {
+			self::schedule_score_recalc( $post_id );
+			return null; // Not yet computed — the column shows its neutral/pending state.
 		}
-		return $score;
+		return (int) get_post_meta( $post_id, self::SEO_SCORE, true );
 	}
 
 	/**
@@ -1383,19 +1480,24 @@ class Nexter_Content_SeoRank {
 		if ( ! $term || is_wp_error( $term ) ) {
 			return null;
 		}
+		// READ-ONLY on list render — same rationale as fresh_post_seo_score(). The cached term
+		// score is refreshed on edit by on_edited_term(), so here we only READ it. There is no term
+		// recalc cron (SCORE_CRON_HOOK is keyed on post IDs), so when a term has never been scored
+		// we compute it ONCE and cache it — a single analysis on first view, never on every GET.
+		if ( metadata_exists( 'term', $term_id, self::SEO_SCORE ) ) {
+			return (int) get_term_meta( $term_id, self::SEO_SCORE, true );
+		}
 		require_once dirname( __FILE__ ) . '/content-seo/class-nxt-seo-analyzer.php';
 		list( $default_title, $default_desc ) = $this->get_resolved_default_title_description_term( $term );
-		$focus = get_term_meta( $term_id, self::FOCUS_KEYWORD, true );
-		$title = get_term_meta( $term_id, self::META_TITLE, true );
-		$desc  = get_term_meta( $term_id, self::META_DESCRIPTION, true );
-		$title = $title ? $title : ( $default_title ? $default_title : $term->name );
-		$desc  = $desc ? $desc : ( $default_desc ? $default_desc : wp_trim_words( wp_strip_all_tags( $term->description ), 25 ) );
-		$result = Nxt_Seo_Analyzer::analyze_post_content( 0, wp_strip_all_tags( $term->description ), $title, $desc, $focus );
-		$score  = (int) $result['score'];
-		if ( ! metadata_exists( 'term', $term_id, self::SEO_SCORE ) || (int) get_term_meta( $term_id, self::SEO_SCORE, true ) !== $score ) {
-			update_term_meta( $term_id, self::SEO_SCORE, $score );
-			update_term_meta( $term_id, self::READABILITY, (int) $result['readability'] );
-		}
+		$focus                                = get_term_meta( $term_id, self::FOCUS_KEYWORD, true );
+		$title                                = get_term_meta( $term_id, self::META_TITLE, true );
+		$desc                                 = get_term_meta( $term_id, self::META_DESCRIPTION, true );
+		$title                                = $title ? $title : ( $default_title ? $default_title : $term->name );
+		$desc                                 = $desc ? $desc : ( $default_desc ? $default_desc : wp_trim_words( wp_strip_all_tags( $term->description ), 25 ) );
+		$result                               = Nxt_Seo_Analyzer::analyze_post_content( 0, wp_strip_all_tags( $term->description ), $title, $desc, $focus );
+		$score                                = (int) $result['score'];
+		update_term_meta( $term_id, self::SEO_SCORE, $score );
+		update_term_meta( $term_id, self::READABILITY, (int) $result['readability'] );
 		return $score;
 	}
 
@@ -1432,7 +1534,7 @@ class Nexter_Content_SeoRank {
 				'root'     => esc_url_raw( rest_url( self::REST_NAMESPACE . '/seo/post/' ) ),
 				'termRoot' => esc_url_raw( rest_url( self::REST_NAMESPACE . '/seo/term/' ) ),
 				'nonce'    => wp_create_nonce( 'wp_rest' ),
-				'i18n'  => array(
+				'i18n'     => array(
 					'loading' => __( 'Analyzing…', 'nexter-extension' ),
 					'error'   => __( 'Could not load SEO checks.', 'nexter-extension' ),
 					'title'   => __( 'SEO Checks', 'nexter-extension' ),
@@ -1449,18 +1551,18 @@ class Nexter_Content_SeoRank {
 	 * @param string $hook Current admin page hook.
 	 */
 	public function enqueue_scripts( $hook ) {
-		$page = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : '';
-		$is_seo_page = ( $hook === 'nexter_page_nxt_content_seo' || $page === 'nxt_content_seo' );
-		$is_post_edit = ( $hook === 'post.php' || $hook === 'post-new.php' );
-		$is_term_edit = false;
-		$term_id_for_js = 0;
+		$page            = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : '';
+		$is_seo_page     = ( $hook === 'nexter_page_nxt_content_seo' || $page === 'nxt_content_seo' );
+		$is_post_edit    = ( $hook === 'post.php' || $hook === 'post-new.php' );
+		$is_term_edit    = false;
+		$term_id_for_js  = 0;
 		$taxonomy_for_js = '';
 		if ( ( $hook === 'edit-tags.php' || $hook === 'term.php' ) && ! empty( $_GET['tag_ID'] ) && ! empty( $_GET['taxonomy'] ) ) {
 			$tid = absint( wp_unslash( $_GET['tag_ID'] ) );
 			$tax = sanitize_key( wp_unslash( $_GET['taxonomy'] ) );
 			if ( $tid && $tax && taxonomy_exists( $tax ) && current_user_can( 'edit_term', $tid ) ) {
-				$is_term_edit = true;
-				$term_id_for_js = $tid;
+				$is_term_edit    = true;
+				$term_id_for_js  = $tid;
 				$taxonomy_for_js = $tax;
 			}
 		}
@@ -1472,7 +1574,7 @@ class Nexter_Content_SeoRank {
 		if ( ! file_exists( $build_path . 'index.js' ) ) {
 			return;
 		}
-		$ver = defined( 'NEXTER_EXT_VER' ) ? NEXTER_EXT_VER : '4.6.0';
+		$ver     = defined( 'NEXTER_EXT_VER' ) ? NEXTER_EXT_VER : '4.6.0';
 		$min_sel = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
 		wp_enqueue_style( 'nexter-select-css', NEXTER_EXT_URL . 'assets/css/extra/select2' . $min_sel . '.css', array(), $ver );
 		wp_enqueue_script( 'nexter-select-js', NEXTER_EXT_URL . 'assets/js/extra/select2' . $min_sel . '.js', array( 'jquery' ), $ver, true );
@@ -1498,12 +1600,12 @@ class Nexter_Content_SeoRank {
 		if ( $is_term_edit ) {
 			wp_enqueue_style( 'dashicons' );
 		}
-		$context = $is_seo_page ? 'standalone' : ( $is_term_edit ? 'term' : 'sidebar' );
+		$context          = $is_seo_page ? 'standalone' : ( $is_term_edit ? 'term' : 'sidebar' );
 		$term_archive_url = '';
 		if ( $is_term_edit && $term_id_for_js && $taxonomy_for_js ) {
 			$term_obj = get_term( $term_id_for_js, $taxonomy_for_js );
 			if ( $term_obj && ! is_wp_error( $term_obj ) ) {
-				$link = get_term_link( $term_obj );
+				$link             = get_term_link( $term_obj );
 				$term_archive_url = is_wp_error( $link ) ? '' : $link;
 			}
 		}
@@ -1511,31 +1613,31 @@ class Nexter_Content_SeoRank {
 			'nexter-content-seo',
 			'nxtContentSeoConfig',
 			array(
-				'restUrl'         => rest_url( self::REST_NAMESPACE ),
-				'restNonce'       => wp_create_nonce( 'wp_rest' ),
-				'ajaxUrl'         => admin_url( 'admin-ajax.php' ),
-				'postId'          => $post_id,
-				'context'         => $context,
-				'termId'          => $term_id_for_js,
-				'taxonomy'        => $taxonomy_for_js,
-				'termArchiveUrl'  => $term_archive_url,
-				'version'         => $ver,
-				'adminUrl'        => admin_url( 'admin.php?page=nxt_content_seo' ),
-				'dashboardUrl'     => admin_url( 'admin.php?page=nexter_welcome' ),
+				'restUrl'             => rest_url( self::REST_NAMESPACE ),
+				'restNonce'           => wp_create_nonce( 'wp_rest' ),
+				'ajaxUrl'             => admin_url( 'admin-ajax.php' ),
+				'postId'              => $post_id,
+				'context'             => $context,
+				'termId'              => $term_id_for_js,
+				'taxonomy'            => $taxonomy_for_js,
+				'termArchiveUrl'      => $term_archive_url,
+				'version'             => $ver,
+				'adminUrl'            => admin_url( 'admin.php?page=nxt_content_seo' ),
+				'dashboardUrl'        => admin_url( 'admin.php?page=nexter_welcome' ),
 				// White-label branding for the SEO dashboard header, mirroring the main dashboard's
 				// shape (dashData.whiteLabelData + dashData.whiteLabel) so both React apps read the
 				// same structure. brandname resolves to "Nexter SEO" and brandlogo stays empty (the
 				// header then uses its built-in SEO logo) unless a Pro white label overrides them.
-				'whiteLabelData'  => array(
+				'whiteLabelData'      => array(
 					'brandname' => class_exists( 'Nexter_Content_SEO' ) ? Nexter_Content_SEO::seo_brand_label() : 'Nexter SEO',
 					'brandlogo' => class_exists( 'Nexter_Content_SEO' ) ? Nexter_Content_SEO::seo_brand_logo() : '',
 				),
-				'whiteLabel'      => self::seo_whitelabel_flags(),
-				'homePageEditUrl'  => self::get_home_page_edit_url(),
+				'whiteLabel'          => self::seo_whitelabel_flags(),
+				'homePageEditUrl'     => self::get_home_page_edit_url(),
 				'isWooCommerceActive' => class_exists( 'WooCommerce' ),
-				'postTypes'       => self::get_robots_post_types(),
-				'taxonomies'      => self::get_robots_taxonomies(),
-				'archives'        => self::get_robots_archives(),
+				'postTypes'           => self::get_robots_post_types(),
+				'taxonomies'          => self::get_robots_taxonomies(),
+				'archives'            => self::get_robots_archives(),
 			)
 		);
 	}
@@ -1599,9 +1701,18 @@ class Nexter_Content_SeoRank {
 	 */
 	public static function get_robots_archives() {
 		return array(
-			array( 'slug' => 'search', 'label' => __( 'Search Pages', 'nexter-extension' ) ),
-			array( 'slug' => 'author', 'label' => __( 'Author Archives', 'nexter-extension' ) ),
-			array( 'slug' => 'date', 'label' => __( 'Date Archives', 'nexter-extension' ) ),
+			array(
+		'slug'  => 'search',
+		'label' => __( 'Search Pages', 'nexter-extension' )
+		),
+			array(
+		'slug'  => 'author',
+		'label' => __( 'Author Archives', 'nexter-extension' )
+		),
+			array(
+		'slug'  => 'date',
+		'label' => __( 'Date Archives', 'nexter-extension' )
+		),
 		);
 	}
 
