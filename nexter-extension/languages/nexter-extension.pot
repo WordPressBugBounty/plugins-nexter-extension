@@ -2,14 +2,14 @@
 # This file is distributed under the GPLv3.
 msgid ""
 msgstr ""
-"Project-Id-Version: Nexter Extension 4.7.2\n"
+"Project-Id-Version: Nexter Extension 4.7.3\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/nexter-extension\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-07-27T06:44:21+02:00\n"
+"POT-Creation-Date: 2026-07-28T12:13:23+02:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: nexter-extension\n"
@@ -309,27 +309,27 @@ msgstr ""
 msgid "Rate Plugin"
 msgstr ""
 
-#: include/class-nexter-load-ext.php:559
+#: include/class-nexter-load-ext.php:558
 msgid "Edit Condition"
 msgstr ""
 
-#: include/class-nexter-load-ext.php:745
+#: include/class-nexter-load-ext.php:744
 msgid "Upgrade to Nexter Pro to Unlock 1000+ Templates, 90+ Blocks & 50+ Extensions"
 msgstr ""
 
-#: include/class-nexter-load-ext.php:746
+#: include/class-nexter-load-ext.php:745
 msgid "A single suite to design faster, reduce plugins, and keep your site lightweight."
 msgstr ""
 
-#: include/class-nexter-load-ext.php:748
+#: include/class-nexter-load-ext.php:747
 msgid "Replace 50+ WordPress Plugins with Nexter Extension Pro"
 msgstr ""
 
-#: include/class-nexter-load-ext.php:749
+#: include/class-nexter-load-ext.php:748
 msgid "Nexter Extension free options cover the basics, but Pro takes it further with features like Login Protection, 2-Factor Authentication, Branded WP Admin & More."
 msgstr ""
 
-#: include/class-nexter-load-ext.php:758
+#: include/class-nexter-load-ext.php:757
 #: assets/js/admin/index.js:7
 #: dashboard/build/index.js:1
 #: dashboard/build/index.js:9
@@ -338,16 +338,16 @@ msgstr ""
 msgid "Upgrade Now"
 msgstr ""
 
-#: include/class-nexter-load-ext.php:759
+#: include/class-nexter-load-ext.php:758
 msgid "Compare Free vs Pro"
 msgstr ""
 
-#: include/class-nexter-load-ext.php:775
+#: include/class-nexter-load-ext.php:774
 msgid "To continue using all latest features smoothly, please update Nexter Blocks to version 4.6.0 or higher."
 msgstr ""
 
-#: include/class-nexter-load-ext.php:790
-#: include/class-nexter-load-ext.php:800
+#: include/class-nexter-load-ext.php:789
+#: include/class-nexter-load-ext.php:799
 #: include/classes/load-code-snippet/nexter-code-snippet-render.php:828
 #: include/classes/load-code-snippet/nexter-code-snippet-render.php:888
 #: include/classes/load-code-snippet/nexter-code-snippet-render.php:939
@@ -383,73 +383,73 @@ msgstr ""
 msgid "Insufficient permissions."
 msgstr ""
 
-#: include/class-nexter-load-ext.php:838
+#: include/class-nexter-load-ext.php:837
 msgid "Invalid notice ID."
 msgstr ""
 
-#: include/class-nexter-load-ext.php:841
+#: include/class-nexter-load-ext.php:840
 msgid "Invalid Notice ID"
 msgstr ""
 
-#: include/class-nexter-load-ext.php:925
+#: include/class-nexter-load-ext.php:924
 #: theme-builder/build/index.js:1
 msgid "Activate WDesignKit to Import Templates"
 msgstr ""
 
-#: include/class-nexter-load-ext.php:926
+#: include/class-nexter-load-ext.php:925
 #: theme-builder/build/index.js:1
 msgid "Install WDesignKit to Import Templates"
 msgstr ""
 
-#: include/class-nexter-load-ext.php:927
+#: include/class-nexter-load-ext.php:926
 #: assets/js/admin/index.js:1
 #: theme-builder/build/index.js:1
 msgid "Activating WDesignKit"
 msgstr ""
 
-#: include/class-nexter-load-ext.php:928
+#: include/class-nexter-load-ext.php:927
 #: assets/js/admin/index.js:1
 #: dashboard/build/index.js:11
 msgid "Installing WDesignKit"
 msgstr ""
 
-#: include/class-nexter-load-ext.php:929
+#: include/class-nexter-load-ext.php:928
 msgid "Failed to Install, Please Manual Install Plugin."
 msgstr ""
 
-#: include/class-nexter-load-ext.php:930
+#: include/class-nexter-load-ext.php:929
 #: theme-builder/build/index.js:1
 msgid "Import Pre-Designed Templates for Theme Builder"
 msgstr ""
 
-#: include/class-nexter-load-ext.php:931
+#: include/class-nexter-load-ext.php:930
 #: theme-builder/build/index.js:1
 msgid "Build your website faster with ready-to-use templates"
 msgstr ""
 
-#: include/class-nexter-load-ext.php:932
+#: include/class-nexter-load-ext.php:931
 #: theme-builder/build/index.js:1
 msgid "Fully customizable to match your brand and style"
 msgstr ""
 
-#: include/class-nexter-load-ext.php:933
+#: include/class-nexter-load-ext.php:932
 #: theme-builder/build/index.js:1
 msgid "Save time by avoiding repetitive design work"
 msgstr ""
 
-#: include/class-nexter-load-ext.php:934
+#: include/class-nexter-load-ext.php:933
 #: theme-builder/build/index.js:1
 msgid "Flexible layouts for headers, footers, pages, and more"
 msgstr ""
 
-#: include/class-nexter-load-ext.php:935
+#: include/class-nexter-load-ext.php:934
 msgid "Design from Scratch"
 msgstr ""
 
 #: include/classes/class-nexter-ext-base.php:110
 #: include/panel-settings/extensions/nexter-ext-bulk-images.php:468
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1655
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1807
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1654
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1806
 msgid "Permission denied."
 msgstr ""
 
@@ -965,7 +965,7 @@ msgstr ""
 #: include/classes/load-sections/nexter-sections-loader.php:204
 #: include/custom-options/class-nxt-builder-condition-ui.php:62
 #: include/custom-options/nexter-builder-condition.php:124
-#: include/panel-settings/extensions/content-seo/schema-types/fields-web-page.php:59
+#: include/panel-settings/extensions/content-seo/schema-types/fields-web-page.php:64
 #: theme-builder/build/index.js:1
 msgid "Breadcrumb"
 msgstr ""
@@ -1007,7 +1007,7 @@ msgstr ""
 #: include/panel-settings/extensions/content-seo/schema-types/fields-service.php:21
 #: include/panel-settings/extensions/content-seo/schema-types/fields-software-application.php:23
 #: include/panel-settings/extensions/content-seo/schema-types/fields-video-object.php:23
-#: include/panel-settings/extensions/content-seo/schema-types/fields-web-page.php:23
+#: include/panel-settings/extensions/content-seo/schema-types/fields-web-page.php:28
 #: assets/js/admin/index.js:1
 #: content-seo/build/index.js:1
 #: dashboard/build/index.js:9
@@ -1024,7 +1024,7 @@ msgstr ""
 
 #: include/classes/load-sections/nexter-sections-loader.php:154
 #: include/panel-settings/extensions/content-seo/schema-types/fields-article.php:101
-#: include/panel-settings/extensions/content-seo/schema-types/fields-web-page.php:38
+#: include/panel-settings/extensions/content-seo/schema-types/fields-web-page.php:43
 #: include/panel-settings/extensions/content-seo/schema-types/fields-website.php:21
 #: assets/js/admin/index.js:1
 msgid "Author"
@@ -1070,7 +1070,7 @@ msgstr ""
 #: include/custom-options/class-nxt-builder-condition-ui.php:910
 #: include/custom-options/module/nexter-display-conditional-rules.php:254
 #: include/custom-options/nexter-builder-condition.php:132
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1982
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2012
 #: assets/js/admin/index.js:1
 #: theme-builder/build/index.js:1
 msgid "404 Page"
@@ -1416,12 +1416,12 @@ msgid "Select where you want to load the template"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:352
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2157
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2187
 msgid "Include In"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:358
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2163
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2193
 msgid "Exclude From"
 msgstr ""
 
@@ -1473,7 +1473,7 @@ msgstr ""
 #. translators: %s: Post Label
 #: include/custom-options/class-nxt-builder-condition-ui.php:876
 #: include/custom-options/module/nexter-display-conditional-rules.php:346
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2007
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2037
 #, php-format
 msgid "All %s"
 msgstr ""
@@ -1483,28 +1483,28 @@ msgstr ""
 #: include/custom-options/class-nxt-builder-condition-ui.php:887
 #: include/custom-options/module/nexter-display-conditional-rules.php:350
 #: include/custom-options/module/nexter-display-conditional-rules.php:357
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2009
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2039
 #, php-format
 msgid "All %s Archive"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:899
 #: include/custom-options/module/nexter-display-conditional-rules.php:241
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1971
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2001
 #: assets/js/admin/index.js:1
 msgid "Entire Website"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:900
 #: include/custom-options/module/nexter-display-conditional-rules.php:242
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1972
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2002
 msgid "All Singulars"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:901
 #: include/custom-options/module/nexter-display-archives-rules.php:393
 #: include/custom-options/module/nexter-display-conditional-rules.php:243
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1973
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2003
 msgid "All Archives"
 msgstr ""
 
@@ -1513,21 +1513,21 @@ msgstr ""
 #: include/custom-options/module/nexter-display-singular-rules.php:257
 #: include/custom-options/module/nexter-display-singular-rules.php:258
 #: include/custom-options/module/nexter-display-singular-rules.php:366
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1979
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2009
 #: assets/js/admin/index.js:1
 msgid "Front Page"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:906
 #: include/custom-options/module/nexter-display-conditional-rules.php:250
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1980
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2010
 msgid "Blog / Posts Page"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:907
 #: include/custom-options/module/nexter-display-conditional-rules.php:251
 #: include/custom-options/module/nexter-display-singular-archives-rules.php:420
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1984
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2014
 #: assets/js/admin/index.js:1
 msgid "Date Archive"
 msgstr ""
@@ -1535,13 +1535,13 @@ msgstr ""
 #: include/custom-options/class-nxt-builder-condition-ui.php:908
 #: include/custom-options/module/nexter-display-conditional-rules.php:252
 #: include/custom-options/module/nexter-display-singular-archives-rules.php:387
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1983
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2013
 msgid "Author Archive"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:909
 #: include/custom-options/module/nexter-display-conditional-rules.php:253
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1981
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2011
 #: assets/js/admin/index.js:1
 msgid "Search Page"
 msgstr ""
@@ -1756,7 +1756,7 @@ msgid "Select User Roles"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:1111
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2098
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2128
 msgid "Specific Pages/Posts"
 msgstr ""
 
@@ -1806,7 +1806,7 @@ msgid "Visitors Source"
 msgstr ""
 
 #: include/custom-options/module/nexter-display-conditional-rules.php:322
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2015
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2045
 msgid "Particular Posts/Pages/Taxonomies"
 msgstr ""
 
@@ -3026,28 +3026,28 @@ msgstr ""
 msgid "Failed to save settings. No changes were made."
 msgstr ""
 
-#: include/panel-settings/extensions/class-nexter-ext-image-cron.php:85
+#: include/panel-settings/extensions/class-nexter-ext-image-cron.php:103
 msgid "Every 10 minutes (Nexter Extension Image Optimiser)"
 msgstr ""
 
-#: include/panel-settings/extensions/class-nxt-image-processor.php:230
-#: include/panel-settings/extensions/class-nxt-image-processor.php:335
+#: include/panel-settings/extensions/class-nxt-image-processor.php:264
+#: include/panel-settings/extensions/class-nxt-image-processor.php:373
 msgid "Optimized file was larger than or equal to the original, so it was skipped because \"Avoid Larger Files\" is enabled."
 msgstr ""
 
-#: include/panel-settings/extensions/class-nxt-seo-notice.php:74
+#: include/panel-settings/extensions/class-nxt-seo-notice.php:98
 msgid "Introducing Nexter SEO - replace your SEO plugins with Nexter."
 msgstr ""
 
-#: include/panel-settings/extensions/class-nxt-seo-notice.php:75
+#: include/panel-settings/extensions/class-nxt-seo-notice.php:99
 msgid "Content optimization, schema, sitemaps, redirects, robots.txt, and image SEO - all built into Nexter. One plugin instead of four."
 msgstr ""
 
-#: include/panel-settings/extensions/class-nxt-seo-notice.php:76
+#: include/panel-settings/extensions/class-nxt-seo-notice.php:100
 msgid "Enable SEO"
 msgstr ""
 
-#: include/panel-settings/extensions/class-nxt-seo-notice.php:77
+#: include/panel-settings/extensions/class-nxt-seo-notice.php:101
 #: dashboard/build/index.js:7
 #: dashboard/build/index.js:9
 #: dashboard/build/index.js:11
@@ -3060,7 +3060,7 @@ msgid "Forbidden."
 msgstr ""
 
 #: include/panel-settings/extensions/content-seo/audit/class-audit-ajax.php:45
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:1821
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:1838
 msgid "Audit queued in background. Showing last available snapshot until the run completes."
 msgstr ""
 
@@ -3671,70 +3671,70 @@ msgstr ""
 msgid "Nexter SEO"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:295
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:299
 msgid "Google Analytics"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:387
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:391
 msgid "Nexter Content SEO global settings"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:1072
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:1089
 msgid "Invalid settings."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:1152
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:1169
 msgid "The Image SEO module is not available. Make sure the Nexter Extension SEO module is enabled and updated to a version that includes Image SEO."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:1273
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:1290
 #: content-seo/build/606.js:1
 msgid "Select at least one group to export."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:1294
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:1311
 msgid "Secret credentials (IndexNow API key, Google Indexing private key) were omitted from this export for security. Re-enter them on the destination site."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:1421
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:1438
 msgid "Invalid or empty import data."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:1430
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:1447
 msgid "The file does not contain any importable SEO data."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:1438
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:1455
 msgid "Unsupported export file version."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:1446
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:1463
 msgid "This JSON file is not a Nexter Content SEO export."
 msgstr ""
 
 #. translators: 1: applied count, 2: skipped count
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:1473
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:1490
 #, php-format
 msgid "Imported %1$d credential/verification value(s); skipped %2$d invalid."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:1478
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:1495
 msgid "This file includes verification/API-key values. They were NOT applied. Re-run the import with the “Import credentials” option enabled to review and apply them."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:1793
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:1834
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:1853
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:1871
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:2039
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:1810
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:1851
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:1870
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:1888
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:2058
 msgid "Audit module not loaded."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:1812
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:1829
 msgid "Could not complete the SEO audit."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:1881
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:1898
 msgid "Schedule saved."
 msgstr ""
 
@@ -3789,7 +3789,7 @@ msgstr ""
 #: include/panel-settings/extensions/content-seo/schema-types/fields-person.php:28
 #: include/panel-settings/extensions/content-seo/schema-types/fields-product.php:60
 #: include/panel-settings/extensions/content-seo/schema-types/fields-service.php:80
-#: include/panel-settings/extensions/content-seo/schema-types/fields-web-page.php:52
+#: include/panel-settings/extensions/content-seo/schema-types/fields-web-page.php:57
 #: include/panel-settings/extensions/content-seo/schema-types/fields-website.php:42
 #: content-seo/build/478.js:1
 #: content-seo/build/716.js:1
@@ -4069,301 +4069,301 @@ msgstr ""
 msgid "Nexter SEO: a physical robots.txt file exists in your site root (e.g. created by your host/HestiaCP), so WordPress cannot serve a dynamic robots.txt. Your custom robots.txt rules and the Sitemap: directive are being ignored. Remove or edit the physical robots.txt file to let Nexter manage it."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1261
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1264
 #: include/panel-settings/extensions/content-seo/class-seo-settings.php:29
 #: content-seo/build/index.js:1
 msgid "Post Title"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1262
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1265
 msgid "Post ID"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1263
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1266
 #: include/panel-settings/extensions/content-seo/class-seo-settings.php:30
 #: content-seo/build/index.js:1
 msgid "Post Excerpt"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1264
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1267
 #: include/panel-settings/extensions/content-seo/class-seo-settings.php:31
 #: content-seo/build/index.js:1
 msgid "Post Content"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1265
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1268
 #: include/panel-settings/extensions/content-seo/class-seo-settings.php:35
 #: content-seo/build/index.js:1
 msgid "Post URL"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1266
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1269
 msgid "Post Slug"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1267
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1270
 #: dashboard/build/index.js:9
 msgid "Post Date"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1268
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1271
 msgid "Post Modified Date"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1269
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1272
 msgid "Post Date (ISO 8601)"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1270
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1273
 msgid "Post Modified Date (ISO 8601)"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1271
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1274
 msgid "Post Thumbnail"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1272
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1275
 msgid "Post Comment Count"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1273
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1276
 msgid "Post Word Count"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1274
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1277
 msgid "Post Tags"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1275
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1278
 msgid "Post Categories"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1276
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1279
 msgid "Breadcrumb ListItems (JSON)"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1291
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1294
 #: include/panel-settings/extensions/content-seo/class-seo-settings.php:49
 msgid "Product SKU (WooCommerce)"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1292
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1295
 #: include/panel-settings/extensions/content-seo/class-seo-settings.php:47
 msgid "Product price (WooCommerce)"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1293
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1296
 msgid "Store currency code (WooCommerce)"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1294
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1297
 msgid "Availability schema.org URL (WooCommerce)"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1295
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1298
 msgid "Product image URL (WooCommerce)"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1296
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1299
 msgid "Product image width (WooCommerce)"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1297
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1300
 msgid "Product image height (WooCommerce)"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1298
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1301
 msgid "Low price / min variation (WooCommerce)"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1299
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1302
 msgid "High price / max variation (WooCommerce)"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1300
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1303
 msgid "Variation count (WooCommerce)"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1301
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1304
 msgid "Average rating (WooCommerce)"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1302
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1305
 msgid "Average rating value (WooCommerce)"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1303
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1306
 msgid "Rating/review count (WooCommerce)"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1304
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1307
 #: include/panel-settings/extensions/content-seo/class-seo-settings.php:50
 msgid "Product short description (WooCommerce)"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1400
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1403
 msgid "Term ID"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1401
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1404
 msgid "Term Name"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1402
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1405
 msgid "Term Slug"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1403
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1406
 msgid "Term Taxonomy"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1404
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1407
 #: include/panel-settings/extensions/content-seo/class-seo-settings.php:32
 #: include/panel-settings/extensions/content-seo/class-seo-settings.php:183
 #: content-seo/build/index.js:1
 msgid "Term Description"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1405
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1408
 msgid "Term URL"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1416
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1419
 msgid "Author ID"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1417
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1420
 msgid "Author First Name"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1418
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1421
 msgid "Author Last Name"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1419
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1422
 msgid "Author Display Name"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1420
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1423
 msgid "Author Username"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1421
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1424
 msgid "Author Nickname"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1422
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1425
 msgid "Author Website URL"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1423
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1426
 msgid "Author Nicename"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1424
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1427
 msgid "Author Description"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1425
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1428
 msgid "Author Posts URL"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1426
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1429
 msgid "Author Avatar"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1449
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1452
 msgid "Site Title"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1450
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1453
 msgid "Site Description"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1451
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1454
 msgid "Site URL"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1452
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1455
 msgid "Site search URL (SearchAction target template)"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1453
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1456
 msgid "Site Language"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1454
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1457
 msgid "Site Icon"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1455
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1458
 msgid "Primary user (ID 1) display name"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1466
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1469
 msgid "Current Page Title"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1467
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1470
 msgid "Current Page URL"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1478
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1481
 msgid "Website Name"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1479
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1482
 msgid "Business Description"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1480
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1483
 msgid "Website Owner Name"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1481
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1484
 msgid "Organization Type"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1482
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1485
 msgid "Website Owner Phone"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1483
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1486
 msgid "Website Logo"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1495
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1498
 msgid "Current schema entry ID (replaced when JSON-LD is output)"
 msgstr ""
 
 #. translators: %s: schema type name
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1501
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1504
 #, php-format
 msgid "%s Schema"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1969
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1999
 msgid "Basic"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1977
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2007
 msgid "Special Pages"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2017
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2047
 msgid "Specific Pages / Posts / Taxonomies, etc."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2075
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2105
 msgid "singulars"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2081
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2111
 msgid "archive"
 msgstr ""
 
 #. translators: %s: schema title/label
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:5467
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:5531
 #, php-format
 msgid "“%s” (FAQ Page) needs at least one question and answer before it can be saved."
 msgstr ""
@@ -4392,14 +4392,14 @@ msgstr ""
 #: include/panel-settings/extensions/content-seo/schema-types/fields-article.php:59
 #: include/panel-settings/extensions/content-seo/schema-types/fields-claim-review.php:62
 #: include/panel-settings/extensions/content-seo/schema-types/fields-recipe.php:92
-#: include/panel-settings/extensions/content-seo/schema-types/fields-web-page.php:80
+#: include/panel-settings/extensions/content-seo/schema-types/fields-web-page.php:85
 #: content-seo/build/index.js:1
 msgid "Date Published"
 msgstr ""
 
 #: include/panel-settings/extensions/content-seo/class-seo-settings.php:34
 #: include/panel-settings/extensions/content-seo/schema-types/fields-article.php:66
-#: include/panel-settings/extensions/content-seo/schema-types/fields-web-page.php:87
+#: include/panel-settings/extensions/content-seo/schema-types/fields-web-page.php:92
 #: content-seo/build/index.js:1
 msgid "Date Modified"
 msgstr ""
@@ -4674,7 +4674,7 @@ msgstr ""
 #: include/panel-settings/extensions/content-seo/schema-types/fields-product.php:30
 #: include/panel-settings/extensions/content-seo/schema-types/fields-software-application.php:37
 #: include/panel-settings/extensions/content-seo/schema-types/fields-video-object.php:30
-#: include/panel-settings/extensions/content-seo/schema-types/fields-web-page.php:31
+#: include/panel-settings/extensions/content-seo/schema-types/fields-web-page.php:36
 #: include/panel-settings/extensions/content-seo/schema-types/fields-website.php:14
 #: content-seo/build/index.js:1
 msgid "Name"
@@ -4704,7 +4704,7 @@ msgstr ""
 #: include/panel-settings/extensions/content-seo/schema-types/fields-recipe.php:35
 #: include/panel-settings/extensions/content-seo/schema-types/fields-service.php:42
 #: include/panel-settings/extensions/content-seo/schema-types/fields-video-object.php:37
-#: include/panel-settings/extensions/content-seo/schema-types/fields-web-page.php:94
+#: include/panel-settings/extensions/content-seo/schema-types/fields-web-page.php:99
 #: include/panel-settings/extensions/content-seo/schema-types/fields-website.php:35
 #: assets/js/admin/index.js:1
 #: assets/js/admin/index.js:4
@@ -4794,17 +4794,17 @@ msgstr ""
 #: include/panel-settings/extensions/content-seo/schema-types/fields-recipe.php:213
 #: include/panel-settings/extensions/content-seo/schema-types/fields-software-application.php:319
 #: include/panel-settings/extensions/content-seo/schema-types/fields-video-object.php:234
-#: include/panel-settings/extensions/content-seo/schema-types/fields-web-page.php:101
+#: include/panel-settings/extensions/content-seo/schema-types/fields-web-page.php:106
 msgid "Is Part Of"
 msgstr ""
 
-#. translators: %schemas.webpage% is a literal schema-variable token, not a format placeholder — leave it unchanged.
+#. translators: %site.url% is a literal schema-variable token, not a format placeholder — leave it unchanged.
 #: include/panel-settings/extensions/content-seo/schema-types/fields-article.php:125
 #, php-format
-msgid "Reference to the containing WebPage (e.g. %schemas.webpage%)."
+msgid "Reference to the containing WebPage (e.g. %site.url%#webpage)."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/schema-types/fields-article.php:130
+#: include/panel-settings/extensions/content-seo/schema-types/fields-article.php:132
 #: include/panel-settings/extensions/content-seo/schema-types/fields-claim-review.php:191
 #: include/panel-settings/extensions/content-seo/schema-types/fields-course.php:91
 #: include/panel-settings/extensions/content-seo/schema-types/fields-event.php:163
@@ -4820,28 +4820,28 @@ msgstr ""
 msgid "Main Entity Of Page"
 msgstr ""
 
-#. translators: %schemas.webpage% is a literal schema-variable token, not a format placeholder — leave it unchanged.
-#: include/panel-settings/extensions/content-seo/schema-types/fields-article.php:133
+#. translators: %site.url% is a literal schema-variable token, not a format placeholder — leave it unchanged.
+#: include/panel-settings/extensions/content-seo/schema-types/fields-article.php:135
 #, php-format
-msgid "The WebPage this article is the main entity of (e.g. %schemas.webpage%)."
+msgid "The WebPage this article is the main entity of (e.g. %site.url%#webpage)."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/schema-types/fields-article.php:141
-#: include/panel-settings/extensions/content-seo/schema-types/fields-web-page.php:108
+#: include/panel-settings/extensions/content-seo/schema-types/fields-article.php:144
+#: include/panel-settings/extensions/content-seo/schema-types/fields-web-page.php:113
 #: include/panel-settings/extensions/content-seo/schema-types/fields-website.php:57
 msgid "Publisher"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/schema-types/fields-article.php:143
+#: include/panel-settings/extensions/content-seo/schema-types/fields-article.php:146
 msgid "Enter the name of the person or organization that published the article."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/schema-types/fields-article.php:148
-#: include/panel-settings/extensions/content-seo/schema-types/fields-web-page.php:122
+#: include/panel-settings/extensions/content-seo/schema-types/fields-article.php:151
+#: include/panel-settings/extensions/content-seo/schema-types/fields-web-page.php:127
 msgid "Main Entity"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/schema-types/fields-article.php:150
+#: include/panel-settings/extensions/content-seo/schema-types/fields-article.php:153
 msgid "Specify the main item being described on the page (usually the article itself)."
 msgstr ""
 
@@ -6455,7 +6455,7 @@ msgid "Write a short summary of the video content."
 msgstr ""
 
 #: include/panel-settings/extensions/content-seo/schema-types/fields-video-object.php:44
-#: include/panel-settings/extensions/content-seo/schema-types/fields-web-page.php:115
+#: include/panel-settings/extensions/content-seo/schema-types/fields-web-page.php:120
 #: include/panel-settings/extensions/content-seo/schema-types/fields-website.php:65
 msgid "Thumbnail URL"
 msgstr ""
@@ -6632,76 +6632,76 @@ msgstr ""
 msgid "Define what the page is mainly about (for example: article, product, or video)."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/schema-types/fields-web-page.php:25
+#: include/panel-settings/extensions/content-seo/schema-types/fields-web-page.php:30
 msgid "Choose the type of page (for example: AboutPage, ContactPage, CollectionPage)."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/schema-types/fields-web-page.php:33
+#: include/panel-settings/extensions/content-seo/schema-types/fields-web-page.php:38
 msgid "Title of the page as it should appear in structured data."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/schema-types/fields-web-page.php:40
+#: include/panel-settings/extensions/content-seo/schema-types/fields-web-page.php:45
 msgid "Enter the name of the person or organization who created the page content."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/schema-types/fields-web-page.php:45
+#: include/panel-settings/extensions/content-seo/schema-types/fields-web-page.php:50
 msgid "In Language"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/schema-types/fields-web-page.php:47
+#: include/panel-settings/extensions/content-seo/schema-types/fields-web-page.php:52
 msgid "Enter the language of the page (for example: en-US)."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/schema-types/fields-web-page.php:54
+#: include/panel-settings/extensions/content-seo/schema-types/fields-web-page.php:59
 msgid "Add the main link (URL) of this page."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/schema-types/fields-web-page.php:61
+#: include/panel-settings/extensions/content-seo/schema-types/fields-web-page.php:66
 msgid "Add the breadcrumb structure for this page (optional)."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/schema-types/fields-web-page.php:66
+#: include/panel-settings/extensions/content-seo/schema-types/fields-web-page.php:71
 msgid "Contributor"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/schema-types/fields-web-page.php:68
+#: include/panel-settings/extensions/content-seo/schema-types/fields-web-page.php:73
 msgid "Enter the name of any person or organization that helped create the page."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/schema-types/fields-web-page.php:73
+#: include/panel-settings/extensions/content-seo/schema-types/fields-web-page.php:78
 #: include/panel-settings/extensions/content-seo/schema-types/fields-website.php:28
 msgid "Copyright Holder"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/schema-types/fields-web-page.php:75
+#: include/panel-settings/extensions/content-seo/schema-types/fields-web-page.php:80
 msgid "Enter the name of the person or organization that owns the copyright for the content."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/schema-types/fields-web-page.php:82
+#: include/panel-settings/extensions/content-seo/schema-types/fields-web-page.php:87
 msgid "Enter the date when the page was first published."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/schema-types/fields-web-page.php:89
+#: include/panel-settings/extensions/content-seo/schema-types/fields-web-page.php:94
 msgid "Enter the date when the page was last updated."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/schema-types/fields-web-page.php:96
+#: include/panel-settings/extensions/content-seo/schema-types/fields-web-page.php:101
 msgid "Write a short summary of the page to help search engines understand the content."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/schema-types/fields-web-page.php:103
+#: include/panel-settings/extensions/content-seo/schema-types/fields-web-page.php:108
 msgid "Use this if the page belongs to a larger section or website (optional)."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/schema-types/fields-web-page.php:110
+#: include/panel-settings/extensions/content-seo/schema-types/fields-web-page.php:115
 msgid "Enter the name of the person or organization that published the page."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/schema-types/fields-web-page.php:117
+#: include/panel-settings/extensions/content-seo/schema-types/fields-web-page.php:122
 msgid "Add the link to a small preview image (thumbnail) for the page."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/schema-types/fields-web-page.php:124
+#: include/panel-settings/extensions/content-seo/schema-types/fields-web-page.php:129
 msgid "Specify the main item being described on the page (optional)."
 msgstr ""
 
@@ -8395,7 +8395,7 @@ msgid "Click the BACK button on your browser and try again."
 msgstr ""
 
 #: include/panel-settings/extensions/nexter-ext-image-sizes.php:39
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1568
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1567
 msgid "Invalid attachment ID."
 msgstr ""
 
@@ -8455,7 +8455,7 @@ msgid "Optimising this image will reduce its file size and help the page load fa
 msgstr ""
 
 #: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:818
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1452
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1451
 msgid "Optimise Image"
 msgstr ""
 
@@ -8474,81 +8474,81 @@ msgid "Your image has been optimised and converted to %1$s format, reducing file
 msgstr ""
 
 #: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:916
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1434
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1433
 msgid "Image Optimised"
 msgstr ""
 
 #. translators: %s: Amount the image is smaller (e.g. "45%")
 #: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:918
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1444
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1443
 #, php-format
 msgid "%s smaller"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1378
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1377
 msgid "Optimise"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1408
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1407
 msgid "Excluded via settings"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1576
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1575
 msgid "File not found."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1584
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1583
 msgid "File is empty or invalid. Skipped."
 msgstr ""
 
 #. translators: %s: Maximum file size (e.g. "20 MB")
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1592
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1591
 #, php-format
 msgid "File exceeds maximum size for optimisation (%s). Skipped."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1600
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1599
 msgid "Already optimised."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1608
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1607
 msgid "Unsupported image format. Skipped."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1616
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1615
 msgid "Image path is excluded from optimisation in settings. Skipped."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1623
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1622
 msgid "Image Optimisation is disabled."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1634
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1633
 msgid "Imagick or GD is required for image optimisation. Skipped."
 msgstr ""
 
 #. translators: %d: Monthly image optimisation limit
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1642
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1641
 #, php-format
 msgid "Monthly Optimisation limit reached (%d images). Upgrade to Pro for unlimited Optimisation."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1676
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1675
 msgid "Optimisation failed. The image may be in an unsupported format or state, or the server could not process it."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1680
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1679
 msgid "Optimised file was not saved. Check folder permissions for wp-content/nexter-optimizer."
 msgstr ""
 
 #. translators: %d: Number of image sizes converted
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1787
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1786
 #, php-format
 msgid "Image Optimised (%d sizes converted)."
 msgstr ""
 
 #. translators: 1: number of images successfully restored, 2: number of images that failed to restore
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1923
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1922
 #: dashboard/build/index.js:11
 #, php-format,js-format
 msgid "Restored %1$d images. %2$d failed."

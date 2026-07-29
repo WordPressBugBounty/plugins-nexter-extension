@@ -360,7 +360,7 @@ li.wp-not-current-submenu:hover .wp-menu-image.dashicons-nxt-builder-groups{
     border: 1px solid #1717CC;
     box-shadow: none;
     margin-left: 8px;
-    padding: 7px 16px;
+    padding: 8px 16px;
     text-decoration: blink !important;
 }
 .nxt-nobtn-primary,.nxt-nobtn-primary:hover, .nxt-nobtn-primary:focus {

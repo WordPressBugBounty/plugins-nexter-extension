@@ -835,8 +835,8 @@ class Nexter_Content_SeoRank {
 
 	private function get_global_default_templates() {
 		$opts       = Nexter_Content_SEO::get_options();
-		$title_t    = ! empty( $opts['search_title_template'] ) ? $opts['search_title_template'] : '%post_title% - %site_name%';
-		$desc_t     = ! empty( $opts['search_description_template'] ) ? $opts['search_description_template'] : '%post_excerpt%';
+		$title_t    = ! empty( $opts['meta_title_template'] ) ? $opts['meta_title_template'] : ( ! empty( $opts['search_title_template'] ) ? $opts['search_title_template'] : '%post_title% - %site_name%' );
+		$desc_t     = ! empty( $opts['meta_description_template'] ) ? $opts['meta_description_template'] : ( ! empty( $opts['search_description_template'] ) ? $opts['search_description_template'] : '%post_excerpt%' );
 		$title_t    = self::normalize_template_for_variables( $title_t );
 		$desc_t     = self::normalize_template_for_variables( $desc_t );
 		$social_img = isset( $opts['default_social_image'] ) ? trim( (string) $opts['default_social_image'] ) : '';
@@ -1034,8 +1034,8 @@ class Nexter_Content_SeoRank {
 		}
 		require_once dirname( __FILE__ ) . '/content-seo/class-seo-settings.php';
 		$opts    = Nexter_Content_SEO::get_options();
-		$title_t = ! empty( $opts['search_title_template'] ) ? $opts['search_title_template'] : '%post_title% - %site_name%';
-		$desc_t  = ! empty( $opts['search_description_template'] ) ? $opts['search_description_template'] : '%post_excerpt%';
+		$title_t = ! empty( $opts['meta_title_template'] ) ? $opts['meta_title_template'] : ( ! empty( $opts['search_title_template'] ) ? $opts['search_title_template'] : '%post_title% - %site_name%' );
+		$desc_t  = ! empty( $opts['meta_description_template'] ) ? $opts['meta_description_template'] : ( ! empty( $opts['search_description_template'] ) ? $opts['search_description_template'] : '%post_excerpt%' );
 		$title_t = self::normalize_template_for_variables( $title_t );
 		$desc_t  = self::normalize_template_for_variables( $desc_t );
 		$ctx     = array( 'post' => $post );
@@ -1057,8 +1057,8 @@ class Nexter_Content_SeoRank {
 		}
 		require_once dirname( __FILE__ ) . '/content-seo/class-seo-settings.php';
 		$opts    = Nexter_Content_SEO::get_options();
-		$title_t = ! empty( $opts['search_title_template'] ) ? $opts['search_title_template'] : '%post_title% - %site_name%';
-		$desc_t  = ! empty( $opts['search_description_template'] ) ? $opts['search_description_template'] : '%post_excerpt%';
+		$title_t = ! empty( $opts['meta_title_template'] ) ? $opts['meta_title_template'] : ( ! empty( $opts['search_title_template'] ) ? $opts['search_title_template'] : '%post_title% - %site_name%' );
+		$desc_t  = ! empty( $opts['meta_description_template'] ) ? $opts['meta_description_template'] : ( ! empty( $opts['search_description_template'] ) ? $opts['search_description_template'] : '%post_excerpt%' );
 		$title_t = self::normalize_template_for_variables( $title_t );
 		$desc_t  = self::normalize_template_for_variables( $desc_t );
 		$title_t = self::map_post_seo_tokens_to_term_templates( $title_t );

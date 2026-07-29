@@ -20,6 +20,15 @@ class Nexter_Content_SEO_Title {
 	const META_TITLE = '_nxt_seo_title';
 
 	/**
+	 * Re-entry guard: true while filter_document_title() is resolving a title. Prevents the
+	 * pre_get_document_title → replace_variables → get_replacements → wp_get_document_title
+	 * recursion that exhausts memory on WooCommerce single product pages.
+	 *
+	 * @var bool
+	 */
+	private static $resolving_title = false;
+
+	/**
 	 * Initialize hooks.
 	 */
 	public static function init() {
@@ -69,6 +78,31 @@ class Nexter_Content_SEO_Title {
 			return $title;
 		}
 
+		// Re-entry guard against infinite recursion / fatal memory exhaustion. On WooCommerce single
+		// product pages the title resolver calls Nexter_Content_SEO_Schema::get_replacements() (only
+		// for the 'product' post type), which reads %current.title% via wp_get_document_title(); that
+		// re-fires pre_get_document_title / document_title_parts and recurses until PHP runs out of
+		// memory. While a resolution is already in progress, hand back the incoming title so the
+		// nested wp_get_document_title() completes with core's own value and the cycle is broken.
+		if ( self::$resolving_title ) {
+			return $title;
+		}
+		self::$resolving_title = true;
+		try {
+			return self::resolve_document_title( $title );
+		} finally {
+			self::$resolving_title = false;
+		}
+	}
+
+	/**
+	 * Resolve the Nexter document title for the current query (front page, singular, or archive).
+	 * Always invoked behind the re-entry guard in filter_document_title().
+	 *
+	 * @param string $title Incoming title, returned unchanged when Nexter has nothing to override.
+	 * @return string
+	 */
+	private static function resolve_document_title( $title ) {
 		$options = Nexter_Content_SEO::get_options();
 
 		// Homepage: when a static front page is set, prefer the per-post Nexter SEO
@@ -114,7 +148,7 @@ class Nexter_Content_SEO_Title {
 				if ( '' !== $resolved ) {
 					return $resolved;
 				}
-				$tpl      = isset( $options['search_title_template'] ) ? (string) $options['search_title_template'] : '%post_title% - %site_name%';
+				$tpl      = ! empty( $options['meta_title_template'] ) ? (string) $options['meta_title_template'] : ( ! empty( $options['search_title_template'] ) ? (string) $options['search_title_template'] : '%post_title% - %site_name%' );
 				$resolved = self::resolve_string_with_context( $tpl, array( 'post' => $post ) );
 				if ( '' !== $resolved ) {
 					return $resolved;

@@ -121,20 +121,23 @@ return array(
 		'key'     => 'isPartOf',
 		'label'   => __( 'Is Part Of', 'nexter-extension' ),
 		'input'   => 'editor',
-		/* translators: %schemas.webpage% is a literal schema-variable token, not a format placeholder — leave it unchanged. */
-		'tooltip' => __( 'Reference to the containing WebPage (e.g. %schemas.webpage%).', 'nexter-extension' ),
-		'default' => '%schemas.webpage%',
+		/* translators: %site.url% is a literal schema-variable token, not a format placeholder — leave it unchanged. */
+		'tooltip' => __( 'Reference to the containing WebPage (e.g. %site.url%#webpage).', 'nexter-extension' ),
+		// Must match the WebPage node @id (%site.url%#webpage). %schemas.webpage% is not resolved
+		// in per-node field replacement, so it produced an empty ref that was pruned as dangling.
+		'default' => '%site.url%#webpage',
 	),
 	array(
 		'key'     => 'mainEntityOfPage',
 		'label'   => __( 'Main Entity Of Page', 'nexter-extension' ),
 		'input'   => 'editor',
-		/* translators: %schemas.webpage% is a literal schema-variable token, not a format placeholder — leave it unchanged. */
-		'tooltip' => __( 'The WebPage this article is the main entity of (e.g. %schemas.webpage%).', 'nexter-extension' ),
-		// Link to the WebPage node's @id (same token as isPartOf), which is Google-recommended and
-		// resolves reliably. The old '%post.url%' token was not resolved by the schema replacer, so
-		// mainEntityOfPage came out empty and was pruned — the node never rendered.
-		'default' => '%schemas.webpage%',
+		/* translators: %site.url% is a literal schema-variable token, not a format placeholder — leave it unchanged. */
+		'tooltip' => __( 'The WebPage this article is the main entity of (e.g. %site.url%#webpage).', 'nexter-extension' ),
+		// Link to the WebPage node @id (%site.url%#webpage — same token as isPartOf and the WebPage
+		// node itself), which is Google-recommended and resolves in per-node replacement. The old
+		// '%post.url%' didn't resolve here (empty → pruned); %schemas.webpage% likewise isn't in the
+		// node map, so both siblings now use %site.url%#webpage.
+		'default' => '%site.url%#webpage',
 	),
 	array(
 		'key'     => 'publisher',

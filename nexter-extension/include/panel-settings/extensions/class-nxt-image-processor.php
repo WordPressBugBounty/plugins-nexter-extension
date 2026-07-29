@@ -60,6 +60,49 @@ class Nxt_Image_Processor {
 	}
 
 	/**
+	 * Validate a freshly-written optimised file before it is accepted.
+	 *
+	 * Guards against the empty/truncated output GD and Imagick can occasionally produce —
+	 * imagewebp()/writeImage() may report success yet write a 0-byte file under memory/time
+	 * pressure (typical during a large background/bulk run) or on certain sources. Without this
+	 * check the plugin stored the empty file and the frontend served it as a broken, 0-byte image
+	 * (HTTP 200, content-length 0). Requires a non-empty file that actually decodes as an image;
+	 * the caller must delete the file and keep the original when this returns false.
+	 *
+	 * @param string $path Written output path.
+	 * @return bool
+	 */
+	private static function is_valid_optimized_output( $path ) {
+		if ( ! is_string( $path ) || '' === $path || ! file_exists( $path ) ) {
+			return false;
+		}
+		$size = @filesize( $path ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged -- guarded below.
+		if ( empty( $size ) || $size <= 0 ) {
+			return false; // 0-byte / unreadable — the exact BETA failure mode.
+		}
+		// Confirm it decodes as a real image. getimagesize() understands JPEG/PNG/GIF/WebP but does
+		// NOT reliably recognise AVIF across PHP/GD builds, so a non-empty AVIF is accepted on size.
+		if ( preg_match( '/\.avif$/i', $path ) ) {
+			return true;
+		}
+		$info = @getimagesize( $path ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged -- non-image returns false, handled below.
+		return is_array( $info ) && ! empty( $info[0] ) && ! empty( $info[1] );
+	}
+
+	/**
+	 * Whether the source file is already a next-gen image (.webp / .avif) that must not be
+	 * re-optimized. Re-encoding one produces a broken "name.webp.webp" / "name.avif.avif" file
+	 * because the output path keeps the source extension and appends the target one.
+	 *
+	 * @param string $file_path Source image path.
+	 * @return bool
+	 */
+	private static function is_next_gen_source( $file_path ) {
+		$ext = strtolower( pathinfo( $file_path, PATHINFO_EXTENSION ) );
+		return in_array( $ext, array( 'webp', 'avif' ), true );
+	}
+
+	/**
 	 * Process image: convert to webp/avif.
 	 * Writes optimised file next to original (same dir, new extension) and returns path to optimised file.
 	 *
@@ -77,6 +120,14 @@ class Nxt_Image_Processor {
 		}
 		$max_size = apply_filters( 'nexter_image_optimizer_max_file_size', 20 * 1024 * 1024 );
 		if ( $max_size > 0 && $original_size > $max_size ) {
+			return false;
+		}
+
+		// Never re-optimize an already next-gen source. A .webp/.avif input would otherwise be
+		// re-encoded into "name.webp.webp" / "name.avif.avif" (the output path keeps the source
+		// extension and appends the target one), producing a broken double-extension file. WebP and
+		// AVIF are skipped by extension.
+		if ( self::is_next_gen_source( $file_path ) ) {
 			return false;
 		}
 
@@ -129,6 +180,10 @@ class Nxt_Image_Processor {
 		}
 		$original_size = filesize( $file_path );
 		if ( false === $original_size || $original_size < 1 ) {
+			return false;
+		}
+		// Skip already next-gen sources (see process_image()).
+		if ( self::is_next_gen_source( $file_path ) ) {
 			return false;
 		}
 		$output_path = $this->parent->get_output_path( $file_path );
@@ -219,7 +274,11 @@ class Nxt_Image_Processor {
 			$imagick->clear();
 			$imagick->destroy();
 
-			if ( ! file_exists( $output_path ) ) {
+			if ( ! self::is_valid_optimized_output( $output_path ) ) {
+				// Imagick reported success but wrote nothing usable (0-byte/undecodable) — discard.
+				if ( file_exists( $output_path ) ) {
+					wp_delete_file( $output_path );
+				}
 				return false;
 			}
 			$optimized_size = filesize( $output_path );
@@ -324,7 +383,11 @@ class Nxt_Image_Processor {
 		}
 		imagedestroy( $image );
 
-		if ( ! $saved || ! file_exists( $output_path ) ) {
+		if ( ! $saved || ! self::is_valid_optimized_output( $output_path ) ) {
+			// Encoder reported success but wrote nothing usable (0-byte/undecodable) — discard.
+			if ( file_exists( $output_path ) ) {
+				wp_delete_file( $output_path );
+			}
 			return false;
 		}
 		$optimized_size = filesize( $output_path );
@@ -419,7 +482,14 @@ class Nxt_Image_Processor {
 					$imagick->setImageCompressionQuality( $settings['webp_quality'] );
 					$imagick->writeImage( $webp_path );
 				}
-				if ( file_exists( $webp_path ) ) {
+				if ( ! self::is_valid_optimized_output( $webp_path ) ) {
+					// Empty / undecodable Imagick output — discard and keep the original.
+					if ( file_exists( $webp_path ) ) {
+						wp_delete_file( $webp_path );
+					}
+					$webp_path = null;
+					$webp_size = null;
+				} elseif ( file_exists( $webp_path ) ) {
 					$webp_size = filesize( $webp_path );
 					if ( $settings['avoid_larger'] && $webp_size >= $original_size ) {
 						wp_delete_file( $webp_path );
@@ -538,7 +608,16 @@ class Nxt_Image_Processor {
 		$best_mime = 'image/webp';
 
 		if ( $try_webp ) {
-			if ( @imagewebp( $image, $webp_path, $settings['webp_quality'] ) && file_exists( $webp_path ) ) {
+			$written = @imagewebp( $image, $webp_path, $settings['webp_quality'] );
+			// imagewebp() can return true yet leave a 0-byte / undecodable file. Reject it and keep
+			// the original instead of serving a broken image.
+			if ( $written && ! self::is_valid_optimized_output( $webp_path ) ) {
+				if ( file_exists( $webp_path ) ) {
+					wp_delete_file( $webp_path );
+				}
+				$written = false;
+			}
+			if ( $written && file_exists( $webp_path ) ) {
 				$webp_size = filesize( $webp_path );
 				if ( ! ( $settings['avoid_larger'] && $webp_size >= $original_size ) ) {
 					$best_path = $webp_path;

@@ -1137,7 +1137,7 @@ class Engine {
 		// each page actually emits (not just the stored post/SEO title). This is what exposes
 		// template-driven site-wide duplication (e.g. a template missing %post_title%).
 		$opts             = \class_exists( 'Nexter_Content_SEO' ) ? Nexter_Content_SEO::get_options() : array();
-		$global_title_tpl = ! empty( $opts['search_title_template'] ) ? (string) $opts['search_title_template'] : '%post_title% - %site_name%';
+		$global_title_tpl = ! empty( $opts['meta_title_template'] ) ? (string) $opts['meta_title_template'] : ( ! empty( $opts['search_title_template'] ) ? (string) $opts['search_title_template'] : '%post_title% - %site_name%' );
 		$blogname         = (string) \get_bloginfo( 'name' );
 		$tagline          = (string) \get_bloginfo( 'description' );
 
@@ -1304,7 +1304,7 @@ class Engine {
 		// Root-cause hint: if the global title template carries no per-item token, EVERY page
 		// renders the same <title>. Surface that instead of a generic "revise post titles".
 		$opts           = \class_exists( 'Nexter_Content_SEO' ) ? Nexter_Content_SEO::get_options() : array();
-		$title_tpl      = ! empty( $opts['search_title_template'] ) ? (string) $opts['search_title_template'] : '';
+		$title_tpl      = ! empty( $opts['meta_title_template'] ) ? (string) $opts['meta_title_template'] : ( ! empty( $opts['search_title_template'] ) ? (string) $opts['search_title_template'] : '' );
 		$has_item_tok   = (bool) \preg_match( '/%(post_title|post\.title|title|term_title)%/i', $title_tpl );
 		$recommendation = $has_item_tok
 			? \__( 'Give each page a unique SEO title (Nexter SEO meta box) or revise duplicated post titles.', 'nexter-extension' )

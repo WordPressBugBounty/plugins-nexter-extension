@@ -860,7 +860,14 @@ PHP;
 			// front-end index rebuild) could interleave and leave a truncated file with unbalanced
 			// parentheses — which then fatally parse-errored ("Unmatched ')'") on every request.
 			$tmp_file = $cache_file . '.' . uniqid( 'tmp', true ) . '.tmp';
-			$bytes    = file_put_contents( $tmp_file, $code, LOCK_EX );
+			// All three filesystem ops below are @-suppressed with their failures explicitly
+			// handled: on some environments (Windows / Local, restrictive ACLs, or the include-d
+			// cache file being locked open by a concurrent request) the write or rename fails with
+			// "Permission denied" / "Access is denied". That is an environment/permissions problem,
+			// not a code error — the plugin degrades to the regenerated in-memory config — so it
+			// must not raise an unhandled warning on every request. is_writable() cannot be trusted
+			// to predict this on Windows, hence the runtime guards here.
+			$bytes = @file_put_contents( $tmp_file, $code, LOCK_EX ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged,WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents -- failure handled below.
 			if ( false === $bytes ) {
 				@unlink( $tmp_file );
 				return false;
@@ -868,10 +875,11 @@ PHP;
 			if ( @rename( $tmp_file, $cache_file ) ) {
 				$result = $bytes;
 			} else {
-				// rename() can fail on some hosts (cross-device links, restrictive perms).
-				// Fall back to a direct locked write and clean up the temp file.
+				// rename() can fail on some hosts (cross-device links, restrictive perms, or a
+				// destination file locked open on Windows). Fall back to a direct locked write and
+				// clean up the temp file. Also @-suppressed — failure is handled via $result below.
 				@unlink( $tmp_file );
-				$result = file_put_contents( $cache_file, $code, LOCK_EX );
+				$result = @file_put_contents( $cache_file, $code, LOCK_EX ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged,WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents -- failure handled below.
 			}
 
 			// After writing new file, remove legacy index.php if it exists (one-time cleanup)

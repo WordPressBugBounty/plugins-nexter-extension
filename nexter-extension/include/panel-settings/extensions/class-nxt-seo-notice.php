@@ -17,6 +17,23 @@ if ( ! class_exists( 'Nxt_Seo_Notice' ) ) {
 			add_action( 'admin_notices', array( $this, 'render_seo_notice' ) );
 			// Register this notice ID with the shared dismiss handler allowlist.
 			add_filter( 'nexter_allowed_dismiss_notice_ids', array( $this, 'allow_dismiss_id' ) );
+			// Load the shared dismiss script wherever this notice renders. The WP "x" only hides the
+			// notice client-side for the current pageview; the persist-via-AJAX handler lives in
+			// nexter-ext-admin.js, so without this the notice reappears on the next load.
+			add_action( 'admin_enqueue_scripts', array( $this, 'maybe_enqueue_dismiss_js' ) );
+		}
+
+		/**
+		 * Enqueue the shared dismiss JS (nexter-ext-admin.js) on the screens where this notice shows.
+		 * Uses the same should_render() gate as the notice output so the two never disagree.
+		 * Shares the 'nexter-ext-builder-js' handle, so it is de-duplicated if already enqueued.
+		 */
+		public function maybe_enqueue_dismiss_js() {
+			if ( ! $this->should_render() ) {
+				return;
+			}
+			$minified = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
+			wp_enqueue_script( 'nexter-ext-builder-js', NEXTER_EXT_URL . 'assets/js/admin/nexter-ext-admin' . $minified . '.js', array(), NEXTER_EXT_VER, true );
 		}
 
 		/**
@@ -31,18 +48,21 @@ if ( ! class_exists( 'Nxt_Seo_Notice' ) ) {
 		}
 
 		/**
-		 * Output the SEO promo notice on relevant admin screens.
+		 * Whether the SEO promo notice should be shown on the current request.
+		 * Shared by render_seo_notice() and the dismiss-JS enqueue signal so the two never disagree.
+		 *
+		 * @return bool
 		 */
-		public function render_seo_notice() {
+		public function should_render() {
 			if ( ! current_user_can( 'manage_options' ) ) {
-				return;
+				return false;
 			}
 			// Per-user dismissal (this is a promo notice): one admin hiding it must not hide it for
 			// every other admin. The shared dismiss handler stores this in user meta for the
 			// per-user notice allowlist (see nexter_ext_dismiss_notice_data / the
 			// nexter_per_user_dismiss_notice_ids filter).
 			if ( get_user_meta( get_current_user_id(), 'nexter_seo_notice_dismissed', true ) ) {
-				return;
+				return false;
 			}
 
 			// White-label (Pro): never show a Nexter-branded promo (with a nexterwp.com "Learn
@@ -51,21 +71,25 @@ if ( ! class_exists( 'Nxt_Seo_Notice' ) ) {
 			if ( ( defined( 'NXT_PRO_EXT' ) || defined( 'TPGBP_VERSION' ) ) && class_exists( 'Nxt_Options' ) ) {
 				$wl = Nxt_Options::white_label();
 				if ( is_array( $wl ) && ( ! empty( $wl['brand_name'] ) || ( ! empty( $wl['nxt_help_link'] ) && 'on' === $wl['nxt_help_link'] ) ) ) {
-					return;
+					return false;
 				}
 			}
 
-			// Show only on high-visibility admin screens, not on every page.
-			global $pagenow;
-			$allowed_screens = array( 'index.php', 'plugins.php', 'edit.php' );
-			if ( ! in_array( $pagenow, $allowed_screens, true ) ) {
+			return true;
+		}
+
+		/**
+		 * Output the SEO promo notice on relevant admin screens.
+		 */
+		public function render_seo_notice() {
+			if ( ! $this->should_render() ) {
 				return;
 			}
 
 			$enable_url = admin_url( 'admin.php?page=nexter_welcome#/seo' );
 			// Include UTM tracking on the outbound "Learn More" link, matching the campaign format
 			// used by Nexter's other admin CTAs (utm_source=wpbackend&utm_medium=admin&utm_campaign).
-			$learn_url = 'https://nexterwp.com/nexter-extension/?utm_source=wpbackend&utm_medium=admin&utm_campaign=seonotice';
+			$learn_url = 'https://nexterwp.com/nexter-extensions/seo-for-wordpress/?utm_source=wpbackend&utm_medium=admin&utm_campaign=seonotice';
 
 			echo '<div class="notice notice-info is-dismissible nxt-notice-wrap" data-notice-id="nexter_seo_notice">';
 				echo '<div class="nexter-license-activate">';

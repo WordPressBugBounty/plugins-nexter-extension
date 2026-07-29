@@ -1024,16 +1024,17 @@ class Nexter_Ext_Image_Upload_Optimization {
 			return $upload;
 		}
 
-		// If background processing is enabled, skip immediate optimisation here — the cron
-		// handler (Nexter_Ext_Image_Cron) picks up unoptimised attachments later. This prevents
-		// large / lossless uploads from blocking the request while WebP/AVIF encoding runs
-		// (lossless encoding of a 2560px image plus every thumbnail size can exceed PHP's time
-		// limit and make the upload appear to hang or fail).
-		if ( ! empty( $settings['run_in_background'] ) ) {
-			return $upload;
-		}
+		// New uploads are ALWAYS optimised immediately while the optimizer is enabled — the
+		// "Run in Background" setting must not skip them. Previously background mode returned here
+		// and deferred fresh uploads to the recurring cron, which on hosts where WP-Cron does not
+		// fire reliably (blocked loopback on many shared hosts / LiteSpeed / staging) meant uploaded
+		// images were never optimised. "Run in Background" now governs only the automatic conversion
+		// of the EXISTING media library backlog (see Nexter_Ext_Image_Cron), not new uploads.
+		// (Oversized files are still skipped above via nexter_image_optimizer_max_file_size.)
 
-		$valid_mimes = array( 'image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp', 'image/avif' );
+		// Only optimise source raster formats. Already next-gen uploads (.webp / .avif) are skipped by
+		// extension — re-encoding them would create broken "name.webp.webp" / "name.avif.avif" files.
+		$valid_mimes = array( 'image/jpeg', 'image/jpg', 'image/png', 'image/gif' );
 		if ( ! in_array( $upload['type'], $valid_mimes, true ) ) {
 			return $upload;
 		}
@@ -1587,9 +1588,10 @@ class Nexter_Ext_Image_Upload_Optimization {
 
 		$max_size = apply_filters( 'nexter_image_optimizer_max_file_size', 20 * 1024 * 1024 );
 		if ( $max_size > 0 && $file_size > $max_size ) {
+			/* translators: %s: Maximum file size (e.g. "20 MB") */
 			return array(
 			'skip'    => true,
-			'message' => sprintf( /* translators: %s: Maximum file size (e.g. "20 MB") */ __( 'File exceeds maximum size for optimisation (%s). Skipped.', 'nexter-extension' ), size_format( $max_size ) )
+			'message' => sprintf( __( 'File exceeds maximum size for optimisation (%s). Skipped.', 'nexter-extension' ), size_format( $max_size ) )
 			);
 		}
 
@@ -1637,9 +1639,10 @@ class Nexter_Ext_Image_Upload_Optimization {
 
 		$limit_handler = Nexter_Ext_Image_Optimization_Limit::get_instance();
 		if ( ! $limit_handler->can_optimize( $attachment_id ) ) {
+			/* translators: %d: Monthly image optimisation limit */
 			return array(
 			'skip'    => true,
-			'message' => sprintf( /* translators: %d: Monthly image optimisation limit */ __( 'Monthly Optimisation limit reached (%d images). Upgrade to Pro for unlimited Optimisation.', 'nexter-extension' ), $limit_handler->get_monthly_limit() )
+			'message' => sprintf( __( 'Monthly Optimisation limit reached (%d images). Upgrade to Pro for unlimited Optimisation.', 'nexter-extension' ), $limit_handler->get_monthly_limit() )
 			);
 		}
 
@@ -1919,7 +1922,7 @@ class Nexter_Ext_Image_Upload_Optimization {
 			array(
 			'restored' => $restored,
 			'failed'   => $failed,
-			/* translators: 1: number of images successfully restored, 2: number of images that failed to restore */
+			/* translators: 1: Number of images restored, 2: Number of images that failed to restore */
 			'message'  => sprintf( __( 'Restored %1$d images. %2$d failed.', 'nexter-extension' ), $restored, $failed ),
 			) 
 		);

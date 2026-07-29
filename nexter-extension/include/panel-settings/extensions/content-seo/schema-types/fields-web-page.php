@@ -16,7 +16,12 @@ return array(
 		'label'   => __( 'ID', 'nexter-extension' ),
 		'input'   => 'text',
 		'tooltip' => __( 'A unique ID for this schema. You can use the page URL or leave the default value as it is.', 'nexter-extension' ),
-		'default' => '%current.url%#webpage',
+		// Use %site.url%#webpage (NOT %current.url%#webpage): (1) it must MATCH the value Article
+		// uses for isPartOf / mainEntityOfPage (both %site.url%#webpage) or those refs dangle and get
+		// pruned; (2) %site.url% is the token proven to resolve for node @ids (Organization uses
+		// %site.url%#organization and renders), whereas %current.url% resolved empty here, dropping
+		// the WebPage @id entirely.
+		'default' => '%site.url%#webpage',
 	),
 	array(
 		'key'     => '@type',

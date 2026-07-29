@@ -39,31 +39,49 @@ class Nexter_Ext_Image_Cron {
 		add_action( 'init', array( $this, 'check_schedule' ) );
 		add_action( self::RECURRING_HOOK, array( $this, 'process_scheduled_optimization' ) );
 
-		// Fallback for hosts with WP-Cron disabled (DISABLE_WP_CRON) and no system cron: the queued
-		// recurring event can sit unfired indefinitely, so background optimisation silently never
-		// runs. On admin requests, if the event is overdue, trigger the runner once behind a short
-		// transient lock so concurrent admin loads can't double-run it. Front-end and real cron are
-		// untouched.
-		if ( defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON ) {
-			add_action( 'admin_init', array( $this, 'maybe_run_due_cron' ) );
-		}
+		// Catch-up fallback for hosts where WP-Cron does not fire reliably. This is NOT limited to
+		// DISABLE_WP_CRON: the far more common case is a blocked/unreliable loopback request
+		// (shared hosts, LiteSpeed, staging, password-protected and firewalled sites) where WP-Cron
+		// is nominally "enabled" but the queued recurring event silently never fires — so background
+		// optimisation of on-upload images never happens (while manual/AJAX optimisation still works).
+		// On full admin page loads, if the recurring event is overdue by more than one interval,
+		// run the batch once behind a short transient lock. Since uploads happen inside wp-admin,
+		// subsequent admin loads drain the queue on any host. Healthy hosts never reach this because
+		// real cron keeps the event scheduled in the future.
+		add_action( 'admin_init', array( $this, 'maybe_run_due_cron' ) );
 	}
 
 	/**
-	 * Admin-only catch-up for the recurring optimiser cron when WP-Cron is disabled.
+	 * Admin-side catch-up runner for the recurring optimiser cron.
+	 *
+	 * Fires the batch when the recurring event is clearly overdue (WP-Cron not firing on this host),
+	 * so "Auto Optimise on Upload" with "Run in Background" enabled still processes images.
 	 */
 	public function maybe_run_due_cron() {
-		if ( ! ( defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON ) ) {
-			return;
-		}
 		if ( ! is_admin() ) {
 			return;
 		}
 		if ( function_exists( 'wp_doing_cron' ) && wp_doing_cron() ) {
 			return;
 		}
+		// Skip AJAX/heartbeat/async-upload requests so we never block the upload response or the
+		// media uploader's polling; the batch runs on regular admin page loads instead.
+		if ( function_exists( 'wp_doing_ajax' ) && wp_doing_ajax() ) {
+			return;
+		}
+		// Only when the module is on and set to background — otherwise there is nothing to run.
+		$settings = Nexter_Ext_Image_Upload_Optimization::get_instance()->get_settings();
+		if ( empty( $settings['enabled'] ) || empty( $settings['run_in_background'] ) ) {
+			return;
+		}
 		$next = wp_next_scheduled( self::RECURRING_HOOK );
-		if ( ! $next || $next > time() ) {
+		if ( ! $next ) {
+			// Not scheduled yet; check_schedule() (on init) will schedule it.
+			return;
+		}
+		// Grace of one full interval: only step in when a tick has clearly been missed, so we do not
+		// race a working WP-Cron and steal a tick that real cron is about to fire within seconds.
+		if ( $next > ( time() - self::FREQUENCY ) ) {
 			return;
 		}
 		// Short lock so overlapping admin requests don't run the batch twice; not deleted on success

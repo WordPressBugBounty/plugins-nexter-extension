@@ -62,7 +62,7 @@ class Nexter_Content_SEO {
 	 * changes (renamed/removed keys, restructured nesting) and add a matching migration step in
 	 * migrate_options() so existing installs upgrade in place instead of silently using stale data.
 	 */
-	const DATA_VERSION = 1;
+	const DATA_VERSION = 2;
 
 	/** Transient key used to serialize concurrent settings writes (see rest_update_settings). */
 	const SAVE_LOCK_KEY = 'nxt_seo_settings_save_lock';
@@ -160,9 +160,13 @@ class Nexter_Content_SEO {
 		Nexter_Content_SEO_Schema::init();
 		self::register_advanced_crawl_hooks();
 
-		// Run any pending options data-shape migrations (admin context only; cheap early-return
-		// when already at the current version).
-		add_action( 'admin_init', array( __CLASS__, 'migrate_options' ) );
+		// Run any pending options data-shape migrations early on EVERY request (init, priority 1 —
+		// before register_settings at 5 and well before wp_head), not just admin_init. A key rename
+		// like search_*_template → meta_*_template is copied old→new here; if this only ran in the
+		// admin, a frontend request between the plugin update and the first wp-admin page load would
+		// render the DEFAULT template instead of the site's customized one. Cheap early-return once
+		// the stored data is already at the current DATA_VERSION.
+		add_action( 'init', array( __CLASS__, 'migrate_options' ), 1 );
 
 		$audit_dir = $dir . '/audit';
 		if ( \is_dir( $audit_dir ) ) {
@@ -414,9 +418,21 @@ class Nexter_Content_SEO {
 		}
 		/**
 		 * Apply versioned migrations. Each block transforms the array from version N-1 to N.
-		 * Example for a future v2:
-		 *   if ( $from < 2 ) { $opts['new_key'] = $opts['old_key'] ?? ''; unset( $opts['old_key'] ); }
+		 * Example for a future v3:
+		 *   if ( $from < 3 ) { $opts['new_key'] = $opts['old_key'] ?? ''; unset( $opts['old_key'] ); }
 		 */
+		// v2: the singular-page SERP title/description templates were renamed
+		// search_*_template → meta_*_template. Copy old → new so existing installs keep their
+		// customized templates. The old keys are intentionally left in place for safety (readers
+		// still fall back to them); do NOT delete them here.
+		if ( $from < 2 ) {
+			if ( empty( $opts['meta_title_template'] ) && ! empty( $opts['search_title_template'] ) ) {
+				$opts['meta_title_template'] = $opts['search_title_template'];
+			}
+			if ( empty( $opts['meta_description_template'] ) && ! empty( $opts['search_description_template'] ) ) {
+				$opts['meta_description_template'] = $opts['search_description_template'];
+			}
+		}
 		$opts = (array) apply_filters( 'nexter_content_seo_migrate_options', $opts, $from, self::DATA_VERSION );
 
 		$opts['_data_version'] = self::DATA_VERSION;
@@ -499,9 +515,10 @@ class Nexter_Content_SEO {
 		return array(
 			// Data-shape version stamp for the migration layer (see migrate_options()).
 			'_data_version'                 => self::DATA_VERSION,
-			// General.
-			'search_title_template'         => '%post_title% - %site_name%',
-			'search_description_template'   => '%post_excerpt%',
+			// General. (Renamed from search_*_template in DATA_VERSION 2; the old keys are the
+			// singular-page SERP title/description templates, not the on-site search page.)
+			'meta_title_template'           => '%post_title% - %site_name%',
+			'meta_description_template'     => '%post_excerpt%',
 			// Social.
 			'default_social_image'          => '',
 			'default_social_image_filename' => '',
@@ -1921,8 +1938,10 @@ class Nexter_Content_SEO {
 		$out = array();
 
 		// On-page: meta template, social, schema, image-seo, home, archives.
+		$mt_tpl = ! empty( $opts['meta_title_template'] ) ? $opts['meta_title_template'] : ( ! empty( $opts['search_title_template'] ) ? $opts['search_title_template'] : '%post_title% - %site_name%' );
+		$md_tpl = ! empty( $opts['meta_description_template'] ) ? $opts['meta_description_template'] : ( ! empty( $opts['search_description_template'] ) ? $opts['search_description_template'] : '%post_excerpt%' );
 		$out['meta-template'] = array(
-			'state' => ( $opts['search_title_template'] !== '%post_title% - %site_name%' || $opts['search_description_template'] !== '%post_excerpt%' ) ? 'active' : 'setup',
+			'state' => ( $mt_tpl !== '%post_title% - %site_name%' || $md_tpl !== '%post_excerpt%' ) ? 'active' : 'setup',
 		);
 		$social_set           = ! empty( $opts['default_social_image'] )
 			|| ! empty( $opts['facebook_page_url'] ) || ! empty( $opts['twitter_site'] )

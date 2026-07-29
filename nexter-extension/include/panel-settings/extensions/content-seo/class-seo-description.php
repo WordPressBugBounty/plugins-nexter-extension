@@ -344,7 +344,7 @@ class Nexter_Content_SEO_Description {
 						return $out;
 					}
 				}
-				$tpl = isset( $options['search_description_template'] ) ? $options['search_description_template'] : '%post_excerpt%';
+				$tpl = ! empty( $options['meta_description_template'] ) ? $options['meta_description_template'] : ( ! empty( $options['search_description_template'] ) ? $options['search_description_template'] : '%post_excerpt%' );
 				$out = self::resolve_string_with_context( $tpl, array( 'post' => $post ) );
 				if ( '' !== $out ) {
 					return $out;

@@ -96,6 +96,13 @@ class Nxt_Image_Frontend_Replacement {
 			return false;
 		}
 
+		// Already a next-gen source (.webp / .avif): serve it as-is. The optimizer never converts
+		// these (see Nxt_Image_Processor::is_next_gen_source), so mapping them here would only point
+		// at a stale/broken "name.webp.webp" file left by an earlier build.
+		if ( preg_match( '/\.(webp|avif)$/i', $rel ) ) {
+			return false;
+		}
+
 		// Convert to absolute path
 		$abs = wp_normalize_path( $base_path . '/' . $rel );
 

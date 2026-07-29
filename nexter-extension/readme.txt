@@ -3,7 +3,7 @@ Contributors: posimyththemes, nirmalkavaiya, sagarpatel124
 Tags: seo, security, theme-builder, code-snippet, image-optimizer
 Requires at least: 5.9
 Tested up to: 7.0
-Stable tag: 4.7.2
+Stable tag: 4.7.3
 Requires PHP: 7.4
 License: GPLv3
 License URI: https://opensource.org/licenses/GPL-3.0
@@ -245,6 +245,14 @@ Yes. [Compare Free vs Pro →](https://nexterwp.com/free-vs-pro/#Nexter-Extensio
 
 ### View Complete Changelog at [roadmap.nexterwp.com](https://roadmap.nexterwp.com/updates?filter=Nexter+Extension+-+FREE)
 
+= V4.7.3 = 28 July 2026
+- Fixed : Nexter SEO : dismissing the "Enable SEO" admin notice now sticks — its dismiss script was not being loaded on the screens where the notice appears, so the close button only hid it until the next page load
+- Fixed : Nexter SEO : fixed a fatal infinite recursion (memory exhaustion / HTTP 500) on WooCommerce single product pages caused by the document-title filter re-entering itself; other pages were unaffected
+- Improvement : Image Optimizer (Pro) : AVIF and Smart output now work on GD builds with AVIF support but no Imagick (many shared hosts), via native imageavif()/imagewebp() with the same resize, avoid-larger and Smart AVIF+WebP handling
+- Fixed : Image Optimizer : new uploads are now optimised immediately even with "Run in Background" on (which now only auto-optimises the existing library); previously they could be left unprocessed when WP-Cron did not fire
+- Fixed : Image Optimizer : already-WebP/AVIF images are no longer re-optimised on upload (this produced an unusable name.webp.webp file that failed to load); such sources are skipped by extension and served as-is
+- Fixed : Image Optimizer : converted images are validated before use, so a 0-byte / corrupt WebP is never stored or served — invalid output is discarded and the original kept
+
 = V4.7.2 = 27 July 2026
 - Fixed : Nexter SEO : JSON-LD schema and XML sitemap now defer to an active third-party SEO plugin (Yoast, Rank Math, AIOSEO, SEOPress and others), preventing duplicate structured data and dual sitemaps
 - Fixed : Nexter SEO : the XML sitemap now self-heals its rewrite rule when enabled via settings import or migration, so /sitemap.xml serves XML without a manual permalink flush
@@ -282,6 +290,9 @@ Yes. [Compare Free vs Pro →](https://nexterwp.com/free-vs-pro/#Nexter-Extensio
 - Fixed : the "Upgrade to Pro" notice timing no longer drifts by a day (replaced a deprecated, timezone-dependent timestamp)
 - Fixed : Search & Replace URL tool no longer strips one backslash level too many from URLs on submit
 - Fixed : Code Snippets : a permission-denied read of the snippet cache file now degrades gracefully (no warning spam, and it never deletes a still-valid cache) instead of being treated as corruption
+- Fixed : Nexter SEO : Article structured data now reliably links to the page's WebPage node via isPartOf and mainEntityOfPage (the WebPage node is always given a stable @id), so the reference is no longer dropped on existing sites with previously-saved schema settings
+- Fixed : Nexter SEO : structured-data (JSON-LD) text fields no longer leak raw shortcodes — a WebPage/Article description derived from content containing a slider or email-obfuscator shortcode now renders clean text instead of literal "[shortcode …]" markup (which also stops the obfuscated email address from appearing in the schema)
+- Improved : Nexter SEO : the site-wide SEO Title / Description template settings were renamed internally (to meta_title_template / meta_description_template) to reflect that they control the search-engine snippet for posts and pages; existing values migrate automatically with no change to behavior
 - Fixed : Bug Fixes and Improvements
 
 = V4.7.1 = 21 July 2026

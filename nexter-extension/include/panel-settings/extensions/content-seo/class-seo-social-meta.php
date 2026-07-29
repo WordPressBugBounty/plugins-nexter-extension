@@ -380,7 +380,7 @@ class Nexter_Content_SEO_Social_Meta {
 	 */
 	private static function get_social_title() {
 		$options  = Nexter_Content_SEO::get_options();
-		$template = ! empty( $options['search_title_template'] ) ? $options['search_title_template'] : '%post_title% - %site_name%';
+		$template = ! empty( $options['meta_title_template'] ) ? $options['meta_title_template'] : ( ! empty( $options['search_title_template'] ) ? $options['search_title_template'] : '%post_title% - %site_name%' );
 		$template = self::normalize_template_for_variables( $template );
 
 		// Homepage / blog index: site name (and tagline when set) instead of admin
@@ -427,8 +427,8 @@ class Nexter_Content_SEO_Social_Meta {
 	 */
 	private static function get_resolved_global_title_and_description_for_term( WP_Term $term ) {
 		$opts    = Nexter_Content_SEO::get_options();
-		$title_t = ! empty( $opts['search_title_template'] ) ? $opts['search_title_template'] : '%post_title% - %site_name%';
-		$desc_t  = ! empty( $opts['search_description_template'] ) ? $opts['search_description_template'] : '%post_excerpt%';
+		$title_t = ! empty( $opts['meta_title_template'] ) ? $opts['meta_title_template'] : ( ! empty( $opts['search_title_template'] ) ? $opts['search_title_template'] : '%post_title% - %site_name%' );
+		$desc_t  = ! empty( $opts['meta_description_template'] ) ? $opts['meta_description_template'] : ( ! empty( $opts['search_description_template'] ) ? $opts['search_description_template'] : '%post_excerpt%' );
 		$title_t = self::normalize_template_for_variables( $title_t );
 		$desc_t  = self::normalize_template_for_variables( $desc_t );
 		$ctx     = array( 'term' => $term );
@@ -607,8 +607,8 @@ class Nexter_Content_SEO_Social_Meta {
 	 */
 	private static function get_resolved_global_title_and_description_for_post( WP_Post $post ) {
 		$opts    = Nexter_Content_SEO::get_options();
-		$title_t = ! empty( $opts['search_title_template'] ) ? $opts['search_title_template'] : '%post_title% - %site_name%';
-		$desc_t  = ! empty( $opts['search_description_template'] ) ? $opts['search_description_template'] : '%post_excerpt%';
+		$title_t = ! empty( $opts['meta_title_template'] ) ? $opts['meta_title_template'] : ( ! empty( $opts['search_title_template'] ) ? $opts['search_title_template'] : '%post_title% - %site_name%' );
+		$desc_t  = ! empty( $opts['meta_description_template'] ) ? $opts['meta_description_template'] : ( ! empty( $opts['search_description_template'] ) ? $opts['search_description_template'] : '%post_excerpt%' );
 		$title_t = self::normalize_template_for_variables( $title_t );
 		$desc_t  = self::normalize_template_for_variables( $desc_t );
 		$ctx     = array( 'post' => $post );
@@ -990,7 +990,7 @@ class Nexter_Content_SEO_Social_Meta {
 	}
 
 	/**
-	 * Open Graph title: FB → TW → main SEO title → global search_title_template.
+	 * Open Graph title: FB → TW → main SEO title → global meta_title_template.
 	 *
 	 * @param WP_Post $post Post.
 	 * @return string
@@ -1016,7 +1016,7 @@ class Nexter_Content_SEO_Social_Meta {
 	}
 
 	/**
-	 * Twitter title: TW → FB → main SEO title → global search_title_template.
+	 * Twitter title: TW → FB → main SEO title → global meta_title_template.
 	 *
 	 * @param WP_Post $post Post.
 	 * @return string

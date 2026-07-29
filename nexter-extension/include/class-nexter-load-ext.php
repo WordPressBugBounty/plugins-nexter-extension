@@ -532,9 +532,8 @@ if ( ! class_exists( 'Nexter_Extensions_Load' ) ) {
 			// - Pages where Nexter admin notices are active (dismiss handlers)
 			// - Media library (image optimization notice)
 			$needs_admin_js = $this->has_admin_notices
-				|| $this->is_nxt_builder_admin_screen( $hook_suffix )
 				|| 'upload.php' === $hook_suffix;
-			
+
 			if ( $needs_admin_js ) {
 				wp_enqueue_script( 'nexter-ext-builder-js', NEXTER_EXT_URL .'assets/js/admin/nexter-ext-admin'.$minified.'.js', array(), NEXTER_EXT_VER, true );
 			}

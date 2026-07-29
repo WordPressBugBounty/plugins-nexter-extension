@@ -957,9 +957,12 @@ class Nexter_Content_SEO_Schema {
 					'enabled'     => true,
 					'fields'      => array(
 						// Give the WebPage node a stable @id (home/#webpage) so Article's
-						// isPartOf / mainEntityOfPage (both %schemas.webpage%) resolve to it instead
-						// of matching no node and being pruned.
-						'@id'         => '%schemas.webpage%',
+						// isPartOf / mainEntityOfPage resolve to it instead of matching no node and
+						// being pruned. Use %site.url%#webpage, NOT %schemas.webpage%: the %schemas.*
+						// map is not merged into per-node field replacement, so %schemas.webpage%
+						// resolved to empty and the @id was dropped. %site.url% IS in the node map
+						// (same working pattern as Organization's %site.url%#organization).
+						'@id'         => '%site.url%#webpage',
 						'name'        => '%post.title%',
 						'url'         => '%post.url%',
 						'description' => '%post.excerpt%',
@@ -1687,6 +1690,25 @@ class Nexter_Content_SEO_Schema {
 	}
 
 	/**
+	 * Clean post text for use in a structured-data text field: expand nothing, but remove
+	 * shortcodes (registered via strip_shortcodes(), plus any unregistered/leftover shortcode-
+	 * shaped tokens) and HTML tags, then collapse whitespace. Prevents raw "[shortcode …]" markup
+	 * — including the email-obfuscator's plain address — from leaking into JSON-LD descriptions.
+	 *
+	 * @param string $text Raw post content/excerpt.
+	 * @return string
+	 */
+	private static function clean_schema_text_value( $text ) {
+		$text = strip_shortcodes( (string) $text );
+		// Drop unregistered / late-registered shortcode-shaped tokens strip_shortcodes() leaves
+		// behind (a bracketed tag starting with a letter, opening or closing). Numeric refs like
+		// "[1]" are intentionally preserved.
+		$text = preg_replace( '/\[\/?[a-z][a-z0-9_\-]*(?:[^\]]*)?\]/i', '', (string) $text );
+		$text = wp_strip_all_tags( (string) $text );
+		return trim( (string) preg_replace( '/\s+/', ' ', (string) $text ) );
+	}
+
+	/**
 	 * Get replacement values for variables (context-aware).
 	 *
 	 * @param WP_Post|null $post Current post or null.
@@ -1723,8 +1745,16 @@ class Nexter_Content_SEO_Schema {
 		if ( $post ) {
 			$r['%post.title%']           = $post->post_title;
 			$r['%post.ID%']              = (string) $post->ID;
-			$r['%post.excerpt%']         = has_excerpt( $post->ID ) ? get_the_excerpt( $post ) : wp_trim_words( $post->post_content, 55 );
-			$r['%post.content%']         = wp_strip_all_tags( $post->post_content );
+			// Strip shortcodes before these feed structured-data text fields (e.g. WebPage /
+			// Article description = %post.excerpt%). Raw content otherwise leaks a literal
+			// "[obfuscate email=…]" / "[some_slider]" into the JSON-LD — an unexpanded shortcode
+			// (and, for the email obfuscator, the plain address) exposed in machine-readable markup.
+			// strip_shortcodes() clears registered ones; the leftover-bracket sweep clears
+			// unregistered/late-registered ones (mirrors the meta-description cleanup).
+			$r['%post.excerpt%']         = has_excerpt( $post->ID )
+				? self::clean_schema_text_value( get_the_excerpt( $post ) )
+				: wp_trim_words( self::clean_schema_text_value( $post->post_content ), 55 );
+			$r['%post.content%']         = self::clean_schema_text_value( $post->post_content );
 			$r['%post.url%']             = get_permalink( $post );
 			$r['%post.slug%']            = $post->post_name;
 			$r['%post.date%']            = get_the_date( '', $post );
@@ -2003,9 +2033,9 @@ class Nexter_Content_SEO_Schema {
 			$options[ $key ] = array(
 				'label' => $pt->labels->name,
 				'value' => array(
-					/* translators: %s: Post Label*/
+					/* translators: %s: the content type name */
 					$pt->name . '|all'         => sprintf( __( 'All %s', 'nexter-extension' ), $pt->labels->name ),
-					/* translators: %s: Post type or taxonomy archive label */
+					/* translators: %s: post type or taxonomy label */
 					$pt->name . '|all|archive' => sprintf( __( 'All %s Archive', 'nexter-extension' ), $pt->labels->name ),
 				),
 			);
@@ -5297,6 +5327,40 @@ class Nexter_Content_SEO_Schema {
 		}
 
 		$rendered = apply_filters( 'nexter_content_seo_schema_graph', $rendered );
+
+		// Guarantee the WebPage↔Article linkage regardless of what the (possibly older, stored)
+		// schema rows contain. Stored rows seeded by earlier versions shipped a WebPage node with
+		// NO @id and an Article whose mainEntityOfPage pointed at the bare page URL (matching no
+		// node) and whose isPartOf used a token that resolved empty — so BOTH refs were pruned as
+		// dangling and never rendered. Here we (1) give the WebPage node a stable @id derived from
+		// its own url (falling back to the home URL), then (2) point every Article node's
+		// isPartOf + mainEntityOfPage at that @id. This is the Google-recommended linkage and needs
+		// no data migration — it corrects existing installs and defaults alike.
+		$nxt_webpage_id = '';
+		foreach ( $rendered as &$nxt_node ) {
+			$nxt_t = isset( $nxt_node['@type'] ) ? $nxt_node['@type'] : '';
+			$nxt_is_webpage = is_array( $nxt_t ) ? in_array( 'WebPage', $nxt_t, true ) : ( 'WebPage' === $nxt_t );
+			if ( $nxt_is_webpage ) {
+				if ( empty( $nxt_node['@id'] ) ) {
+					$nxt_base           = ! empty( $nxt_node['url'] ) ? untrailingslashit( (string) $nxt_node['url'] ) : untrailingslashit( home_url( '/' ) );
+					$nxt_node['@id']    = $nxt_base . '#webpage';
+				}
+				$nxt_webpage_id = (string) $nxt_node['@id'];
+				break;
+			}
+		}
+		unset( $nxt_node );
+		if ( '' !== $nxt_webpage_id ) {
+			foreach ( $rendered as &$nxt_node2 ) {
+				$nxt_t2 = isset( $nxt_node2['@type'] ) ? $nxt_node2['@type'] : '';
+				$nxt_is_article = is_array( $nxt_t2 ) ? (bool) array_intersect( array( 'Article', 'NewsArticle', 'BlogPosting' ), $nxt_t2 ) : in_array( $nxt_t2, array( 'Article', 'NewsArticle', 'BlogPosting' ), true );
+				if ( $nxt_is_article ) {
+					$nxt_node2['isPartOf']         = array( '@id' => $nxt_webpage_id );
+					$nxt_node2['mainEntityOfPage'] = array( '@id' => $nxt_webpage_id );
+				}
+			}
+			unset( $nxt_node2 );
+		}
 
 		// Drop references (e.g. isPartOf → #webpage) pointing to @id nodes that aren't actually
 		// present in this @graph, so the markup never contains a broken/dangling @id reference.
