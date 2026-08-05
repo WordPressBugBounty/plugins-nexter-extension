@@ -421,7 +421,9 @@ if ( ! class_exists( 'Nexter_Extensions_Load' ) ) {
 			}
 			
 			if ( is_admin() ) {
-				require_once NEXTER_EXT_DIR . 'include/panel-settings/nxt-deactivate.php';
+				// The legacy deactivation popup (nxt-deactivate.php) was removed in 4.7.3 — the
+				// POSIMYTH SDK survey (Posimyth_Deactivation_Survey, booted from the main plugin
+				// file) is now the single deactivation form, with the 3-way consent model.
 				require_once NEXTER_EXT_DIR . 'include/panel-settings/nexter-whats-new.php';
 			}
 			

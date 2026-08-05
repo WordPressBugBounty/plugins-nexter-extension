@@ -30,6 +30,14 @@ class Nexter_Content_SEO_Schema {
 	/** Object-cache group for rendered JSON-LD output. */
 	const CACHE_GROUP = 'nexter_content_seo_schema';
 
+	/**
+	 * Memoised document title for this request (see get_current_document_title()).
+	 * Null until first resolved.
+	 *
+	 * @var string|null
+	 */
+	private static $current_document_title = null;
+
 	public static function init() {
 		add_action( 'wp_head', array( __CLASS__, 'print_schema' ), 1 );
 		// Invalidate the per-object JSON-LD output cache when its source data changes.
@@ -1314,7 +1322,7 @@ class Nexter_Content_SEO_Schema {
 	 * @param WP_Post $post Product post.
 	 * @return array<string, string>
 	 */
-	private static function get_woocommerce_product_replacements( $post ) {
+	public static function get_woocommerce_product_replacements( $post ) {
 		$out = array();
 		if ( ! $post instanceof WP_Post || 'product' !== $post->post_type || ! function_exists( 'wc_get_product' ) ) {
 			return $out;
@@ -1464,6 +1472,22 @@ class Nexter_Content_SEO_Schema {
 	 *
 	 * @return array
 	 */
+	/**
+	 * Current document title, resolved at most once per request.
+	 *
+	 * wp_get_document_title() runs the full title filter chain, which includes Nexter's own title
+	 * resolver — so this is deliberately memoised. Nexter_Content_SEO_Title also holds a re-entry
+	 * guard, so a nested call here returns core's assembled title instead of recursing.
+	 *
+	 * @return string
+	 */
+	private static function get_current_document_title() {
+		if ( null === self::$current_document_title ) {
+			self::$current_document_title = (string) wp_get_document_title();
+		}
+		return self::$current_document_title;
+	}
+
 	private static function get_current_page_variables() {
 		return array(
 			'%current.title%' => __( 'Current Page Title', 'nexter-extension' ),
@@ -1839,7 +1863,11 @@ class Nexter_Content_SEO_Schema {
 		// Current page. Build the URL from the trusted site host (home_url), NOT the client-
 		// supplied Host header — a spoofed Host could otherwise be injected into rendered
 		// schema. The request path/query is run through esc_url_raw.
-		$r['%current.title%'] = wp_get_document_title();
+		// Resolved through a per-request cache: wp_get_document_title() fires the whole document-title
+		// filter chain (which re-enters Nexter's own title resolver), so calling it once per
+		// get_replacements() invocation was both a recursion risk and a large per-request cost on
+		// pages that call this repeatedly. Cache the first result for the rest of the request.
+		$r['%current.title%'] = self::get_current_document_title();
 		$current_host         = wp_parse_url( home_url(), PHP_URL_HOST );
 		$current_uri          = isset( $_SERVER['REQUEST_URI'] ) ? wp_unslash( $_SERVER['REQUEST_URI'] ) : '';
 		$r['%current.url%']   = $current_host

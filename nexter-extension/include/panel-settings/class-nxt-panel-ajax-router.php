@@ -376,10 +376,17 @@ class Nxt_Panel_Ajax_Router {
 					}
 					add_option( $secr_opt,$nxtctmLogin );
 				} else if ( ! empty( $disrightclick ) ) {
-					$disValue = [];
+					// Persist switch/values unconditionally — do not gate them on
+					// class_exists(), which depends on this same 'values' already being
+					// non-empty (see nexter-settings-options.php), or the very first save
+					// could never write anything. Only the optional cached typography CSS
+					// needs the class; get_right_click_disable_css() regenerates the base
+					// CSS live from 'values' regardless.
+					$disValue                    = [];
+					$disValue[ $ext ]['switch']  = true;
+					$disValue[ $ext ]['values']  = $disrightclick;
 					if ( class_exists( 'Nexter_Ext_Right_Click_Disable' ) ) {
-						$disValue[ $ext ]['values'] = $disrightclick;
-						$disValue[ $ext ]['css']    = Nexter_Ext_Right_Click_Disable::nxtrClickCSSGenerate( $disrightclick );
+						$disValue[ $ext ]['css'] = Nexter_Ext_Right_Click_Disable::nxtrClickCSSGenerate( $disrightclick );
 					}
 					add_option( $secr_opt,$disValue );
 				} else if ( ! empty( $emailNotiSet ) ) {
@@ -486,6 +493,18 @@ class Nxt_Panel_Ajax_Router {
 						if ( isset( $nxtctmLogin['login_page_message'] ) && ! empty( $nxtctmLogin['login_page_message'] ) ) {
 							$nxtctmLogin['login_page_message'] = sanitize_text_field( wp_unslash( $nxtctmLogin['login_page_message'] ) );
 						}
+						// "Custom URL" login-behaviour target. A bare slug must be turned into a path
+						// BEFORE escaping: esc_url_raw( 'member-login' ) returns
+						// 'http://member-login' because esc_url treats a schemeless string as a
+						// HOST. Prefixing with '/' keeps it a site-relative path ('/member-login').
+						// The runtime resolver still rejects off-site hosts and loop-inducing paths.
+						if ( isset( $nxtctmLogin['login_redirect_url'] ) && ! empty( $nxtctmLogin['login_redirect_url'] ) ) {
+							$nxt_login_target = trim( wp_unslash( $nxtctmLogin['login_redirect_url'] ) );
+							if ( ! preg_match( '#^https?://#i', $nxt_login_target ) ) {
+								$nxt_login_target = '/' . ltrim( $nxt_login_target, '/' );
+							}
+							$nxtctmLogin['login_redirect_url'] = esc_url_raw( $nxt_login_target );
+						}
 						if ( ! isset( $get_option[ $ext ] ) ) {
 							$get_option[ $ext ]['switch'] = true;
 						}
@@ -500,11 +519,12 @@ class Nxt_Panel_Ajax_Router {
 						if ( isset( $get_option[ $ext ]['css'] ) && ! empty( $get_option[ $ext ]['css'] ) ) {
 							unset( $get_option[ $ext ]['css'] );
 						}
-						$newdata = [];
+						// Persist switch/values unconditionally — see the matching note in the
+						// add_option() branch above for why this must not depend on class_exists().
+						$get_option[ $ext ]['switch'] = true;
+						$get_option[ $ext ]['values'] = $disrightclick;
 						if ( class_exists( 'Nexter_Ext_Right_Click_Disable' ) ) {
-							$get_option[ $ext ]['switch'] = true;
-							$get_option[ $ext ]['values'] = $disrightclick;
-							$get_option[ $ext ]['css']    = Nexter_Ext_Right_Click_Disable::nxtrClickCSSGenerate( $disrightclick );
+							$get_option[ $ext ]['css'] = Nexter_Ext_Right_Click_Disable::nxtrClickCSSGenerate( $disrightclick );
 						}
 						$newArr = $get_option;
 					} else if ( $ext === 'email-login-notification' ) {

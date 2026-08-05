@@ -54,6 +54,35 @@ class Nexter_Content_SEO_Settings {
 	}
 
 	/**
+	 * Reduce stored content to clean plain text for use inside a meta value.
+	 *
+	 * wp_strip_all_tags() alone is NOT enough: it removes HTML but leaves shortcodes intact, so a
+	 * body like `Welcome. [rev_slider alias="home-gallery"] Oil paintings…` leaked the literal
+	 * shortcode into whatever consumed %post_content% / %post_excerpt% — most visibly og:description
+	 * and twitter:description (confirmed in Facebook's sharing debugger). Shortcodes are stripped
+	 * first, then any leftover bracket residue from malformed or unregistered tags, then tags.
+	 *
+	 * @param string $content Raw post content or term description.
+	 * @return string Plain text, whitespace collapsed.
+	 */
+	private static function plain_text_from_content( $content ) {
+		$content = (string) $content;
+		if ( '' === $content ) {
+			return '';
+		}
+		if ( false !== strpos( $content, '[' ) ) {
+			// Registered shortcodes (and their enclosed content) first.
+			$content = strip_shortcodes( $content );
+			// Unregistered/malformed leftovers, e.g. [smartslider3 slider="2"] from a disabled plugin,
+			// which strip_shortcodes() cannot know about.
+			$content = (string) preg_replace( '/\[\/?[a-z0-9_\-]+(?:[^\]]*)?\]/i', ' ', $content );
+		}
+		$content = wp_strip_all_tags( $content );
+		$content = (string) preg_replace( '/\s+/u', ' ', $content );
+		return trim( $content );
+	}
+
+	/**
 	 * Replace template variables in a string.
 	 *
 	 * @param string $template Template string with %variable% placeholders.
@@ -75,16 +104,23 @@ class Nexter_Content_SEO_Settings {
 		);
 		if ( ! empty( $context['post'] ) && $context['post'] instanceof WP_Post ) {
 			$post                          = $context['post'];
+			$post_body                     = self::plain_text_from_content( $post->post_content );
 			$replace['%post_title%']       = $post->post_title;
-			$replace['%post_excerpt%']     = has_excerpt( $post ) ? get_the_excerpt( $post ) : wp_trim_words( wp_strip_all_tags( $post->post_content ), 25 );
-			$replace['%post_content%']     = wp_strip_all_tags( $post->post_content );
+			$replace['%post_excerpt%']     = has_excerpt( $post ) ? get_the_excerpt( $post ) : wp_trim_words( $post_body, 25 );
+			$replace['%post_content%']     = $post_body;
 			$replace['%post_url%']         = get_permalink( $post );
 			$replace['%date_published%']   = get_the_date( '', $post );
 			$replace['%date_modified%']    = get_the_modified_date( '', $post );
 			$replace['%post_author_name%'] = get_the_author_meta( 'display_name', $post->post_author );
 
 			if ( 'product' === $post->post_type && class_exists( 'Nexter_Content_SEO_Schema' ) ) {
-				$sr                                = Nexter_Content_SEO_Schema::get_replacements( $post );
+				// Only the four WooCommerce product tokens below are needed here, so resolve JUST the
+				// product replacements — never the full get_replacements() set. The full set also
+				// resolves %current.title% via wp_get_document_title() and author-archive URLs, which
+				// on a single-product page re-entered the document-title filters and recursed until
+				// PHP ran out of memory (HTTP 500), and cost ~241k alloptions lookups per render even
+				// when it did not fatal. Keep this narrow: do not switch back to get_replacements().
+				$sr                                = Nexter_Content_SEO_Schema::get_woocommerce_product_replacements( $post );
 				$replace['%wc_price%']             = isset( $sr['%product.price%'] ) ? $sr['%product.price%'] : '';
 				$replace['%wc_currency%']          = isset( $sr['%product.currency%'] ) ? $sr['%product.currency%'] : '';
 				$replace['%wc_sku%']               = isset( $sr['%product.sku%'] ) ? $sr['%product.sku%'] : '';
@@ -107,7 +143,7 @@ class Nexter_Content_SEO_Settings {
 		}
 		if ( ! empty( $context['term'] ) && $context['term'] instanceof WP_Term ) {
 			$term                          = $context['term'];
-			$desc_plain                    = wp_strip_all_tags( $term->description );
+			$desc_plain                    = self::plain_text_from_content( $term->description );
 			$term_link                     = get_term_link( $term );
 			$replace['%term_title%']       = $term->name;
 			$replace['%term_description%'] = $desc_plain;
@@ -252,7 +288,9 @@ class Nexter_Content_SEO_Settings {
 			);
 			if ( ! empty( $sample_product[0] ) ) {
 				$p  = $sample_product[0];
-				$sr = Nexter_Content_SEO_Schema::get_replacements( $p );
+				// Product tokens only — same reason as replace_variables() above: the full
+				// get_replacements() set resolves the document title and archive URLs we don't need.
+				$sr = Nexter_Content_SEO_Schema::get_woocommerce_product_replacements( $p );
 				if ( isset( $sr['%product.price%'] ) && '' !== $sr['%product.price%'] ) {
 					$data['%wc_price%'] = $sr['%product.price%'];
 				}

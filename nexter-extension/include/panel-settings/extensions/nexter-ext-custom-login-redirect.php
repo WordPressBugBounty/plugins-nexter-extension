@@ -185,23 +185,120 @@ class Nexter_Ext_Custom_Login_Redirect {
 			if ( $this->cusloOption['disable_login_url_behavior'] == 'home_page' ) {
 				wp_safe_redirect( esc_url_raw( home_url() ) );
 				exit;
+			} else if ( $this->cusloOption['disable_login_url_behavior'] == 'custom_url' ) {
+				// Send blocked login/admin requests to a front-end page instead (a custom login page
+				// built with the site's builder). wp_safe_redirect() keeps this on the site's own
+				// host, so the setting can never be turned into an open redirect.
+				$target = $this->nxt_resolve_login_redirect_target();
+				if ( '' !== $target ) {
+					wp_safe_redirect( esc_url_raw( $target ) );
+					exit;
+				}
+				// No usable URL configured (or it would loop) — fall through to the message below
+				// rather than silently doing nothing.
 			} else if ( $this->cusloOption['disable_login_url_behavior'] == '404_page' ) {
-				global $wp_query;
-				if ( function_exists( 'status_header' ) ) {
-					status_header( 404 );
-					nocache_headers();
+				// Render the 404 through WordPress's OWN template flow rather than loading the
+				// theme's 404.php from here.
+				//
+				// This method runs on 'wp_loaded' — before the main query has run. Calling
+				// get_template_part( '404' ) at that point loaded the theme template (and therefore
+				// get_header() / wp_head()) outside the context it expects: no queried object, and
+				// is_404()/body classes unresolved. The result was a partially rendered page — site
+				// title and footer, but no 404 content — with unrelated deprecation notices dumped
+				// at the top when WP_DEBUG display is on.
+				if ( is_admin() ) {
+					// wp-admin never runs the front-end template flow, so a theme 404 simply cannot
+					// be rendered correctly from here. Hand the request to the front end on a path
+					// that cannot match any route: WordPress then serves the theme's real 404
+					// template, in a valid context, with a genuine 404 status — and no login form is
+					// revealed. Returning instead would let wp-admin continue loading and let core's
+					// auth_redirect() expose the login screen, defeating the point of this mode.
+					wp_safe_redirect( home_url( $this->nxt_user_trailingslashit( '/' . str_repeat( '-/', 10 ) ) ), 302 );
+					exit;
 				}
-				if ( $wp_query && is_object( $wp_query ) ) {
-					$wp_query->set_404();
-					get_template_part( '404' );
-				}
-				exit;
-			} 
+				// Front-end: nxt_login_plugins_loaded() has already rewritten REQUEST_URI to an
+				// unmatchable path, so we only need to force the 404 flags once the query exists
+				// (on 'wp'). WordPress then picks 404.php itself, at the right time.
+				\add_action(
+					'wp',
+					static function () {
+						global $wp_query;
+						if ( $wp_query instanceof WP_Query ) {
+							$wp_query->set_404();
+						}
+						if ( function_exists( 'status_header' ) ) {
+							status_header( 404 );
+							nocache_headers();
+						}
+					},
+					1
+				);
+				return;
+			}
 		}
 
 		// Security: Escape message output
 		$message = ! empty( $this->cusloOption['login_page_message'] ) ? wp_kses_post( $this->cusloOption['login_page_message'] ) : esc_html__( 'This has been disabled.', 'nexter-extension' );
 		wp_die( $message, esc_html__( 'Forbidden', 'nexter-extension' ), array('response' => 403) );
+	}
+
+	/**
+	 * Resolve the configured "Custom URL" login redirect target.
+	 *
+	 * Accepts either a full URL on this site or a relative path/slug ("member-login",
+	 * "/member-login/"). Returns '' when nothing usable is configured, when the URL points off-site,
+	 * or when redirecting would loop back to the request we are already handling.
+	 *
+	 * @since 4.7.4
+	 * @return string Absolute URL on this site, or '' when unusable.
+	 */
+	private function nxt_resolve_login_redirect_target() {
+		$raw = isset( $this->cusloOption['login_redirect_url'] ) ? trim( (string) $this->cusloOption['login_redirect_url'] ) : '';
+		if ( '' === $raw ) {
+			return '';
+		}
+
+		// Relative path/slug -> absolute URL on this site.
+		if ( ! preg_match( '#^https?://#i', $raw ) ) {
+			$target = home_url( '/' . ltrim( $raw, '/' ) );
+		} else {
+			$target      = $raw;
+			$target_host = wp_parse_url( $target, PHP_URL_HOST );
+			$home_host   = wp_parse_url( home_url(), PHP_URL_HOST );
+
+			// Recover a slug that an earlier build stored as a bogus host: esc_url_raw('member-login')
+			// yields 'http://member-login'. A "host" with no dot that is not this site's host is not
+			// a real domain, so treat the whole value as a site-relative path instead of discarding
+			// the user's setting.
+			if ( $target_host && false === strpos( $target_host, '.' )
+				&& ( ! $home_host || strtolower( $target_host ) !== strtolower( $home_host ) ) ) {
+				$recovered_path = (string) wp_parse_url( $target, PHP_URL_PATH );
+				$target         = home_url( '/' . ltrim( $target_host . $recovered_path, '/' ) );
+			} elseif ( $target_host && $home_host && strtolower( $target_host ) !== strtolower( $home_host ) ) {
+				// A genuine different host: this is a login redirect, it must stay on-site.
+				return '';
+			}
+		}
+
+		// Loop guard: never redirect to the path we are currently serving, and never to the login
+		// endpoints this class itself intercepts (that would bounce forever).
+		$target_path  = (string) wp_parse_url( $target, PHP_URL_PATH );
+		$current_path = isset( $_SERVER['REQUEST_URI'] ) ? (string) wp_parse_url( esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ), PHP_URL_PATH ) : '';
+		$norm         = static function ( $p ) {
+			return trailingslashit( strtolower( (string) $p ) );
+		};
+		if ( '' !== $current_path && $norm( $target_path ) === $norm( $current_path ) ) {
+			return '';
+		}
+		if ( preg_match( '#/(?:wp-login\.php|wp-admin)(?:/|$)#i', $target_path ) ) {
+			return '';
+		}
+		$custom_slug = isset( $this->cusloOption['custom_login_url'] ) ? trim( (string) $this->cusloOption['custom_login_url'], '/' ) : '';
+		if ( '' !== $custom_slug && $norm( $target_path ) === $norm( '/' . $custom_slug ) ) {
+			return '';
+		}
+
+		return $target;
 	}
 
 	/**

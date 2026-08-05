@@ -309,6 +309,13 @@ class Nxt_Dashboard_Data {
 			'image_optimizer_avif_supported' => $this->nxt_ext_check_avif_supported(),
 			'image_optimizer_pro_formats'    => apply_filters( 'nexter_image_optimizer_pro_formats', array() ),
 			'extOption'                      => Nxt_Options::tpgb_connection_data(),
+			// Shared "Share Non-Sensitive Details" consent (opt-in, default OFF). Same option the
+			// onboarding checkbox, the dashboard toggle and the inline notice all read/write.
+			'shareAnalytics'                 => (int) get_option( 'posimyth_nexter_share_analytics', 0 ),
+			// Same docs page from both React surfaces, but tagged per placement so the campaign
+			// reports which one the reader came from. The inline notice tags itself in PHP.
+			'shareAnalyticsDocs'             => 'https://nexterwp.com/docs/data-sharing/?utm_source=wpbackend&utm_medium=admin&utm_campaign=datasharingsettings',
+			'shareAnalyticsDocsOnboarding'   => 'https://nexterwp.com/docs/data-sharing/?utm_source=wpbackend&utm_medium=admin&utm_campaign=datasharingonboarding',
 		];
 
 		$current_user_username = '';

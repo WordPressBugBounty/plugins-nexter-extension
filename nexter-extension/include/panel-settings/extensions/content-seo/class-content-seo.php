@@ -182,11 +182,12 @@ class Nexter_Content_SEO {
 			if ( \class_exists( '\NexterSEO\Audit\Engine' ) ) {
 				\add_filter( 'cron_schedules', array( '\NexterSEO\Audit\Engine', 'filter_cron_schedules' ) );
 				\add_action( \NexterSEO\Audit\Engine::CRON_HOOK, array( '\NexterSEO\Audit\Engine', 'cron_run' ) );
-				// Fallback for hosts with WP-Cron disabled (DISABLE_WP_CRON): trigger the overdue
-				// recurring audit on an admin request behind a transient lock.
-				if ( defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON ) {
-					\add_action( 'admin_init', array( '\NexterSEO\Audit\Engine', 'maybe_run_due_cron' ) );
-				}
+				// Catch-up fallback on EVERY host, not just DISABLE_WP_CRON ones: an unreliable or
+				// blocked loopback (shared hosts, LiteSpeed, staging, password-protected sites) leaves
+				// the audit event queued but never fired, so the scheduled audit silently never runs.
+				// maybe_run_due_cron() only acts when the event is overdue past a grace period, behind
+				// a transient lock, so a healthy WP-Cron is never raced.
+				\add_action( 'admin_init', array( '\NexterSEO\Audit\Engine', 'maybe_run_due_cron' ) );
 			}
 		}
 	}

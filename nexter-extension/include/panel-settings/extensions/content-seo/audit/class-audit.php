@@ -167,25 +167,30 @@ class Engine {
 		}
 		$scheduled = \wp_schedule_single_event( time() + 5, self::CRON_HOOK );
 
-		// Fallback for hosts with WP-Cron disabled (DISABLE_WP_CRON): the queued "run now" event may
-		// never fire. This is a user-triggered action (Run Audit), so run it on shutdown — after the
-		// response is flushed (fastcgi_finish_request when available) — and unschedule the
-		// now-duplicate event. Mirrors class-seo-indexing.php maybe_ping_indexnow_on_save().
-		if ( defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON ) {
-			\add_action(
-				'shutdown',
-				static function () {
-					$timestamp = \wp_next_scheduled( self::CRON_HOOK );
-					if ( $timestamp ) {
-						\wp_unschedule_event( $timestamp, self::CRON_HOOK );
-					}
-					if ( \function_exists( 'fastcgi_finish_request' ) ) {
-						\fastcgi_finish_request();
-					}
-					self::cron_run();
+		// Complete the run in THIS request, on shutdown, on every host — not only when
+		// DISABLE_WP_CRON is defined. The far more common failure is an unreliable/blocked loopback
+		// (shared hosts, LiteSpeed, staging, password-protected, firewalled sites) where WP-Cron is
+		// nominally "enabled" but the queued single event silently never fires: the audit then never
+		// persists a snapshot and the dashboard is stuck on "Run First Audit" forever.
+		//
+		// Safe to do unconditionally because this is an explicit user action (Run Audit): the event
+		// is unscheduled first so real cron can never run it a second time, cron_run() holds its own
+		// running-state guard, and the work happens after the response is flushed
+		// (fastcgi_finish_request when available) so the click never blocks the UI.
+		// Mirrors class-seo-indexing.php maybe_ping_indexnow_on_save().
+		\add_action(
+			'shutdown',
+			static function () {
+				$timestamp = \wp_next_scheduled( self::CRON_HOOK );
+				if ( $timestamp ) {
+					\wp_unschedule_event( $timestamp, self::CRON_HOOK );
 				}
-			);
-		}
+				if ( \function_exists( 'fastcgi_finish_request' ) ) {
+					\fastcgi_finish_request();
+				}
+				self::cron_run();
+			}
+		);
 
 		return array(
 			'scheduled' => (bool) $scheduled,
@@ -194,19 +199,26 @@ class Engine {
 	}
 
 	/**
-	 * Admin-only catch-up for the recurring audit cron when WP-Cron is disabled. If the scheduled
-	 * event is overdue, run it once behind a short transient lock so concurrent admin requests can't
-	 * double-run it. cron_run() has its own running-state guard. Real cron / front-end are untouched.
+	 * Admin-side catch-up for the scheduled audit cron. Runs on ANY host, not just
+	 * DISABLE_WP_CRON ones, because a blocked/unreliable loopback leaves the event queued but never
+	 * fired — so the scheduled audit silently never runs. If the event is overdue by more than a
+	 * grace period, run it once behind a short transient lock so concurrent admin requests can't
+	 * double-run it. cron_run() has its own running-state guard. Front-end / real cron are untouched.
 	 */
 	public static function maybe_run_due_cron() {
-		if ( ! ( defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON ) ) {
-			return;
-		}
 		if ( \function_exists( 'wp_doing_cron' ) && \wp_doing_cron() ) {
 			return;
 		}
+		if ( \function_exists( 'wp_doing_ajax' ) && \wp_doing_ajax() ) {
+			return;
+		}
 		$next = \wp_next_scheduled( self::CRON_HOOK );
-		if ( ! $next || $next > time() ) {
+		if ( ! $next ) {
+			return;
+		}
+		// Grace period: only step in once a tick has clearly been missed, so we never race a working
+		// WP-Cron that is about to fire this event within seconds.
+		if ( $next > ( time() - 5 * MINUTE_IN_SECONDS ) ) {
 			return;
 		}
 		$lock_key = 'nexter_seo_audit_catchup_lock';
@@ -899,20 +911,53 @@ class Engine {
 		}
 		$title = \trim( \html_entity_decode( $m[1], ENT_QUOTES | ENT_HTML5, 'UTF-8' ) );
 		$len   = \function_exists( 'mb_strlen' ) ? \mb_strlen( $title ) : \strlen( $title );
-		if ( $len >= 50 && $len <= 60 ) {
-			/* translators: %d: title length in characters */
-			return $this->item( 'title_length', 'passed', \__( 'Title tag length', 'nexter-extension' ), sprintf( \__( 'Title length is %d characters (within the 50–60 range).', 'nexter-extension' ), $len ), '', false, '' );
+
+		// 50–60 is the IDEAL band, not the acceptable one. Treating anything outside it as a warning
+		// flagged perfectly good titles (a 49-character title was reported as a problem), so only a
+		// genuinely actionable length is a warning now: too long to display in full. A short title is
+		// a suggestion, not a fault. The message also names the homepage — these checks read the
+		// rendered homepage, and without saying so the numbers look "wrong" next to the per-post
+		// preview in On-Page → Meta Template, which is a different page entirely.
+		if ( $len > 60 ) {
+			return $this->item(
+				'title_length',
+				'warning',
+				\__( 'Title tag length', 'nexter-extension' ),
+				sprintf(
+					/* translators: %d: character count */
+					\__( 'The homepage title is %d characters, so search engines will probably cut it off. Keep it under 60.', 'nexter-extension' ),
+					$len
+				),
+				\__( 'Shorten the homepage title in On-Page → Home Page, or the title template in On-Page → Meta Template.', 'nexter-extension' ),
+				false,
+				''
+			);
+		}
+		if ( $len < 30 ) {
+			return $this->item(
+				'title_length',
+				'suggestion',
+				\__( 'Title tag length', 'nexter-extension' ),
+				sprintf(
+					/* translators: %d: character count */
+					\__( 'The homepage title is %d characters. It works, but there is room to be more descriptive (up to 60).', 'nexter-extension' ),
+					$len
+				),
+				\__( 'Optional: add context to the homepage title in On-Page → Home Page.', 'nexter-extension' ),
+				false,
+				''
+			);
 		}
 		return $this->item(
 			'title_length',
-			'warning',
+			'passed',
 			\__( 'Title tag length', 'nexter-extension' ),
 			sprintf(
-				/* translators: 1: character count */
-				\__( 'Title length is %1$d characters. Aim for roughly 50–60 for best display in search results.', 'nexter-extension' ),
+				/* translators: %d: title length in characters */
+				\__( 'The homepage title is %d characters, which displays well in search results.', 'nexter-extension' ),
 				$len
 			),
-			\__( 'Edit the site or homepage title template in On-Page → Meta Template.', 'nexter-extension' ),
+			'',
 			false,
 			''
 		);
@@ -942,20 +987,51 @@ class Engine {
 		}
 		$desc = \trim( \html_entity_decode( ! empty( $m[1] ) ? $m[1] : $m[2], ENT_QUOTES | ENT_HTML5, 'UTF-8' ) );
 		$len  = \function_exists( 'mb_strlen' ) ? \mb_strlen( $desc ) : \strlen( $desc );
-		if ( $len >= 120 && $len <= 160 ) {
-			/* translators: %d: meta description length in characters */
-			return $this->item( 'meta_description', 'passed', \__( 'Meta description', 'nexter-extension' ), sprintf( \__( 'Meta description length is %d characters (within 120–160).', 'nexter-extension' ), $len ), '', false, '' );
+
+		// Same reasoning as the title check: 120–160 is the ideal, not the minimum acceptable, so
+		// only a length that actually costs the user something is a warning (over 160 = truncated).
+		// Anything shorter is a suggestion. Messages name the homepage, since that is what is
+		// measured — not the per-post template shown in On-Page → Meta Template.
+		if ( $len > 160 ) {
+			return $this->item(
+				'meta_description',
+				'warning',
+				\__( 'Meta description', 'nexter-extension' ),
+				sprintf(
+					/* translators: %d: character count */
+					\__( 'The homepage meta description is %d characters, so search engines will probably cut it off. Keep it under 160.', 'nexter-extension' ),
+					$len
+				),
+				\__( 'Shorten the homepage description in On-Page → Home Page.', 'nexter-extension' ),
+				false,
+				''
+			);
+		}
+		if ( $len < 70 ) {
+			return $this->item(
+				'meta_description',
+				'suggestion',
+				\__( 'Meta description', 'nexter-extension' ),
+				sprintf(
+					/* translators: %d: character count */
+					\__( 'The homepage meta description is %d characters. That is valid, but 120–160 gives search engines more to show.', 'nexter-extension' ),
+					$len
+				),
+				\__( 'Optional: expand the homepage description in On-Page → Home Page.', 'nexter-extension' ),
+				false,
+				''
+			);
 		}
 		return $this->item(
 			'meta_description',
-			'warning',
+			'passed',
 			\__( 'Meta description', 'nexter-extension' ),
 			sprintf(
-				/* translators: %1$d: meta description length in characters */
-				\__( 'Meta description length is %1$d characters. Aim for about 120–160 characters.', 'nexter-extension' ),
+				/* translators: %d: meta description length in characters */
+				\__( 'The homepage meta description is %d characters, which works well in search results.', 'nexter-extension' ),
 				$len
 			),
-			\__( 'Refine the homepage description for clearer snippets in search results.', 'nexter-extension' ),
+			'',
 			false,
 			''
 		);
@@ -1022,7 +1098,8 @@ class Engine {
 				''
 			);
 		}
-		$missing = 0;
+		$missing       = 0;
+		$missing_files = array();
 		foreach ( $tags[0] as $tag ) {
 			// Lazy-loaded / slider images defer their real source (and frequently their ALT) to
 			// JavaScript, so the server-rendered tag legitimately has no usable ALT yet — auditing
@@ -1031,27 +1108,52 @@ class Engine {
 			if ( \preg_match( '/\bdata-(?:lazy-)?src(?:set)?\s*=/i', $tag ) || \preg_match( '/\bdata-lazy(?:-[a-z-]+)?\s*=/i', $tag ) ) {
 				continue;
 			}
+			// Explicitly decorative images are VALID without ALT text per WCAG/ARIA — a spacer, an
+			// icon next to a text label, a theme flourish. role="presentation"/"none" and
+			// aria-hidden="true" are the author saying "ignore this", so flagging them is a false
+			// positive (a common source of an unexplained "1 image missing ALT" on a homepage).
+			if ( \preg_match( '/\brole\s*=\s*["\']?(?:presentation|none)\b/i', $tag )
+				|| \preg_match( '/\baria-hidden\s*=\s*["\']?true\b/i', $tag ) ) {
+				continue;
+			}
+			// 1x1 tracking / spacer pixels are not content images.
+			if ( \preg_match( '/\bwidth\s*=\s*["\']?1\b/i', $tag ) && \preg_match( '/\bheight\s*=\s*["\']?1\b/i', $tag ) ) {
+				continue;
+			}
 			// A PRESENT alt attribute is intentional authoring — INCLUDING alt="" on a decorative
 			// image, which is valid per WCAG and must NOT be reported as a problem. Only a
 			// completely ABSENT alt attribute counts as missing. (The old code flagged intentional
 			// empty alt="" as "missing usable ALT", a false positive.)
 			if ( ! \preg_match( '/\balt\s*=/i', $tag ) ) {
 				++$missing;
+				// Record WHICH image, so the report is actionable instead of a bare count the user
+				// has to guess at (e.g. "is it my SVG logo or a background image?").
+				if ( \count( $missing_files ) < 5 && \preg_match( '/\bsrc\s*=\s*["\']([^"\']+)["\']/i', $tag, $sm ) ) {
+					$missing_files[] = \wp_basename( \strtok( $sm[1], '?' ) );
+				}
 			}
 		}
 		if ( 0 === $missing ) {
 			return $this->item( 'image_alt', 'passed', \__( 'Image ALT attributes', 'nexter-extension' ), \__( 'All homepage images include an ALT attribute (empty alt="" on decorative images is allowed).', 'nexter-extension' ), '', false, '' );
 		}
+		$detail = sprintf(
+			/* translators: %d: count */
+			\__( '%d image(s) on the homepage are missing usable ALT text.', 'nexter-extension' ),
+			$missing
+		);
+		if ( ! empty( $missing_files ) ) {
+			$detail .= ' ' . sprintf(
+				/* translators: %s: comma-separated list of image file names */
+				\__( 'Affected image(s): %s.', 'nexter-extension' ),
+				\implode( ', ', $missing_files )
+			);
+		}
 		return $this->item(
 			'image_alt',
 			'warning',
 			\__( 'Image ALT attributes', 'nexter-extension' ),
-			sprintf(
-				/* translators: %d: count */
-				\__( '%d image(s) on the homepage are missing usable ALT text.', 'nexter-extension' ),
-				$missing
-			),
-			\__( 'Add descriptive ALT attributes for accessibility and image SEO.', 'nexter-extension' ),
+			$detail,
+			\__( 'Add descriptive ALT attributes for accessibility and image SEO. Purely decorative images (spacers, icons, SVG flourishes) should instead carry alt="", role="presentation" or aria-hidden="true", which this check accepts.', 'nexter-extension' ),
 			false,
 			'',
 			$missing

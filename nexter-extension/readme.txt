@@ -3,7 +3,7 @@ Contributors: posimyththemes, nirmalkavaiya, sagarpatel124
 Tags: seo, security, theme-builder, code-snippet, image-optimizer
 Requires at least: 5.9
 Tested up to: 7.0
-Stable tag: 4.7.3
+Stable tag: 4.7.4
 Requires PHP: 7.4
 License: GPLv3
 License URI: https://opensource.org/licenses/GPL-3.0
@@ -241,9 +241,44 @@ Yes. [Compare Free vs Pro →](https://nexterwp.com/free-vs-pro/#Nexter-Extensio
 7. Admin Interface — White Label, Branded Login, Admin Menu Organizer & Dashboard Cleanup
 8. SMTP Email — Gmail, Mailgun, SendGrid & Custom SMTP with Test Email Tool
 
+
+== External services ==
+
+Nexter Extension may connect to external services below only when the related feature is enabled:
+
+* **POSIMYTH Analytics** (api.posimyth.com) may receive non-sensitive site, environment and feature-usage data when "Share Non-Sensitive Details" is enabled. Off by default; nothing is sent until you turn it on. [Terms](https://store.posimyth.com/terms-conditions/) and [Privacy Policy](https://store.posimyth.com/privacy-policy/) — [see exactly what is shared](https://nexterwp.com/docs/data-sharing/)
+
+* **POSIMYTH Store** (store.posimyth.com) is used to activate and validate a Pro license and to load the template library. [Terms](https://store.posimyth.com/terms-conditions/) and [Privacy Policy](https://store.posimyth.com/privacy-policy/)
+
+* **WordPress.org API** (api.wordpress.org, themes.svn.wordpress.org) is used by Rollback Manager to look up and download an earlier version of a plugin or theme, only when you open Rollback Manager or perform a rollback. [Privacy Policy](https://wordpress.org/about/privacy/)
+
+* **Google Fonts** (fonts.googleapis.com, fonts.gstatic.com) may be downloaded when "Self-Host Google Fonts" is enabled, so fonts are served from your own server. [Terms](https://developers.google.com/fonts/faq) and [Privacy Policy](https://policies.google.com/privacy)
+
+* **Adobe Fonts** (typekit.com, use.typekit.net) may load when you add your own Adobe Fonts project ID. [Terms](https://www.adobe.com/legal/terms.html) and [Privacy Policy](https://www.adobe.com/privacy/policy.html)
+
+* **Google reCAPTCHA** (google.com/recaptcha) verifies form submissions when you enable reCAPTCHA under CAPTCHA Spam Protection and add your own site key. [Terms](https://policies.google.com/terms) and [Privacy Policy](https://policies.google.com/privacy)
+
+* **Cloudflare Turnstile** (challenges.cloudflare.com) verifies form submissions when you enable Turnstile under CAPTCHA Spam Protection and add your own site key. [Terms](https://www.cloudflare.com/website-terms/) and [Privacy Policy](https://www.cloudflare.com/privacypolicy/)
+
+* **Google OAuth** (accounts.google.com, oauth2.googleapis.com) is used only if you connect Gmail or Google Workspace via OAuth in the SMTP Email settings, to authenticate your outgoing mail connection. [Terms](https://policies.google.com/terms) and [Privacy Policy](https://policies.google.com/privacy)
+
 == Changelog ==
 
 ### View Complete Changelog at [roadmap.nexterwp.com](https://roadmap.nexterwp.com/updates?filter=Nexter+Extension+-+FREE)
+
+= V4.7.4 = 04 August 2026
+- Added : Security : Custom Login URL now has a "Redirect to Custom URL" behaviour, so old wp-login.php / wp-admin requests can go to your own front-end login page; accepts a slug or an on-site URL and refuses off-site targets and redirect loops
+- Improvement : Nexter SEO : "Fix Now" now opens the setting that actually controls each issue, and issues fixed in the content or permalink (alt text, subheadings, readability, slug) tell you what to change instead of opening an unrelated panel
+- Improvement : Nexter SEO : Readability now lists the specific over-long sentences with their word count, flags passive voice, counts oversized paragraphs and reports the share of long words, instead of showing only a score
+- Fixed : Nexter SEO : pages using sliders (Smart Slider 3, Revolution Slider, Swiper) or page-builder background images are no longer reported as having "no images"; slide backgrounds, lazy-loaded sources, srcset, <picture>, video embeds and gallery blocks are now recognised
+- Fixed : Nexter SEO : the homepage ALT-text check no longer flags intentionally decorative images (role="presentation", aria-hidden="true") or 1x1 tracking pixels, and now names the files that are missing ALT text
+- Fixed : Nexter SEO : the SEO panel now stays open after you save and refreshes its checks in place, so a focus keyword you just entered is reflected immediately
+- Fixed : Nexter SEO : changing the Focus Keyword without saving no longer shows keyword density, title/description match and slug figures calculated for the previous keyword; those checks now ask for a save instead
+- Fixed : Nexter SEO : Open Graph and X (Twitter) descriptions no longer leak raw shortcode text such as [rev_slider ...] or [smartslider3 ...]; shortcodes are stripped from every meta description, social tag and term description
+- Fixed : Nexter SEO : Site Audit no longer reports a "Warning" for a title or meta description that is merely outside the ideal length; only lengths that actually get cut off in search results are flagged, and the messages state that they refer to your homepage
+- Fixed : Nexter SEO : WooCommerce single-product pages are dramatically faster and no longer risk exhausting memory; resolving the title/description template pulled in the entire schema replacement set (~241,000 option lookups per page view) and now resolves only the product fields it needs
+- Fixed : Nexter SEO : Site Audit no longer stays stuck on "Run First Audit"; the queued audit now completes even where WP-Cron is unreliable (many shared hosts, LiteSpeed, staging and password-protected sites)
+- Fixed : Nexter SEO : the URL slug check no longer asks you to add a focus keyword the slug already contains; a multi-word keyword ("best seo plugin") is now matched against the hyphenated slug ("best-seo-plugin")
 
 = V4.7.3 = 28 July 2026
 - Fixed : Nexter SEO : dismissing the "Enable SEO" admin notice now sticks — its dismiss script was not being loaded on the screens where the notice appears, so the close button only hid it until the next page load
