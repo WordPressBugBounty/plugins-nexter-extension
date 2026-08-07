@@ -18,7 +18,7 @@ if ( ! class_exists( 'Posimyth_Consent_Notice' ) ) {
 	 */
 	class Posimyth_Consent_Notice {
 
-		const VERSION = '1.1.0';
+		const VERSION = '1.2.0';
 
 		/**
 		 * Shared across every plugin instance in this suite: only one notice renders per page load.
@@ -26,6 +26,24 @@ if ( ! class_exists( 'Posimyth_Consent_Notice' ) ) {
 		 * @var bool
 		 */
 		private static bool $rendered_this_request = false;
+
+		/**
+		 * Same idea for the inline CSS/JS (E9): every product instance hooks admin_enqueue_scripts,
+		 * so without this the identical stylesheet and script were attached once per active product.
+		 *
+		 * @var bool
+		 */
+		private static bool $assets_enqueued = false;
+
+		/**
+		 * Suite_key => opt_in_option, as first registered (E2). The whole design assumes every
+		 * product in a suite shares ONE opt-in option; a product passing its own option under the
+		 * same suite_key would get permanently locked out — the shared dismissed flag silences its
+		 * notice while its private option never gets set. Catch that in development.
+		 *
+		 * @var array<string,string>
+		 */
+		private static array $suite_contracts = array();
 
 		/**
 		 * Every product that shares this consent, keyed by plugin slug => plugin name.
@@ -81,6 +99,24 @@ if ( ! class_exists( 'Posimyth_Consent_Notice' ) ) {
 				self::$registered_products[ $this->config['plugin_slug'] ] = (string) $this->config['plugin_name'];
 			}
 
+			// Contract check (E2): everyone under one suite_key must share ONE opt_in_option, or the
+			// suite-wide dismissed flag permanently locks the odd product out of ever being asked.
+			$suite = (string) $this->config['suite_key'];
+			if ( ! isset( self::$suite_contracts[ $suite ] ) ) {
+				self::$suite_contracts[ $suite ] = (string) $this->config['opt_in_option'];
+			} elseif ( self::$suite_contracts[ $suite ] !== (string) $this->config['opt_in_option'] ) {
+				_doing_it_wrong(
+					__METHOD__,
+					sprintf(
+						'Every product sharing suite_key "%s" must pass the same opt_in_option. Got "%s", the suite already uses "%s" — this product would never be asked for consent.',
+						esc_html( $suite ),
+						esc_html( (string) $this->config['opt_in_option'] ),
+						esc_html( self::$suite_contracts[ $suite ] )
+					),
+					'2.2.0'
+				);
+			}
+
 			$this->hooks();
 		}
 
@@ -100,6 +136,13 @@ if ( ! class_exists( 'Posimyth_Consent_Notice' ) ) {
 			if ( ! $this->should_show() ) {
 				return;
 			}
+			// Once per request, not once per product (E9): each active product's instance runs this
+			// hook, and the CSS/JS are identical, so they were being attached N times.
+			if ( self::$assets_enqueued ) {
+				return;
+			}
+			self::$assets_enqueued = true;
+
 			wp_add_inline_style( 'wp-admin', $this->inline_css() );
 			wp_add_inline_script( 'jquery', $this->inline_js() );
 		}
@@ -165,32 +208,58 @@ if ( ! class_exists( 'Posimyth_Consent_Notice' ) ) {
 		const SNOOZE_SECONDS = 30 * DAY_IN_SECONDS;
 
 		/**
+		 * How long the notice stays quiet after install, in seconds.
+		 *
+		 * Filterable via posimyth_consent_notice_grace_seconds — see grace_period_ends().
+		 */
+		const GRACE_SECONDS = 2 * DAY_IN_SECONDS;
+
+		/**
+		 * Stores the Allow/Dismiss choice, suite-wide.
+		 */
+		/**
+		 * The capability that may see and answer this notice.
+		 *
+		 * On multisite the consent is ONE answer for the whole network (the options below are site
+		 * options), so only someone who speaks for the network may give it — a subsite admin would
+		 * otherwise be answering for every other blog (A6).
+		 *
+		 * @return string
+		 */
+		private function required_capability(): string {
+			return is_multisite() ? 'manage_network_options' : 'manage_options';
+		}
+
+		/**
 		 * Stores the Allow/Dismiss choice, suite-wide.
 		 */
 		public function handle_ajax(): void {
 			// Nonce AND capability, not nonce alone. Today the nonce is only ever printed inside markup
-			// that render() already gates on manage_options, so this is not exploitable — but that makes
-			// the handler's safety a property of its callers rather than of itself. This flips consent
-			// for the whole site, so it checks for the capability directly.
-			if ( ! current_user_can( 'manage_options' ) ) {
+			// that render() already gates on the same capability, so this is not exploitable — but that
+			// makes the handler's safety a property of its callers rather than of itself. This flips
+			// consent for the whole site (network, on multisite), so it checks directly.
+			if ( ! current_user_can( $this->required_capability() ) ) {
 				wp_send_json_error( array( 'message' => 'unauthorized' ), 403 );
 			}
 			check_ajax_referer( $this->config['ajax_action'], 'nonce' );
 			$choice = sanitize_key( $_POST['choice'] ?? 'skip' );
 
 			// Both flags are keyed on suite_key, not on the plugin slug, so Nexter Extension and Nexter
-			// Blocks share one answer and the user is never asked twice.
+			// Blocks share one answer and the user is never asked twice. Site options on purpose (A6):
+			// on multisite one install means one consent, not one per blog — per-blog options produced
+			// N notices and N heartbeats for a single network-activated install. On a single site,
+			// *_site_option() falls back to the plain option of the same name, so nothing changes.
 			if ( 'allow' === $choice ) {
-				update_option( $this->config['opt_in_option'], 1 );
+				update_site_option( $this->config['opt_in_option'], 1 );
 				// An explicit yes is final: never ask again, even if sharing is later turned back off.
-				update_option( 'posi_consent_dismissed_' . $this->config['suite_key'], 1 );
+				update_site_option( 'posi_consent_dismissed_' . $this->config['suite_key'], 1 );
 				if ( is_callable( $this->config['tracker_cb'] ) ) {
 					call_user_func( $this->config['tracker_cb'], 'activate' );
 				}
 			} else {
-				update_option( $this->config['opt_in_option'], 0 );
+				update_site_option( $this->config['opt_in_option'], 0 );
 				// Dismiss only snoozes — see SNOOZE_SECONDS.
-				update_option( 'posi_consent_snoozed_until_' . $this->config['suite_key'], time() + self::SNOOZE_SECONDS );
+				update_site_option( 'posi_consent_snoozed_until_' . $this->config['suite_key'], time() + self::SNOOZE_SECONDS );
 			}
 
 			wp_send_json_success();
@@ -202,11 +271,13 @@ if ( ! class_exists( 'Posimyth_Consent_Notice' ) ) {
 		 * @return bool
 		 */
 		private function should_show(): bool {
-			if ( ! current_user_can( 'manage_options' ) ) {
+			// On multisite only someone who can answer for the whole network is asked — see
+			// required_capability(). All three flags below are site options for the same reason.
+			if ( ! current_user_can( $this->required_capability() ) ) {
 				return false;
 			}
 			// Answered for good: "Allow" was clicked (see handle_ajax). Never ask again.
-			if ( get_option( 'posi_consent_dismissed_' . $this->config['suite_key'] ) ) {
+			if ( get_site_option( 'posi_consent_dismissed_' . $this->config['suite_key'] ) ) {
 				return false;
 			}
 
@@ -216,13 +287,18 @@ if ( ! class_exists( 'Posimyth_Consent_Notice' ) ) {
 			// permission the user has already granted (and could even read as though it were off).
 			// This is also what stops the notice when the user says yes from Onboarding or from
 			// Dashboard → Settings rather than from the notice itself.
-			if ( ! empty( $this->config['opt_in_option'] ) && ! empty( get_option( $this->config['opt_in_option'] ) ) ) {
+			if ( ! empty( $this->config['opt_in_option'] ) && ! empty( get_site_option( $this->config['opt_in_option'] ) ) ) {
 				return false;
 			}
 
 			// Snoozed by a previous "Dismiss" — comes back when the snooze expires.
-			$snoozed_until = (int) get_option( 'posi_consent_snoozed_until_' . $this->config['suite_key'], 0 );
+			$snoozed_until = (int) get_site_option( 'posi_consent_snoozed_until_' . $this->config['suite_key'], 0 );
 			if ( $snoozed_until > time() ) {
+				return false;
+			}
+
+			// Quiet for the first couple of days after install — see grace_period_ends().
+			if ( $this->grace_period_ends() > time() ) {
 				return false;
 			}
 
@@ -230,12 +306,50 @@ if ( ! class_exists( 'Posimyth_Consent_Notice' ) ) {
 			//
 			// It used to require a saved setting before asking, so a fresh install was never asked at
 			// all until the user happened to save something — and plenty of sites never do. The ask now
-			// starts from activation and keeps coming back (snoozed, not silenced) until the user
-			// actually decides, either here or from Onboarding / Dashboard → Settings.
+			// starts a couple of days after activation and keeps coming back (snoozed, not silenced)
+			// until the user actually decides, either here or from Onboarding / Dashboard → Settings.
 			//
 			// installed_option is still accepted in the config for backwards compatibility, but it is
 			// no longer consulted; mark_first_use() is now a no-op for gating purposes.
 			return true;
+		}
+
+		/**
+		 * When the post-install quiet period ends.
+		 *
+		 * A consent notice that appears in the same breath as activation competes with whatever the user
+		 * actually came to do, and asking someone to share diagnostics about a plugin they have not used
+		 * yet is a worse question than asking once they have. So the ask is delayed — not skipped: after
+		 * this window it behaves exactly as before, coming back until the user decides.
+		 *
+		 * The start is stamped on the first admin load that would otherwise have shown the notice,
+		 * rather than read from the tracker's install timestamp. That timestamp is a per-site option
+		 * holding a date string, and this notice is answered once per network (see required_capability),
+		 * so it is the wrong scope and the wrong type to gate a network-wide prompt. On a fresh install
+		 * the two are the same moment anyway — activation lands the user on an admin screen — and on a
+		 * site upgrading into this version it starts the window now instead of treating a months-old
+		 * install as already overdue, which would show the notice on the very next page load.
+		 *
+		 * @return int Unix timestamp at which the notice may start showing.
+		 */
+		private function grace_period_ends(): int {
+			$key   = 'posi_consent_grace_start_' . $this->config['suite_key'];
+			$start = (int) get_site_option( $key, 0 );
+
+			if ( $start <= 0 ) {
+				$start = time();
+				update_site_option( $key, $start );
+			}
+
+			/**
+			 * Filters how long the data-sharing notice stays quiet after install.
+			 *
+			 * @param int    $seconds   Quiet period in seconds. Default 2 days.
+			 * @param string $suite_key Suite the notice belongs to.
+			 */
+			$grace = (int) apply_filters( 'posimyth_consent_notice_grace_seconds', self::GRACE_SECONDS, (string) $this->config['suite_key'] );
+
+			return $start + max( 0, $grace );
 		}
 
 		/**

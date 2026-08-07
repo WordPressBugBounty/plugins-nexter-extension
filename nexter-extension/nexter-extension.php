@@ -3,7 +3,7 @@
  * Plugin Name: Nexter Extension
  * Plugin URI: https://nexterwp.com
  * Description: Nexter Extension adds lightweight performance, security, and admin features to WordPress so you can improve and manage your website without installing many plugins.
- * Version: 4.7.4
+ * Version: 4.7.5
  * Author: POSIMYTH
  * Author URI: https://posimyth.com
  * Text Domain: nexter-extension
@@ -26,7 +26,7 @@ define( 'NEXTER_EXT_BASE', plugin_basename( NEXTER_EXT_FILE ) );
 define( 'NEXTER_EXT_DIR', plugin_dir_path( NEXTER_EXT_FILE ) );
 define( 'NEXTER_EXT_URL', plugins_url( '/', NEXTER_EXT_FILE ) );
 define( 'NEXTER_EXT_CPT', 'nxt_builder' );
-define( 'NEXTER_EXT_VER', '4.7.4' );
+define( 'NEXTER_EXT_VER', '4.7.5' );
 // Rewrite-rules revision for the Theme Builder CPT. Bump this whenever the CPT's slug or
 // rewrite args change to trigger a one-time automatic flush (see nxt_ext_flush_rewrite_rules
 // / nxt_ext_maybe_flush_rewrite_rules). Mirrors Elementor's activation + admin_init upgrade
@@ -40,13 +40,18 @@ if ( ! defined( 'NXT_BUILD_POST' ) ) {
 /* Centralized settings cache — load once, before any module reads options. */
 require_once NEXTER_EXT_DIR . 'include/classes/class-nxt-options.php';
 
-/* POSIMYTH Analytics SDK (shared base + per-plugin subclass + consent notice + churn survey) */
-$nxt_posimyth_sdk = NEXTER_EXT_DIR . 'include/posimyth-sdk/';
-require_once $nxt_posimyth_sdk . 'class-posimyth-tracker-base.php';
-require_once $nxt_posimyth_sdk . 'class-posimyth-tracker-ne.php';
-require_once $nxt_posimyth_sdk . 'class-posimyth-consent-notice.php';
-require_once $nxt_posimyth_sdk . 'class-posimyth-deactivation-survey.php';
-unset( $nxt_posimyth_sdk );
+/*
+ * POSIMYTH Analytics SDK — registered, not required (E6).
+ *
+ * The shared classes used to be require_once'd right here, each behind a class_exists guard, so
+ * whichever POSIMYTH plugin WordPress included FIRST supplied its copy to the whole suite — an
+ * outdated sibling silently downgraded everyone (an older do_request() without $bypass_consent
+ * dropped the survey's third argument, so submitted feedback never sent). Now every plugin only
+ * registers its bundled copy, and the loader requires the NEWEST one at plugins_loaded priority 0,
+ * before any consumer runs. Our per-product subclass loads inside the consumers below.
+ */
+require_once NEXTER_EXT_DIR . 'include/posimyth-sdk/posimyth-sdk-loader.php';
+posimyth_sdk_register( NEXTER_EXT_DIR . 'include/posimyth-sdk' );
 /**
  * White-label (Pro): a rebranded install must never surface POSIMYTH-branded UI (consent notice /
  * deactivation survey) AND must never phone api.posimyth.com. Same rule the legacy deactivation
@@ -61,9 +66,16 @@ unset( $nxt_posimyth_sdk );
  * @return bool
  */
 function nxt_posimyth_is_white_labelled() {
-	if ( ! defined( 'NXT_PRO_EXT' ) && ! defined( 'TPGBP_VERSION' ) ) {
-		return false; // White-label is a Pro feature; Free installs can never be rebranded.
-	}
+	/*
+	 * The stored brand IS the evidence, not the presence of Pro (A8).
+	 *
+	 * This used to require NXT_PRO_EXT or TPGBP_VERSION first, on the reasoning that only Pro can
+	 * configure white-labelling. True — but the setting outlives Pro: deactivate Pro on a rebranded
+	 * install and both constants vanish, so the site was suddenly judged "not white-labelled",
+	 * POSIMYTH-branded UI reappeared in someone else's admin and the pings resumed. A brand name that
+	 * is still stored still means "do not surface POSIMYTH here". A Free-only site that never had Pro
+	 * has nothing stored, so it is unaffected.
+	 */
 	if ( ! class_exists( 'Nxt_Options' ) ) {
 		return false;
 	}
@@ -78,12 +90,28 @@ add_action( 'plugins_loaded', function () {
 		return;
 	}
 
-	// One-time migration: consolidate this plugin's legacy standalone opt-in into the
-	// shared Nexter-family consent (Nexter Extension + Nexter Blocks share one decision now).
-	// Only fires if the shared option has literally never been set (get_option's `false`
-	// fallback), so an explicit opt-out (stored as 0) is never overwritten.
-	if ( false === get_option( 'posimyth_nexter_share_analytics', false ) && get_option( 'nexter_ext_share_analytics', false ) ) {
-		update_option( 'posimyth_nexter_share_analytics', 1, false );
+	// The shared base was loaded by the SDK loader at plugins_loaded priority 0 (newest bundled
+	// copy wins); the per-product subclass is ours alone and loads here, after the winner exists.
+	require_once NEXTER_EXT_DIR . 'include/posimyth-sdk/class-posimyth-tracker-ne.php';
+
+	/*
+	 * One-time migration: consolidate this plugin's legacy standalone opt-in into the shared
+	 * Nexter-family consent (Nexter Extension + Nexter Blocks share one decision now). Only fires if
+	 * the shared option has literally never been set (get_site_option's `false` fallback), so an
+	 * explicit opt-out (stored as 0) is never overwritten.
+	 *
+	 * Marker-guarded (C4): the legacy option is not autoloaded, so on a site where the shared option
+	 * was never set this ran an uncached query on EVERY request, front end included. The marker is
+	 * autoloaded, so after the first pass this costs nothing.
+	 *
+	 * Written with update_site_option and left autoloaded: has_consent() reads it on every request,
+	 * so a non-autoloaded consent option (the old `false` third argument) meant a query each time.
+	 */
+	if ( ! get_site_option( 'posimyth_ne_legacy_consent_migrated' ) ) {
+		if ( false === get_site_option( 'posimyth_nexter_share_analytics', false ) && get_option( 'nexter_ext_share_analytics', false ) ) {
+			update_site_option( 'posimyth_nexter_share_analytics', 1 );
+		}
+		update_site_option( 'posimyth_ne_legacy_consent_migrated', 1 );
 	}
 
 	// Registers activate / deactivate / weekly-heartbeat hooks + cron (all consent-gated).
@@ -102,7 +130,24 @@ add_action( 'plugins_loaded', function () {
 		}
 		$raw     = isset( $_POST['enabled'] ) ? sanitize_text_field( wp_unslash( $_POST['enabled'] ) ) : '0';
 		$enabled = ! in_array( $raw, array( '', '0', 'false', 'off', 'no' ), true );
-		update_option( 'posimyth_nexter_share_analytics', $enabled ? 1 : 0, false );
+		// Site option + autoloaded, matching the notice and has_consent() (A6, C4). The old
+		// update_option( …, false ) wrote a per-blog, non-autoloaded value, so on multisite the
+		// dashboard toggle and the notice were answering two different questions.
+		update_site_option( 'posimyth_nexter_share_analytics', $enabled ? 1 : 0 );
+
+		/*
+		 * Answering here counts as answering the consent notice, either way.
+		 *
+		 * Turning sharing ON already silences the notice on its own (should_show() sees the option).
+		 * Saying NO did not: the option was set to 0, which is exactly the state the notice looks for,
+		 * so the very next admin page load asked again — the user had just declined in Onboarding or in
+		 * Dashboard → Settings and was immediately re-prompted. Record the decision so the ask stops.
+		 */
+		if ( class_exists( 'Posimyth_Consent_Notice' ) ) {
+			// Site option, matching the notice's own writes (A6).
+			update_site_option( 'posi_consent_dismissed_nexter_suite', 1 );
+		}
+
 		if ( $enabled && class_exists( 'Posimyth_Tracker_NE' ) ) {
 			Posimyth_Tracker_NE::send_first_ping();
 		}
@@ -112,7 +157,8 @@ add_action( 'plugins_loaded', function () {
 	// (The white-label gate now runs at the very top of this callback, so everything here —
 	// tracker included — is already known to be non-rebranded.)
 
-	$nxt_consent_notice = new Posimyth_Consent_Notice( array(
+	// The constructor registers its own hooks; nothing else needs the instance.
+	new Posimyth_Consent_Notice( array(
 		'plugin_name'      => 'Nexter Extension',
 		'plugin_slug'      => 'nexter-extension',
 		'opt_in_option'    => 'posimyth_nexter_share_analytics',
@@ -125,54 +171,19 @@ add_action( 'plugins_loaded', function () {
 		'suite_key'        => 'nexter_suite',
 	) );
 
-	// "First successful use" marker — the notice intentionally shows only after the user has
-	// actually used the plugin, never on bare activation. This also covers existing installs
-	// upgrading to this build, so they see the consent notice once too.
-	// Cheap: runs only while the marker is unset, then never queries again.
-	//
-	// "Used" means a settings group contains a saved TOGGLE, not merely that the group is non-empty.
-	// Non-empty was wrong: the code-snippets migration (admin_init priority 1) writes its own
-	// bookkeeping flag into nexter_extra_ext_options as
-	// ['code-snippets']['values']['migration'] = true, which made the group non-empty on the very
-	// first admin screen after activation — so the notice appeared before the user had touched a
-	// single setting, which is exactly what this gate exists to prevent.
-	//
-	// Every real extension entry is stored as `slug => array( 'switch' => bool, 'values' => ... )`.
-	// Internal bookkeeping only ever writes under `values`, never a `switch`. Testing for the
-	// presence of a `switch` key therefore distinguishes "the user saved something" from "the plugin
-	// wrote to its own options", and keeps working if another migration adds more bookkeeping later.
-	add_action( 'admin_init', function () use ( $nxt_consent_notice ) {
-		if ( get_option( 'posimyth_ne_first_use_at', 0 ) ) {
-			return;
-		}
-		$groups = array(
-			class_exists( 'Nxt_Options' ) ? Nxt_Options::extra_ext()   : get_option( 'nexter_extra_ext_options', array() ),
-			class_exists( 'Nxt_Options' ) ? Nxt_Options::performance() : get_option( 'nexter_site_performance', array() ),
-			class_exists( 'Nxt_Options' ) ? Nxt_Options::security()    : get_option( 'nexter_site_security', array() ),
-		);
-		foreach ( $groups as $opts ) {
-			if ( ! is_array( $opts ) ) {
-				continue;
-			}
-			foreach ( $opts as $entry ) {
-				// A saved toggle — including one saved OFF, which still means the user was there.
-				if ( is_array( $entry ) && array_key_exists( 'switch', $entry ) ) {
-					$nxt_consent_notice->mark_first_use();
-					return;
-				}
-				// Legacy shape: some older builds stored the toggle as a bare scalar.
-				if ( ! is_array( $entry ) && ! empty( $entry ) ) {
-					$nxt_consent_notice->mark_first_use();
-					return;
-				}
-			}
-		}
-	}, 20 );
+	// No "first successful use" gate any more: the consent notice now shows from activation and
+	// keeps asking (snoozed by Dismiss, never silenced) until the user decides — here, in Onboarding, or
+	// in Dashboard → Settings. Requiring a saved setting first meant a fresh install was never asked at
+	// all unless the user happened to save something. See Posimyth_Consent_Notice::should_show().
+
 
 	// "Why are you leaving?" survey — reason sent only if the user opted in.
 	new Posimyth_Deactivation_Survey( array(
 		'plugin_name'   => 'Nexter Extension',
 		'plugin_slug'   => 'nexter-extension',
+		// Matched against the Deactivate link's href, which is locale-proof (the row's data-slug is
+		// sanitize_title of the TRANSLATED plugin name, so it broke on non-English locales).
+		'plugin_file'   => plugin_basename( __FILE__ ),
 		'ajax_action'   => 'posimyth_ne_deact',
 		'opt_in_option' => 'posimyth_nexter_share_analytics',
 		// Full submit = consent → send the non-sensitive environment payload + reason.
@@ -241,6 +252,10 @@ function nxt_ext_activate() {
 	// consent-gated inside on_self_activate(), so a fresh install sends nothing.
 	// Rebranded installs must not phone home from here either — this runs during our own activation
 	// request, so the plugins_loaded gate has not had a chance to short-circuit anything yet.
+	// During that same activation request the plugins_loaded callback above never ran either, so the
+	// subclass has to be loaded here; the loader already loaded the shared base immediately (its
+	// did_action( 'plugins_loaded' ) branch) when this file was included.
+	require_once NEXTER_EXT_DIR . 'include/posimyth-sdk/class-posimyth-tracker-ne.php';
 	if ( class_exists( 'Posimyth_Tracker_NE' ) && ! nxt_posimyth_is_white_labelled() ) {
 		Posimyth_Tracker_NE::on_self_activate();
 	}
@@ -281,6 +296,16 @@ function nxt_ext_deactivate() {
 		$deactivation->remove_login_attempt_table();
 	}
 	delete_transient( 'nxtext_cached_feed_data' );
+
+	// Stop the weekly analytics heartbeat. init() scheduled it but nothing ever cleared it, so a
+	// deactivated plugin left a recurring event behind in WordPress permanently. Consent itself is
+	// left in place — the user may reactivate, and re-asking someone who already answered is worse
+	// than remembering. Deleting the plugin clears consent too; see uninstall.php.
+	if ( class_exists( 'Posimyth_Tracker_NE' ) ) {
+		Posimyth_Tracker_NE::unschedule();
+	} else {
+		wp_clear_scheduled_hook( 'posimyth_heartbeat_ne' );
+	}
 }
 
 // Plugin Activation and Deactivation Hooks

@@ -20,6 +20,29 @@ class Nxt_Dashboard_Data {
 
 	public function register_hooks() {
 		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts_admin' ], 1 );
+		add_action( 'wp_ajax_nxt_ext_onboarding_done', [ $this, 'nxt_ext_mark_onboarding_done' ] );
+	}
+
+	/**
+	 * Records that the onboarding wizard has been completed.
+	 *
+	 * The dashboard used to remember this in localStorage only, so it came back on another browser,
+	 * another admin user, or after clearing site data — and the gate that decides whether to run the
+	 * wizard reads a server option, which nothing on this side ever wrote.
+	 *
+	 * Deliberately its own endpoint rather than reusing Nexter Blocks' `nxt_boarding_store`: that one
+	 * also POSTs an environment payload including the admin email to api.posimyth.com, which has no
+	 * business happening just because someone finished a setup wizard. This only sets the flag.
+	 *
+	 * @return void
+	 */
+	public function nxt_ext_mark_onboarding_done() {
+		if ( ! current_user_can( 'manage_options' ) || ! check_ajax_referer( 'nexter_admin_nonce', 'security', false ) ) {
+			wp_send_json_error( [ 'message' => 'unauthorized' ], 403 );
+		}
+
+		update_option( 'nxt_onboarding_done', '1' );
+		wp_send_json_success( [ 'nxt_onboarding' => '1' ] );
 	}
 
 	public function get_setting_name() {
@@ -84,32 +107,53 @@ class Nxt_Dashboard_Data {
 		 * @return bool
 		 */
 	private function is_nexter_admin_page( $hook_suffix ) {
-		// Nexter dashboard pages (toplevel_page_nexter_welcome, nexter-ext_page_*)
-		if ( strpos( $hook_suffix, 'nexter' ) !== false || strpos( $hook_suffix, 'nxt_builder' ) !== false ) {
+		$hook_suffix = (string) $hook_suffix;
+		$build_post  = defined( 'NXT_BUILD_POST' ) ? NXT_BUILD_POST : 'nxt_builder';
+
+		// Nexter dashboard pages (toplevel_page_nexter_welcome, nexter-ext_page_*).
+		if ( false !== strpos( $hook_suffix, 'nexter' ) || false !== strpos( $hook_suffix, 'nxt_builder' ) ) {
 			return true;
 		}
-		// Page param based screens
-		if ( isset( $_GET['page'] ) ) {
-			$page = sanitize_text_field( wp_unslash( $_GET['page'] ) );
-			if ( strpos( $page, 'nexter' ) !== false || strpos( $page, 'nxt_' ) !== false ) {
+
+		// Page param based screens. Reading $_GET here is a screen test only — no state is changed —
+		// but it is still unslashed and sanitised, both because it is the correct thing to do and
+		// because Plugin Check flags a raw superglobal read.
+		if ( isset( $_GET['page'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only screen detection.
+			$page = sanitize_text_field( wp_unslash( $_GET['page'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only screen detection.
+			if ( false !== strpos( $page, 'nexter' ) || false !== strpos( $page, 'nxt_' ) ) {
 				return true;
 			}
 		}
-		// Theme builder CPT list screen
-		if ( 'edit.php' === $hook_suffix && isset( $_GET['post_type'] ) && 'nxt_builder' === $_GET['post_type'] ) {
-			return true;
+
+		// Theme builder CPT list, and the "add new" screen for it.
+		if ( in_array( $hook_suffix, array( 'edit.php', 'post-new.php' ), true ) && isset( $_GET['post_type'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only screen detection.
+			if ( sanitize_key( wp_unslash( $_GET['post_type'] ) ) === $build_post ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only screen detection.
+				return true;
+			}
 		}
-		// Single nxt_builder post edit
-		if ( in_array( $hook_suffix, array( 'post.php', 'post-new.php' ), true ) && defined( 'NXT_BUILD_POST' ) && NXT_BUILD_POST === get_post_type() ) {
-			return true;
+
+		/*
+		 * Editing a single builder post.
+		 *
+		 * Resolved from $_GET['post'] rather than get_post_type(): this method runs from
+		 * admin_enqueue_scripts at priority 1, where the global $post is not reliably set yet, so the
+		 * old global-based test returned false on exactly the screen it was meant to match. That is
+		 * the same way Nexter_Class_Load::is_nxt_builder_admin_screen() does it, so the two agree.
+		 */
+		if ( 'post.php' === $hook_suffix && ! empty( $_GET['post'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only screen detection.
+			$post_id = absint( wp_unslash( $_GET['post'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only screen detection.
+			if ( $post_id && get_post_type( $post_id ) === $build_post ) {
+				return true;
+			}
 		}
+
 		return false;
 	}
 
 		/*Load Panel Settings Style & Scripts*/
 	public function enqueue_scripts_admin( $hook_suffix ){
-		$minified = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
-		//$is_nexter_page = $this->is_nexter_admin_page( $hook_suffix );
+		$minified       = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
+		$is_nexter_page = $this->is_nexter_admin_page( $hook_suffix );
 
 		// Theme builder CPT list: select2 assets (lightweight, scoped)
 		if ( ( ( 'post-new.php' != $hook_suffix && 'post.php' != $hook_suffix && 'edit.php' == $hook_suffix ) && ( isset( $_GET['post_type'] ) && 'nxt_builder' == $_GET['post_type'] ) || ( defined( 'NXT_BUILD_POST' ) && NXT_BUILD_POST == get_post_type() ) ) || (isset( $_GET['page'] ) && $_GET['page'] === 'nxt_builder') ) {
@@ -117,11 +161,39 @@ class Nxt_Dashboard_Data {
 			wp_enqueue_script( 'nexter-select-js', NEXTER_EXT_URL . 'assets/js/extra/select2'. $minified .'.js', array(), NEXTER_EXT_VER, false );
 		}
 
-		// Early exit: skip all heavy assets on non-Nexter admin pages.
-		// Admin JS for notices/builder toggle is enqueued separately in Nexter_Class_Load.
-		/* if ( ! $is_nexter_page ) {
+		/*
+		 * Early exit: none of the heavy assets belong on admin screens that are not ours.
+		 *
+		 * This guard existed but was commented out, so every admin page load — Posts, Media, Users,
+		 * any plugin's settings screen — pulled in wp_enqueue_media(), the colour picker, the ~1.5 MB
+		 * dashboard bundle and the entire dashData payload for anyone with manage_options.
+		 *
+		 * It was presumably disabled because the small admin script that persists notice dismissals
+		 * (assets/js/admin/nexter-ext-admin.js) reads nxtext_ajax_object, and that script does render on
+		 * other screens. That is now handled where it belongs: the notice enqueues its own three-field
+		 * object when this method has not provided the full one. See
+		 * Nxt_Seo_Notice::maybe_enqueue_dismiss_js().
+		 */
+		/*
+		 * One exception to the page scoping above: this stylesheet is not page-specific.
+		 *
+		 * nexter-admin.css carries the Nexter admin MENU ICON (.wp-menu-image.dashicons-nexter-settings)
+		 * and the plugin's admin NOTICE styling (.nexter-license-activate, .nxt-nobtn-primary and
+		 * friends). The menu renders on every admin screen and the notices appear on screens like
+		 * Plugins and Dashboard, so scoping this file to Nexter pages left the menu icon blank and the
+		 * notices unstyled — the notice's two buttons collapsed to bare underlined links and its
+		 * icon/text row lost its layout. It is 9 KB minified, and it loaded on every admin page before
+		 * the scoping went in, so keeping it global costs nothing the early exit was added to save.
+		 * The expensive things — wp_enqueue_media(), the colour picker, the dashboard bundle and the
+		 * dashData payload — stay behind the exit.
+		 */
+		if ( is_user_logged_in() && current_user_can( 'manage_options' ) && ! is_customize_preview() ) {
+			wp_enqueue_style( 'nxt-panel-settings', NEXTER_EXT_URL .'assets/css/admin/nexter-admin'. $minified .'.css', array(), NEXTER_EXT_VER );
+		}
+
+		if ( ! $is_nexter_page ) {
 			return;
-		} */
+		}
 
 		// --- From here: Nexter pages only ---
 
@@ -134,7 +206,6 @@ class Nxt_Dashboard_Data {
 		}
 
 		if ( ! is_customize_preview() ) {
-			wp_enqueue_style( 'nxt-panel-settings', NEXTER_EXT_URL .'assets/css/admin/nexter-admin'. $minified .'.css', array(), NEXTER_EXT_VER );
 			wp_enqueue_style( 'wp-color-picker' );
 		}
 
@@ -166,7 +237,7 @@ class Nxt_Dashboard_Data {
 		$nexterInstalled = array_key_exists( 'nexter', $themes );
 		$theme_det_link  = Nexter_Ext_Panel_Settings::get_instance()->get_nexter_theme_details_link( 'nexter' );
 
-		$rollback_url = wp_nonce_url( admin_url( 'admin-post.php?action=nxtext_rollback&version=NEXTER_EXT_VER' ), 'nxtext_rollback' );
+		$rollback_url = wp_nonce_url( admin_url( 'admin-post.php?action=nxtext_rollback&version=' . NEXTER_EXT_VER ), 'nxtext_rollback' );
 
 		$nxtPlugin     = false;
 		$tpaePlugin    = false;
@@ -256,8 +327,23 @@ class Nxt_Dashboard_Data {
 		$dashData = [
 			'userData'                       => [
 				'userName'    => esc_html( $user->display_name ),
-				'profileLink' => esc_url( get_avatar_url( $user->ID ) )
+				'profileLink' => esc_url( get_avatar_url( $user->ID ) ),
+				// The onboarding wizard reads both of these; neither existed here, so the newsletter
+				// email prefill was undefined (a React controlled/uncontrolled warning) and the share
+				// tweet literally contained the string "undefined" in place of the site URL.
+				'userEmail'   => sanitize_email( $user->user_email ? $user->user_email : get_option( 'admin_email', '' ) ),
+				'siteUrl'     => esc_url( home_url() ),
 			],
+			// The share step's copy comes from the hosting product. The dashboard bundle is shared
+			// with Nexter Blocks, whose PHP does not send this key — the bundle then falls back to
+			// its original Nexter Blocks wording, so NB behaviour is unchanged. Without this, the
+			// Nexter Extension wizard asked users to tweet "I just installed Nexter Blocks".
+			'shareText'                      => __( 'I just installed Nexter Extension - @nexterwp One plugin that replaces a dozen single-use plugins for me - SEO, security, performance and more - without compromising my website performance. Excited to use it.', 'nexter-extension' ),
+			// Which product the onboarding diagnostics checkbox is asking about. Same reason as
+			// shareText above: the bundle is shared with Nexter Blocks, whose PHP does not send this
+			// key, so the bundle falls back to the Nexter Blocks wording and NB is unchanged. Without
+			// it, the Nexter Blocks wizard asked users to help make "Nexter Extension" faster.
+			'productName'                    => esc_html__( 'Nexter Extension', 'nexter-extension' ),
 			'whiteLabelData'                 => [
 				'brandname' => $this->setting_name,
 				'brandlogo' => $this->setting_logo
@@ -269,6 +355,18 @@ class Nxt_Dashboard_Data {
 			'nxtDisableImg'                  => ! empty( $legacy_disabled_images ) ? $legacy_disabled_images : [],
 			'nxtImageSize'                   => $legacy_custom_image_sizes,
 			'nxtSecurity'                    => Nxt_Options::security(),
+			// Whether the onboarding wizard has already been completed. Same option Nexter Blocks
+			// uses, so finishing the wizard in either product counts for both. The dashboard's
+			// onboarding gate reads this; without it the key was undefined on every load.
+			'nxt_onboarding'                 => get_option( 'nxt_onboarding_done' ),
+			// NOT sending showOnboarding is deliberate: Nexter Extension does not run the setup wizard.
+			// The wizard's content is Nexter Blocks' (template import / block toggles), so opening it
+			// here showed a flow that does not belong to this plugin. With this key absent the shared
+			// bundle falls back to its original rule, which is false on this dashboard — the wizard
+			// stays closed, exactly as before. Do not add it back without also giving the wizard
+			// Nexter Extension content.
+			// Lets the shared bundle record completion against whichever plugin is hosting it.
+			'onboardingDoneAction'           => 'nxt_ext_onboarding_done',
 			'nexterThemeActive'              => (defined( 'NXT_VERSION' )) ? true : false,
 			'nexterThemeIntall'              => $nexterInstalled,
 			'nexterThemeDet'                 => $theme_det_link,
@@ -311,7 +409,9 @@ class Nxt_Dashboard_Data {
 			'extOption'                      => Nxt_Options::tpgb_connection_data(),
 			// Shared "Share Non-Sensitive Details" consent (opt-in, default OFF). Same option the
 			// onboarding checkbox, the dashboard toggle and the inline notice all read/write.
-			'shareAnalytics'                 => (int) get_option( 'posimyth_nexter_share_analytics', 0 ),
+			// Site option (A6): the consent is one answer per install, so the toggle must show the
+			// same value the notice and has_consent() use.
+			'shareAnalytics'                 => (int) get_site_option( 'posimyth_nexter_share_analytics', 0 ),
 			// Same docs page from both React surfaces, but tagged per placement so the campaign
 			// reports which one the reader came from. The inline notice tags itself in PHP.
 			'shareAnalyticsDocs'             => 'https://nexterwp.com/docs/data-sharing/?utm_source=wpbackend&utm_medium=admin&utm_campaign=datasharingsettings',

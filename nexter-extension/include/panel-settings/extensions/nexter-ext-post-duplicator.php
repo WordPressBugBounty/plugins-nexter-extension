@@ -81,7 +81,32 @@ if ( ! empty( $extension_option['wp-duplicate-post']['values'] ) ) {
 			$minified = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
 			wp_enqueue_style( 'nxt-duplicate-post-css', NEXTER_EXT_URL .'assets/css/admin/nxt-duplicate-post'. $minified .'.css', array(), NEXTER_EXT_VER );
 			wp_enqueue_script( 'nexter-duplicate-post-js', NEXTER_EXT_URL . 'assets/js/admin/nexter-duplicate-post'. $minified .'.js', array(), NEXTER_EXT_VER, true );
-		} 
+
+			/*
+			 * Localise the handful of values this script needs, on its own handle.
+			 *
+			 * The Duplicate row action lives on the Posts and Pages list screens, which are not Nexter
+			 * screens. nexter_admin_config used to arrive anyway, because the dashboard localised it on
+			 * every admin page along with a 1.5 MB bundle; now that it is correctly limited to Nexter
+			 * screens, this script has to bring its own or the Duplicate link silently does nothing.
+			 *
+			 * Skipped when the dashboard has already provided the full object, so the two never fight
+			 * over the same global.
+			 */
+			if ( ! wp_script_is( 'nexter-ext-dashscript', 'enqueued' ) ) {
+				wp_localize_script(
+					'nexter-duplicate-post-js',
+					'nexter_admin_config',
+					array(
+						'adminUrl'    => admin_url(),
+						'ajaxurl'     => admin_url( 'admin-ajax.php' ),
+						'ajax_nonce'  => wp_create_nonce( 'nexter_admin_nonce' ),
+						'duplicating' => esc_html__( 'Duplicating..', 'nexter-extension' ),
+						'duplicated'  => esc_html__( 'Duplicated', 'nexter-extension' ),
+					)
+				);
+			}
+		}
 	);
 
 	/**

@@ -34,6 +34,27 @@ if ( ! class_exists( 'Nxt_Seo_Notice' ) ) {
 			}
 			$minified = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
 			wp_enqueue_script( 'nexter-ext-builder-js', NEXTER_EXT_URL . 'assets/js/admin/nexter-ext-admin' . $minified . '.js', array(), NEXTER_EXT_VER, true );
+
+			/*
+			 * This notice renders on screens that are not Nexter's own, where the dashboard no longer
+			 * localises nxtext_ajax_object (it used to, on every admin page, along with a 1.5 MB bundle).
+			 * The dismiss script needs exactly three values from it, so provide just those.
+			 *
+			 * Only when the full object is absent: the dashboard localises it on Nexter screens at
+			 * admin_enqueue_scripts priority 1, and this runs at the default priority, so overwriting it
+			 * here would replace the complete object with a three-key one and break the dashboard.
+			 */
+			if ( ! wp_script_is( 'nexter-ext-dashscript', 'enqueued' ) ) {
+				wp_localize_script(
+					'nexter-ext-builder-js',
+					'nxtext_ajax_object',
+					array(
+						'ajax_url'   => admin_url( 'admin-ajax.php' ),
+						'ajax_nonce' => wp_create_nonce( 'nexter_admin_nonce' ),
+						'adminUrl'   => admin_url(),
+					)
+				);
+			}
 		}
 
 		/**

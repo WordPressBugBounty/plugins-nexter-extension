@@ -1578,8 +1578,23 @@ class Nexter_Content_SeoRank {
 		$min_sel = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
 		wp_enqueue_style( 'nexter-select-css', NEXTER_EXT_URL . 'assets/css/extra/select2' . $min_sel . '.css', array(), $ver );
 		wp_enqueue_script( 'nexter-select-js', NEXTER_EXT_URL . 'assets/js/extra/select2' . $min_sel . '.js', array( 'jquery' ), $ver, true );
-		
-		wp_enqueue_style( 'nexter-content-seo', $build_url . 'index.css', array( 'nexter-select-css' ), $ver );
+
+		/*
+		 * The design system this UI is built from.
+		 *
+		 * The Content SEO bundle renders 118 distinct nxp-* classes but ships none of those rules; they
+		 * live in the dashboard stylesheet. That used to work by accident, because the dashboard payload
+		 * was enqueued on every admin screen — once it was scoped to Nexter's own pages, this panel came
+		 * out completely unstyled on post.php, post-new.php and the term screens.
+		 *
+		 * Enqueued under the DASHBOARD'S OWN HANDLE on purpose. The SEO settings screen is a Nexter page,
+		 * so the dashboard payload queues this same file there; reusing the handle lets WordPress dedupe
+		 * it to a single request instead of downloading ~155 KB of identical rules twice. Bundling the
+		 * rules into the SEO build would have produced exactly that duplication.
+		 */
+		wp_enqueue_style( 'nexter-welcome-style', NEXTER_EXT_URL . 'dashboard/build/index.css', array(), $ver, 'all' );
+
+		wp_enqueue_style( 'nexter-content-seo', $build_url . 'index.css', array( 'nexter-select-css', 'nexter-welcome-style' ), $ver );
 		wp_enqueue_script(
 			'nexter-content-seo',
 			$build_url . 'index.js',

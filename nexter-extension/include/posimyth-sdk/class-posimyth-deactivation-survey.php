@@ -51,6 +51,12 @@ if ( ! class_exists( 'Posimyth_Deactivation_Survey' ) ) {
 				array(
 					'plugin_name'   => '',
 					'plugin_slug'   => '',
+					// The plugin's file path relative to the plugins dir ('slug/main-file.php'). Used to
+					// recognise this plugin's own Deactivate link by its href — the row's data-slug is
+					// NOT reliable: core falls back to sanitize_title of the (translated) plugin name,
+					// so on translated locales the old data-slug selector matched nothing and the
+					// dialog never opened (E3). Defaults to 'slug/slug.php'.
+					'plugin_file'   => '',
 					'ajax_action'   => '',
 					// Deprecated for the submit gate: submitting the form is itself the consent, so a
 					// full submit always sends. Retained only so callers passing it don't break.
@@ -71,13 +77,49 @@ if ( ! class_exists( 'Posimyth_Deactivation_Survey' ) ) {
 		}
 
 		/**
+		 * The dialog's free-text limit. Matches the hub column (other_text varchar(500)) so nothing a
+		 * user can type is ever silently cut down elsewhere — the boundary is visible in the UI.
+		 */
+		const OTHER_TEXT_MAX = 500;
+
+		/**
+		 * The selectable reasons — single source for BOTH the rendered radio list and the AJAX
+		 * handler's allowlist, so the two can never drift apart.
+		 *
+		 * @return array<string,string> Slug => label.
+		 */
+		private static function reasons(): array {
+			return array(
+				'no-longer-needed' => __( 'I no longer need the plugin', 'nexter-extension' ),
+				'found-better'     => __( 'I found a better plugin', 'nexter-extension' ),
+				'not-working'      => __( "It's not working", 'nexter-extension' ),
+				'temporary'        => __( "It's a temporary deactivation", 'nexter-extension' ),
+				'plugin-conflict'  => __( 'Plugin conflict', 'nexter-extension' ),
+				'site-speed'       => __( 'It slowed down my site', 'nexter-extension' ),
+				'other'            => __( 'Other', 'nexter-extension' ),
+			);
+		}
+
+		/**
 		 * Prints this product's dialog markup, plus the shared stylesheet and the scoped behaviour.
 		 */
 		public function render_modal(): void {
+			// Not in the network admin (A6): network deactivation is a super admin's bulk operation
+			// across the whole install — intercepting it with a per-site "why are you leaving?" dialog
+			// is wrong there, and the tracker's own deactivated_plugin listener still records the
+			// network deactivation as a single event.
+			if ( is_multisite() && is_network_admin() ) {
+				return;
+			}
+
 			$slug   = $this->config['plugin_slug'];
 			$action = $this->config['ajax_action'];
 			$name   = empty( $this->config['plugin_name'] ) ? $slug : $this->config['plugin_name'];
 			$nonce  = wp_create_nonce( $action );
+
+			// See the config note: recognise our Deactivate link by the plugin file in its href, not
+			// by the row's locale-dependent data-slug.
+			$plugin_file = ! empty( $this->config['plugin_file'] ) ? $this->config['plugin_file'] : $slug . '/' . $slug . '.php';
 
 			// Every participating product renders its OWN dialog on this screen (the reason has to be
 			// attributed to the right plugin_slug, and each has a different deactivation URL), so the
@@ -86,15 +128,7 @@ if ( ! class_exists( 'Posimyth_Deactivation_Survey' ) ) {
 			// returned the label twice ("Submit & DeactivateSubmit & Deactivate").
 			$uid = 'posi-deact-' . sanitize_html_class( $slug );
 
-			$reasons = array(
-				'no-longer-needed' => __( 'I no longer need the plugin' ),
-				'found-better'     => __( 'I found a better plugin' ),
-				'not-working'      => __( "It's not working" ),
-				'temporary'        => __( "It's a temporary deactivation" ),
-				'plugin-conflict'  => __( 'Plugin conflict' ),
-				'site-speed'       => __( 'It slowed down my site' ),
-				'other'            => __( 'Other' ),
-			);
+			$reasons = self::reasons();
 			?>
 			<?php
 			/*
@@ -123,12 +157,12 @@ if ( ! class_exists( 'Posimyth_Deactivation_Survey' ) ) {
 						<span class="posi-deact-icon" aria-hidden="true">
 							<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" viewBox="0 0 28 28"><rect width="28" height="28" fill="#1717cc" rx="5.833"></rect><path fill="#fff" d="M12.834 5.32h2.917v11.958a.875.875 0 0 1-.875.875h-2.042zM12.834 19.903h2.042c.483 0 .875.391.875.875v2.041h-2.917z"></path></svg>
 						</span>
-						<?php esc_html_e( 'Quick Feedback' ); ?>
+						<?php esc_html_e( 'Quick Feedback', 'nexter-extension' ); ?>
 					</h3>
 					<p class="posi-deact-sub">
 						<?php
 						/* translators: %s: product name */
-						echo esc_html( sprintf( __( 'Help us improve %s. Why are you deactivating?' ), $name ) );
+						echo esc_html( sprintf( __( 'Help us improve %s. Why are you deactivating?', 'nexter-extension' ), $name ) );
 						?>
 					</p>
 					<form id="<?php echo esc_attr( $uid ); ?>-form">
@@ -143,7 +177,8 @@ if ( ! class_exists( 'Posimyth_Deactivation_Survey' ) ) {
 							<?php endforeach; ?>
 						</ul>
 
-						<textarea name="posi_other_text" rows="3" placeholder="<?php esc_attr_e( 'Please share more details…' ); ?>"></textarea>
+						<?php // maxlength mirrors the hub's column width, so long feedback is trimmed visibly here rather than lost later. ?>
+						<textarea name="posi_other_text" rows="3" maxlength="<?php echo (int) self::OTHER_TEXT_MAX; ?>" placeholder="<?php esc_attr_e( 'Please share more details…', 'nexter-extension' ); ?>"></textarea>
 
 						<div class="posi-deact-opts">
 							<?php
@@ -173,21 +208,21 @@ if ( ! class_exists( 'Posimyth_Deactivation_Survey' ) ) {
 							?>
 							<label class="posi-deact-opt">
 								<input type="checkbox" class="posi-deact-contact" name="posi_contact_ok" value="1">
-								<span><?php esc_html_e( 'I agree to be contacted via email for support with this plugin.' ); ?></span>
+								<span><?php esc_html_e( 'I agree to be contacted via email for support with this plugin.', 'nexter-extension' ); ?></span>
 							</label>
 						</div>
 
 						<div class="posi-deact-footer">
 							<?php // Plain '&' — esc_html_e() does the encoding. Passing '&amp;' here would be escaped again and render literally as "&amp;". ?>
-							<button type="button" class="posi-deact-skip"><?php esc_html_e( 'Skip & Deactivate' ); ?></button>
-							<button type="submit" class="posi-deact-submit" disabled><?php esc_html_e( 'Submit & Deactivate' ); ?></button>
+							<button type="button" class="posi-deact-skip"><?php esc_html_e( 'Skip & Deactivate', 'nexter-extension' ); ?></button>
+							<button type="submit" class="posi-deact-submit" disabled><?php esc_html_e( 'Submit & Deactivate', 'nexter-extension' ); ?></button>
 						</div>
 
 						<?php
 						/* translators: %s: product name */
-						$consent_default = sprintf( __( 'Submitting shares non-sensitive info so we can improve %s. No personal data.' ), $name );
+						$consent_default = sprintf( __( 'Submitting shares non-sensitive info so we can improve %s. No personal data.', 'nexter-extension' ), $name );
 						/* translators: %s: product name */
-						$consent_contact = sprintf( __( 'Submitting shares non-sensitive info so we can improve %s, plus your admin email so we can reply.' ), $name );
+						$consent_contact = sprintf( __( 'Submitting shares non-sensitive info so we can improve %s, plus your admin email so we can reply.', 'nexter-extension' ), $name );
 						?>
 						<p class="posi-deact-consent"
 							data-default="<?php echo esc_attr( $consent_default ); ?>"
@@ -274,9 +309,20 @@ if ( ! class_exists( 'Posimyth_Deactivation_Survey' ) ) {
 					$modal.hide();
 				}
 
-				$('tr[data-slug="<?php echo esc_js( $slug ); ?>"] span.deactivate a').on('click', function(e){
+				/*
+				 * Delegated + matched by href, not a direct bind on a data-slug row (E3):
+				 *  - direct handlers died when wp.updates re-rendered the row (after an update or a
+				 *    bulk action), so the next Deactivate click sailed straight past the dialog;
+				 *  - data-slug falls back to sanitize_title of the TRANSLATED plugin name, so on
+				 *    non-English locales the selector matched nothing and the dialog never opened.
+				 * The plugin=<file> pair in the href is locale-proof and survives re-renders.
+				 */
+				var pluginParam = 'plugin=' + encodeURIComponent('<?php echo esc_js( $plugin_file ); ?>');
+				$(document).on('click.<?php echo esc_js( $uid ); ?>', 'span.deactivate a', function(e){
+					var href = $(this).attr('href') || '';
+					if ( href.indexOf( pluginParam ) === -1 ) { return; }
 					e.preventDefault();
-					var deactUrl = $(this).attr('href');
+					var deactUrl = href;
 
 					// Reset so reopening never shows a stale selection or a stuck button.
 					if ( $form.length && $form[0] ) { $form[0].reset(); }
@@ -296,7 +342,7 @@ if ( ! class_exists( 'Posimyth_Deactivation_Survey' ) ) {
 					function send(){
 						var reason = $modal.find('input[name="posi_reason"]:checked').val() || 'no-reason';
 						var other  = $other.val() || '';
-						$submit.prop('disabled', true).text(<?php echo wp_json_encode( __( 'Submitting…' ) ); ?>);
+						$submit.prop('disabled', true).text(<?php echo wp_json_encode( __( 'Submitting…', 'nexter-extension' ) ); ?>);
 						$.post(ajaxurl, {
 							action: '<?php echo esc_js( $action ); ?>',
 							nonce:  nonce,
@@ -358,8 +404,17 @@ if ( ! class_exists( 'Posimyth_Deactivation_Survey' ) ) {
 			// WordPress then fired `deactivated_plugin`, whose listener is gated on the persistent
 			// sharing consent and cannot see what was clicked here — so a full ping with the real site
 			// URL and the same reason followed moments later and undid it.
-			$reason     = sanitize_key( $_POST['reason'] ?? 'no-reason' );
-			$other_text = sanitize_textarea_field( wp_unslash( $_POST['other_text'] ?? '' ) );
+			// Allowlisted against the same map the dialog renders (A7): the radio list is the only
+			// legitimate source, so anything else — a tampered request inventing its own "reason" —
+			// collapses to no-reason instead of flowing into the hub as free text.
+			$reason = sanitize_key( $_POST['reason'] ?? 'no-reason' );
+			if ( 'no-reason' !== $reason && ! array_key_exists( $reason, self::reasons() ) ) {
+				$reason = 'no-reason';
+			}
+
+			// Capped to the dialog's visible maxlength (A7): without this, a hand-crafted request
+			// could push a multi-megabyte body through to the hub.
+			$other_text = substr( sanitize_textarea_field( wp_unslash( $_POST['other_text'] ?? '' ) ), 0, self::OTHER_TEXT_MAX );
 
 			// The regular payload carries no personal data. The admin email is attached ONLY when the
 			// user ticked "I agree to be contacted" — and it is read from the site, never from the
@@ -372,6 +427,22 @@ if ( ! class_exists( 'Posimyth_Deactivation_Survey' ) ) {
 				if ( is_email( $email ) ) {
 					$extra['contact_email'] = $email;
 					$extra['contact_ok']    = 1;
+				}
+			}
+
+			/*
+			 * Tell the tracker this deactivation is already accounted for.
+			 *
+			 * WordPress fires `deactivated_plugin` moments after this, and that listener has no way of
+			 * knowing the dialog just reported the same deactivation with a reason attached — so every
+			 * opted-in deactivation was sent twice, once with a reason and once without, double-counting
+			 * churn for exactly the opted-in cohort. The marker is short-lived and consumed by the
+			 * listener.
+			 */
+			if ( is_callable( $this->config['tracker_cb'] ) && is_array( $this->config['tracker_cb'] ) ) {
+				$tracker_class = $this->config['tracker_cb'][0];
+				if ( is_string( $tracker_class ) && method_exists( $tracker_class, 'mark_deactivation_reported' ) ) {
+					call_user_func( array( $tracker_class, 'mark_deactivation_reported' ) );
 				}
 			}
 

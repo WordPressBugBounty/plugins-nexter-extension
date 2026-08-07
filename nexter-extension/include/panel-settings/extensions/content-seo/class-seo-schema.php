@@ -2061,9 +2061,9 @@ class Nexter_Content_SEO_Schema {
 			$options[ $key ] = array(
 				'label' => $pt->labels->name,
 				'value' => array(
-					/* translators: %s: the content type name */
+					/* translators: %s: Post Label*/
 					$pt->name . '|all'         => sprintf( __( 'All %s', 'nexter-extension' ), $pt->labels->name ),
-					/* translators: %s: post type or taxonomy label */
+					/* translators: %s: Post type or taxonomy archive label */
 					$pt->name . '|all|archive' => sprintf( __( 'All %s Archive', 'nexter-extension' ), $pt->labels->name ),
 				),
 			);

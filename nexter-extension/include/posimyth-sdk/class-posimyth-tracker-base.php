@@ -112,10 +112,51 @@ if ( ! class_exists( 'Posimyth_Tracker_Base' ) ) {
 			add_action( 'deactivated_plugin', array( static::class, 'on_deactivate' ), 10, 2 );
 			add_action( static::cron_hook(), array( static::class, 'heartbeat' ) );
 			add_action( 'admin_init', array( static::class, 'register_privacy_policy_content' ) );
+			add_action( 'admin_init', array( static::class, 'maybe_catchup_heartbeat' ) );
+
+			// One heartbeat per INSTALL, not per blog (A6): on a network-activated multisite this
+			// scheduled a weekly event on every single blog — N crons and N pings for one install.
+			// The network reports once, from the main site.
+			if ( is_multisite() && ! is_main_site() ) {
+				return;
+			}
 
 			if ( ! wp_next_scheduled( static::cron_hook() ) ) {
 				wp_schedule_event( time(), 'weekly', static::cron_hook() );
 			}
+		}
+
+		/**
+		 * Runs an overdue heartbeat from an admin visit when WP-Cron is not firing (E7).
+		 *
+		 * On DISABLE_WP_CRON hosts, aggressive page caches or dormant sites, the weekly event can sit
+		 * past due forever and the install goes silent. A day past due means cron is not coming; an
+		 * admin page load then sends the ping (still consent-gated, still deferred to shutdown) and
+		 * reschedules. The transient stops this from probing more than once a day.
+		 */
+		public static function maybe_catchup_heartbeat(): void {
+			if ( is_multisite() && ! is_main_site() ) {
+				return;
+			}
+			if ( ! static::has_consent() ) {
+				return;
+			}
+
+			$next = wp_next_scheduled( static::cron_hook() );
+			if ( $next && $next > time() - DAY_IN_SECONDS ) {
+				return; // Scheduled and not meaningfully overdue.
+			}
+
+			$lock = 'posimyth_' . static::id() . '_hb_catchup';
+			if ( get_transient( $lock ) ) {
+				return;
+			}
+			set_transient( $lock, 1, DAY_IN_SECONDS );
+
+			wp_clear_scheduled_hook( static::cron_hook() );
+			wp_schedule_event( time() + WEEK_IN_SECONDS, 'weekly', static::cron_hook() );
+
+			static::heartbeat();
 		}
 
 		/**
@@ -131,15 +172,23 @@ if ( ! class_exists( 'Posimyth_Tracker_Base' ) ) {
 
 			$name = static::display_name();
 
+			/*
+			 * This paragraph used to end with "nothing is sent unless an administrator turns on Share
+			 * Non-Sensitive Details", which is not true: submitting the deactivation feedback form sends
+			 * that one submission regardless of the setting, because pressing Submit there IS the
+			 * consent for it. The wording now states the exception instead of contradicting it.
+			 */
 			$content = '<p>' . sprintf(
 				/* translators: %s: product name */
-				esc_html__( '%s can send non-sensitive information about this website to POSIMYTH Innovation (api.posimyth.com) to help diagnose conflicts and prioritise fixes. This is off by default and nothing is sent unless an administrator turns on "Share Non-Sensitive Details".', 'nexter-extension' ),
+				esc_html__( '%s can send non-sensitive information about this website to POSIMYTH Innovation (api.posimyth.com) to help diagnose conflicts and prioritise fixes. This is off by default, and while it is off nothing is collected or sent automatically.', 'nexter-extension' ),
 				esc_html( $name )
 			) . '</p>';
 
 			$content .= '<p>' . esc_html__( 'When enabled, the information sent is: the site URL, the plugin version, PHP / MySQL / WordPress versions, server software, timezone, locale, memory limit, maximum upload size, permalink structure, whether HTTPS / multisite / debug mode are on, the environment type, the number of registered users, the active theme and its version, the detected page builder, the list of active plugin folders and their count, which of the plugin\'s features are enabled and how often they are used, Pro/Free and licence status, and the install date. It is sent when the plugin is activated, when it is deactivated, and once a week in the background.', 'nexter-extension' ) . '</p>';
 
-			$content .= '<p>' . esc_html__( 'No post or page content, visitor data, user names or email addresses are included. The one exception is the deactivation feedback form: if an administrator ticks "I agree to be contacted via email" there, the site administration email address is sent with that feedback so POSIMYTH can reply. That box is off by default.', 'nexter-extension' ) . '</p>';
+			$content .= '<p>' . esc_html__( 'There is one case where information is sent even while the setting is off: the feedback form shown when the plugin is deactivated. If an administrator fills it in and presses Submit, that submission is sent - the reason chosen, any comment typed, and the same non-sensitive setup information listed above - because pressing Submit is the consent for it. Choosing Skip, pressing Esc or clicking outside the form sends nothing at all.', 'nexter-extension' ) . '</p>';
+
+			$content .= '<p>' . esc_html__( 'No post or page content, visitor data, user names or email addresses are included. The one exception is that same feedback form: if an administrator ticks "I agree to be contacted via email" there, the site administration email address is sent with the feedback so POSIMYTH can reply. That box is off by default.', 'nexter-extension' ) . '</p>';
 
 			wp_add_privacy_policy_content( $name, wp_kses_post( $content ) );
 		}
@@ -154,20 +203,107 @@ if ( ! class_exists( 'Posimyth_Tracker_Base' ) ) {
 		}
 
 		/**
+		 * Stops the weekly heartbeat. Call from the plugin's deactivation hook.
+		 *
+		 * Init() schedules this cron but nothing ever cleared it, so a deactivated plugin left a weekly
+		 * event behind in WordPress forever — firing against a hook with no listener, and reappearing in
+		 * every cron listing.
+		 *
+		 * @return void
+		 */
+		public static function unschedule(): void {
+			wp_clear_scheduled_hook( static::cron_hook() );
+		}
+
+		/**
+		 * Removes everything this product stored. Call from uninstall, never from deactivation.
+		 *
+		 * Consent used to survive uninstalling: the opt-in option stayed in wp_options, so reinstalling
+		 * silently resumed sending without ever asking again. Someone who removes the plugin has
+		 * withdrawn from the arrangement, and reinstalling has to start from a clean slate.
+		 *
+		 * @param bool   $include_suite_wide Also delete the options shared across the Nexter family.
+		 *                                 Pass false while a sibling product is still installed,
+		 *                                 otherwise removing one plugin silently resets the other's
+		 *                                 consent and re-prompts a user who already decided.
+		 * @param string $suite_key          Suite key those shared options are named after.
+		 * @return void
+		 */
+		public static function purge_state( bool $include_suite_wide = false, string $suite_key = 'nexter_suite' ): void {
+			static::unschedule();
+
+			$id = static::id();
+			delete_option( 'posimyth_' . $id . '_install_time' );
+			delete_option( 'posimyth_' . $id . '_usage' );
+			delete_option( 'posimyth_' . $id . '_first_use_at' );
+			delete_option( 'posimyth_' . $id . '_activate_reported' );
+			delete_transient( 'posimyth_' . $id . '_deact_reported' );
+
+			if ( $include_suite_wide ) {
+				// These are stored as SITE options (A6: one consent per install, not per blog), so they
+				// have to be removed as site options too — delete_option alone would leave the network
+				// value behind and a reinstall would silently resume with the old answer.
+				delete_site_option( static::opt_in_option() );
+				delete_site_option( 'posi_consent_dismissed_' . $suite_key );
+				delete_site_option( 'posi_consent_snoozed_until_' . $suite_key );
+				// Start of the notice's post-install quiet period. Left behind, a reinstall would inherit
+				// an expired window and be asked on the first admin page load instead of getting the
+				// couple of quiet days a fresh install is meant to get.
+				delete_site_option( 'posi_consent_grace_start_' . $suite_key );
+
+				/*
+				 * These two belong to the Nexter suite specifically, not to whichever suite is being
+				 * purged, and their names are fixed rather than derived from $suite_key.
+				 *
+				 * That was harmless while `nexter_suite` was the only suite in existence. It stopped being
+				 * harmless when The Plus Addons for Elementor moved to its own `tpae_suite`: deleting TPAE
+				 * then reached across and wiped Nexter's onboarding-completed flag and its legacy-consent
+				 * migration marker, so Nexter's setup wizard could reopen and the migration could run a
+				 * second time — on a site where Nexter had not been touched at all.
+				 */
+				if ( 'nexter_suite' === $suite_key ) {
+					delete_site_option( 'posimyth_ne_legacy_consent_migrated' );
+					delete_option( 'nxt_onboarding_done' );
+				}
+
+				// Older builds wrote these per-blog; clear that shape too so nothing lingers.
+				delete_option( static::opt_in_option() );
+				delete_option( 'posi_consent_dismissed_' . $suite_key );
+				delete_option( 'posi_consent_snoozed_until_' . $suite_key );
+				delete_option( 'posi_consent_grace_start_' . $suite_key );
+			}
+		}
+
+		/**
+		 * Is this the plugin file belonging to THIS product?
+		 *
+		 * Using strpos( $plugin, slug() ) was wrong: `nexter-extension` is a substring of
+		 * `nexter-extension-pro/...` and of `my-nexter-extension/...`, so activating or deactivating a
+		 * differently-named plugin reported an event against this one. Compare the folder exactly.
+		 *
+		 * @param string $plugin Plugin file as WordPress passes it, e.g. "slug/slug.php".
+		 * @return bool
+		 */
+		protected static function is_own_plugin_file( string $plugin ): bool {
+			$folder = ( false !== strpos( $plugin, '/' ) ) ? dirname( $plugin ) : $plugin;
+			return static::slug() === $folder;
+		}
+
+		/**
 		 * Reports an activation, but only for THIS product and only with consent.
 		 *
 		 * @param string $plugin       Plugin file that was activated.
 		 * @param bool   $network_wide Unused; part of the activated_plugin hook signature.
 		 */
 		public static function on_activate( string $plugin, bool $network_wide ): void { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed -- required by the hook signature.
-			if ( false === strpos( $plugin, static::slug() ) ) {
+			if ( ! static::is_own_plugin_file( $plugin ) ) {
 				return;
 			}
 			static::record_install_time();
 			if ( ! static::has_consent() ) {
 				return;
 			}
-			static::do_request( 'activate' );
+			static::report_activation();
 		}
 
 		/**
@@ -177,13 +313,60 @@ if ( ! class_exists( 'Posimyth_Tracker_Base' ) ) {
 		 * @param bool   $network_wide Unused; part of the deactivated_plugin hook signature.
 		 */
 		public static function on_deactivate( string $plugin, bool $network_wide ): void { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed -- required by the hook signature.
-			if ( false === strpos( $plugin, static::slug() ) ) {
+			if ( ! static::is_own_plugin_file( $plugin ) ) {
 				return;
 			}
+			delete_option( 'posimyth_' . static::id() . '_activate_reported' );
+
 			if ( ! static::has_consent() ) {
 				return;
 			}
+
+			/*
+			 * The deactivation dialog may have just reported this same deactivation, with the reason
+			 * attached. WordPress then fires `deactivated_plugin` regardless, and this listener cannot
+			 * see what the user clicked — so every opted-in deactivation was counted twice on the hub:
+			 * once with a reason and once without, inflating churn for precisely the opted-in cohort.
+			 * The dialog leaves a short-lived marker; if it is there, the richer event has already gone.
+			 */
+			if ( get_transient( 'posimyth_' . static::id() . '_deact_reported' ) ) {
+				delete_transient( 'posimyth_' . static::id() . '_deact_reported' );
+				return;
+			}
+
 			static::do_request( 'deactivate' );
+		}
+
+		/**
+		 * Marks this deactivation as already reported, so on_deactivate() does not send a second event.
+		 *
+		 * Called by the deactivation dialog right before it submits. Short-lived on purpose: it only
+		 * has to survive the hop from the dialog's AJAX call to the deactivation request that follows.
+		 *
+		 * @return void
+		 */
+		public static function mark_deactivation_reported(): void {
+			set_transient( 'posimyth_' . static::id() . '_deact_reported', 1, 5 * MINUTE_IN_SECONDS );
+		}
+
+		/**
+		 * Sends `activate` at most once per active period.
+		 *
+		 * Four different places legitimately want to announce an activation — the notice's Allow, the
+		 * Dashboard toggle, onboarding, and the plugin's own activation hook — and each called
+		 * do_request('activate') directly, so one install could report several activations and the
+		 * hub's activation count drifted away from the install count. The flag is cleared on
+		 * deactivation, so a genuine reactivation is still counted.
+		 *
+		 * @return void
+		 */
+		protected static function report_activation(): void {
+			$key = 'posimyth_' . static::id() . '_activate_reported';
+			if ( get_option( $key ) ) {
+				return;
+			}
+			update_option( $key, 1, false );
+			static::do_request( 'activate' );
 		}
 
 		/**
@@ -212,7 +395,7 @@ if ( ! class_exists( 'Posimyth_Tracker_Base' ) ) {
 			if ( ! static::has_consent() ) {
 				return;
 			}
-			static::do_request( 'activate' );
+			static::report_activation();
 		}
 
 		/**
@@ -227,16 +410,21 @@ if ( ! class_exists( 'Posimyth_Tracker_Base' ) ) {
 			if ( ! static::has_consent() ) {
 				return;
 			}
-			static::do_request( 'activate' );
+			static::report_activation();
 		}
 
 		/**
 		 * Whether the user has opted in to sharing. Nothing is ever sent without this.
 		 *
+		 * Read as a SITE option (A6): on multisite the consent is one answer for the whole network —
+		 * per-blog options meant N notices and N independent consents for a single install, and no
+		 * way for the network admin to answer once. On a single site, get_site_option() falls back
+		 * to the ordinary option of the same name, so nothing changes there.
+		 *
 		 * @return bool
 		 */
 		protected static function has_consent(): bool {
-			return (bool) get_option( static::opt_in_option(), false );
+			return (bool) get_site_option( static::opt_in_option(), false );
 		}
 
 		/**
@@ -260,14 +448,33 @@ if ( ! class_exists( 'Posimyth_Tracker_Base' ) ) {
 		public static function build_payload( string $event ): array {
 			global $wpdb;
 
-			$theme        = wp_get_theme();
-			$parent       = $theme->parent();
-			$active_slugs = (array) get_option( 'active_plugins', array() );
-			$license      = static::license();
+			$theme  = wp_get_theme();
+			$parent = $theme->parent();
 
-			$install_time = get_option( 'posimyth_' . static::id() . '_install_time', '' );
-			if ( empty( $install_time ) ) {
-				$install_time = gmdate( 'Y-m-d H:i:s' );
+			// Network-activated plugins live in the sitewide option, not in the per-blog list (B3):
+			// on multisite, reading only active_plugins missed every network-activated plugin — this
+			// SDK's own products included — so plugin_count, page_builder and posimyth_products were
+			// all wrong there. Single site: get_site_option returns the default, merge is a no-op.
+			$active_slugs = (array) get_option( 'active_plugins', array() );
+			if ( is_multisite() ) {
+				$network      = (array) get_site_option( 'active_sitewide_plugins', array() );
+				$active_slugs = array_values( array_unique( array_merge( $active_slugs, array_keys( $network ) ) ) );
+			}
+
+			$license = static::license();
+
+			/*
+			 * Persist the first-seen date instead of substituting "now".
+			 *
+			 * When the option was missing — legacy installs that predate it, and subsites, where
+			 * record_install_time() never ran — this reported today's date and then threw it away, so
+			 * every weekly heartbeat claimed the site was installed today and install age was
+			 * permanently zero. Write it once, then keep reporting that same value.
+			 */
+			$install_time = (string) get_option( 'posimyth_' . static::id() . '_install_time', '' );
+			if ( '' === $install_time ) {
+				static::record_install_time();
+				$install_time = (string) get_option( 'posimyth_' . static::id() . '_install_time', gmdate( 'Y-m-d H:i:s' ) );
 			}
 
 			return array(
@@ -395,7 +602,9 @@ if ( ! class_exists( 'Posimyth_Tracker_Base' ) ) {
 				return 1;
 			}
 
-			$suffixes = array( '.local', '.test', '.localhost', '.dev', '.example', '.invalid' );
+			// NOT '.dev': it has been a real, publicly registered gTLD since 2019 (with HSTS preload,
+			// so these are HTTPS production sites) — treating it as local silently excluded them (E5).
+			$suffixes = array( '.local', '.test', '.localhost', '.example', '.invalid' );
 			foreach ( $suffixes as $suffix ) {
 				if ( substr( $host, -strlen( $suffix ) ) === $suffix ) {
 					return 1;
@@ -410,8 +619,23 @@ if ( ! class_exists( 'Posimyth_Tracker_Base' ) ) {
 		 * @return int
 		 */
 		protected static function user_count(): int {
+			/*
+			 * count_users() is not cached by WordPress and walks the whole user table, which is
+			 * genuinely slow on a membership site with hundreds of thousands of users. This value only
+			 * has to be roughly right — it is a size band, not an exact figure — so a day of cache
+			 * costs nothing and stops a weekly ping from turning into a table scan.
+			 */
+			$cache_key = 'posimyth_' . static::id() . '_user_count';
+			$cached    = get_transient( $cache_key );
+			if ( false !== $cached ) {
+				return (int) $cached;
+			}
+
 			$counts = count_users();
-			return isset( $counts['total_users'] ) ? (int) $counts['total_users'] : 0;
+			$total  = isset( $counts['total_users'] ) ? (int) $counts['total_users'] : 0;
+			set_transient( $cache_key, $total, DAY_IN_SECONDS );
+
+			return $total;
 		}
 
 		/**
@@ -487,34 +711,45 @@ if ( ! class_exists( 'Posimyth_Tracker_Base' ) ) {
 
 			$counts  = array();
 			$cap     = (int) apply_filters( 'posimyth_scan_post_cap', 2000 );
-			$batch   = 200;
-			$offset  = 0;
+			$batch   = 100;
+			$last_id = 0;
 			$scanned = 0;
 			$like    = '%"widgetType":"' . $wpdb->esc_like( $prefix ) . '%';
 			$regex   = '/"widgetType":"(' . preg_quote( $prefix, '/' ) . '[a-z0-9_-]+)"/';
 
 			while ( $scanned < $cap ) {
+				// Clamp the batch to what the cap still allows, so `posimyth_scan_post_cap` is an exact
+				// bound rather than a between-batches check that could overshoot by a whole batch.
+				$take = min( $batch, $cap - $scanned );
+
 				// Batched scan of Elementor's own meta blob; no core API can query inside it. Runs only
 				// on the weekly cron and the result is cached in an option, so per-query caching would
 				// add a second cache layer for a job that already runs at most once a week.
+				//
+				// Keyset pagination (meta_id > last, ORDER BY meta_id), not LIMIT/OFFSET (B5): with no
+				// ORDER BY the batches had no defined order at all, so rows could repeat or be skipped
+				// between them; and the batch is 100 rows because these are longtext blobs — 200 of
+				// them at once was a real memory spike on page-heavy sites.
 				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-				$rows = $wpdb->get_col(
+				$rows = $wpdb->get_results(
 					$wpdb->prepare(
-						"SELECT meta_value FROM {$wpdb->postmeta}
-					 WHERE meta_key = '_elementor_data' AND meta_value LIKE %s
-					 LIMIT %d OFFSET %d",
+						"SELECT meta_id, meta_value FROM {$wpdb->postmeta}
+					 WHERE meta_key = '_elementor_data' AND meta_value LIKE %s AND meta_id > %d
+					 ORDER BY meta_id ASC LIMIT %d",
 						$like,
-						$batch,
-						$offset
-					)
+						$last_id,
+						$take
+					),
+					ARRAY_A
 				);
 
 				if ( empty( $rows ) ) {
 					break;
 				}
 
-				foreach ( $rows as $json ) {
-					if ( preg_match_all( $regex, $json, $m ) ) {
+				foreach ( $rows as $row ) {
+					$last_id = (int) $row['meta_id'];
+					if ( preg_match_all( $regex, $row['meta_value'], $m ) ) {
 						foreach ( $m[1] as $widget ) {
 							$counts[ $widget ] = ( $counts[ $widget ] ?? 0 ) + 1;
 						}
@@ -522,8 +757,7 @@ if ( ! class_exists( 'Posimyth_Tracker_Base' ) ) {
 				}
 
 				$scanned += count( $rows );
-				$offset  += $batch;
-				if ( count( $rows ) < $batch ) {
+				if ( count( $rows ) < $take ) {
 					break;
 				}
 			}
@@ -542,8 +776,8 @@ if ( ! class_exists( 'Posimyth_Tracker_Base' ) ) {
 
 			$counts  = array();
 			$cap     = (int) apply_filters( 'posimyth_scan_post_cap', 2000 );
-			$batch   = 200;
-			$offset  = 0;
+			$batch   = 100;
+			$last_id = 0;
 			$scanned = 0;
 			$like    = '%wp:' . $wpdb->esc_like( $block_namespace ) . '%';
 			// Negative lookbehind skips the closing "/wp:tpgb/..." comment so each
@@ -551,26 +785,33 @@ if ( ! class_exists( 'Posimyth_Tracker_Base' ) ) {
 			$regex = '#(?<!/)wp:' . preg_quote( $block_namespace, '#' ) . '([a-z0-9-]+)#';
 
 			while ( $scanned < $cap ) {
+				// Clamp to the remaining allowance — see the note in scan_elementor_widgets().
+				$take = min( $batch, $cap - $scanned );
+
 				// Batched LIKE over post_content; WP_Query has no equivalent and would load full post
 				// objects for rows we only pattern-match. Weekly cron only, result cached in an option.
+				// Keyset pagination and a 100-row batch for the same reasons as the Elementor scan
+				// above (B5): OFFSET with no ORDER BY repeats/skips rows, and these are full posts.
 				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-				$rows = $wpdb->get_col(
+				$rows = $wpdb->get_results(
 					$wpdb->prepare(
-						"SELECT post_content FROM {$wpdb->posts}
-					 WHERE post_status = 'publish' AND post_content LIKE %s
-					 LIMIT %d OFFSET %d",
+						"SELECT ID, post_content FROM {$wpdb->posts}
+					 WHERE post_status = 'publish' AND post_content LIKE %s AND ID > %d
+					 ORDER BY ID ASC LIMIT %d",
 						$like,
-						$batch,
-						$offset
-					)
+						$last_id,
+						$take
+					),
+					ARRAY_A
 				);
 
 				if ( empty( $rows ) ) {
 					break;
 				}
 
-				foreach ( $rows as $content ) {
-					if ( preg_match_all( $regex, $content, $m ) ) {
+				foreach ( $rows as $row ) {
+					$last_id = (int) $row['ID'];
+					if ( preg_match_all( $regex, $row['post_content'], $m ) ) {
 						// Store the bare block slug (e.g. 'tp-accordion') — no namespace,
 						// so it survives sanitize_key on the hub and matches the enabled key.
 						foreach ( $m[1] as $block ) {
@@ -580,8 +821,7 @@ if ( ! class_exists( 'Posimyth_Tracker_Base' ) ) {
 				}
 
 				$scanned += count( $rows );
-				$offset  += $batch;
-				if ( count( $rows ) < $batch ) {
+				if ( count( $rows ) < $take ) {
 					break;
 				}
 			}
@@ -613,9 +853,6 @@ if ( ! class_exists( 'Posimyth_Tracker_Base' ) ) {
 				? POSIMYTH_ANALYTICS_ENDPOINT
 				: 'https://api.posimyth.com/wp-json/posimyth/v1/track';
 
-			$payload = array_merge( static::build_payload( $event ), $extra );
-			$body    = wp_json_encode( $payload );
-
 			// No ingest key and no request signature.
 			//
 			// The hub's endpoint is intentionally open. A shared key would have to be baked
@@ -642,20 +879,44 @@ if ( ! class_exists( 'Posimyth_Tracker_Base' ) ) {
 			// Nothing here is signed or timestamped.
 			$timeout = (int) apply_filters( 'posimyth_analytics_request_timeout', 15 );
 
-			$dispatch = static function () use ( $endpoint, $headers, $body, $timeout ) {
-				// Flush the response first so the send never adds latency to the page.
+			$class = static::class;
+
+			/*
+			 * Everything expensive happens INSIDE this closure.
+			 *
+			 * build_payload() used to run inline, before the response was flushed, which made the claim
+			 * that this "never blocks the admin" untrue: it counts users, reads the plugin list, resolves
+			 * the theme and (in other products) scans content, all while the admin waits. Only the HTTP
+			 * call was deferred. Now the payload is assembled after the response has gone out too.
+			 */
+			$dispatch = static function () use ( $class, $event, $extra, $endpoint, $headers, $timeout ) {
+				// Flush the response first so nothing below adds latency to the page.
+				$flushed = false;
 				if ( function_exists( 'fastcgi_finish_request' ) ) {
 					fastcgi_finish_request();
+					$flushed = true;
 				}
+
+				$body = wp_json_encode( array_merge( call_user_func( array( $class, 'build_payload' ), $event ), $extra ) );
+
+				/*
+				 * Only wait for the round trip when the response has actually been flushed.
+				 *
+				 * fastcgi_finish_request() does not exist under mod_php, LiteSpeed's PHP handler or
+				 * plain php-cgi. There, a blocking 15-second POST held the worker — and the browser —
+				 * for up to 15 seconds on activate, deactivate and every cron run. Where we cannot
+				 * flush, fire and forget instead: WordPress still opens the connection and writes the
+				 * request, it simply does not wait for the reply. (The timeout stays generous enough to
+				 * connect and write; the 0.01s used by an earlier build aborted during DNS/TLS and
+				 * nothing ever arrived.)
+				 */
 				wp_remote_post(
 					$endpoint,
 					array(
 						'headers'     => $headers,
 						'body'        => $body,
-						'timeout'     => $timeout,
-						// We are past the response; let the request run to completion so the hub
-						// actually receives (and can acknowledge) it.
-						'blocking'    => true,
+						'timeout'     => $flushed ? $timeout : 5,
+						'blocking'    => $flushed,
 						'data_format' => 'body',
 						'sslverify'   => true,
 					)

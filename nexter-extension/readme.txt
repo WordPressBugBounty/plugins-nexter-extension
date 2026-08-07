@@ -246,25 +246,40 @@ Yes. [Compare Free vs Pro →](https://nexterwp.com/free-vs-pro/#Nexter-Extensio
 
 Nexter Extension may connect to external services below only when the related feature is enabled:
 
-* **POSIMYTH Analytics** (api.posimyth.com) may receive non-sensitive site, environment and feature-usage data when "Share Non-Sensitive Details" is enabled. Off by default; nothing is sent until you turn it on. [Terms](https://store.posimyth.com/terms-conditions/) and [Privacy Policy](https://store.posimyth.com/privacy-policy/) — [see exactly what is shared](https://nexterwp.com/docs/data-sharing/)
+* **api.posimyth.com** — usage analytics. Off by default; submitting the deactivation feedback form also sends it, plus your admin email if you tick the contact box. [Terms](https://store.posimyth.com/terms-conditions/) · [Privacy](https://store.posimyth.com/privacy-policy/) · [what's shared](https://nexterwp.com/docs/data-sharing/)
 
-* **POSIMYTH Store** (store.posimyth.com) is used to activate and validate a Pro license and to load the template library. [Terms](https://store.posimyth.com/terms-conditions/) and [Privacy Policy](https://store.posimyth.com/privacy-policy/)
+* **store.posimyth.com** — Pro licence, template library, newsletter opt-in. [Terms](https://store.posimyth.com/terms-conditions/) · [Privacy](https://store.posimyth.com/privacy-policy/)
 
-* **WordPress.org API** (api.wordpress.org, themes.svn.wordpress.org) is used by Rollback Manager to look up and download an earlier version of a plugin or theme, only when you open Rollback Manager or perform a rollback. [Privacy Policy](https://wordpress.org/about/privacy/)
+* **api.wdesignkit.com, etemplates.wdesignkit.com** — templates and preview images. [Terms](https://wdesignkit.com/terms/) · [Privacy](https://wdesignkit.com/privacy-policy/)
 
-* **Google Fonts** (fonts.googleapis.com, fonts.gstatic.com) may be downloaded when "Self-Host Google Fonts" is enabled, so fonts are served from your own server. [Terms](https://developers.google.com/fonts/faq) and [Privacy Policy](https://policies.google.com/privacy)
+* **api.indexnow.org** — sends a post URL when you save it, to notify search engines. [Terms](https://www.indexnow.org/documentation)
 
-* **Adobe Fonts** (typekit.com, use.typekit.net) may load when you add your own Adobe Fonts project ID. [Terms](https://www.adobe.com/legal/terms.html) and [Privacy Policy](https://www.adobe.com/privacy/policy.html)
+* **api.openai.com** — AI content, using your own API key. [Terms](https://openai.com/policies/terms-of-use) · [Privacy](https://openai.com/policies/privacy-policy)
 
-* **Google reCAPTCHA** (google.com/recaptcha) verifies form submissions when you enable reCAPTCHA under CAPTCHA Spam Protection and add your own site key. [Terms](https://policies.google.com/terms) and [Privacy Policy](https://policies.google.com/privacy)
+* **generativelanguage.googleapis.com** — AI content, using your own API key. [Terms](https://ai.google.dev/gemini-api/terms) · [Privacy](https://policies.google.com/privacy)
 
-* **Cloudflare Turnstile** (challenges.cloudflare.com) verifies form submissions when you enable Turnstile under CAPTCHA Spam Protection and add your own site key. [Terms](https://www.cloudflare.com/website-terms/) and [Privacy Policy](https://www.cloudflare.com/privacypolicy/)
+* **fonts.googleapis.com, fonts.gstatic.com, google.com/recaptcha, accounts.google.com, oauth2.googleapis.com** — self-hosted fonts, CAPTCHA, SMTP OAuth. [Terms](https://policies.google.com/terms) · [Privacy](https://policies.google.com/privacy)
 
-* **Google OAuth** (accounts.google.com, oauth2.googleapis.com) is used only if you connect Gmail or Google Workspace via OAuth in the SMTP Email settings, to authenticate your outgoing mail connection. [Terms](https://policies.google.com/terms) and [Privacy Policy](https://policies.google.com/privacy)
+* **typekit.com, use.typekit.net** — Adobe Fonts, using your own project ID. [Terms](https://www.adobe.com/legal/terms.html) · [Privacy](https://www.adobe.com/privacy/policy.html)
+
+* **challenges.cloudflare.com** — Turnstile CAPTCHA, using your own site key. [Terms](https://www.cloudflare.com/website-terms/) · [Privacy](https://www.cloudflare.com/privacypolicy/)
+
+* **api.wordpress.org, themes.svn.wordpress.org** — Rollback Manager lookups and downloads. [Privacy](https://wordpress.org/about/privacy/)
+
 
 == Changelog ==
 
 ### View Complete Changelog at [roadmap.nexterwp.com](https://roadmap.nexterwp.com/updates?filter=Nexter+Extension+-+FREE)
+
+= V4.7.5 = 07 August 2026
+- Improvement : Performance : feature-usage scans read content in bounded, ordered batches so nothing is double-counted or skipped, and the consent notice's styles load once per page
+- Fixed : Rollback : the rollback link showed the literal text "NEXTER_EXT_VER" instead of the version number
+- Fixed : Performance : the analytics payload is assembled after the page has been sent, and the user count is cached for a day instead of counting the whole user table each time
+- Fixed : Performance : on servers that cannot flush the response early (mod_php, LiteSpeed, php-cgi) the analytics request no longer holds the page for up to 15 seconds
+- Improvement : Performance : dashboard assets and settings no longer load on every admin screen - around 1.5 MB of scripts, the media library and the colour picker were loading on unrelated pages
+- Fixed : Compliance : readme now discloses IndexNow, OpenAI, Google Gemini, WDesignKit and the newsletter signup, which were contacted but not listed
+- Fixed : i18n : the deactivation feedback form's strings were missing their text domain, so they were never translated
+- Fixed : SEO Redirects : a rejected redirect now says why - a rule pointing at itself, a loop, an over-long chain, the rule limit or a missing URL - instead of only "Could not save redirect."
 
 = V4.7.4 = 04 August 2026
 - Added : Security : Custom Login URL now has a "Redirect to Custom URL" behaviour, so old wp-login.php / wp-admin requests can go to your own front-end login page; accepts a slug or an on-site URL and refuses off-site targets and redirect loops
