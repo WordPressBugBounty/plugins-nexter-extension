@@ -82,7 +82,10 @@ if ( ! class_exists( 'Nexter_Pro_Ext_Activate' ) ) {
 					self::$valid_url,
 					array(
 					'timeout'   => 15,
-					'sslverify' => false,
+					// Verify the certificate. Disabling this makes licence activation
+					// interceptable on a hostile network, and the licence key travels in
+					// this request.
+					'sslverify' => true,
 					'body'      => $api_params
 					) 
 				);

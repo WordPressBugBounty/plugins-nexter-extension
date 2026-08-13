@@ -96,11 +96,16 @@ class Nexter_Ext_Image_Cron {
 
 	/**
 	 * Register custom cron intervals.
+	 *
+	 * Translated only after `init`. `cron_schedules` can fire as early as `plugins_loaded` — any
+	 * plugin calling wp_schedule_event() there reaches it — and translating that early triggers
+	 * WP 6.7+'s `_load_textdomain_just_in_time was called incorrectly` notice. The label is only
+	 * read by cron-listing tools, which run well after `init`.
 	 */
 	public function register_cron_interval( $schedules ) {
 		$schedules['nxt_ext_image_cron_interval'] = array(
 			'interval' => self::FREQUENCY,
-			'display'  => __( 'Every 10 minutes (Nexter Extension Image Optimiser)', 'nexter-extension' ),
+			'display'  => did_action( 'init' ) ? __( 'Every 10 minutes (Nexter Extension Image Optimiser)', 'nexter-extension' ) : 'Every 10 minutes (Nexter Extension Image Optimiser)',
 		);
 		return $schedules;
 	}

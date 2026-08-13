@@ -51,6 +51,11 @@ if ( ! class_exists( 'Posimyth_Deactivation_Survey' ) ) {
 				array(
 					'plugin_name'   => '',
 					'plugin_slug'   => '',
+					// This product's own mark for the dialog heading, as ready-made markup — normally an
+					// <img> whose src the caller has already run through esc_url(). Leave empty to keep
+					// the built-in Nexter mark, which is correct for Extension and Blocks and wrong for
+					// every other product, so anything outside the Nexter brand must set it.
+					'logo_html'     => '',
 					// The plugin's file path relative to the plugins dir ('slug/main-file.php'). Used to
 					// recognise this plugin's own Deactivate link by its href — the row's data-slug is
 					// NOT reliable: core falls back to sanitize_title of the (translated) plugin name,
@@ -65,6 +70,27 @@ if ( ! class_exists( 'Posimyth_Deactivation_Survey' ) ) {
 					// tracker's do_request( $event, $extra ) — e.g. array( 'Posimyth_Tracker_NE', 'do_request' ).
 					// When absent, a full submit falls back to a minimal reason payload built here.
 					'tracker_cb'    => null,
+					// This product's own reason set: slug => label, or slug => array( 'label', 'icon' ).
+					// Empty keeps the built-in seven. See reason_list(); passing icons is what switches the
+					// dialog to the card layout.
+					'reasons'       => array(),
+					/*
+					 * Accent for the top border, the selected card, the submit button and the focus ring.
+					 *
+					 * This has to be per-product, and the mechanism has to isolate products from each
+					 * other. One copy of this class serves every active POSIMYTH plugin and the
+					 * stylesheet below is printed once for the whole page, so a literal colour in it
+					 * paints EVERY product's dialog — a brief spell with a hardcoded #6660ef put The
+					 * Plus Addons' purple on Sticky Header Effects' dialog, on its own plugin row.
+					 *
+					 * The value is set as a --posi-accent custom property on each dialog element, so it
+					 * is scoped by the element itself: a declaration inside one product's dialog cannot
+					 * reach another's, no matter which plugin's copy of this file won the loader.
+					 *
+					 * The default is the historical one, so a product that passes nothing renders
+					 * exactly as it did before this key existed.
+					 */
+					'accent'        => '#1717cc',
 				)
 			);
 
@@ -83,13 +109,77 @@ if ( ! class_exists( 'Posimyth_Deactivation_Survey' ) ) {
 		const OTHER_TEXT_MAX = 500;
 
 		/**
-		 * The selectable reasons — single source for BOTH the rendered radio list and the AJAX
-		 * handler's allowlist, so the two can never drift apart.
+		 * The reasons this product offers — single source for BOTH the rendered choices and the AJAX
+		 * handler's allowlist, so the two can never drift apart. That invariant is why a product cannot
+		 * simply render its own list: anything not in here collapses to 'no-reason' on submit.
 		 *
-		 * @return array<string,string> Slug => label.
+		 * A product overrides the set through the `reasons` config key, as slug => label or
+		 * slug => array( 'label' => …, 'icon' => '<svg…>' ). Supplying icons is what switches the dialog
+		 * to the card layout; without them it stays the plain list. Slugs are what reach the hub, and the
+		 * hub groups them per plugin_slug, so one product having its own set does not disturb another's.
+		 *
+		 * @return array<string,array{label:string,icon:string}>
 		 */
-		private static function reasons(): array {
-			return array(
+		private function reason_list(): array {
+			$configured = $this->config['reasons'] ?? array();
+
+			/*
+			 * A callable is the supported way to pass a translated set. The survey is constructed at
+			 * `plugins_loaded`, so labels written straight into the config array are translated there
+			 * too — before WordPress is ready for it, which is the "translation loading was triggered
+			 * too early" notice in WP 6.7+. Deferring the array to a closure moves every __() to the
+			 * moment this method actually runs: rendering the dialog in admin_footer-plugins.php, or
+			 * handling its AJAX submit. Both are long after `init`.
+			 *
+			 * This must never be dropped in a re-sync. Nexter Extension and Nexter Blocks both pass a
+			 * closure, and a copy that only accepts arrays does not error on one — is_array() is simply
+			 * false, so the config collapses to the built-in seven and both products silently lose their
+			 * own reason set and card icons. That is exactly what shipped while a copy without this
+			 * block held the highest version.
+			 */
+			if ( is_callable( $configured ) ) {
+				$configured = call_user_func( $configured );
+			}
+
+			if ( ! is_array( $configured ) ) {
+				$configured = array();
+			}
+
+			if ( empty( $configured ) ) {
+				return self::default_reasons();
+			}
+
+			$out = array();
+			foreach ( $configured as $slug => $entry ) {
+				$slug = sanitize_key( (string) $slug );
+				if ( '' === $slug ) {
+					continue;
+				}
+
+				$label = is_array( $entry ) ? (string) ( $entry['label'] ?? '' ) : (string) $entry;
+				$icon  = is_array( $entry ) ? (string) ( $entry['icon'] ?? '' ) : '';
+				if ( '' === $label ) {
+					continue;
+				}
+
+				$out[ $slug ] = array(
+					'label' => $label,
+					'icon'  => $icon,
+				);
+			}
+
+			// A config that produced nothing usable would otherwise render an empty dialog with a
+			// permanently disabled Submit, so fall back rather than ship a dead form.
+			return empty( $out ) ? self::default_reasons() : $out;
+		}
+
+		/**
+		 * The built-in set, used by every product that does not override it.
+		 *
+		 * @return array<string,array{label:string,icon:string}>
+		 */
+		private static function default_reasons(): array {
+			$labels = array(
 				'no-longer-needed' => __( 'I no longer need the plugin', 'nexter-extension' ),
 				'found-better'     => __( 'I found a better plugin', 'nexter-extension' ),
 				'not-working'      => __( "It's not working", 'nexter-extension' ),
@@ -97,6 +187,52 @@ if ( ! class_exists( 'Posimyth_Deactivation_Survey' ) ) {
 				'plugin-conflict'  => __( 'Plugin conflict', 'nexter-extension' ),
 				'site-speed'       => __( 'It slowed down my site', 'nexter-extension' ),
 				'other'            => __( 'Other', 'nexter-extension' ),
+			);
+
+			$out = array();
+			foreach ( $labels as $slug => $label ) {
+				$out[ $slug ] = array(
+					'label' => $label,
+					'icon'  => '',
+				);
+			}
+			return $out;
+		}
+
+		/**
+		 * The kses allowlist for a reason icon. Product-supplied markup, but it crosses an SDK boundary
+		 * into an admin screen, so it goes through an allowlist like every other injected fragment.
+		 *
+		 * @return array
+		 */
+		private static function icon_tags(): array {
+			$shape = array(
+				'fill'             => true,
+				'd'                => true,
+				'fill-rule'        => true,
+				'clip-rule'        => true,
+				'stroke'           => true,
+				'stroke-width'     => true,
+				'stroke-linecap'   => true,
+				'stroke-linejoin'  => true,
+				'clip-path'        => true,
+			);
+
+			return array(
+				'svg'      => array(
+					'xmlns'   => true,
+					'fill'    => true,
+					'viewbox' => true,
+					'width'   => true,
+					'height'  => true,
+					'class'   => true,
+				),
+				'g'        => $shape,
+				'path'     => $shape,
+				'rect'     => array_merge( $shape, array( 'width' => true, 'height' => true, 'x' => true, 'y' => true, 'rx' => true ) ),
+				'circle'   => array_merge( $shape, array( 'cx' => true, 'cy' => true, 'r' => true ) ),
+				'defs'     => array(),
+				'clippath' => array( 'id' => true ),
 			);
 		}
 
@@ -128,7 +264,12 @@ if ( ! class_exists( 'Posimyth_Deactivation_Survey' ) ) {
 			// returned the label twice ("Submit & DeactivateSubmit & Deactivate").
 			$uid = 'posi-deact-' . sanitize_html_class( $slug );
 
-			$reasons = self::reasons();
+			$reasons = $this->reason_list();
+
+			// Validated as a hex colour: it is interpolated into a style attribute, so a product's
+			// config must not be able to smuggle further declarations in through it.
+			$accent = (string) ( $this->config['accent'] ?? '' );
+			$accent = preg_match( '/^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/', $accent ) ? $accent : '#1717cc';
 			?>
 			<?php
 			/*
@@ -144,18 +285,87 @@ if ( ! class_exists( 'Posimyth_Deactivation_Survey' ) ) {
 			 *    to send.
 			 */
 			?>
-			<div id="<?php echo esc_attr( $uid ); ?>" class="posi-deact-modal">
+			<?php
+			/*
+			 * Two scoping hooks on the root, both per-product:
+			 *
+			 *  - `posi-deact-p-{slug}` is a parent class a product can target from its OWN stylesheet
+			 *    to restyle only its own dialog. The shared stylesheet below never uses it, so anything
+			 *    written against it cannot bleed into a sibling's dialog.
+			 *  - `--posi-accent` carries this product's colour. Set on the element, so it is scoped by
+			 *    the element: the shared rules read var(--posi-accent) and each dialog resolves it to
+			 *    its own value.
+			 */
+			?>
+			<div id="<?php echo esc_attr( $uid ); ?>" class="posi-deact-modal posi-deact-p-<?php echo esc_attr( sanitize_html_class( $slug ) ); ?>" style="--posi-accent:<?php echo esc_attr( $accent ); ?>">
 				<div class="posi-deact-dialog" role="dialog" aria-modal="true" aria-labelledby="<?php echo esc_attr( $uid ); ?>-title" tabindex="-1">
 					<h3 id="<?php echo esc_attr( $uid ); ?>-title">
 						<?php
 						/*
-						 * The Nexter mark. Deliberately without the nxt-normal-theme-logo class it carries
-						 * elsewhere: this SDK file ships inside several plugins and must not depend on any
-						 * host stylesheet, so the sizing lives in .posi-deact-icon below instead.
+						 * The product mark, from the caller's `logo_html`. This file ships inside several
+						 * plugins, and until now it rendered a hardcoded Nexter mark regardless — so a user
+						 * deactivating The Plus Addons for Elementor, or Sticky Header Effects, was shown
+						 * another product's logo on their own dialog. Both of those already passed
+						 * `logo_html`; nothing here ever read it.
+						 *
+						 * Run through wp_kses rather than echoed raw. The value is developer-supplied
+						 * config, not user input, but this is markup crossing an SDK boundary into an admin
+						 * screen, and an allowlist costs nothing.
+						 *
+						 * The inline fallback below is the Nexter mark, kept so Extension and Blocks look
+						 * exactly as before when they pass nothing. Deliberately without the
+						 * nxt-normal-theme-logo class it carries elsewhere: this file must not depend on
+						 * any host stylesheet, so the sizing lives in .posi-deact-icon instead.
 						 */
+						$posi_logo = isset( $this->config['logo_html'] ) ? trim( (string) $this->config['logo_html'] ) : '';
 						?>
 						<span class="posi-deact-icon" aria-hidden="true">
-							<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" viewBox="0 0 28 28"><rect width="28" height="28" fill="#1717cc" rx="5.833"></rect><path fill="#fff" d="M12.834 5.32h2.917v11.958a.875.875 0 0 1-.875.875h-2.042zM12.834 19.903h2.042c.483 0 .875.391.875.875v2.041h-2.917z"></path></svg>
+							<?php
+							if ( '' !== $posi_logo ) {
+								echo wp_kses(
+									$posi_logo,
+									array(
+										'img'  => array(
+											'src'      => true,
+											'width'    => true,
+											'height'   => true,
+											'alt'      => true,
+											'class'    => true,
+											'style'    => true,
+											'decoding' => true,
+											'loading'  => true,
+										),
+										'svg'  => array(
+											'xmlns'   => true,
+											'width'   => true,
+											'height'  => true,
+											'viewbox' => true,
+											'fill'    => true,
+											'class'   => true,
+										),
+										'g'    => array( 'fill' => true ),
+										'path' => array(
+											'd'         => true,
+											'fill'      => true,
+											'fill-rule' => true,
+											'clip-rule' => true,
+										),
+										'rect' => array(
+											'width'  => true,
+											'height' => true,
+											'x'      => true,
+											'y'      => true,
+											'rx'     => true,
+											'fill'   => true,
+										),
+									)
+								);
+							} else {
+								?>
+								<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" viewBox="0 0 28 28"><rect width="28" height="28" fill="#1717cc" rx="5.833"></rect><path fill="#fff" d="M12.834 5.32h2.917v11.958a.875.875 0 0 1-.875.875h-2.042zM12.834 19.903h2.042c.483 0 .875.391.875.875v2.041h-2.917z"></path></svg>
+								<?php
+							}
+							?>
 						</span>
 						<?php esc_html_e( 'Quick Feedback', 'nexter-extension' ); ?>
 					</h3>
@@ -166,12 +376,30 @@ if ( ! class_exists( 'Posimyth_Deactivation_Survey' ) ) {
 						?>
 					</p>
 					<form id="<?php echo esc_attr( $uid ); ?>-form">
-						<ul class="posi-deact-reasons">
-							<?php foreach ( $reasons as $val => $label ) : ?>
+						<?php
+						/*
+						 * Two layouts from one list. A product that supplies icons gets the card grid it
+						 * had before this SDK existed; one that does not keeps the plain rows. Same input
+						 * name, same slugs, same validation either way — only the presentation differs, so
+						 * there is no second code path for the submit to fall out of sync with.
+						 */
+						$has_icons = false;
+						foreach ( $reasons as $entry ) {
+							if ( '' !== $entry['icon'] ) {
+								$has_icons = true;
+								break;
+							}
+						}
+						?>
+						<ul class="posi-deact-reasons<?php echo $has_icons ? ' posi-deact-cards' : ''; ?>">
+							<?php foreach ( $reasons as $val => $entry ) : ?>
 								<li>
 									<label>
 										<input type="radio" name="posi_reason" value="<?php echo esc_attr( $val ); ?>">
-										<span><?php echo esc_html( $label ); ?></span>
+										<?php if ( '' !== $entry['icon'] ) : ?>
+											<span class="posi-deact-ricon" aria-hidden="true"><?php echo wp_kses( $entry['icon'], self::icon_tags() ); ?></span>
+										<?php endif; ?>
+										<span><?php echo esc_html( $entry['label'] ); ?></span>
 									</label>
 								</li>
 							<?php endforeach; ?>
@@ -215,7 +443,7 @@ if ( ! class_exists( 'Posimyth_Deactivation_Survey' ) ) {
 						<div class="posi-deact-footer">
 							<?php // Plain '&' — esc_html_e() does the encoding. Passing '&amp;' here would be escaped again and render literally as "&amp;". ?>
 							<button type="button" class="posi-deact-skip"><?php esc_html_e( 'Skip & Deactivate', 'nexter-extension' ); ?></button>
-							<button type="submit" class="posi-deact-submit" disabled><?php esc_html_e( 'Submit & Deactivate', 'nexter-extension' ); ?></button>
+							<button type="submit" class="posi-deact-submit"><?php esc_html_e( 'Submit & Deactivate', 'nexter-extension' ); ?></button>
 						</div>
 
 						<?php
@@ -243,8 +471,20 @@ if ( ! class_exists( 'Posimyth_Deactivation_Survey' ) ) {
 				self::$styles_printed = true;
 				?>
 			<style>
-			.posi-deact-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100000;align-items:center;justify-content:center;}
-			.posi-deact-dialog{background:#fff;border-radius:8px;padding:28px 32px;max-width:520px;width:90%;box-shadow:0 8px 32px rgba(0,0,0,.18);max-height:90vh;overflow:auto;box-sizing:border-box;}
+			/* Lighter wash plus a blur rather than a flat 50% black, so the plugin rows stay readable
+			   behind the dialog. The rgba() line stands alone as the fallback: a browser without
+			   backdrop-filter support keeps a usable scrim instead of a near-transparent overlay. */
+			.posi-deact-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.33);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);z-index:100000;align-items:center;justify-content:center;}
+			/*
+			 * 575px matches the form this dialog replaced. At 520px the two-column card grid wrapped the
+			 * longer labels ("Switched to Alternative") onto a second line while the shorter ones stayed
+			 * single, so the cards came out different heights.
+			 *
+			 * The top border reads --posi-accent, which each dialog sets from its own `accent` config —
+			 * see that key. Never a literal here: this stylesheet is printed once for the whole page and
+			 * shared by every product's dialog, so a fixed colour would paint all of them.
+			 */
+			.posi-deact-dialog{background:#fff;border-radius:5px;border-top:5px solid var(--posi-accent,#1717cc);padding:30px 32px;max-width:575px;width:90%;box-shadow:0 8px 32px rgba(0,0,0,.18);max-height:90vh;overflow:auto;box-sizing:border-box;}
 			/* Focused programmatically for screen readers; no visible ring on the container itself. */
 			.posi-deact-dialog:focus{outline:none;}
 			.posi-deact-dialog h3{margin:0 0 6px;font-size:18px;line-height:1.3;color:#1c1c1c;display:flex;align-items:center;gap:8px;}
@@ -256,24 +496,37 @@ if ( ! class_exists( 'Posimyth_Deactivation_Survey' ) ) {
 			.posi-deact-reasons li{margin:0 0 2px;}
 			/* Whole row is the hit target, not just the 16px radio. */
 			.posi-deact-reasons label{display:flex;align-items:center;gap:8px;cursor:pointer;padding:7px 8px;margin:0 -8px;border-radius:4px;font-size:13px;color:#1c1c1c;}
-			.posi-deact-reasons label:hover{background:#f5f7fe;}
+			.posi-deact-reasons label:hover{background:#f5f7fe;background:color-mix(in srgb, var(--posi-accent,#1717cc) 8%, #fff);}
 			.posi-deact-reasons input[type=radio]{margin:0;flex:none;}
+			/* Card layout, used only when the product supplies reason icons. Ported from the design The
+			   Plus Addons shipped before this SDK. Colours come from --posi-accent so one shared
+			   stylesheet can serve products with different brand colours. */
+			.posi-deact-cards{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+			.posi-deact-cards li{margin:0;}
+			.posi-deact-cards label{display:flex;align-items:center;gap:10px;padding:13px 14px;margin:0;border:1px solid #d9d9d9;border-radius:5px;background:#fff;font-size:13px;font-weight:500;line-height:1.3;transition:border-color .2s ease,background-color .2s ease;}
+			.posi-deact-cards label:hover{border-color:var(--posi-accent,#1717cc);background:#fff;}
+			.posi-deact-cards input[type=radio]{position:absolute;width:1px;height:1px;opacity:0;margin:0;pointer-events:none;}
+			.posi-deact-cards label:has(input:checked){border-color:var(--posi-accent,#1717cc);background:#f1f4ff;background:color-mix(in srgb, var(--posi-accent,#1717cc) 8%, #fff);}
+			.posi-deact-cards label:has(input:focus-visible){outline:2px solid var(--posi-accent,#1717cc);outline-offset:1px;}
+			.posi-deact-ricon{display:inline-flex;flex:none;width:20px;height:20px;}
+			.posi-deact-ricon svg{width:20px;height:20px;display:block;}
+			@media (max-width:600px){.posi-deact-cards{grid-template-columns:1fr;}}
 			.posi-deact-dialog textarea{display:none;width:100%;margin-top:10px;box-sizing:border-box;font-size:13px;}
 			.posi-deact-opts{margin:16px 0 0;padding-top:14px;border-top:1px solid #e5e5e5;display:flex;flex-direction:column;gap:8px;}
 			/* Each option is its own bordered box so it reads as a distinct, tappable choice. */
 			.posi-deact-opt{display:flex;align-items:center;gap:9px;cursor:pointer;font-size:13px;color:#1c1c1c;border:1px solid #dcdcde;border-radius:4px;padding:11px 13px;}
-			.posi-deact-opt:hover{border-color:#1717cc;}
+			.posi-deact-opt:hover{border-color:var(--posi-accent,#1717cc);}
 			.posi-deact-opt input[type=checkbox]{margin:0;flex:none;}
 			/* A disabled option must look disabled, not just refuse the click. */
 			.posi-deact-opt.is-disabled{opacity:.5;cursor:not-allowed;}
 			.posi-deact-opt.is-disabled:hover{border-color:#dcdcde;}
 			/* Skip sits on the left, the primary action on the right. */
 			.posi-deact-footer{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:18px;flex-wrap:wrap;}
-			.posi-deact-submit{background:#1717cc;border:1px solid #1717cc;color:#fff;padding:8px 18px;border-radius:4px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;line-height:1.4;}
+			.posi-deact-submit{background:var(--posi-accent,#1717cc);border:1px solid var(--posi-accent,#1717cc);color:#fff;padding:8px 18px;border-radius:4px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;line-height:1.4;}
 			.posi-deact-submit:disabled{background:#c7c7d6;border-color:#c7c7d6;cursor:not-allowed;}
 			/* Text button: available, but visually subordinate to the primary action. */
 			.posi-deact-skip{background:none;border:0;padding:4px 2px;color:#5e5e5e;font-size:13px;cursor:pointer;text-decoration:underline;font-family:inherit;}
-			.posi-deact-skip:hover{color:#1717cc;}
+			.posi-deact-skip:hover{color:var(--posi-accent,#1717cc);}
 			.posi-deact-consent{color:#787878;font-size:12px;margin:14px 0 0;line-height:1.5;}
 			</style>
 			<?php endif; ?>
@@ -324,19 +577,23 @@ if ( ! class_exists( 'Posimyth_Deactivation_Survey' ) ) {
 					e.preventDefault();
 					var deactUrl = href;
 
-					// Reset so reopening never shows a stale selection or a stuck button.
+					// Reset so reopening never shows a stale selection or a stuck button. Submit is
+					// re-ENABLED here rather than disabled: a previous submit leaves it disabled and
+					// relabelled "Submitting…", and reopening has to clear both or the button stays dead
+					// for the rest of the page load.
 					if ( $form.length && $form[0] ) { $form[0].reset(); }
 					$other.hide();
-					$submit.prop('disabled', true).text(submitLabel);
+					$submit.prop('disabled', false).text(submitLabel);
 					syncOptions();   // form.reset() clears the boxes; re-apply the derived UI state
 					$modal.css('display','flex');
-					// Focus the dialog, NOT the first radio — a focus ring on a radio reads as though
-					// it were already selected while Submit is (correctly) still disabled.
+					// Focus the dialog, NOT the first radio — a focus ring on a radio reads as though that
+					// option were already selected.
 					$modal.find('.posi-deact-dialog').trigger('focus');
 
 					$modal.find('input[name="posi_reason"]').off('change.posi').on('change.posi', function(){
+						// Only the "Other" textarea is derived from the choice; Submit is always available,
+						// and an unanswered dialog submits as reason "no-reason", which the handler accepts.
 						$other.toggle( $(this).val() === 'other' );
-						$submit.prop('disabled', false);   // something to submit now
 					});
 
 					function send(){
@@ -408,7 +665,7 @@ if ( ! class_exists( 'Posimyth_Deactivation_Survey' ) ) {
 			// legitimate source, so anything else — a tampered request inventing its own "reason" —
 			// collapses to no-reason instead of flowing into the hub as free text.
 			$reason = sanitize_key( $_POST['reason'] ?? 'no-reason' );
-			if ( 'no-reason' !== $reason && ! array_key_exists( $reason, self::reasons() ) ) {
+			if ( 'no-reason' !== $reason && ! array_key_exists( $reason, $this->reason_list() ) ) {
 				$reason = 'no-reason';
 			}
 
@@ -417,13 +674,21 @@ if ( ! class_exists( 'Posimyth_Deactivation_Survey' ) ) {
 			$other_text = substr( sanitize_textarea_field( wp_unslash( $_POST['other_text'] ?? '' ) ), 0, self::OTHER_TEXT_MAX );
 
 			// The regular payload carries no personal data. The admin email is attached ONLY when the
-			// user ticked "I agree to be contacted" — and it is read from the site, never from the
-			// posted form, so the browser cannot inject an arbitrary address.
+			// user ticked "I agree to be contacted" — and it is read server-side from the user
+			// submitting THIS request, never from the posted form, so the browser cannot inject an
+			// arbitrary address.
+			//
+			// This must be the consenting user's own address, not get_option( 'admin_email' ): that
+			// option is the site's single global address, which on a multi-admin or agency/reseller
+			// site can belong to someone else entirely (a former owner, a dev shop) — sending it here
+			// discloses an unrelated person's email based on THIS user's checkbox, which is not a valid
+			// consent basis for contacting them. check_ajax_referer() above has already run, so
+			// wp_get_current_user() is reliably the person who just ticked the box.
 			$contact_ok = ! empty( $_POST['contact_ok'] );
 			$extra      = array();
 
 			if ( $contact_ok ) {
-				$email = sanitize_email( (string) get_option( 'admin_email', '' ) );
+				$email = sanitize_email( (string) wp_get_current_user()->user_email );
 				if ( is_email( $email ) ) {
 					$extra['contact_email'] = $email;
 					$extra['contact_ok']    = 1;

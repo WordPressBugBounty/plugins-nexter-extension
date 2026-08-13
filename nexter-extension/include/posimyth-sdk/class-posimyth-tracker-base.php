@@ -510,6 +510,7 @@ if ( ! class_exists( 'Posimyth_Tracker_Base' ) ) {
 
 				// Plugins / ecosystem.
 				'page_builder'      => static::detect_page_builder( $active_slugs ),
+				'theme_builder'     => static::detect_theme_builder( $active_slugs ),
 				'active_plugins'    => array_values( $active_slugs ),
 				'plugin_count'      => count( $active_slugs ),
 				'posimyth_products' => static::detect_posimyth_products( $active_slugs ),
@@ -531,7 +532,27 @@ if ( ! class_exists( 'Posimyth_Tracker_Base' ) ) {
 				// Feature adoption.
 				'enabled_widgets'   => static::enabled_features(),
 				'widget_usage'      => static::used_features_cached( $event ),
+				'plugin_meta'       => static::plugin_meta(),
 			);
+		}
+
+		/**
+		 * Product-specific settings that do not deserve a column of their own.
+		 *
+		 * The hub has accepted a `plugin_meta` object since 1.5 (nested up to 8 levels, capped at 64 KB)
+		 * and nothing has ever filled it. This is the place for the handful of settings that matter for
+		 * one product only — an asset-loading mode, a compatibility toggle — without adding a shared
+		 * column that stays NULL for every other product and without smuggling them into
+		 * enabled_widgets, which is joined against widget_usage and must stay a widget map.
+		 *
+		 * Keep it small and keep it non-personal: the same rules as the rest of the payload. Report the
+		 * stored value rather than the label shown in the UI, so a wording change in the dashboard does
+		 * not split one setting into two series on the hub.
+		 *
+		 * @return array<string,mixed>
+		 */
+		protected static function plugin_meta(): array {
+			return array();
 		}
 
 		/**
@@ -652,6 +673,10 @@ if ( ! class_exists( 'Posimyth_Tracker_Base' ) ) {
 				'nexter'                           => 'nexter-theme',
 				'uichemy'                          => 'uichemy',
 				'wdesignkit'                       => 'wdesignkit',
+				// Sticky Header Effects for Elementor. Added to SHE's own copy in SDK 2.7.0 and merged
+				// back here in 2.9.0 — while it was only in SHE's copy, any site where an older sibling
+				// won the loader reported no SHE at all.
+				'sticky-header-effects-for-elementor' => 'sticky-header-effects',
 			);
 
 			$found = array();
@@ -693,6 +718,171 @@ if ( ! class_exists( 'Posimyth_Tracker_Base' ) ) {
 				return 'bricks';
 			}
 			return 'gutenberg';
+		}
+
+		/**
+		 * Which theme builder the site actually BUILDS with.
+		 *
+		 * Deliberately separate from detect_page_builder() and from active_plugins. Those answer "what
+		 * is installed"; this answers "what did they build their header, footer and archive templates
+		 * with", which is the question you cannot get from a plugin list — Elementor Pro being active
+		 * says nothing about whether its Theme Builder was ever opened.
+		 *
+		 * Each candidate is proved by PUBLISHED template content, not by the plugin being present. The
+		 * first match wins and the rest are skipped, so a typical site costs one or two cached counts.
+		 * Order is intentional: our own builders first (a Nexter site that also has Elementor Pro is a
+		 * Nexter theme-builder site), then the common third parties.
+		 *
+		 * Returns a single slug so the hub can chart a distribution the same way it does page_builder.
+		 * A site using two builders reports the higher-priority one; co-presence is still visible in
+		 * active_plugins if it ever needs cross-checking.
+		 *
+		 * @param array $plugins Active plugin files, used to decide who owns Elementor theme templates.
+		 * @return string Slug, or 'none' when no template content exists anywhere.
+		 */
+		protected static function detect_theme_builder( array $plugins = array() ): string {
+			/**
+			 * Theme builders to test, in the order they should win.
+			 *
+			 * Each value is the post type whose published entries prove that builder is in use, except
+			 * `elementor-pro`, whose marker is the literal 'elementor-pro' — its library is shared with
+			 * page and section templates, so it needs the template-type check below rather than a count.
+			 *
+			 * @param array<string,string> $map slug => post type, or slug => 'elementor-pro'.
+			 */
+			$map = apply_filters(
+				'posimyth_theme_builder_post_types',
+				array(
+					// Nexter Extension's Theme Builder. Nexter Blocks has NO theme builder of its own —
+					// it registers no post type at all and consumes this same `nxt_builder` CPT, which is
+					// why there is no 'nexter-blocks' entry here. An earlier revision listed one against
+					// `tpgb_template`; nothing ever registers that post type, so the entry could only
+					// ever be skipped. A Blocks-only site therefore falls through to whatever it really
+					// uses, or to 'none'.
+					'nexter'         => 'nxt_builder',
+
+					/*
+					 * Third-party builders below. A wrong post-type name here does not break anything —
+					 * post_type_exists() simply never matches — but it does under-report that competitor
+					 * for as long as it is wrong, which is worse than leaving it out, because the data
+					 * looks complete. Confirm each against a real install before trusting its share; the
+					 * `posimyth_theme_builder_post_types` filter is the no-deploy way to correct one.
+					 */
+
+					// Elementor ecosystem.
+					'elementor-pro'  => 'elementor-pro',
+					'jet-theme-core' => 'jet-theme-core',
+
+					// Other page builders with a theme-building layer.
+					'beaver-themer'  => 'fl-theme-layout',
+					'divi'           => 'et_theme_builder',
+					'oxygen'         => 'ct_template',
+					'bricks'         => 'bricks_template',
+					'breakdance'     => 'breakdance_template',
+					'zion'           => 'zion_template',
+					'avada'          => 'fusion_tb_section',
+					'themify'        => 'tbuilder_layout',
+					'toolset'        => 'dd_layouts',
+
+					// Theme-supplied builders, mostly block based.
+					'generatepress'  => 'gp_elements',
+					'astra'          => 'astra-advanced-hook',
+					'blocksy'        => 'ct_content_block',
+					'kadence'        => 'kadence_element',
+					'neve'           => 'neve_custom_layouts',
+
+					/*
+					 * WordPress's own Site Editor, last because it is the least specific answer: a site
+					 * running a dedicated theme builder usually has customised block templates as well,
+					 * and the dedicated tool is the more useful attribution.
+					 *
+					 * Note what this actually measures. A block theme's templates live as FILES until the
+					 * user edits one, at which point WordPress saves a `wp_template` post. So a published
+					 * row here means they opened the Site Editor and changed something — which is exactly
+					 * the "in use" signal wanted, not merely "runs a block theme".
+					 */
+					'wp-site-editor' => 'wp_template',
+				)
+			);
+
+			$dirs = array();
+			foreach ( $plugins as $plugin_file ) {
+				$dirs[ explode( '/', (string) $plugin_file )[0] ] = true;
+			}
+
+			foreach ( $map as $slug => $post_type ) {
+				if ( 'elementor-pro' === $post_type ) {
+					if ( ! static::elementor_theme_builder_in_use() ) {
+						continue;
+					}
+
+					/*
+					 * Theme templates exist in elementor_library — but that post type is shared, so
+					 * finding them there does not say who built them. The Plus Addons registers its own
+					 * theme locations through `elementor/theme/register_locations` and stores its
+					 * templates in exactly the same place, so attributing them to Elementor Pro was wrong
+					 * whenever Pro was not even installed. Credit whichever plugin present can actually
+					 * serve them, checking Pro first because it owns the feature when both are there.
+					 */
+					if ( isset( $dirs['elementor-pro'] ) ) {
+						return 'elementor-pro';
+					}
+					if ( isset( $dirs['the-plus-addons-for-elementor-page-builder'] ) || isset( $dirs['theplus_elementor_addon'] ) ) {
+						return 'tpae';
+					}
+
+					// Templates are there and nothing active can render them — most likely built by a
+					// plugin since removed. Say that, rather than crediting a plugin that is absent.
+					return 'elementor-library-orphaned';
+				}
+
+				if ( ! post_type_exists( $post_type ) ) {
+					continue;
+				}
+
+				$counts = wp_count_posts( $post_type );
+				if ( isset( $counts->publish ) && (int) $counts->publish > 0 ) {
+					return $slug;
+				}
+			}
+
+			return 'none';
+		}
+
+		/**
+		 * Whether Elementor Pro's Theme Builder has published templates.
+		 *
+		 * `elementor_library` is shared by page, section and container templates, none of which are
+		 * theme building, so the template type has to be checked. One prepared query rather than a
+		 * WP_Query with a meta clause, because this runs while a payload is being assembled.
+		 *
+		 * @return bool
+		 */
+		protected static function elementor_theme_builder_in_use(): bool {
+			if ( ! post_type_exists( 'elementor_library' ) ) {
+				return false;
+			}
+
+			global $wpdb;
+
+			$types = array( 'header', 'footer', 'single', 'single-post', 'single-page', 'archive', 'search-results', 'error-404' );
+
+			// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- one bounded existence check, no cache layer available for it.
+			$found = $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT p.ID FROM {$wpdb->posts} p
+					INNER JOIN {$wpdb->postmeta} m ON m.post_id = p.ID
+					WHERE p.post_type = 'elementor_library'
+					AND p.post_status = 'publish'
+					AND m.meta_key = '_elementor_template_type'
+					AND m.meta_value IN (" . implode( ', ', array_fill( 0, count( $types ), '%s' ) ) . ')
+					LIMIT 1',
+					$types
+				)
+			);
+			// phpcs:enable
+
+			return ! empty( $found );
 		}
 
 		// Content scanners (reused by TPAE / TPGB subclasses).
@@ -889,7 +1079,11 @@ if ( ! class_exists( 'Posimyth_Tracker_Base' ) ) {
 			 * the theme and (in other products) scans content, all while the admin waits. Only the HTTP
 			 * call was deferred. Now the payload is assembled after the response has gone out too.
 			 */
-			$dispatch = static function () use ( $class, $event, $extra, $endpoint, $headers, $timeout ) {
+			// Resolved out here rather than inside the closure: slug() is protected, and the debug log
+			// below is the only thing that needs it.
+			$slug = static::slug();
+
+			$dispatch = static function () use ( $class, $slug, $event, $extra, $endpoint, $headers, $timeout ) {
 				// Flush the response first so nothing below adds latency to the page.
 				$flushed = false;
 				if ( function_exists( 'fastcgi_finish_request' ) ) {
@@ -910,7 +1104,7 @@ if ( ! class_exists( 'Posimyth_Tracker_Base' ) ) {
 				 * connect and write; the 0.01s used by an earlier build aborted during DNS/TLS and
 				 * nothing ever arrived.)
 				 */
-				wp_remote_post(
+				$response = wp_remote_post(
 					$endpoint,
 					array(
 						'headers'     => $headers,
@@ -921,6 +1115,46 @@ if ( ! class_exists( 'Posimyth_Tracker_Base' ) ) {
 						'sslverify'   => true,
 					)
 				);
+
+				/*
+				 * Say something when the hub refuses a ping.
+				 *
+				 * Until this existed the response was discarded whole, so a hub that accepted the
+				 * request and then failed to store it was completely invisible: every product kept
+				 * sending, every ping was dropped, and the only symptom was a dashboard that quietly
+				 * stopped gaining rows. That is a failure mode which can run for months. A single line
+				 * in the debug log turns it into something findable in minutes.
+				 *
+				 * Two deliberate limits:
+				 *
+				 *  - WP_DEBUG only. This is a diagnostic, not a user-facing error, and a site that has
+				 *    debugging off must not accumulate log lines because a remote service is unwell.
+				 *  - Blocking requests only. Where fastcgi_finish_request() is unavailable the request
+				 *    is fire-and-forget, so $response carries no status at all — checking it there would
+				 *    report a failure on every single ping regardless of what the hub did.
+				 *
+				 * The body is truncated and the payload is never logged: the point is the status, not a
+				 * copy of what was sent.
+				 */
+				if ( $flushed && defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+					$code = is_wp_error( $response ) ? 0 : (int) wp_remote_retrieve_response_code( $response );
+
+					if ( $code < 200 || $code > 299 ) {
+						$detail = is_wp_error( $response )
+							? $response->get_error_message()
+							: trim( (string) wp_remote_retrieve_body( $response ) );
+
+						error_log( // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- diagnostic, WP_DEBUG only.
+							sprintf(
+								'POSIMYTH analytics: %s "%s" ping was not accepted (HTTP %d) — %s',
+								$slug,
+								$event,
+								$code,
+								substr( $detail, 0, 300 )
+							)
+						);
+					}
+				}
 			};
 
 			// If we are already inside shutdown (e.g. called from another shutdown handler), adding

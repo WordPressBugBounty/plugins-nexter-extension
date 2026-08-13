@@ -47,7 +47,10 @@ if ( ! class_exists( 'Nexter_Builder_Condition' ) ) {
 					add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts_admin' ), 1 );
 
 					add_action( 'admin_post_nexter_ext_save_template',[$this,'nexter_ext_add_template_form_data'] );
-					add_action( 'admin_post_nopriv_nexter_ext_save_template',[$this,'nexter_ext_add_template_form_data'] );
+					// No admin_post_nopriv_ counterpart: this whole block only runs once
+					// current_user_can( 'manage_options' ) is true, and the nopriv hook only ever
+					// fires for logged-out visitors, so registering it was dead code that read as
+					// if the endpoint were open to anonymous callers.
 					// Register hook so other plugins can trigger it
 					add_action( 'nxt_update_builder_status', array( $this, 'update_builder_status' ), 10, 1 );
 				}
@@ -67,6 +70,12 @@ if ( ! class_exists( 'Nexter_Builder_Condition' ) ) {
 			if ( empty( $user ) ) {
 				return false;
 			}
+			// A multisite Super Admin does not necessarily hold the administrator role on every
+			// subsite, so the role check below would refuse them on their own network.
+			if ( is_multisite() && is_super_admin( $user->ID ) ) {
+				return true;
+			}
+
 			$allowed_roles = array( 'administrator' );
 			if ( ! empty( $user ) && isset( $user->roles ) && array_intersect( $allowed_roles, $user->roles ) ) {
 				return true;

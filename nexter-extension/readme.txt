@@ -3,7 +3,7 @@ Contributors: posimyththemes, nirmalkavaiya, sagarpatel124
 Tags: seo, security, theme-builder, code-snippet, image-optimizer
 Requires at least: 5.9
 Tested up to: 7.0
-Stable tag: 4.7.4
+Stable tag: 4.7.6
 Requires PHP: 7.4
 License: GPLv3
 License URI: https://opensource.org/licenses/GPL-3.0
@@ -270,6 +270,15 @@ Nexter Extension may connect to external services below only when the related fe
 == Changelog ==
 
 ### View Complete Changelog at [roadmap.nexterwp.com](https://roadmap.nexterwp.com/updates?filter=Nexter+Extension+-+FREE)
+
+= V4.7.6 = 13 August 2026
+- Fixed : SEO Redirects : one broken rule no longer stops every new redirect from saving; a rule aimed at its own URL is skipped when other rules are checked for loops
+- Fixed : Rollback : picking a version in the dropdown now works; every rollback was being sent to the version already installed and refused with "Try selecting another version."
+- Fixed : Security : license activation now verifies the SSL certificate, so the licence key is no longer sent over a connection that could be intercepted
+- Fixed : Code Snippets : a shortcode attribute can no longer overwrite the snippet's own code, or other internal values, before the snippet runs
+- Fixed : Multisite : Super Admins can now manage code snippets and Theme Builder templates on network sites without also being given the administrator role there
+- Fixed : i18n : the SEO audit and image optimiser cron labels no longer load translations before WordPress is ready, which logged a "translation loading was triggered too early" warning whenever another plugin scheduled a task during start-up
+
 
 = V4.7.5 = 07 August 2026
 - Improvement : Performance : feature-usage scans read content in bounded, ordered batches so nothing is double-counted or skipped, and the consent notice's styles load once per page

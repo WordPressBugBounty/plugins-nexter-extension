@@ -91,8 +91,58 @@ if ( ! class_exists( 'Posimyth_Consent_Notice' ) ) {
 					// Suite-wide dedupe: same key across all Nexter plugins so only ONE notice
 					// ever shows, and dismissing it counts for the whole suite, not one plugin.
 					'suite_key'        => 'nexter_suite',
+					/*
+					 * LEGACY HOOK ONLY. Emits `<prefix>-notice-wrap`, `<prefix>-nobtn-primary` and
+					 * `<prefix>-nobtn-secondary` alongside this SDK's own `posi-*` classes, purely so a host
+					 * suite stylesheet that already targets them keeps matching.
+					 *
+					 * Nothing in inline_css() keys off it any more, and it MUST stay that way. The stylesheet
+					 * is emitted once per request behind a static latch (see enqueue()) while the markup is
+					 * rendered by a possibly DIFFERENT product's instance behind a second static latch — so
+					 * prefix-keyed selectors meant one product's CSS could be paired with another's markup
+					 * and match nothing, leaving the notice unstyled. That stayed hidden only because every
+					 * sibling inherited the same default prefix. Styling now hangs off the stable `posi-*`
+					 * classes, which are identical for every product, so the once-per-request stylesheet is
+					 * genuinely interchangeable again.
+					 *
+					 * Defaulted to this SDK's own neutral rather than any product's, so a sibling that passes
+					 * nothing does not end up with another product's name in its admin markup.
+					 */
+					'css_prefix'       => 'posi',
+					/*
+					 * Accent for the left border, the buttons and the icon stroke. Same contract as the
+					 * deactivation survey's `accent`: validated as a plain hex.
+					 *
+					 * Delivered to CSS as the inline custom property `--posi-accent` on the wrapper, exactly
+					 * as the survey does it, so the colour travels with the INSTANCE rather than with the
+					 * shared stylesheet. This is what makes one stylesheet safe to serve every product.
+					 *
+					 * The default is this SDK's own neutral, matching the survey's. It is deliberately NOT
+					 * any product's brand colour: a passed value always wins, so this only ever paints a
+					 * caller that supplies no accent — which on a multi-product site is a sibling whose
+					 * notice is rendered by whichever copy won the loader. Defaulting to a real product's
+					 * colour there is how this plugin's raspberry ended up on The Plus Addons' notice.
+					 * Any product that cares sets its own; every POSIMYTH product should.
+					 */
+					'accent'           => '#1717cc',
 				)
 			);
+
+			/*
+			 * Normalised once, here, because each is interpolated into both an attribute and a CSS
+			 * selector/declaration. sanitize_html_class() is what makes the prefix safe in the attribute;
+			 * the trailing-dash trim means a caller passing 'she-' and one passing 'she' agree rather than
+			 * producing `she--notice-wrap`. Empty or all-invalid falls back to the default rather than
+			 * emitting a bare `-notice-wrap`, which is not a valid selector.
+			 */
+			$posi_prefix                = rtrim( sanitize_html_class( (string) $this->config['css_prefix'] ), '-' );
+			$this->config['css_prefix'] = ( '' !== $posi_prefix ) ? $posi_prefix : 'posi';
+
+			// Validated rather than trusted: it lands in a custom-property declaration and an SVG
+			// attribute, so anything that is not a plain 3- or 6-digit hex falls back to the default.
+			$this->config['accent'] = preg_match( '/^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/', (string) $this->config['accent'] )
+				? (string) $this->config['accent']
+				: '#1717cc';
 
 			// Record this product as sharing the consent (see $registered_products).
 			if ( ! empty( $this->config['plugin_slug'] ) ) {
@@ -138,6 +188,11 @@ if ( ! class_exists( 'Posimyth_Consent_Notice' ) ) {
 			}
 			// Once per request, not once per product (E9): each active product's instance runs this
 			// hook, and the CSS/JS are identical, so they were being attached N times.
+			//
+			// "Identical" is load-bearing, and it is a constraint on inline_css() rather than an
+			// observation about it. This latch and render()'s are separate, and this hook runs first, so
+			// the instance that supplies the stylesheet may not be the instance that supplies the markup.
+			// inline_css() must therefore stay free of per-product values — see the note on it.
 			if ( self::$assets_enqueued ) {
 				return;
 			}
@@ -168,26 +223,36 @@ if ( ! class_exists( 'Posimyth_Consent_Notice' ) ) {
 			$name  = $this->suite_display_name();
 			$docs  = $this->config['docs_url'];
 			$nonce = wp_create_nonce( $this->config['ajax_action'] );
+			// Legacy prefix (host-stylesheet hook only) and this product's accent — see the constructor
+			// defaults. The accent is emitted as an inline custom property below, NOT baked into the
+			// shared stylesheet, so each product's notice keeps its own brand colour even though one
+			// stylesheet serves them all.
+			$px     = $this->config['css_prefix'];
+			$accent = $this->config['accent'];
 			// Deliberately NOT 'is-dismissible': the notice has its own explicit Dismiss button, and
 			// core's injected "x" would be a second, redundant control sitting right beside it.
+			//
+			// posi-consent-bar is the second STABLE class the layout rules key off. It exists to carry
+			// the two-class specificity those rules need (see inline_css()) without that specificity
+			// depending on the legacy prefix, which is not guaranteed to match the stylesheet's.
 			?>
-		<div class="notice notice-info nxt-notice-wrap posi-consent-notice" id="posi-consent-<?php echo esc_attr( $slug ); ?>" data-nonce="<?php echo esc_attr( $nonce ); ?>" data-action="<?php echo esc_attr( $this->config['ajax_action'] ); ?>">
+		<div class="notice notice-info <?php echo esc_attr( $px ); ?>-notice-wrap posi-consent-notice posi-consent-bar posi-consent--<?php echo esc_attr( $slug ); ?>" id="posi-consent-<?php echo esc_attr( $slug ); ?>" style="--posi-accent:<?php echo esc_attr( $accent ); ?>" data-nonce="<?php echo esc_attr( $nonce ); ?>" data-action="<?php echo esc_attr( $this->config['ajax_action'] ); ?>">
 			<span class="posi-notice-icon" aria-hidden="true">
-				<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" viewBox="0 0 24 24"><path stroke="#1717cc" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 20V12M12 20V4m7 16v-6"/></svg>
+				<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" viewBox="0 0 24 24"><path stroke="<?php echo esc_attr( $accent ); ?>" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 20V12M12 20V4m7 16v-6"/></svg>
 			</span>
 			<span class="posi-notice-text">
 				<?php
 				printf(
 					/* translators: %s: product name */
-					esc_html__( 'Help make %s faster and more stable. Share basic, non-sensitive info so we can catch conflicts and ship fixes quicker — no personal data, ever.', 'nexter-extension' ),
+					esc_html__( 'Help make %s faster and more stable. Share basic, non-sensitive info so we can catch conflicts and ship fixes quicker. No personal data, ever.', 'nexter-extension' ),
 					'<strong>' . esc_html( $name ) . '</strong>'
 				);
 				?>
 				<a href="<?php echo esc_url( $docs ); ?>" target="_blank" rel="noopener noreferrer"><?php esc_html_e( "See what's shared", 'nexter-extension' ); ?> &rarr;</a>
 			</span>
 			<span class="posi-notice-actions">
-				<button type="button" class="nxt-nobtn-primary posi-consent-allow" data-choice="allow"><?php esc_html_e( 'Allow', 'nexter-extension' ); ?></button>
-				<button type="button" class="nxt-nobtn-secondary posi-consent-skip" data-choice="skip"><?php esc_html_e( 'Dismiss', 'nexter-extension' ); ?></button>
+				<button type="button" class="<?php echo esc_attr( $px ); ?>-nobtn-primary posi-consent-allow" data-choice="allow"><?php esc_html_e( 'Allow', 'nexter-extension' ); ?></button>
+				<button type="button" class="<?php echo esc_attr( $px ); ?>-nobtn-secondary posi-consent-skip" data-choice="skip"><?php esc_html_e( 'Dismiss', 'nexter-extension' ); ?></button>
 			</span>
 		</div>
 			<?php
@@ -383,29 +448,39 @@ if ( ! class_exists( 'Posimyth_Consent_Notice' ) ) {
 		}
 
 		/**
-		 * Compact inline notice, styled with Nexter Extension's visual language.
+		 * Compact inline notice, styled entirely from product-neutral classes.
 		 *
-		 * Deliberately a single row rather than the tall `nexter-license-activate` block used by
-		 * promo/licence notices: this is an optional, low-priority ask that appears on ordinary admin
-		 * screens, so it should not push the page down. It still reuses Extension's accent colour
-		 * (#1717cc), border treatment (nxt-notice-wrap) and button classes (nxt-nobtn-primary /
-		 * nxt-nobtn-secondary) so it clearly belongs to the suite.
+		 * Deliberately a single row rather than a tall promo/licence block: this is an optional,
+		 * low-priority ask that appears on ordinary admin screens, so it should not push the page down.
 		 *
-		 * Those button/border rules live in Nexter Extension's admin stylesheet, but this SDK also
-		 * ships inside products that can run WITHOUT Nexter Extension (e.g. Nexter Blocks on its own),
-		 * so the same values are repeated here. When Extension's CSS is present the values are
-		 * identical, so nothing conflicts.
+		 * CONTAINS NO PER-PRODUCT VALUE, AND MUST NOT. This stylesheet is emitted once per request
+		 * behind a static latch (see enqueue()) whereas the markup is emitted behind a SEPARATE static
+		 * latch in render(), and admin_enqueue_scripts runs before admin_notices — so on a multi-product
+		 * site the copy that supplies the CSS is not necessarily the copy that supplies the markup. Any
+		 * selector or colour taken from config therefore risked pairing one product's stylesheet with
+		 * another's markup: identical prefixes hid it (everything matched by luck), differing prefixes
+		 * would have matched nothing and shipped an unstyled notice.
+		 *
+		 * So selectors key only on the stable `posi-*` classes, which every product emits identically,
+		 * and the one value that legitimately varies — the accent — arrives as the `--posi-accent`
+		 * custom property set inline per instance in render(). One stylesheet, N brand colours. The
+		 * fallback in each var() is this SDK's neutral and should never be reached, since render()
+		 * always sets the property.
+		 *
+		 * Every declaration is repeated in full because this SDK ships inside products that run with no
+		 * suite stylesheet present to supply them.
 		 */
 		private function inline_css(): string {
 			return '
         /* Compact single-row layout: this is an optional ask, so it should not occupy a tall
-           block at the top of every admin screen. Nexter Extension\'s colours and button styles
-           are reused so it still reads as part of the suite.
-           The two-class selector is required: Extension\'s stylesheet sets
-           `.nxt-notice-wrap{padding-left:0}`, which has the same specificity as a single class and
-           would otherwise win on load order, leaving the icon jammed against the left border. */
-        .posi-consent-notice.nxt-notice-wrap {
-            border-left-color: #1717cc;
+           block at the top of every admin screen.
+           The two-class selector is deliberate. A host stylesheet may already define a rule for the
+           wrapper class on its own (one suite stylesheet zeroes its left padding), which has the same
+           specificity as a single class and would otherwise win on load order, leaving the icon jammed
+           against the border. Both classes here are this SDK\'s own and are always emitted together,
+           so the specificity no longer depends on a configured prefix matching. */
+        .posi-consent-notice.posi-consent-bar {
+            border-left-color: var(--posi-accent, #1717cc);
             display: flex;
             align-items: center;
             flex-wrap: nowrap;
@@ -431,8 +506,8 @@ if ( ! class_exists( 'Posimyth_Consent_Notice' ) ) {
             align-items: center;
             white-space: nowrap;
         }
-        .posi-consent-notice .nxt-nobtn-primary,
-        .posi-consent-notice .nxt-nobtn-secondary {
+        .posi-consent-notice .posi-consent-allow,
+        .posi-consent-notice .posi-consent-skip {
             padding: 7px 16px;
             border-radius: 4px;
             font-weight: 600;
@@ -444,26 +519,26 @@ if ( ! class_exists( 'Posimyth_Consent_Notice' ) ) {
             box-shadow: none;
             font-family: inherit;
         }
-        .posi-consent-notice .nxt-nobtn-primary,
-        .posi-consent-notice .nxt-nobtn-primary:hover,
-        .posi-consent-notice .nxt-nobtn-primary:focus {
-            background-color: #1717cc;
-            border: 1px solid #1717cc;
+        .posi-consent-notice .posi-consent-allow,
+        .posi-consent-notice .posi-consent-allow:hover,
+        .posi-consent-notice .posi-consent-allow:focus {
+            background-color: var(--posi-accent, #1717cc);
+            border: 1px solid var(--posi-accent, #1717cc);
             color: #fff;
             outline: 0;
         }
-        .posi-consent-notice .nxt-nobtn-secondary,
-        .posi-consent-notice .nxt-nobtn-secondary:hover,
-        .posi-consent-notice .nxt-nobtn-secondary:focus {
+        .posi-consent-notice .posi-consent-skip,
+        .posi-consent-notice .posi-consent-skip:hover,
+        .posi-consent-notice .posi-consent-skip:focus {
             background-color: #fff;
-            color: #1717cc;
-            border: 1px solid #1717cc;
+            color: var(--posi-accent, #1717cc);
+            border: 1px solid var(--posi-accent, #1717cc);
             margin-left: 8px;
             padding: 8px 16px;
             outline: 0;
         }
         @media (max-width: 782px) {
-            .posi-consent-notice.nxt-notice-wrap { flex-wrap: wrap; }
+            .posi-consent-notice.posi-consent-bar { flex-wrap: wrap; }
             .posi-consent-notice .posi-notice-actions { margin-top: 8px; }
         }
         ';

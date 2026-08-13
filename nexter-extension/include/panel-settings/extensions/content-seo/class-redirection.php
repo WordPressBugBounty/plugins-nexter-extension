@@ -429,7 +429,7 @@ class Nexter_Content_SEO_Redirection {
 	 * @param array<int, array<string, mixed>> $rules Full prospective rule set.
 	 * @return string Human-readable error, or '' when no loop exists.
 	 */
-	private static function find_redirect_loop( $rules ) {
+	private static function find_redirect_loop( $rules, $focus = null ) {
 		$enabled = array();
 		foreach ( $rules as $r ) {
 			if ( ! empty( $r['enabled'] ) ) {
@@ -437,7 +437,11 @@ class Nexter_Content_SEO_Redirection {
 			}
 		}
 
-		foreach ( $enabled as $start ) {
+		// With a $focus rule, only chains starting at that rule are reported. Checking every rule meant
+		// one bad pre-existing rule rejected every later save, blaming the rule being added.
+		$starts = ( null !== $focus && ! empty( $focus['enabled'] ) ) ? array( $focus ) : $enabled;
+
+		foreach ( $starts as $start ) {
 			$status = isset( $start['status_code'] ) ? (int) $start['status_code'] : self::DEFAULT_STATUS_CODE;
 			if ( in_array( $status, self::GONE_STATUS_CODES, true ) ) {
 				continue; // No destination to chain from.
@@ -492,8 +496,14 @@ class Nexter_Content_SEO_Redirection {
 			if ( in_array( $status, self::GONE_STATUS_CODES, true ) ) {
 				continue;
 			}
+			$next = self::path_of( isset( $rule['to_url'] ) ? $rule['to_url'] : '' );
+			// A rule pointing at its own source is broken on its own and cannot be a useful chain step.
+			// Following it made every rule aimed at that path look like a loop.
+			if ( '' !== $next && $next === self::path_of( isset( $rule['from_url'] ) ? $rule['from_url'] : '' ) ) {
+				continue;
+			}
 			if ( self::rule_matches_request( $rule, $path ) ) {
-				return self::path_of( isset( $rule['to_url'] ) ? $rule['to_url'] : '' );
+				return $next;
 			}
 		}
 		return '';
@@ -636,7 +646,7 @@ class Nexter_Content_SEO_Redirection {
 			);
 		}
 		$rules[] = $rule;
-		$loop    = self::find_redirect_loop( $rules );
+		$loop    = self::find_redirect_loop( $rules, $rule );
 		if ( '' !== $loop ) {
 			return new WP_Error( 'redirect_loop', $loop, array( 'status' => 400 ) );
 		}
@@ -679,7 +689,7 @@ class Nexter_Content_SEO_Redirection {
 		if ( ! $found ) {
 			return new WP_Error( 'not_found', __( 'Rule not found.', 'nexter-extension' ), array( 'status' => 404 ) );
 		}
-		$loop = self::find_redirect_loop( $rules );
+		$loop = self::find_redirect_loop( $rules, $rule );
 		if ( '' !== $loop ) {
 			return new WP_Error( 'redirect_loop', $loop, array( 'status' => 400 ) );
 		}
@@ -722,7 +732,7 @@ class Nexter_Content_SEO_Redirection {
 		}
 		// Enabling a rule can complete a loop — re-validate before persisting.
 		if ( ! empty( $updated['enabled'] ) ) {
-			$loop = self::find_redirect_loop( $rules );
+			$loop = self::find_redirect_loop( $rules, $updated );
 			if ( '' !== $loop ) {
 				return new WP_Error( 'redirect_loop', $loop, array( 'status' => 400 ) );
 			}

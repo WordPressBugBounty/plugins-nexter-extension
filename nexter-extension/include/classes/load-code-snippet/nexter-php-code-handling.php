@@ -71,11 +71,20 @@ class Nexter_Builder_Code_Snippets_Executor {
 			// Extract shortcode attributes as variables if provided (with security validation)
 			if ( ! empty( $attributes ) && is_array( $attributes ) ) {
 				
+				// Names that must never be assignable from an attribute. ${$key} writes into this
+				// method's own scope, and $code is the parameter handed to nexter_run_eval() below -
+				// an attribute named "code" would therefore replace the snippet body with its own
+				// value and have it executed. The comment below used to promise a blacklist check;
+				// there was no list, so "code" passed every test. sanitize_text_field() is not a
+				// defence here either: it strips tags, and eval() needs no <?php to run a statement.
+				$reserved = array( 'code', 'post_id', 'catch_output', 'attributes', 'key', 'value', 'reserved', 'result', 'output', 'file_based', 'file_path', 'this' );
+
 				foreach ( $attributes as $key => $value ) {
 					if ( is_string( $key ) && ! empty( $key ) ) {
 						// Security: Validate variable name format and check blacklist
-						if ( preg_match( '/^[a-zA-Z_][a-zA-Z0-9_]*$/', $key ) && 
-							strpos( $key, '_' ) !== 0 && 
+						if ( ! in_array( $key, $reserved, true ) &&
+							preg_match( '/^[a-zA-Z_][a-zA-Z0-9_]*$/', $key ) &&
+							strpos( $key, '_' ) !== 0 &&
 							strlen( $key ) <= 50 ) {
 							// Use variable variables to set dynamic variable names
 							${$key} = is_string( $value ) ? sanitize_text_field( $value ) : $value;

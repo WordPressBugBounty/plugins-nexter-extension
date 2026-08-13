@@ -1220,8 +1220,15 @@ class Nxt_Panel_Ajax_Router {
 		}
 
 		$api_url = isset( $_POST['api_url'] ) ? esc_url_raw( wp_unslash( $_POST['api_url'] ) ) : '';
-		// Security: SSRF Protection - Whitelist allowed domains
-		$allowed_domains = array( 'api.wdesignkit.com', 'nexterwp.com', 'api.wordpress.org' );
+		/**
+		 * Security: SSRF Protection - Whitelist allowed domains.
+		 *
+		 * `wdesignkit.com` is the base host the dashboard builds template API
+		 * calls from (nxt_wdkit_url), and is already accepted by the duplicate
+		 * copy of this proxy in Nexter Blocks — without it here, those calls
+		 * fail whenever this plugin's handler is the one that answers.
+		 */
+		$allowed_domains = array( 'wdesignkit.com', 'api.wdesignkit.com', 'nexterwp.com', 'api.wordpress.org' );
 		$parsed_url      = wp_parse_url( $api_url );
 		if ( empty( $parsed_url['host'] ) || ! in_array( $parsed_url['host'], $allowed_domains, true ) ) {
 			wp_send_json_error( array( 'content' => __( 'Unauthorized API endpoint.', 'nexter-extension' ) ) );
@@ -1233,6 +1240,34 @@ class Nxt_Panel_Ajax_Router {
 		$body     = $this->parent->safe_json_decode( $body_raw, true );
 		if ( ! is_array( $body ) ) {
 			$body = array();
+		}
+
+		/**
+		 * Optional response cache. Opt-in per request via `cache_ttl` (seconds)
+		 * so existing callers of this generic proxy keep their live behaviour.
+		 * The key covers url + method + body, so each filter combination caches
+		 * separately. `cache_bust` forces a refetch.
+		 */
+		$cache_ttl = isset( $_POST['cache_ttl'] ) ? absint( wp_unslash( $_POST['cache_ttl'] ) ) : 0;
+		$cache_ttl = min( $cache_ttl, DAY_IN_SECONDS );
+		$cache_key = '';
+
+		if ( $cache_ttl > 0 ) {
+			$cache_key = 'nxt_api_' . md5( $api_url . '|' . $method . '|' . wp_json_encode( $body ) );
+
+			$cache_bust = isset( $_POST['cache_bust'] ) && '1' === sanitize_text_field( wp_unslash( $_POST['cache_bust'] ) );
+
+			if ( $cache_bust ) {
+				delete_transient( $cache_key );
+			} else {
+				$cached = get_transient( $cache_key );
+
+				if ( false !== $cached && is_array( $cached ) ) {
+					$cached['NXT_CACHED'] = true;
+					wp_send_json( $cached );
+					wp_die();
+				}
+			}
 		}
 
 		$args = array(
@@ -1280,8 +1315,48 @@ class Nxt_Panel_Ajax_Router {
 			$final = array_merge( $statuscode_array, array( 'data' => $response_data ) );
 		}
 
+		// Only cache successful responses, so a transient can't pin an error.
+		if ( $cache_ttl > 0 && ! empty( $cache_key ) && 200 === (int) $statuscode && ! empty( $response_data ) ) {
+			$this->nexter_purge_expired_api_transients();
+			set_transient( $cache_key, $final, $cache_ttl );
+		}
+
 		wp_send_json( $final );
 		wp_die();
+	}
+
+	/**
+	 * Delete expired `nxt_api_*` response transients.
+	 *
+	 * WordPress only clears an expired transient when it's next requested, so
+	 * keys that are never asked for again (an old filter combination, say) would
+	 * sit in wp_options indefinitely. Called just before writing a new cache
+	 * entry, i.e. only on a cache miss.
+	 */
+	private function nexter_purge_expired_api_transients() {
+		global $wpdb;
+
+		$now = time();
+
+		// Timeout rows whose expiry has passed; the paired value row is removed too.
+		$expired = $wpdb->get_col(
+			$wpdb->prepare(
+				"SELECT option_name FROM {$wpdb->options}
+				WHERE option_name LIKE %s AND option_value < %d LIMIT 100",
+				$wpdb->esc_like( '_transient_timeout_nxt_api_' ) . '%',
+				$now
+			)
+		);
+
+		if ( empty( $expired ) ) {
+			return;
+		}
+
+		foreach ( $expired as $timeout_name ) {
+			$key = substr( $timeout_name, strlen( '_transient_timeout_' ) );
+
+			delete_transient( $key );
+		}
 	}
 
 	public function nexter_ext_connection_data_save_action(){

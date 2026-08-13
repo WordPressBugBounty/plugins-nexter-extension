@@ -486,6 +486,16 @@ class Engine {
 	/**
 	 * Register custom cron schedule(s).
 	 *
+	 * The label is only translated once `init` has run. `cron_schedules` fires from
+	 * wp_get_schedules(), which any plugin can reach at `plugins_loaded` simply by calling
+	 * wp_schedule_event() there — the shared analytics SDK does exactly that. Translating at that
+	 * point loads the text domain before WordPress is ready for it, which is the
+	 * `_load_textdomain_just_in_time was called incorrectly` notice in WP 6.7+.
+	 *
+	 * Nothing is lost by waiting: this string is only ever read by tools that list cron schedules
+	 * (Query Monitor, WP Crontrol, our own settings screens), all of which render long after
+	 * `init`, and wp_get_schedules() re-runs this filter on every call rather than caching it.
+	 *
 	 * @param array $schedules Existing.
 	 * @return array
 	 */
@@ -493,7 +503,7 @@ class Engine {
 		if ( ! isset( $schedules['nexter_seo_monthly'] ) ) {
 			$schedules['nexter_seo_monthly'] = array(
 				'interval' => 30 * DAY_IN_SECONDS,
-				'display'  => __( 'Once Monthly (Nexter SEO)', 'nexter-extension' ),
+				'display'  => did_action( 'init' ) ? __( 'Once Monthly (Nexter SEO)', 'nexter-extension' ) : 'Once Monthly (Nexter SEO)',
 			);
 		}
 		return $schedules;

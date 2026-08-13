@@ -84,16 +84,29 @@ if ( ! class_exists( 'NxtExt_Rollback' ) ) {
 		public static function get_rollback_versions() {
 			$versions_list = get_transient( 'nxtext_rollback_version_' . NEXTER_EXT_VER );
 			if ( $versions_list === false ) {
-				
+
 				require_once ABSPATH . 'wp-admin/includes/plugin-install.php';
-	
+
 				$plugin_info = plugins_api(
 					'plugin_information',
 					[
 						'slug' => 'nexter-extension',
 					]
 				);
-	
+
+				// Distinguish "WordPress.org couldn't be reached" from "no eligible versions" —
+				// both used to collapse into the exact same empty list, so the caller's generic
+				// "Try selecting another version." fired even when the real cause is a blocked/failed
+				// outbound request (WP_HTTP_BLOCK_EXTERNAL, a firewalled dev/local environment, a
+				// WordPress.org outage) — there was never a list to select from in that case, and no
+				// version the admin could pick would have worked. Recording the underlying error lets
+				// the call site tell the admin what actually happened instead of implying user error.
+				if ( is_wp_error( $plugin_info ) ) {
+					set_transient( 'nxtext_rollback_fetch_error_' . NEXTER_EXT_VER, $plugin_info->get_error_message(), HOUR_IN_SECONDS );
+					return [];
+				}
+				delete_transient( 'nxtext_rollback_fetch_error_' . NEXTER_EXT_VER );
+
 				if ( empty( $plugin_info->versions ) || ! is_array( $plugin_info->versions ) ) {
 					return [];
 				}
@@ -144,7 +157,27 @@ if ( ! class_exists( 'NxtExt_Rollback' ) ) {
 
 			$rv      = self::get_rollback_versions();
 			$version = isset( $_GET['version'] ) && ! empty( $_GET['version'] ) ? sanitize_text_field( wp_unslash( $_GET['version'] ) ) : '';
-			if ( empty( $version ) || ! in_array( $version, $rv ) ) {
+
+			// An empty $rv is not the same fact as "$version isn't in it" — see the note in
+			// get_rollback_versions(). Report which one actually happened instead of the one
+			// generic message that used to fire for both.
+			if ( empty( $rv ) ) {
+				$fetch_error = get_transient( 'nxtext_rollback_fetch_error_' . NEXTER_EXT_VER );
+				if ( $fetch_error ) {
+					wp_die(
+						esc_html(
+							sprintf(
+								/* translators: %s: underlying error message from the failed WordPress.org request. */
+								__( 'Could not fetch the list of previous versions from WordPress.org: %s. Check this site\'s outbound network access and try again.', 'nexter-extension' ),
+								$fetch_error
+							)
+						)
+					);
+				}
+				wp_die( esc_html__( 'No earlier stable version of this plugin is available to roll back to.', 'nexter-extension' ) );
+			}
+
+			if ( empty( $version ) || ! in_array( $version, $rv, true ) ) {
 				wp_die( esc_html__( 'Error, Try selecting another version.', 'nexter-extension' ) );
 			}
 

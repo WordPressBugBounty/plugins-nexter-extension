@@ -237,7 +237,9 @@ class Nxt_Dashboard_Data {
 		$nexterInstalled = array_key_exists( 'nexter', $themes );
 		$theme_det_link  = Nexter_Ext_Panel_Settings::get_instance()->get_nexter_theme_details_link( 'nexter' );
 
-		$rollback_url = wp_nonce_url( admin_url( 'admin-post.php?action=nxtext_rollback&version=' . NEXTER_EXT_VER ), 'nxtext_rollback' );
+		// 'NEXTER_EXT_VER' is a placeholder token, not the constant — rollback.jsx swaps it for the
+		// picked version. Concatenating the constant made every rollback target the installed version.
+		$rollback_url = wp_nonce_url( admin_url( 'admin-post.php?action=nxtext_rollback&version=NEXTER_EXT_VER' ), 'nxtext_rollback' );
 
 		$nxtPlugin     = false;
 		$tpaePlugin    = false;

@@ -483,20 +483,27 @@ class Nexter_Ext_RollBack_Manager {
 		
 		$args = wp_parse_args( $get_params, $defaults );
 
-		// Security: Validate version format
+		// Security: Validate version format. This value is interpolated straight into a download
+		// URL in nxt-rb-plugin-upgrader.php ("…/plugin/{slug}.{version}.zip"), so it must stay
+		// restricted to safe version characters — but the previous pattern only accepted a strict
+		// 2-3 numeric segments plus a DASH-prefixed suffix, while real WordPress.org SVN tags also
+		// use a dot before a pre-release/build qualifier (e.g. "4.7.0.beta-1", one of this very
+		// plugin's own past tags) and sometimes carry 4+ numeric segments (e.g. "2.1.3.1"). Any such
+		// tag in the rollback dropdown 404'd here with "Invalid version format." before the request
+		// ever reached the SVN URL. Widened to accept dot- OR dash-separated trailing segments while
+		// still rejecting slashes, spaces, and anything else that isn't a safe version token.
 		if ( ! empty( $args['plugin_version'] ) ) {
-			// Security: Validate version format (semantic versioning)
-			if ( ! preg_match( '/^[0-9]+\.[0-9]+(\.[0-9]+)?(-[a-zA-Z0-9-]+)?$/', $args['plugin_version'] ) ) {
+			if ( ! preg_match( '/^[0-9]+(\.[0-9]+)*(?:[.-][a-zA-Z0-9]+)*$/', $args['plugin_version'] ) ) {
 				wp_die( esc_html__( 'Invalid version format.', 'nexter-extension' ) );
 			}
-			
+
 			// Include plugin rollback logic
 			require_once NEXTER_EXT_DIR . '/include/panel-settings/extensions/custom-fields/nxt-rb-plugin-upgrader.php';
 			require_once NEXTER_EXT_DIR . '/include/panel-settings/extensions/custom-fields/nxt-rb-action.php';
 
 		} elseif ( ! empty( $args['theme_version'] ) ) {
-			// Security: Validate version format
-			if ( ! preg_match( '/^[0-9]+\.[0-9]+(\.[0-9]+)?(-[a-zA-Z0-9-]+)?$/', $args['theme_version'] ) ) {
+			// See the matching note above — same widened pattern, same reason.
+			if ( ! preg_match( '/^[0-9]+(\.[0-9]+)*(?:[.-][a-zA-Z0-9]+)*$/', $args['theme_version'] ) ) {
 				wp_die( esc_html__( 'Invalid version format.', 'nexter-extension' ) );
 			}
 			
