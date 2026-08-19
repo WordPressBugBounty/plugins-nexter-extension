@@ -259,7 +259,7 @@ class Nexter_Ext_SMTP_Email {
 		}
 
 		$smtp_data    = Nxt_Options::extra_ext();
-		$access_token = $smtp_data['smtp-email']['values']['access_token'] ?? '';
+		$access_token = Nxt_Secret::smtp( $smtp_data['smtp-email']['values'] ?? array(), 'access_token' );
 		$email        = $smtp_data['smtp-email']['values']['email'] ?? '';
 
 		if ( ! empty( $access_token ) ) {
@@ -385,7 +385,8 @@ class Nexter_Ext_SMTP_Email {
 				'autoTLS'    => (isset( $smtp_custom['autoTLS'] ) && $smtp_custom['autoTLS'] == true) ? true : false,
 				'auth'       => (isset( $smtp_custom['auth'] ) && $smtp_custom['auth'] == true) ? true : false,
 				'username'   => isset( $smtp_custom['username'] ) ? sanitize_text_field( $smtp_custom['username'] ) : '',
-				'password'   => isset( $smtp_custom['password'] ) ? $smtp_custom['password'] : '', // Password should not be sanitized with sanitize_text_field
+				// Stored encrypted since 4.7.7; legacy cleartext values pass through unchanged.
+				'password'   => Nxt_Secret::smtp( $smtp_custom, 'password' ),
 				'connect'    => false,
 				'from_email' => sanitize_email( $smtp_custom['from_email'] ),
 				'from_name'  => sanitize_text_field( $smtp_custom['from_name'] ),

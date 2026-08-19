@@ -48,6 +48,10 @@ class Nexter_Singular_Archives_Rules {
 	
 	//Ajax Get Data Singular/Archive Condition Rules
 	public static function nexter_ajax_singular_archives_filters( $get_data ='' ){
+		// Reachable over admin-ajax with no guard at all; internal callers are unaffected.
+		if ( wp_doing_ajax() && ! current_user_can( 'edit_posts' ) ) {
+			wp_send_json_error( array( 'content' => __( 'Insufficient permissions.', 'nexter-extension' ) ), 403 );
+		}
 
 		if ( ! empty( $get_data ) ) {
 			$data = $get_data;

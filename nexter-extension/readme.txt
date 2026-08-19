@@ -3,7 +3,7 @@ Contributors: posimyththemes, nirmalkavaiya, sagarpatel124
 Tags: seo, security, theme-builder, code-snippet, image-optimizer
 Requires at least: 5.9
 Tested up to: 7.0
-Stable tag: 4.7.6
+Stable tag: 4.7.7
 Requires PHP: 7.4
 License: GPLv3
 License URI: https://opensource.org/licenses/GPL-3.0
@@ -271,6 +271,36 @@ Nexter Extension may connect to external services below only when the related fe
 
 ### View Complete Changelog at [roadmap.nexterwp.com](https://roadmap.nexterwp.com/updates?filter=Nexter+Extension+-+FREE)
 
+= V4.7.7 = 19 August 2026
+- Improvement : Security : SMTP passwords and Google OAuth tokens are now encrypted in the database. Credentials saved by earlier versions keep working and convert on the next save.
+- Improvement : Regenerate Thumbnails : The popup now shows a progress bar, live counts, a Stop button and a list of images it could not process.
+- Improvement : Regenerate Thumbnails : Images are processed in batches, WebP and AVIF are included, and an unreadable file can no longer wipe an attachment's stored image data.
+- Improvement : Nexter SEO : The image ALT warning now names the files it flagged instead of only giving a count.
+- Improvement : Nexter SEO : The audit's ALT check is labelled "homepage as rendered", so it is clear why its count can differ from the single-page SEO panel.
+- Fixed : Nexter SEO : Author and date archives are no longer disabled by default. Sites that deliberately turned them off keep their setting.
+- Fixed : Nexter SEO : The Orphan Pages check now counts navigation, header and footer links, so pages linked from the menu are no longer reported as orphaned.
+- Fixed : Nexter SEO : The per-page image ALT check no longer counts slider, lazy-loaded, decorative or tracking images.
+- Fixed : SEO Redirects : "Exactly Match In Any Order" matched any query string at all; it now matches only when the same parameters are present, in any order.
+- Fixed : SEO Redirects : "Ignore And Pass Parameters To Target" never passed them on; the visitor's query string now reaches the destination.
+- Fixed : Custom Login URL : With the "404 page" behaviour, wp-login.php still opened the real login form and the register link gave the hidden login address away.
+- Fixed : Custom Login URL : Visiting wp-admin while logged out sent the browser to a nonsense address; it now answers with a proper 404 at the same URL.
+- Fixed : Custom Login URL : wp-signup.php answered with a server error instead of a not-found page when the site is not a network.
+- Fixed : Regenerate Thumbnails : The feature now works on its own; it only loaded when Custom Image Sizes or Disable Image Sizes was switched on.
+- Fixed : Regenerate Thumbnails : The button now reports real progress and a finished state instead of sitting on "Regenerating..." forever.
+- Fixed : Disable Image Sizes : Turning a size off now actually stops the file being created; Thumbnail, Medium, Medium Large and Large were still generated.
+- Fixed : Custom Fonts : TTF, OTF, WOFF and WOFF2 files now upload; the very first upload was always rejected before the extension had been saved.
+- Fixed : Wider Admin Menu : The menu width now saves; it was discarded on every save and the menu stayed at its default.
+- Fixed : Template Import : The bundled WordPress importer could be requested directly outside WordPress, and a crafted export file could overwrite internal values while importing menus.
+- Fixed : Security : View Admin Role could change another account's roles from an unauthenticated request, and the role-granting permission check was disabled.
+- Fixed : Security : Plugin and theme installs fetched their details over an unencrypted connection and installed whatever download address came back.
+- Fixed : Security : The login attempt limiter trusted forwarded-for headers a visitor can set, so the limit could be evaded or used to lock someone else out.
+- Fixed : Security : A template import request could name any internal method to run; only export and import are accepted now.
+- Fixed : Security : The builder's post search could be called by any logged-in user and returned every matching post of every type.
+- Fixed : Security : Several builder condition endpoints and the licence activation endpoints could be called without the right permission.
+- Fixed : Security : Dismissing an admin notice can no longer be triggered from another site on an administrator's behalf.
+- Fixed : Security : the unused PHPMailer example script is no longer shipped, ten files could be requested outside WordPress, and every plugin folder now carries an index.php stub so no directory can be browsed.
+
+
 = V4.7.6 = 13 August 2026
 - Fixed : SEO Redirects : one broken rule no longer stops every new redirect from saving; a rule aimed at its own URL is skipped when other rules are checked for loops
 - Fixed : Rollback : picking a version in the dropdown now works; every rollback was being sent to the version already installed and refused with "Try selecting another version."
@@ -278,6 +308,7 @@ Nexter Extension may connect to external services below only when the related fe
 - Fixed : Code Snippets : a shortcode attribute can no longer overwrite the snippet's own code, or other internal values, before the snippet runs
 - Fixed : Multisite : Super Admins can now manage code snippets and Theme Builder templates on network sites without also being given the administrator role there
 - Fixed : i18n : the SEO audit and image optimiser cron labels no longer load translations before WordPress is ready, which logged a "translation loading was triggered too early" warning whenever another plugin scheduled a task during start-up
+- Fixed : i18n : the SMTP PHP-version notice is now translatable; the version numbers were being inserted into the message before it was handed to the translation function, so the string never reached the translation files at all
 
 
 = V4.7.5 = 07 August 2026

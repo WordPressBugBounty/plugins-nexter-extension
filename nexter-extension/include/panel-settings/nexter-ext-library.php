@@ -56,6 +56,11 @@ if ( ! class_exists( 'Nexter_Pro_Ext_Activate' ) ) {
 
 			// listen for our activate button to be clicked
 			if ( isset( $_POST["submit-key"] ) && ! empty( $_POST["submit-key"] ) && $_POST["submit-key"] == 'Activate' ) {
+				// A nonce proves intent; managing a licence still needs the capability.
+				if ( ! current_user_can( 'manage_options' ) ) {
+					wp_send_json_error( array( 'content' => __( 'Insufficient permissions.', 'nexter-extension' ) ), 403 );
+				}
+
 				if ( ! check_ajax_referer( self::$licence_nonce, 'nexter_activte_nonce' ) ) {
 					return;
 				}
@@ -185,6 +190,11 @@ if ( ! class_exists( 'Nexter_Pro_Ext_Activate' ) ) {
 			if ( isset( $_POST["submit-key"] ) && ! empty( $_POST["submit-key"] ) && $_POST["submit-key"] == 'Deactivate' ) {
 
 				// run a quick security check
+				// A nonce proves intent; managing a licence still needs the capability.
+				if ( ! current_user_can( 'manage_options' ) ) {
+					wp_send_json_error( array( 'content' => __( 'Insufficient permissions.', 'nexter-extension' ) ), 403 );
+				}
+
 				if ( ! check_ajax_referer( self::$licence_nonce, 'nexter_deactivte_nonce' ) ) {
 					return;
 				}

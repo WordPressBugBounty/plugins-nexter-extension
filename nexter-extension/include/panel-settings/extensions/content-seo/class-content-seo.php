@@ -548,10 +548,11 @@ class Nexter_Content_SEO {
 			'home_og_description'           => '',
 			'home_og_image'                 => '',
 			'home_og_image_id'              => 0,
-			// Archives. Enabled by default — author/date archives duplicate blog content
-			// and harm SEO on single-author sites (matches RankMath / Yoast defaults).
-			'disable_author_archives'       => true,
-			'disable_date_archives'         => true,
+			// Archives. All off by default: removing author/date archives is a deliberate SEO
+			// decision, and enabling them here silently 301'd existing archive URLs to home the
+			// moment Content SEO was switched on.
+			'disable_author_archives'       => false,
+			'disable_date_archives'         => false,
 			// Category/tag archives are useful navigation by default, so opt-in (false).
 			'disable_category_archives'     => false,
 			'disable_tag_archives'          => false,

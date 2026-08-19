@@ -14,97 +14,180 @@ class Nexter_Ext_Image_Size {
 	 */
 	private $cached_image_sizes = null;
 
+	/**
+	 * Cached list of disabled size names for this request.
+	 *
+	 * @var array|null
+	 */
+	private $cached_disabled_sizes = null;
+
+	/**
+	 * Largest batch a single regenerate request will accept.
+	 */
+	const REGENERATE_BATCH_LIMIT = 25;
+
 	public function __construct() {
 		if ( is_admin() ) {
 			add_action( 'wp_ajax_nexter_ext_delete_image_size', [ $this, 'nexter_ext_delete_image_size_ajax'] );
 			//regenerate_thumbnails
-			
+
 			add_action( 'wp_ajax_nexter_regenerate_image_thumbnails', [ $this, 'nexter_ext_regenerate_image_thumbnails'] );
 			add_action( 'wp_ajax_nexter_regenerate_image_thumbnail_by_id', [ $this, 'nexter_ext_regenerate_image_thumbnail_by_id'] );
 		}
 		add_action( 'init', [ $this, 'nexter_register_custom_image_sizes'] );
 		// Fix: was add_filter() — 'init' is an action, not a filter.
 		add_action( 'init', [ $this, 'nexter_manage_image_sizes'] );
+		// remove_image_size() cannot touch thumbnail/medium/large, so the generation list is
+		// filtered too - that is what actually stops the files being written.
+		add_filter( 'intermediate_image_sizes_advanced', [ $this, 'nexter_filter_disabled_image_sizes' ], 99 );
+		add_filter( 'intermediate_image_sizes', [ $this, 'nexter_filter_disabled_size_names' ], 99 );
 	}
-	public function nexter_ext_regenerate_image_thumbnail_by_id(){
-		check_admin_referer( 'nexter_admin_nonce','nexter_nonce' );
+
+	/**
+	 * Image types this feature will regenerate.
+	 *
+	 * @return array
+	 */
+	private function regenerable_mime_types() {
+		// webp and avif were missing from the old list, so modern uploads were never regenerated.
+		return array( 'image/jpeg', 'image/png', 'image/gif', 'image/bmp', 'image/tiff', 'image/x-icon', 'image/webp', 'image/avif' );
+	}
+
+	/**
+	 * Reject the request unless it carries a valid nonce and the caller may manage options.
+	 *
+	 * @return void
+	 */
+	private function guard_regenerate_request() {
+		// check_admin_referer() answers with an HTML page, which breaks the JSON the dashboard
+		// expects and leaves the button stuck; check_ajax_referer() lets us reply in JSON.
+		if ( ! check_ajax_referer( 'nexter_admin_nonce', 'nexter_nonce', false ) ) {
+			wp_send_json_error( array( 'content' => __( 'Security check failed. Please reload the page and try again.', 'nexter-extension' ) ), 403 );
+		}
 
 		if ( ! is_user_logged_in() || ! current_user_can( 'manage_options' ) ) {
-			wp_send_json_error();
+			wp_send_json_error( array( 'content' => __( 'Insufficient permissions.', 'nexter-extension' ) ), 403 );
 		}
+	}
 
-		// Security: Sanitize and validate input
-		$id = isset( $_POST['thumbnail_id'] ) ? absint( wp_unslash( $_POST['thumbnail_id'] ) ) : 0;
-		if ( $id <= 0 ) {
-			wp_send_json_error( array( 'content' => __( 'Invalid attachment ID.', 'nexter-extension' ) ) );
-		}
-		
-		// Security: Verify attachment exists and user has permission
+	/**
+	 * Regenerate a single attachment.
+	 *
+	 * @param int   $id    Attachment ID.
+	 * @param array $sizes Size names to rebuild; empty rebuilds every registered size.
+	 * @return true|WP_Error
+	 */
+	private function regenerate_single( $id, $sizes ) {
 		$attachment = get_post( $id );
 		if ( ! $attachment || 'attachment' !== $attachment->post_type ) {
-			wp_send_json_error( array( 'content' => __( 'Invalid attachment.', 'nexter-extension' ) ) );
+			return new WP_Error( 'nxt_bad_attachment', __( 'Invalid attachment.', 'nexter-extension' ) );
 		}
-		
-		// Security: Validate image sizes list
-		$image_sizes_raw             = isset( $_POST['image_sizes_to_be_generated'] ) ? sanitize_text_field( wp_unslash( $_POST['image_sizes_to_be_generated'] ) ) : '';
-		$image_sizes_to_be_generated = ! empty( $image_sizes_raw ) ? explode( ',', $image_sizes_raw ) : array();
-		// Security: Sanitize each image size name
-		$image_sizes_to_be_generated = array_map( 'sanitize_key', array_filter( $image_sizes_to_be_generated ) );
-		$fullsizepath                = get_attached_file( $id );
-		
-		// Security: Validate file path to prevent directory traversal
-		if ( ! empty( $fullsizepath ) ) {
-			$real_file_path   = realpath( $fullsizepath );
-			$uploads_dir      = wp_upload_dir();
-			$real_uploads_dir = realpath( $uploads_dir['basedir'] );
-			
-			// Security: Verify file is within uploads directory
-			if ( ! $real_file_path || ! $real_uploads_dir || strpos( $real_file_path, $real_uploads_dir ) !== 0 ) {
-				wp_send_json_error( array( 'content' => __( 'Invalid file path.', 'nexter-extension' ) ) );
+
+		$fullsizepath = get_attached_file( $id );
+		if ( empty( $fullsizepath ) ) {
+			return new WP_Error( 'nxt_no_file', __( 'Source file not found.', 'nexter-extension' ) );
+		}
+
+		// Keep regeneration inside the uploads directory.
+		$real_file   = realpath( $fullsizepath );
+		$uploads     = wp_upload_dir();
+		$real_upload = ! empty( $uploads['basedir'] ) ? realpath( $uploads['basedir'] ) : false;
+		if ( ! $real_file || ! $real_upload || 0 !== strpos( $real_file, $real_upload ) || ! file_exists( $real_file ) ) {
+			return new WP_Error( 'nxt_bad_path', __( 'Invalid file path.', 'nexter-extension' ) );
+		}
+
+		$metadata = $this->custom_metadata( $id, $fullsizepath, $sizes );
+
+		// An empty result means the file is not a usable image; storing it would wipe the
+		// attachment's existing metadata, which the old code did.
+		if ( empty( $metadata ) || empty( $metadata['file'] ) ) {
+			return new WP_Error( 'nxt_not_image', __( 'File is not a regenerable image.', 'nexter-extension' ) );
+		}
+
+		// Return value is deliberately ignored: wp_update_attachment_metadata() reports false when
+		// the metadata is unchanged, which is a successful no-op rather than a failure.
+		wp_update_attachment_metadata( $id, $metadata );
+
+		return true;
+	}
+
+	public function nexter_ext_regenerate_image_thumbnail_by_id(){
+		$this->guard_regenerate_request();
+
+		// A batch keeps the round trips down; a single id is still accepted for compatibility.
+		$raw_ids = isset( $_POST['thumbnail_ids'] ) ? sanitize_text_field( wp_unslash( $_POST['thumbnail_ids'] ) ) : '';
+		$ids     = ! empty( $raw_ids ) ? array_map( 'absint', explode( ',', $raw_ids ) ) : array();
+		if ( empty( $ids ) ) {
+			$ids = array( isset( $_POST['thumbnail_id'] ) ? absint( wp_unslash( $_POST['thumbnail_id'] ) ) : 0 );
+		}
+		$ids = array_slice( array_values( array_unique( array_filter( $ids ) ) ), 0, self::REGENERATE_BATCH_LIMIT );
+
+		if ( empty( $ids ) ) {
+			wp_send_json_error( array( 'content' => __( 'Invalid attachment ID.', 'nexter-extension' ) ) );
+		}
+
+		$image_sizes_raw = isset( $_POST['image_sizes_to_be_generated'] ) ? sanitize_text_field( wp_unslash( $_POST['image_sizes_to_be_generated'] ) ) : '';
+		$requested_sizes = ! empty( $image_sizes_raw ) ? array_map( 'sanitize_key', array_filter( explode( ',', $image_sizes_raw ) ) ) : array();
+
+		// Only ever act on sizes WordPress currently has registered.
+		$requested_sizes = array_values( array_intersect( $requested_sizes, array_keys( $this->image_sizes() ) ) );
+
+		// Allow more time for large images or sites with many registered sizes.
+		@set_time_limit( 300 );
+
+		$regenerated = array();
+		$failed      = array();
+		foreach ( $ids as $id ) {
+			$result = $this->regenerate_single( $id, $requested_sizes );
+			if ( is_wp_error( $result ) ) {
+				$failed[] = array(
+					'id'      => $id,
+					'message' => $result->get_error_message(),
+				);
+			} else {
+				$regenerated[] = $id;
 			}
 		}
 
-		if ( FALSE !== $fullsizepath && @file_exists( $fullsizepath ) ) {
-			// Allow more time for large images or sites with many registered sizes.
-			@set_time_limit( 300 );
-			$updated_metadata = $this->custom_metadata( $id, $fullsizepath, $image_sizes_to_be_generated );
-			$status           = wp_update_attachment_metadata( $id, $updated_metadata );
-			wp_send_json_success( array( 'content' => $status ) );
-		} else {
-			wp_send_json_error( array( 'content' => __( 'Source file not found.', 'nexter-extension' ) ) );
-		}
+		wp_send_json_success(
+			array(
+				'content' => array(
+					'regenerated' => $regenerated,
+					'failed'      => $failed,
+				),
+			)
+		);
 	}
 
 	public function nexter_ext_regenerate_image_thumbnails(){
+		$this->guard_regenerate_request();
 
-		check_admin_referer( 'nexter_admin_nonce','nexter_nonce' );
-		
-		if ( ! is_user_logged_in() || ! current_user_can( 'manage_options' ) ) {
-			wp_send_json_error(
-				array( 
-					'content' => __( 'Insufficient permissions.', 'nexter-extension' ),
-				)
-			);
-		}
-
-		$output                               = array();
-		$args                                 = array(
-			'post_type'      => 'attachment',
-			'post_status'    => 'inherit',   // Fix: was null; attachments use 'inherit' status.
-			'posts_per_page' => -1,
-			'fields'         => 'ids',       // Return IDs only — fast, low memory.
-			'post_mime_type' => array( 'image/jpeg', 'image/jpg', 'image/gif', 'image/png', 'image/bmp', 'image/tiff', 'image/x-icon' ),
-		);
-		$attachments                          = get_posts( $args );
-		$output['attachment_ids']             = $attachments;
-		$output['total_images_to_regenerate'] = count( $attachments );
-
-		wp_send_json_success(
+		// fields=ids with the cache and count flags off keeps this cheap on large media libraries.
+		$attachments = get_posts(
 			array(
-				'content' => $output,
+				'post_type'              => 'attachment',
+				'post_status'            => 'inherit',
+				'posts_per_page'         => -1,
+				'fields'                 => 'ids',
+				'orderby'                => 'ID',
+				'order'                  => 'ASC',
+				'no_found_rows'          => true,
+				'update_post_meta_cache' => false,
+				'update_post_term_cache' => false,
+				'post_mime_type'         => $this->regenerable_mime_types(),
 			)
 		);
 
+		$attachments = array_map( 'absint', (array) $attachments );
+
+		wp_send_json_success(
+			array(
+				'content' => array(
+					'attachment_ids'             => $attachments,
+					'total_images_to_regenerate' => count( $attachments ),
+				),
+			)
+		);
 	}
 
 
@@ -114,7 +197,7 @@ class Nexter_Ext_Image_Size {
 			wp_send_json_error();
 		}
 		$image_size_name = ( isset( $_POST['image_size_name'] ) ) ? sanitize_text_field( wp_unslash( $_POST['image_size_name'] ) ) : '';
-		
+
 		$custom_sizes = get_option( 'nexter_custom_image_sizes',array() );
 		foreach ( $custom_sizes as $cs ) {
 			$normalized_cs_name = preg_replace( '/\s+/', ' ', trim( $cs['name'] ) );
@@ -164,23 +247,70 @@ class Nexter_Ext_Image_Size {
 		}
 	}
 
+	/**
+	 * Size names the user has switched off, from the extension option or the legacy option.
+	 *
+	 * @return array
+	 */
+	private function get_disabled_image_sizes() {
+		if ( null !== $this->cached_disabled_sizes ) {
+			return $this->cached_disabled_sizes;
+		}
+
+		$get_performance = Nxt_Options::performance();
+		$get_performance = is_object( $get_performance ) ? (array) $get_performance : $get_performance;
+
+		$node = ( is_array( $get_performance ) && isset( $get_performance['disabled-image-sizes'] ) ) ? $get_performance['disabled-image-sizes'] : null;
+		$node = is_object( $node ) ? (array) $node : $node;
+
+		if ( is_array( $node ) && ! empty( $node['switch'] ) && isset( $node['values'] ) ) {
+			$disabled = (array) $node['values'];
+		} else {
+			$disabled = get_option( 'nexter_disabled_images' );
+		}
+
+		$this->cached_disabled_sizes = is_array( $disabled ) ? array_values( array_filter( array_map( 'strval', $disabled ) ) ) : array();
+
+		return $this->cached_disabled_sizes;
+	}
+
 	// Fix: removed unused $sizes parameter — this is an action callback, not a filter.
 	public function nexter_manage_image_sizes(){
-		$disabled_is     = array();
-		$get_performance = Nxt_Options::performance();
-		if ( ! empty( $get_performance ) && isset( $get_performance['disabled-image-sizes'] ) && isset( $get_performance['disabled-image-sizes']['switch'] ) && ! empty( $get_performance['disabled-image-sizes']['switch'] ) && isset( $get_performance['disabled-image-sizes']['values'] ) ) {
-				$disabled_is = (array) $get_performance['disabled-image-sizes']['values'];
-		} else {
-			$disabled_is = get_option( 'nexter_disabled_images' );
+		// Only clears sizes added with add_image_size(); the core sizes are handled by the filters
+		// below, which is where the generated files are actually decided.
+		foreach ( $this->get_disabled_image_sizes() as $size ) {
+			remove_image_size( $size );
 		}
-		
-		if ( is_array( $disabled_is ) ) {
-			foreach ( get_intermediate_image_sizes() as $size ) {
-				if ( in_array( $size, $disabled_is ) ) {
-					remove_image_size( $size );
-				}
-			}
+	}
+
+	/**
+	 * Drop disabled sizes from the list WordPress is about to generate.
+	 *
+	 * @param array $sizes Sizes keyed by name.
+	 * @return array
+	 */
+	public function nexter_filter_disabled_image_sizes( $sizes ) {
+		if ( ! is_array( $sizes ) ) {
+			return $sizes;
 		}
+
+		foreach ( $this->get_disabled_image_sizes() as $size ) {
+			unset( $sizes[ $size ] );
+		}
+
+		return $sizes;
+	}
+
+	/**
+	 * Same, for callers that deal in a plain list of size names.
+	 *
+	 * @param array $sizes Size names.
+	 * @return array
+	 */
+	public function nexter_filter_disabled_size_names( $sizes ) {
+		$disabled = $this->get_disabled_image_sizes();
+
+		return ( ! empty( $disabled ) && is_array( $sizes ) ) ? array_values( array_diff( $sizes, $disabled ) ) : $sizes;
 	}
 
 	/**

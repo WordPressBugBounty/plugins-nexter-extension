@@ -86,8 +86,8 @@ add_action(
 				if ( ! empty( $smtp_custom['username'] ) ) {
 					$phpmailer->Username = sanitize_text_field( $smtp_custom['username'] );
 				}
-				if ( ! empty( $smtp_custom['password'] ) ) {
-					$phpmailer->Password = $smtp_custom['password'];
+				if ( '' !== Nxt_Secret::smtp( $smtp_custom, 'password' ) ) {
+					$phpmailer->Password = Nxt_Secret::smtp( $smtp_custom, 'password' );
 				}
 			}
 

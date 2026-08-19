@@ -112,7 +112,7 @@ if ( ! class_exists( 'Nxt_Seo_Notice' ) ) {
 			// used by Nexter's other admin CTAs (utm_source=wpbackend&utm_medium=admin&utm_campaign).
 			$learn_url = 'https://nexterwp.com/nexter-extensions/seo-for-wordpress/?utm_source=wpbackend&utm_medium=admin&utm_campaign=seonotice';
 
-			echo '<div class="notice notice-info is-dismissible nxt-notice-wrap" data-notice-id="nexter_seo_notice">';
+			echo '<div class="notice notice-info is-dismissible nxt-notice-wrap" data-notice-id="nexter_seo_notice" data-nonce=\"' . esc_attr( wp_create_nonce( 'nexter_admin_nonce' ) ) . '\">';
 				echo '<div class="nexter-license-activate">';
 					echo '<div class="nexter-license-icon"><svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" fill="none" viewBox="0 0 44 44"><rect width="44" height="44" fill="#f5f7fe" rx="8.676"/><path stroke="#1717cc" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.897" d="M13.2 24.2a1.1 1.1 0 0 1-.858-1.792l10.89-11.22a.55.55 0 0 1 .946.506l-2.112 6.622A1.102 1.102 0 0 0 23.1 19.8h7.7a1.1 1.1 0 0 1 .858 1.793l-10.89 11.22a.55.55 0 0 1-.946-.506l2.112-6.622A1.1 1.1 0 0 0 20.9 24.2z"/></svg></div>';
 					echo '<div class="nexter-license-content">';

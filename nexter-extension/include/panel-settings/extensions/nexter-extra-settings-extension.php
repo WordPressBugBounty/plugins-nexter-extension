@@ -24,10 +24,12 @@ class Nexter_Ext_Extra_Settings {
 			//Custom Upload Font
 			if ( isset( $extension_option['custom-upload-font'] ) && ! empty( $extension_option['custom-upload-font']['switch'] ) ) {
 				require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-custom-upload-font.php';
-				// Font MIME types only needed when custom font uploads are enabled
-				add_filter( 'upload_mimes', [$this, 'nxt_allow_mime_types'] );
-				add_filter( 'wp_check_filetype_and_ext', [$this, 'nxt_check_file_ext'], 10, 4 );
 			}
+
+			// Not gated on the switch: the dashboard uploader runs before the toggle has been saved,
+			// so the callbacks limit these to admin users who can already upload.
+			add_filter( 'upload_mimes', [$this, 'nxt_allow_mime_types'] );
+			add_filter( 'wp_check_filetype_and_ext', [$this, 'nxt_check_file_ext'], 10, 4 );
 			//Disable Admin Settings
 			if ( isset( $extension_option['disable-admin-setting'] ) && ! empty( $extension_option['disable-admin-setting']['switch'] ) ) {
 				require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-disable-admin-settings.php';
@@ -133,7 +135,15 @@ class Nexter_Ext_Extra_Settings {
 		//Image Sizes (custom sizes + disabled sizes) — load only when either toggle is on
 		$image_sizes_active = ( ! empty( ( $perf_option['disabled-image-sizes'] ?? array() )['switch'] ) )
 			|| ( ! empty( ( $perf_option['nexter-custom-image-sizes'] ?? array() )['switch'] ) );
-		if ( $image_sizes_active ) {
+
+		// Regenerate Thumbnails is a separate extension whose AJAX handlers live in this same file,
+		// so it has to load for that toggle and for its own requests too.
+		$regen_ajax_actions = array( 'nexter_regenerate_image_thumbnails', 'nexter_regenerate_image_thumbnail_by_id', 'nexter_ext_delete_image_size' );
+		$current_ajax       = ( wp_doing_ajax() && isset( $_REQUEST['action'] ) ) ? sanitize_key( wp_unslash( $_REQUEST['action'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+
+		if ( $image_sizes_active
+			|| ! empty( ( $extension_option['regenerate-thumbnails'] ?? array() )['switch'] )
+			|| in_array( $current_ajax, $regen_ajax_actions, true ) ) {
 			require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-image-sizes.php';
 		}
 
@@ -149,21 +159,18 @@ class Nexter_Ext_Extra_Settings {
 	 */
 	public function nxt_check_file_ext($types, $file, $filename, $mimes) {
 		
-		if ( false !== strpos( $filename, '.ttf' ) ) {
-			$types['ext']  = 'ttf';
-			$types['type'] = 'font/ttf';
-		}
-		if ( false !== strpos( $filename, '.otf' ) ) {
-			$types['ext']  = 'otf';
-			$types['type'] = 'font/otf';
-		}
-		if ( false !== strpos( $filename, '.woff' ) && false === strpos( $filename, '.woff2' ) ) {
-			$types['ext']  = 'woff';
-			$types['type'] = 'font/woff';
-		}
-		if ( false !== strpos( $filename, '.woff2' ) ) {
-			$types['ext']  = 'woff2';
-			$types['type'] = 'font/woff2';
+		// Match the real extension only; strpos() also matched names like "report.ttf.pdf".
+		$ext   = strtolower( (string) pathinfo( $filename, PATHINFO_EXTENSION ) );
+		$fonts = array(
+			'ttf'   => 'font/ttf',
+			'otf'   => 'font/otf',
+			'woff'  => 'font/woff',
+			'woff2' => 'font/woff2',
+		);
+
+		if ( isset( $fonts[ $ext ] ) && is_admin() && current_user_can( 'upload_files' ) ) {
+			$types['ext']  = $ext;
+			$types['type'] = $fonts[ $ext ];
 		}
 
 		return $types;
@@ -174,10 +181,15 @@ class Nexter_Ext_Extra_Settings {
 	 * @since 1.1.0 
 	 */
 	public function nxt_allow_mime_types( $mimes ) {
-		$mimes['ttf']   = 'application/x-font-ttf|font/ttf';
+		// Fonts are only uploaded from wp-admin, so the frontend allowed-upload list is untouched.
+		if ( ! is_admin() || ! current_user_can( 'upload_files' ) ) {
+			return $mimes;
+		}
+
+		$mimes['ttf']   = 'font/ttf';
 		$mimes['otf']   = 'font/otf';
 		$mimes['woff']  = 'font/woff';
-		$mimes['woff2'] = 'font/woff2|application/octet-stream|font/x-woff2';
+		$mimes['woff2'] = 'font/woff2';
 		
 		return $mimes;
 	}

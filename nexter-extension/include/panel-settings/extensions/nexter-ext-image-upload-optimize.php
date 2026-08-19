@@ -1588,10 +1588,9 @@ class Nexter_Ext_Image_Upload_Optimization {
 
 		$max_size = apply_filters( 'nexter_image_optimizer_max_file_size', 20 * 1024 * 1024 );
 		if ( $max_size > 0 && $file_size > $max_size ) {
-			/* translators: %s: Maximum file size (e.g. "20 MB") */
 			return array(
 			'skip'    => true,
-			'message' => sprintf( __( 'File exceeds maximum size for optimisation (%s). Skipped.', 'nexter-extension' ), size_format( $max_size ) )
+			'message' => sprintf( /* translators: %s: Maximum file size (e.g. "20 MB") */ __( 'File exceeds maximum size for optimisation (%s). Skipped.', 'nexter-extension' ), size_format( $max_size ) )
 			);
 		}
 
@@ -1639,10 +1638,9 @@ class Nexter_Ext_Image_Upload_Optimization {
 
 		$limit_handler = Nexter_Ext_Image_Optimization_Limit::get_instance();
 		if ( ! $limit_handler->can_optimize( $attachment_id ) ) {
-			/* translators: %d: Monthly image optimisation limit */
 			return array(
 			'skip'    => true,
-			'message' => sprintf( __( 'Monthly Optimisation limit reached (%d images). Upgrade to Pro for unlimited Optimisation.', 'nexter-extension' ), $limit_handler->get_monthly_limit() )
+			'message' => sprintf( /* translators: %d: Monthly image optimisation limit */ __( 'Monthly Optimisation limit reached (%d images). Upgrade to Pro for unlimited Optimisation.', 'nexter-extension' ), $limit_handler->get_monthly_limit() )
 			);
 		}
 
@@ -1922,7 +1920,7 @@ class Nexter_Ext_Image_Upload_Optimization {
 			array(
 			'restored' => $restored,
 			'failed'   => $failed,
-			/* translators: 1: Number of images restored, 2: Number of images that failed to restore */
+			/* translators: 1: number of images successfully restored, 2: number of images that failed to restore */
 			'message'  => sprintf( __( 'Restored %1$d images. %2$d failed.', 'nexter-extension' ), $restored, $failed ),
 			) 
 		);

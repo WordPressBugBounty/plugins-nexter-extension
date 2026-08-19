@@ -126,6 +126,11 @@ class Nexter_Builder_Import_Export {
 		$nxt_action   = (isset( $_REQUEST['nxt_action'] )) ? sanitize_text_field( wp_unslash( $_REQUEST['nxt_action'] ) ) : '';
 		$after_import = (isset( $_REQUEST['after_import'] )) ? sanitize_text_field( wp_unslash( $_REQUEST['after_import'] ) ) : '';
 
+		// Only these two are dispatchable; the raw value used to reach any method on this class.
+		if ( ! in_array( $nxt_action, array( 'export_template', 'import_template' ), true ) ) {
+			$this->handle_direct_action_error( 'Access Denied' );
+		}
+
 		$result = $this->$nxt_action( $_REQUEST );
 
 		if ( is_wp_error( $result ) ) {

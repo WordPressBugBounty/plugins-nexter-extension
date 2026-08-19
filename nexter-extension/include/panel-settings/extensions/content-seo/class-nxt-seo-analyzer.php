@@ -129,22 +129,71 @@ class Nxt_Seo_Analyzer {
 	 * @param string $content HTML content.
 	 * @return float 0–1
 	 */
+	/**
+	 * Basenames of images flagged by the last check_image_alt() run.
+	 *
+	 * @var array
+	 */
+	private static $missing_alt_files = array();
 	public static function check_image_alt( $content ) {
+		self::$missing_alt_files = array();
+
 		if ( empty( $content ) ) {
 			return 0.5;
 		}
-		preg_match_all( '/<img\s[^>]*>/i', $content, $imgs );
-		$total = count( $imgs[0] ?? [] );
-		if ( $total === 0 ) {
-			return 0.5;
+
+		// Lazy-load fallback copies inside <noscript> duplicate the real image; drop them first.
+		$scan = preg_replace( '#<noscript\b[^>]*>.*?</noscript>#is', '', (string) $content );
+		if ( ! is_string( $scan ) ) {
+			$scan = (string) $content;
 		}
+
+		preg_match_all( '/<img\s[^>]*>/i', $scan, $imgs );
+		$total    = 0;
 		$with_alt = 0;
-		foreach ( (array) $imgs[0] as $img ) {
-			if ( preg_match( '/\balt\s*=\s*["\'][^"\']*["\']/', $img ) ) {
-				$with_alt++;
+
+		foreach ( (array) ( $imgs[0] ?? array() ) as $img ) {
+			// Same exclusions the site audit applies, so the page panel and the audit agree:
+			// slider/lazy images defer their ALT to JS, decorative images are valid without one,
+			// and 1x1 pixels are not content images.
+			if ( preg_match( '/\bdata-(?:lazy-)?src(?:set)?\s*=/i', $img ) || preg_match( '/\bdata-lazy(?:-[a-z-]+)?\s*=/i', $img ) ) {
+				continue;
+			}
+			if ( preg_match( '/\brole\s*=\s*["\']?(?:presentation|none)\b/i', $img )
+				|| preg_match( '/\baria-hidden\s*=\s*["\']?true\b/i', $img ) ) {
+				continue;
+			}
+			if ( preg_match( '/\bwidth\s*=\s*["\']?1\b/i', $img ) && preg_match( '/\bheight\s*=\s*["\']?1\b/i', $img ) ) {
+				continue;
+			}
+
+			++$total;
+
+			// An absent alt attribute is missing; a deliberate alt="" on a decorative image is not.
+			if ( preg_match( '/\balt\s*=/i', $img ) ) {
+				++$with_alt;
+				continue;
+			}
+
+			if ( count( self::$missing_alt_files ) < 10 && preg_match( '/\bsrc\s*=\s*["\']([^"\']+)["\']/i', $img, $sm ) ) {
+				self::$missing_alt_files[] = wp_basename( strtok( $sm[1], '?' ) );
 			}
 		}
+
+		if ( 0 === $total ) {
+			return 0.5;
+		}
+
 		return $with_alt / $total;
+	}
+
+	/**
+	 * Files flagged by the most recent check_image_alt() call, so the panel can name them.
+	 *
+	 * @return array
+	 */
+	public static function last_missing_alt_files() {
+		return self::$missing_alt_files;
 	}
 
 	/**
@@ -678,7 +727,13 @@ class Nxt_Seo_Analyzer {
 				'status'  => $image_status,
 				'text'    => $image_alt >= 1
 					? __( 'All images have alt text.', 'nexter-extension' )
-					: __( 'Some images are missing alt text.', 'nexter-extension' ),
+					: ( ! empty( $analysis['image_alt_missing'] )
+						? sprintf(
+							/* translators: %s: comma-separated image file names. */
+							__( 'Some images are missing alt text: %s', 'nexter-extension' ),
+							implode( ', ', array_map( 'sanitize_text_field', (array) $analysis['image_alt_missing'] ) )
+						)
+						: __( 'Some images are missing alt text.', 'nexter-extension' ) ),
 				'label'   => __( 'Image alt tags', 'nexter-extension' ),
 			'fix_section' => 'general',
 			);
@@ -1039,6 +1094,7 @@ class Nxt_Seo_Analyzer {
 			'internal_links_count'     => $internal['count'],
 			'internal_links_score'     => $internal['score'],
 			'image_alt_score'          => $image_alt_score,
+			'image_alt_missing'        => self::last_missing_alt_files(),
 			'heading_usage_score'      => $heading_score,
 			'content_length_score'     => $content_length_score,
 			'readability_score'        => $readability,

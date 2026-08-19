@@ -10,13 +10,13 @@ if ( version_compare( PHP_VERSION, '8.0.2', '<' ) ) {
 			function () {
 				printf(
 					'<div class="notice notice-error"><p>%s</p></div>',
-					esc_html__(
+					esc_html(
 						sprintf(
-							'The Nexter Extension SMTP integration requires PHP version %s or higher. You are using %s.',
+							/* translators: 1: Required PHP version, 2: Current version */
+							__( 'The Nexter Extension SMTP integration requires PHP version %1$s or higher. You are using %2$s.', 'nexter-extension' ),
 							'8.0.2',
 							PHP_VERSION
-						),
-						'nexter-extension'
+						)
 					)
 				);
 			}
@@ -49,7 +49,7 @@ add_action(
 		if (
 		empty( $smtp['gclient_id'] ) ||
 		empty( $smtp['gsecret_key'] ) ||
-		empty( $smtp['refresh_token'] ) ||
+		'' === Nxt_Secret::smtp( $smtp, 'refresh_token' ) ||
 		empty( $smtp['email'] )
 		) {
 			// error_log('SMTP OAuth: Missing required credentials.');
@@ -90,7 +90,7 @@ add_action(
 					'provider'     => $provider,
 					'clientId'     => $smtp['gclient_id'],
 					'clientSecret' => $smtp['gsecret_key'],
-					'refreshToken' => $smtp['refresh_token'],
+					'refreshToken' => Nxt_Secret::smtp( $smtp, 'refresh_token' ),
 					'userName'     => $smtp['email'],
 					]
 				)

@@ -161,13 +161,15 @@ class Nexter_Ext_View_Admin_Role_Switch {
 			$role   = sanitize_key( wp_unslash( $_REQUEST['role'] ) );
 			$nonce  = sanitize_text_field( wp_unslash( $_REQUEST['nonce'] ) );
 			
-			// Security: Verify user has permission to switch roles
-			/* if ( ! current_user_can( 'manage_options' ) ) {
-				return;
-			} */
+			// Granting a role is an administrator action; a nonce proves intent, not authority.
+			// Checked per-branch below because switch-back deliberately runs while lowered.
 
 			// --- Switch to role ---
 			if ( $action === 'switch_role_to' ) {
+				if ( ! current_user_can( 'manage_options' ) ) {
+					return;
+				}
+
 				$valid_roles = array_keys( wp_roles()->roles );
 
 				if ( ! wp_verify_nonce( $nonce, 'nxtext_view_admin_' . $role ) || ! in_array( $role, $valid_roles ) ) {
@@ -204,6 +206,11 @@ class Nexter_Ext_View_Admin_Role_Switch {
 					return;
 				}
 
+				// Only an account this feature actually switched may switch back.
+				if ( ! in_array( $uname, $allowed, true ) || '' === get_user_meta( $user->ID, 'nxtext_view_admin_original_role', true ) ) {
+					return;
+				}
+
 				foreach ( $roles as $r ) {
 					$user->remove_role( $r );
 				}
@@ -221,6 +228,16 @@ class Nexter_Ext_View_Admin_Role_Switch {
 		} elseif ( isset( $_REQUEST['reset-view'] ) ) {
 
 			$reset_user = sanitize_user( wp_unslash( $_REQUEST['reset-view'] ) );
+
+			// This ran on 'init' with no nonce and no capability check, so anyone could change the
+			// roles of any whitelisted account. Own view only, unless the caller can promote users.
+			$reset_nonce = isset( $_REQUEST['nonce'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['nonce'] ) ) : '';
+			if ( ! is_user_logged_in()
+				|| ! wp_verify_nonce( $reset_nonce, 'nxtext_view_admin_reset_' . $reset_user )
+				|| ( $reset_user !== $uname && ! current_user_can( 'promote_users' ) ) ) {
+				return;
+			}
+
 			if ( in_array( $reset_user, $allowed, true ) ) {
 				$reset_obj = get_user_by( 'login', $reset_user );
 				if ( $reset_obj ) {
@@ -296,7 +313,13 @@ class Nexter_Ext_View_Admin_Role_Switch {
 
 		// Show only if user is impersonating and NOT an admin
 		if ( ! current_user_can( 'manage_options' ) && in_array( $uname, $allowed, true ) ) {
-			$reset_url = add_query_arg( 'reset-view', rawurlencode( $uname ), home_url() );
+			$reset_url = add_query_arg(
+				array(
+					'reset-view' => rawurlencode( $uname ),
+					'nonce'      => wp_create_nonce( 'nxtext_view_admin_reset_' . $uname ),
+				),
+				home_url()
+			);
 			?>
 			<div id="nxt-role-view-reset" style="position:fixed;bottom:20px;right:20px;z-index:9999;">
 				<a href="<?php echo esc_url( $reset_url ); ?>" class="button button-primary">

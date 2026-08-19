@@ -66,6 +66,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
                     const formData = new FormData();
                     formData.append('action', 'nexter_ext_dismiss_notice');
                     formData.append('notice_id', noticeId);
+                    formData.append('nonce', notice.getAttribute('data-nonce') || '');
                     xhr.open('POST', ajaxurl, true);
                     xhr.send(formData);
                 });

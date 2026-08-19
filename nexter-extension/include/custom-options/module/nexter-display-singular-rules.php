@@ -167,6 +167,10 @@ class Nexter_Builders_Singular_Conditional_Rules {
 		 * @since 1.0.1
 		 */
 	public static function get_post_type_posts_list( $post_type = '') {
+		// Reachable over admin-ajax with no guard at all; internal callers are unaffected.
+		if ( wp_doing_ajax() && ! current_user_can( 'edit_posts' ) ) {
+			wp_send_json_error( array( 'content' => __( 'Insufficient permissions.', 'nexter-extension' ) ), 403 );
+		}
 		$posts_limit = (int) apply_filters( 'nexter_builder_condition_posts_limit', 200 );
 		if ( $posts_limit < 1 ) {
 			$posts_limit = 200;

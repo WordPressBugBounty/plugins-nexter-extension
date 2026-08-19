@@ -1,4 +1,5 @@
 <?php
+defined( 'ABSPATH' ) || exit;
 /* WordPress Importer
  * Version  0.6.4
  */
@@ -82,7 +83,7 @@ class WP_Import extends WP_Importer {
 				$this->id                = (int) $_POST['import_id'];
 				$file                    = get_attached_file( $this->id );
 				set_time_limit( 0 );
-				$this->import( $file );
+				$this->import( $file, array( 'rewrite_urls' => '1' === $_POST['rewrite_urls'] ) );
 				break;
 		}
 
@@ -92,14 +93,47 @@ class WP_Import extends WP_Importer {
 	/**
 	 * The main controller for the actual import stage.
 	 *
-	 * @param string $file Path to the WXR file for importing
+	 * @param string $file    Path to the WXR file for importing
+	 * @param array  $options Options to control import behavior. Supported:
+	 *                       - 'rewrite_urls' (bool) Enable rewriting URLs in post content/excerpt.
 	 */
-	function import( $file ) {
-	
+	public function import( $file, $options = array() ) {
+		$options = wp_parse_args(
+			$options,
+			array(
+				'rewrite_urls' => false,
+			)
+		);
+
+		$this->options = apply_filters( 'wp_import_options', $options );
+
 		add_filter( 'import_post_meta_key', array( $this, 'is_valid_meta_key' ) );
 		add_filter( 'http_request_timeout', array( &$this, 'bump_request_timeout' ) );
 
 		$this->import_start( $file );
+
+		/**
+		 * If URL rewriting was requested but the WP version is too old, report
+		 * an error and disable it.
+		 *
+		 * More context:
+		 * WordPress 6.7 introduced WP_HTML_Tag_Processor::set_modifiable_text
+		 * required for wp_rewrite_urls to work. We could also offer a graceful
+		 * downgrade and support versions down to WordPress 6.5 where the required
+		 * WP_HTML_Tag_Processor::get_token_type() method was introduced.
+		 *
+		 * Alternatively, it might be possible to just rely on the HTML Processor
+		 * polyfill shipped with this plugin and make URL rewriting work in any
+		 * WordPress version.
+		 */
+		if ( $this->options['rewrite_urls'] && version_compare( get_bloginfo( 'version' ), '6.7', '<' ) ) {
+			echo '<div class="error"><p><strong>' . __( 'URL rewriting requires WordPress 6.7 or newer. The import will continue without rewriting URLs.', 'nexter-extension' ) . '</strong></p></div>';
+			$this->options['rewrite_urls'] = false;
+		}
+		// URL rewriting is only possible when we have the previous site base URL
+		if ( $this->options['rewrite_urls'] && ! $this->base_url_parsed ) {
+			$this->options['rewrite_urls'] = false;
+		}
 
 		$this->get_author_mapping();
 
@@ -147,6 +181,11 @@ class WP_Import extends WP_Importer {
 		$this->categories = $import_data['categories'];
 		$this->tags       = $import_data['tags'];
 		$this->base_url   = esc_url( $import_data['base_url'] );
+
+		$base_url_with_trailing_slash = rtrim( $import_data['base_url'], '/' ) . '/';
+		$this->base_url_parsed        = WPURL::parse( $base_url_with_trailing_slash );
+		$site_url_with_trailing_slash = rtrim( get_site_url(), '/' ) . '/';
+		$this->site_url_parsed        = WPURL::parse( $site_url_with_trailing_slash );
 
 		wp_defer_term_counting( true );
 		wp_defer_comment_counting( true );
@@ -281,7 +320,11 @@ class WP_Import extends WP_Importer {
 		<label for="import-attachments"><?php echo esc_html__( 'Download and import file attachments', 'nexter-extension' ); ?></label>
 	</p>
 		<?php endif; ?>
-
+	<h3><?php echo esc_html__( 'Content Options', 'nexter-extension' ); ?></h3>
+        <p>
+                <input type="checkbox" value="1" name="rewrite_urls" id="rewrite-urls" checked="checked" />
+                <label for="rewrite-urls"><?php echo esc_html__( 'Change all imported URLs that currently link to the previous site so that they now link to this site', 'nexter-extension' ); ?></label>
+        </p>
 	<p class="submit"><input type="submit" class="button" value="<?php esc_attr_e( 'Submit', 'nexter-extension' ); ?>" /></p>
 </form>
 		<?php
@@ -628,9 +671,8 @@ class WP_Import extends WP_Importer {
 			$post = apply_filters( 'wp_import_post_data_raw', $post );
 
 			if ( ! post_type_exists( $post['post_type'] ) ) {
-				/* translators: %s: post title post type */
 				printf(
-					__( 'Failed to import &#8220;%1$s&#8221;: Invalid post type %2$s', 'nexter-extension' ),
+					/* translators: 1: post title, 2: post type */ __( 'Failed to import &#8220;%1$s&#8221;: Invalid post type %2$s', 'nexter-extension' ),
 					esc_html( $post['post_title'] ),
 					esc_html( $post['post_type'] ) 
 				); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
@@ -652,7 +694,7 @@ class WP_Import extends WP_Importer {
 
 			$post_type_object = get_post_type_object( $post['post_type'] );
 
-			$post_exists = post_exists( $post['post_title'], '', $post['post_date'] );
+			$post_exists = post_exists( $post['post_title'], '', $post['post_date'], $post['post_type'] );
 
 			/**
 			* Filter ID of the existing post corresponding to post currently importing.
@@ -907,6 +949,16 @@ class WP_Import extends WP_Importer {
 			return;
 		}
 
+		// Declared up front: a WXR that omits any of these left them undefined below.
+		$_menu_item_classes = '';
+		$_menu_item_menu_item_parent = '';
+		$_menu_item_object = '';
+		$_menu_item_object_id = '';
+		$_menu_item_target = '';
+		$_menu_item_type = '';
+		$_menu_item_url = '';
+		$_menu_item_xfn = '';
+
 		$menu_slug = false;
 		if ( isset( $item['terms'] ) ) {
 			// loop through terms, assume first nav_menu term is correct menu
@@ -936,7 +988,11 @@ class WP_Import extends WP_Importer {
 		}
 
 		foreach ( $item['postmeta'] as $meta ) {
-			${$meta['key']} = $meta['value'];
+			// Restricted to menu-item keys: the bare variable-variable let a crafted WXR overwrite
+			// any local in scope, $menu_id included.
+			if ( isset( $meta['key'] ) && is_string( $meta['key'] ) && 0 === strpos( $meta['key'], '_menu_item_' ) ) {
+				${$meta['key']} = $meta['value'];
+			}
 		}
 
 		if ( 'taxonomy' == $_menu_item_type && isset( $this->processed_terms[ intval( $_menu_item_object_id ) ] ) ) {

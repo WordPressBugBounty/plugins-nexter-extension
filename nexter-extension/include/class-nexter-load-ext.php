@@ -769,7 +769,7 @@ if ( ! class_exists( 'Nexter_Extensions_Load' ) ) {
 				return;
 			}
 
-			echo '<div class="notice notice-info is-dismissible nxt-notice-wrap" data-notice-id="nexter_blocks_installed">';
+			echo '<div class="notice notice-info is-dismissible nxt-notice-wrap" data-notice-id="nexter_blocks_installed" data-nonce=\"' . esc_attr( wp_create_nonce( 'nexter_admin_nonce' ) ) . '\">';
 				echo '<div class="nexter-license-activate" style="align-items: center;">';
 					echo '<div class="nexter-license-icon" style="display: flex;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"><rect width="24" height="24" fill="#1717CC" rx="5"/><path fill="#fff" d="M12.605 17.374c.026 0 .038.013.039.038.102 0 .192.014.27.04.025 0 .05.012.076.037.128.077.23.167.307.27v.038c0 .026.013.051.039.077v.038a.63.63 0 0 1 .038.193l-.038 1.882h-2.652v-2.613h1.921Zm.308-13.414c.128 0 .23.038.308.115a.259.259 0 0 1 .115.23V15.26c.025.153-.052.295-.23.423a.872.872 0 0 1-.578.192h-1.844V3.96h2.23Z"/></svg></div>';
 					echo '<div class="nexter-license-content">';
@@ -796,6 +796,11 @@ if ( ! class_exists( 'Nexter_Extensions_Load' ) ) {
 		}
 
 		public function nexter_ext_dismiss_notice_data(){
+			// The handler had a capability check but no nonce, so it was CSRF-able.
+			if ( ! check_ajax_referer( 'nexter_admin_nonce', 'nonce', false ) ) {
+				wp_send_json_error( array( 'content' => __( 'Security check failed.', 'nexter-extension' ) ), 403 );
+			}
+
 			// Security: Check user capabilities
 			if ( ! current_user_can( 'manage_options' ) ) {
 				wp_send_json_error( array( 'content' => __( 'Insufficient permissions.', 'nexter-extension' ) ) );

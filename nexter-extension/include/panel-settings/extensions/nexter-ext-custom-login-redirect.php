@@ -67,7 +67,9 @@ class Nexter_Ext_Custom_Login_Redirect {
 		$request_uri = isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( $_SERVER['REQUEST_URI'] ) : '';
 		
 		if ( ! is_multisite() && ( strpos( $request_uri, 'wp-signup' ) !== false || strpos( $request_uri, 'wp-activate' ) !== false ) ) {
-			wp_die( esc_html__( 'This feature is not enabled.', 'nexter-extension' ) );
+			// Plain wp_die() answers 500; these are simply not available here, so say 404.
+			nocache_headers();
+			wp_die( esc_html__( 'This feature is not enabled.', 'nexter-extension' ), esc_html__( 'Not Found', 'nexter-extension' ), array( 'response' => 404 ) );
 		}
 
 		// Security: Sanitize REQUEST_URI to prevent XSS
@@ -103,6 +105,18 @@ class Nexter_Ext_Custom_Login_Redirect {
 
 	}
 
+	/**
+	 * True when PHP is executing one of WordPress's standalone login scripts.
+	 *
+	 * @return bool
+	 */
+	private function nxt_is_standalone_login_script() {
+		// These files never run the main query, so a 404 forced on the 'wp' hook never fires and the
+		// login form would render anyway.
+		$script = isset( $_SERVER['SCRIPT_NAME'] ) ? basename( sanitize_text_field( wp_unslash( $_SERVER['SCRIPT_NAME'] ) ) ) : '';
+
+		return in_array( $script, array( 'wp-login.php', 'wp-register.php', 'wp-signup.php', 'wp-activate.php' ), true );
+	}
 	/**
 	 * Get Nexter Custom Login Url
 	 * @since 1.1.0
@@ -206,15 +220,16 @@ class Nexter_Ext_Custom_Login_Redirect {
 				// is_404()/body classes unresolved. The result was a partially rendered page — site
 				// title and footer, but no 404 content — with unrelated deprecation notices dumped
 				// at the top when WP_DEBUG display is on.
-				if ( is_admin() ) {
-					// wp-admin never runs the front-end template flow, so a theme 404 simply cannot
-					// be rendered correctly from here. Hand the request to the front end on a path
-					// that cannot match any route: WordPress then serves the theme's real 404
-					// template, in a valid context, with a genuine 404 status — and no login form is
-					// revealed. Returning instead would let wp-admin continue loading and let core's
-					// auth_redirect() expose the login screen, defeating the point of this mode.
-					wp_safe_redirect( home_url( $this->nxt_user_trailingslashit( '/' . str_repeat( '-/', 10 ) ) ), 302 );
-					exit;
+				if ( is_admin() || $this->nxt_is_standalone_login_script() ) {
+					// wp-admin and wp-login.php never run the front-end template flow, so a theme 404
+					// cannot be rendered here. Answer in place with a real 404 rather than redirecting
+					// a made-up path, which put a nonsense URL in the address bar. Returning instead
+					// would let core's auth_redirect() expose the login screen.
+					nocache_headers();
+					$not_found = ! empty( $this->cusloOption['login_page_message'] )
+						? wp_kses_post( $this->cusloOption['login_page_message'] )
+						: esc_html__( 'This has been disabled.', 'nexter-extension' );
+					wp_die( $not_found, esc_html__( 'Not Found', 'nexter-extension' ), array( 'response' => 404 ) );
 				}
 				// Front-end: nxt_login_plugins_loaded() has already rewritten REQUEST_URI to an
 				// unmatchable path, so we only need to force the 404 flags once the query exists

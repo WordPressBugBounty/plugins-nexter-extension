@@ -193,15 +193,9 @@ class Nexter_Ext_Limit_Login_Attempt {
 			}
 		}
 
-		$remote_ip = '';
-		if ( ! empty( $_SERVER['HTTP_CLIENT_IP'] ) ) {
-			$remote_ip = sanitize_text_field( wp_unslash( $_SERVER['HTTP_CLIENT_IP'] ) );
-		} elseif ( ! empty( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) {
-			$ipList    = explode( ',', sanitize_text_field( wp_unslash( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) );
-			$remote_ip = trim( $ipList[0] );
-		} else if ( ! empty( $_SERVER['REMOTE_ADDR'] ) ) {
-			$remote_ip = sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) );
-		}
+		// Client-IP and X-Forwarded-For are attacker-controlled unless a trusted proxy sets them,
+		// so they are only read through the admin-configured header override handled above.
+		$remote_ip = ! empty( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '';
 
 		if ( $return === 'ip' ) {
 			return $this->is_valid_ip( $remote_ip ) ? sanitize_text_field( $remote_ip ) : '0.0.0.0';

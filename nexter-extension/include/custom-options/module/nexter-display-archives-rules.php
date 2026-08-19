@@ -125,6 +125,10 @@ class Nexter_Builders_Archives_Conditional_Rules {
 		 * @since 1.0.1
 		 */
 	public static function get_terms_by_taxonomy( $taxonomy = '' ) {
+		// Reachable over admin-ajax with no guard at all; internal callers are unaffected.
+		if ( wp_doing_ajax() && ! current_user_can( 'edit_posts' ) ) {
+			wp_send_json_error( array( 'content' => __( 'Insufficient permissions.', 'nexter-extension' ) ), 403 );
+		}
 		
 		if ( ! empty( $taxonomy ) ) {
 			$data = $taxonomy;

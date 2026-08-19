@@ -3,7 +3,7 @@
  * Plugin Name: Nexter Extension
  * Plugin URI: https://nexterwp.com
  * Description: Nexter Extension adds lightweight performance, security, and admin features to WordPress so you can improve and manage your website without installing many plugins.
- * Version: 4.7.6
+ * Version: 4.7.7
  * Author: POSIMYTH
  * Author URI: https://posimyth.com
  * Text Domain: nexter-extension
@@ -26,7 +26,7 @@ define( 'NEXTER_EXT_BASE', plugin_basename( NEXTER_EXT_FILE ) );
 define( 'NEXTER_EXT_DIR', plugin_dir_path( NEXTER_EXT_FILE ) );
 define( 'NEXTER_EXT_URL', plugins_url( '/', NEXTER_EXT_FILE ) );
 define( 'NEXTER_EXT_CPT', 'nxt_builder' );
-define( 'NEXTER_EXT_VER', '4.7.6' );
+define( 'NEXTER_EXT_VER', '4.7.7' );
 // Rewrite-rules revision for the Theme Builder CPT. Bump this whenever the CPT's slug or
 // rewrite args change to trigger a one-time automatic flush (see nxt_ext_flush_rewrite_rules
 // / nxt_ext_maybe_flush_rewrite_rules). Mirrors Elementor's activation + admin_init upgrade
@@ -39,6 +39,7 @@ if ( ! defined( 'NXT_BUILD_POST' ) ) {
 
 /* Centralized settings cache — load once, before any module reads options. */
 require_once NEXTER_EXT_DIR . 'include/classes/class-nxt-options.php';
+require_once NEXTER_EXT_DIR . 'include/classes/class-nxt-secret.php';
 
 /*
  * POSIMYTH Analytics SDK — registered, not required (E6).

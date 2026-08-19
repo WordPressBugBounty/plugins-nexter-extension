@@ -35,7 +35,7 @@ class Nexter_Ext_RollBack_Manager {
 	/**
 	 * Theme update check const
 	 * */
-	const NXT_RB_THEME_UPDATE_CHECK = 'http://api.wordpress.org/themes/update-check/1.1/';
+	const NXT_RB_THEME_UPDATE_CHECK = 'https://api.wordpress.org/themes/update-check/1.1/';
 
 	/**
 	 * Versions.

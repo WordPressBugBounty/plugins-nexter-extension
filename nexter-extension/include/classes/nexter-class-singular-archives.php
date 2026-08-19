@@ -1,4 +1,5 @@
 <?php
+defined( 'ABSPATH' ) || exit;
 /**
  * Load Pages (Singluar/Archives) Templates
  *

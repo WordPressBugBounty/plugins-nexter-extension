@@ -173,10 +173,11 @@ class Nxt_Panel_Ajax_Router {
 			wp_send_json_success();
 		} else if ( ! empty( $ext ) && $ext === 'wider-admin-menu' && ! empty( $adminMenuWidth ) ) {
 			if ( ! empty( $get_option ) && isset( $get_option[ $ext ] ) ) {
-				// Security: Safe JSON decode with validation
+				// Menu width is a single number, not an array; the is_array() guard rejected every
+				// save. Clamp to the slider's own 140-500px range before it reaches the CSS.
 				$decoded_adminMenuWidth = $this->parent->safe_json_decode( $adminMenuWidth, false );
-				if ( is_array( $decoded_adminMenuWidth ) ) {
-					$get_option[ $ext ]['values'] = $decoded_adminMenuWidth;
+				if ( is_numeric( $decoded_adminMenuWidth ) ) {
+					$get_option[ $ext ]['values'] = min( 500, max( 140, absint( $decoded_adminMenuWidth ) ) );
 					update_option( $option_page, $get_option );
 				}
 			}
@@ -857,6 +858,11 @@ class Nxt_Panel_Ajax_Router {
 
 			$theme_name    = sanitize_text_field( $theme_info->name );
 			$theme_zip_url = $theme_info->download_link;
+
+			// The package URL comes from a remote response, so only wordpress.org may serve it.
+			if ( ! self::is_wordpress_org_package( $theme_zip_url ) ) {
+				wp_send_json_error( array( 'content' => __( 'Refusing to install a package from an unexpected host.', 'nexter-extension' ) ) );
+			}
 			global $wp_filesystem;
 			// Install the theme
 			$theme = wp_remote_get( $theme_zip_url );
@@ -923,7 +929,7 @@ class Nxt_Panel_Ajax_Router {
 
 		$result   = array();
 		$response = wp_remote_post(
-			'http://api.wordpress.org/plugins/info/1.0/',
+			'https://api.wordpress.org/plugins/info/1.0/',
 			array(
 				'body' => array(
 					'action'  => 'plugin_information',
@@ -962,6 +968,11 @@ class Nxt_Panel_Ajax_Router {
 
 
 		if ( ! isset( $installed_plugins[ $plugin_basename ] ) && empty( $installed_plugins[ $plugin_basename ] ) ) {
+			// Same host restriction as the theme installer above.
+			if ( ! self::is_wordpress_org_package( $plugin_info->download_link ) ) {
+				wp_send_json_error( array( 'content' => __( 'Refusing to install a package from an unexpected host.', 'nexter-extension' ) ) );
+			}
+
 			$installed = $upgrader->install( $plugin_info->download_link );
 
 			$activation_result = activate_plugin( $plugin_basename );
@@ -1438,5 +1449,24 @@ class Nxt_Panel_Ajax_Router {
 			wp_safe_redirect( esc_url( admin_url( 'admin.php?page=nexter_welcome' ) ) );
 			exit;
 		}
+	}
+
+	/**
+	 * Only accept install packages served by wordpress.org over TLS.
+	 *
+	 * @param mixed $url Candidate package URL.
+	 * @return bool
+	 */
+	private static function is_wordpress_org_package( $url ) {
+		if ( ! is_string( $url ) || '' === $url ) {
+			return false;
+		}
+
+		$parts = wp_parse_url( $url );
+		if ( empty( $parts['scheme'] ) || empty( $parts['host'] ) || 'https' !== strtolower( $parts['scheme'] ) ) {
+			return false;
+		}
+
+		return (bool) preg_match( '/(^|\.)wordpress\.org$/i', $parts['host'] );
 	}
 }

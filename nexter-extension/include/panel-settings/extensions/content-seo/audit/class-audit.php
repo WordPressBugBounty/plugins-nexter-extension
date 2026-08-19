@@ -1085,11 +1085,11 @@ class Engine {
 	 */
 	private function check_image_alt() {
 		if ( $this->is_local_site() ) {
-			return $this->local_skip_item( 'image_alt', \__( 'Image ALT attributes', 'nexter-extension' ) );
+			return $this->local_skip_item( 'image_alt', \__( 'Image ALT attributes (homepage as rendered)', 'nexter-extension' ) );
 		}
 		$html = $this->fetch_homepage_html();
 		if ( \is_wp_error( $html ) ) {
-			return $this->item( 'image_alt', 'warning', \__( 'Image ALT attributes', 'nexter-extension' ), \__( 'Could not scan images on the homepage.', 'nexter-extension' ), '', false, '' );
+			return $this->item( 'image_alt', 'warning', \__( 'Image ALT attributes (homepage as rendered)', 'nexter-extension' ), \__( 'Could not fetch the homepage to scan its rendered images.', 'nexter-extension' ), '', false, '' );
 		}
 		// Drop <noscript> blocks first — they hold lazy-load fallback <img> copies that duplicate
 		// the real image and would otherwise be counted (and flagged) twice.
@@ -1101,8 +1101,8 @@ class Engine {
 			return $this->item(
 				'image_alt',
 				'suggestion',
-				\__( 'Image ALT attributes', 'nexter-extension' ),
-				\__( 'No images found on the homepage HTML (neutral signal).', 'nexter-extension' ),
+				\__( 'Image ALT attributes (homepage as rendered)', 'nexter-extension' ),
+				\__( 'No images found in the homepage as it is served (neutral signal).', 'nexter-extension' ),
 				\__( 'If relevant to your content, add meaningful images with descriptive ALT text.', 'nexter-extension' ),
 				false,
 				''
@@ -1144,11 +1144,13 @@ class Engine {
 			}
 		}
 		if ( 0 === $missing ) {
-			return $this->item( 'image_alt', 'passed', \__( 'Image ALT attributes', 'nexter-extension' ), \__( 'All homepage images include an ALT attribute (empty alt="" on decorative images is allowed).', 'nexter-extension' ), '', false, '' );
+			return $this->item( 'image_alt', 'passed', \__( 'Image ALT attributes (homepage as rendered)', 'nexter-extension' ), \__( 'Every image in the homepage as it is served includes an ALT attribute (empty alt="" on decorative images is allowed).', 'nexter-extension' ), '', false, '' );
 		}
+		// Names the scope: this scans the served page, so it can differ from the per-page panel,
+		// which only looks at post content.
 		$detail = sprintf(
 			/* translators: %d: count */
-			\__( '%d image(s) on the homepage are missing usable ALT text.', 'nexter-extension' ),
+			\__( '%d image(s) are missing usable ALT text in the homepage as it is served, including header, footer and slider markup.', 'nexter-extension' ),
 			$missing
 		);
 		if ( ! empty( $missing_files ) ) {
@@ -1161,7 +1163,7 @@ class Engine {
 		return $this->item(
 			'image_alt',
 			'warning',
-			\__( 'Image ALT attributes', 'nexter-extension' ),
+			\__( 'Image ALT attributes (homepage as rendered)', 'nexter-extension' ),
 			$detail,
 			\__( 'Add descriptive ALT attributes for accessibility and image SEO. Purely decorative images (spacers, icons, SVG flourishes) should instead carry alt="", role="presentation" or aria-hidden="true", which this check accepts.', 'nexter-extension' ),
 			false,
@@ -1837,13 +1839,75 @@ class Engine {
 	 *
 	 * @return array<string, mixed>
 	 */
+	/**
+	 * Internal paths linked from site-wide navigation: classic menus, block navigation posts and
+	 * template parts. None of these live in post_content, so the orphan check never saw them.
+	 *
+	 * @return array Paths keyed for O(1) lookup.
+	 */
+	private function collect_navigation_targets() {
+		static $cache = null;
+		if ( null !== $cache ) {
+			return $cache;
+		}
+
+		$home        = (string) \home_url( '/' );
+		$home_host   = (string) \wp_parse_url( $home, PHP_URL_HOST );
+		$home_origin = \untrailingslashit( $home );
+		$targets     = array();
+
+		$add = function ( $url ) use ( &$targets, $home_host ) {
+			$path = $this->to_internal_path( (string) $url, $home_host );
+			if ( null !== $path && '' !== $path ) {
+				$targets[ $path ] = true;
+			}
+		};
+
+		// Classic nav menus.
+		if ( \function_exists( 'wp_get_nav_menus' ) ) {
+			foreach ( (array) \wp_get_nav_menus() as $menu ) {
+				if ( empty( $menu->term_id ) ) {
+					continue;
+				}
+				foreach ( (array) \wp_get_nav_menu_items( $menu->term_id ) as $item ) {
+					if ( ! empty( $item->url ) ) {
+						$add( $item->url );
+					}
+				}
+			}
+		}
+
+		// Block-theme navigation and template parts: links live in their markup.
+		$chrome = \get_posts(
+			array(
+				'post_type'              => array( 'wp_navigation', 'wp_template_part' ),
+				'post_status'            => array( 'publish', 'any' ),
+				'posts_per_page'         => 40,
+				'no_found_rows'          => true,
+				'update_post_meta_cache' => false,
+				'update_post_term_cache' => false,
+			)
+		);
+		foreach ( $chrome as $part ) {
+			foreach ( $this->extract_links( (string) $part->post_content, $home_origin ) as $lnk ) {
+				$add( $lnk );
+			}
+		}
+
+		$cache = $targets;
+
+		return $cache;
+	}
+
 	private function check_orphan_pages() {
 		$sample = $this->get_content_sample();
 		$posts  = $sample['posts'];
 		if ( \count( $posts ) < 2 ) {
 			return $this->item( 'orphan_pages', 'passed', \__( 'Orphan pages', 'nexter-extension' ), \__( 'Not enough published content to evaluate internal linking.', 'nexter-extension' ), '', false, '' );
 		}
-		$targets = array();
+		// Site-wide chrome first: only post_content was scanned before, so a page reachable purely
+		// through the header menu counted as orphaned.
+		$targets = $this->collect_navigation_targets();
 		foreach ( $posts as $p ) {
 			foreach ( (array) $p['internal_targets'] as $t ) {
 				$targets[ $t ] = true;

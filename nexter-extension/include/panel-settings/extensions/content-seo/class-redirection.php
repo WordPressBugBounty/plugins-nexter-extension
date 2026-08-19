@@ -182,6 +182,22 @@ class Nexter_Content_SEO_Redirection {
 			? $request_path . '?' . $request_query
 			: $request_path;
 
+		// 'Exactly Match In Any Order' was falling through to the ignore-query branch, so it matched
+		// any query at all. Compare the parsed parameters as a set instead.
+		$qp_mode = isset( $rule['query_params'] ) ? sanitize_key( (string) $rule['query_params'] ) : '';
+		if ( 'match_any_order' === $qp_mode ) {
+			$rule_query = (string) wp_parse_url( (string) $rule['from_url'], PHP_URL_QUERY );
+			$want = array();
+			$got  = array();
+			wp_parse_str( $rule_query, $want );
+			wp_parse_str( (string) $request_query, $got );
+			ksort( $want );
+			ksort( $got );
+			if ( $want != $got ) { // phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison
+				return false;
+			}
+		}
+
 		$cond = isset( $rule['condition'] ) ? $rule['condition'] : 'exact_match';
 		switch ( $cond ) {
 			case 'contains':
@@ -258,7 +274,7 @@ class Nexter_Content_SEO_Redirection {
 			$keys[] = trim( $path, '/' );
 			foreach ( $keys as $key ) {
 				if ( isset( $compiled['exact_index'][ $key ] ) ) {
-					self::apply_rule( $compiled['exact_index'][ $key ], $path );
+					self::apply_rule( $compiled['exact_index'][ $key ], $path, $query );
 					return;
 				}
 			}
@@ -273,7 +289,7 @@ class Nexter_Content_SEO_Redirection {
 			}
 			// apply_rule() exits on a fired redirect / 410; it only returns here when the
 			// destination is empty or unsafe, so fall through and try the next matching rule.
-			self::apply_rule( $rule, $path );
+			self::apply_rule( $rule, $path, $query );
 		}
 	}
 
@@ -286,7 +302,7 @@ class Nexter_Content_SEO_Redirection {
 	 * @param string $path Matched request path.
 	 * @return false
 	 */
-	private static function apply_rule( $rule, $path ) {
+	private static function apply_rule( $rule, $path, $request_query = '' ) {
 		$status = isset( $rule['status_code'] ) ? (int) $rule['status_code'] : self::DEFAULT_STATUS_CODE;
 		if ( ! in_array( $status, self::ALLOWED_STATUS_CODES, true ) ) {
 			$status = self::DEFAULT_STATUS_CODE;
@@ -301,6 +317,19 @@ class Nexter_Content_SEO_Redirection {
 		}
 
 		$to = isset( $rule['to_url'] ) ? esc_url_raw( (string) $rule['to_url'] ) : '';
+
+		// 'Ignore And Pass Parameters To Target' only ignored them; the request query was never
+		// carried over. Merge it in, letting the target's own parameters win on a clash.
+		$qp_mode = isset( $rule['query_params'] ) ? sanitize_key( (string) $rule['query_params'] ) : '';
+		if ( 'ignore_pass' === $qp_mode && '' !== $to && '' !== (string) $request_query ) {
+			$incoming = array();
+			wp_parse_str( (string) $request_query, $incoming );
+			if ( ! empty( $incoming ) ) {
+				$existing = array();
+				wp_parse_str( (string) wp_parse_url( $to, PHP_URL_QUERY ), $existing );
+				$to = add_query_arg( array_merge( $incoming, $existing ), $to );
+			}
+		}
 		// Defense in depth: never honor an empty destination or a dangerous scheme even if one
 		// somehow slipped past save-time sanitization. External http/https hosts are allowed.
 		if ( '' === $to || ! self::is_safe_redirect_target( $to ) ) {

@@ -1,4 +1,5 @@
-<?php 
+<?php
+defined( 'ABSPATH' ) || exit; 
 Class Nxt_custom_Fields_Components{
 	/**
 	 * Instance

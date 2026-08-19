@@ -1659,6 +1659,11 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 		 */
 		public static function nexter_get_particular_posts_query() {
 
+			// This picker is an editor tool; it had no authorisation check at all.
+			if ( ! current_user_can( 'edit_posts' ) ) {
+				wp_send_json_error( array( 'content' => __( 'Insufficient permissions.', 'nexter-extension' ) ), 403 );
+			}
+
 			$search_data = isset( $_POST['q'] ) ? sanitize_text_field( wp_unslash( $_POST['q'] ) ) : '';
 			$data        = array();
 			$result      = array();
@@ -1684,10 +1689,14 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 					$get_instance = Nexter_Builder_Display_Conditional_Rules::get_instance();
 					add_filter( 'posts_search', array( $get_instance, 'search_data_by_titles' ), 10, 2 );
 				}
+				// Was -1: one request materialised every matching post of every public type.
 				$particular_args  = array(
-					'post_type'      => $post_type,
-					'posts_per_page' => - 1,
-					's'              => $search_data,
+					'post_type'              => $post_type,
+					'posts_per_page'         => 20,
+					'no_found_rows'          => true,
+					'update_post_meta_cache' => false,
+					'update_post_term_cache' => false,
+					's'                      => $search_data,
 				);
 				$particular_query = get_posts( $particular_args );
 				
