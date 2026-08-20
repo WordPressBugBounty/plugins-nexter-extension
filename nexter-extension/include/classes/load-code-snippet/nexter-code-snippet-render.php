@@ -426,6 +426,18 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 		 *
 		 * @return void
 		 */
+		/**
+		 * Drop the per-type file snippet caches. Public so every write path can invalidate them:
+		 * the dashboard AJAX save did, but the Abilities API did not, so a snippet created or enabled
+		 * through an ability kept serving a stale empty list until the transient expired.
+		 *
+		 * @return void
+		 */
+		public static function flush_file_snippet_caches() {
+			foreach ( array( 'php', 'css', 'javascript', 'htmlmixed' ) as $type ) {
+				delete_transient( self::get_file_snippet_transient_key( $type ) );
+			}
+		}
 		private function clear_file_snippet_transients() {
 			foreach ( array( 'php', 'css', 'javascript', 'htmlmixed' ) as $type ) {
 				delete_transient( self::get_file_snippet_transient_key( $type ) );
@@ -1922,10 +1934,12 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 			if ( ! is_array( $get_opt ) ) {
 				$get_opt = array();
 			}
-			if ( ! isset( $get_opt['code-snippets'] ) ) {
+			// isset() is also true for a string, so a corrupted option left this as a string and the
+			// assignment below became a fatal TypeError on PHP 8. Check the shape, not just presence.
+			if ( ! is_array( $get_opt['code-snippets'] ?? null ) ) {
 				$get_opt['code-snippets'] = array();
 			}
-			if ( ! isset( $get_opt['code-snippets']['values'] ) ) {
+			if ( ! is_array( $get_opt['code-snippets']['values'] ?? null ) ) {
 				$get_opt['code-snippets']['values'] = array();
 			}
 			$get_opt['code-snippets']['values']['migration'] = true;

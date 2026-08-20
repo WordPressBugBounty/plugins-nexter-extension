@@ -2,14 +2,14 @@
 # This file is distributed under the GPLv3.
 msgid ""
 msgstr ""
-"Project-Id-Version: Nexter Extension 4.7.7\n"
+"Project-Id-Version: Nexter Extension 4.7.8\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/nexter-extension\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-08-19T10:42:44+02:00\n"
+"POT-Creation-Date: 2026-08-20T10:43:28+02:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: nexter-extension\n"
@@ -47,6 +47,16 @@ msgstr ""
 
 #: include/abilities/class-nxt-mcp-abilities.php:123
 msgid "Nexter Extension MCP abilities for templates, snippets, and site settings."
+msgstr ""
+
+#. translators: %d: record ID.
+#: include/abilities/lifecycle-filters.php:144
+#, php-format
+msgid "Nothing exists with ID %d, so it cannot be changed."
+msgstr ""
+
+#: include/abilities/lifecycle-filters.php:192
+msgid "This feature requires Nexter Extension Pro."
 msgstr ""
 
 #: include/abilities/nexter-bulk-image-optimizer.php:20
@@ -350,17 +360,17 @@ msgstr ""
 
 #: include/class-nexter-load-ext.php:791
 #: include/class-nexter-load-ext.php:806
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:828
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:888
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:939
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1158
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1603
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1941
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1987
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2220
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2370
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2448
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2545
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:840
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:900
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:951
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1170
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1615
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1955
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2001
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2234
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2384
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2462
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2559
 #: include/custom-options/class-nxt-builder-condition-ui.php:52
 #: include/custom-options/class-nxt-builder-condition-ui.php:283
 #: include/custom-options/class-nxt-builder-condition-ui.php:410
@@ -481,167 +491,167 @@ msgstr ""
 msgid "You do not have permission to perform this action."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:584
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:596
 msgid "Failed to load HTML. Check syntax."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:925
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:937
 #: assets/js/admin/index.js:1
 msgid "Authors"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1052
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1064
 #: assets/js/admin/index.js:1
 msgid "Default Template"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1153
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1598
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2142
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2215
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2443
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1165
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1610
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2156
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2229
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2457
 msgid "File-based snippets require write access. This environment restricts file creation."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1166
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1668
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1178
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1680
 msgid "Enter Name Snippet"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1184
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1656
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2414
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2492
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1196
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1668
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2428
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2506
 msgid "Invalid file path detected."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1189
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1201
 msgid "File already exists. Please try a different name."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1203
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1683
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1215
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1695
 msgid "Please remove <?php from the beginning of the code"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1215
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1227
 msgid "Failed to create snippet file."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1232
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1244
 msgid "Snippet Created Successfully."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1242
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1254
 msgid "Missing required fields."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1457
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1469
 msgid "PHP executor unavailable."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1471
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1483
 msgid "Snippet has been disabled for safety"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1473
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1485
 msgid "Check the line numbers and suggestions above. Snippet is disabled until fixed."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1638
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1650
 msgid "Storage directory not available."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1646
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2006
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2481
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1658
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2020
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2495
 msgid "Invalid snippet ID."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1661
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2426
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2529
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1673
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2440
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2543
 msgid "Snippet ID does not exist."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1694
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1706
 msgid "Snippet Updated Successfully."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1696
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2526
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1708
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2540
 msgid "Failed to update snippet file."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1699
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1711
 msgid "File-based storage not available"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1702
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2430
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2433
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1714
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2444
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2447
 msgid "Invalid Snippet ID"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2099
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2113
 msgid "No valid snippets found to export."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2147
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2300
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2161
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2314
 msgid "Unknown snippet"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2151
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2165
 msgid "Snippet name is required"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2156
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2170
 msgid "Untitled snippet"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2165
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2179
 msgid "File based storage not available"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2170
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2184
 msgid "Storage directory not available"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2225
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2239
 msgid "No file uploaded or file upload error."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2231
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2245
 msgid "File size exceeds maximum allowed size (10MB)."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2253
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2267
 msgid "Invalid file type. Only JSON files are allowed."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2261
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2275
 msgid "Invalid file upload detected."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2268
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2282
 msgid "Empty or unreadable file."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2274
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2288
 msgid "Invalid snippet file."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2318
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2332
 msgid "No snippets were imported."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2326
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2340
 msgid "Snippet imported successfully."
 msgstr ""
 
 #. translators: %d: Number of snippets imported successfully
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2330
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2344
 #, php-format
 msgid "%d snippet imported successfully."
 msgid_plural "%d snippets imported successfully."
@@ -649,49 +659,49 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: %d: Number of snippets that failed to import
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2341
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2355
 #, php-format
 msgid "%d snippet failed."
 msgid_plural "%d snippets failed."
 msgstr[0] ""
 msgstr[1] ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2384
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2398
 msgid "Snippet deleted successfully"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2386
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2400
 msgid "Failed to delete Snippet"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2389
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2403
 msgid "You do not have permission to delete this snippet"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2392
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2470
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2406
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2484
 msgid "Invalid post or post type"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2399
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2413
 msgid "Invalid snippet ID format."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2424
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2438
 msgid "Snippet deleted successfully."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2466
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2480
 msgid "Updated Status Successfully"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2522
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2536
 msgid "Updated Status Successfully."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2532
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2535
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2619
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2546
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2549
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2633
 msgid "Invalid post ID"
 msgstr ""
 
@@ -18859,7 +18869,7 @@ msgid "Plugin Version: "
 msgstr ""
 
 #: dashboard/build/index.js:10
-msgid "60 days Money-Back Guarantee"
+msgid "30 days Money-Back Guarantee"
 msgstr ""
 
 #: dashboard/build/index.js:10

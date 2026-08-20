@@ -138,6 +138,10 @@ class Nxt_MCP_Abilities {
 
 		$base = NEXTER_EXT_DIR . 'include/abilities/';
 
+		// Must load before the ability files: wp_register_ability_args only reaches abilities
+		// registered after the filter is attached.
+		require_once $base . 'lifecycle-filters.php';
+
 		foreach ( array(
 			'nexter-bulk-image-optimizer',
 			'nexter-create-snippet',

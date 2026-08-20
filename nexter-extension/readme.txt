@@ -3,7 +3,7 @@ Contributors: posimyththemes, nirmalkavaiya, sagarpatel124
 Tags: seo, security, theme-builder, code-snippet, image-optimizer
 Requires at least: 5.9
 Tested up to: 7.0
-Stable tag: 4.7.7
+Stable tag: 4.7.8
 Requires PHP: 7.4
 License: GPLv3
 License URI: https://opensource.org/licenses/GPL-3.0
@@ -270,6 +270,13 @@ Nexter Extension may connect to external services below only when the related fe
 == Changelog ==
 
 ### View Complete Changelog at [roadmap.nexterwp.com](https://roadmap.nexterwp.com/updates?filter=Nexter+Extension+-+FREE)
+
+= V4.7.8 = 20 August 2026
+- Compatibility : WordPress 7.1 : the Abilities API lifecycle filters are now supported, so AI agents get faster repeat reads, clearer errors when a record does not exist, and switches that accept plain "on" or "yes" values. No effect before WordPress 7.1.
+- Fixed : Code Snippets : enabling, editing or adding a snippet now takes effect on the next page load. The cached snippet list was only refreshed by the dashboard, so changes made any other way appeared to do nothing until the cache expired.
+- Fixed : Code Snippets : snippets added through the AI assistant now run. They were saved with a placement name the runtime did not recognise, so PHP, CSS, JavaScript and HTML snippets were all stored correctly but never executed.
+- Fixed : Code Snippets : a fatal error on every admin page when the stored snippet settings held a single value instead of a list; the one-time file migration could not finish, so it retried and failed again on each request, locking the dashboard out.
+
 
 = V4.7.7 = 19 August 2026
 - Improvement : Security : SMTP passwords and Google OAuth tokens are now encrypted in the database. Credentials saved by earlier versions keep working and convert on the next save.

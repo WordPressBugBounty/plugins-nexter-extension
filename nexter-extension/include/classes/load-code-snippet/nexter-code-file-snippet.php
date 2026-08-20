@@ -796,6 +796,11 @@ if ( ! class_exists( 'Nexter_Code_Snippets_File_Based' ) ) {
 
 			$data['error_files'] = $error_files;
 			$this->saveSnippetData( $data );
+
+			// The index just changed, so the per-type caches built from it are stale.
+			if ( method_exists( 'Nexter_Builder_Code_Snippets_Render', 'flush_file_snippet_caches' ) ) {
+				Nexter_Builder_Code_Snippets_Render::flush_file_snippet_caches();
+			}
 		}
 
 		/**
