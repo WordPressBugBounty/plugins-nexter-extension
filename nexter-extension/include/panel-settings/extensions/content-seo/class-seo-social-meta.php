@@ -216,7 +216,7 @@ class Nexter_Content_SEO_Social_Meta {
 		if ( ! empty( $og_image_url ) ) {
 			echo '<meta property="og:image" content="' . esc_url( $og_image_url ) . '" />' . "\n";
 			echo '<meta property="og:image:secure_url" content="' . esc_url( $og_image_url ) . '" />' . "\n";
-			
+
 			$dimensions = self::resolve_og_image_dimensions( $og_image_url );
 			if ( ! empty( $dimensions['width'] ) && ! empty( $dimensions['height'] ) ) {
 				echo '<meta property="og:image:width" content="' . esc_attr( $dimensions['width'] ) . '" />' . "\n";
@@ -621,7 +621,7 @@ class Nexter_Content_SEO_Social_Meta {
 	/**
 	 * Per-post meta title: resolve @/% variables, else plain text.
 	 *
-	 * @param string   $raw  Stored meta.
+	 * @param string  $raw  Stored meta.
 	 * @param WP_Post $post Post.
 	 * @return string
 	 */
@@ -640,7 +640,7 @@ class Nexter_Content_SEO_Social_Meta {
 	/**
 	 * Per-post meta description: resolve @/% variables, else plain text (tags stripped).
 	 *
-	 * @param string   $raw  Stored meta.
+	 * @param string  $raw  Stored meta.
 	 * @param WP_Post $post Post.
 	 * @return string
 	 */
@@ -721,19 +721,19 @@ class Nexter_Content_SEO_Social_Meta {
 		// 1. WP resize suffix in the URL (-WxH.ext) — cheapest, no I/O, no cache needed.
 		if ( preg_match( '/-(\d+)x(\d+)\.(?:jpe?g|png|gif|webp|avif)(?:\?.*)?$/i', $url, $m ) ) {
 			return array(
-			'width'  => (int) $m[1],
-			'height' => (int) $m[2]
+				'width'  => (int) $m[1],
+				'height' => (int) $m[2],
 			);
 		}
 
 		// 2. Cache for every I/O-bound branch below (including a negative result), keyed on the URL
-		//    hash — so a local disk read or remote probe happens at most once per image per TTL.
+		// hash — so a local disk read or remote probe happens at most once per image per TTL.
 		$cache_key = 'nxt_oging_dim_' . md5( $url );
 		$cached    = get_transient( $cache_key );
 		if ( is_array( $cached ) ) {
 			return ! empty( $cached['width'] ) ? array(
-			'width'  => (int) $cached['width'],
-			'height' => (int) $cached['height']
+				'width'  => (int) $cached['width'],
+				'height' => (int) $cached['height'],
 			) : array();
 		}
 
@@ -745,20 +745,20 @@ class Nexter_Content_SEO_Social_Meta {
 			$metadata = wp_get_attachment_metadata( $attachment_id );
 			if ( ! empty( $metadata['width'] ) && ! empty( $metadata['height'] ) ) {
 				$dims = array(
-				'width'  => (int) $metadata['width'],
-				'height' => (int) $metadata['height']
+					'width'  => (int) $metadata['width'],
+					'height' => (int) $metadata['height'],
 				);
 			}
 		}
 
 		// 4. Local file on disk by URL PATH — resolves CDN/rewritten URLs (different host, same
-		//    /wp-content/uploads path) and per-post override URLs that still live in uploads.
+		// wp-content/uploads path) and per-post override URLs that still live in uploads.
 		if ( empty( $dims ) ) {
 			$dims = self::local_image_dimensions( $url );
 		}
 
 		// 5. Genuinely remote/off-site image: fetch once with a short timeout and measure from the
-		//    bytes. Filterable off. The result (including failure) is cached below.
+		// bytes. Filterable off. The result (including failure) is cached below.
 		if ( empty( $dims ) && preg_match( '#^https?://#i', $url )
 			&& self::remote_probe_allowed( $url )
 			&& apply_filters( 'nexter_content_seo_og_probe_remote_image', true, $url ) ) {
@@ -768,8 +768,8 @@ class Nexter_Content_SEO_Social_Meta {
 		set_transient(
 			$cache_key,
 			! empty( $dims ) ? $dims : array(
-			'width'  => 0,
-			'height' => 0
+				'width'  => 0,
+				'height' => 0,
 			),
 			(int) apply_filters( 'nexter_content_seo_og_image_dim_ttl', DAY_IN_SECONDS )
 		);
@@ -812,8 +812,8 @@ class Nexter_Content_SEO_Social_Meta {
 		$size = @getimagesize( $real_path ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged -- bad image returns false, handled below.
 		if ( is_array( $size ) && ! empty( $size[0] ) && ! empty( $size[1] ) ) {
 			return array(
-			'width'  => (int) $size[0],
-			'height' => (int) $size[1]
+				'width'  => (int) $size[0],
+				'height' => (int) $size[1],
 			);
 		}
 		return array();
@@ -958,8 +958,8 @@ class Nexter_Content_SEO_Social_Meta {
 		$size = @getimagesizefromstring( $body ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged -- non-image returns false, handled below.
 		if ( is_array( $size ) && ! empty( $size[0] ) && ! empty( $size[1] ) ) {
 			return array(
-			'width'  => (int) $size[0],
-			'height' => (int) $size[1]
+				'width'  => (int) $size[0],
+				'height' => (int) $size[1],
 			);
 		}
 		return array();

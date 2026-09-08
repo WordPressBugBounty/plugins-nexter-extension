@@ -239,7 +239,7 @@ if ( ! class_exists( 'Nexter_Code_Snippets_Import_Data' ) ) {
 				array(
 					'title'        => esc_html__( 'Limit Post Revisions to Optimize Database', 'nexter-extension' ),
 					'type'         => 'php',
-					'code'         => "define('WP_POST_REVISIONS', 5);",
+					'code'         => "if ( ! defined( 'WP_POST_REVISIONS' ) ) {\n\tdefine( 'WP_POST_REVISIONS', 5 );\n}",
 					'code-execute' => 'global',
 					'desc'         => esc_html__( 'Restrict number of saved post revisions to reduce database size.', 'nexter-extension' ),
 					'tags'         => array( 'Database', 'Optimization', 'Performance' ),
@@ -247,7 +247,7 @@ if ( ! class_exists( 'Nexter_Code_Snippets_Import_Data' ) ) {
 				array(
 					'title'        => esc_html__( 'Customize Login Logo Link URL', 'nexter-extension' ),
 					'type'         => 'php',
-					'code'         => "function custom_login_url() {\n\treturn home_url();\n}\nadd_filter('login_headerurl', 'custom_login_url');",
+					'code'         => "if ( ! function_exists( 'custom_login_url' ) ) {\n\tfunction custom_login_url() {\n\t\treturn home_url();\n\t}\n}\nadd_filter('login_headerurl', 'custom_login_url');",
 					'code-execute' => 'front-end',
 					'desc'         => esc_html__( 'Change WordPress login logo URL to your site homepage.', 'nexter-extension' ),
 					'tags'         => array( 'Branding', 'Login-Page', 'Frontend' ),

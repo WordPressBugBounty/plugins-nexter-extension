@@ -187,8 +187,8 @@ class Nexter_Content_SEO_Redirection {
 		$qp_mode = isset( $rule['query_params'] ) ? sanitize_key( (string) $rule['query_params'] ) : '';
 		if ( 'match_any_order' === $qp_mode ) {
 			$rule_query = (string) wp_parse_url( (string) $rule['from_url'], PHP_URL_QUERY );
-			$want = array();
-			$got  = array();
+			$want       = array();
+			$got        = array();
 			wp_parse_str( $rule_query, $want );
 			wp_parse_str( (string) $request_query, $got );
 			ksort( $want );
@@ -515,8 +515,8 @@ class Nexter_Content_SEO_Redirection {
 	 * Given a path, return the on-site destination path of the first enabled rule that matches it,
 	 * or '' when nothing matches or the destination leaves the site.
 	 *
-	 * @param string                            $path    Current path.
-	 * @param array<int, array<string, mixed>>  $enabled Enabled rules.
+	 * @param string                           $path    Current path.
+	 * @param array<int, array<string, mixed>> $enabled Enabled rules.
 	 * @return string
 	 */
 	private static function resolve_next_path( $path, $enabled ) {
@@ -682,9 +682,9 @@ class Nexter_Content_SEO_Redirection {
 		self::save_rules( $rules );
 		return rest_ensure_response(
 			array(
-			'data'     => $rule,
-			'warnings' => self::rule_warnings( $rule )
-			) 
+				'data'     => $rule,
+				'warnings' => self::rule_warnings( $rule ),
+			)
 		);
 	}
 
@@ -725,9 +725,9 @@ class Nexter_Content_SEO_Redirection {
 		self::save_rules( $rules );
 		return rest_ensure_response(
 			array(
-			'data'     => $rule,
-			'warnings' => self::rule_warnings( $rule )
-			) 
+				'data'     => $rule,
+				'warnings' => self::rule_warnings( $rule ),
+			)
 		);
 	}
 

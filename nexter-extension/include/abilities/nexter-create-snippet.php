@@ -5,6 +5,37 @@
 
 declare(strict_types=1);
 
+if ( ! function_exists( 'nexter_snippet_map_location' ) ) {
+	/**
+	 * Translate a documented location name into the one the runtime recognises.
+	 *
+	 * Values this API documents (front-end, header-css, header-js, ...) are all rejected by
+	 * Nexter_Global_Code_Handler::is_global_location(), so without this a snippet created here
+	 * saved correctly and then never executed.
+	 *
+	 * @param string $location Incoming location.
+	 * @return string
+	 */
+	function nexter_snippet_map_location( $location ) {
+		$map = array(
+			'front-end'    => 'frontend_only',
+			'admin'        => 'admin_only',
+			'global'       => 'run_everywhere',
+			'wp_head'      => 'site_header',
+			'wp_body_open' => 'site_body',
+			'wp_footer'    => 'site_footer',
+			'header-css'   => 'site_header',
+			'footer-css'   => 'site_footer',
+			'header-js'    => 'site_header',
+			'footer-js'    => 'site_footer',
+			'header-html'  => 'site_header',
+			'footer-html'  => 'site_footer',
+		);
+
+		return isset( $map[ $location ] ) ? $map[ $location ] : (string) $location;
+	}
+}
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit();
 }
@@ -59,7 +90,7 @@ wp_register_ability(
 			],
 			'location'           => [
 				'type'        => 'string',
-				'description' => 'Where to execute. PHP: global, front-end, admin, wp_head, wp_body_open, wp_footer, before-content, after-content. CSS: header-css, footer-css. JS: header-js, footer-js. HTML: header-html, footer-html.',
+				'description' => 'Where to run: site_header, site_body, site_footer, admin_header, admin_footer, run_everywhere, frontend_only, admin_only. Defaults to site_header for css/javascript/htmlmixed and run_everywhere for php. Legacy names (front-end, global, header-css, footer-js, ...) are still accepted and mapped.',
 			],
 			'code_execute'       => [
 				'type'        => 'string',
@@ -209,14 +240,17 @@ function nexter_mcp_create_snippet(array $input): array {
 	// Set default location if not provided
 	$location = sanitize_text_field( $input['location'] ?? '' );
 	if ( empty( $location ) ) {
+		// Same defaults the dashboard uses, so an AI-created snippet lands where a hand-made one does.
 		$defaults = [
-			'php'        => 'front-end',
-			'css'        => 'header-css',
-			'javascript' => 'header-js',
-			'htmlmixed'  => 'header-html',
+			'php'        => 'run_everywhere',
+			'css'        => 'site_header',
+			'javascript' => 'site_header',
+			'htmlmixed'  => 'site_header',
 		];
 		$location = $defaults[ $type ] ?? '';
 	}
+
+	$location = nexter_snippet_map_location( $location );
 
 	$condition = [
 		'status'             => isset( $input['status'] ) ? (int)$input['status'] : 0,

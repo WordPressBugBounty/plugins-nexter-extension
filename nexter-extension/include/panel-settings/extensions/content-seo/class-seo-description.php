@@ -93,7 +93,7 @@ class Nexter_Content_SEO_Description {
 	 * Recursively collect visible text from Elementor element settings into $parts (document
 	 * order). Reads only known text-bearing keys, so button labels / structural values are skipped.
 	 *
-	 * @param array               $elements Elementor elements tree.
+	 * @param array             $elements Elementor elements tree.
 	 * @param array<int,string> $parts    Accumulator (by reference).
 	 * @return void
 	 */
@@ -183,7 +183,7 @@ class Nexter_Content_SEO_Description {
 		if ( ! apply_filters( 'nexter_content_seo_output_description_meta', true ) ) {
 			return;
 		}
-		
+
 		if ( self::other_seo_plugin_active() ) {
 			return;
 		}

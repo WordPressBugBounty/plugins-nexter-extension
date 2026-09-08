@@ -26,7 +26,7 @@ class Nexter_Content_SEO_Archives {
 	 * worked — the inconsistency reported). pre_handle_404 runs before that reset, so the
 	 * conditionals are reliable here and both archive types behave identically.
 	 *
-	 * @param bool          $preempt  Current short-circuit value (false = let core handle 404).
+	 * @param bool           $preempt  Current short-circuit value (false = let core handle 404).
 	 * @param \WP_Query|null $wp_query Main query.
 	 * @return bool True when we have handled the response (redirect/404); otherwise $preempt.
 	 */

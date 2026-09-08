@@ -2,8 +2,8 @@
 Contributors: posimyththemes, nirmalkavaiya, sagarpatel124
 Tags: seo, security, theme-builder, code-snippet, image-optimizer
 Requires at least: 5.9
-Tested up to: 7.0
-Stable tag: 4.7.8
+Tested up to: 7.1
+Stable tag: 4.7.9
 Requires PHP: 7.4
 License: GPLv3
 License URI: https://opensource.org/licenses/GPL-3.0
@@ -271,12 +271,23 @@ Nexter Extension may connect to external services below only when the related fe
 
 ### View Complete Changelog at [roadmap.nexterwp.com](https://roadmap.nexterwp.com/updates?filter=Nexter+Extension+-+FREE)
 
+= V4.7.9 = 08 September 2026
+- Improvement : Nexter SEO : The image ALT warning now names every image it flagged, including slider and <picture> images that carry no plain src attribute.
+- Fixed : Code Snippets : snippets added through the AI assistant now run. They were saved with a placement name the runtime did not recognise, so PHP, CSS, JavaScript and HTML snippets were all stored correctly but never executed.
+- Fixed : Code Snippets : a PHP snippet created by the AI assistant now runs everywhere by default, the same as one added from the dashboard.
+- Fixed : SEO : the SEO screens are now fully translated. Roughly half their strings sit in separate bundle files that WordPress was never told to load a translation file for, so those stayed English in every language.
+- Fixed : Theme Builder : blocks and panels that use WordPress’s built-in code editor now load on Theme Builder screens. The builder was unregistering WordPress’s CodeMirror handle, which silently dropped every script that depended on it.
+- Fixed : Image Optimization : single and bulk optimisation no longer fail with a server error on large media libraries. Each image converted its original and every thumbnail size in one request; that work is now split into small batches.
+- Fixed : Image Optimization : the bulk screen now shows the real counts in its progress line instead of the raw "%1$d of %2$d images optimised" text, and the message under it is translatable.
+- Fixed : Nexter SEO : the Orphan Pages check now reads the links in the served homepage, so pages linked only from a page-builder or theme-coded header are no longer reported as orphaned.
+- Fixed : Code Snippets : importing a snippet that already exists is now blocked instead of silently creating a second copy. Two copies of a snippet that declares a PHP function crashed every page including the login screen.
+- Fixed : Code Snippets : the two bundled snippets that declare a PHP function or constant are now wrapped in function_exists() / defined() guards, so a duplicate can no longer be fatal. Sites that already had the unguarded copies are repaired automatically on update.
+
+
 = V4.7.8 = 20 August 2026
 - Compatibility : WordPress 7.1 : the Abilities API lifecycle filters are now supported, so AI agents get faster repeat reads, clearer errors when a record does not exist, and switches that accept plain "on" or "yes" values. No effect before WordPress 7.1.
 - Fixed : Code Snippets : enabling, editing or adding a snippet now takes effect on the next page load. The cached snippet list was only refreshed by the dashboard, so changes made any other way appeared to do nothing until the cache expired.
-- Fixed : Code Snippets : snippets added through the AI assistant now run. They were saved with a placement name the runtime did not recognise, so PHP, CSS, JavaScript and HTML snippets were all stored correctly but never executed.
 - Fixed : Code Snippets : a fatal error on every admin page when the stored snippet settings held a single value instead of a list; the one-time file migration could not finish, so it retried and failed again on each request, locking the dashboard out.
-
 
 = V4.7.7 = 19 August 2026
 - Improvement : Security : SMTP passwords and Google OAuth tokens are now encrypted in the database. Credentials saved by earlier versions keep working and convert on the next save.

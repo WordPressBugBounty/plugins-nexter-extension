@@ -111,7 +111,7 @@ class Nexter_Content_SEO {
 	 * Load Content SEO sub-modules.
 	 */
 	private function load_modules() {
-		$dir   = dirname( __FILE__ );
+		$dir   = __DIR__;
 		$files = array(
 			'class-seo-settings.php',
 			'class-seo-title.php',
@@ -127,6 +127,8 @@ class Nexter_Content_SEO {
 			'class-redirection.php',
 			'class-404-monitor.php',
 			'class-seo-llms.php',
+			'importers/class-nxt-seo-importer-yoast.php',
+			'importers/class-nxt-seo-importer.php',
 		);
 		foreach ( $files as $file ) {
 			$path = $dir . '/' . $file;
@@ -151,6 +153,9 @@ class Nexter_Content_SEO {
 		Nexter_Content_SEO_Indexing::init();
 		if ( class_exists( 'Nexter_Content_SEO_LLMs' ) ) {
 			Nexter_Content_SEO_LLMs::init();
+		}
+		if ( class_exists( 'Nexter_Content_SEO_Importer' ) ) {
+			Nexter_Content_SEO_Importer::init();
 		}
 		Nexter_Content_SEO_Robots::init();
 		Nexter_Content_SEO_Canonical::init();
@@ -733,13 +738,13 @@ class Nexter_Content_SEO {
 					'permission_callback' => $permission,
 					'args'                => array(
 						'urls'   => array(
-			'type'  => 'array',
-			'items' => array( 'type' => 'string' )
-					),
+							'type'  => 'array',
+							'items' => array( 'type' => 'string' ),
+						),
 						'action' => array(
-					'type' => 'string',
-					'enum' => array( 'update', 'remove' )
-					),
+							'type' => 'string',
+							'enum' => array( 'update', 'remove' ),
+						),
 					),
 				),
 			)
@@ -906,33 +911,33 @@ class Nexter_Content_SEO {
 						'permission_callback' => $permission,
 						'args'                => array(
 							'page'     => array(
-				'type'    => 'integer',
-				'default' => 1,
-				'minimum' => 1
-						),
+								'type'    => 'integer',
+								'default' => 1,
+								'minimum' => 1,
+							),
 							// Allow loading the full log in one request (default stays 20). The admin UI
 							// fetches everything once and filters/paginates client-side; fetch_rows still
 							// clamps to MAX_ROWS, which equals the table's hard row cap.
 							'per_page' => array(
-						'type'    => 'integer',
-						'default' => 20,
-						'minimum' => 1,
-						'maximum' => Nexter_Content_SEO_404_Monitor::MAX_ROWS
-						),
+								'type'    => 'integer',
+								'default' => 20,
+								'minimum' => 1,
+								'maximum' => Nexter_Content_SEO_404_Monitor::MAX_ROWS,
+							),
 							'orderby'  => array(
-						'type'    => 'string',
-						'default' => 'last_seen',
-						'enum'    => array( 'last_seen', 'first_seen', 'hits', 'url' )
-						),
+								'type'    => 'string',
+								'default' => 'last_seen',
+								'enum'    => array( 'last_seen', 'first_seen', 'hits', 'url' ),
+							),
 							'order'    => array(
-						'type'    => 'string',
-						'default' => 'desc',
-						'enum'    => array( 'asc', 'desc' )
-						),
+								'type'    => 'string',
+								'default' => 'desc',
+								'enum'    => array( 'asc', 'desc' ),
+							),
 							'search'   => array(
-						'type'    => 'string',
-						'default' => ''
-						),
+								'type'    => 'string',
+								'default' => '',
+							),
 						),
 					),
 					array(
@@ -967,9 +972,9 @@ class Nexter_Content_SEO {
 					'permission_callback' => $permission,
 					'args'                => array(
 						'id' => array(
-				'type'     => 'integer',
-				'required' => true
-					),
+							'type'     => 'integer',
+							'required' => true,
+						),
 					),
 				)
 			);
@@ -1063,17 +1068,17 @@ class Nexter_Content_SEO {
 		$data    = array_merge(
 			$options,
 			array(
-			'preview_data'           => Nexter_Content_SEO_Settings::get_preview_data(),
-			'sitemap_url'            => Nexter_Content_SEO_Sitemap::get_sitemap_url(),
-			'sitemap_video_url'      => Nexter_Content_SEO_Sitemap::get_video_sitemap_url(),
-			'sitemap_news_url'       => Nexter_Content_SEO_Sitemap::get_news_sitemap_url(),
-			'sitemap_html_url'       => Nexter_Content_SEO_Sitemap::get_html_sitemap_url(),
-			'content_seo_is_pro'     => self::content_seo_is_pro_active(),
-			'robots_txt_placeholder' => Nexter_Content_SEO_Robots::get_robots_txt_placeholder(),
-			'robots_txt_url'         => home_url( '/robots.txt' ),
-			'blog_public'            => get_option( 'blog_public' ),
-			'show_on_front'          => get_option( 'show_on_front' ),
-			) 
+				'preview_data'           => Nexter_Content_SEO_Settings::get_preview_data(),
+				'sitemap_url'            => Nexter_Content_SEO_Sitemap::get_sitemap_url(),
+				'sitemap_video_url'      => Nexter_Content_SEO_Sitemap::get_video_sitemap_url(),
+				'sitemap_news_url'       => Nexter_Content_SEO_Sitemap::get_news_sitemap_url(),
+				'sitemap_html_url'       => Nexter_Content_SEO_Sitemap::get_html_sitemap_url(),
+				'content_seo_is_pro'     => self::content_seo_is_pro_active(),
+				'robots_txt_placeholder' => Nexter_Content_SEO_Robots::get_robots_txt_placeholder(),
+				'robots_txt_url'         => home_url( '/robots.txt' ),
+				'blog_public'            => get_option( 'blog_public' ),
+				'show_on_front'          => get_option( 'show_on_front' ),
+			)
 		);
 		return rest_ensure_response( array( 'data' => $data ) );
 	}
@@ -1603,14 +1608,14 @@ class Nexter_Content_SEO {
 	public static function sanitize_robots_settings( $options ) {
 		$keys             = array(
 			'noindex_post_types',
-		'noindex_taxonomies',
-		'noindex_archives',
+			'noindex_taxonomies',
+			'noindex_archives',
 			'nofollow_post_types',
-		'nofollow_taxonomies',
-		'nofollow_archives',
+			'nofollow_taxonomies',
+			'nofollow_archives',
 			'noarchive_post_types',
-		'noarchive_taxonomies',
-		'noarchive_archives',
+			'noarchive_taxonomies',
+			'noarchive_archives',
 		);
 		$valid_post_types = array_keys( get_post_types( array( 'public' => true ), 'names' ) );
 		$valid_taxonomies = array_keys( get_taxonomies( array( 'public' => true ), 'names' ) );
@@ -1874,11 +1879,11 @@ class Nexter_Content_SEO {
 		$schedule = \NexterSEO\Audit\Engine::get_schedule();
 		return rest_ensure_response(
 			array(
-			'data' => array(
-				'schedule'    => $schedule,
-				'next_run_at' => \NexterSEO\Audit\Engine::next_run_timestamp( $schedule ),
-			 ),
-			) 
+				'data' => array(
+					'schedule'    => $schedule,
+					'next_run_at' => \NexterSEO\Audit\Engine::next_run_timestamp( $schedule ),
+				),
+			)
 		);
 	}
 
@@ -1893,12 +1898,12 @@ class Nexter_Content_SEO {
 		$schedule = \NexterSEO\Audit\Engine::save_schedule( $input );
 		return rest_ensure_response(
 			array(
-			'data'     => array(
-				'schedule'    => $schedule,
-				'next_run_at' => \NexterSEO\Audit\Engine::next_run_timestamp( $schedule ),
-			 ),
-			 'message' => __( 'Schedule saved.', 'nexter-extension' ),
-			) 
+				'data'    => array(
+					'schedule'    => $schedule,
+					'next_run_at' => \NexterSEO\Audit\Engine::next_run_timestamp( $schedule ),
+				),
+				'message' => __( 'Schedule saved.', 'nexter-extension' ),
+			)
 		);
 	}
 
@@ -1915,16 +1920,16 @@ class Nexter_Content_SEO {
 
 		return rest_ensure_response(
 			array(
-			'data' => array(
-				'audit'           => is_array( $audit ) ? $audit : null,
-				'scan_info'       => array(
-					'audits_count' => count( $history ),
-					'schedule'     => $schedule,
-					'next_run_at'  => $next_run,
+				'data' => array(
+					'audit'           => is_array( $audit ) ? $audit : null,
+					'scan_info'       => array(
+						'audits_count' => count( $history ),
+						'schedule'     => $schedule,
+						'next_run_at'  => $next_run,
+					),
+					'module_statuses' => $this->collect_module_statuses( is_array( $audit ) ? $audit : array() ),
 				),
-				'module_statuses' => $this->collect_module_statuses( is_array( $audit ) ? $audit : array() ),
-			 ),
-			) 
+			)
 		);
 	}
 
@@ -1940,8 +1945,8 @@ class Nexter_Content_SEO {
 		$out = array();
 
 		// On-page: meta template, social, schema, image-seo, home, archives.
-		$mt_tpl = ! empty( $opts['meta_title_template'] ) ? $opts['meta_title_template'] : ( ! empty( $opts['search_title_template'] ) ? $opts['search_title_template'] : '%post_title% - %site_name%' );
-		$md_tpl = ! empty( $opts['meta_description_template'] ) ? $opts['meta_description_template'] : ( ! empty( $opts['search_description_template'] ) ? $opts['search_description_template'] : '%post_excerpt%' );
+		$mt_tpl               = ! empty( $opts['meta_title_template'] ) ? $opts['meta_title_template'] : ( ! empty( $opts['search_title_template'] ) ? $opts['search_title_template'] : '%post_title% - %site_name%' );
+		$md_tpl               = ! empty( $opts['meta_description_template'] ) ? $opts['meta_description_template'] : ( ! empty( $opts['search_description_template'] ) ? $opts['search_description_template'] : '%post_excerpt%' );
 		$out['meta-template'] = array(
 			'state' => ( $mt_tpl !== '%post_title% - %site_name%' || $md_tpl !== '%post_excerpt%' ) ? 'active' : 'setup',
 		);
@@ -2012,7 +2017,7 @@ class Nexter_Content_SEO {
 	}
 
 	/**
-	 * @param array $audit Last audit payload.
+	 * @param array  $audit Last audit payload.
 	 * @param string $id    Check id to find.
 	 * @return array|null
 	 */
@@ -2099,17 +2104,15 @@ class Nexter_Content_SEO {
 		$bool_keys = apply_filters(
 			'nexter_content_seo_image_seo_bool_keys',
 			array(
-			'redirect_attachment_pages',
-			'auto_alt_text',
-			) 
+				'redirect_attachment_pages',
+				'auto_alt_text',
+			)
 		);
 		foreach ( $bool_keys as $key ) {
 			if ( isset( $options[ $key ] ) ) {
 				$options[ $key ] = ! empty( $options[ $key ] );
 			}
 		}
-
-
 
 		return $options;
 	}

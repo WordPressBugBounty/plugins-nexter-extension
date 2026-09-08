@@ -33,19 +33,19 @@ class Nexter_Content_SEO_Image {
 
 		$hooks = array(
 			'the_content'         => array(
-		'priority' => 11,
-		'args'     => 1
-		),
+				'priority' => 11,
+				'args'     => 1,
+			),
 			'post_thumbnail_html' => array(
-		'priority' => 11,
-		'args'     => 5
-		),
+				'priority' => 11,
+				'args'     => 5,
+			),
 		);
 
 		if ( class_exists( 'WooCommerce', false ) ) {
 			$hooks['woocommerce_single_product_image_thumbnail_html'] = array(
-			'priority' => 11,
-			'args'     => 2
+				'priority' => 11,
+				'args'     => 2,
 			);
 		}
 
@@ -73,11 +73,11 @@ class Nexter_Content_SEO_Image {
 	/**
 	 * Filter callback: enhance images in HTML (variable hook arity).
 	 *
-	 * @param string      $html HTML fragment.
-	 * @param int|null    $arg2 post_thumbnail_html: post ID; WooCommerce: thumbnail attachment ID; ignored for the_content.
-	 * @param mixed       $arg3 Unused (thumbnail API).
-	 * @param mixed       $arg4 Unused.
-	 * @param mixed       $arg5 Unused.
+	 * @param string   $html HTML fragment.
+	 * @param int|null $arg2 post_thumbnail_html: post ID; WooCommerce: thumbnail attachment ID; ignored for the_content.
+	 * @param mixed    $arg3 Unused (thumbnail API).
+	 * @param mixed    $arg4 Unused.
+	 * @param mixed    $arg5 Unused.
 	 * @return string
 	 */
 	public static function filter_enhance_images( $html, $arg2 = null, $arg3 = null, $arg4 = null, $arg5 = null ) {
@@ -356,27 +356,27 @@ class Nexter_Content_SEO_Image {
 
 		$query = new WP_Query(
 			array(
-			'post_type'              => 'attachment',
-			'post_status'            => 'inherit',
-			'post_mime_type'         => 'image',
-			'posts_per_page'         => $limit,
-			'fields'                 => 'ids',
-			'no_found_rows'          => false,
-			'update_post_term_cache' => false,
-			// Only attachments with no alt meta or an empty one.
-			'meta_query'             => array(
-				'relation' => 'OR',
-				array(
-			'key'     => '_wp_attachment_image_alt',
-			'compare' => 'NOT EXISTS'
-			),
-				array(
-			'key'     => '_wp_attachment_image_alt',
-			'value'   => '',
-			'compare' => '='
-			),
-			 ),
-			) 
+				'post_type'              => 'attachment',
+				'post_status'            => 'inherit',
+				'post_mime_type'         => 'image',
+				'posts_per_page'         => $limit,
+				'fields'                 => 'ids',
+				'no_found_rows'          => false,
+				'update_post_term_cache' => false,
+				// Only attachments with no alt meta or an empty one.
+				'meta_query'             => array(
+					'relation' => 'OR',
+					array(
+						'key'     => '_wp_attachment_image_alt',
+						'compare' => 'NOT EXISTS',
+					),
+					array(
+						'key'     => '_wp_attachment_image_alt',
+						'value'   => '',
+						'compare' => '=',
+					),
+				),
+			)
 		);
 
 		$ids     = $query->posts;

@@ -206,8 +206,8 @@ class Nxt_Seo_Analyzer {
 	public static function check_internal_links( $content, $home = '' ) {
 		if ( empty( $content ) ) {
 			return array(
-			'count' => 0,
-			'score' => 0.0
+				'count' => 0,
+				'score' => 0.0,
 			);
 		}
 		$home = $home ?: home_url( '/' );
@@ -216,13 +216,13 @@ class Nxt_Seo_Analyzer {
 		$internal = 0;
 		foreach ( $urls as $url ) {
 			if ( strpos( $url, $home ) === 0 || strpos( $url, '/' ) === 0 ) {
-				$internal++;
+				++$internal;
 			}
 		}
 		$score = $internal >= 1 ? min( 1.0, $internal / 3.0 ) : 0.0;
 		return array(
-		'count' => $internal,
-		'score' => $score
+			'count' => $internal,
+			'score' => $score,
 		);
 	}
 
@@ -356,7 +356,7 @@ class Nxt_Seo_Analyzer {
 		$out['avg_sentence_words'] = $out['sentence_count'] > 0
 			? round( $total_words / $out['sentence_count'], 1 )
 			: 0.0;
-		$out['complex_word_pct'] = $total_words > 0
+		$out['complex_word_pct']   = $total_words > 0
 			? round( ( $complex_words / $total_words ) * 100, 1 )
 			: 0.0;
 
@@ -605,58 +605,58 @@ class Nxt_Seo_Analyzer {
 
 		$checklist = array(
 			array(
-				'id'     => 'page_media',
-				'status' => $has_media ? 'pass' : 'warning',
-				'text'   => $has_media
+				'id'          => 'page_media',
+				'status'      => $has_media ? 'pass' : 'warning',
+				'text'        => $has_media
 					? __( 'This page contains images or videos.', 'nexter-extension' )
 					: __( 'No images or videos found on this page.', 'nexter-extension' ),
-				'label'  => __( 'Images & video', 'nexter-extension' ),
-		'fix_section'    => 'general',
+				'label'       => __( 'Images & video', 'nexter-extension' ),
+				'fix_section' => 'general',
 			),
 			array(
-				'id'     => 'page_links',
-				'status' => $has_link ? 'pass' : 'warning',
-				'text'   => $has_link
+				'id'          => 'page_links',
+				'status'      => $has_link ? 'pass' : 'warning',
+				'text'        => $has_link
 					? __( 'This page contains links.', 'nexter-extension' )
 					: __( 'No links found on this page.', 'nexter-extension' ),
-				'label'  => __( 'Links', 'nexter-extension' ),
-		'fix_section'    => 'general',
+				'label'       => __( 'Links', 'nexter-extension' ),
+				'fix_section' => 'general',
 			),
 			array(
-				'id'     => 'page_subheading',
-				'status' => $has_sub ? 'pass' : 'warning',
-				'text'   => $has_sub
+				'id'          => 'page_subheading',
+				'status'      => $has_sub ? 'pass' : 'warning',
+				'text'        => $has_sub
 					? __( 'The page contains subheadings.', 'nexter-extension' )
 					: __( 'Page does not contain at least one subheading.', 'nexter-extension' ),
-				'label'  => __( 'Subheadings', 'nexter-extension' ),
-		'fix_section'    => 'general',
+				'label'       => __( 'Subheadings', 'nexter-extension' ),
+				'fix_section' => 'general',
 			),
 			array(
-				'id'     => 'page_url',
-				'status' => $url_ok ? 'pass' : 'warning',
-				'text'   => $url_ok
+				'id'          => 'page_url',
+				'status'      => $url_ok ? 'pass' : 'warning',
+				'text'        => $url_ok
 					? __( 'Page URL is short and SEO-friendly.', 'nexter-extension' )
 					: __( 'Page URL is missing, very long, or could be shortened for SEO.', 'nexter-extension' ),
-				'label'  => __( 'URL', 'nexter-extension' ),
-		'fix_section'    => 'general',
+				'label'       => __( 'URL', 'nexter-extension' ),
+				'fix_section' => 'general',
 			),
 			array(
-				'id'     => 'page_title_length',
-				'status' => $title_ok ? 'pass' : 'warning',
-				'text'   => $title_ok
+				'id'          => 'page_title_length',
+				'status'      => $title_ok ? 'pass' : 'warning',
+				'text'        => $title_ok
 					? __( 'Search engine title is present and under 60 characters.', 'nexter-extension' )
 					: __( 'Search engine title is missing or longer than 60 characters.', 'nexter-extension' ),
-				'label'  => __( 'Title length', 'nexter-extension' ),
-		'fix_section'    => 'general',
+				'label'       => __( 'Title length', 'nexter-extension' ),
+				'fix_section' => 'general',
 			),
 			array(
-				'id'     => 'page_meta_length',
-				'status' => $meta_ok ? 'pass' : 'warning',
-				'text'   => $meta_ok
+				'id'          => 'page_meta_length',
+				'status'      => $meta_ok ? 'pass' : 'warning',
+				'text'        => $meta_ok
 					? __( 'Search engine description is present and under 160 characters.', 'nexter-extension' )
 					: __( 'Search engine description is missing or longer than 160 characters.', 'nexter-extension' ),
-				'label'  => __( 'Meta description length', 'nexter-extension' ),
-		'fix_section'    => 'general',
+				'label'       => __( 'Meta description length', 'nexter-extension' ),
+				'fix_section' => 'general',
 			),
 		);
 
@@ -676,38 +676,38 @@ class Nxt_Seo_Analyzer {
 			$read_status    = $readability >= 50 ? 'pass' : ( $readability >= 30 ? 'warning' : 'error' );
 
 			$checklist[] = array(
-				'id'      => 'focus_title',
-				'status'  => $title_keyword ? 'pass' : 'warning',
-				'text'    => $title_keyword
+				'id'          => 'focus_title',
+				'status'      => $title_keyword ? 'pass' : 'warning',
+				'text'        => $title_keyword
 					? __( 'Focus keyword appears in the SEO title.', 'nexter-extension' )
 					: __( 'Add the focus keyword to the SEO title.', 'nexter-extension' ),
-				'label'   => __( 'Title optimization', 'nexter-extension' ),
-			'fix_section' => 'general',
+				'label'       => __( 'Title optimization', 'nexter-extension' ),
+				'fix_section' => 'general',
 			);
 			$checklist[] = array(
-				'id'      => 'focus_meta',
-				'status'  => $meta_keyword ? 'pass' : 'warning',
-				'text'    => $meta_keyword
+				'id'          => 'focus_meta',
+				'status'      => $meta_keyword ? 'pass' : 'warning',
+				'text'        => $meta_keyword
 					? __( 'Focus keyword appears in the meta description.', 'nexter-extension' )
 					: __( 'Add the focus keyword to the meta description.', 'nexter-extension' ),
-				'label'   => __( 'Meta description keyword', 'nexter-extension' ),
-			'fix_section' => 'general',
+				'label'       => __( 'Meta description keyword', 'nexter-extension' ),
+				'fix_section' => 'general',
 			);
 			$checklist[] = array(
-				'id'      => 'keyword_density',
-				'status'  => $density_status,
-				'text'    => sprintf(
+				'id'          => 'keyword_density',
+				'status'      => $density_status,
+				'text'        => sprintf(
 					/* translators: %s: keyword density percentage */
 					__( 'Keyword density is %s%% (aim for roughly 0.5%%–2.5%%).', 'nexter-extension' ),
 					number_format_i18n( $keyword_d, 2 )
 				),
-				'label'   => __( 'Keyword density', 'nexter-extension' ),
-			'fix_section' => 'general',
+				'label'       => __( 'Keyword density', 'nexter-extension' ),
+				'fix_section' => 'general',
 			);
 			$checklist[] = array(
-				'id'      => 'internal_links',
-				'status'  => $internal_count >= 1 ? 'pass' : 'warning',
-				'text'    => $internal_count >= 1
+				'id'          => 'internal_links',
+				'status'      => $internal_count >= 1 ? 'pass' : 'warning',
+				'text'        => $internal_count >= 1
 					? sprintf(
 						/* translators: %d: internal link count */
 						_n(
@@ -719,13 +719,13 @@ class Nxt_Seo_Analyzer {
 						$internal_count
 					)
 					: __( 'Add at least one internal link to other pages on your site.', 'nexter-extension' ),
-				'label'   => __( 'Internal links', 'nexter-extension' ),
-			'fix_section' => 'general',
+				'label'       => __( 'Internal links', 'nexter-extension' ),
+				'fix_section' => 'general',
 			);
 			$checklist[] = array(
-				'id'      => 'image_alt',
-				'status'  => $image_status,
-				'text'    => $image_alt >= 1
+				'id'          => 'image_alt',
+				'status'      => $image_status,
+				'text'        => $image_alt >= 1
 					? __( 'All images have alt text.', 'nexter-extension' )
 					: ( ! empty( $analysis['image_alt_missing'] )
 						? sprintf(
@@ -734,22 +734,22 @@ class Nxt_Seo_Analyzer {
 							implode( ', ', array_map( 'sanitize_text_field', (array) $analysis['image_alt_missing'] ) )
 						)
 						: __( 'Some images are missing alt text.', 'nexter-extension' ) ),
-				'label'   => __( 'Image alt tags', 'nexter-extension' ),
-			'fix_section' => 'general',
+				'label'       => __( 'Image alt tags', 'nexter-extension' ),
+				'fix_section' => 'general',
 			);
 			$checklist[] = array(
-				'id'      => 'headings',
-				'status'  => $heading_s > 0 ? 'pass' : 'warning',
-				'text'    => $heading_s > 0
+				'id'          => 'headings',
+				'status'      => $heading_s > 0 ? 'pass' : 'warning',
+				'text'        => $heading_s > 0
 					? __( 'The content uses headings.', 'nexter-extension' )
 					: __( 'Add headings (H1–H6) to structure the content.', 'nexter-extension' ),
-				'label'   => __( 'Heading usage', 'nexter-extension' ),
-			'fix_section' => 'general',
+				'label'       => __( 'Heading usage', 'nexter-extension' ),
+				'fix_section' => 'general',
 			);
 			$checklist[] = array(
-				'id'      => 'content_length',
-				'status'  => $word_count >= 300 ? 'pass' : 'warning',
-				'text'    => $word_count >= 300
+				'id'          => 'content_length',
+				'status'      => $word_count >= 300 ? 'pass' : 'warning',
+				'text'        => $word_count >= 300
 					? sprintf(
 						/* translators: %d: word count */
 						__( 'Content length is %d words.', 'nexter-extension' ),
@@ -760,22 +760,22 @@ class Nxt_Seo_Analyzer {
 						__( 'Content is short (%d words). Consider at least 300 words for stronger SEO.', 'nexter-extension' ),
 						$word_count
 					),
-				'label'   => __( 'Content length', 'nexter-extension' ),
-			'fix_section' => 'general',
+				'label'       => __( 'Content length', 'nexter-extension' ),
+				'fix_section' => 'general',
 			);
 			$read_detail = isset( $analysis['readability_detail'] ) && is_array( $analysis['readability_detail'] )
 				? $analysis['readability_detail']
 				: array();
-			$read_item = array(
-				'id'      => 'readability',
-				'status'  => $read_status,
-				'text'    => sprintf(
+			$read_item   = array(
+				'id'          => 'readability',
+				'status'      => $read_status,
+				'text'        => sprintf(
 					/* translators: %d: readability score */
 					__( 'Readability score is %d (higher is easier to read).', 'nexter-extension' ),
 					$readability
 				),
-				'label'   => __( 'Readability', 'nexter-extension' ),
-			'fix_section' => 'general',
+				'label'       => __( 'Readability', 'nexter-extension' ),
+				'fix_section' => 'general',
 			);
 			// Ship the diagnostics with the check so the UI can show WHAT is wrong and WHERE,
 			// instead of only a bare score.
@@ -794,23 +794,23 @@ class Nxt_Seo_Analyzer {
 				'long_paragraphs'    => isset( $read_detail['long_paragraphs'] ) ? $read_detail['long_paragraphs'] : 0,
 				'complex_word_pct'   => isset( $read_detail['complex_word_pct'] ) ? $read_detail['complex_word_pct'] : 0,
 			);
-			$checklist[] = $read_item;
-			$checklist[] = array(
-				'id'      => 'url_slug_keyword',
-				'status'  => $url_slug_kw ? 'pass' : 'warning',
-				'text'    => $url_slug_kw
+			$checklist[]        = $read_item;
+			$checklist[]        = array(
+				'id'          => 'url_slug_keyword',
+				'status'      => $url_slug_kw ? 'pass' : 'warning',
+				'text'        => $url_slug_kw
 					? __( 'URL slug looks good for this focus keyword.', 'nexter-extension' )
 					: __( 'Consider including the focus keyword in the URL slug.', 'nexter-extension' ),
-				'label'   => __( 'URL slug & keyword', 'nexter-extension' ),
-			'fix_section' => 'general',
+				'label'       => __( 'URL slug & keyword', 'nexter-extension' ),
+				'fix_section' => 'general',
 			);
 		} else {
 			$checklist[] = array(
-				'id'      => 'focus_keyword_missing',
-				'status'  => 'warning',
-				'text'    => __( 'Add a focus keyword on the Optimize tab to run keyword-based checks.', 'nexter-extension' ),
-				'label'   => __( 'Focus keyword', 'nexter-extension' ),
-			'fix_section' => 'general',
+				'id'          => 'focus_keyword_missing',
+				'status'      => 'warning',
+				'text'        => __( 'Add a focus keyword on the Optimize tab to run keyword-based checks.', 'nexter-extension' ),
+				'label'       => __( 'Focus keyword', 'nexter-extension' ),
+				'fix_section' => 'general',
 			);
 		}
 
@@ -853,7 +853,7 @@ class Nxt_Seo_Analyzer {
 			'page_subheadings'      => array( 'general', 'content', __( 'Break the content up with at least one subheading (H2 or H3).', 'nexter-extension' ) ),
 			'internal_links'        => array( 'general', 'content', __( 'Link to a few of your own related posts or pages from this content.', 'nexter-extension' ) ),
 			'image_alt'             => array( 'general', 'content', __( 'Select each image in the editor and fill in its Alt text describing the image.', 'nexter-extension' ) ),
-			'headings'             => array( 'general', 'content', __( 'Add more subheadings (H2/H3) so the content is easier to scan.', 'nexter-extension' ) ),
+			'headings'              => array( 'general', 'content', __( 'Add more subheadings (H2/H3) so the content is easier to scan.', 'nexter-extension' ) ),
 			'content_length'        => array( 'general', 'content', __( 'Expand the content — around 300 words or more performs better.', 'nexter-extension' ) ),
 			'readability'           => array( 'general', 'content', __( 'Shorten long sentences and split large paragraphs. See the flagged sentences below.', 'nexter-extension' ) ),
 		);
@@ -863,8 +863,8 @@ class Nxt_Seo_Analyzer {
 				continue;
 			}
 			list( $section, $target, $hint ) = $map[ $item['id'] ];
-			$item['fix_section'] = $section;
-			$item['fix_target']  = $target;
+			$item['fix_section']             = $section;
+			$item['fix_target']              = $target;
 			// Only surface a hint on checks that are not already passing.
 			if ( '' !== $hint && isset( $item['status'] ) && 'pass' !== $item['status'] ) {
 				$item['fix_hint'] = $hint;
@@ -1007,11 +1007,11 @@ class Nxt_Seo_Analyzer {
 	/**
 	 * Full analysis for a post (content + meta).
 	 *
-	 * @param int                $post_id   Post ID.
-	 * @param string             $content   Post content HTML.
-	 * @param string             $title     SEO or post title.
-	 * @param string             $meta_desc Meta description.
-	 * @param string|array|null  $focus_kw  Focus keyword (single string) or list of keywords (array, or comma/newline-separated string). First non-empty entry is treated as primary.
+	 * @param int               $post_id   Post ID.
+	 * @param string            $content   Post content HTML.
+	 * @param string            $title     SEO or post title.
+	 * @param string            $meta_desc Meta description.
+	 * @param string|array|null $focus_kw  Focus keyword (single string) or list of keywords (array, or comma/newline-separated string). First non-empty entry is treated as primary.
 	 * @return array
 	 */
 	public static function analyze_post_content( $post_id, $content, $title, $meta_desc, $focus_kw ) {

@@ -357,12 +357,12 @@ class Nexter_Content_SEO_LLMs {
 			}
 			$terms = get_terms(
 				array(
-				'taxonomy'   => $tax_slug,
-				'number'     => $terms_limit,
-				'orderby'    => 'count',
-				'order'      => 'DESC',
-				'hide_empty' => true,
-				) 
+					'taxonomy'   => $tax_slug,
+					'number'     => $terms_limit,
+					'orderby'    => 'count',
+					'order'      => 'DESC',
+					'hide_empty' => true,
+				)
 			);
 			if ( is_wp_error( $terms ) || empty( $terms ) ) {
 				continue;

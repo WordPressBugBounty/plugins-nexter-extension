@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Load Content SEO global module (settings, schema, sitemap, REST API).
-require_once dirname( __FILE__ ) . '/content-seo/class-content-seo.php';
+require_once __DIR__ . '/content-seo/class-content-seo.php';
 Nexter_Content_SEO::get_instance();
 
 /**
@@ -527,7 +527,7 @@ class Nexter_Content_SeoRank {
 			'schema_variables'         => class_exists( 'Nexter_Content_SEO_Schema' ) ? Nexter_Content_SEO_Schema::get_cached_static_schema_config()['schema_variables'] : array(),
 			'schema_field_definitions' => class_exists( 'Nexter_Content_SEO_Schema' ) ? Nexter_Content_SEO_Schema::get_cached_static_schema_config()['schema_field_definitions'] : array(),
 		);
-		require_once dirname( __FILE__ ) . '/content-seo/class-nxt-seo-analyzer.php';
+		require_once __DIR__ . '/content-seo/class-nxt-seo-analyzer.php';
 		$title                     = $data['meta_title'] ? $data['meta_title'] : ( $default_title ? $default_title : $term->name );
 		$desc                      = $data['meta_description'] ? $data['meta_description'] : ( $default_desc ? $default_desc : wp_trim_words( wp_strip_all_tags( $term->description ), 25 ) );
 		$content_plain             = wp_strip_all_tags( $term->description );
@@ -793,7 +793,7 @@ class Nexter_Content_SeoRank {
 			'schema_field_definitions' => class_exists( 'Nexter_Content_SEO_Schema' ) ? Nexter_Content_SEO_Schema::get_cached_static_schema_config()['schema_field_definitions'] : array(),
 		);
 		if ( $post ) {
-			require_once dirname( __FILE__ ) . '/content-seo/class-nxt-seo-analyzer.php';
+			require_once __DIR__ . '/content-seo/class-nxt-seo-analyzer.php';
 			$title                     = $data['meta_title'] ? $data['meta_title'] : ( $default_title ? $default_title : $post->post_title );
 			$desc                      = $data['meta_description'] ? $data['meta_description'] : ( $default_desc ? $default_desc : wp_trim_words( wp_strip_all_tags( $post->post_content ), 25 ) );
 			$result                    = Nxt_Seo_Analyzer::analyze_post_content( $post_id, $post->post_content, $title, $desc, $data['focus_keyword'] );
@@ -872,7 +872,7 @@ class Nexter_Content_SeoRank {
 			$lines,
 			static function ( $l ) {
 				return '' !== $l;
-			} 
+			}
 		);
 		return implode( "\n", $lines );
 	}
@@ -1032,7 +1032,7 @@ class Nexter_Content_SeoRank {
 		if ( ! $post instanceof WP_Post ) {
 			return array( '', '' );
 		}
-		require_once dirname( __FILE__ ) . '/content-seo/class-seo-settings.php';
+		require_once __DIR__ . '/content-seo/class-seo-settings.php';
 		$opts    = Nexter_Content_SEO::get_options();
 		$title_t = ! empty( $opts['meta_title_template'] ) ? $opts['meta_title_template'] : ( ! empty( $opts['search_title_template'] ) ? $opts['search_title_template'] : '%post_title% - %site_name%' );
 		$desc_t  = ! empty( $opts['meta_description_template'] ) ? $opts['meta_description_template'] : ( ! empty( $opts['search_description_template'] ) ? $opts['search_description_template'] : '%post_excerpt%' );
@@ -1055,7 +1055,7 @@ class Nexter_Content_SeoRank {
 		if ( ! $term instanceof WP_Term ) {
 			return array( '', '' );
 		}
-		require_once dirname( __FILE__ ) . '/content-seo/class-seo-settings.php';
+		require_once __DIR__ . '/content-seo/class-seo-settings.php';
 		$opts    = Nexter_Content_SEO::get_options();
 		$title_t = ! empty( $opts['meta_title_template'] ) ? $opts['meta_title_template'] : ( ! empty( $opts['search_title_template'] ) ? $opts['search_title_template'] : '%post_title% - %site_name%' );
 		$desc_t  = ! empty( $opts['meta_description_template'] ) ? $opts['meta_description_template'] : ( ! empty( $opts['search_description_template'] ) ? $opts['search_description_template'] : '%post_excerpt%' );
@@ -1127,18 +1127,18 @@ class Nexter_Content_SeoRank {
 			}
 		}
 
-		require_once dirname( __FILE__ ) . '/content-seo/class-nxt-seo-analyzer.php';
+		require_once __DIR__ . '/content-seo/class-nxt-seo-analyzer.php';
 		$result = Nxt_Seo_Analyzer::analyze_post_content( $post_id ?: 0, $content, $title, $meta_desc, $focus_kw );
 		return rest_ensure_response(
 			array(
-			'data' => array(
-				'score'           => $result['score'],
-				'keyword_density' => $result['keyword_density'],
-				'readability'     => $result['readability'],
-				'checklist'       => $result['checklist'],
-				'suggestions'     => $result['suggestions'],
-			 ),
-			) 
+				'data' => array(
+					'score'           => $result['score'],
+					'keyword_density' => $result['keyword_density'],
+					'readability'     => $result['readability'],
+					'checklist'       => $result['checklist'],
+					'suggestions'     => $result['suggestions'],
+				),
+			)
 		);
 	}
 
@@ -1225,7 +1225,7 @@ class Nexter_Content_SeoRank {
 		// [shortcode] bracket syntax, so a slider/gallery shortcode in the first ~25 words would
 		// otherwise leak its raw markup into the auto-generated description (matches class-audit.php).
 		$desc = $desc_meta ?: wp_trim_words( wp_strip_all_tags( strip_shortcodes( $post->post_content ) ), 25 );
-		require_once dirname( __FILE__ ) . '/content-seo/class-nxt-seo-analyzer.php';
+		require_once __DIR__ . '/content-seo/class-nxt-seo-analyzer.php';
 		$result = Nxt_Seo_Analyzer::analyze_post_content( $post_id, $post->post_content, $title, $desc, $focus );
 		update_post_meta( $post_id, self::SEO_SCORE, $result['score'] );
 		update_post_meta( $post_id, self::READABILITY, $result['readability'] );
@@ -1253,7 +1253,7 @@ class Nexter_Content_SeoRank {
 		// strip_shortcodes() before wp_strip_all_tags() so a shortcode in the term description
 		// doesn't leak raw [shortcode] markup into the auto-generated description.
 		$desc = $desc_meta ? $desc_meta : wp_trim_words( wp_strip_all_tags( strip_shortcodes( $term->description ) ), 25 );
-		require_once dirname( __FILE__ ) . '/content-seo/class-nxt-seo-analyzer.php';
+		require_once __DIR__ . '/content-seo/class-nxt-seo-analyzer.php';
 		$result = Nxt_Seo_Analyzer::analyze_post_content( 0, wp_strip_all_tags( $term->description ), $title, $desc, $focus );
 		update_term_meta( $term_id, self::SEO_SCORE, $result['score'] );
 		update_term_meta( $term_id, self::READABILITY, $result['readability'] );
@@ -1285,10 +1285,10 @@ class Nexter_Content_SeoRank {
 	public function seo_checks_taxonomies() {
 		$taxes = get_taxonomies(
 			array(
-			'public'  => true,
-			'show_ui' => true
+				'public'  => true,
+				'show_ui' => true,
 			),
-			'names' 
+			'names'
 		);
 		unset( $taxes['post_format'] );
 		/**
@@ -1376,25 +1376,25 @@ class Nexter_Content_SeoRank {
 	private function seo_score_badge( $score, $has_score ) {
 		if ( ! $has_score ) {
 			return array(
-			'level' => 'none',
-			'label' => __( 'Not analyzed', 'nexter-extension' )
+				'level' => 'none',
+				'label' => __( 'Not analyzed', 'nexter-extension' ),
 			);
 		}
 		if ( $score >= 70 ) {
 			return array(
-			'level' => 'good',
-			'label' => __( 'Good', 'nexter-extension' )
+				'level' => 'good',
+				'label' => __( 'Good', 'nexter-extension' ),
 			);
 		}
 		if ( $score >= 40 ) {
 			return array(
-			'level' => 'fair',
-			'label' => __( 'Fair', 'nexter-extension' )
+				'level' => 'fair',
+				'label' => __( 'Fair', 'nexter-extension' ),
 			);
 		}
 		return array(
-		'level' => 'poor',
-		'label' => __( 'Needs work', 'nexter-extension' )
+			'level' => 'poor',
+			'label' => __( 'Needs work', 'nexter-extension' ),
 		);
 	}
 
@@ -1487,7 +1487,7 @@ class Nexter_Content_SeoRank {
 		if ( metadata_exists( 'term', $term_id, self::SEO_SCORE ) ) {
 			return (int) get_term_meta( $term_id, self::SEO_SCORE, true );
 		}
-		require_once dirname( __FILE__ ) . '/content-seo/class-nxt-seo-analyzer.php';
+		require_once __DIR__ . '/content-seo/class-nxt-seo-analyzer.php';
 		list( $default_title, $default_desc ) = $this->get_resolved_default_title_description_term( $term );
 		$focus                                = get_term_meta( $term_id, self::FOCUS_KEYWORD, true );
 		$title                                = get_term_meta( $term_id, self::META_TITLE, true );
@@ -1607,6 +1607,7 @@ class Nexter_Content_SeoRank {
 		// stays in English regardless of locale.
 		if ( function_exists( 'wp_set_script_translations' ) ) {
 			wp_set_script_translations( 'nexter-content-seo', 'nexter-extension', WP_LANG_DIR . '/plugins/' );
+			self::load_seo_chunk_translations( $build_path, $build_url, $ver );
 		}
 		$post_id = 0;
 		if ( $is_post_edit && isset( $_GET['post'] ) ) {
@@ -1717,17 +1718,17 @@ class Nexter_Content_SeoRank {
 	public static function get_robots_archives() {
 		return array(
 			array(
-		'slug'  => 'search',
-		'label' => __( 'Search Pages', 'nexter-extension' )
-		),
+				'slug'  => 'search',
+				'label' => __( 'Search Pages', 'nexter-extension' ),
+			),
 			array(
-		'slug'  => 'author',
-		'label' => __( 'Author Archives', 'nexter-extension' )
-		),
+				'slug'  => 'author',
+				'label' => __( 'Author Archives', 'nexter-extension' ),
+			),
 			array(
-		'slug'  => 'date',
-		'label' => __( 'Date Archives', 'nexter-extension' )
-		),
+				'slug'  => 'date',
+				'label' => __( 'Date Archives', 'nexter-extension' ),
+			),
 		);
 	}
 
@@ -1747,6 +1748,48 @@ class Nexter_Content_SeoRank {
 			}
 		}
 		return admin_url( 'options-reading.php' );
+	}
+
+	/*
+	 * The Content SEO bundle is code split: 17 chunk files hold about half its strings, and
+	 * WordPress only injects translations for handles it registered, so those stayed English.
+	 */
+	private static function load_seo_chunk_translations( $build_path, $build_url, $ver ) {
+		$locale = function_exists( 'determine_locale' ) ? determine_locale() : get_locale();
+		if ( 'en_US' === $locale || '' === $locale ) {
+			return;
+		}
+
+		$chunks = glob( $build_path . '*.js' );
+		if ( ! is_array( $chunks ) ) {
+			return;
+		}
+
+		$lang_path = WP_LANG_DIR . '/plugins/';
+		foreach ( $chunks as $chunk ) {
+			$file = basename( $chunk );
+			if ( 'index.js' === $file ) {
+				continue;
+			}
+
+			// A throwaway handle just so load_script_textdomain() can resolve the chunk's JSON name.
+			$handle = 'nexter-seo-i18n-' . sanitize_key( basename( $file, '.js' ) );
+			wp_register_script( $handle, $build_url . $file, array(), $ver, true );
+			wp_set_script_translations( $handle, 'nexter-extension', $lang_path );
+			$json = load_script_textdomain( $handle, 'nexter-extension', $lang_path );
+			wp_deregister_script( $handle );
+
+			if ( empty( $json ) ) {
+				continue;
+			}
+
+			// Same unwrapping core uses in WP_Scripts::print_translations(); setLocaleData merges.
+			wp_add_inline_script(
+				'nexter-content-seo',
+				'( function( domain, translations ) { var localeData = translations.locale_data[ domain ] || translations.locale_data.messages; localeData[""].domain = domain; wp.i18n.setLocaleData( localeData, domain ); } )( "nexter-extension", ' . $json . ' );',
+				'before'
+			);
+		}
 	}
 }
 

@@ -2150,6 +2150,52 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 		 * @param object|null $file_based File based handler instance
 		 * @return array|WP_Error Returns array with 'success', 'id', 'name' on success, or WP_Error on failure
 		 */
+		/*
+		 * Does a snippet with this title already exist, active or not?
+		 *
+		 * Import used to guard only with is_file(), which can never fire: generate_snippet_filename()
+		 * prefixes a fresh counter, so a re-import of "Customize Login Logo Link URL" becomes
+		 * 22-customize-login-logo-link.php next to 14-customize-login-logo-link.php and the check
+		 * passes. Two copies of a snippet that declares a function are a site-wide fatal.
+		 *
+		 * Draft snippets count too — a disabled duplicate is one toggle away from the same crash.
+		 *
+		 * @param string $title      Snippet title to look for.
+		 * @param string $storageDir Snippet storage directory.
+		 * @return string|false Existing file name, or false when the title is free.
+		 */
+		private function find_existing_snippet_by_title( $title, $storageDir ) {
+			$index = $storageDir . '/nxt-snippet-list.php';
+			if ( ! is_file( $index ) ) {
+				return false;
+			}
+
+			$data = include $index;
+			if ( ! is_array( $data ) ) {
+				return false;
+			}
+
+			$needle = strtolower( trim( (string) $title ) );
+			if ( '' === $needle ) {
+				return false;
+			}
+
+			foreach ( array( 'publish', 'draft' ) as $group ) {
+				if ( empty( $data[ $group ] ) || ! is_array( $data[ $group ] ) ) {
+					continue;
+				}
+				foreach ( $data[ $group ] as $file => $meta ) {
+					if ( ! is_array( $meta ) || ! isset( $meta['name'] ) ) {
+						continue;
+					}
+					if ( strtolower( trim( (string) $meta['name'] ) ) === $needle ) {
+						return (string) $file;
+					}
+				}
+			}
+
+			return false;
+		}
 		public function import_single_snippet_file_based( $snippet, $file_based = null ) {
 			// Pre-check: Ensure WP_CONTENT_DIR is writable before attempting file operations
 			if ( ! self::check_content_dir_writable() ) {
@@ -2182,6 +2228,20 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 			$storageDir = $this->get_storage_directory();
 			if ( ! $storageDir ) {
 				return new \WP_Error( 'storage_dir_not_available', __( 'Storage directory not available', 'nexter-extension' ) );
+			}
+
+			// Block before writing: two copies of a snippet that declares a function or constant
+			// take the whole site down, login page included.
+			$duplicate_of = $this->find_existing_snippet_by_title( $title, $storageDir );
+			if ( false !== $duplicate_of ) {
+				return new \WP_Error(
+					'snippet_already_exists',
+					sprintf(
+						/* translators: %s: snippet name */
+						__( '"%s" already exists - edit the existing snippet instead of importing a second copy.', 'nexter-extension' ),
+						$title
+					)
+				);
 			}
 
 			$fileName = $this->generate_snippet_filename( $title );

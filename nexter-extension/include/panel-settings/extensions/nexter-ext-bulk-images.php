@@ -109,6 +109,7 @@ class Nexter_Ext_Bulk_Images {
 					'readyToOptimize'       => __( 'Ready to optimise %d images and save storage space', 'nexter-extension' ),
 					/* translators: 1: number of images optimised so far, 2: total number of images in queue */
 					'imagesOptimized'       => __( '%1$d of %2$d images optimised', 'nexter-extension' ),
+					'keepTabOpen'           => __( 'Keep this tab open to continue image optimisation, or enable Background Optimisation to run automatically.', 'nexter-extension' ),
 					'needToOptimise'        => __( 'Need to Optimise', 'nexter-extension' ),
 					'done'                  => __( 'Done', 'nexter-extension' ),
 					'failed'                => __( 'Failed', 'nexter-extension' ),

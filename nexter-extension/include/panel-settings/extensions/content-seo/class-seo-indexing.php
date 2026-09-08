@@ -308,8 +308,8 @@ class Nexter_Content_SEO_Indexing {
 		}
 		if ( ! $has_exclusions ) {
 			return array(
-			'allowed'  => $urls,
-			'excluded' => array()
+				'allowed'  => $urls,
+				'excluded' => array(),
 			);
 		}
 
@@ -342,8 +342,8 @@ class Nexter_Content_SEO_Indexing {
 			$allowed[] = $url;
 		}
 		return array(
-		'allowed'  => $allowed,
-		'excluded' => $excluded
+			'allowed'  => $allowed,
+			'excluded' => $excluded,
 		);
 	}
 
@@ -535,7 +535,7 @@ class Nexter_Content_SEO_Indexing {
 						fastcgi_finish_request();
 					}
 					self::cron_submit_auto( $url );
-				} 
+				}
 			);
 		}
 	}
@@ -586,9 +586,9 @@ class Nexter_Content_SEO_Indexing {
 		// pushed the expiry forward indefinitely and stayed locked out far longer than $window.)
 		if ( ! is_array( $bucket ) || empty( $bucket['start'] ) || ( $now - (int) $bucket['start'] ) >= $window ) {
 			$bucket = array(
-			'start'    => $now,
-			'requests' => 0,
-			'urls'     => 0
+				'start'    => $now,
+				'requests' => 0,
+				'urls'     => 0,
 			);
 		}
 		$requests_after = (int) $bucket['requests'] + 1;

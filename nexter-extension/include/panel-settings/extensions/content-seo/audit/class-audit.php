@@ -430,13 +430,13 @@ class Engine {
 				break;
 			case 'weekly':
 				$dayMap = array(
-				'sun' => 0,
-				'mon' => 1,
-				'tue' => 2,
-				'wed' => 3,
-				'thu' => 4,
-				'fri' => 5,
-				'sat' => 6
+					'sun' => 0,
+					'mon' => 1,
+					'tue' => 2,
+					'wed' => 3,
+					'thu' => 4,
+					'fri' => 5,
+					'sat' => 6,
 				);
 				$want   = $dayMap[ $schedule['day'] ] ?? 0;
 				$delta  = ( $want - (int) $today->format( 'w' ) + 7 ) % 7;
@@ -573,13 +573,13 @@ class Engine {
 	}
 
 	/**
-	 * @param string               $id          Issue id.
-	 * @param string               $status      critical|warning|suggestion|passed.
-	 * @param string               $title       Title.
-	 * @param string               $message     Message.
-	 * @param string               $recommendation Recommendation text.
-	 * @param bool                 $fix_available Fix available.
-	 * @param string               $fix_issue_id  ID for fix endpoint.
+	 * @param string $id          Issue id.
+	 * @param string $status      critical|warning|suggestion|passed.
+	 * @param string $title       Title.
+	 * @param string $message     Message.
+	 * @param string $recommendation Recommendation text.
+	 * @param bool   $fix_available Fix available.
+	 * @param string $fix_issue_id  ID for fix endpoint.
 	 * @return array<string, mixed>
 	 */
 	private function item( $id, $status, $title, $message, $recommendation = '', $fix_available = false, $fix_issue_id = '', $count = null ) {
@@ -1083,6 +1083,32 @@ class Engine {
 	/**
 	 * @return array<string, mixed>
 	 */
+	/**
+	 * A recognisable label for an <img> that carries no ALT.
+	 *
+	 * Slider and <picture> markup often has no plain src, which left the report with a bare
+	 * count and nothing for the user to act on.
+	 *
+	 * @param string $tag The <img> tag.
+	 * @return string
+	 */
+	private function describe_image_tag( $tag ) {
+		foreach ( array( 'src', 'data-src', 'data-lazy-src' ) as $attr ) {
+			if ( \preg_match( '/\b' . \preg_quote( $attr, '/' ) . '\s*=\s*["\']([^"\']+)["\']/i', $tag, $m ) ) {
+				return \wp_basename( \strtok( $m[1], '?' ) );
+			}
+		}
+		if ( \preg_match( '/\bsrcset\s*=\s*["\']([^"\',\s]+)/i', $tag, $m ) ) {
+			return \wp_basename( \strtok( $m[1], '?' ) );
+		}
+		foreach ( array( 'id', 'class' ) as $attr ) {
+			if ( \preg_match( '/\b' . $attr . '\s*=\s*["\']([^"\']+)["\']/i', $tag, $m ) ) {
+				return $attr . '="' . \trim( \preg_replace( '/\s+/', ' ', $m[1] ) ) . '"';
+			}
+		}
+
+		return \__( 'an image with no src attribute', 'nexter-extension' );
+	}
 	private function check_image_alt() {
 		if ( $this->is_local_site() ) {
 			return $this->local_skip_item( 'image_alt', \__( 'Image ALT attributes (homepage as rendered)', 'nexter-extension' ) );
@@ -1138,8 +1164,8 @@ class Engine {
 				++$missing;
 				// Record WHICH image, so the report is actionable instead of a bare count the user
 				// has to guess at (e.g. "is it my SVG logo or a background image?").
-				if ( \count( $missing_files ) < 5 && \preg_match( '/\bsrc\s*=\s*["\']([^"\']+)["\']/i', $tag, $sm ) ) {
-					$missing_files[] = \wp_basename( \strtok( $sm[1], '?' ) );
+				if ( \count( $missing_files ) < 5 ) {
+					$missing_files[] = $this->describe_image_tag( $tag );
 				}
 			}
 		}
@@ -1717,10 +1743,10 @@ class Engine {
 		while ( $hops <= self::REDIRECT_MAX_HOPS ) {
 			if ( isset( $seen[ $current ] ) ) {
 				return array(
-				'ok'     => false,
-				'status' => 0,
-				'hops'   => $hops,
-				'loop'   => true
+					'ok'     => false,
+					'status' => 0,
+					'hops'   => $hops,
+					'loop'   => true,
 				);
 			}
 			$seen[ $current ] = true;
@@ -1730,10 +1756,10 @@ class Engine {
 			// metadata). Re-checked on every hop since redirects are followed manually.
 			if ( ! self::url_host_is_public( $current ) ) {
 				return array(
-				'ok'      => false,
-				'status'  => 0,
-				'hops'    => $hops,
-				'blocked' => true
+					'ok'      => false,
+					'status'  => 0,
+					'hops'    => $hops,
+					'blocked' => true,
 				);
 			}
 
@@ -1743,10 +1769,10 @@ class Engine {
 			}
 			if ( \is_wp_error( $resp ) ) {
 				return array(
-				'ok'     => false,
-				'status' => 0,
-				'hops'   => $hops,
-				'error'  => $resp->get_error_message()
+					'ok'     => false,
+					'status' => 0,
+					'hops'   => $hops,
+					'error'  => $resp->get_error_message(),
 				);
 			}
 			$code = (int) \wp_remote_retrieve_response_code( $resp );
@@ -1757,9 +1783,9 @@ class Engine {
 				}
 				if ( '' === (string) $loc ) {
 					return array(
-					'ok'     => true,
-					'status' => $code,
-					'hops'   => $hops
+						'ok'     => true,
+						'status' => $code,
+						'hops'   => $hops,
 					);
 				}
 				$current = $this->resolve_redirect_url( (string) $loc, $current );
@@ -1767,16 +1793,16 @@ class Engine {
 				continue;
 			}
 			return array(
-			'ok'     => ( $code >= 200 && $code < 400 ),
-			'status' => $code,
-			'hops'   => $hops
+				'ok'     => ( $code >= 200 && $code < 400 ),
+				'status' => $code,
+				'hops'   => $hops,
 			);
 		}
 		return array(
-		'ok'             => false,
-		'status'         => 0,
-		'hops'           => $hops,
-		'chain_exceeded' => true
+			'ok'             => false,
+			'status'         => 0,
+			'hops'           => $hops,
+			'chain_exceeded' => true,
 		);
 	}
 
@@ -1880,7 +1906,7 @@ class Engine {
 		// Block-theme navigation and template parts: links live in their markup.
 		$chrome = \get_posts(
 			array(
-				'post_type'              => array( 'wp_navigation', 'wp_template_part' ),
+				'post_type'              => array( 'wp_navigation', 'wp_template_part', 'nxt_builder' ),
 				'post_status'            => array( 'publish', 'any' ),
 				'posts_per_page'         => 40,
 				'no_found_rows'          => true,
@@ -1891,6 +1917,17 @@ class Engine {
 		foreach ( $chrome as $part ) {
 			foreach ( $this->extract_links( (string) $part->post_content, $home_origin ) as $lnk ) {
 				$add( $lnk );
+			}
+		}
+
+		// A header can come from anywhere: a block template part, a page-builder header
+		// template, or theme PHP. Reading the served homepage catches every one of them.
+		if ( ! $this->is_local_site() ) {
+			$html = $this->fetch_homepage_html();
+			if ( ! \is_wp_error( $html ) ) {
+				foreach ( $this->extract_links( (string) $html, $home_origin ) as $lnk ) {
+					$add( $lnk );
+				}
 			}
 		}
 
@@ -2111,10 +2148,10 @@ class Engine {
 						$site_probe = \wp_remote_get(
 							$https_site,
 							array(
-							'timeout'     => 10,
-							'redirection' => 2,
-							'sslverify'   => true
-							) 
+								'timeout'     => 10,
+								'redirection' => 2,
+								'sslverify'   => true,
+							)
 						);
 						$site_code  = \is_wp_error( $site_probe ) ? 0 : (int) \wp_remote_retrieve_response_code( $site_probe );
 						if ( \is_wp_error( $site_probe ) || $site_code < 200 || $site_code >= 400 ) {

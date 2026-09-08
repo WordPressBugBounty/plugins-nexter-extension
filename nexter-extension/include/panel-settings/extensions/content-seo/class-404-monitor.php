@@ -354,8 +354,8 @@ class Nexter_Content_SEO_404_Monitor {
 		}
 
 		return array(
-		'rows'  => $rows,
-		'total' => $total
+			'rows'  => $rows,
+			'total' => $total,
 		);
 	}
 

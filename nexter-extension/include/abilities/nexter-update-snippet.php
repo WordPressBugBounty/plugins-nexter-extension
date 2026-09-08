@@ -5,6 +5,37 @@
 
 declare(strict_types=1);
 
+if ( ! function_exists( 'nexter_snippet_map_location' ) ) {
+	/**
+	 * Translate a documented location name into the one the runtime recognises.
+	 *
+	 * Values this API documents (front-end, header-css, header-js, ...) are all rejected by
+	 * Nexter_Global_Code_Handler::is_global_location(), so without this a snippet created here
+	 * saved correctly and then never executed.
+	 *
+	 * @param string $location Incoming location.
+	 * @return string
+	 */
+	function nexter_snippet_map_location( $location ) {
+		$map = array(
+			'front-end'    => 'frontend_only',
+			'admin'        => 'admin_only',
+			'global'       => 'run_everywhere',
+			'wp_head'      => 'site_header',
+			'wp_body_open' => 'site_body',
+			'wp_footer'    => 'site_footer',
+			'header-css'   => 'site_header',
+			'footer-css'   => 'site_footer',
+			'header-js'    => 'site_header',
+			'footer-js'    => 'site_footer',
+			'header-html'  => 'site_header',
+			'footer-html'  => 'site_footer',
+		);
+
+		return isset( $map[ $location ] ) ? $map[ $location ] : (string) $location;
+	}
+}
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit();
 }
@@ -189,7 +220,7 @@ function nexter_mcp_update_snippet(array $input): array {
 		'status'             => isset( $cond['status'] ) ? (int)$cond['status'] : 0,
 		'priority'           => isset( $input['priority'] ) ? (int)$input['priority'] : (isset( $cond['priority'] ) ? (int)$cond['priority'] : 10),
 		'insertion'          => isset( $input['insertion'] ) ? sanitize_text_field( $input['insertion'] ) : ($cond['insertion'] ?? 'auto'),
-		'location'           => isset( $input['location'] ) ? sanitize_text_field( $input['location'] ) : ($cond['location'] ?? ''),
+		'location'           => nexter_snippet_map_location( isset( $input['location'] ) ? sanitize_text_field( $input['location'] ) : ( $cond['location'] ?? '' ) ),
 		'code-execute'       => isset( $input['code_execute'] ) ? sanitize_text_field( $input['code_execute'] ) : ($cond['code-execute'] ?? 'global'),
 		'css_selector'       => $cond['css_selector'] ?? '',
 		'element_index'      => isset( $cond['element_index'] ) ? (int)$cond['element_index'] : 0,

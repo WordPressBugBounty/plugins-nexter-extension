@@ -459,10 +459,10 @@ class Nexter_Content_SEO_Robots {
 	/**
 	 * Get directive for singular post: saved post meta first, then global (homepage flags on front page, else per post type).
 	 *
-	 * @param int         $post_id       Post ID.
-	 * @param string      $meta_key      Post meta key (e.g. self::META_NOINDEX).
-	 * @param string      $opt_key       Option key (e.g. noindex_post_types).
-	 * @param string      $post_type     Post type slug.
+	 * @param int    $post_id       Post ID.
+	 * @param string $meta_key      Post meta key (e.g. self::META_NOINDEX).
+	 * @param string $opt_key       Option key (e.g. noindex_post_types).
+	 * @param string $post_type     Post type slug.
 	 * @return bool
 	 */
 	private static function get_singular_directive( $post_id, $meta_key, $opt_key, $post_type ) {

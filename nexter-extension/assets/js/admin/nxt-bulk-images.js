@@ -582,6 +582,15 @@
 
     },
 
+    // The translated string uses positional placeholders (%1$d), which a bare /%d/ never matched.
+    formatCount: function (tpl, done, total) {
+      return String(tpl)
+        .replace(/%1\$d/g, done)
+        .replace(/%2\$d/g, total)
+        .replace(/%d/, done)
+        .replace(/%d/, total);
+    },
+
     updateProgress: function (onprogress = false) {
       var total = this.queue.length;
       var doneCount = this.queue.filter(function (q) {
@@ -597,20 +606,19 @@
       $bar.css("width", pct + "%");
       $wrap.toggleClass("nxt-bulk-progress-complete", pct >= 100);
       $("#nxt-progress-percentage").text(pct + "%");
-      if(onprogress) {
-        var progText = (
-        "Keep this tab open to continue image optimisation, or enable Background Optimisation to run automatically." || nxtBulkImages.i18n.imagesOptimized || "%d of %d images optimised"
-        )
-          .replace(/%d/, done)
-          .replace(/%d/, total);
-        $("#nxt-progress-text").text(progText);
+      if (onprogress) {
+        $("#nxt-progress-text").text(
+          nxtBulkImages.i18n.keepTabOpen ||
+            "Keep this tab open to continue image optimisation, or enable Background Optimisation to run automatically."
+        );
       } else {
-        var progText = (
-          nxtBulkImages.i18n.imagesOptimized || "%d of %d images optimised"
-        )
-          .replace(/%d/, done)
-          .replace(/%d/, total);
-        $("#nxt-progress-text").text(progText);
+        $("#nxt-progress-text").text(
+          this.formatCount(
+            nxtBulkImages.i18n.imagesOptimized || "%d of %d images optimised",
+            done,
+            total
+          )
+        );
       }
       var itemsLeft = this.queue.filter(function (q) {
         return q.status === "pending";
@@ -843,51 +851,66 @@
       self.updateQueueItemToProcessing($el, next);
       self.simulateProgress($el);
 
-      self.currentXhr = $.post(nxtBulkImages.ajaxUrl, {
-        action: "nxt_ext_image_convert_attachment",
-        nonce: nxtBulkImages.convertNonce,
-        attachment_id: next.id,
-      })
-        .done(function (r) {
-          if (r && r.success) {
-            next.status = "done";
-            next.optimized_size = r.data && r.data.optimized_size;
-            next.saved_pct = r.data && r.data.saved_percent;
-            self.updateQueueItemToDone($el, next);
-            self.processedCount++;
-            self.sessionProcessed++;
-            if (r.data && r.data.stats) {
-              self.stats = r.data.stats;
-              self.totalSavings = 0;
-            } else {
-              self.totalSavings +=
-                (next.original_size || 0) -
-                ((r.data && r.data.optimized_size) || 0);
+      // The server converts one slice per request; keep going until it reports done.
+      var runSlice = function (offset) {
+        self.currentXhr = $.post(nxtBulkImages.ajaxUrl, {
+          action: "nxt_ext_image_convert_attachment",
+          nonce: nxtBulkImages.convertNonce,
+          attachment_id: next.id,
+          offset: offset,
+        })
+          .done(function (r) {
+            // Not the last slice: same image continues, so do not mark it done.
+            if (r && r.success && r.data && !r.data.done) {
+              runSlice(r.data.offset);
+              return;
             }
-            self.updateStats();
-          } else {
+            if (r && r.success) {
+              next.status = "done";
+              next.optimized_size = r.data && r.data.optimized_size;
+              next.saved_pct = r.data && r.data.saved_percent;
+              self.updateQueueItemToDone($el, next);
+              self.processedCount++;
+              self.sessionProcessed++;
+              if (r.data && r.data.stats) {
+                self.stats = r.data.stats;
+                self.totalSavings = 0;
+              } else {
+                self.totalSavings +=
+                  (next.original_size || 0) -
+                  ((r.data && r.data.optimized_size) || 0);
+              }
+              self.updateStats();
+            } else {
+              next.status = "failed";
+              next.fail_reason = (r.data && r.data.message) || r.message || "";
+              self.updateQueueItemToFailed($el, next);
+              self.failedCount++;
+            }
+          })
+          .fail(function (xhr) {
             next.status = "failed";
-            next.fail_reason = (r.data && r.data.message) || r.message || "";
+            var msg = (xhr.responseJSON && xhr.responseJSON.data && xhr.responseJSON.data.message) || (xhr.responseJSON && xhr.responseJSON.message) || (xhr.statusText || "Request failed");
+            next.fail_reason = typeof msg === "string" ? msg : "Request failed";
             self.updateQueueItemToFailed($el, next);
             self.failedCount++;
-          }
-        })
-        .fail(function (xhr) {
-          next.status = "failed";
-          var msg = (xhr.responseJSON && xhr.responseJSON.data && xhr.responseJSON.data.message) || (xhr.responseJSON && xhr.responseJSON.message) || (xhr.statusText || "Request failed");
-          next.fail_reason = typeof msg === "string" ? msg : "Request failed";
-          self.updateQueueItemToFailed($el, next);
-          self.failedCount++;
-        })
-        .always(function () {
-          self.currentXhr = null;
-          self.updateProgress(true);
-          self.updateStats();
-          self.updateRetryButton();
-          setTimeout(function () {
-            self.processNext();
-          }, 100);
-        });
+          })
+          .always(function () {
+            // A pending item still has slices left; keep the queue on it.
+            if (next.status === "pending") {
+              return;
+            }
+            self.currentXhr = null;
+            self.updateProgress(true);
+            self.updateStats();
+            self.updateRetryButton();
+            setTimeout(function () {
+              self.processNext();
+            }, 100);
+          });
+      };
+
+      runSlice(0);
     },
 
     finishBulk: function () {

@@ -297,4 +297,3 @@ class Nexter_Content_SEO_Title {
 		return trim( (string) $title );
 	}
 }
-

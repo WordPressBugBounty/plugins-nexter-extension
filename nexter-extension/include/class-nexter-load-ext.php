@@ -38,6 +38,8 @@ if ( ! class_exists( 'Nexter_Extensions_Load' ) ) {
 		public function __construct() {
 			$this->maybe_migrate_builder_cache_autoload();
 			$this->maybe_migrate_builder_cache_split();
+			$this->maybe_migrate_guard_bundled_snippets();
+			$this->maybe_cleanup_snippet_preguard_backups();
 			add_action( 'after_setup_theme', [ $this, 'nexter_builder_post_type' ] );
 			
 			$this->include_custom_options();
@@ -193,6 +195,195 @@ if ( ! class_exists( 'Nexter_Extensions_Load' ) ) {
 		 *
 		 * @return void
 		 */
+		/**
+		 * One-time migration: guard the two bundled snippets that declare a global PHP symbol.
+		 *
+		 * Sites seeded before 4.7.9 carry "Customize Login Logo Link URL" and "Limit Post
+		 * Revisions to Optimize Database" on disk with a bare `function` / `define()`. A second
+		 * copy of either — from a re-import, a staging clone or template reuse — is a site-wide
+		 * fatal that also takes down wp-login.php. The seeder now emits guarded code, but that
+		 * only helps new installs, so rewrite the copies already on disk.
+		 *
+		 * Deliberately narrow: it rewrites only the two shipped payload shapes, only in the code
+		 * body (never the doc block), and only when the declaration is not already guarded. A
+		 * snippet the user has edited will not match and is left alone — skipping is the safe
+		 * failure, since the worst case is the status quo.
+		 *
+		 * Disabled copies are rewritten too: a draft duplicate is one toggle from the same crash.
+		 *
+		 * @since 4.7.9
+		 * @return void
+		 */
+		/**
+		 * One-time cleanup: remove the *.preguard.bak copies the guard migration left behind.
+		 *
+		 * The guard migration keeps the original of every snippet file it rewrites, so a bad
+		 * rewrite can be undone by hand. Those copies are not meant to live in the snippet
+		 * directory forever.
+		 *
+		 * Timing is self-managing rather than hard-coded to a version number: the guard
+		 * migration records the plugin version it ran under, and this only fires once the
+		 * running version differs — i.e. the site has taken at least one update since the
+		 * rewrite, so the guarded snippets have been exercised through a release.
+		 *
+		 * A backup is only removed when its snippet still exists and still looks healthy. If the
+		 * .php is gone, or somehow carries an unguarded declaration again, the backup is the one
+		 * thing worth keeping and is left alone.
+		 *
+		 * @since 4.7.9
+		 * @return void
+		 */
+		private function maybe_cleanup_snippet_preguard_backups() {
+			$cleanup_flag = 'nexter_ext_cleaned_snippet_preguard_backups_v1';
+			if ( get_option( $cleanup_flag ) ) {
+				return;
+			}
+
+			$ran_under = get_option( 'nexter_ext_migrated_snippet_symbol_guards_v1' );
+			if ( empty( $ran_under ) ) {
+				return; // Guard migration has not run yet; nothing of ours to clean up.
+			}
+
+			$current = defined( 'NEXTER_EXT_VER' ) ? NEXTER_EXT_VER : '';
+			if ( '' === $current || (string) $ran_under === (string) $current ) {
+				return; // Same release that wrote them — give the guards a version to prove out.
+			}
+
+			$dir = WP_CONTENT_DIR . '/nexter-snippet-data';
+			if ( ! is_dir( $dir ) ) {
+				update_option( $cleanup_flag, 1, true );
+				return;
+			}
+
+			$backups = glob( $dir . '/*.preguard.bak' );
+			if ( ! is_array( $backups ) ) {
+				update_option( $cleanup_flag, 1, true );
+				return;
+			}
+
+			foreach ( $backups as $backup ) {
+				$snippet = preg_replace( '/\.preguard\.bak$/', '', $backup );
+				if ( ! is_string( $snippet ) || ! is_file( $snippet ) ) {
+					continue; // Snippet gone — keep the only copy of it that is left.
+				}
+
+				$code = file_get_contents( $snippet );
+				if ( ! is_string( $code ) ) {
+					continue;
+				}
+
+				// Same two checks the guard migration uses. If either symbol is declared without
+				// its guard, the rewrite did not hold and the backup still matters.
+				$unguarded_fn = preg_match( '/function\s+custom_login_url\s*\(/', $code )
+					&& ! preg_match( '/function_exists\s*\(\s*[\'"]custom_login_url/', $code );
+				$unguarded_const = preg_match( '/define\s*\(\s*[\'"]WP_POST_REVISIONS/', $code )
+					&& ! preg_match( '/defined\s*\(\s*[\'"]WP_POST_REVISIONS/', $code );
+
+				if ( $unguarded_fn || $unguarded_const ) {
+					continue;
+				}
+
+				if ( is_writable( $backup ) ) {
+					@unlink( $backup );
+				}
+			}
+
+			update_option( $cleanup_flag, 1, true );
+		}
+		private function maybe_migrate_guard_bundled_snippets() {
+			$migration_flag = 'nexter_ext_migrated_snippet_symbol_guards_v1';
+			if ( get_option( $migration_flag ) ) {
+				return;
+			}
+
+			$dir = WP_CONTENT_DIR . '/nexter-snippet-data';
+			if ( ! is_dir( $dir ) || ! is_writable( $dir ) ) {
+				update_option( $migration_flag, defined( 'NEXTER_EXT_VER' ) ? NEXTER_EXT_VER : '1', true );
+				return;
+			}
+
+			$files = glob( $dir . '/*.php' );
+			if ( ! is_array( $files ) ) {
+				update_option( $migration_flag, defined( 'NEXTER_EXT_VER' ) ? NEXTER_EXT_VER : '1', true );
+				return;
+			}
+
+			// The doc block ends with this marker; only the code after it is rewritten.
+			$marker  = '// <Internal End> ?>';
+			$changed = 0;
+
+			foreach ( $files as $file ) {
+				if ( 'nxt-snippet-list.php' === basename( $file ) || ! is_writable( $file ) ) {
+					continue;
+				}
+
+				$content = file_get_contents( $file );
+				if ( ! is_string( $content ) || '' === $content ) {
+					continue;
+				}
+
+				$split = strpos( $content, $marker );
+				if ( false === $split ) {
+					continue;
+				}
+				$split += strlen( $marker );
+				$head   = substr( $content, 0, $split );
+				$code   = substr( $content, $split );
+				$before = $code;
+
+				// "Customize Login Logo Link URL" — a redeclared function is the fatal one.
+				// The brace-free body requirement means an edited snippet simply will not match.
+				if ( ! preg_match( '/function_exists\s*\(\s*[\'"]custom_login_url/', $code ) ) {
+					$code = preg_replace(
+						'/(function\s+custom_login_url\s*\(\s*\)\s*\{[^{}]*\})/',
+						"if ( ! function_exists( 'custom_login_url' ) ) {\n$1\n}",
+						$code,
+						1
+					);
+				}
+
+				// "Limit Post Revisions" — a redeclared constant is a warning, not a fatal, but it
+				// fires on every request and the guard is the same one line.
+				if ( ! preg_match( '/defined\s*\(\s*[\'"]WP_POST_REVISIONS/', $code ) ) {
+					$code = preg_replace(
+						'/(define\s*\(\s*[\'"]WP_POST_REVISIONS[\'"]\s*,\s*[^;)]*\)\s*;)/',
+						"if ( ! defined( 'WP_POST_REVISIONS' ) ) {\n$1\n}",
+						$code,
+						1
+					);
+				}
+
+				if ( ! is_string( $code ) || $code === $before ) {
+					continue;
+				}
+
+				// Keep a copy next to the original. The extension is deliberately not .php so the
+				// index scanner's *.php glob cannot pick it up as another snippet.
+				$backup = $file . '.preguard.bak';
+				if ( ! file_exists( $backup ) ) {
+					@copy( $file, $backup );
+				}
+
+				if ( false !== file_put_contents( $file, $head . $code ) ) {
+					++$changed;
+				}
+			}
+
+			if ( $changed > 0 ) {
+				// The manifest and the per-type caches both describe files that just changed.
+				if ( class_exists( 'Nexter_Code_Snippets_File_Based' ) ) {
+					$file_based = new Nexter_Code_Snippets_File_Based();
+					if ( method_exists( $file_based, 'snippetIndexData' ) ) {
+						$file_based->snippetIndexData( '', true );
+					}
+				}
+				if ( method_exists( 'Nexter_Builder_Code_Snippets_Render', 'flush_file_snippet_caches' ) ) {
+					Nexter_Builder_Code_Snippets_Render::flush_file_snippet_caches();
+				}
+			}
+
+			update_option( $migration_flag, defined( 'NEXTER_EXT_VER' ) ? NEXTER_EXT_VER : '1', true );
+		}
 		private function maybe_migrate_builder_cache_autoload() {
 			$migration_flag = 'nexter_ext_migrated_autoload_nxt_build_get_data';
 			if ( get_option( $migration_flag ) ) {
@@ -564,10 +755,10 @@ if ( ! class_exists( 'Nexter_Extensions_Load' ) ) {
 				}
 				
 				$js_url = NEXTER_EXT_URL .'assets/js/admin/codemirror/';
-				wp_deregister_style( 'wp-codemirror' );
+				// Core's wp-codemirror stays registered: deregistering it makes every
+				// script depending on 'code-editor' silently fail to print.
 				wp_enqueue_style( 'nxt-codemirror', NEXTER_EXT_URL .'assets/css/codemirror/codemirror.min.css', array(), NEXTER_EXT_VER );
 				//Main
-				wp_deregister_script( 'wp-codemirror' );
 				wp_enqueue_script( 'nxt-codemirror', $js_url.'codemirror.min.js', [], NEXTER_EXT_VER, true );
 				
 				//Mode

@@ -241,11 +241,11 @@ class Nexter_Content_SEO_Settings {
 		// Use a recent post for more realistic preview when available.
 		$sample = get_posts(
 			array(
-			'post_type'      => 'post',
-			'post_status'    => 'publish',
-			'posts_per_page' => 1,
-			'orderby'        => 'date',
-			) 
+				'post_type'      => 'post',
+				'post_status'    => 'publish',
+				'posts_per_page' => 1,
+				'orderby'        => 'date',
+			)
 		);
 		if ( ! empty( $sample[0] ) ) {
 			$post                       = $sample[0];
@@ -280,14 +280,14 @@ class Nexter_Content_SEO_Settings {
 			$data['%wc_stock_status%']      = __( 'In stock', 'nexter-extension' );
 			$sample_product                 = get_posts(
 				array(
-				'post_type'      => 'product',
-				'post_status'    => 'publish',
-				'posts_per_page' => 1,
-				'orderby'        => 'date',
-				) 
+					'post_type'      => 'product',
+					'post_status'    => 'publish',
+					'posts_per_page' => 1,
+					'orderby'        => 'date',
+				)
 			);
 			if ( ! empty( $sample_product[0] ) ) {
-				$p  = $sample_product[0];
+				$p = $sample_product[0];
 				// Product tokens only — same reason as replace_variables() above: the full
 				// get_replacements() set resolves the document title and archive URLs we don't need.
 				$sr = Nexter_Content_SEO_Schema::get_woocommerce_product_replacements( $p );

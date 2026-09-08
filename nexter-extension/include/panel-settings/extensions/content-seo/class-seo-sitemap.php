@@ -534,9 +534,9 @@ class Nexter_Content_SEO_Sitemap {
 			}
 			$c = wp_count_terms(
 				array(
-				'taxonomy'   => $slug,
-				'hide_empty' => true
-				) 
+					'taxonomy'   => $slug,
+					'hide_empty' => true,
+				)
 			);
 			return ! is_wp_error( $c ) && (int) $c > 0;
 		}
@@ -580,9 +580,9 @@ class Nexter_Content_SEO_Sitemap {
 			}
 			$c      = wp_count_terms(
 				array(
-				'taxonomy'   => $tax,
-				'hide_empty' => true
-				) 
+					'taxonomy'   => $tax,
+					'hide_empty' => true,
+				)
 			);
 			$total += is_wp_error( $c ) ? 0 : (int) $c;
 		}
@@ -626,9 +626,9 @@ class Nexter_Content_SEO_Sitemap {
 			}
 			$c = wp_count_terms(
 				array(
-				'taxonomy'   => $tax,
-				'hide_empty' => true
-				) 
+					'taxonomy'   => $tax,
+					'hide_empty' => true,
+				)
 			);
 			$c = is_wp_error( $c ) ? 0 : (int) $c;
 			if ( $c < 1 ) {
@@ -757,17 +757,17 @@ class Nexter_Content_SEO_Sitemap {
 			while ( true ) {
 				$posts = get_posts(
 					array(
-					'post_type'              => $pt,
-					'post_status'            => 'publish',
-					'posts_per_page'         => $batch_size,
-					'paged'                  => $page,
-					'orderby'                => 'modified',
-					'order'                  => 'DESC',
-					'no_found_rows'          => true,
-					'has_password'           => false,
-					'update_post_meta_cache' => false,
-					'update_post_term_cache' => false,
-					) 
+						'post_type'              => $pt,
+						'post_status'            => 'publish',
+						'posts_per_page'         => $batch_size,
+						'paged'                  => $page,
+						'orderby'                => 'modified',
+						'order'                  => 'DESC',
+						'no_found_rows'          => true,
+						'has_password'           => false,
+						'update_post_meta_cache' => false,
+						'update_post_term_cache' => false,
+					)
 				);
 
 				if ( empty( $posts ) ) {
@@ -799,9 +799,9 @@ class Nexter_Content_SEO_Sitemap {
 			}
 			$terms = get_terms(
 				array(
-				'taxonomy'   => $tax,
-				'hide_empty' => true
-				) 
+					'taxonomy'   => $tax,
+					'hide_empty' => true,
+				)
 			);
 			if ( is_wp_error( $terms ) ) {
 				continue;
@@ -871,17 +871,17 @@ class Nexter_Content_SEO_Sitemap {
 			}
 			$posts = get_posts(
 				array(
-				'post_type'              => $slug,
-				'post_status'            => 'publish',
-				'posts_per_page'         => $limit,
-				'offset'                 => max( 0, (int) $offset ),
-				'orderby'                => 'modified',
-				'order'                  => 'DESC',
-				'no_found_rows'          => true,
-				'has_password'           => false,
-				'update_post_meta_cache' => false,
-				'update_post_term_cache' => false,
-				) 
+					'post_type'              => $slug,
+					'post_status'            => 'publish',
+					'posts_per_page'         => $limit,
+					'offset'                 => max( 0, (int) $offset ),
+					'orderby'                => 'modified',
+					'order'                  => 'DESC',
+					'no_found_rows'          => true,
+					'has_password'           => false,
+					'update_post_meta_cache' => false,
+					'update_post_term_cache' => false,
+				)
 			);
 			foreach ( $posts as $post ) {
 				if ( 'publish' !== $post->post_status || self::is_post_excluded_from_sitemap( $post, $options ) ) {
@@ -899,11 +899,11 @@ class Nexter_Content_SEO_Sitemap {
 		} elseif ( 'tax' === $kind && taxonomy_exists( $slug ) && ! in_array( $slug, self::excluded_taxonomies( $options ), true ) ) {
 			$terms = get_terms(
 				array(
-				'taxonomy'   => $slug,
-				'hide_empty' => true,
-				'number'     => $per,
-				'offset'     => ( $page - 1 ) * $per,
-				) 
+					'taxonomy'   => $slug,
+					'hide_empty' => true,
+					'number'     => $per,
+					'offset'     => ( $page - 1 ) * $per,
+				)
 			);
 			if ( ! is_wp_error( $terms ) ) {
 				foreach ( $terms as $term ) {
@@ -990,41 +990,41 @@ class Nexter_Content_SEO_Sitemap {
 		$deny_slugs    = array(
 			// Elementor.
 			'elementor_library',
-		'e-landing-page',
-		'elementor_font',
-		'elementor_icons',
-		'e-floating-buttons',
+			'e-landing-page',
+			'elementor_font',
+			'elementor_icons',
+			'e-floating-buttons',
 			// Nexter.
 			'nxt_builder',
-		'nexter_builder',
+			'nexter_builder',
 			// Themes / other builders.
 			'oceanwp_library',
-		'ct_template',
-		'fl-builder-template',
-		'fl-theme-layout',
+			'ct_template',
+			'fl-builder-template',
+			'fl-theme-layout',
 			'fusion_template',
-		'fusion_element',
-		'fusion_tb_section',
+			'fusion_element',
+			'fusion_tb_section',
 			'brizy_template',
-		'brizy-global-blocks',
-		'cornerstone',
+			'brizy-global-blocks',
+			'cornerstone',
 			// JetEngine utility (not user CPTs).
 			'jet-menu',
-		'jet-popup',
-		'jet-woo-builder',
-		'jet-theme-core',
-		'jet-smart-filters',
-		'jet-engine',
+			'jet-popup',
+			'jet-woo-builder',
+			'jet-theme-core',
+			'jet-smart-filters',
+			'jet-engine',
 			// WordPress FSE / system.
 			'wp_template',
-		'wp_template_part',
-		'wp_global_styles',
-		'wp_navigation',
-		'wp_block',
+			'wp_template_part',
+			'wp_global_styles',
+			'wp_navigation',
+			'wp_block',
 			'custom_css',
-		'customize_changeset',
-		'oembed_cache',
-		'user_request',
+			'customize_changeset',
+			'oembed_cache',
+			'user_request',
 		);
 		$deny_prefixes = array( 'theplus_', 'tve_' );
 
@@ -1171,18 +1171,18 @@ class Nexter_Content_SEO_Sitemap {
 		$cutoff = gmdate( 'Y-m-d H:i:s', strtotime( '-48 hours' ) );
 		$posts  = get_posts(
 			array(
-			'post_type'      => 'post',
-			'post_status'    => 'publish',
-			'posts_per_page' => 1000,
-			'date_query'     => array(
-				array(
-					'after'     => $cutoff,
-					'inclusive' => true,
+				'post_type'      => 'post',
+				'post_status'    => 'publish',
+				'posts_per_page' => 1000,
+				'date_query'     => array(
+					array(
+						'after'     => $cutoff,
+						'inclusive' => true,
+					),
 				),
-			 ),
-			 'orderby'       => 'date',
-			 'order'         => 'DESC',
-			) 
+				'orderby'        => 'date',
+				'order'          => 'DESC',
+			)
 		);
 
 		// Google News requires a non-empty publication name. Fall back to the site host when the
@@ -1296,15 +1296,15 @@ class Nexter_Content_SEO_Sitemap {
 
 		<?php
 		$builtin    = array(
-		'page' => get_post_type_object( 'page' ),
-		'post' => get_post_type_object( 'post' )
+			'page' => get_post_type_object( 'page' ),
+			'post' => get_post_type_object( 'post' ),
 		);
 		$custom     = get_post_types(
 			array(
-			'public'   => true,
-			'_builtin' => false
+				'public'   => true,
+				'_builtin' => false,
 			),
-			'objects' 
+			'objects'
 		);
 		$post_types = array_filter( array_merge( $builtin, $custom ) );
 		foreach ( $post_types as $pt ) {
@@ -1313,12 +1313,12 @@ class Nexter_Content_SEO_Sitemap {
 			}
 			$posts = get_posts(
 				array(
-				'post_type'      => $pt->name,
-				'post_status'    => 'publish',
-				'posts_per_page' => 500,
-				'orderby'        => 'title',
-				'order'          => 'ASC',
-				) 
+					'post_type'      => $pt->name,
+					'post_status'    => 'publish',
+					'posts_per_page' => 500,
+					'orderby'        => 'title',
+					'order'          => 'ASC',
+				)
 			);
 			if ( empty( $posts ) ) {
 				continue;
@@ -1343,9 +1343,9 @@ class Nexter_Content_SEO_Sitemap {
 			}
 			$terms = get_terms(
 				array(
-				'taxonomy'   => $tax->name,
-				'hide_empty' => true
-				) 
+					'taxonomy'   => $tax->name,
+					'hide_empty' => true,
+				)
 			);
 			if ( is_wp_error( $terms ) || empty( $terms ) ) {
 				continue;
@@ -1384,15 +1384,15 @@ class Nexter_Content_SEO_Sitemap {
 		echo '<ul><li><a href="' . esc_url( home_url( '/' ) ) . '">' . esc_html( $site_name ) . '</a></li></ul>';
 
 		$builtin    = array(
-		'page' => get_post_type_object( 'page' ),
-		'post' => get_post_type_object( 'post' )
+			'page' => get_post_type_object( 'page' ),
+			'post' => get_post_type_object( 'post' ),
 		);
 		$custom     = get_post_types(
 			array(
-			'public'   => true,
-			'_builtin' => false
+				'public'   => true,
+				'_builtin' => false,
 			),
-			'objects' 
+			'objects'
 		);
 		$post_types = array_filter( array_merge( $builtin, $custom ) );
 		foreach ( $post_types as $pt ) {
@@ -1401,12 +1401,12 @@ class Nexter_Content_SEO_Sitemap {
 			}
 			$posts = get_posts(
 				array(
-				'post_type'      => $pt->name,
-				'post_status'    => 'publish',
-				'posts_per_page' => 500,
-				'orderby'        => 'title',
-				'order'          => 'ASC',
-				) 
+					'post_type'      => $pt->name,
+					'post_status'    => 'publish',
+					'posts_per_page' => 500,
+					'orderby'        => 'title',
+					'order'          => 'ASC',
+				)
 			);
 			if ( empty( $posts ) ) {
 				continue;
@@ -1428,9 +1428,9 @@ class Nexter_Content_SEO_Sitemap {
 			}
 			$terms = get_terms(
 				array(
-				'taxonomy'   => $tax->name,
-				'hide_empty' => true
-				) 
+					'taxonomy'   => $tax->name,
+					'hide_empty' => true,
+				)
 			);
 			if ( is_wp_error( $terms ) || empty( $terms ) ) {
 				continue;
@@ -1822,8 +1822,8 @@ class Nexter_Content_SEO_Sitemap {
 			if ( $thumb_url && ! isset( $seen[ $thumb_url ] ) ) {
 				$seen[ $thumb_url ] = true;
 				$images[]           = array(
-				'url'   => $thumb_url,
-				'title' => get_the_title( $thumb_id )
+					'url'   => $thumb_url,
+					'title' => get_the_title( $thumb_id ),
 				);
 			}
 		}
@@ -1848,8 +1848,8 @@ class Nexter_Content_SEO_Sitemap {
 				if ( ! isset( $seen[ $url ] ) ) {
 					$seen[ $url ] = true;
 					$images[]     = array(
-					'url'   => $url,
-					'title' => ''
+						'url'   => $url,
+						'title' => '',
 					);
 				}
 			}
@@ -1984,17 +1984,17 @@ class Nexter_Content_SEO_Sitemap {
 				array_map(
 					'absint',
 					array(
-					(int) get_option( 'woocommerce_cart_page_id' ),
-					(int) get_option( 'woocommerce_checkout_page_id' ),
-					(int) get_option( 'woocommerce_myaccount_page_id' ),
-					(int) get_option( 'woocommerce_terms_page_id' ),
-					(int) get_option( 'woocommerce_pay_page_id' ),
-					(int) get_option( 'woocommerce_thanks_page_id' ),
-					(int) get_option( 'woocommerce_view_order_page_id' ),
-					(int) get_option( 'woocommerce_edit_address_page_id' ),
-					(int) get_option( 'woocommerce_lost_password_page_id' ),
-					) 
-				) 
+						(int) get_option( 'woocommerce_cart_page_id' ),
+						(int) get_option( 'woocommerce_checkout_page_id' ),
+						(int) get_option( 'woocommerce_myaccount_page_id' ),
+						(int) get_option( 'woocommerce_terms_page_id' ),
+						(int) get_option( 'woocommerce_pay_page_id' ),
+						(int) get_option( 'woocommerce_thanks_page_id' ),
+						(int) get_option( 'woocommerce_view_order_page_id' ),
+						(int) get_option( 'woocommerce_edit_address_page_id' ),
+						(int) get_option( 'woocommerce_lost_password_page_id' ),
+					)
+				)
 			);
 		}
 		return in_array( (int) $post_id, $ids, true );
@@ -2077,11 +2077,11 @@ class Nexter_Content_SEO_Sitemap {
 		flush_rewrite_rules();
 		return rest_ensure_response(
 			array(
-			'data' => array(
-				'success'     => true,
-				'sitemap_url' => self::get_sitemap_url(),
-			 ),
-			) 
+				'data' => array(
+					'success'     => true,
+					'sitemap_url' => self::get_sitemap_url(),
+				),
+			)
 		);
 	}
 }

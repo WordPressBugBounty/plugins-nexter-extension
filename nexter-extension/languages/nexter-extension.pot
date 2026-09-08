@@ -2,14 +2,14 @@
 # This file is distributed under the GPLv3.
 msgid ""
 msgstr ""
-"Project-Id-Version: Nexter Extension 4.7.8\n"
+"Project-Id-Version: Nexter Extension 4.7.9\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/nexter-extension\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-08-20T10:43:28+02:00\n"
+"POT-Creation-Date: 2026-09-07T11:18:26+02:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: nexter-extension\n"
@@ -84,11 +84,11 @@ msgstr ""
 msgid "Restores all images that were optimized by Nexter back to their original files from backup, and clears optimization metadata."
 msgstr ""
 
-#: include/abilities/nexter-create-snippet.php:15
+#: include/abilities/nexter-create-snippet.php:46
 msgid "Create Code Snippet"
 msgstr ""
 
-#: include/abilities/nexter-create-snippet.php:16
+#: include/abilities/nexter-create-snippet.php:47
 msgid "Creates a new Nexter Extension code snippet. Supports PHP, CSS, JavaScript, and HTML snippet types with configurable insertion locations, conditions, scheduling, and display rules."
 msgstr ""
 
@@ -260,11 +260,11 @@ msgstr ""
 msgid "Enables or disables a Nexter Theme Builder template. Can explicitly set active/inactive or toggle current state."
 msgstr ""
 
-#: include/abilities/nexter-update-snippet.php:15
+#: include/abilities/nexter-update-snippet.php:46
 msgid "Update Code Snippet"
 msgstr ""
 
-#: include/abilities/nexter-update-snippet.php:16
+#: include/abilities/nexter-update-snippet.php:47
 msgid "Updates an existing Nexter Extension code snippet. You can update the code, name, description, tags, type, location, conditions, and all other settings. Only provided fields are updated — omitted fields keep their current values."
 msgstr ""
 
@@ -276,7 +276,7 @@ msgstr ""
 msgid "Updates an existing Nexter Theme Builder template settings including title, display rules, and type-specific options. Only provided fields are updated."
 msgstr ""
 
-#: include/class-nexter-load-ext.php:294
+#: include/class-nexter-load-ext.php:485
 #: assets/js/admin/index.js:1
 #: content-seo/build/index.js:1
 #: dashboard/build/index.js:1
@@ -284,64 +284,64 @@ msgstr ""
 msgid "Settings"
 msgstr ""
 
-#: include/class-nexter-load-ext.php:298
+#: include/class-nexter-load-ext.php:489
 #: dashboard/build/index.js:10
 msgid "Need Help?"
 msgstr ""
 
-#: include/class-nexter-load-ext.php:306
+#: include/class-nexter-load-ext.php:497
 #: assets/js/admin/index.js:1
 msgid "Upgrade PRO"
 msgstr ""
 
-#: include/class-nexter-load-ext.php:323
+#: include/class-nexter-load-ext.php:514
 msgid "Official Site"
 msgstr ""
 
-#: include/class-nexter-load-ext.php:324
+#: include/class-nexter-load-ext.php:515
 msgid "Docs"
 msgstr ""
 
-#: include/class-nexter-load-ext.php:325
+#: include/class-nexter-load-ext.php:516
 #: dashboard/build/index.js:3
 msgid "Join Community"
 msgstr ""
 
-#: include/class-nexter-load-ext.php:326
+#: include/class-nexter-load-ext.php:517
 #: dashboard/build/index.js:3
 msgid "What's New?"
 msgstr ""
 
-#: include/class-nexter-load-ext.php:327
+#: include/class-nexter-load-ext.php:518
 #: dashboard/build/index.js:3
 msgid "Request Feature"
 msgstr ""
 
-#: include/class-nexter-load-ext.php:328
+#: include/class-nexter-load-ext.php:519
 msgid "Rate Plugin"
 msgstr ""
 
-#: include/class-nexter-load-ext.php:560
+#: include/class-nexter-load-ext.php:751
 msgid "Edit Condition"
 msgstr ""
 
-#: include/class-nexter-load-ext.php:746
+#: include/class-nexter-load-ext.php:937
 msgid "Upgrade to Nexter Pro to Unlock 1000+ Templates, 90+ Blocks & 50+ Extensions"
 msgstr ""
 
-#: include/class-nexter-load-ext.php:747
+#: include/class-nexter-load-ext.php:938
 msgid "A single suite to design faster, reduce plugins, and keep your site lightweight."
 msgstr ""
 
-#: include/class-nexter-load-ext.php:749
+#: include/class-nexter-load-ext.php:940
 msgid "Replace 50+ WordPress Plugins with Nexter Extension Pro"
 msgstr ""
 
-#: include/class-nexter-load-ext.php:750
+#: include/class-nexter-load-ext.php:941
 msgid "Nexter Extension free options cover the basics, but Pro takes it further with features like Login Protection, 2-Factor Authentication, Branded WP Admin & More."
 msgstr ""
 
-#: include/class-nexter-load-ext.php:759
+#: include/class-nexter-load-ext.php:950
 #: assets/js/admin/index.js:7
 #: dashboard/build/index.js:1
 #: dashboard/build/index.js:6
@@ -350,16 +350,16 @@ msgstr ""
 msgid "Upgrade Now"
 msgstr ""
 
-#: include/class-nexter-load-ext.php:760
+#: include/class-nexter-load-ext.php:951
 msgid "Compare Free vs Pro"
 msgstr ""
 
-#: include/class-nexter-load-ext.php:776
+#: include/class-nexter-load-ext.php:967
 msgid "To continue using all latest features smoothly, please update Nexter Blocks to version 4.6.0 or higher."
 msgstr ""
 
-#: include/class-nexter-load-ext.php:791
-#: include/class-nexter-load-ext.php:806
+#: include/class-nexter-load-ext.php:982
+#: include/class-nexter-load-ext.php:997
 #: include/classes/load-code-snippet/nexter-code-snippet-render.php:840
 #: include/classes/load-code-snippet/nexter-code-snippet-render.php:900
 #: include/classes/load-code-snippet/nexter-code-snippet-render.php:951
@@ -367,10 +367,10 @@ msgstr ""
 #: include/classes/load-code-snippet/nexter-code-snippet-render.php:1615
 #: include/classes/load-code-snippet/nexter-code-snippet-render.php:1955
 #: include/classes/load-code-snippet/nexter-code-snippet-render.php:2001
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2234
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2384
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2462
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2559
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2294
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2444
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2522
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2619
 #: include/custom-options/class-nxt-builder-condition-ui.php:52
 #: include/custom-options/class-nxt-builder-condition-ui.php:283
 #: include/custom-options/class-nxt-builder-condition-ui.php:410
@@ -401,7 +401,7 @@ msgstr ""
 msgid "Insufficient permissions."
 msgstr ""
 
-#: include/class-nexter-load-ext.php:801
+#: include/class-nexter-load-ext.php:992
 #: include/classes/class-nxt-ajax-guard.php:44
 #: include/panel-settings/class-nxt-panel-ajax-router.php:1386
 #: include/panel-settings/extensions/nexter-ext-rollback-manager.php:364
@@ -409,73 +409,73 @@ msgstr ""
 msgid "Security check failed."
 msgstr ""
 
-#: include/class-nexter-load-ext.php:844
+#: include/class-nexter-load-ext.php:1035
 msgid "Invalid notice ID."
 msgstr ""
 
-#: include/class-nexter-load-ext.php:847
+#: include/class-nexter-load-ext.php:1038
 msgid "Invalid Notice ID"
 msgstr ""
 
-#: include/class-nexter-load-ext.php:931
+#: include/class-nexter-load-ext.php:1122
 #: theme-builder/build/index.js:1
 msgid "Activate WDesignKit to Import Templates"
 msgstr ""
 
-#: include/class-nexter-load-ext.php:932
+#: include/class-nexter-load-ext.php:1123
 #: theme-builder/build/index.js:1
 msgid "Install WDesignKit to Import Templates"
 msgstr ""
 
-#: include/class-nexter-load-ext.php:933
+#: include/class-nexter-load-ext.php:1124
 #: assets/js/admin/index.js:1
 #: theme-builder/build/index.js:1
 msgid "Activating WDesignKit"
 msgstr ""
 
-#: include/class-nexter-load-ext.php:934
+#: include/class-nexter-load-ext.php:1125
 #: assets/js/admin/index.js:1
 #: dashboard/build/index.js:10
 msgid "Installing WDesignKit"
 msgstr ""
 
-#: include/class-nexter-load-ext.php:935
+#: include/class-nexter-load-ext.php:1126
 msgid "Failed to Install, Please Manual Install Plugin."
 msgstr ""
 
-#: include/class-nexter-load-ext.php:936
+#: include/class-nexter-load-ext.php:1127
 #: theme-builder/build/index.js:1
 msgid "Import Pre-Designed Templates for Theme Builder"
 msgstr ""
 
-#: include/class-nexter-load-ext.php:937
+#: include/class-nexter-load-ext.php:1128
 #: theme-builder/build/index.js:1
 msgid "Build your website faster with ready-to-use templates"
 msgstr ""
 
-#: include/class-nexter-load-ext.php:938
+#: include/class-nexter-load-ext.php:1129
 #: theme-builder/build/index.js:1
 msgid "Fully customizable to match your brand and style"
 msgstr ""
 
-#: include/class-nexter-load-ext.php:939
+#: include/class-nexter-load-ext.php:1130
 #: theme-builder/build/index.js:1
 msgid "Save time by avoiding repetitive design work"
 msgstr ""
 
-#: include/class-nexter-load-ext.php:940
+#: include/class-nexter-load-ext.php:1131
 #: theme-builder/build/index.js:1
 msgid "Flexible layouts for headers, footers, pages, and more"
 msgstr ""
 
-#: include/class-nexter-load-ext.php:941
+#: include/class-nexter-load-ext.php:1132
 msgid "Design from Scratch"
 msgstr ""
 
 #: include/classes/class-nexter-ext-base.php:110
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:468
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1656
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1808
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:469
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1741
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1904
 msgid "Permission denied."
 msgstr ""
 
@@ -507,9 +507,9 @@ msgstr ""
 
 #: include/classes/load-code-snippet/nexter-code-snippet-render.php:1165
 #: include/classes/load-code-snippet/nexter-code-snippet-render.php:1610
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2156
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2229
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2457
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2202
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2289
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2517
 msgid "File-based snippets require write access. This environment restricts file creation."
 msgstr ""
 
@@ -520,8 +520,8 @@ msgstr ""
 
 #: include/classes/load-code-snippet/nexter-code-snippet-render.php:1196
 #: include/classes/load-code-snippet/nexter-code-snippet-render.php:1668
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2428
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2506
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2488
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2566
 msgid "Invalid file path detected."
 msgstr ""
 
@@ -564,13 +564,13 @@ msgstr ""
 
 #: include/classes/load-code-snippet/nexter-code-snippet-render.php:1658
 #: include/classes/load-code-snippet/nexter-code-snippet-render.php:2020
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2495
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2555
 msgid "Invalid snippet ID."
 msgstr ""
 
 #: include/classes/load-code-snippet/nexter-code-snippet-render.php:1673
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2440
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2543
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2500
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2603
 msgid "Snippet ID does not exist."
 msgstr ""
 
@@ -579,7 +579,7 @@ msgid "Snippet Updated Successfully."
 msgstr ""
 
 #: include/classes/load-code-snippet/nexter-code-snippet-render.php:1708
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2540
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2600
 msgid "Failed to update snippet file."
 msgstr ""
 
@@ -588,8 +588,8 @@ msgid "File-based storage not available"
 msgstr ""
 
 #: include/classes/load-code-snippet/nexter-code-snippet-render.php:1714
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2444
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2447
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2504
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2507
 msgid "Invalid Snippet ID"
 msgstr ""
 
@@ -597,61 +597,67 @@ msgstr ""
 msgid "No valid snippets found to export."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2161
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2314
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2207
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2374
 msgid "Unknown snippet"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2165
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2211
 msgid "Snippet name is required"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2170
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2216
 msgid "Untitled snippet"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2179
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2225
 msgid "File based storage not available"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2184
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2230
 msgid "Storage directory not available"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2239
+#. translators: %s: snippet name
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2241
+#, php-format
+msgid "\"%s\" already exists - edit the existing snippet instead of importing a second copy."
+msgstr ""
+
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2299
 msgid "No file uploaded or file upload error."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2245
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2305
 msgid "File size exceeds maximum allowed size (10MB)."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2267
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2327
 msgid "Invalid file type. Only JSON files are allowed."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2275
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2335
 msgid "Invalid file upload detected."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2282
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2342
 msgid "Empty or unreadable file."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2288
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2348
 msgid "Invalid snippet file."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2332
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2392
 msgid "No snippets were imported."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2340
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2400
 msgid "Snippet imported successfully."
 msgstr ""
 
 #. translators: %d: Number of snippets imported successfully
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2344
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2404
 #, php-format
 msgid "%d snippet imported successfully."
 msgid_plural "%d snippets imported successfully."
@@ -659,49 +665,49 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: %d: Number of snippets that failed to import
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2355
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2415
 #, php-format
 msgid "%d snippet failed."
 msgid_plural "%d snippets failed."
 msgstr[0] ""
 msgstr[1] ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2398
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2458
 msgid "Snippet deleted successfully"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2400
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2460
 msgid "Failed to delete Snippet"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2403
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2463
 msgid "You do not have permission to delete this snippet"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2406
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2484
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2466
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2544
 msgid "Invalid post or post type"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2413
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2473
 msgid "Invalid snippet ID format."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2438
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2498
 msgid "Snippet deleted successfully."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2480
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2540
 msgid "Updated Status Successfully"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2536
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2596
 msgid "Updated Status Successfully."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2546
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2549
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2633
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2606
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2609
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2693
 msgid "Invalid post ID"
 msgstr ""
 
@@ -1052,7 +1058,7 @@ msgid "Author"
 msgstr ""
 
 #: include/classes/load-sections/nexter-sections-loader.php:155
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:304
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:305
 #: assets/js/admin/index.js:1
 #: theme-builder/build/index.js:1
 msgid "Status"
@@ -1443,12 +1449,12 @@ msgid "Select where you want to load the template"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:352
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2215
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2217
 msgid "Include In"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:358
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2221
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2223
 msgid "Exclude From"
 msgstr ""
 
@@ -1500,7 +1506,7 @@ msgstr ""
 #. translators: %s: Post Label
 #: include/custom-options/class-nxt-builder-condition-ui.php:876
 #: include/custom-options/module/nexter-display-conditional-rules.php:346
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2065
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2067
 #, php-format
 msgid "All %s"
 msgstr ""
@@ -1510,7 +1516,7 @@ msgstr ""
 #: include/custom-options/class-nxt-builder-condition-ui.php:887
 #: include/custom-options/module/nexter-display-conditional-rules.php:350
 #: include/custom-options/module/nexter-display-conditional-rules.php:357
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2067
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2069
 #, php-format
 msgid "All %s Archive"
 msgstr ""
@@ -1783,7 +1789,7 @@ msgid "Select User Roles"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:1111
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2156
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2158
 msgid "Specific Pages/Posts"
 msgstr ""
 
@@ -1833,7 +1839,7 @@ msgid "Visitors Source"
 msgstr ""
 
 #: include/custom-options/module/nexter-display-conditional-rules.php:322
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2073
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2075
 msgid "Particular Posts/Pages/Taxonomies"
 msgstr ""
 
@@ -2933,7 +2939,7 @@ msgstr ""
 
 #: include/panel-settings/class-nxt-dashboard-data.php:95
 #: include/panel-settings/class-nxt-dashboard-data.php:98
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:241
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:242
 #: include/panel-settings/nexter-ext-panel-settings.php:207
 msgid "Nexter"
 msgstr ""
@@ -3111,7 +3117,7 @@ msgid "Forbidden."
 msgstr ""
 
 #: include/panel-settings/extensions/content-seo/audit/class-audit-ajax.php:45
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:1840
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:1845
 msgid "Audit queued in background. Showing last available snapshot until the run completes."
 msgstr ""
 
@@ -3437,301 +3443,305 @@ msgstr ""
 msgid "Adjust your theme or front page content so only one H1 is present."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1088
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1092
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1104
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1147
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1166
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1110
+msgid "an image with no src attribute"
+msgstr ""
+
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1114
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1118
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1130
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1173
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1192
 msgid "Image ALT attributes (homepage as rendered)"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1092
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1118
 msgid "Could not fetch the homepage to scan its rendered images."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1105
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1131
 msgid "No images found in the homepage as it is served (neutral signal)."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1106
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1132
 msgid "If relevant to your content, add meaningful images with descriptive ALT text."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1147
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1173
 msgid "Every image in the homepage as it is served includes an ALT attribute (empty alt=\"\" on decorative images is allowed)."
 msgstr ""
 
 #. translators: %d: count
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1153
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1179
 #, php-format
 msgid "%d image(s) are missing usable ALT text in the homepage as it is served, including header, footer and slider markup."
 msgstr ""
 
 #. translators: %s: comma-separated list of image file names
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1159
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1185
 #, php-format
 msgid "Affected image(s): %s."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1168
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1194
 msgid "Add descriptive ALT attributes for accessibility and image SEO. Purely decorative images (spacers, icons, SVG flourishes) should instead carry alt=\"\", role=\"presentation\" or aria-hidden=\"true\", which this check accepts."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1181
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1186
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1207
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1212
 msgid "Site tagline"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1181
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1207
 msgid "Tagline is set in WordPress settings."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1187
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1213
 msgid "WordPress tagline (blog description) is empty."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1188
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1214
 msgid "Set a short tagline under Settings → General."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1199
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1204
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1225
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1230
 msgid "Search engine visibility"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1199
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1225
 msgid "Site is not set to discourage search engines."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1205
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1231
 msgid "WordPress is configured to discourage search engines from indexing the site."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1206
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1232
 msgid "Uncheck “Discourage search engines…” in Settings → Reading unless you intentionally block indexing."
 msgstr ""
 
 #. translators: %d: number of items analyzed
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1381
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1407
 #, php-format
 msgid "(Analysis limited to the %d most recently modified items.)"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1394
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1415
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1430
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1420
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1441
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1456
 msgid "Duplicate titles"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1394
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1420
 msgid "No published content to analyze for duplicate titles."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1415
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1441
 msgid "All sampled pages render a unique title."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1424
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1450
 msgid "Give each page a unique SEO title (Nexter SEO meta box) or revise duplicated post titles."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1425
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1451
 msgid "Your title template has no per-page token, so every page renders the same title. Add %post_title% (and %term_title% for archives) to the title template under On-Page → Meta Template."
 msgstr ""
 
 #. translators: %d: number of items
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1435
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1461
 #, php-format
 msgid "%d published pages render the same <title> as another page. Duplicate titles confuse search engines and split ranking signals."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1465
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1470
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1491
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1496
 msgid "Duplicate meta descriptions"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1465
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1491
 msgid "No duplicate custom meta descriptions detected."
 msgstr ""
 
 #. translators: %d: number of items
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1475
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1501
 #, php-format
 msgid "%d items share an identical custom meta description."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1479
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1505
 msgid "Write a unique meta description per page for distinct search snippets."
 msgstr ""
 
 #. translators: %d: minimum word count threshold
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1491
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1503
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1510
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1517
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1529
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1536
 msgid "Thin content"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1491
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1517
 msgid "No published content to analyze."
 msgstr ""
 
 #. translators: %d: minimum word count threshold
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1503
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1529
 #, php-format
 msgid "All sampled items have at least %d words."
 msgstr ""
 
 #. translators: 1: count of thin items, 2: word threshold
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1515
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1541
 #, php-format
 msgid "%1$d sampled item(s) have fewer than %2$d words."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1520
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1546
 msgid "Expand short pages with useful, original content, or consolidate/noindex them."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1538
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1564
 msgid "Indexable content"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1538
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1564
 msgid "No published items are individually set to noindex."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1543
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1569
 msgid "Noindex content"
 msgstr ""
 
 #. translators: %d: number of items
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1548
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1574
 #, php-format
 msgid "%d published item(s) are set to noindex and will be excluded from search results."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1552
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1578
 msgid "Confirm these pages are meant to be hidden from search; remove the noindex flag if not."
 msgstr ""
 
 #. translators: 1: links checked, 2: links found
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1826
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1852
 #, php-format
 msgid "Checked %1$d of %2$d link(s) found in sampled content."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1831
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1857
 msgid "(stopped early at the time limit)"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1906
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1927
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1932
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1943
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1964
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1969
 msgid "Orphan pages"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1906
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1943
 msgid "Not enough published content to evaluate internal linking."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1927
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1964
 msgid "Every sampled page is linked from other content."
 msgstr ""
 
 #. translators: %d: number of orphan pages
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1937
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1974
 #, php-format
 msgid "%d sampled page(s) are not linked from any other sampled content (orphaned)."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1941
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1978
 msgid "Add internal links from related posts/pages so these pages are discoverable and receive link equity."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1954
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1958
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1961
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1971
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1976
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1991
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1995
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1998
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2008
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2013
 msgid "Broken links"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1958
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1995
 msgid "No links were found in the sampled content to check."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1961
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1998
 msgid "Link checking was skipped because the time budget was reached before any link could be probed."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1961
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1998
 msgid "Reduce the sampled link count or increase the probe budget, then re-run."
 msgstr ""
 
 #. translators: 1: number of broken links, 2: probe summary
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1979
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2016
 #, php-format
 msgid "%1$d link(s) returned a connection error or a 4xx/5xx status. %2$s"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1983
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2020
 msgid "Fix or remove the broken links/images so visitors and crawlers do not hit dead ends."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1997
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2007
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2012
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2034
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2044
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2049
 msgid "Redirect chains"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1997
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2034
 msgid "No links were probed for redirect chains."
 msgstr ""
 
 #. translators: 1: number of chained links, 2: probe summary
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2015
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2052
 #, php-format
 msgid "%1$d link(s) reach their destination through 2 or more redirects. %2$s"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2019
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2056
 msgid "Point links directly at the final URL to remove intermediate redirect hops."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2039
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2076
 msgid "Search visibility updated: search engines are no longer discouraged."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2050
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2087
 msgid "Nexter XML sitemap has been enabled. Flush permalinks if the sitemap URL still 404s."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2056
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2093
 msgid "Open WordPress General settings to set the tagline."
 msgstr ""
 
 #. translators: %s: connection error message
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2081
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2118
 #, php-format
 msgid "HTTPS is not reachable yet (%s). Install or repair your SSL certificate first — the URLs were NOT changed, to avoid locking you out."
 msgstr ""
 
 #. translators: %d: HTTP status code
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2093
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2130
 #, php-format
 msgid "HTTPS responded with HTTP %d, so it is not serving your site correctly. Fix SSL first — the URLs were NOT changed."
 msgstr ""
 
 #. translators: %s: WordPress-address host
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2125
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2162
 #, php-format
 msgid "HTTPS is not serving your WordPress Address host (%s) yet. Fix SSL there first — the URLs were NOT changed, to avoid locking you out of wp-admin."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2143
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2180
 msgid "HTTPS verified reachable. Site URL and Home URL were updated to HTTPS; add a server-level http→https redirect to finish."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2147
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2184
 msgid "No automated fix is available for this issue."
 msgstr ""
 
@@ -3748,70 +3758,70 @@ msgstr ""
 msgid "Nexter SEO"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:300
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:305
 msgid "Google Analytics"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:392
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:397
 msgid "Nexter Content SEO global settings"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:1091
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:1096
 msgid "Invalid settings."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:1171
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:1176
 msgid "The Image SEO module is not available. Make sure the Nexter Extension SEO module is enabled and updated to a version that includes Image SEO."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:1292
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:1297
 #: content-seo/build/606.js:1
 msgid "Select at least one group to export."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:1313
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:1318
 msgid "Secret credentials (IndexNow API key, Google Indexing private key) were omitted from this export for security. Re-enter them on the destination site."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:1440
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:1445
 msgid "Invalid or empty import data."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:1449
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:1454
 msgid "The file does not contain any importable SEO data."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:1457
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:1462
 msgid "Unsupported export file version."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:1465
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:1470
 msgid "This JSON file is not a Nexter Content SEO export."
 msgstr ""
 
 #. translators: 1: applied count, 2: skipped count
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:1492
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:1497
 #, php-format
 msgid "Imported %1$d credential/verification value(s); skipped %2$d invalid."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:1497
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:1502
 msgid "This file includes verification/API-key values. They were NOT applied. Re-run the import with the “Import credentials” option enabled to review and apply them."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:1812
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:1853
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:1872
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:1890
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:2060
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:1817
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:1858
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:1877
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:1895
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:2065
 msgid "Audit module not loaded."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:1831
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:1836
 msgid "Could not complete the SEO audit."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:1900
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:1905
 msgid "Schedule saved."
 msgstr ""
 
@@ -4520,20 +4530,20 @@ msgstr ""
 msgid "Special Pages"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2075
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2077
 msgid "Specific Pages / Posts / Taxonomies, etc."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2133
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2135
 msgid "singulars"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2139
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2141
 msgid "archive"
 msgstr ""
 
 #. translators: %s: schema title/label
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:5559
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:5561
 #, php-format
 msgid "“%s” (FAQ Page) needs at least one question and answer before it can be saved."
 msgstr ""
@@ -4704,6 +4714,36 @@ msgstr ""
 
 #: include/panel-settings/extensions/content-seo/class-seo-social-meta.php:1286
 msgid "In Stock"
+msgstr ""
+
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-yoast.php:122
+msgid "Focus keywords are not imported — Nexter SEO runs its own analysis."
+msgstr ""
+
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-yoast.php:123
+msgid "Cornerstone flags have no Nexter equivalent."
+msgstr ""
+
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-yoast.php:124
+msgid "Per-post schema type import arrives with the schema milestone."
+msgstr ""
+
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-yoast.php:141
+msgid "Primary term has no Nexter equivalent yet."
+msgstr ""
+
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-yoast.php:158
+msgid "Regex redirects are skipped — Nexter redirection matches exact/contains/starts/ends."
+msgstr ""
+
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer.php:186
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer.php:207
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer.php:288
+msgid "Unknown import source."
+msgstr ""
+
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer.php:189
+msgid "No data from this plugin was found on the site."
 msgstr ""
 
 #: include/panel-settings/extensions/content-seo/schema-types/article-subtypes.php:18
@@ -8079,15 +8119,15 @@ msgstr ""
 msgid "Edit SEO"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seorank.php:1721
+#: include/panel-settings/extensions/content-seorank.php:1722
 msgid "Search Pages"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seorank.php:1725
+#: include/panel-settings/extensions/content-seorank.php:1726
 msgid "Author Archives"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seorank.php:1729
+#: include/panel-settings/extensions/content-seorank.php:1730
 msgid "Date Archives"
 msgstr ""
 
@@ -8208,7 +8248,7 @@ msgid "Custom Fonts"
 msgstr ""
 
 #: include/panel-settings/extensions/nexter-ext-bulk-images.php:64
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:213
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:214
 msgid "Bulk Image Optimisation"
 msgstr ""
 
@@ -8217,7 +8257,7 @@ msgid "Bulk Images"
 msgstr ""
 
 #: include/panel-settings/extensions/nexter-ext-bulk-images.php:105
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:255
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:256
 msgid "Start Bulk Optimisation"
 msgstr ""
 
@@ -8237,219 +8277,223 @@ msgstr ""
 
 #. translators: 1: number of images optimised so far, 2: total number of images in queue
 #: include/panel-settings/extensions/nexter-ext-bulk-images.php:111
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:335
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:336
 #, php-format
 msgid "%1$d of %2$d images optimised"
 msgstr ""
 
 #: include/panel-settings/extensions/nexter-ext-bulk-images.php:112
-msgid "Need to Optimise"
+msgid "Keep this tab open to continue image optimisation, or enable Background Optimisation to run automatically."
 msgstr ""
 
 #: include/panel-settings/extensions/nexter-ext-bulk-images.php:113
+msgid "Need to Optimise"
+msgstr ""
+
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:114
 #: dashboard/build/index.js:1
 #: dashboard/build/index.js:10
 msgid "Done"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:114
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:115
 #: dashboard/build/index.js:8
 msgid "Failed"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:115
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:203
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:116
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:204
 msgid "Ready to Optimise"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:116
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:203
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:117
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:204
 msgid "Completed"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:117
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:118
 msgid "Errors Found"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:118
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:119
 #: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:902
 msgid "Optimising..."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:119
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:120
 msgid "Before"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:120
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:121
 msgid "After"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:121
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:122
 #: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:783
 #: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:908
 msgid "Original Size"
 msgstr ""
 
 #. translators: %s: Percentage of file size saved
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:123
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:124
 #, php-format
 msgid "%s% saved"
 msgstr ""
 
 #. translators: %d: Number of items remaining
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:125
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:126
 #, php-format
 msgid "%d items left"
 msgstr ""
 
 #. translators: %d: Number of failed items
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:127
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:128
 #, php-format
 msgid "Retry Failed (%d)"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:128
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:129
 msgid "All Optimised Successfully"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:129
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:130
 msgid "An error occurred. Please try again."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:130
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:396
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:131
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:397
 msgid "No images to optimise."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:131
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:132
 msgid "Load More"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:132
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:133
 msgid "Loading..."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:133
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:181
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:134
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:182
 msgid "Unlimited"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:134
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:316
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:135
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:317
 msgid "Monthly Limit Reached"
 msgstr ""
 
 #. translators: %d: Monthly image optimisation limit
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:136
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:322
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:137
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:323
 #, php-format
 msgid "You have reached your monthly limit of %d images. Upgrade to Pro for unlimited optimisation or wait until next month."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:137
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:196
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:138
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:197
 msgid "Upgrade to Pro"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:138
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:139
 msgid "Failed to load queue."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:139
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:140
 msgid "Optimisation in progress in another tab or window. Only one bulk optimisation can run at a time. This page will update when it finishes."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:140
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:141
 msgid "Optimisation is already running in another tab or window. Please wait for it to complete."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:196
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:197
 #: dashboard/build/index.js:6
 #: theme-builder/build/index.js:1
 msgid "Activate Now"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:216
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:217
 msgid "Image Optimisation Settings"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:235
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:249
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:236
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:250
 msgid "Image Optimisation Center"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:259
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:260
 #: dashboard/build/index.js:6
 msgid "Stop"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:268
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:269
 msgid "Storage Saved"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:282
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:283
 #: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:755
 #: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:910
 msgid "Monthly Usage"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:284
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:285
 msgid "You have unlimited image optimization credits with Nexter Pro."
 msgstr ""
 
 #. translators: %d: Monthly image optimisation credit limit
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:286
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:287
 #, php-format
 msgid "Free version includes %d image optimization credits per month. This resets at the start of each month."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:297
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:298
 msgid "Total Count"
 msgstr ""
 
 #. translators: %d: Monthly image optimisation limit
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:319
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:320
 #, php-format
 msgid "You have reached your monthly limit of %d images. Please activate Nexter Extension Pro to unlock unlimited access."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:333
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:334
 msgid "Overall Progress"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:339
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:340
 msgid "Complete"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:353
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:354
 msgid "Images Remaining"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:360
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:361
 msgid "Skipped Images"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:367
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:368
 msgid "Total Savings"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:377
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:378
 msgid "Image Queue"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:380
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:381
 msgid "Retry Failed (0)"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:389
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:390
 msgid "Load next 6 images"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:402
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:403
 msgid "All Images Optimised!"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-bulk-images.php:403
+#: include/panel-settings/extensions/nexter-ext-bulk-images.php:404
 msgid "Great job! All images in the queue have been successfully optimised. Upload more images to continue optimising."
 msgstr ""
 
@@ -8726,22 +8770,22 @@ msgstr ""
 msgid "Monthly Optimisation limit reached (%d images). Upgrade to Pro for unlimited Optimisation."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1677
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1789
 msgid "Optimisation failed. The image may be in an unsupported format or state, or the server could not process it."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1681
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1793
 msgid "Optimised file was not saved. Check folder permissions for wp-content/nexter-optimizer."
 msgstr ""
 
 #. translators: %d: Number of image sizes converted
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1788
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1882
 #, php-format
 msgid "Image Optimised (%d sizes converted)."
 msgstr ""
 
 #. translators: 1: number of images successfully restored, 2: number of images that failed to restore
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1924
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:2020
 #: dashboard/build/index.js:10
 #, php-format,js-format
 msgid "Restored %1$d images. %2$d failed."
