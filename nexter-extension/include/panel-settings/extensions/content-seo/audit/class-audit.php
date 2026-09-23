@@ -603,7 +603,7 @@ class Engine {
 	}
 
 	/**
-	 * @return array<string, mixed>
+	 * @return bool
 	 */
 	private function is_local_site() {
 		// Local/dev hosts where the server can't reliably reach its own public URL over HTTP

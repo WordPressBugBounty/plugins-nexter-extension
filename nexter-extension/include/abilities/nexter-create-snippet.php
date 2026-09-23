@@ -13,10 +13,17 @@ if ( ! function_exists( 'nexter_snippet_map_location' ) ) {
 	 * Nexter_Global_Code_Handler::is_global_location(), so without this a snippet created here
 	 * saved correctly and then never executed.
 	 *
+	 * An unmapped value used to be stored verbatim, which left that same failure reachable by
+	 * any name not in the table below — a near miss like "footer", "frontend" or "Site_Header"
+	 * saved cleanly and never ran, with nothing to show why. The result is now checked against
+	 * the runtime's own list, and anything it would reject falls back to the documented default
+	 * for the snippet type, so a snippet can no longer be stored in a place that never runs.
+	 *
 	 * @param string $location Incoming location.
-	 * @return string
+	 * @param string $type     Snippet type ('php', 'css', 'javascript', 'htmlmixed'), for the fallback.
+	 * @return string A location Nexter_Global_Code_Handler will actually run.
 	 */
-	function nexter_snippet_map_location( $location ) {
+	function nexter_snippet_map_location( $location, $type = '' ) {
 		$map = array(
 			'front-end'    => 'frontend_only',
 			'admin'        => 'admin_only',
@@ -32,7 +39,35 @@ if ( ! function_exists( 'nexter_snippet_map_location' ) ) {
 			'footer-html'  => 'site_footer',
 		);
 
-		return isset( $map[ $location ] ) ? $map[ $location ] : (string) $location;
+		$location = strtolower( trim( (string) $location ) );
+
+		// Callers spell the legacy names with either separator, so front_end and front-end both
+		// have to land. Only the lookup is normalised; a value that is already valid is untouched.
+		$lookup = str_replace( '_', '-', $location );
+		foreach ( $map as $legacy => $runtime ) {
+			if ( str_replace( '_', '-', $legacy ) === $lookup ) {
+				$location = $runtime;
+				break;
+			}
+		}
+
+		// A runtime location spelled with hyphens (site-header) is the same place, so try that
+		// form too rather than dropping the caller's intent and using the type default.
+		foreach ( array( $location, str_replace( '-', '_', $location ) ) as $candidate ) {
+			if ( class_exists( 'Nexter_Global_Code_Handler' ) && Nexter_Global_Code_Handler::is_global_location( $candidate ) ) {
+				return $candidate;
+			}
+		}
+
+		// Same defaults the dashboard uses, so a corrected snippet lands where a hand-made one does.
+		$defaults = array(
+			'php'        => 'run_everywhere',
+			'css'        => 'site_header',
+			'javascript' => 'site_header',
+			'htmlmixed'  => 'site_header',
+		);
+
+		return isset( $defaults[ $type ] ) ? $defaults[ $type ] : 'site_header';
 	}
 }
 
@@ -142,9 +177,11 @@ wp_register_ability(
 	'execute_callback'    => 'nexter_mcp_create_snippet',
 	'permission_callback' => 'nexter_mcp_permission_callback',
 	'meta'                => [
-		'show_in_rest' => true,
-		'mcp'          => ['public' => true],
-		'annotations'  => [
+		'mode'           => 'write',
+		'targets_object' => false,
+		'show_in_rest'   => true,
+		'mcp'            => ['public' => true],
+		'annotations'    => [
 			'instructions' => implode(
 				"\n",
 				[
@@ -250,7 +287,7 @@ function nexter_mcp_create_snippet(array $input): array {
 		$location = $defaults[ $type ] ?? '';
 	}
 
-	$location = nexter_snippet_map_location( $location );
+	$location = nexter_snippet_map_location( $location, $type );
 
 	$condition = [
 		'status'             => isset( $input['status'] ) ? (int)$input['status'] : 0,

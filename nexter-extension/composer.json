@@ -1,8 +1,13 @@
 {
     "require": {
-        "enshrined/svg-sanitize": "^0.21.0",
+        "enshrined/svg-sanitize": "^0.22.0",
         "league/oauth2-google": "^4.0",
         "phpmailer/phpmailer": "^6.10",
         "league/oauth2-client": "^2.8"
+    },
+    "config": {
+        "platform": {
+            "php": "7.4.33"
+        }
     }
 }

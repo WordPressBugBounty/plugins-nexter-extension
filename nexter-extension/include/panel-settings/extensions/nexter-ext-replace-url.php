@@ -213,17 +213,17 @@ if ( ! function_exists( 'nxt_table_exists' ) ) {
 if ( ! function_exists( 'nxt_get_columns' ) ) {
 	function nxt_get_columns( $table ) {
 		global $wpdb;
-		$primKey = null; $columns = array();
+		$prim_keys = array(); $columns = array();
 	
 		// Security: Validate and sanitize table name to prevent SQL injection
 		$table = preg_replace( '/[^a-zA-Z0-9_$]/', '', $table );
 		if ( empty( $table ) ) {
-			return array( null, array() );
+			return array( array(), array() );
 		}
 
 		// Bug 4: Verify table exists before querying
 		if ( ! nxt_table_exists( $table ) ) {
-			return array( null, array() );
+			return array( array(), array() );
 		}
 		
 		// Security: Table names cannot be prepared, so we validate and escape separately
@@ -235,12 +235,12 @@ if ( ! function_exists( 'nxt_get_columns' ) ) {
 			foreach ( $fields as $column ) {
 				$columns[] = $column->Field;
 				if ( $column->Key == 'PRI' ) {
-					$primKey = $column->Field;
+					$prim_keys[] = $column->Field;
 				}
 			}
 		}
 	
-		return array( $primKey, $columns );
+		return array( $prim_keys, $columns );
 	}
 }
 
@@ -386,21 +386,35 @@ if ( ! function_exists( 'nxt_search_replace' ) ) {
 					continue;
 				}
 				
-				list( $primKey, $columns ) = nxt_get_columns( $table );
+				list( $prim_keys, $columns ) = nxt_get_columns( $table );
 
 				// Bug 3: Skip tables with no primary key - cannot safely UPDATE without PK
-				if ( null === $primKey || empty( $columns ) ) {
+				if ( empty( $prim_keys ) || empty( $columns ) ) {
 					continue;
 				}
 				
 				// Bug 2: Paginate - process all rows, not just first $limitV
 				$limitV        = absint( $limitV );
+				if ( $limitV < 1 ) {
+					// A page size of 0 never advances the offset, so the loop below would never end.
+					$limitV = 20000;
+				}
 				$off           = 0;
 				$table_escaped = esc_sql( $table );
 
+				// LIMIT/OFFSET with no ORDER BY lets MySQL hand back rows in any order it likes, so
+				// paging over a big table could skip rows entirely and visit others twice.
+				$order_parts = array();
+				foreach ( $prim_keys as $prim_key ) {
+					$order_parts[] = '`' . esc_sql( $prim_key ) . '`';
+				}
+				$order_by = implode( ', ', $order_parts );
+
 				do {
-					// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-					$data         = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM `{$table_escaped}` LIMIT %d, %d", $off, $limitV ), ARRAY_A );
+					// Table and column names cannot be bound as placeholders; both are filtered to
+					// [a-zA-Z0-9_$], escaped, and the table is confirmed to exist before we get here.
+					// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+					$data         = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM `{$table_escaped}` ORDER BY {$order_by} LIMIT %d, %d", $off, $limitV ), ARRAY_A );
 					$rows_fetched = is_array( $data ) ? count( $data ) : 0;
 
 					foreach ( (array) $data as $row ) {
@@ -415,7 +429,7 @@ if ( ! function_exists( 'nxt_search_replace' ) ) {
 							}
 						
 							$data_to_fix = $row[ $column ];
-							if ( $column == $primKey ) {
+							if ( in_array( $column, $prim_keys, true ) ) {
 								// Security: Use wpdb->prepare with proper escaping
 								// Note: Column names cannot be prepared, so we validate them separately
 								$column_escaped = esc_sql( $column );

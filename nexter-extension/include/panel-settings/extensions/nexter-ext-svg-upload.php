@@ -256,8 +256,17 @@ class Nexter_Ext_SVG_Upload {
 
 	/**
 	 * Generate metadata for an SVG attachment.
+	 *
+	 * $context is defaulted rather than required: WordPress core always passes it, but any
+	 * plugin that fires this filter with two arguments would otherwise crash this callback
+	 * and take the whole request with it. Defaulting costs nothing and makes that impossible.
+	 *
+	 * @param array  $metadata      Attachment metadata.
+	 * @param int    $attachment_id Attachment ID.
+	 * @param string $context       'create' on upload, 'update' when regenerating.
+	 * @return array
 	 */
-	public function generate_svg_metadata( $metadata, $attachment_id, $context ) {
+	public function generate_svg_metadata( $metadata, $attachment_id, $context = 'create' ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed -- part of the filter signature.
 		if ( get_post_mime_type( $attachment_id ) === 'image/svg+xml' ) {
 			$svg_path = get_attached_file( $attachment_id );
 			

@@ -872,7 +872,7 @@ class Nxt_Builder_Condition_UI {
 
 		$options = array();
 
-		/* translators: %s: Post Label*/
+		/* translators: %s: Post Label */
 		$options[ $post_name . '|entire' ] = sprintf( __( 'All %s', 'nexter-extension' ), $post_label );
 
 		if ( $post_key != 'pages' ) {

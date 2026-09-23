@@ -99,7 +99,7 @@ class Nexter_Content_SEO_LLMs {
 		if ( is_admin() || is_feed() || is_trackback() ) {
 			return;
 		}
-		$uri  = isset( $_SERVER['REQUEST_URI'] ) ? (string) wp_unslash( $_SERVER['REQUEST_URI'] ) : '';
+		$uri  = isset( $_SERVER['REQUEST_URI'] ) ? (string) wp_unslash( $_SERVER['REQUEST_URI'] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- path compared after wp_parse_url().
 		$path = (string) wp_parse_url( $uri, PHP_URL_PATH );
 		if ( '/llms.txt' !== $path ) {
 			return;
@@ -309,10 +309,20 @@ class Nexter_Content_SEO_LLMs {
 				'post__not_in'   => array_keys( $picked_set ),
 			);
 			if ( $freshness_months > 0 ) {
+				// Published OR updated inside the window. Matching post_date alone dropped every
+				// evergreen page and still-maintained post, which emptied whole sections.
+				$window                   = '-' . $freshness_months . ' months';
 				$query_args['date_query'] = array(
+					'relation' => 'OR',
 					array(
-						'after'     => '-' . $freshness_months . ' months',
+						'after'     => $window,
 						'inclusive' => true,
+						'column'    => 'post_date',
+					),
+					array(
+						'after'     => $window,
+						'inclusive' => true,
+						'column'    => 'post_modified',
 					),
 				);
 			}

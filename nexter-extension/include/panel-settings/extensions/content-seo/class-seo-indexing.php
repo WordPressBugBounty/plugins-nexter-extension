@@ -178,7 +178,7 @@ class Nexter_Content_SEO_Indexing {
 		if ( ! is_string( $expected_path ) || $expected_path === '' ) {
 			return;
 		}
-		$request_uri  = isset( $_SERVER['REQUEST_URI'] ) ? wp_unslash( $_SERVER['REQUEST_URI'] ) : '';
+		$request_uri  = isset( $_SERVER['REQUEST_URI'] ) ? wp_unslash( $_SERVER['REQUEST_URI'] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- path compared after wp_parse_url().
 		$request_path = wp_parse_url( $request_uri, PHP_URL_PATH );
 		if ( ! is_string( $request_path ) ) {
 			return;

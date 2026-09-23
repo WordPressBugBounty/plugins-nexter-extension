@@ -284,7 +284,7 @@ class Nexter_Content_SEO_Social_Meta {
 			if ( '' === $raw ) {
 				continue;
 			}
-			$template = preg_replace( '/@([a-z0-9_]+)/i', '%$1%', $raw );
+			$template = Nexter_Content_SEO_Settings::expand_variable_shorthand( $raw );
 			$value    = Nexter_Content_SEO_Settings::replace_variables( $template, array() );
 			$value    = trim( wp_strip_all_tags( (string) $value ) );
 			if ( '' !== $value ) {
@@ -407,7 +407,7 @@ class Nexter_Content_SEO_Social_Meta {
 		if ( ! is_string( $t ) ) {
 			return '';
 		}
-		return preg_replace( '/@([a-z0-9_]+)/i', '%$1%', $t );
+		return Nexter_Content_SEO_Settings::expand_variable_shorthand( $t );
 	}
 
 	/**
@@ -420,15 +420,21 @@ class Nexter_Content_SEO_Social_Meta {
 	}
 
 	/**
-	 * Resolve global search title/description templates for a term (Content SEO templates + %term_*% / aliases).
+	 * Resolve global archive title/description templates for a term (Content SEO templates + %term_*% / aliases).
+	 *
+	 * The ARCHIVE templates, not the post ones. A term archive's visible <title> comes from
+	 * archive_title_template (class-seo-title.php) and its meta description from
+	 * archive_description_template, so resolving the post templates here made the social card
+	 * disagree with the page whenever a site had customised the two differently. With the
+	 * shipped defaults the two happen to produce the same string, which is why this went unseen.
 	 *
 	 * @param WP_Term $term Term.
 	 * @return array{0:string,1:string} Title and description.
 	 */
 	private static function get_resolved_global_title_and_description_for_term( WP_Term $term ) {
 		$opts    = Nexter_Content_SEO::get_options();
-		$title_t = ! empty( $opts['meta_title_template'] ) ? $opts['meta_title_template'] : ( ! empty( $opts['search_title_template'] ) ? $opts['search_title_template'] : '%post_title% - %site_name%' );
-		$desc_t  = ! empty( $opts['meta_description_template'] ) ? $opts['meta_description_template'] : ( ! empty( $opts['search_description_template'] ) ? $opts['search_description_template'] : '%post_excerpt%' );
+		$title_t = ! empty( $opts['archive_title_template'] ) ? $opts['archive_title_template'] : '%term_title% - %site_name%';
+		$desc_t  = ! empty( $opts['archive_description_template'] ) ? $opts['archive_description_template'] : '%term_description%';
 		$title_t = self::normalize_template_for_variables( $title_t );
 		$desc_t  = self::normalize_template_for_variables( $desc_t );
 		$ctx     = array( 'term' => $term );

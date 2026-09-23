@@ -161,17 +161,17 @@ class Nexter_Content_SEO_404_Monitor {
 			return;
 		}
 
-		$method = isset( $_SERVER['REQUEST_METHOD'] ) ? strtoupper( (string) $_SERVER['REQUEST_METHOD'] ) : 'GET';
+		$method = isset( $_SERVER['REQUEST_METHOD'] ) ? strtoupper( (string) $_SERVER['REQUEST_METHOD'] ) : 'GET'; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput -- compared to two literals, never stored.
 		if ( 'GET' !== $method && 'HEAD' !== $method ) {
 			return;
 		}
 
-		$ua = isset( $_SERVER['HTTP_USER_AGENT'] ) ? (string) wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) : '';
+		$ua = isset( $_SERVER['HTTP_USER_AGENT'] ) ? (string) wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- only matched against the bot list.
 		if ( self::looks_like_bot( $ua ) ) {
 			return;
 		}
 
-		$uri = isset( $_SERVER['REQUEST_URI'] ) ? (string) wp_unslash( $_SERVER['REQUEST_URI'] ) : '';
+		$uri = isset( $_SERVER['REQUEST_URI'] ) ? (string) wp_unslash( $_SERVER['REQUEST_URI'] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- sanitized on the next line.
 		$uri = (string) sanitize_text_field( $uri );
 		if ( '' === $uri ) {
 			return;
@@ -184,7 +184,7 @@ class Nexter_Content_SEO_404_Monitor {
 			return;
 		}
 
-		$referrer_raw = isset( $_SERVER['HTTP_REFERER'] ) ? (string) wp_unslash( $_SERVER['HTTP_REFERER'] ) : '';
+		$referrer_raw = isset( $_SERVER['HTTP_REFERER'] ) ? (string) wp_unslash( $_SERVER['HTTP_REFERER'] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- reduced to scheme + host below.
 		// Store only the referring origin (scheme + host), never the full path/query — a referer
 		// URL can carry personal data (e.g. an email or token in the query string). Domain-only is
 		// enough to see where 404s come from without logging PII.
@@ -267,6 +267,7 @@ class Nexter_Content_SEO_404_Monitor {
 		$now   = current_time( 'mysql', true );
 
 		// Upsert: UNIQUE KEY on url_hash means hits increments on duplicate.
+		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name from $wpdb->prefix; every value is a placeholder.
 		$sql = $wpdb->prepare(
 			"INSERT INTO {$table} (url, url_hash, referrer, hits, first_seen, last_seen)
 			 VALUES (%s, %s, %s, 1, %s, %s)
@@ -276,8 +277,9 @@ class Nexter_Content_SEO_404_Monitor {
 			$referrer,
 			$now,
 			$now
-		); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery
+		);
+		// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.NotPrepared -- $sql was prepared just above.
 		$res = $wpdb->query( $sql );
 
 		// Prune deterministically whenever a NEW row was inserted (rows-affected === 1; a repeat
@@ -297,7 +299,7 @@ class Nexter_Content_SEO_404_Monitor {
 	public static function prune_if_needed() {
 		global $wpdb;
 		$table = self::table_name();
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name from $wpdb->prefix.
 		$total = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$table}" );
 		if ( $total <= self::MAX_ROWS ) {
 			return;
@@ -336,18 +338,19 @@ class Nexter_Content_SEO_404_Monitor {
 			$params[] = $like;
 		}
 
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL -- table name from $wpdb->prefix, $where is a fixed literal, values are placeholders.
 		$total_sql = "SELECT COUNT(*) FROM {$table} {$where}";
 		$total     = (int) ( empty( $params )
 			? $wpdb->get_var( $total_sql )
 			: $wpdb->get_var( $wpdb->prepare( $total_sql, $params ) ) );
+		// phpcs:enable WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL
 
 		$list_params   = $params;
 		$list_params[] = $per_page;
 		$list_params[] = $offset;
 		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$list_sql = "SELECT id, url, referrer, hits, first_seen, last_seen FROM {$table} {$where} ORDER BY {$orderby} {$order} LIMIT %d OFFSET %d";
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.NotPrepared -- $list_sql holds only placeholders and whitelisted identifiers.
 		$rows = $wpdb->get_results( $wpdb->prepare( $list_sql, $list_params ), ARRAY_A );
 		if ( ! is_array( $rows ) ) {
 			$rows = array();
@@ -382,7 +385,7 @@ class Nexter_Content_SEO_404_Monitor {
 	 */
 	public static function clear_all() {
 		global $wpdb;
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL -- table name from $wpdb->prefix, no values.
 		return $wpdb->query( 'TRUNCATE TABLE ' . self::table_name() );
 	}
 

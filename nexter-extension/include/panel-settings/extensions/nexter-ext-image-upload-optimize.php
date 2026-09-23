@@ -1223,6 +1223,120 @@ class Nexter_Ext_Image_Upload_Optimization {
 	}
 
 	/**
+	 * Does this URL point into the optimizer's own output directory?
+	 *
+	 * @param string $url URL to test.
+	 * @return bool
+	 */
+	private static function is_optimizer_url( $url ) {
+		return is_string( $url ) && false !== strpos( $url, '/nexter-optimizer/uploads/' );
+	}
+
+	/**
+	 * The optimised copy of one intermediate size, when there really is one on disk.
+	 *
+	 * @param int    $attachment_id Attachment ID.
+	 * @param string $size_name     Size name.
+	 * @param array  $metadata      Attachment metadata.
+	 * @return array{url:string,format:string}|false
+	 */
+	private function optimized_size_url( $attachment_id, $size_name, $metadata ) {
+		$format = isset( $metadata['nxt_optimized_format'] ) ? $metadata['nxt_optimized_format'] : 'webp';
+		if ( 'original' === $format ) {
+			return false; // Original format keeps its thumbnails in uploads.
+		}
+		if ( empty( $metadata['nxt_optimized_sizes'][ $size_name ]['file'] ) || empty( $metadata['sizes'][ $size_name ]['file'] ) ) {
+			return false;
+		}
+
+		$size_opt_path = self::get_absolute_path( $metadata['nxt_optimized_sizes'][ $size_name ]['file'] );
+		if ( ! $size_opt_path || ! file_exists( $size_opt_path ) ) {
+			return false;
+		}
+
+		$original_file = get_attached_file( $attachment_id );
+		if ( ! $original_file ) {
+			return false;
+		}
+
+		$size_file_path = wp_normalize_path( dirname( $original_file ) . '/' . $metadata['sizes'][ $size_name ]['file'] );
+		$size_format    = isset( $metadata['nxt_optimized_sizes'][ $size_name ]['format'] ) ? $metadata['nxt_optimized_sizes'][ $size_name ]['format'] : 'webp';
+
+		return array(
+			'url'    => $this->get_output_url( $size_file_path ) . '.' . $size_format,
+			'format' => $size_format,
+		);
+	}
+
+	/**
+	 * The ordinary WordPress intermediate for one size — the file that actually exists.
+	 *
+	 * @param int    $attachment_id Attachment ID.
+	 * @param string $size_name     Size name.
+	 * @param array  $metadata      Attachment metadata.
+	 * @return string|false
+	 */
+	private function uploads_size_url( $attachment_id, $size_name, $metadata ) {
+		if ( empty( $metadata['sizes'][ $size_name ]['file'] ) ) {
+			return false;
+		}
+
+		$original_file = get_attached_file( $attachment_id );
+		if ( ! $original_file ) {
+			return false;
+		}
+
+		return $this->path_to_url( wp_normalize_path( dirname( $original_file ) . '/' . $metadata['sizes'][ $size_name ]['file'] ) );
+	}
+
+	/**
+	 * Decide what one intermediate size should be served from.
+	 *
+	 * There are three cases and only two of them used to be handled. An optimised copy of the
+	 * size exists, or the whole attachment was optimised in its original format — both fine.
+	 * The third is a full size optimised to WebP/AVIF whose intermediates were never optimised
+	 * (nxt_optimized_sizes empty, e.g. a run that stopped after the full size). Nothing rewrote
+	 * those size URLs, so what stayed was whatever WordPress derived from the base attachment
+	 * URL — and this class rewrites that base to the optimizer path. The result was a URL under
+	 * nexter-optimizer/ for a file that was never created: a 404 and a blank Media Library tile.
+	 *
+	 * A URL that is not ours is never touched, so a CDN or another plugin that already rewrote
+	 * it keeps its answer.
+	 *
+	 * @param int    $attachment_id Attachment ID.
+	 * @param string $size_name     Size name.
+	 * @param array  $metadata      Attachment metadata.
+	 * @param string $current_url   URL currently on the response.
+	 * @return array{url:string,optimized:bool,format:string}|false False to leave it alone.
+	 */
+	private function resolve_size_url( $attachment_id, $size_name, $metadata, $current_url ) {
+		if ( ! is_array( $metadata ) ) {
+			return false;
+		}
+
+		$optimized = $this->optimized_size_url( $attachment_id, $size_name, $metadata );
+		if ( $optimized ) {
+			return array(
+				'url'       => $optimized['url'],
+				'optimized' => true,
+				'format'    => $optimized['format'],
+			);
+		}
+
+		if ( ! self::is_optimizer_url( $current_url ) ) {
+			return false;
+		}
+
+		$uploads_url = $this->uploads_size_url( $attachment_id, $size_name, $metadata );
+
+		return $uploads_url ? array(
+			'url'       => $uploads_url,
+			'optimized' => false,
+			'format'    => '',
+		) : false;
+	}
+
+	/**
 	 * Filter attachment URL to return optimised version when available (same as webp-optimizer).
 	 *
 	 * @param string $url           Attachment URL.
@@ -1250,21 +1364,16 @@ class Nexter_Ext_Image_Upload_Optimization {
 		$optimized_url = $this->get_optimized_attachment_url( $attachment_id, $size );
 		if ( false !== $optimized_url ) {
 			$image[0] = $optimized_url;
-		} elseif ( $size && 'full' !== $size && ! is_array( $size ) ) {
-			// For original format, image_downsize derives size URLs
-			$metadata = wp_get_attachment_metadata( $attachment_id );
-			if ( is_array( $metadata ) && ! empty( $metadata['nxt_optimized_format'] ) && 'original' === $metadata['nxt_optimized_format'] ) {
-				$original_file = get_attached_file( $attachment_id );
-				if ( $original_file && ! empty( $metadata['sizes'][ $size ]['file'] ) ) {
-					$base_dir       = dirname( $original_file );
-					$size_file_path = wp_normalize_path( $base_dir . '/' . $metadata['sizes'][ $size ]['file'] );
-					$uploads_url    = $this->path_to_url( $size_file_path );
-					if ( $uploads_url ) {
-						$image[0] = $uploads_url;
-					}
-				}
+			return $image;
+		}
+
+		if ( $size && 'full' !== $size && ! is_array( $size ) ) {
+			$resolved = $this->resolve_size_url( $attachment_id, $size, wp_get_attachment_metadata( $attachment_id ), $image[0] );
+			if ( $resolved ) {
+				$image[0] = $resolved['url'];
 			}
 		}
+
 		return $image;
 	}
 
@@ -1336,33 +1445,15 @@ class Nexter_Ext_Image_Upload_Optimization {
 			}
 		}
 
-		// Rewrite each size URL so Media Library thumbnails use .webp/.avif.
-		// For original format, explicitly set thumbnail URLs to uploads (image_downsize derives wrong nexter-optimizer URLs).
+		// Every size resolved on its own: the optimised copy when there is one, otherwise the
+		// uploads file. Previously a size with no optimised copy was left holding the URL
+		// WordPress derived from the rewritten base attachment URL, which pointed into
+		// nexter-optimizer/ at a file that was never created.
 		if ( ! empty( $response['sizes'] ) && is_array( $response['sizes'] ) ) {
-			$base_dir = dirname( $original_file );
-			if ( 'original' === $format ) {
-				foreach ( $response['sizes'] as $size_name => $size_data ) {
-					if ( empty( $metadata['sizes'][ $size_name ]['file'] ) ) {
-						continue;
-					}
-					$size_file_path = wp_normalize_path( $base_dir . '/' . $metadata['sizes'][ $size_name ]['file'] );
-					$uploads_url    = $this->path_to_url( $size_file_path );
-					if ( $uploads_url ) {
-						$response['sizes'][ $size_name ]['url'] = $uploads_url;
-					}
-				}
-			} elseif ( ! empty( $metadata['nxt_optimized_sizes'] ) ) {
-				foreach ( $response['sizes'] as $size_name => $size_data ) {
-					if ( empty( $metadata['nxt_optimized_sizes'][ $size_name ]['file'] ) || empty( $metadata['sizes'][ $size_name ]['file'] ) ) {
-						continue;
-					}
-					$size_opt_path = self::get_absolute_path( $metadata['nxt_optimized_sizes'][ $size_name ]['file'] );
-					if ( ! $size_opt_path || ! file_exists( $size_opt_path ) ) {
-						continue;
-					}
-					$size_file_path                         = wp_normalize_path( $base_dir . '/' . $metadata['sizes'][ $size_name ]['file'] );
-					$size_format                            = isset( $metadata['nxt_optimized_sizes'][ $size_name ]['format'] ) ? $metadata['nxt_optimized_sizes'][ $size_name ]['format'] : 'webp';
-					$response['sizes'][ $size_name ]['url'] = $this->get_output_url( $size_file_path ) . '.' . $size_format;
+			foreach ( $response['sizes'] as $size_name => $size_data ) {
+				$resolved = $this->resolve_size_url( $attachment->ID, $size_name, $metadata, isset( $size_data['url'] ) ? $size_data['url'] : '' );
+				if ( $resolved ) {
+					$response['sizes'][ $size_name ]['url'] = $resolved['url'];
 				}
 			}
 		}
@@ -1442,6 +1533,7 @@ class Nexter_Ext_Image_Upload_Optimization {
 				$saved_pct = round( ( $saved / $original_size ) * 100, 2 );
 				
 				// Percentage in Blue
+				/* translators: %s: Amount the image is smaller (e.g. "45%") */
 				echo '<div style="font-size:13px;color:#1717cc;">' . sprintf( esc_html__( '%s smaller', 'nexter-extension' ), number_format_i18n( $saved_pct, 2 ) . '%' ) . '</div>';
 			}
 			echo '</div>';
@@ -1522,37 +1614,19 @@ class Nexter_Ext_Image_Upload_Optimization {
 		// Update each size in media_details so REST media library gets correct thumbnail URLs.
 		// For original format, explicitly set source_url to uploads (image_downsize derives wrong nexter-optimizer URLs).
 		if ( ! empty( $response->data['media_details']['sizes'] ) && is_array( $response->data['media_details']['sizes'] ) ) {
-			$base_dir = dirname( $original_file );
-			if ( 'original' === $format ) {
-				foreach ( $response->data['media_details']['sizes'] as $size_name => $size_data ) {
-					if ( empty( $metadata['sizes'][ $size_name ]['file'] ) ) {
-						continue;
-					}
-					$size_file_path = wp_normalize_path( $base_dir . '/' . $metadata['sizes'][ $size_name ]['file'] );
-					$uploads_url    = $this->path_to_url( $size_file_path );
-					if ( $uploads_url ) {
-						$response->data['media_details']['sizes'][ $size_name ]['source_url'] = $uploads_url;
-					}
+			foreach ( $response->data['media_details']['sizes'] as $size_name => $size_data ) {
+				$resolved = $this->resolve_size_url( $post->ID, $size_name, $metadata, isset( $size_data['source_url'] ) ? $size_data['source_url'] : '' );
+				if ( ! $resolved ) {
+					continue;
 				}
-			} elseif ( ! empty( $metadata['nxt_optimized_sizes'] ) ) {
-				foreach ( $response->data['media_details']['sizes'] as $size_name => $size_data ) {
-					if ( empty( $metadata['nxt_optimized_sizes'][ $size_name ]['file'] ) || empty( $metadata['sizes'][ $size_name ]['file'] ) ) {
-						continue;
-					}
-					$size_opt_path = self::get_absolute_path( $metadata['nxt_optimized_sizes'][ $size_name ]['file'] );
-					if ( ! $size_opt_path || ! file_exists( $size_opt_path ) ) {
-						continue;
-					}
-					$size_file_path = wp_normalize_path( $base_dir . '/' . $metadata['sizes'][ $size_name ]['file'] );
-					$size_format    = isset( $metadata['nxt_optimized_sizes'][ $size_name ]['format'] ) ? $metadata['nxt_optimized_sizes'][ $size_name ]['format'] : 'webp';
-					$size_full_url  = $this->get_output_url( $size_file_path ) . '.' . $size_format;
-					$response->data['media_details']['sizes'][ $size_name ]['source_url'] = $size_full_url;
-					if ( isset( $response->data['media_details']['sizes'][ $size_name ]['file'] ) ) {
-						$response->data['media_details']['sizes'][ $size_name ]['file'] = basename( $size_full_url );
-					}
-					if ( isset( $response->data['media_details']['sizes'][ $size_name ]['mime-type'] ) ) {
-						$response->data['media_details']['sizes'][ $size_name ]['mime-type'] = 'image/' . $size_format;
-					}
+
+				$response->data['media_details']['sizes'][ $size_name ]['source_url'] = $resolved['url'];
+				if ( isset( $response->data['media_details']['sizes'][ $size_name ]['file'] ) ) {
+					$response->data['media_details']['sizes'][ $size_name ]['file'] = basename( $resolved['url'] );
+				}
+				// Only an optimised copy changes the type; a fallback keeps whatever the file is.
+				if ( $resolved['optimized'] && isset( $response->data['media_details']['sizes'][ $size_name ]['mime-type'] ) ) {
+					$response->data['media_details']['sizes'][ $size_name ]['mime-type'] = 'image/' . $resolved['format'];
 				}
 			}
 		}
@@ -2016,7 +2090,7 @@ class Nexter_Ext_Image_Upload_Optimization {
 			array(
 			'restored' => $restored,
 			'failed'   => $failed,
-			/* translators: 1: number of images successfully restored, 2: number of images that failed to restore */
+			/* translators: 1: Number of images restored, 2: Number of images that failed to restore */
 			'message'  => sprintf( __( 'Restored %1$d images. %2$d failed.', 'nexter-extension' ), $restored, $failed ),
 			) 
 		);

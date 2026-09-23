@@ -5,23 +5,35 @@ if ( ! defined( 'ABSPATH' )) exit;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-// Prevent WordPress from setting default From address when SMTP is configured
+// Prevent WordPress from setting its default From address when custom SMTP is configured
 add_filter(
 	'wp_mail_from',
 	function($from_email) {
 		$options = Nxt_Options::extra_ext() ?: [];
 		$smtp    = $options['smtp-email']['values'] ?? [];
-	
-		// Only override if custom SMTP is configured and enabled
-		if ( ! empty( $options['smtp-email']['switch'] ) && 
-		! empty( $smtp['type'] ) && 
-		$smtp['type'] === 'custom' && 
-		! empty( $smtp['custom']['username'] ) && 
-		is_email( $smtp['custom']['username'] ) ) {
-			// Return the authenticated username to prevent WordPress default
-			return $smtp['custom']['username'];
+		$custom  = $smtp['custom'] ?? [];
+
+		if ( empty( $options['smtp-email']['switch'] ) || ($smtp['type'] ?? '') !== 'custom' ) {
+			return $from_email;
 		}
-	
+
+		// Respect the user-configured From Email first — most providers (Brevo, SendGrid, Mailgun, etc.)
+		// use an API-key-style username that is not a valid sender address.
+		if ( ! empty( $custom['from_email'] ) && is_email( $custom['from_email'] ) ) {
+			return $custom['from_email'];
+		}
+
+		// Yandex requires the From address to match the authenticated username.
+		$is_yandex = stripos( $custom['host'] ?? '', 'yandex' ) !== false;
+		if ( $is_yandex && ! empty( $custom['username'] ) && is_email( $custom['username'] ) ) {
+			return $custom['username'];
+		}
+
+		// No From Email configured — fall back to the username only if it is a usable address.
+		if ( ! empty( $custom['username'] ) && is_email( $custom['username'] ) ) {
+			return $custom['username'];
+		}
+
 		return $from_email;
 	},
 	999
@@ -91,39 +103,23 @@ add_action(
 				}
 			}
 
-			// Set From email - for providers like Yandex, From must match authenticated username
-			// CRITICAL: Always set From address to match authenticated username when auth is enabled
-			// This prevents WordPress default From address from being used
-		
-			$from_name = ! empty( $smtp_custom['from_name'] ) ? sanitize_text_field( $smtp_custom['from_name'] ) : get_bloginfo( 'name' );
-		
-			// Check if this is Yandex SMTP (requires From to match username)
-			$is_yandex = stripos( $phpmailer->Host, 'yandex' ) !== false;
-		
-			// If auth is enabled, From MUST match username (required for Yandex and many other providers)
-			if ( $smtp_auth && ! empty( $smtp_custom['username'] ) ) {
-				// Always use username as From address when auth is enabled
-				// This ensures the From address matches the authenticated user
-				$username_email = is_email( $smtp_custom['username'] ) 
-				? $smtp_custom['username'] 
-				: sanitize_email( $smtp_custom['username'] );
-			
-				if ( $username_email ) {
-					// Force set From address - this will override any default WordPress set
-					$phpmailer->setFrom( $username_email, $from_name, false );
-				} else {
-					// Fallback: use from_email if username is not a valid email
-					$from_email = ! empty( $smtp_custom['from_email'] ) ? sanitize_email( $smtp_custom['from_email'] ) : '';
-					if ( $from_email && is_email( $from_email ) ) {
-						$phpmailer->setFrom( $from_email, $from_name, false );
-					}
-				}
-			} else {
-				// If auth is not enabled, use from_email if provided
-				$from_email = ! empty( $smtp_custom['from_email'] ) ? sanitize_email( $smtp_custom['from_email'] ) : '';
-				if ( $from_email && is_email( $from_email ) ) {
-					$phpmailer->setFrom( $from_email, $from_name, false );
-				}
+			// Set From email — the user-configured From Email takes priority. Only Yandex actually
+			// requires the From address to match the authenticated username; for most providers
+			// (Brevo, SendGrid, Mailgun, etc.) the username is an API-key-style value that isn't
+			// a valid sender address, so forcing it as From causes provider-side rejections.
+
+			$from_name  = ! empty( $smtp_custom['from_name'] ) ? sanitize_text_field( $smtp_custom['from_name'] ) : get_bloginfo( 'name' );
+			$from_email = ! empty( $smtp_custom['from_email'] ) ? sanitize_email( $smtp_custom['from_email'] ) : '';
+			$is_yandex  = stripos( $phpmailer->Host, 'yandex' ) !== false;
+
+			if ( $is_yandex && $smtp_auth && ! empty( $smtp_custom['username'] ) && is_email( $smtp_custom['username'] ) ) {
+				// Yandex requires From to match the authenticated username.
+				$phpmailer->setFrom( $smtp_custom['username'], $from_name, false );
+			} elseif ( $from_email && is_email( $from_email ) ) {
+				$phpmailer->setFrom( $from_email, $from_name, false );
+			} elseif ( $smtp_auth && ! empty( $smtp_custom['username'] ) && is_email( $smtp_custom['username'] ) ) {
+				// No From Email configured — fall back to the username only if it is a usable address.
+				$phpmailer->setFrom( $smtp_custom['username'], $from_name, false );
 			}
 		
 			// Always allow self-signed / mismatched certs — matches behaviour of WP Mail SMTP,

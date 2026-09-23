@@ -2,14 +2,14 @@
 # This file is distributed under the GPLv3.
 msgid ""
 msgstr ""
-"Project-Id-Version: Nexter Extension 4.7.9\n"
+"Project-Id-Version: Nexter Extension 4.7.10\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/nexter-extension\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-09-07T11:18:26+02:00\n"
+"POT-Creation-Date: 2026-09-23T11:25:28+02:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: nexter-extension\n"
@@ -50,12 +50,12 @@ msgid "Nexter Extension MCP abilities for templates, snippets, and site settings
 msgstr ""
 
 #. translators: %d: record ID.
-#: include/abilities/lifecycle-filters.php:144
+#: include/abilities/lifecycle-filters.php:404
 #, php-format
 msgid "Nothing exists with ID %d, so it cannot be changed."
 msgstr ""
 
-#: include/abilities/lifecycle-filters.php:192
+#: include/abilities/lifecycle-filters.php:474
 msgid "This feature requires Nexter Extension Pro."
 msgstr ""
 
@@ -67,28 +67,28 @@ msgstr ""
 msgid "Returns Nexter Bulk Image Optimizer stats (totals, savings, monthly usage) and the next batch of unoptimized attachments — the same data shown on Media → Bulk Images."
 msgstr ""
 
-#: include/abilities/nexter-bulk-image-optimizer.php:59
+#: include/abilities/nexter-bulk-image-optimizer.php:61
 msgid "Bulk Optimize Images"
 msgstr ""
 
-#: include/abilities/nexter-bulk-image-optimizer.php:60
+#: include/abilities/nexter-bulk-image-optimizer.php:62
 msgid "Optimizes one or more attachments using the configured Nexter Image Optimization settings. Same effect as clicking Start Bulk Optimisation on Media → Bulk Images."
 msgstr ""
 
-#: include/abilities/nexter-bulk-image-optimizer.php:98
+#: include/abilities/nexter-bulk-image-optimizer.php:102
 #: dashboard/build/index.js:10
 msgid "Restore Original Images"
 msgstr ""
 
-#: include/abilities/nexter-bulk-image-optimizer.php:99
+#: include/abilities/nexter-bulk-image-optimizer.php:103
 msgid "Restores all images that were optimized by Nexter back to their original files from backup, and clears optimization metadata."
 msgstr ""
 
-#: include/abilities/nexter-create-snippet.php:46
+#: include/abilities/nexter-create-snippet.php:81
 msgid "Create Code Snippet"
 msgstr ""
 
-#: include/abilities/nexter-create-snippet.php:47
+#: include/abilities/nexter-create-snippet.php:82
 msgid "Creates a new Nexter Extension code snippet. Supports PHP, CSS, JavaScript, and HTML snippet types with configurable insertion locations, conditions, scheduling, and display rules."
 msgstr ""
 
@@ -108,11 +108,11 @@ msgstr ""
 msgid "Retrieves uploaded custom fonts configuration including font names, file IDs, and weight variations."
 msgstr ""
 
-#: include/abilities/nexter-custom-fonts.php:39
+#: include/abilities/nexter-custom-fonts.php:41
 msgid "Update Custom Fonts Settings"
 msgstr ""
 
-#: include/abilities/nexter-custom-fonts.php:40
+#: include/abilities/nexter-custom-fonts.php:42
 msgid "Updates custom font upload feature: enable/disable and configure font families with weight variations."
 msgstr ""
 
@@ -156,11 +156,11 @@ msgstr ""
 msgid "Retrieves Nexter Extension image optimization/compression settings including format, quality, resize, and exclusion rules."
 msgstr ""
 
-#: include/abilities/nexter-image-optimization.php:39
+#: include/abilities/nexter-image-optimization.php:41
 msgid "Update Image Optimization Settings"
 msgstr ""
 
-#: include/abilities/nexter-image-optimization.php:40
+#: include/abilities/nexter-image-optimization.php:42
 msgid "Updates Nexter Extension image optimization settings. Only provided fields are changed."
 msgstr ""
 
@@ -196,11 +196,11 @@ msgstr ""
 msgid "Retrieves all Nexter performance settings including heartbeat control, lazy loading, preloading, minification, emoji/embed disabling, and more."
 msgstr ""
 
-#: include/abilities/nexter-performance-settings.php:46
+#: include/abilities/nexter-performance-settings.php:48
 msgid "Update Performance Settings"
 msgstr ""
 
-#: include/abilities/nexter-performance-settings.php:47
+#: include/abilities/nexter-performance-settings.php:49
 msgid "Updates Nexter performance settings. Can enable/disable features and change their values. Only provided features are modified."
 msgstr ""
 
@@ -212,11 +212,11 @@ msgstr ""
 msgid "Retrieve all security settings. Returns every configured security feature with its enabled status and values."
 msgstr ""
 
-#: include/abilities/nexter-security-settings.php:39
+#: include/abilities/nexter-security-settings.php:41
 msgid "Update Nexter Security Settings"
 msgstr ""
 
-#: include/abilities/nexter-security-settings.php:40
+#: include/abilities/nexter-security-settings.php:42
 msgid "Update a specific security feature. Set enabled to toggle, and values to update configuration."
 msgstr ""
 
@@ -228,11 +228,11 @@ msgstr ""
 msgid "Retrieves Nexter SMTP email configuration including type (Gmail/Custom), host, port, encryption, and from address."
 msgstr ""
 
-#: include/abilities/nexter-smtp-settings.php:39
+#: include/abilities/nexter-smtp-settings.php:41
 msgid "Update SMTP Email Settings"
 msgstr ""
 
-#: include/abilities/nexter-smtp-settings.php:40
+#: include/abilities/nexter-smtp-settings.php:42
 msgid "Updates Nexter SMTP email configuration. Supports Gmail OAuth and Custom SMTP with host/port/encryption/auth."
 msgstr ""
 
@@ -260,11 +260,11 @@ msgstr ""
 msgid "Enables or disables a Nexter Theme Builder template. Can explicitly set active/inactive or toggle current state."
 msgstr ""
 
-#: include/abilities/nexter-update-snippet.php:46
+#: include/abilities/nexter-update-snippet.php:81
 msgid "Update Code Snippet"
 msgstr ""
 
-#: include/abilities/nexter-update-snippet.php:47
+#: include/abilities/nexter-update-snippet.php:82
 msgid "Updates an existing Nexter Extension code snippet. You can update the code, name, description, tags, type, location, conditions, and all other settings. Only provided fields are updated — omitted fields keep their current values."
 msgstr ""
 
@@ -278,7 +278,7 @@ msgstr ""
 
 #: include/class-nexter-load-ext.php:485
 #: assets/js/admin/index.js:1
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 #: dashboard/build/index.js:1
 #: dashboard/build/index.js:13
 msgid "Settings"
@@ -395,7 +395,7 @@ msgstr ""
 #: include/panel-settings/extensions/nexter-ext-replace-url.php:23
 #: include/panel-settings/extensions/nexter-ext-replace-url.php:118
 #: include/panel-settings/extensions/nexter-ext-rollback-manager.php:213
-#: include/panel-settings/extensions/nexter-ext-svg-upload.php:329
+#: include/panel-settings/extensions/nexter-ext-svg-upload.php:338
 #: include/panel-settings/nexter-ext-library.php:61
 #: include/panel-settings/nexter-ext-library.php:195
 msgid "Insufficient permissions."
@@ -474,8 +474,8 @@ msgstr ""
 
 #: include/classes/class-nexter-ext-base.php:110
 #: include/panel-settings/extensions/nexter-ext-bulk-images.php:469
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1741
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1904
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1815
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1978
 msgid "Permission denied."
 msgstr ""
 
@@ -863,7 +863,7 @@ msgstr ""
 #. translators: %d: number of search results successfully replaced
 #: include/classes/load-code-snippet/nexter-php-code-handling.php:1336
 #: include/classes/load-code-snippet/nexter-php-code-handling.php:1344
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 #: dashboard/build/index.js:3
 msgid "Warning"
 msgstr ""
@@ -1135,6 +1135,7 @@ msgstr ""
 #: assets/js/admin/index.js:1
 #: content-seo/build/150.js:1
 #: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Edit"
 msgstr ""
 
@@ -1243,6 +1244,7 @@ msgstr ""
 
 #: include/classes/third-party/class-beaver-build-theme.php:122
 #: assets/js/admin/index.js:1
+#: content-seo/build/869.js:7
 msgid "Posts"
 msgstr ""
 
@@ -1261,7 +1263,7 @@ msgstr ""
 #: include/custom-options/class-nxt-builder-condition-ui.php:68
 #: content-seo/build/78.js:1
 #: content-seo/build/180.js:1
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Archives"
 msgstr ""
 
@@ -1300,7 +1302,7 @@ msgid "Normal + Sticky"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:80
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 #: dashboard/build/index.js:8
 msgid "Fixed"
 msgstr ""
@@ -1417,6 +1419,7 @@ msgstr ""
 #: content-seo/build/917.js:1
 #: content-seo/build/939.js:1
 #: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 #: dashboard/build/index.js:1
 #: dashboard/build/index.js:3
 #: dashboard/build/index.js:5
@@ -1438,7 +1441,7 @@ msgstr ""
 #: include/custom-options/class-nxt-builder-condition-ui.php:331
 #: include/custom-options/class-nxt-builder-condition-ui.php:435
 #: include/custom-options/class-nxt-builder-condition-ui.php:786
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Set Display Conditions"
 msgstr ""
 
@@ -1619,6 +1622,7 @@ msgstr ""
 #: include/custom-options/module/nexter-display-conditional-rules.php:1806
 #: assets/js/admin/index.js:1
 #: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Monday"
 msgstr ""
 
@@ -1626,6 +1630,7 @@ msgstr ""
 #: include/custom-options/module/nexter-display-conditional-rules.php:1807
 #: assets/js/admin/index.js:1
 #: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Tuesday"
 msgstr ""
 
@@ -1633,6 +1638,7 @@ msgstr ""
 #: include/custom-options/module/nexter-display-conditional-rules.php:1808
 #: assets/js/admin/index.js:1
 #: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Wednesday"
 msgstr ""
 
@@ -1640,6 +1646,7 @@ msgstr ""
 #: include/custom-options/module/nexter-display-conditional-rules.php:1809
 #: assets/js/admin/index.js:1
 #: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Thursday"
 msgstr ""
 
@@ -1647,6 +1654,7 @@ msgstr ""
 #: include/custom-options/module/nexter-display-conditional-rules.php:1810
 #: assets/js/admin/index.js:1
 #: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Friday"
 msgstr ""
 
@@ -1654,6 +1662,7 @@ msgstr ""
 #: include/custom-options/module/nexter-display-conditional-rules.php:1811
 #: assets/js/admin/index.js:1
 #: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Saturday"
 msgstr ""
 
@@ -1661,6 +1670,7 @@ msgstr ""
 #: include/custom-options/module/nexter-display-conditional-rules.php:1812
 #: assets/js/admin/index.js:1
 #: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Sunday"
 msgstr ""
 
@@ -2537,6 +2547,7 @@ msgstr ""
 #: content-seo/build/917.js:1
 #: content-seo/build/939.js:1
 #: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 #: dashboard/build/index.js:1
 #: dashboard/build/index.js:10
 msgid "Saving…"
@@ -2696,80 +2707,80 @@ msgstr ""
 
 #. translators: 1: Taxonomy name, 2: Term name
 #: include/nexter-template/importer/class.wordpress-importer.php:581
-#: include/nexter-template/importer/class.wordpress-importer.php:820
+#: include/nexter-template/importer/class.wordpress-importer.php:821
 #, php-format
 msgid "Failed to import %1$s %2$s"
 msgstr ""
 
 #. translators: 1: post title, 2: post type
-#: include/nexter-template/importer/class.wordpress-importer.php:675
+#: include/nexter-template/importer/class.wordpress-importer.php:676
 #, php-format
 msgid "Failed to import &#8220;%1$s&#8221;: Invalid post type %2$s"
 msgstr ""
 
 #. translators: %s: post title
-#: include/nexter-template/importer/class.wordpress-importer.php:786
+#: include/nexter-template/importer/class.wordpress-importer.php:787
 #, php-format
 msgid "Failed to import %1$s &#8220;%2$s&#8221;"
 msgstr ""
 
-#: include/nexter-template/importer/class.wordpress-importer.php:975
+#: include/nexter-template/importer/class.wordpress-importer.php:976
 msgid "Menu item skipped due to missing menu slug"
 msgstr ""
 
 #. translators: %s: menu slug
-#: include/nexter-template/importer/class.wordpress-importer.php:983
+#: include/nexter-template/importer/class.wordpress-importer.php:984
 #, php-format
 msgid "Menu item skipped due to invalid menu slug: %s"
 msgstr ""
 
-#: include/nexter-template/importer/class.wordpress-importer.php:1053
+#: include/nexter-template/importer/class.wordpress-importer.php:1054
 msgid "Fetching attachments is not enabled"
 msgstr ""
 
-#: include/nexter-template/importer/class.wordpress-importer.php:1066
+#: include/nexter-template/importer/class.wordpress-importer.php:1067
 msgid "Invalid file type"
 msgstr ""
 
-#: include/nexter-template/importer/class.wordpress-importer.php:1122
+#: include/nexter-template/importer/class.wordpress-importer.php:1123
 msgid "Remote server did not respond"
 msgstr ""
 
 #. translators: 1: HTTP response code, 2: HTTP status description
-#: include/nexter-template/importer/class.wordpress-importer.php:1131
+#: include/nexter-template/importer/class.wordpress-importer.php:1132
 #, php-format
 msgid "Remote server returned error response %1$d %2$s"
 msgstr ""
 
-#: include/nexter-template/importer/class.wordpress-importer.php:1138
+#: include/nexter-template/importer/class.wordpress-importer.php:1139
 msgid "Remote file is incorrect size"
 msgstr ""
 
-#: include/nexter-template/importer/class.wordpress-importer.php:1143
+#: include/nexter-template/importer/class.wordpress-importer.php:1144
 msgid "Zero size file downloaded"
 msgstr ""
 
 #. translators: %s: Maximum file size limit
-#: include/nexter-template/importer/class.wordpress-importer.php:1150
+#: include/nexter-template/importer/class.wordpress-importer.php:1151
 #, php-format
 msgid "Remote file is too large, limit is %s"
 msgstr ""
 
-#: include/nexter-template/importer/class.wordpress-importer.php:1253
+#: include/nexter-template/importer/class.wordpress-importer.php:1254
 msgid "Import WordPress"
 msgstr ""
 
 #. translators: %s: new version
-#: include/nexter-template/importer/class.wordpress-importer.php:1261
+#: include/nexter-template/importer/class.wordpress-importer.php:1262
 #, php-format
 msgid "A new version of this importer is available. Please update to version %s to ensure compatibility with newer export files."
 msgstr ""
 
-#: include/nexter-template/importer/class.wordpress-importer.php:1276
+#: include/nexter-template/importer/class.wordpress-importer.php:1277
 msgid "Howdy! Upload your WordPress eXtended RSS (WXR) file and we&#8217;ll import the posts, pages, comments, custom fields, categories, and tags into this site."
 msgstr ""
 
-#: include/nexter-template/importer/class.wordpress-importer.php:1277
+#: include/nexter-template/importer/class.wordpress-importer.php:1278
 msgid "Choose a WXR (.xml) file to upload, then click Upload file and import."
 msgstr ""
 
@@ -3117,7 +3128,7 @@ msgid "Forbidden."
 msgstr ""
 
 #: include/panel-settings/extensions/content-seo/audit/class-audit-ajax.php:45
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:1845
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:1911
 msgid "Audit queued in background. Showing last available snapshot until the run completes."
 msgstr ""
 
@@ -3745,83 +3756,85 @@ msgstr ""
 msgid "No automated fix is available for this issue."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-404-monitor.php:452
+#: include/panel-settings/extensions/content-seo/class-404-monitor.php:455
 msgid "404 log row not found."
 msgstr ""
 
 #: include/panel-settings/extensions/content-seo/class-content-seo.php:42
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer.php:996
 #: include/panel-settings/extensions/content-seorank.php:82
 #: include/panel-settings/extensions/content-seorank.php:318
 #: include/panel-settings/nexter-ext-panel-settings.php:393
 #: content-seo/build/150.js:1
-#: content-seo/build/index.js:1
+#: content-seo/build/869.js:1
+#: content-seo/build/index.js:3
 msgid "Nexter SEO"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:305
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:320
 msgid "Google Analytics"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:397
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:413
 msgid "Nexter Content SEO global settings"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:1096
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:1122
 msgid "Invalid settings."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:1176
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:1218
 msgid "The Image SEO module is not available. Make sure the Nexter Extension SEO module is enabled and updated to a version that includes Image SEO."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:1297
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:1340
 #: content-seo/build/606.js:1
 msgid "Select at least one group to export."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:1318
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:1361
 msgid "Secret credentials (IndexNow API key, Google Indexing private key) were omitted from this export for security. Re-enter them on the destination site."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:1445
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:1488
 msgid "Invalid or empty import data."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:1454
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:1497
 msgid "The file does not contain any importable SEO data."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:1462
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:1505
 msgid "Unsupported export file version."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:1470
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:1513
 msgid "This JSON file is not a Nexter Content SEO export."
 msgstr ""
 
 #. translators: 1: applied count, 2: skipped count
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:1497
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:1540
 #, php-format
 msgid "Imported %1$d credential/verification value(s); skipped %2$d invalid."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:1502
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:1545
 msgid "This file includes verification/API-key values. They were NOT applied. Re-run the import with the “Import credentials” option enabled to review and apply them."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:1817
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:1858
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:1877
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:1895
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:2065
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:1883
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:1924
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:1943
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:1961
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:2131
 msgid "Audit module not loaded."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:1836
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:1902
 msgid "Could not complete the SEO audit."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:1905
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:1971
 msgid "Schedule saved."
 msgstr ""
 
@@ -4148,52 +4161,56 @@ msgid "Improve readability (shorter sentences, simpler words)"
 msgstr ""
 
 #. translators: %s: redirect source
-#: include/panel-settings/extensions/content-seo/class-redirection.php:486
+#: include/panel-settings/extensions/content-seo/class-redirection.php:689
 #, php-format
 msgid "A rule cannot redirect a URL to itself (%s)."
 msgstr ""
 
 #. translators: %s: chain of paths
-#: include/panel-settings/extensions/content-seo/class-redirection.php:499
+#: include/panel-settings/extensions/content-seo/class-redirection.php:702
 #, php-format
 msgid "These redirect rules form a loop: %s"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-redirection.php:508
+#: include/panel-settings/extensions/content-seo/class-redirection.php:711
 msgid "Redirect chain is too long — this usually indicates a loop."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-redirection.php:637
+#: include/panel-settings/extensions/content-seo/class-redirection.php:851
+msgid "This pattern matches every request — it will redirect every page on your site."
+msgstr ""
+
+#: include/panel-settings/extensions/content-seo/class-redirection.php:854
 msgid "This rule matches all requests (Starts With “/”) and points to an external domain — it will send every visitor off-site."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-redirection.php:639
+#: include/panel-settings/extensions/content-seo/class-redirection.php:856
 msgid "This rule matches all requests (Starts With “/”) — it will redirect every page on your site."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-redirection.php:641
+#: include/panel-settings/extensions/content-seo/class-redirection.php:858
 msgid "This rule redirects to an external domain — visitors will be sent off-site."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-redirection.php:660
-#: include/panel-settings/extensions/content-seo/class-redirection.php:707
-msgid "A source URL is required, and a destination URL is required for redirect (3xx) rules."
+#: include/panel-settings/extensions/content-seo/class-redirection.php:877
+#: include/panel-settings/extensions/content-seo/class-redirection.php:924
+msgid "A valid source is required (a Regex rule needs a pattern that compiles), and a destination URL is required for redirect (3xx) rules."
 msgstr ""
 
 #. translators: %d: maximum number of redirect rules
-#: include/panel-settings/extensions/content-seo/class-redirection.php:671
+#: include/panel-settings/extensions/content-seo/class-redirection.php:888
 #, php-format
 msgid "The redirect rule limit (%d) has been reached. Delete unused rules before adding more."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-redirection.php:719
-#: include/panel-settings/extensions/content-seo/class-redirection.php:760
-#: include/panel-settings/extensions/content-seo/class-redirection.php:790
+#: include/panel-settings/extensions/content-seo/class-redirection.php:936
+#: include/panel-settings/extensions/content-seo/class-redirection.php:977
+#: include/panel-settings/extensions/content-seo/class-redirection.php:1007
 msgid "Rule not found."
 msgstr ""
 
 #. translators: %s: the search query
-#: include/panel-settings/extensions/content-seo/class-seo-description.php:419
+#: include/panel-settings/extensions/content-seo/class-seo-description.php:420
 #, php-format
 msgid "Search results for \"%s\""
 msgstr ""
@@ -4245,13 +4262,27 @@ msgstr ""
 msgid "Important Pages"
 msgstr ""
 
+#. translators: %s: detected plugin name, e.g. "Yoast SEO".
+#: include/panel-settings/extensions/content-seo/class-seo-migrate-notice.php:146
+#, php-format
+msgid "We found %s on this site — bring its SEO data into Nexter in one click."
+msgstr ""
+
+#: include/panel-settings/extensions/content-seo/class-seo-migrate-notice.php:147
+msgid "Titles, meta descriptions, per-post robots settings and redirects import in resumable batches. Nothing already set in Nexter is overwritten, and the source plugin's own data is left untouched."
+msgstr ""
+
+#: include/panel-settings/extensions/content-seo/class-seo-migrate-notice.php:148
+msgid "Migrate Now"
+msgstr ""
+
 #: include/panel-settings/extensions/content-seo/class-seo-robots.php:82
 msgid "Nexter SEO: a physical robots.txt file exists in your site root (e.g. created by your host/HestiaCP), so WordPress cannot serve a dynamic robots.txt. Your custom robots.txt rules and the Sitemap: directive are being ignored. Remove or edit the physical robots.txt file to let Nexter manage it."
 msgstr ""
 
 #: include/panel-settings/extensions/content-seo/class-seo-schema.php:1272
 #: include/panel-settings/extensions/content-seo/class-seo-settings.php:29
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Post Title"
 msgstr ""
 
@@ -4261,19 +4292,19 @@ msgstr ""
 
 #: include/panel-settings/extensions/content-seo/class-seo-schema.php:1274
 #: include/panel-settings/extensions/content-seo/class-seo-settings.php:30
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Post Excerpt"
 msgstr ""
 
 #: include/panel-settings/extensions/content-seo/class-seo-schema.php:1275
 #: include/panel-settings/extensions/content-seo/class-seo-settings.php:31
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Post Content"
 msgstr ""
 
 #: include/panel-settings/extensions/content-seo/class-seo-schema.php:1276
 #: include/panel-settings/extensions/content-seo/class-seo-settings.php:35
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Post URL"
 msgstr ""
 
@@ -4399,8 +4430,8 @@ msgstr ""
 
 #: include/panel-settings/extensions/content-seo/class-seo-schema.php:1415
 #: include/panel-settings/extensions/content-seo/class-seo-settings.php:32
-#: include/panel-settings/extensions/content-seo/class-seo-settings.php:219
-#: content-seo/build/index.js:1
+#: include/panel-settings/extensions/content-seo/class-seo-settings.php:255
+#: content-seo/build/index.js:3
 msgid "Term Description"
 msgstr ""
 
@@ -4549,22 +4580,22 @@ msgid "“%s” (FAQ Page) needs at least one question and answer before it can 
 msgstr ""
 
 #: include/panel-settings/extensions/content-seo/class-seo-settings.php:26
-#: include/panel-settings/extensions/content-seo/class-seo-settings.php:213
-#: include/panel-settings/extensions/content-seo/class-seo-settings.php:271
-#: content-seo/build/index.js:1
+#: include/panel-settings/extensions/content-seo/class-seo-settings.php:249
+#: include/panel-settings/extensions/content-seo/class-seo-settings.php:307
+#: content-seo/build/index.js:3
 msgid "Site Name"
 msgstr ""
 
 #: include/panel-settings/extensions/content-seo/class-seo-settings.php:27
-#: include/panel-settings/extensions/content-seo/class-seo-settings.php:214
-#: include/panel-settings/extensions/content-seo/class-seo-settings.php:272
-#: content-seo/build/index.js:1
+#: include/panel-settings/extensions/content-seo/class-seo-settings.php:250
+#: include/panel-settings/extensions/content-seo/class-seo-settings.php:308
+#: content-seo/build/index.js:3
 msgid "Tagline"
 msgstr ""
 
 #: include/panel-settings/extensions/content-seo/class-seo-settings.php:28
-#: include/panel-settings/extensions/content-seo/class-seo-settings.php:215
-#: content-seo/build/index.js:1
+#: include/panel-settings/extensions/content-seo/class-seo-settings.php:251
+#: content-seo/build/index.js:3
 msgid "Term Title"
 msgstr ""
 
@@ -4573,61 +4604,61 @@ msgstr ""
 #: include/panel-settings/extensions/content-seo/schema-types/fields-claim-review.php:62
 #: include/panel-settings/extensions/content-seo/schema-types/fields-recipe.php:92
 #: include/panel-settings/extensions/content-seo/schema-types/fields-web-page.php:85
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Date Published"
 msgstr ""
 
 #: include/panel-settings/extensions/content-seo/class-seo-settings.php:34
 #: include/panel-settings/extensions/content-seo/schema-types/fields-article.php:66
 #: include/panel-settings/extensions/content-seo/schema-types/fields-web-page.php:92
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Date Modified"
 msgstr ""
 
 #: include/panel-settings/extensions/content-seo/class-seo-settings.php:36
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Current Date"
 msgstr ""
 
 #: include/panel-settings/extensions/content-seo/class-seo-settings.php:37
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Current Day"
 msgstr ""
 
 #: include/panel-settings/extensions/content-seo/class-seo-settings.php:38
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Current Month"
 msgstr ""
 
 #: include/panel-settings/extensions/content-seo/class-seo-settings.php:39
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Current Year"
 msgstr ""
 
 #: include/panel-settings/extensions/content-seo/class-seo-settings.php:40
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 #: dashboard/build/index.js:6
 msgid "Current Time"
 msgstr ""
 
 #: include/panel-settings/extensions/content-seo/class-seo-settings.php:41
-#: include/panel-settings/extensions/content-seo/class-seo-settings.php:229
-#: content-seo/build/index.js:1
+#: include/panel-settings/extensions/content-seo/class-seo-settings.php:265
+#: content-seo/build/index.js:3
 msgid "Organization Name"
 msgstr ""
 
 #: include/panel-settings/extensions/content-seo/class-seo-settings.php:42
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Organization Logo"
 msgstr ""
 
 #: include/panel-settings/extensions/content-seo/class-seo-settings.php:43
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Organization URL"
 msgstr ""
 
 #: include/panel-settings/extensions/content-seo/class-seo-settings.php:44
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Post Author Name"
 msgstr ""
 
@@ -4639,40 +4670,40 @@ msgstr ""
 msgid "Stock status label (WooCommerce)"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-settings.php:134
+#: include/panel-settings/extensions/content-seo/class-seo-settings.php:170
 #: include/panel-settings/extensions/content-seo/schema-types/product-select-groups.php:28
 msgid "Out of stock"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-settings.php:136
-#: include/panel-settings/extensions/content-seo/class-seo-social-meta.php:1284
+#: include/panel-settings/extensions/content-seo/class-seo-settings.php:172
+#: include/panel-settings/extensions/content-seo/class-seo-social-meta.php:1290
 msgid "On backorder"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-settings.php:138
-#: include/panel-settings/extensions/content-seo/class-seo-settings.php:280
+#: include/panel-settings/extensions/content-seo/class-seo-settings.php:174
+#: include/panel-settings/extensions/content-seo/class-seo-settings.php:316
 #: include/panel-settings/extensions/content-seo/schema-types/event-select-groups.php:58
 #: include/panel-settings/extensions/content-seo/schema-types/product-select-groups.php:27
 msgid "In stock"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-settings.php:216
+#: include/panel-settings/extensions/content-seo/class-seo-settings.php:252
 msgid "Sample Post"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-settings.php:217
-#: include/panel-settings/extensions/content-seo/class-seo-settings.php:218
+#: include/panel-settings/extensions/content-seo/class-seo-settings.php:253
+#: include/panel-settings/extensions/content-seo/class-seo-settings.php:254
 msgid "This content will be set as the meta description tag and may appear in search results. Keep it short and clearly explain what the page is about."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-settings.php:232
+#: include/panel-settings/extensions/content-seo/class-seo-settings.php:268
 #: include/panel-settings/extensions/content-seo/schema-types/fields-claim-review.php:40
 #: include/panel-settings/extensions/content-seo/schema-types/fields-recipe.php:85
 #: include/panel-settings/extensions/content-seo/schema-types/fields-video-object.php:134
 msgid "Author Name"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-settings.php:279
+#: include/panel-settings/extensions/content-seo/class-seo-settings.php:315
 msgid "Short product summary for search and social previews."
 msgstr ""
 
@@ -4692,7 +4723,7 @@ msgstr ""
 msgid "Sorry, you are not allowed to do that."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-social-meta.php:1277
+#: include/panel-settings/extensions/content-seo/class-seo-social-meta.php:1283
 #: include/panel-settings/extensions/content-seo/schema-types/fields-event.php:103
 #: include/panel-settings/extensions/content-seo/schema-types/fields-product.php:142
 #: include/panel-settings/extensions/content-seo/schema-types/fields-service.php:103
@@ -4701,49 +4732,386 @@ msgstr ""
 msgid "Price"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-social-meta.php:1280
+#: include/panel-settings/extensions/content-seo/class-seo-social-meta.php:1286
 #: include/panel-settings/extensions/content-seo/schema-types/fields-event.php:124
 #: include/panel-settings/extensions/content-seo/schema-types/fields-product.php:157
 #: include/panel-settings/extensions/content-seo/schema-types/product-select-groups.php:24
 msgid "Availability"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-social-meta.php:1282
+#: include/panel-settings/extensions/content-seo/class-seo-social-meta.php:1288
 msgid "Out of Stock"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-social-meta.php:1286
+#: include/panel-settings/extensions/content-seo/class-seo-social-meta.php:1292
 msgid "In Stock"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-yoast.php:122
-msgid "Focus keywords are not imported — Nexter SEO runs its own analysis."
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-aioseo.php:441
+msgid "TruSEO scores and keyphrases"
 msgstr ""
 
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-aioseo.php:443
+msgid "AIOSEO analysis results are not imported — Nexter runs its own audit."
+msgstr ""
+
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-aioseo.php:453
+msgid "Schema field values"
+msgstr ""
+
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-aioseo.php:455
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-rankmath.php:186
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-surerank.php:175
+msgid "The schema type is imported; the individual schema field values are not — Nexter builds those from its own field set."
+msgstr ""
+
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-aioseo.php:463
+msgid "Twitter title and description"
+msgstr ""
+
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-aioseo.php:465
+msgid "These posts are set to use the Facebook/OG values for Twitter, so the stored Twitter text is not what AIOSEO shows. The Facebook values are imported instead."
+msgstr ""
+
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-aioseo.php:473
+msgid "Robots settings left as inherited"
+msgstr ""
+
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-aioseo.php:475
+msgid "These posts are set to follow your global robots defaults, so their stored per-post values are not active in AIOSEO. They are left inherited in Nexter too rather than becoming explicit overrides."
+msgstr ""
+
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-aioseo.php:482
+msgid "Category and tag SEO"
+msgstr ""
+
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-aioseo.php:484
+msgid "AIOSEO stores term SEO in a table that only its Pro version creates. This site does not have it, so there is no term data to import."
+msgstr ""
+
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-aioseo.php:494
+msgid "Per-language setting overrides"
+msgstr ""
+
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-aioseo.php:496
+msgid "AIOSEO stores a separate copy of some settings per language. Nexter keeps one value per setting, so the main values are imported and the per-language copies are left behind."
+msgstr ""
+
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-aioseo.php:505
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-rankmath.php:210
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-surerank.php:220
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-yoast.php:163
+msgid "Your existing robots settings"
+msgstr ""
+
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-aioseo.php:507
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-rankmath.php:212
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-surerank.php:222
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-yoast.php:165
+msgid "These posts already have a Nexter No Index, No Follow or No Archive setting. The import never overwrites what you set yourself, so yours is kept."
+msgstr ""
+
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-aioseo.php:521
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-rankmath.php:226
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-surerank.php:236
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-yoast.php:180
+msgid "Redirect loop"
+msgstr ""
+
+#. translators: %s: the loop the detector found, already a full sentence.
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-aioseo.php:525
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-rankmath.php:230
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-surerank.php:240
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-yoast.php:184
+#, php-format
+msgid "These redirects contain a chain that never resolves, so those URLs would keep bouncing. %s They are still imported — fix the rule in the source plugin before importing, or under Redirections afterwards."
+msgstr ""
+
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-aioseo.php:532
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-rankmath.php:237
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-surerank.php:247
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-yoast.php:191
+msgid "Redirects above the rule limit"
+msgstr ""
+
+#. translators: 1: product name, 2: maximum number of redirect rules.
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-aioseo.php:536
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-rankmath.php:241
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-surerank.php:251
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-yoast.php:195
+#, php-format
+msgid "%1$s stores up to %2$d redirect rules, because the front end compiles and walks the whole set on every request. These ones are over that limit and are not imported."
+msgstr ""
+
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-aioseo.php:554
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-rankmath.php:258
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-yoast.php:212
+msgid "Per-type title and description templates"
+msgstr ""
+
+#. translators: 1: product name, 2: comma-separated list of post types and taxonomies.
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-aioseo.php:558
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-rankmath.php:262
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-yoast.php:216
+#, php-format
+msgid "%1$s uses one title and description template for all post types and one for all taxonomies. The Post and Category templates are imported and will apply to these too, whose own templates are not brought across: %2$s."
+msgstr ""
+
+#. translators: %s: product name.
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-aioseo.php:569
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-rankmath.php:273
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-surerank.php:266
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-yoast.php:153
+#, php-format
+msgid "Your existing %s values"
+msgstr ""
+
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-aioseo.php:571
+msgid "These posts already have a Nexter title or description. The import never overwrites what you set yourself — the AIOSEO value is skipped and your own is kept."
+msgstr ""
+
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-aioseo.php:578
+msgid "404 log"
+msgstr ""
+
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-aioseo.php:580
+msgid "AIOSEO's recorded 404 hits are not imported — Nexter's own 404 Monitor starts logging fresh from when it is enabled."
+msgstr ""
+
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-aioseo.php:1506
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-aioseo.php:1519
+#: content-seo/build/150.js:1
+#: content-seo/build/index.js:3
+msgid "Redirects"
+msgstr ""
+
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-aioseo.php:1508
+msgid "Redirects are part of AIOSEO Pro, and this site does not have its redirects table. There is nothing to import."
+msgstr ""
+
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-aioseo.php:1521
+msgid "The AIOSEO redirects table on this site is not in a layout Nexter recognises, so redirects are left alone rather than imported incorrectly."
+msgstr ""
+
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-aioseo.php:1537
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-yoast.php:253
+msgid "Redirects with an unsupported status"
+msgstr ""
+
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-aioseo.php:1539
+msgid "Nexter redirects support 301, 302, 307, 308, 410 and 451. Redirects using any other response are left behind."
+msgstr ""
+
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-aioseo.php:1546
+msgid "Redirect matching mode"
+msgstr ""
+
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-aioseo.php:1548
+msgid "This version of the AIOSEO redirects table does not record which redirects use a regular expression, so each one is imported as an exact URL match. Any source that looks like a pattern is skipped instead of being imported as a literal URL."
+msgstr ""
+
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-aioseo.php:1558
+msgid "Redirects that ignore letter case"
+msgstr ""
+
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-aioseo.php:1560
+msgid "AIOSEO matches these regardless of letter case (its default). Nexter compares case exactly, so they are stored as Regex rules and keep matching /Old-Page as well as /old-page; they will show as Regex in the Redirection Manager. A trailing slash needs no special handling — Nexter already treats /old-page and /old-page/ alike."
+msgstr ""
+
+#. translators: %s: product name.
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-rankmath.php:156
 #: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-yoast.php:123
-msgid "Cornerstone flags have no Nexter equivalent."
+#, php-format
+msgid "Focus keywords are not imported — %s runs its own analysis."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-yoast.php:124
-msgid "Per-post schema type import arrives with the schema milestone."
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-rankmath.php:157
+msgid "Rank Math SEO scores have no Nexter equivalent."
 msgstr ""
 
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-rankmath.php:158
+msgid "Pillar-content flags have no Nexter equivalent."
+msgstr ""
+
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-rankmath.php:159
+msgid "Custom breadcrumb titles have no Nexter equivalent."
+msgstr ""
+
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-rankmath.php:176
 #: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-yoast.php:141
 msgid "Primary term has no Nexter equivalent yet."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-yoast.php:158
-msgid "Regex redirects are skipped — Nexter redirection matches exact/contains/starts/ends."
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-rankmath.php:201
+msgid "Nexter stores Google, Bing, Pinterest and Facebook verification codes only."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer.php:186
-#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer.php:207
-#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer.php:288
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-rankmath.php:275
+msgid "These posts already have a Nexter title or description. The import never overwrites what you set yourself — the Rank Math value is skipped and your own is kept."
+msgstr ""
+
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-rankmath.php:282
+msgid "404 Monitor log"
+msgstr ""
+
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-rankmath.php:284
+msgid "Rank Math's recorded 404 hits are not imported — Nexter's own 404 Monitor starts logging fresh from when it is enabled."
+msgstr ""
+
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-rankmath.php:304
+msgid "Contains / Ends With redirects"
+msgstr ""
+
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-rankmath.php:306
+msgid "These arrive as Regex rules. Rank Math matches them anywhere in the URL, and a Regex rule is how Nexter reproduces that exactly — the redirects behave the same, they are just labelled Regex in the Redirection Manager."
+msgstr ""
+
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-rankmath.php:315
+msgid "Schema templates"
+msgstr ""
+
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-rankmath.php:317
+msgid "Rank Math PRO schema templates are applied to posts by display conditions rather than stored on the post, so they are not imported. The schema type set on each post is."
+msgstr ""
+
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-rankmath.php:323
+msgid "Local SEO locations"
+msgstr ""
+
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-rankmath.php:325
+msgid "Rank Math PRO location entries have no Nexter equivalent."
+msgstr ""
+
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-rankmath.php:331
+msgid "Posts with more than one schema"
+msgstr ""
+
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-rankmath.php:333
+msgid "Nexter stores one schema type per post, so the schema Rank Math marks as primary is imported and the others are left behind."
+msgstr ""
+
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-rankmath.php:339
+msgid "Redirect categories"
+msgstr ""
+
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-rankmath.php:341
+msgid "The redirects are imported; the Rank Math PRO categories they were filed under are not, because Nexter has no redirect categories."
+msgstr ""
+
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-surerank.php:166
+msgid "SureRank SEO check results are not imported — Nexter runs its own audit."
+msgstr ""
+
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-surerank.php:184
+msgid "Nexter has no matching setting for noindexing paginated archive pages, so this one is left behind."
+msgstr ""
+
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-surerank.php:202
+msgid "Turned-off redirects"
+msgstr ""
+
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-surerank.php:204
+msgid "These redirects are switched off in SureRank, so they are not brought across. Turn them on before importing if you want them."
+msgstr ""
+
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-surerank.php:209
+msgid "Redirects that match part of a URL"
+msgstr ""
+
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-surerank.php:211
+msgid "SureRank \"Contains\" and \"Ends With\" redirects are imported as Regex rules so they keep matching exactly as they do now. They will show as Regex in the Redirection Manager."
+msgstr ""
+
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-surerank.php:268
+msgid "These posts already have a Nexter title or description. The import never overwrites what you set yourself — the SureRank value is skipped and your own is kept."
+msgstr ""
+
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-yoast.php:124
+msgid "Cornerstone flags have no Nexter equivalent."
+msgstr ""
+
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-yoast.php:155
+msgid "These posts already have a Nexter title or description. The import never overwrites what you set yourself — the Yoast value is skipped and your own is kept."
+msgstr ""
+
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-yoast.php:229
+msgid "Organization name and logo"
+msgstr ""
+
+#. translators: %s: product name.
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-yoast.php:232
+#, php-format
+msgid "These are imported into the Organization schema in %s, which is where it keeps your site identity — you will find them under Schema rather than in the settings list above. If you have already set your own name or logo there, yours is kept."
+msgstr ""
+
+#. translators: %s: product name.
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-yoast.php:256
+#, php-format
+msgid "%s can serve 301, 302, 307, 308, 410 and 451. These redirects use a different response, so they are skipped rather than changed into a 301 behind your back."
+msgstr ""
+
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer-yoast.php:284
+msgid "These regex redirects use a pattern Nexter cannot compile, so they are skipped."
+msgstr ""
+
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer.php:253
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer.php:313
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer.php:714
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer.php:755
 msgid "Unknown import source."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer.php:189
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer.php:256
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer.php:319
 msgid "No data from this plugin was found on the site."
+msgstr ""
+
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer.php:294
+msgid "The preview could not be built from this plugin's data. The import itself handles each step separately, so it can still run and will report whatever it cannot read."
+msgstr ""
+
+#. translators: %d: seconds until the import lock expires.
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer.php:350
+#, php-format
+msgid "An import from this plugin is already running. It releases in about %d second. If no import is actually running, use Reset markers and start again."
+msgid_plural "An import from this plugin is already running. It releases in about %d seconds. If no import is actually running, use Reset markers and start again."
+msgstr[0] ""
+msgstr[1] ""
+
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer.php:758
+msgid "This source does not support verification."
+msgstr ""
+
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer.php:1022
+msgid "Per-author SEO settings"
+msgstr ""
+
+#. translators: 1: source SEO plugin name, 2: product name.
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer.php:1026
+#, php-format
+msgid "These users have an author title, description or noindex set in %1$s. %2$s has no per-author fields yet, so they are not imported and the author archives will use your global archive template instead."
+msgstr ""
+
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer.php:1059
+msgid "Per-language global settings"
+msgstr ""
+
+#. translators: 1: multilingual plugin name, 2: source SEO plugin name.
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer.php:1063
+#, php-format
+msgid "%1$s is active. %3$s keeps one set of global settings for the whole site, so the title and description templates, robots defaults and social settings are imported once from %2$s and then apply to every language. Your per-post SEO is unaffected: each translation is its own post with its own values."
+msgstr ""
+
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer.php:1140
+msgid "Nothing has been imported from this source yet, so there is nothing to verify."
+msgstr ""
+
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer.php:1142
+msgid "The imported objects were found, but not one source field could be read from them. The import wrote nothing — treat this as a failure and re-run it after resetting the markers."
+msgstr ""
+
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer.php:1144
+msgid "Some values the source holds are missing or different in Nexter. The affected objects are listed below."
 msgstr ""
 
 #: include/panel-settings/extensions/content-seo/schema-types/article-subtypes.php:18
@@ -4921,6 +5289,7 @@ msgstr ""
 #: content-seo/build/257.js:1
 #: content-seo/build/877.js:1
 #: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 #: dashboard/build/index.js:8
 msgid "Description"
 msgstr ""
@@ -5510,7 +5879,7 @@ msgid "List the supplies or materials needed to complete the task."
 msgstr ""
 
 #: include/panel-settings/extensions/content-seo/schema-types/fields-how-to.php:63
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Tools"
 msgstr ""
 
@@ -6969,7 +7338,7 @@ msgstr ""
 
 #: include/panel-settings/extensions/content-seo/schema-types/local-business-subtypes.php:18
 #: include/panel-settings/extensions/content-seo/schema-types/organization-subtypes.php:19
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "General"
 msgstr ""
 
@@ -8011,11 +8380,13 @@ msgstr ""
 
 #: include/panel-settings/extensions/content-seo/schema-types/video-object-selects.php:62
 #: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Yes"
 msgstr ""
 
 #: include/panel-settings/extensions/content-seo/schema-types/video-object-selects.php:63
 #: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "No"
 msgstr ""
 
@@ -8065,69 +8436,69 @@ msgid "Term not found."
 msgstr ""
 
 #: include/panel-settings/extensions/content-seorank.php:479
-#: include/panel-settings/extensions/content-seorank.php:883
-#: include/panel-settings/extensions/content-seorank.php:1081
+#: include/panel-settings/extensions/content-seorank.php:887
+#: include/panel-settings/extensions/content-seorank.php:1089
 msgid "Not allowed."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seorank.php:749
+#: include/panel-settings/extensions/content-seorank.php:753
 msgid "Invalid post ID."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seorank.php:759
+#: include/panel-settings/extensions/content-seorank.php:763
 msgid "Post not found."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seorank.php:1337
-#: include/panel-settings/extensions/content-seorank.php:1342
-#: include/panel-settings/extensions/content-seorank.php:1540
+#: include/panel-settings/extensions/content-seorank.php:1345
+#: include/panel-settings/extensions/content-seorank.php:1350
+#: include/panel-settings/extensions/content-seorank.php:1548
 msgid "SEO Checks"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seorank.php:1380
+#: include/panel-settings/extensions/content-seorank.php:1388
 msgid "Not analyzed"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seorank.php:1386
-#: content-seo/build/index.js:1
+#: include/panel-settings/extensions/content-seorank.php:1394
+#: content-seo/build/index.js:3
 msgid "Good"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seorank.php:1392
+#: include/panel-settings/extensions/content-seorank.php:1400
 msgid "Fair"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seorank.php:1397
-#: content-seo/build/index.js:1
+#: include/panel-settings/extensions/content-seorank.php:1405
+#: content-seo/build/index.js:3
 msgid "Needs work"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seorank.php:1538
+#: include/panel-settings/extensions/content-seorank.php:1546
 msgid "Analyzing…"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seorank.php:1539
+#: include/panel-settings/extensions/content-seorank.php:1547
 msgid "Could not load SEO checks."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seorank.php:1541
+#: include/panel-settings/extensions/content-seorank.php:1549
 msgid "Score"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seorank.php:1542
-#: content-seo/build/index.js:1
+#: include/panel-settings/extensions/content-seorank.php:1550
+#: content-seo/build/index.js:3
 msgid "Edit SEO"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seorank.php:1722
+#: include/panel-settings/extensions/content-seorank.php:1748
 msgid "Search Pages"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seorank.php:1726
+#: include/panel-settings/extensions/content-seorank.php:1752
 msgid "Author Archives"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seorank.php:1730
+#: include/panel-settings/extensions/content-seorank.php:1756
 msgid "Date Archives"
 msgstr ""
 
@@ -8229,6 +8600,7 @@ msgstr ""
 #: content-seo/build/150.js:1
 #: content-seo/build/716.js:1
 #: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 #: dashboard/build/index.js:10
 msgid "Cancel"
 msgstr ""
@@ -8615,6 +8987,7 @@ msgid "Authentication failed."
 msgstr ""
 
 #: include/panel-settings/extensions/nexter-ext-google-captcha.php:627
+#: content-seo/build/869.js:11
 #: dashboard/build/index.js:10
 msgid "Error"
 msgstr ""
@@ -8628,7 +9001,7 @@ msgid "Security check failed. Please reload the page and try again."
 msgstr ""
 
 #: include/panel-settings/extensions/nexter-ext-image-sizes.php:83
-#: include/panel-settings/extensions/nexter-ext-svg-upload.php:338
+#: include/panel-settings/extensions/nexter-ext-svg-upload.php:347
 msgid "Invalid attachment."
 msgstr ""
 
@@ -8645,7 +9018,7 @@ msgid "File is not a regenerable image."
 msgstr ""
 
 #: include/panel-settings/extensions/nexter-ext-image-sizes.php:126
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1569
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1643
 msgid "Invalid attachment ID."
 msgstr ""
 
@@ -8692,7 +9065,7 @@ msgid "Optimising this image will reduce its file size and help the page load fa
 msgstr ""
 
 #: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:818
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1453
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1545
 msgid "Optimise Image"
 msgstr ""
 
@@ -8711,81 +9084,81 @@ msgid "Your image has been optimised and converted to %1$s format, reducing file
 msgstr ""
 
 #: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:916
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1435
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1526
 msgid "Image Optimised"
 msgstr ""
 
 #. translators: %s: Amount the image is smaller (e.g. "45%")
 #: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:918
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1445
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1537
 #, php-format
 msgid "%s smaller"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1379
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1470
 msgid "Optimise"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1409
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1500
 msgid "Excluded via settings"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1577
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1651
 msgid "File not found."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1585
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1659
 msgid "File is empty or invalid. Skipped."
 msgstr ""
 
 #. translators: %s: Maximum file size (e.g. "20 MB")
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1593
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1667
 #, php-format
 msgid "File exceeds maximum size for optimisation (%s). Skipped."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1601
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1675
 msgid "Already optimised."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1609
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1683
 msgid "Unsupported image format. Skipped."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1617
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1691
 msgid "Image path is excluded from optimisation in settings. Skipped."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1624
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1698
 msgid "Image Optimisation is disabled."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1635
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1709
 msgid "Imagick or GD is required for image optimisation. Skipped."
 msgstr ""
 
 #. translators: %d: Monthly image optimisation limit
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1643
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1717
 #, php-format
 msgid "Monthly Optimisation limit reached (%d images). Upgrade to Pro for unlimited Optimisation."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1789
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1863
 msgid "Optimisation failed. The image may be in an unsupported format or state, or the server could not process it."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1793
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1867
 msgid "Optimised file was not saved. Check folder permissions for wp-content/nexter-optimizer."
 msgstr ""
 
 #. translators: %d: Number of image sizes converted
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1882
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1956
 #, php-format
 msgid "Image Optimised (%d sizes converted)."
 msgstr ""
 
-#. translators: 1: number of images successfully restored, 2: number of images that failed to restore
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:2020
+#. translators: 1: Number of images restored, 2: Number of images that failed to restore
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:2094
 #: dashboard/build/index.js:10
 #, php-format,js-format
 msgid "Restored %1$d images. %2$d failed."
@@ -9055,7 +9428,7 @@ msgstr ""
 msgid "SVG could not be sanitized and was not uploaded for security reasons."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-svg-upload.php:344
+#: include/panel-settings/extensions/nexter-ext-svg-upload.php:353
 msgid "Missing attachment ID."
 msgstr ""
 
@@ -9122,7 +9495,7 @@ msgstr ""
 
 #: include/panel-settings/extensions/perf-security/class-nxt-performance-feed-tweaks.php:41
 #: content-seo/build/257.js:1
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 #: dashboard/build/index.js:8
 msgid "Home Page"
 msgstr ""
@@ -9295,7 +9668,7 @@ msgstr ""
 
 #: include/panel-settings/nexter-ext-panel-settings.php:237
 #: include/panel-settings/nexter-ext-panel-settings.php:238
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 #: dashboard/build/index.js:3
 msgid "Dashboard"
 msgstr ""
@@ -9322,7 +9695,7 @@ msgstr ""
 
 #: include/panel-settings/nexter-ext-panel-settings.php:307
 #: include/panel-settings/nexter-ext-panel-settings.php:308
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 #: dashboard/build/index.js:1
 #: dashboard/build/index.js:6
 msgid "SEO"
@@ -9623,7 +9996,7 @@ msgstr ""
 #: assets/js/admin/index.js:1
 #: content-seo/build/257.js:1
 #: content-seo/build/877.js:1
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 #: dashboard/build/index.js:8
 msgid "Title"
 msgstr ""
@@ -9818,6 +10191,7 @@ msgid "Importing"
 msgstr ""
 
 #: assets/js/admin/index.js:1
+#: content-seo/build/869.js:7
 #: theme-builder/build/index.js:1
 msgid "Imported"
 msgstr ""
@@ -11518,7 +11892,7 @@ msgstr ""
 
 #: assets/js/admin/index.js:1
 #: content-seo/build/150.js:1
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Enable"
 msgstr ""
 
@@ -12150,7 +12524,7 @@ msgstr ""
 
 #: assets/js/admin/index.js:4
 #: content-seo/build/793.js:1
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 #: theme-builder/build/index.js:1
 msgid "Active"
 msgstr ""
@@ -12200,7 +12574,7 @@ msgid "Enter Description"
 msgstr ""
 
 #: assets/js/admin/index.js:4
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Schedule"
 msgstr ""
 
@@ -12394,7 +12768,7 @@ msgid "Upgrade to Nexter Extension PRO Unlimited Site Plan to unlock all advance
 msgstr ""
 
 #: content-seo/build/78.js:1
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "No Index"
 msgstr ""
 
@@ -12403,7 +12777,7 @@ msgid "Prevents selected content types from appearing in search results."
 msgstr ""
 
 #: content-seo/build/78.js:1
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "No Follow"
 msgstr ""
 
@@ -12412,7 +12786,7 @@ msgid "Prevents search engines from following links within selected content type
 msgstr ""
 
 #: content-seo/build/78.js:1
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "No Archive"
 msgstr ""
 
@@ -12433,7 +12807,7 @@ msgid "Items"
 msgstr ""
 
 #: content-seo/build/78.js:1
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Robots Instructions"
 msgstr ""
 
@@ -12455,6 +12829,10 @@ msgstr ""
 
 #: content-seo/build/150.js:1
 msgid "Ends With"
+msgstr ""
+
+#: content-seo/build/150.js:1
+msgid "Regex"
 msgstr ""
 
 #: content-seo/build/150.js:1
@@ -12567,7 +12945,15 @@ msgid "A To URL is required."
 msgstr ""
 
 #: content-seo/build/150.js:1
+msgid "This is not a valid regular expression."
+msgstr ""
+
+#: content-seo/build/150.js:1
 msgid "Please fill in the required fields."
+msgstr ""
+
+#: content-seo/build/150.js:1
+msgid "This pattern matches ALL requests, so it affects every page on your site."
 msgstr ""
 
 #: content-seo/build/150.js:1
@@ -12633,11 +13019,6 @@ msgid "Decide how to handle extra URL parts (you can ignore them, match them exa
 msgstr ""
 
 #: content-seo/build/150.js:1
-#: content-seo/build/index.js:1
-msgid "Redirects"
-msgstr ""
-
-#: content-seo/build/150.js:1
 msgid "Search…"
 msgstr ""
 
@@ -12670,6 +13051,7 @@ msgstr ""
 #: content-seo/build/150.js:1
 #: content-seo/build/716.js:1
 #: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 #: dashboard/build/index.js:8
 #: dashboard/build/index.js:10
 msgid "Remove"
@@ -12744,7 +13126,86 @@ msgid "Meta description for archive pages."
 msgstr ""
 
 #: content-seo/build/207.js:1
+msgid "No Image Index"
+msgstr ""
+
+#: content-seo/build/207.js:1
+msgid "Add a noimageindex directive so search engines don't index images on the page."
+msgstr ""
+
+#: content-seo/build/207.js:1
+msgid "No Snippet"
+msgstr ""
+
+#: content-seo/build/207.js:1
+msgid "Add a nosnippet directive so search engines don't show a text or video preview in results."
+msgstr ""
+
+#: content-seo/build/207.js:1
+msgid "Disable Website Schema"
+msgstr ""
+
+#: content-seo/build/207.js:1
+msgid "Suppress the automatic WebSite structured-data node Nexter adds to every page."
+msgstr ""
+
+#: content-seo/build/207.js:1
+msgid "Pagination Signals"
+msgstr ""
+
+#: content-seo/build/207.js:1
+msgid "Add rel=\"prev\"/\"next\" links on paginated archives and the blog index."
+msgstr ""
+
+#: content-seo/build/207.js:1
+msgid "Strip /category/ Base"
+msgstr ""
+
+#: content-seo/build/207.js:1
+msgid "Shortens category links from /category/news/ to /news/. A category whose slug matches an existing page's slug keeps going to the page."
+msgstr ""
+
+#: content-seo/build/207.js:1
+#: content-seo/build/index.js:3
 msgid "Advanced SEO"
+msgstr ""
+
+#: content-seo/build/207.js:1
+msgid "Crawling Optimization"
+msgstr ""
+
+#: content-seo/build/207.js:1
+msgid "WooCommerce URLs"
+msgstr ""
+
+#. translators: %s: the store's product base, e.g. /product
+#: content-seo/build/207.js:3
+#, js-format
+msgid "Strip %s Base (Products)"
+msgstr ""
+
+#: content-seo/build/207.js:3
+msgid "Shortens product links to /product-name/. Old product URLs are redirected. Pages and posts keep their own URLs when a product shares their slug."
+msgstr ""
+
+#. translators: %s: the store's product category base, e.g. /product-category
+#: content-seo/build/207.js:5
+#, js-format
+msgid "Strip %s Base (Product Categories)"
+msgstr ""
+
+#: content-seo/build/207.js:5
+msgid "Shortens product category links to /category-slug/. Old URLs are redirected."
+msgstr ""
+
+#. translators: %s: the store's product tag base, e.g. /product-tag
+#: content-seo/build/207.js:7
+#, js-format
+msgid "Strip %s Base (Product Tags)"
+msgstr ""
+
+#: content-seo/build/207.js:7
+msgid "Shortens product tag links to /tag-slug/. Old URLs are redirected."
 msgstr ""
 
 #: content-seo/build/257.js:1
@@ -12754,19 +13215,21 @@ msgstr ""
 
 #: content-seo/build/257.js:1
 #: content-seo/build/877.js:1
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Page URL"
 msgstr ""
 
 #: content-seo/build/257.js:1
 #: content-seo/build/877.js:1
 #: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Page title"
 msgstr ""
 
 #: content-seo/build/257.js:1
 #: content-seo/build/877.js:1
 #: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Meta description will appear here."
 msgstr ""
 
@@ -12820,13 +13283,13 @@ msgstr ""
 
 #: content-seo/build/257.js:1
 #: content-seo/build/400.js:1
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Remove Image"
 msgstr ""
 
 #: content-seo/build/257.js:1
 #: content-seo/build/400.js:1
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 #: theme-builder/build/index.js:1
 msgid "Preview"
 msgstr ""
@@ -12837,13 +13300,13 @@ msgstr ""
 
 #: content-seo/build/257.js:1
 #: content-seo/build/400.js:1
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Upload Your File"
 msgstr ""
 
 #: content-seo/build/257.js:1
 #: content-seo/build/400.js:1
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Recommended size: 1200 x 630 px. JPG or PNG supported"
 msgstr ""
 
@@ -12912,7 +13375,7 @@ msgid "BlueSky"
 msgstr ""
 
 #: content-seo/build/400.js:1
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 #: dashboard/build/index.js:3
 msgid "Social"
 msgstr ""
@@ -13046,7 +13509,7 @@ msgid "Please fix the highlighted verification codes before saving."
 msgstr ""
 
 #: content-seo/build/424.js:1
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Robots.txt Editor"
 msgstr ""
 
@@ -13099,7 +13562,7 @@ msgid "The request was rejected (403). Verify your key and its location."
 msgstr ""
 
 #: content-seo/build/478.js:1
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Time"
 msgstr ""
 
@@ -13108,7 +13571,7 @@ msgid "Response"
 msgstr ""
 
 #: content-seo/build/478.js:1
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Logs"
 msgstr ""
 
@@ -13121,7 +13584,7 @@ msgid "Delete Logs"
 msgstr ""
 
 #: content-seo/build/478.js:1
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 #: dashboard/build/index.js:5
 msgid "Loading…"
 msgstr ""
@@ -13205,7 +13668,7 @@ msgid "Only http(s) URLs on this site are allowed."
 msgstr ""
 
 #: content-seo/build/478.js:8
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Instant Indexing"
 msgstr ""
 
@@ -13275,7 +13738,7 @@ msgid "Export file downloaded."
 msgstr ""
 
 #: content-seo/build/606.js:1
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Import / Export"
 msgstr ""
 
@@ -13315,6 +13778,7 @@ msgid "IndexNow / Google keys and site verification tags."
 msgstr ""
 
 #: content-seo/build/606.js:1
+#: content-seo/build/869.js:1
 msgid "Preparing…"
 msgstr ""
 
@@ -13339,7 +13803,7 @@ msgid "Last Seen"
 msgstr ""
 
 #: content-seo/build/716.js:1
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "404 Monitor"
 msgstr ""
 
@@ -13444,7 +13908,7 @@ msgid "Automatically adds alt text to images that don’t have one at the time o
 msgstr ""
 
 #: content-seo/build/739.js:1
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Image SEO"
 msgstr ""
 
@@ -13509,7 +13973,15 @@ msgid "Posts Per Type Limit"
 msgstr ""
 
 #: content-seo/build/793.js:1
+msgid "How many items to list per post type, newest first."
+msgstr ""
+
+#: content-seo/build/793.js:1
 msgid "Terms Per Taxonomy Limit"
+msgstr ""
+
+#: content-seo/build/793.js:1
+msgid "How many terms to list per taxonomy, most used first."
 msgstr ""
 
 #: content-seo/build/793.js:1
@@ -13517,7 +13989,19 @@ msgid "Cache Duration (hours)"
 msgstr ""
 
 #: content-seo/build/793.js:1
+msgid "How long the generated file is reused before it is rebuilt. 0 rebuilds it on every request."
+msgstr ""
+
+#: content-seo/build/793.js:1
 msgid "Freshness Window (months)"
+msgstr ""
+
+#: content-seo/build/793.js:1
+msgid "Only content published or updated in this many months is listed — older items are left out. Set 0 to list everything."
+msgstr ""
+
+#: content-seo/build/793.js:1
+msgid "Set 0 to list everything. A higher number lists only content published or updated in that many months."
 msgstr ""
 
 #: content-seo/build/793.js:1
@@ -13541,7 +14025,7 @@ msgid "Loading pages…"
 msgstr ""
 
 #: content-seo/build/793.js:1
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "LLMs.txt"
 msgstr ""
 
@@ -13583,8 +14067,483 @@ msgstr ""
 msgid "Skip posts and terms marked noindex (per-item meta, global post-type, or taxonomy setting). Recommended."
 msgstr ""
 
+#: content-seo/build/869.js:1
+#: content-seo/build/869.js:7
+msgid "Global settings"
+msgstr ""
+
+#: content-seo/build/869.js:1
+msgid "Post meta"
+msgstr ""
+
+#: content-seo/build/869.js:1
+msgid "Term meta"
+msgstr ""
+
+#: content-seo/build/869.js:1
+#: content-seo/build/869.js:7
+msgid "Redirections"
+msgstr ""
+
+#: content-seo/build/869.js:1
+msgid "Checking the imported values"
+msgstr ""
+
+#: content-seo/build/869.js:1
+msgid "Importing post meta"
+msgstr ""
+
+#: content-seo/build/869.js:1
+msgid "Importing term meta"
+msgstr ""
+
+#: content-seo/build/869.js:1
+msgid "Finishing up"
+msgstr ""
+
+#. translators: %d: number of posts
+#: content-seo/build/869.js:3
+#: content-seo/build/869.js:9
+#, js-format
+msgid "%d post"
+msgid_plural "%d posts"
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %d: number of terms
+#: content-seo/build/869.js:5
+#: content-seo/build/869.js:11
+#, js-format
+msgid "%d term"
+msgid_plural "%d terms"
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %d: number of redirects
+#: content-seo/build/869.js:7
+#, js-format
+msgid "%d redirection"
+msgid_plural "%d redirections"
+msgstr[0] ""
+msgstr[1] ""
+
+#: content-seo/build/869.js:7
+msgid "global settings"
+msgstr ""
+
+#: content-seo/build/869.js:7
+msgid "(plugin inactive — its data is still here)"
+msgstr ""
+
+#: content-seo/build/869.js:7
+msgid "Everything from this plugin has already been imported."
+msgstr ""
+
+#: content-seo/build/869.js:7
+msgid "This clears the markers for this plugin and removes the values that import wrote, so it can be imported again. Values you set yourself are left alone."
+msgstr ""
+
+#: content-seo/build/869.js:7
+#: content-seo/build/869.js:16
+msgid "Import it again"
+msgstr ""
+
+#: content-seo/build/869.js:7
+msgid "Import Data"
+msgstr ""
+
+#: content-seo/build/869.js:7
+msgid "Nothing has been written yet. This is what the import would do."
+msgstr ""
+
+#: content-seo/build/869.js:7
+msgid "What to import"
+msgstr ""
+
+#. translators: %d: number of settings that change
+#: content-seo/build/869.js:7
+#, js-format
+msgid "Settings that change (%d)"
+msgstr ""
+
+#: content-seo/build/869.js:7
+#: content-seo/build/index.js:3
+msgid "Setting"
+msgstr ""
+
+#: content-seo/build/869.js:7
+msgid "Now"
+msgstr ""
+
+#: content-seo/build/869.js:7
+msgid "After import"
+msgstr ""
+
+#: content-seo/build/869.js:7
+msgid "Imported, but stored differently"
+msgstr ""
+
+#: content-seo/build/869.js:7
+msgid "Will be skipped"
+msgstr ""
+
+#. translators: %s: product name
+#: content-seo/build/869.js:7
+#, js-format
+msgid "These template variables have no %s equivalent and will be dropped rather than rendered as literal text:"
+msgstr ""
+
+#: content-seo/build/869.js:7
+msgid "Waiting"
+msgstr ""
+
+#. translators: %d: number of slices retried
+#: content-seo/build/869.js:7
+#, js-format
+msgid "%d retried"
+msgstr ""
+
+#: content-seo/build/869.js:7
+msgid "Reading the other plugin's data and importing the global settings first. The first step can take a moment."
+msgstr ""
+
+#. translators: 1: number of existing values kept, 2: product name
+#: content-seo/build/869.js:7
+#, js-format
+msgid "%1$d of your own %2$s values was kept — the imported one was skipped"
+msgid_plural "%1$d of your own %2$s values were kept — the imported ones were skipped"
+msgstr[0] ""
+msgstr[1] ""
+
+#: content-seo/build/869.js:7
+msgid "Terms"
+msgstr ""
+
+#: content-seo/build/869.js:7
+msgid "Some steps did not finish. The rest of the import is still running and the details are listed when it stops."
+msgstr ""
+
+#: content-seo/build/869.js:7
+msgid "Safe to leave this page — each object is marked as it is imported, so resuming picks up where it stopped and never repeats work."
+msgstr ""
+
+#: content-seo/build/869.js:7
+msgid "Stopping…"
+msgstr ""
+
+#: content-seo/build/869.js:7
+msgid "Stop after this batch"
+msgstr ""
+
+#: content-seo/build/869.js:7
+msgid "redirections"
+msgstr ""
+
+#: content-seo/build/869.js:11
+msgid "Import stopped. Nothing already imported was lost — start it again to continue from here."
+msgstr ""
+
+#: content-seo/build/869.js:11
+msgid "Import complete."
+msgstr ""
+
+#. translators: 1: number of existing values kept, 2: product name
+#: content-seo/build/869.js:11
+#, js-format
+msgid "%1$d value you had already set in %2$s was left exactly as it was — the import skipped it rather than replacing your work."
+msgid_plural "%1$d values you had already set in %2$s were left exactly as they were — the import skipped those rather than replacing your work."
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %d: number of slices retried
+#: content-seo/build/869.js:11
+#, js-format
+msgid "%d slice was retried after a temporary error and then succeeded."
+msgid_plural "%d slices were retried after a temporary error and then succeeded."
+msgstr[0] ""
+msgstr[1] ""
+
+#: content-seo/build/869.js:11
+msgid "Steps that did not finish"
+msgstr ""
+
+#: content-seo/build/869.js:11
+msgid "Step"
+msgstr ""
+
+#: content-seo/build/869.js:11
+msgid "Attempts"
+msgstr ""
+
+#: content-seo/build/869.js:11
+msgid "Retrying continues from where it stopped — everything already imported stays imported and is not written again."
+msgstr ""
+
+#: content-seo/build/869.js:11
+msgid "Retry the failed steps"
+msgstr ""
+
+#. translators: 1: number of values checked, 2: product name
+#: content-seo/build/869.js:14
+#, js-format
+msgid "Checked %1$d imported value — it is present in %2$s."
+msgid_plural "Checked %1$d imported values — every one of them is present in %2$s."
+msgstr[0] ""
+msgstr[1] ""
+
+#: content-seo/build/869.js:14
+#, js-format
+msgid "%1$d imported value is missing or different in %2$s. Open the affected post to check it."
+msgid_plural "%1$d imported values are missing or different in %2$s. Open one of the affected posts to check it."
+msgstr[0] ""
+msgstr[1] ""
+
+#: content-seo/build/869.js:14
+msgid "The import could not be verified."
+msgstr ""
+
+#. translators: %s: source plugin name
+#: content-seo/build/869.js:16
+#, js-format
+msgid "%s is still active. Two SEO plugins output their own meta tags, so deactivate it once you have checked a few pages."
+msgstr ""
+
+#: content-seo/build/869.js:16
+msgid "Clears the per-object markers and removes the values this import wrote, so the whole source can be imported again and picks up anything that changed. Values you set yourself are kept, and the source plugin's own data is never touched."
+msgstr ""
+
+#: content-seo/build/869.js:16
+msgid "Reset markers"
+msgstr ""
+
+#: content-seo/build/869.js:16
+msgid "Back to sources"
+msgstr ""
+
+#: content-seo/build/869.js:16
+msgid "Post title template"
+msgstr ""
+
+#: content-seo/build/869.js:16
+msgid "Post description template"
+msgstr ""
+
+#: content-seo/build/869.js:16
+msgid "Archive title template"
+msgstr ""
+
+#: content-seo/build/869.js:16
+msgid "Archive description template"
+msgstr ""
+
+#: content-seo/build/869.js:16
+msgid "Homepage title"
+msgstr ""
+
+#: content-seo/build/869.js:16
+msgid "Homepage description"
+msgstr ""
+
+#: content-seo/build/869.js:16
+msgid "Homepage social title"
+msgstr ""
+
+#: content-seo/build/869.js:16
+msgid "Homepage social description"
+msgstr ""
+
+#: content-seo/build/869.js:16
+msgid "Homepage social image"
+msgstr ""
+
+#: content-seo/build/869.js:16
+msgid "Post types hidden from search engines"
+msgstr ""
+
+#: content-seo/build/869.js:16
+msgid "Categories and tags hidden from search engines"
+msgstr ""
+
+#: content-seo/build/869.js:16
+msgid "Archives hidden from search engines"
+msgstr ""
+
+#: content-seo/build/869.js:16
+msgid "Post types whose links are not followed"
+msgstr ""
+
+#: content-seo/build/869.js:16
+msgid "Categories and tags whose links are not followed"
+msgstr ""
+
+#: content-seo/build/869.js:16
+msgid "Archives whose links are not followed"
+msgstr ""
+
+#: content-seo/build/869.js:16
+msgid "Post types search engines may not cache"
+msgstr ""
+
+#: content-seo/build/869.js:16
+msgid "Categories and tags search engines may not cache"
+msgstr ""
+
+#: content-seo/build/869.js:16
+msgid "Archives search engines may not cache"
+msgstr ""
+
+#: content-seo/build/869.js:16
+msgid "Author archive pages turned off"
+msgstr ""
+
+#: content-seo/build/869.js:16
+msgid "Date archive pages turned off"
+msgstr ""
+
+#: content-seo/build/869.js:16
+msgid "Attachment pages redirected to the file"
+msgstr ""
+
+#: content-seo/build/869.js:16
+msgid "Images included in the sitemap"
+msgstr ""
+
+#: content-seo/build/869.js:16
+msgid "XML sitemap enabled"
+msgstr ""
+
+#: content-seo/build/869.js:16
+msgid "Custom robots.txt rules"
+msgstr ""
+
+#: content-seo/build/869.js:16
+msgid "Default social sharing image"
+msgstr ""
+
+#: content-seo/build/869.js:16
+msgid "X card layout"
+msgstr ""
+
+#: content-seo/build/869.js:16
+msgid "Facebook page URL"
+msgstr ""
+
+#: content-seo/build/869.js:16
+msgid "Facebook author URL"
+msgstr ""
+
+#: content-seo/build/869.js:16
+msgid "X profile"
+msgstr ""
+
+#: content-seo/build/869.js:16
+msgid "Instagram URL"
+msgstr ""
+
+#: content-seo/build/869.js:16
+msgid "LinkedIn URL"
+msgstr ""
+
+#: content-seo/build/869.js:16
+msgid "YouTube URL"
+msgstr ""
+
+#: content-seo/build/869.js:16
+msgid "Pinterest URL"
+msgstr ""
+
+#: content-seo/build/869.js:16
+msgid "TikTok URL"
+msgstr ""
+
+#: content-seo/build/869.js:16
+msgid "Telegram URL"
+msgstr ""
+
+#: content-seo/build/869.js:16
+msgid "WhatsApp URL"
+msgstr ""
+
+#: content-seo/build/869.js:16
+msgid "Yelp URL"
+msgstr ""
+
+#: content-seo/build/869.js:16
+msgid "Bluesky URL"
+msgstr ""
+
+#: content-seo/build/869.js:16
+msgid "Google site verification"
+msgstr ""
+
+#: content-seo/build/869.js:16
+msgid "Bing site verification"
+msgstr ""
+
+#: content-seo/build/869.js:16
+msgid "Pinterest site verification"
+msgstr ""
+
+#: content-seo/build/869.js:16
+msgid "Facebook site verification"
+msgstr ""
+
+#: content-seo/build/869.js:16
+msgid "(empty)"
+msgstr ""
+
+#: content-seo/build/869.js:16
+msgid "On"
+msgstr ""
+
+#: content-seo/build/869.js:16
+#: content-seo/build/index.js:3
+msgid "Off"
+msgstr ""
+
+#. translators: %d: retry attempt number
+#: content-seo/build/869.js:18
+#, js-format
+msgid "Retrying after an error (attempt %d)"
+msgstr ""
+
+#: content-seo/build/869.js:18
+#: content-seo/build/index.js:3
+msgid "Migrate From Other SEO Plugins"
+msgstr ""
+
+#: content-seo/build/869.js:18
+#: dashboard/build/index.js:6
+#: dashboard/build/index.js:8
+#: dashboard/build/index.js:10
+#: dashboard/build/index.js:13
+msgid "Back"
+msgstr ""
+
+#: content-seo/build/869.js:18
+msgid "Start Import"
+msgstr ""
+
+#: content-seo/build/869.js:18
+msgid "Back up your site before you start. The import writes directly to your database and cannot be undone from this screen."
+msgstr ""
+
+#. translators: %s: product name
+#: content-seo/build/869.js:18
+#, js-format
+msgid "Nothing you have already set in %s is overwritten, and the other plugin's own data is left untouched."
+msgstr ""
+
+#: content-seo/build/869.js:18
+msgid "No data from Yoast SEO, Rank Math, SureRank or All in One SEO was found on this site, so there is nothing to import."
+msgstr ""
+
+#: content-seo/build/869.js:18
+msgid "Your existing SEO data can be brought across. You will see exactly what changes before anything is written, and the other plugin's data is never deleted."
+msgstr ""
+
 #: content-seo/build/877.js:1
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Meta Template"
 msgstr ""
 
@@ -13609,7 +14568,7 @@ msgid "Your title template has no per-page token, so every page would render the
 msgstr ""
 
 #: content-seo/build/917.js:1
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Analytics"
 msgstr ""
 
@@ -13622,7 +14581,7 @@ msgid "Measurement ID"
 msgstr ""
 
 #: content-seo/build/939.js:1
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Sitemaps"
 msgstr ""
 
@@ -13756,6 +14715,7 @@ msgid "Enter URL or use @ for variables"
 msgstr ""
 
 #: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "+ Add New"
 msgstr ""
 
@@ -13860,6 +14820,7 @@ msgstr ""
 
 #. translators: %d: part number
 #: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 #, js-format
 msgid "Part %d"
 msgstr ""
@@ -14102,18 +15063,22 @@ msgid "Exclude:"
 msgstr ""
 
 #: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Schema Title"
 msgstr ""
 
 #: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "No schema entries yet."
 msgstr ""
 
 #: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Remove this schema?"
 msgstr ""
 
 #: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Remove schema"
 msgstr ""
 
@@ -14134,10 +15099,12 @@ msgid "Could not load conditions."
 msgstr ""
 
 #: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Schema"
 msgstr ""
 
 #: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Add Schema"
 msgstr ""
 
@@ -14154,22 +15121,27 @@ msgid "Please check the schema settings and try again."
 msgstr ""
 
 #: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Site Wide Schema"
 msgstr ""
 
 #: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Page Specific Schema"
 msgstr ""
 
 #: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Please select a schema type."
 msgstr ""
 
 #: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Choose Schema"
 msgstr ""
 
 #: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Select Schema Type"
 msgstr ""
 
@@ -14178,860 +15150,864 @@ msgid "Give your schema a name so you can easily recognize it later. This is onl
 msgstr ""
 
 #: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Type @ to view variable suggestions"
 msgstr ""
 
 #. translators: %d: person number
 #: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 #, js-format
 msgid "Person %d"
 msgstr ""
 
 #: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Is accessible for free?"
 msgstr ""
 
 #: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "CSS selector"
 msgstr ""
 
 #: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "+ Add part"
 msgstr ""
 
 #. translators: %d: supply number
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:2
+#: content-seo/build/index.js:3
 #, js-format
 msgid "Supply %d"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:2
+#: content-seo/build/index.js:3
 msgid "Remove supply"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:2
+#: content-seo/build/index.js:3
 msgid "+ Add supply"
 msgstr ""
 
 #. translators: %d: tool number
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 #, js-format
 msgid "Tool %d"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Remove tool"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "+ Add tool"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Select where you want to load the schema."
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Save to run the keyword checks for the focus keyword you entered."
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Not yet calculated for the keyword you just entered — save to update this check."
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "All checks are hidden or ignored. Use “Ignore” only for items you accept."
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Save the post and reload SEO data, or run a live analysis to see page checks."
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Critical"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Passed"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Show the sentences to shorten"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "words"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Show passive-voice sentences"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Fix Now"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Ignore check"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Google Preview"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Use @ to insert variables. Saves to this post only (does not change global templates). Leave empty to use the global template for this post type."
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Use @ to insert variables. Saves to this post only (does not change global templates)."
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Use @ to insert variables like Post Excerpt. Saves to this post only (does not change global templates). Leave empty to use the global template for this post type."
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Use @ to insert variables like Post Excerpt. Saves to this post only (does not change global templates)."
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Use @ to insert variables. Saves to this taxonomy term only (does not change global templates). Leave empty to use the global-style template with Term Title and site variables."
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Use @ to insert variables. Saves to this taxonomy term only (does not change global templates)."
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Use @ to insert variables like Term Description. Saves to this taxonomy term only (does not change global templates). Leave empty to use the global-style template."
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Use @ to insert variables like Term Description. Saves to this taxonomy term only (does not change global templates)."
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "SEO Title"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Meta Title"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Meta Description"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Focus Keyword"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Enter Focus Keyword"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Use @ to insert variables. Saves to this post only."
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Facebook"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "X"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Facebook Title"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Override for Facebook"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Facebook Description"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Facebook description"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Facebook image"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Shown when sharing on Facebook. Leave empty to use the Content SEO global default image."
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Choose Facebook image"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "X Title"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Override for X"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "X Description"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "X description"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "X image"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Card image for X. Leave empty to use the Facebook image or global default."
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Choose X image"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Recommended size: 1200 x 675 px. JPG or PNG supported"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Robots directives"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Canonical URL"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Shown in the list only; not output as JSON-LD."
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Custom JSON-LD for this term archive is stored in term meta and outputs on the taxonomy archive URL."
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Default schema types are shown below (WebSite, WebPage, Organization, SearchAction). Enable customization to save overrides for this term only."
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Custom schema for this post is stored in post meta and overrides global page-specific rules."
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Using schema from Content SEO settings for this post. Turn on customization to save overrides."
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Use global defaults"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Customize for this term"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Customize for this post"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "All schema use global settings"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Edit schema"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 #: dashboard/build/index.js:3
 msgid "Advanced"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Page SEO Audit"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Page SEO audit health summary"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Site health"
 msgstr ""
 
 #. translators: %d: total number of checks
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 #, js-format
 msgid "%d Total"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Warnings"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "You have unsaved SEO changes on this page. Leave without saving?"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Taxonomy term data is missing. Reload the page and try again."
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Save the post first to store SEO data."
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Failed to save"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Edit the SEO title, meta description, social previews, and schema for this content. Use the Edit SEO tab to fill in fields, and the SEO Audit tab to review the on-page SEO checklist."
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Go to SEO Settings"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "SEO Audit"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Saved. Checks below have been refreshed."
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Archive Pages"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Site Verification"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Redirection Manager"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
+msgid "Migrate SEO Plugins"
+msgstr ""
+
+#: content-seo/build/index.js:3
 msgid "Site Audit"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "On-Page"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Technical"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 #: dashboard/build/index.js:1
 #: theme-builder/build/index.js:1
 msgid "Version "
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Crawling"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Default Social Image"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Other Accounts"
 msgstr ""
 
-#: content-seo/build/index.js:1
-msgid "Setting"
-msgstr ""
-
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Search engine verification"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Suggestion"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Set"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Setup"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Issues"
 msgstr ""
 
-#: content-seo/build/index.js:1
-msgid "Off"
-msgstr ""
-
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 #: dashboard/build/index.js:8
 msgid "Default"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Ready"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Configure"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Set Up"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Run"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Manage SEO titles & meta descriptions for posts, pages, archives."
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Configure Open Graph & Twitter cards for social media previews."
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Add structured data markup for rich results in Google."
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Optimize ALT text, filenames & lazy loading."
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Set SEO title, description & social preview for home."
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Control SEO for category, tag, author archive pages."
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Auto-generate XML sitemaps for posts, pages, images."
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Control which pages search engines can index."
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Robots.txt"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Edit robots.txt directly from the dashboard."
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Submit URLs to Bing, Yandex & other IndexNow engines."
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Control AI crawler (ChatGPT, Claude, Perplexity) access."
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Add Google, Bing, Pinterest & Facebook site verification codes."
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Redirection"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Create 301/302 redirects to fix broken URLs."
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Track 404 errors & missing pages on your site."
 msgstr ""
 
 #. translators: %d: number of issues
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 #, js-format
 msgid "%d issues"
 msgstr ""
 
 #. translators: %d: number of redirect rules
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 #, js-format
 msgid "%d rules"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "0 rules"
 msgstr ""
 
 #. translators: %d: number of 404 hits
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 #, js-format
 msgid "%d hits"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Modules"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Set up your modules while the first audit runs"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Needs Attention"
 msgstr ""
 
 #. translators: %d: number of modules
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 #, js-format
 msgid "%d modules"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Excellent"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Poor"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "All clear"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Review"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "View"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Site Health Score"
 msgstr ""
 
 #. translators: 1: up/down direction, 2: number of points
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 #, js-format
 msgid "%1$s %2$d pts since last scan"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "up"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "down"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "just now"
 msgstr ""
 
 #. translators: %d: number of minutes
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 #, js-format
 msgid "%dm ago"
 msgstr ""
 
 #. translators: %d: number of hours
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 #, js-format
 msgid "%dh ago"
 msgstr ""
 
 #. translators: %d: number of days
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 #, js-format
 msgid "%d days ago"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Every day"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Every 7 days"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Every month"
 msgstr ""
 
 #. translators: %d: number of audits
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 #, js-format
 msgid "%d audits"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Site Health"
 msgstr ""
 
 #. translators: %d: total number of checks
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 #, js-format
 msgid "%d Checks Total"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Top Fixes"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Highest-impact issues to resolve first"
 msgstr ""
 
 #. translators: %d: total number of items
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 #, js-format
 msgid "See all %d →"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Applying…"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Open"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Last day of month"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Off — disabled"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Pick a day and time; scans repeat each week."
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Runs on the same day each month at the chosen time."
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Automatic scans are disabled until you choose a frequency."
 msgstr ""
 
 #. translators: %s: formatted date/time of the next scan
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 #, js-format
 msgid "Next scheduled scan: %s (site timezone)."
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Uses your WordPress site timezone."
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Schedule Auto-Scan"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Automatically run the SEO audit on a schedule and get notified by email."
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Enter a valid email address."
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Frequency"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "24-hour format in your site timezone."
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Day of week"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Select a day"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Day of month"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Email report when scan completes"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Email address"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Leave empty to use the WordPress admin email."
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "name@example.com"
 msgstr ""
 
 #. translators: %s: product name
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 #, js-format
 msgid "Welcome to %s"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Run your first site audit to see your SEO score and get personalized recommendations."
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Run First Audit"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Takes ~10 seconds · Checks 15 SEO signals"
 msgstr ""
 
 #. translators: %d: total number of checks
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 #, js-format
 msgid "All (%d)"
 msgstr ""
 
 #. translators: %d: number of open issues
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 #, js-format
 msgid "Issues (%d)"
 msgstr ""
 
 #. translators: %d: number of passed checks
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 #, js-format
 msgid "Passed (%d)"
 msgstr ""
 
 #. translators: %d: SEO score
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 #, js-format
 msgid "Score: %d"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Last run:"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Export JSON"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Export CSV"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "No open issues — nice work!"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "No passed checks to show yet."
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "No checks to show."
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Hide details"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Show details"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Dismiss from list"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Recommendation"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Site SEO Audit"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Deep-scan your site for technical & on-page SEO issues"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Checking..."
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Run Checks"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Welcome! Run your first audit to get started."
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Your SEO overview — score, issues, and module status at a glance."
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Set up automatic audit scheduling"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Run First Audit →"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Run Audit"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Nexter SEO — Dashboard"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Nexter SEO — Site Audit"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Nexter SEO — On-Page"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Nexter SEO — Technical"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Nexter SEO — Redirects"
 msgstr ""
 
-#: content-seo/build/index.js:1
+#: content-seo/build/index.js:3
 msgid "Nexter SEO — Tools"
 msgstr ""
 
@@ -16277,13 +17253,6 @@ msgid "Simple Font Upload"
 msgstr ""
 
 #: dashboard/build/index.js:6
-#: dashboard/build/index.js:8
-#: dashboard/build/index.js:10
-#: dashboard/build/index.js:13
-msgid "Back"
-msgstr ""
-
-#: dashboard/build/index.js:6
 msgid "Regenerate again"
 msgstr ""
 
@@ -16508,16 +17477,19 @@ msgstr ""
 msgid "Something went wrong"
 msgstr ""
 
+#. translators: %d: number of images regenerated
 #: dashboard/build/index.js:8
 #, js-format
 msgid "%d regenerated"
 msgstr ""
 
+#. translators: %d: number of images that failed
 #: dashboard/build/index.js:8
 #, js-format
 msgid "%d failed"
 msgstr ""
 
+#. translators: %d: number of images remaining
 #: dashboard/build/index.js:8
 #, js-format
 msgid "%d remaining"
@@ -16527,11 +17499,13 @@ msgstr ""
 msgid "Keep this window open until it finishes."
 msgstr ""
 
+#. translators: %d: number of images that could not be regenerated
 #: dashboard/build/index.js:8
 #, js-format
 msgid "Show %d image(s) that could not be regenerated"
 msgstr ""
 
+#. translators: 1: image ID, 2: error message
 #: dashboard/build/index.js:8
 #, js-format
 msgid "#%1$s - %2$s"
@@ -16644,6 +17618,10 @@ msgstr ""
 
 #: dashboard/build/index.js:8
 msgid "SMTP Password"
+msgstr ""
+
+#: dashboard/build/index.js:8
+msgid "For providers like Brevo, SendGrid or Mailgun, this is your API key, not your account password."
 msgstr ""
 
 #: dashboard/build/index.js:8

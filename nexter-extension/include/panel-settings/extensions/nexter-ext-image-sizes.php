@@ -356,7 +356,11 @@ class Nexter_Ext_Image_Size {
 				$thumbnail_metadata['image_meta'] = $image_meta;
 			}
 		}
-		return apply_filters( 'wp_generate_attachment_metadata', $thumbnail_metadata, $thumbnail_id );
+		// Third argument is part of the filter's signature — core fires it with 'create' on
+		// upload and 'update' when regenerating (wp-admin/includes/image.php). Omitting it threw
+		// ArgumentCountError in every correctly-written three-argument callback, which took the
+		// whole regeneration batch down with it. 'update' is what a regeneration is.
+		return apply_filters( 'wp_generate_attachment_metadata', $thumbnail_metadata, $thumbnail_id, 'update' );
 	}
 
 	/**

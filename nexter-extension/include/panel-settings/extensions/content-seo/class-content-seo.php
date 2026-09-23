@@ -124,10 +124,16 @@ class Nexter_Content_SEO {
 			'class-seo-robots.php',
 			'class-seo-canonical.php',
 			'class-seo-social-meta.php',
+			'class-seo-permalinks.php',
+			'class-seo-woo-permalinks.php',
+			'class-seo-migrate-notice.php',
 			'class-redirection.php',
 			'class-404-monitor.php',
 			'class-seo-llms.php',
 			'importers/class-nxt-seo-importer-yoast.php',
+			'importers/class-nxt-seo-importer-rankmath.php',
+			'importers/class-nxt-seo-importer-surerank.php',
+			'importers/class-nxt-seo-importer-aioseo.php',
 			'importers/class-nxt-seo-importer.php',
 		);
 		foreach ( $files as $file ) {
@@ -159,6 +165,15 @@ class Nexter_Content_SEO {
 		}
 		Nexter_Content_SEO_Robots::init();
 		Nexter_Content_SEO_Canonical::init();
+		if ( class_exists( 'Nexter_Content_SEO_Permalinks' ) ) {
+			Nexter_Content_SEO_Permalinks::init();
+		}
+		if ( class_exists( 'Nexter_Content_SEO_Woo_Permalinks' ) ) {
+			Nexter_Content_SEO_Woo_Permalinks::init();
+		}
+		if ( is_admin() && class_exists( 'Nexter_Content_SEO_Migrate_Notice' ) ) {
+			Nexter_Content_SEO_Migrate_Notice::init();
+		}
 		Nexter_Content_SEO_Title::init();
 		Nexter_Content_SEO_Description::init();
 		Nexter_Content_SEO_Social_Meta::init();
@@ -303,8 +318,9 @@ class Nexter_Content_SEO {
 		}
 		$id = esc_attr( $id );
 		echo "\n<!-- " . esc_html( self::seo_brand_label() ) . ': ' . esc_html__( 'Google Analytics', 'nexter-extension' ) . " -->\n";
-		echo '<script async src="https://www.googletagmanager.com/gtag/js?id=' . $id . '"></script>' . "\n";
-		echo '<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag("js",new Date());gtag("config","' . $id . '");</script>' . "\n";
+		// $id is regex-validated and esc_attr()'d above.
+		echo '<script async src="https://www.googletagmanager.com/gtag/js?id=' . $id . '"></script>' . "\n"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo '<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag("js",new Date());gtag("config","' . $id . '");</script>' . "\n"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 
 	/**
@@ -579,8 +595,13 @@ class Nexter_Content_SEO {
 			'enable_news_sitemap'           => false,
 			'sitemap_exclude_post_types'    => array(),
 			'sitemap_exclude_taxonomies'    => array(),
-			// Robots (No Index / No Follow / No Archive) – slug => bool.
-			'noindex_post_types'            => array(),
+			// Robots (No Index / No Follow / No Archive) – slug => bool. Attachment pages start
+			// noindexed by default (thin, usually duplicate content) — same as the old dead
+			// "Noindex Attachments" Advanced toggle intended, but through the mechanism that
+			// actually reaches the meta tag (see is_effectively_noindex()) instead of a setting
+			// nothing ever read. Only applies to a genuinely fresh install; wp_parse_args() never
+			// overrides an already-saved (even empty) noindex_post_types on an existing site.
+			'noindex_post_types'            => array( 'attachment' => true ),
 			'noindex_taxonomies'            => array(),
 			'noindex_archives'              => array(),
 			'nofollow_post_types'           => array(),
@@ -632,7 +653,11 @@ class Nexter_Content_SEO {
 			'no_image_index'                => false,
 			'no_snippet'                    => false,
 			'pagination_signals'            => false,
-			'noindex_attachments'           => true,
+			// Permalinks.
+			'strip_category_base'           => false,
+			'strip_woo_product_base'        => false,
+			'strip_woo_category_base'       => false,
+			'strip_woo_tag_base'            => false,
 			// Robots.txt (empty = use WordPress default virtual file; non-empty replaces output via filter).
 			'robots_txt_custom'             => '',
 		);
@@ -1078,6 +1103,7 @@ class Nexter_Content_SEO {
 				'robots_txt_url'         => home_url( '/robots.txt' ),
 				'blog_public'            => get_option( 'blog_public' ),
 				'show_on_front'          => get_option( 'show_on_front' ),
+				'woo_bases'              => self::woo_bases_context(),
 			)
 		);
 		return rest_ensure_response( array( 'data' => $data ) );
@@ -1133,6 +1159,7 @@ class Nexter_Content_SEO {
 				'robots_txt_placeholder' => true,
 				'blog_public'            => true,
 				'show_on_front'          => true,
+				'woo_bases'              => true,
 			)
 		);
 		$merged  = self::sanitize_full_options( $merged );
@@ -1153,6 +1180,21 @@ class Nexter_Content_SEO {
 		foreach ( $sitemap_enable_keys as $sk ) {
 			if ( ( ! empty( $current[ $sk ] ) ) !== ( ! empty( $merged[ $sk ] ) ) ) {
 				update_option( 'nexter_content_seo_flush_rewrite', 1, false );
+				break;
+			}
+		}
+
+		// Same idea for the category-base toggle, via its own flush flag (see
+		// Nexter_Content_SEO_Permalinks::FLUSH_OPTION) so the two features' one-shot flushes on the
+		// next init never race to consume a single shared flag.
+		if ( ( ! empty( $current['strip_category_base'] ) ) !== ( ! empty( $merged['strip_category_base'] ) ) ) {
+			update_option( 'nexter_content_seo_category_base_flush_rewrite', 1, false );
+		}
+
+		// The three WooCommerce base toggles share one flush flag — they rebuild the same ruleset.
+		foreach ( array( 'strip_woo_product_base', 'strip_woo_category_base', 'strip_woo_tag_base' ) as $woo_key ) {
+			if ( ( ! empty( $current[ $woo_key ] ) ) !== ( ! empty( $merged[ $woo_key ] ) ) ) {
+				update_option( 'nexter_content_seo_woo_base_flush_rewrite', 1, false );
 				break;
 			}
 		}
@@ -1227,6 +1269,7 @@ class Nexter_Content_SEO {
 			'sitemap_html_url'       => true,
 			'robots_txt_url'         => true,
 			'robots_txt_placeholder' => true,
+			'woo_bases'              => true,
 		);
 	}
 
@@ -1599,6 +1642,29 @@ class Nexter_Content_SEO {
 	}
 
 	/**
+	 * Post type slugs with real, crawlable front-end URLs — the set Robots/Sitemap/Indexing
+	 * settings should offer and accept.
+	 *
+	 * get_post_types( [ 'public' => true ] ) alone misses post types a plugin registers with
+	 * public => false (to stay out of the default admin menus/search) but
+	 * publicly_queryable => true (because the content still resolves to a live front-end URL) —
+	 * e.g. Complianz's cookie/privacy statement post type. Those are exactly the post types that
+	 * need noindex/sitemap control, so the whitelist has to include them too, or a saved toggle
+	 * for one is silently stripped back out on every save.
+	 *
+	 * @return string[] Post type slugs.
+	 */
+	public static function get_seo_indexable_post_types() {
+		$slugs = array();
+		foreach ( get_post_types( array(), 'objects' ) as $slug => $obj ) {
+			if ( ! empty( $obj->public ) || ! empty( $obj->publicly_queryable ) ) {
+				$slugs[] = $slug;
+			}
+		}
+		return $slugs;
+	}
+
+	/**
 	 * Sanitize Robots (No Index / No Follow / No Archive) settings.
 	 * Ensures slug => bool structure; unknown slugs are stripped.
 	 *
@@ -1617,7 +1683,7 @@ class Nexter_Content_SEO {
 			'noarchive_taxonomies',
 			'noarchive_archives',
 		);
-		$valid_post_types = array_keys( get_post_types( array( 'public' => true ), 'names' ) );
+		$valid_post_types = self::get_seo_indexable_post_types();
 		$valid_taxonomies = array_keys( get_taxonomies( array( 'public' => true ), 'names' ) );
 		// Blanket archive keys plus the two blog-index contexts and CPT-archive blanket.
 		$valid_archives = array( 'search', 'author', 'date', 'front', 'blog', 'post_type_archive' );
@@ -1704,7 +1770,7 @@ class Nexter_Content_SEO {
 			}
 		}
 
-		$valid_post_types = array_keys( get_post_types( array( 'public' => true ), 'names' ) );
+		$valid_post_types = self::get_seo_indexable_post_types();
 		$valid_taxonomies = array_keys( get_taxonomies( array( 'public' => true ), 'names' ) );
 
 		if ( isset( $options['sitemap_exclude_post_types'] ) && is_array( $options['sitemap_exclude_post_types'] ) ) {
@@ -1757,7 +1823,7 @@ class Nexter_Content_SEO {
 		if ( isset( $options['google_indexing_key'] ) ) {
 			$options['google_indexing_key'] = sanitize_textarea_field( (string) $options['google_indexing_key'] );
 		}
-		$valid_post_types = array_keys( get_post_types( array( 'public' => true ), 'names' ) );
+		$valid_post_types = self::get_seo_indexable_post_types();
 		if ( isset( $options['indexnow_exclude_types'] ) && is_array( $options['indexnow_exclude_types'] ) ) {
 			$sanitized = array();
 			foreach ( $options['indexnow_exclude_types'] as $slug => $val ) {
@@ -1810,7 +1876,7 @@ class Nexter_Content_SEO {
 	 * POST – run Site SEO Audit checks.
 	 *
 	 * @param WP_REST_Request $request Request.
-	 * @return WP_REST_Response
+	 * @return WP_REST_Response|WP_Error
 	 */
 	public function rest_audit_run( $request ) {
 		if ( ! class_exists( '\NexterSEO\Audit\Engine' ) ) {
@@ -1851,7 +1917,7 @@ class Nexter_Content_SEO {
 	 * GET – last stored audit snapshot.
 	 *
 	 * @param WP_REST_Request $request Request.
-	 * @return WP_REST_Response
+	 * @return WP_REST_Response|WP_Error
 	 */
 	public function rest_audit_last( $request ) {
 		if ( ! class_exists( '\NexterSEO\Audit\Engine' ) ) {
@@ -2078,6 +2144,27 @@ class Nexter_Content_SEO {
 	 *
 	 * @return bool
 	 */
+	/**
+	 * Read-only context for the WooCommerce base toggles: whether WooCommerce is providing the
+	 * permalink structure, and the bases it currently uses, so the UI can label each toggle with
+	 * the store's real base instead of the English default.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public static function woo_bases_context() {
+		$active = class_exists( 'Nexter_Content_SEO_Woo_Permalinks' ) && Nexter_Content_SEO_Woo_Permalinks::woo_active();
+		if ( ! $active ) {
+			return array( 'active' => false );
+		}
+
+		return array(
+			'active'      => true,
+			'product'     => Nexter_Content_SEO_Woo_Permalinks::base( 'product' ),
+			'product_cat' => Nexter_Content_SEO_Woo_Permalinks::base( 'product_cat' ),
+			'product_tag' => Nexter_Content_SEO_Woo_Permalinks::base( 'product_tag' ),
+		);
+	}
+
 	public static function content_seo_is_pro_active() {
 		// Accept BOTH Pro activation constants — mirrors every other Pro gate in the plugin
 		// (seo_brand_label/logo, notices, dashboard data, bulk images, import/export). Without
@@ -2171,9 +2258,9 @@ class Nexter_Content_SEO {
 			}
 		}
 
-		// Post-types map: slug => bool, restricted to public post types.
+		// Post-types map: slug => bool, restricted to indexable post types.
 		if ( isset( $options['llms_txt_post_types'] ) && is_array( $options['llms_txt_post_types'] ) ) {
-			$valid_post_types = array_keys( get_post_types( array( 'public' => true ), 'names' ) );
+			$valid_post_types = self::get_seo_indexable_post_types();
 			$sanitized        = array();
 			foreach ( $options['llms_txt_post_types'] as $slug => $val ) {
 				if ( in_array( (string) $slug, $valid_post_types, true ) ) {

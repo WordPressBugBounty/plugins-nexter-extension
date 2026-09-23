@@ -21,9 +21,11 @@ wp_register_ability(
 	'execute_callback'    => 'nexter_mcp_get_custom_fonts',
 	'permission_callback' => 'nexter_mcp_permission_callback',
 	'meta'                => [
-		'show_in_rest' => true,
-		'mcp'          => ['public' => true],
-		'annotations'  => [
+		'mode'           => 'read',
+		'targets_object' => false,
+		'show_in_rest'   => true,
+		'mcp'            => ['public' => true],
+		'annotations'    => [
 			'instructions' => "Returns custom uploaded fonts with names, media attachment IDs, and weight/style variations (400, 700, 400i, etc.).",
 			'readonly'     => true,
 	'destructive'          => false,
@@ -58,9 +60,11 @@ wp_register_ability(
 	'execute_callback'    => 'nexter_mcp_update_custom_fonts',
 	'permission_callback' => 'nexter_mcp_permission_callback',
 	'meta'                => [
-		'show_in_rest' => true,
-		'mcp'          => ['public' => true],
-		'annotations'  => [
+		'mode'           => 'write',
+		'targets_object' => false,
+		'show_in_rest'   => true,
+		'mcp'            => ['public' => true],
+		'annotations'    => [
 			'instructions' => "Updates custom fonts. Font files must be uploaded to Media Library first (WOFF2/TTF/OTF). Pass attachment IDs in the fonts array.",
 			'readonly'     => false,
 	'destructive'          => false,

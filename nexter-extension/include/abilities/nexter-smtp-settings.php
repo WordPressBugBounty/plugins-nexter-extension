@@ -21,9 +21,11 @@ wp_register_ability(
 	'execute_callback'    => 'nexter_mcp_get_smtp_settings',
 	'permission_callback' => 'nexter_mcp_permission_callback',
 	'meta'                => [
-		'show_in_rest' => true,
-		'mcp'          => ['public' => true],
-		'annotations'  => [
+		'mode'           => 'read',
+		'targets_object' => false,
+		'show_in_rest'   => true,
+		'mcp'            => ['public' => true],
+		'annotations'    => [
 			'instructions' => "Returns SMTP settings. Sensitive values (passwords, tokens) are masked. Type can be 'gmail' (OAuth2) or 'custom' (standard SMTP).",
 			'readonly'     => true,
 	'destructive'          => false,
@@ -95,9 +97,11 @@ wp_register_ability(
 	'execute_callback'    => 'nexter_mcp_update_smtp_settings',
 	'permission_callback' => 'nexter_mcp_permission_callback',
 	'meta'                => [
-		'show_in_rest' => true,
-		'mcp'          => ['public' => true],
-		'annotations'  => [
+		'mode'           => 'write',
+		'targets_object' => false,
+		'show_in_rest'   => true,
+		'mcp'            => ['public' => true],
+		'annotations'    => [
 			'instructions' => "Updates SMTP settings. For custom SMTP: set type='custom', host, port, encryption, username, password. Gmail OAuth requires setup in WP admin UI.",
 			'readonly'     => false,
 	'destructive'          => false,

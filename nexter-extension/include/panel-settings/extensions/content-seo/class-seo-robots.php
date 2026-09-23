@@ -110,7 +110,7 @@ class Nexter_Content_SEO_Robots {
 		if ( is_admin() || is_feed() || is_trackback() ) {
 			return;
 		}
-		$uri  = isset( $_SERVER['REQUEST_URI'] ) ? (string) wp_unslash( $_SERVER['REQUEST_URI'] ) : '';
+		$uri  = isset( $_SERVER['REQUEST_URI'] ) ? (string) wp_unslash( $_SERVER['REQUEST_URI'] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- path compared after wp_parse_url().
 		$path = (string) wp_parse_url( $uri, PHP_URL_PATH );
 		if ( '/robots.txt' !== $path ) {
 			return;

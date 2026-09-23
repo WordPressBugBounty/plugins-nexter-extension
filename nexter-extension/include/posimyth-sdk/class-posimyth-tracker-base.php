@@ -284,7 +284,7 @@ if ( ! class_exists( 'Posimyth_Tracker_Base' ) ) {
 		 * @param string $plugin Plugin file as WordPress passes it, e.g. "slug/slug.php".
 		 * @return bool
 		 */
-		protected static function is_own_plugin_file( string $plugin ): bool {
+		protected static function is_own_plugin_file( $plugin ): bool {
 			$folder = ( false !== strpos( $plugin, '/' ) ) ? dirname( $plugin ) : $plugin;
 			return static::slug() === $folder;
 		}
@@ -294,8 +294,13 @@ if ( ! class_exists( 'Posimyth_Tracker_Base' ) ) {
 		 *
 		 * @param string $plugin       Plugin file that was activated.
 		 * @param bool   $network_wide Unused; part of the activated_plugin hook signature.
+		 *
+		 * The parameters are deliberately untyped. WP-CLI before 2.12 fires this hook with null
+		 * for $network_wide, and a `bool` declaration rejects it — which aborted the whole CLI
+		 * run with a TypeError (exit 255) on every plugin activation while this product was
+		 * active, taking deploy scripts down with it.
 		 */
-		public static function on_activate( string $plugin, bool $network_wide ): void { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed -- required by the hook signature.
+		public static function on_activate( $plugin, $network_wide = false ): void { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed -- required by the hook signature.
 			if ( ! static::is_own_plugin_file( $plugin ) ) {
 				return;
 			}
@@ -311,8 +316,13 @@ if ( ! class_exists( 'Posimyth_Tracker_Base' ) ) {
 		 *
 		 * @param string $plugin       Plugin file that was deactivated.
 		 * @param bool   $network_wide Unused; part of the deactivated_plugin hook signature.
+		 *
+		 * The parameters are deliberately untyped. WP-CLI before 2.12 fires this hook with null
+		 * for $network_wide, and a `bool` declaration rejects it — which aborted the whole CLI
+		 * run with a TypeError (exit 255) on every plugin activation while this product was
+		 * active, taking deploy scripts down with it.
 		 */
-		public static function on_deactivate( string $plugin, bool $network_wide ): void { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed -- required by the hook signature.
+		public static function on_deactivate( $plugin, $network_wide = false ): void { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed -- required by the hook signature.
 			if ( ! static::is_own_plugin_file( $plugin ) ) {
 				return;
 			}

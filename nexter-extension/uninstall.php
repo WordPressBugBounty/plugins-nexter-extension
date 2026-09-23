@@ -83,3 +83,22 @@ if ( class_exists( 'Posimyth_Tracker_NE' ) && method_exists( 'Posimyth_Tracker_N
 		delete_option( 'nxt_onboarding_done' );
 	}
 }
+
+// The migration's own bookkeeping. A run state and a per-source lock describe a run that no
+// longer exists once the plugin is deleted, and a lock left behind blocks the first import
+// after a reinstall until it expires.
+//
+// The per-object markers and the values the import wrote are deliberately NOT removed here.
+// They are two halves of one record of the user's SEO data: dropping the values would destroy
+// content the user may still want, and dropping only the markers would leave the plugin
+// reporting work as outstanding that was in fact already done. Recovering from stale markers
+// is a job for "Import it again" on the migration screen, which clears both together.
+delete_option( 'nexter_content_seo_import_state' );
+
+foreach ( array( 'yoast', 'rankmath', 'surerank', 'aioseo' ) as $nxt_ext_seo_source ) {
+	delete_option( 'nexter_content_seo_import_state_lock_' . $nxt_ext_seo_source );
+}
+unset( $nxt_ext_seo_source );
+
+// Derived cache, rebuilt from the rules option on demand.
+delete_transient( 'nxt_content_seo_redirect_compiled' );

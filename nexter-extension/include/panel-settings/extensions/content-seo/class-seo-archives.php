@@ -84,7 +84,7 @@ class Nexter_Content_SEO_Archives {
 		// hasn't been fully parsed.
 		$is_feed_request = is_feed();
 		if ( ! $is_feed_request ) {
-			$uri  = isset( $_SERVER['REQUEST_URI'] ) ? (string) wp_unslash( $_SERVER['REQUEST_URI'] ) : '';
+			$uri  = isset( $_SERVER['REQUEST_URI'] ) ? (string) wp_unslash( $_SERVER['REQUEST_URI'] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- path compared after wp_parse_url().
 			$path = (string) wp_parse_url( $uri, PHP_URL_PATH );
 			// The regex already matches a path ending in /feed or /feed/, so the earlier
 			// strpos() pre-check and the '/feed/' === $path comparison were redundant.

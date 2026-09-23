@@ -21,9 +21,11 @@ wp_register_ability(
 	'execute_callback'    => 'nexter_mcp_get_image_optimization',
 	'permission_callback' => 'nexter_mcp_permission_callback',
 	'meta'                => [
-		'show_in_rest' => true,
-		'mcp'          => ['public' => true],
-		'annotations'  => [
+		'mode'           => 'read',
+		'targets_object' => false,
+		'show_in_rest'   => true,
+		'mcp'            => ['public' => true],
+		'annotations'    => [
 			'instructions' => "Returns image optimization config: format (webp/avif/original/smart), quality_mode (balanced/lossless/aggressive), max dimensions, EXIF handling, exclusion paths, and more.",
 			'readonly'     => true,
 	'destructive'          => false,
@@ -112,9 +114,11 @@ wp_register_ability(
 	'execute_callback'    => 'nexter_mcp_update_image_optimization',
 	'permission_callback' => 'nexter_mcp_permission_callback',
 	'meta'                => [
-		'show_in_rest' => true,
-		'mcp'          => ['public' => true],
-		'annotations'  => [
+		'mode'           => 'write',
+		'targets_object' => false,
+		'show_in_rest'   => true,
+		'mcp'            => ['public' => true],
+		'annotations'    => [
 			'instructions' => "Updates image optimization settings. Only fields you provide are changed. Use nexter/get-image-optimization to see current values first.",
 			'readonly'     => false,
 	'destructive'          => false,

@@ -228,7 +228,7 @@ class Nexter_Content_SEO_Title {
 		if ( '' === $value ) {
 			return '';
 		}
-		$template = preg_replace( '/@([a-z0-9_]+)/i', '%$1%', $value );
+		$template = Nexter_Content_SEO_Settings::expand_variable_shorthand( $value );
 		$resolved = Nexter_Content_SEO_Settings::replace_variables( $template, is_array( $context ) ? $context : array() );
 		$resolved = self::cleanup_title( $resolved );
 		return self::trim_template_separators( $resolved );

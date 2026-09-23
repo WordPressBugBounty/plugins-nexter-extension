@@ -1619,7 +1619,7 @@ class Nexter_Content_SEO_Schema {
 	/**
 	 * JSON array string of ListItem objects for BreadcrumbList (home → Shop/categories/ancestors → current).
 	 *
-	 * @param WP_Post $post Post.
+	 * @param WP_Term|mixed $term Term (anything else yields an empty list).
 	 * @return string JSON.
 	 */
 	private static function build_current_term_breadcrumbs_json( $term ) {
@@ -1869,7 +1869,7 @@ class Nexter_Content_SEO_Schema {
 		// pages that call this repeatedly. Cache the first result for the rest of the request.
 		$r['%current.title%'] = self::get_current_document_title();
 		$current_host         = wp_parse_url( home_url(), PHP_URL_HOST );
-		$current_uri          = isset( $_SERVER['REQUEST_URI'] ) ? wp_unslash( $_SERVER['REQUEST_URI'] ) : '';
+		$current_uri          = isset( $_SERVER['REQUEST_URI'] ) ? wp_unslash( $_SERVER['REQUEST_URI'] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- escaped where it is output.
 		$r['%current.url%']   = $current_host
 			? esc_url_raw( ( is_ssl() ? 'https://' : 'http://' ) . $current_host . $current_uri )
 			: '';
@@ -2063,7 +2063,7 @@ class Nexter_Content_SEO_Schema {
 			$options[ $key ] = array(
 				'label' => $pt->labels->name,
 				'value' => array(
-					/* translators: %s: Post Label*/
+					/* translators: %s: Post Label */
 					$pt->name . '|all'         => sprintf( __( 'All %s', 'nexter-extension' ), $pt->labels->name ),
 					/* translators: %s: Post type or taxonomy archive label */
 					$pt->name . '|all|archive' => sprintf( __( 'All %s Archive', 'nexter-extension' ), $pt->labels->name ),
@@ -5507,7 +5507,7 @@ class Nexter_Content_SEO_Schema {
 	 * REST: POST save schema.
 	 *
 	 * @param WP_REST_Request $request Request.
-	 * @return WP_REST_Response
+	 * @return WP_REST_Response|WP_Error
 	 */
 	public static function rest_save_schema( $request ) {
 		$schema = $request->get_param( 'schema' );

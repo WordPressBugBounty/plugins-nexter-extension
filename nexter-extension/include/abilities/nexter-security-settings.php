@@ -21,9 +21,11 @@ wp_register_ability(
 	'execute_callback'    => 'nexter_mcp_get_security_settings',
 	'permission_callback' => 'nexter_mcp_permission_callback',
 	'meta'                => [
-		'show_in_rest' => true,
-		'mcp'          => ['public' => true],
-		'annotations'  => [
+		'mode'           => 'read',
+		'targets_object' => false,
+		'show_in_rest'   => true,
+		'mcp'            => ['public' => true],
+		'annotations'    => [
 			'instructions' => "Returns all security settings from nexter_site_security. Features: advance-security (headers, XML-RPC, REST API, file editor, cookies, meta generator, XSS protection, iframe security), limit-login-attempt (failed attempts, lockout duration, IP whitelist), captcha-security (Google reCAPTCHA / Cloudflare Turnstile), custom-login (custom login URL), svg-upload (allowed roles). Sensitive captcha keys are masked.",
 			'readonly'     => true,
 	'destructive'          => false,
@@ -63,9 +65,11 @@ wp_register_ability(
 	'execute_callback'    => 'nexter_mcp_update_security_settings',
 	'permission_callback' => 'nexter_mcp_permission_callback',
 	'meta'                => [
-		'show_in_rest' => true,
-		'mcp'          => ['public' => true],
-		'annotations'  => [
+		'mode'           => 'write',
+		'targets_object' => false,
+		'show_in_rest'   => true,
+		'mcp'            => ['public' => true],
+		'annotations'    => [
 			'instructions' => "Updates a security feature's enabled state and/or values. Use nexter/get-security-settings first to see current config.",
 			'readonly'     => false,
 	'destructive'          => false,

@@ -54,6 +54,42 @@ class Nexter_Content_SEO_Settings {
 	}
 
 	/**
+	 * Expand the @shorthand for template variables.
+	 *
+	 * @name is a convenience alias for %name%, but only for names that really are variables.
+	 * Rewriting every @word turned ordinary prose into tokens that then resolved to nothing:
+	 * "Follow @posimyth for updates" rendered as "Follow for updates", and in an email address
+	 * the local part took the domain with it. A word is expanded only when it is a known
+	 * variable AND the @ is not part of something longer — an email address, or a handle
+	 * inside a URL.
+	 *
+	 * @param string $value Raw template text.
+	 * @return string
+	 */
+	public static function expand_variable_shorthand( $value ) {
+		if ( ! is_string( $value ) || false === strpos( $value, '@' ) ) {
+			return is_string( $value ) ? $value : '';
+		}
+
+		static $known = null;
+		if ( null === $known ) {
+			$known = self::get_template_variables();
+		}
+
+		// The leading group keeps the @ from matching when it follows a word character, a dot
+		// or a hyphen, which is what makes hello@example.com and first.last@example.com safe.
+		return (string) preg_replace_callback(
+			'/(^|[^\w.\-])@([a-z0-9_]+)/i',
+			static function ( $m ) use ( $known ) {
+				$name = strtolower( $m[2] );
+
+				return isset( $known[ $name ] ) ? $m[1] . '%' . $name . '%' : $m[0];
+			},
+			$value
+		);
+	}
+
+	/**
 	 * Reduce stored content to clean plain text for use inside a meta value.
 	 *
 	 * wp_strip_all_tags() alone is NOT enough: it removes HTML but leaves shortcodes intact, so a

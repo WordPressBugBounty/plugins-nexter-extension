@@ -40,9 +40,11 @@ wp_register_ability(
 	'execute_callback'    => 'nexter_mcp_delete_snippet',
 	'permission_callback' => 'nexter_mcp_permission_callback',
 	'meta'                => [
-		'show_in_rest' => true,
-		'mcp'          => ['public' => true],
-		'annotations'  => [
+		'mode'           => 'write',
+		'targets_object' => true,
+		'show_in_rest'   => true,
+		'mcp'            => ['public' => true],
+		'annotations'    => [
 			'instructions' => implode(
 				"\n",
 				[

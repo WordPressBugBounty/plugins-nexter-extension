@@ -33,6 +33,9 @@ class Nexter_Content_SEO_Redirection {
 	/** Maximum redirect rules that can be stored, guarding unbounded growth. Filterable. */
 	const MAX_RULES = 2000;
 
+	/** Longest accepted regex source pattern. */
+	const MAX_REGEX_LENGTH = 512;
+
 	/** Transient holding the compiled/filtered rule set used by the front-end matcher. */
 	const COMPILED_CACHE_KEY = 'nxt_content_seo_redirect_compiled';
 
@@ -70,8 +73,46 @@ class Nexter_Content_SEO_Redirection {
 		// bloating it site-wide (the concern with autoloading a large rule set). The front-end
 		// matcher reads a compiled transient (see get_compiled_rules) rather than this option
 		// directly, so an object cache serves it with no per-request SELECT.
-		update_option( self::OPTION_RULES, array_values( $rules ), false );
+		$rules   = array_values( (array) $rules );
+		$max     = self::max_rules();
+		$dropped = 0;
+
+		// The cap used to sit on the hand-entry REST route alone, so an import could write an
+		// unbounded option that the front-end matcher then compiles and walks on every request.
+		// Enforcing it at the one seam every writer goes through means none of them can skip it.
+		if ( $max > 0 && count( $rules ) > $max ) {
+			$dropped = count( $rules ) - $max;
+			$rules   = array_slice( $rules, 0, $max );
+		}
+
+		update_option( self::OPTION_RULES, $rules, false );
 		delete_transient( self::COMPILED_CACHE_KEY );
+
+		return array(
+			'saved'   => count( $rules ),
+			'dropped' => $dropped,
+		);
+	}
+
+	/**
+	 * The maximum number of stored rules. Filterable, and read by every writer.
+	 *
+	 * @return int
+	 */
+	public static function max_rules() {
+		return (int) apply_filters( 'nexter_content_seo_max_redirect_rules', self::MAX_RULES );
+	}
+
+	/**
+	 * Public wrapper over the loop detector, so an importer can check a prospective rule set
+	 * before writing it instead of leaving loops for the front end to discover.
+	 *
+	 * @param array<int, array<string, mixed>> $rules Full prospective rule set.
+	 * @param array<string, mixed>|null        $focus Only report chains starting here.
+	 * @return string Human-readable error, or '' when no loop exists.
+	 */
+	public static function find_loop( $rules, $focus = null ) {
+		return self::find_redirect_loop( $rules, $focus );
 	}
 
 	/**
@@ -122,6 +163,120 @@ class Nexter_Content_SEO_Redirection {
 	}
 
 	/**
+	 * Validate a regex source pattern for storage.
+	 *
+	 * Patterns are kept WITHOUT delimiters — the same shape Yoast Premium and Rank Math store —
+	 * so an imported pattern needs no rewriting on the way in or out.
+	 *
+	 * @param string $pattern Raw pattern.
+	 * @return string Empty when the pattern is unusable.
+	 */
+	private static function sanitize_regex_source( $pattern ) {
+		// Deliberately NOT wp_unslash()'d, unlike normalize_url_field(). A regex's backslashes
+		// are data — stripping them turns \d into d and \. into any character — and the rules
+		// REST routes read a JSON body, which WordPress never slashes, so there is nothing to
+		// undo. Slashing a URL is harmless; slashing a pattern silently rewrites it.
+		$pattern = trim( (string) $pattern );
+		// Newlines and control characters cannot occur in a request path, so a pattern carrying
+		// them is a paste accident rather than an intent.
+		$pattern = (string) preg_replace( '/[\x00-\x1f\x7f]/', '', $pattern );
+		if ( '' === $pattern || strlen( $pattern ) > self::MAX_REGEX_LENGTH ) {
+			return '';
+		}
+		return '' === self::compile_regex( $pattern ) ? '' : $pattern;
+	}
+
+	/**
+	 * The path WordPress is served under, with no trailing slash: '' on a plain single site,
+	 * '/site2' on a subdirectory Multisite subsite, '/blog' for a subdirectory install.
+	 *
+	 * @return string
+	 */
+	private static function home_base() {
+		$base = rtrim( (string) wp_parse_url( home_url( '/' ), PHP_URL_PATH ), '/' );
+
+		return ( '/' === $base ) ? '' : $base;
+	}
+
+	/**
+	 * Make a path relative to the site root.
+	 *
+	 * On a subdirectory Multisite subsite the request path carries the subsite segment, which
+	 * no rule pattern written for the site ever accounts for — so every anchored regex rule was
+	 * dead after an import. The request and the rule both go through this, so an exact rule
+	 * keyed on its stored URL still lines up with the request it is meant to catch.
+	 *
+	 * @param string $path Path beginning with a slash.
+	 * @return string
+	 */
+	private static function strip_home_base( $path ) {
+		$base = self::home_base();
+		if ( '' === $base || 0 !== strpos( $path, $base ) ) {
+			return $path;
+		}
+
+		$rest = substr( $path, strlen( $base ) );
+		if ( '' === $rest ) {
+			return '/';
+		}
+
+		// Only strip on a segment boundary, so a base of /site2 leaves /site22/x alone.
+		return ( '/' === substr( $rest, 0, 1 ) ) ? $rest : $path;
+	}
+
+	/**
+	 * Wrap a stored pattern in a delimiter it does not itself contain, so the pattern can never
+	 * close the expression and append its own modifiers.
+	 *
+	 * @param string $pattern Stored pattern.
+	 * @return string Delimited pattern, or empty when it does not compile.
+	 */
+	private static function compile_regex( $pattern ) {
+		$pattern = (string) $pattern;
+		if ( '' === $pattern || strlen( $pattern ) > self::MAX_REGEX_LENGTH ) {
+			return '';
+		}
+
+		$delimited = '';
+		foreach ( array( '#', '~', '!', '%', ';', '=', ',' ) as $delimiter ) {
+			if ( false === strpos( $pattern, $delimiter ) ) {
+				$delimited = $delimiter . $pattern . $delimiter;
+				break;
+			}
+		}
+		if ( '' === $delimited ) {
+			return '';
+		}
+
+		// A pattern that will not compile must read as "no match", not warn on every request.
+		if ( false === @preg_match( $delimited, '' ) ) { // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+			return '';
+		}
+
+		return $delimited;
+	}
+
+	/**
+	 * Substitute $1..$9 backreferences in a regex rule's destination.
+	 *
+	 * @param string           $to       Destination URL.
+	 * @param array<int,mixed> $captures preg_match() capture groups.
+	 * @return string
+	 */
+	private static function expand_regex_backrefs( $to, $captures ) {
+		$to = (string) $to;
+		if ( false === strpos( $to, '$' ) ) {
+			return $to;
+		}
+		// Highest index first, so $10 is never eaten by the $1 pass.
+		for ( $i = 9; $i >= 1; $i-- ) {
+			$value = isset( $captures[ $i ] ) ? (string) $captures[ $i ] : '';
+			$to    = str_replace( '$' . $i, $value, $to );
+		}
+		return $to;
+	}
+
+	/**
 	 * Sanitize one rule.
 	 *
 	 * @param array<string, mixed> $rule Rule.
@@ -135,10 +290,22 @@ class Nexter_Content_SEO_Redirection {
 		if ( '' === $id ) {
 			$id = 'r_' . wp_generate_password( 12, false, false );
 		}
-		$condition_whitelist = array( 'exact_match', 'contains', 'starts_with', 'ends_with' );
+		$condition_whitelist = array( 'exact_match', 'contains', 'starts_with', 'ends_with', 'regex' );
 		$cond                = isset( $rule['condition'] ) ? sanitize_key( (string) $rule['condition'] ) : 'exact_match';
 		if ( ! in_array( $cond, $condition_whitelist, true ) ) {
 			$cond = 'exact_match';
+		}
+		// A regex source is a pattern, not a URL — normalize_url_field() would resolve it
+		// against home_url() and destroy it. Keep it raw, and reject one that will not compile
+		// rather than saving a rule that can never fire.
+		$raw_from = isset( $rule['from_url'] ) ? $rule['from_url'] : '';
+		if ( 'regex' === $cond ) {
+			$from = self::sanitize_regex_source( $raw_from );
+			if ( '' === $from ) {
+				return null;
+			}
+		} else {
+			$from = self::normalize_url_field( $raw_from );
 		}
 		$query_whitelist = array( '', 'match_any_order', 'ignore_all', 'ignore_pass' );
 		$qp              = isset( $rule['query_params'] ) ? sanitize_key( (string) $rule['query_params'] ) : '';
@@ -152,7 +319,7 @@ class Nexter_Content_SEO_Redirection {
 		return array(
 			'id'           => $id,
 			'enabled'      => ! empty( $rule['enabled'] ),
-			'from_url'     => self::normalize_url_field( isset( $rule['from_url'] ) ? $rule['from_url'] : '' ),
+			'from_url'     => $from,
 			'to_url'       => self::normalize_url_field( isset( $rule['to_url'] ) ? $rule['to_url'] : '' ),
 			'condition'    => $cond,
 			'query_params' => $qp,
@@ -163,9 +330,12 @@ class Nexter_Content_SEO_Redirection {
 	/**
 	 * @param array<string, mixed> $rule Rule.
 	 * @param string               $request_path Request path (no domain, leading slash).
+	 * @param string               $request_query Request query string.
+	 * @param array<int|string,mixed> $captures Regex capture groups of a matched regex rule (by reference).
 	 * @return bool
 	 */
-	public static function rule_matches_request( $rule, $request_path, $request_query = '' ) {
+	public static function rule_matches_request( $rule, $request_path, $request_query = '', &$captures = array() ) {
+		$captures     = array();
 		$compare_from = self::rule_compare_from( $rule );
 		if ( '' === $compare_from ) {
 			return false;
@@ -200,6 +370,25 @@ class Nexter_Content_SEO_Redirection {
 
 		$cond = isset( $rule['condition'] ) ? $rule['condition'] : 'exact_match';
 		switch ( $cond ) {
+			case 'regex':
+				$pattern = self::compile_regex( $compare_from );
+				if ( '' === $pattern ) {
+					return false;
+				}
+				// Source plugins store an anchored pattern with no leading slash (^old/(.*)$) while
+				// the request path always has one, so every imported regex rule silently never
+				// matched and fell through to a 404. The path is tried as it is first, so a pattern
+				// written with the slash keeps the captures it always had, then without it.
+				// preg_match() returns false on a backtrack-limit blowout; only an explicit 1 counts
+				// as a match, so a runaway pattern degrades to "no redirect".
+				foreach ( array( $compare_path, ltrim( $compare_path, '/' ) ) as $candidate ) {
+					if ( 1 === preg_match( $pattern, $candidate, $captures ) ) {
+						return true;
+					}
+				}
+				$captures = array();
+
+				return false;
 			case 'contains':
 				return strpos( $compare_path, $compare_from ) !== false;
 			case 'starts_with':
@@ -225,11 +414,16 @@ class Nexter_Content_SEO_Redirection {
 		if ( '' === $from ) {
 			return '';
 		}
+		// A regex rule's source is a pattern, not a URL — hand it back untouched.
+		if ( isset( $rule['condition'] ) && 'regex' === $rule['condition'] ) {
+			return $from;
+		}
 		$parsed = wp_parse_url( $from );
 		$path   = isset( $parsed['path'] ) ? $parsed['path'] : '/';
 		if ( '/' !== substr( $path, 0, 1 ) ) {
 			$path = '/' . $path;
 		}
+		$path  = self::strip_home_base( $path );
 		$query = isset( $parsed['query'] ) ? $parsed['query'] : '';
 		$qp    = isset( $rule['query_params'] ) ? sanitize_key( (string) $rule['query_params'] ) : '';
 		if ( 'ignore_all' === $qp || 'ignore_pass' === $qp || 'match_any_order' === $qp ) {
@@ -250,13 +444,14 @@ class Nexter_Content_SEO_Redirection {
 		if ( empty( $compiled['enabled'] ) ) {
 			return;
 		}
-		$uri = isset( $_SERVER['REQUEST_URI'] ) ? wp_unslash( (string) $_SERVER['REQUEST_URI'] ) : '/';
+		$uri = isset( $_SERVER['REQUEST_URI'] ) ? wp_unslash( (string) $_SERVER['REQUEST_URI'] ) : '/'; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- sanitized on the next line.
 		// sanitize_text_field to strip control chars while preserving percent-encoding.
 		$uri  = (string) sanitize_text_field( $uri );
 		$path = wp_parse_url( $uri, PHP_URL_PATH );
 		if ( ! is_string( $path ) || '' === $path ) {
 			$path = '/';
 		}
+		$path  = self::strip_home_base( $path );
 		$query = wp_parse_url( $uri, PHP_URL_QUERY );
 		$query = is_string( $query ) ? $query : '';
 
@@ -284,12 +479,13 @@ class Nexter_Content_SEO_Redirection {
 		// Mixed rule set (contains / starts_with / ends_with present): scan the cached ENABLED
 		// subset in order. Disabled rules were already filtered out at compile time.
 		foreach ( $compiled['enabled'] as $rule ) {
-			if ( ! self::rule_matches_request( $rule, $path, $query ) ) {
+			$captures = array();
+			if ( ! self::rule_matches_request( $rule, $path, $query, $captures ) ) {
 				continue;
 			}
 			// apply_rule() exits on a fired redirect / 410; it only returns here when the
 			// destination is empty or unsafe, so fall through and try the next matching rule.
-			self::apply_rule( $rule, $path, $query );
+			self::apply_rule( $rule, $path, $query, $captures );
 		}
 	}
 
@@ -298,11 +494,13 @@ class Nexter_Content_SEO_Redirection {
 	 * success). Returns false — without exiting — only when the destination is empty or unsafe, so
 	 * the caller can try the next matching rule.
 	 *
-	 * @param array  $rule Rule definition.
-	 * @param string $path Matched request path.
+	 * @param array            $rule Rule definition.
+	 * @param string           $path Matched request path.
+	 * @param string           $request_query Request query string.
+	 * @param array<int,mixed> $captures Regex capture groups, when the rule matched by pattern.
 	 * @return false
 	 */
-	private static function apply_rule( $rule, $path, $request_query = '' ) {
+	private static function apply_rule( $rule, $path, $request_query = '', $captures = array() ) {
 		$status = isset( $rule['status_code'] ) ? (int) $rule['status_code'] : self::DEFAULT_STATUS_CODE;
 		if ( ! in_array( $status, self::ALLOWED_STATUS_CODES, true ) ) {
 			$status = self::DEFAULT_STATUS_CODE;
@@ -317,6 +515,11 @@ class Nexter_Content_SEO_Redirection {
 		}
 
 		$to = isset( $rule['to_url'] ) ? esc_url_raw( (string) $rule['to_url'] ) : '';
+
+		// Regex sources usually capture a path fragment and rebuild the target around it.
+		if ( ! empty( $captures ) && isset( $rule['condition'] ) && 'regex' === $rule['condition'] ) {
+			$to = esc_url_raw( self::expand_regex_backrefs( $to, $captures ) );
+		}
 
 		// 'Ignore And Pass Parameters To Target' only ignored them; the request query was never
 		// carried over. Merge it in, letting the target's own parameters win on a clash.
@@ -627,12 +830,26 @@ class Nexter_Content_SEO_Redirection {
 		$cf          = trim( (string) self::rule_compare_from( $rule ), '/' ); // '' means the site root.
 		$matches_all = in_array( $cond, array( 'starts_with', 'contains' ), true ) && '' === $cf;
 
+		// A pattern that matches both the site root and an arbitrary path is a catch-all, whatever
+		// it looks like — cheaper and more reliable than trying to read the pattern's intent.
+		// Uses the raw pattern, not $cf, whose trim() would strip the pattern's own slashes.
+		$regex_all = false;
+		if ( 'regex' === $cond ) {
+			$compiled  = self::compile_regex( isset( $rule['from_url'] ) ? (string) $rule['from_url'] : '' );
+			$regex_all = '' !== $compiled
+				&& 1 === preg_match( $compiled, '/' )
+				&& 1 === preg_match( $compiled, '/nxt-catch-all-probe-9f2c' );
+		}
+
 		$to          = isset( $rule['to_url'] ) ? (string) $rule['to_url'] : '';
 		$to_host     = strtolower( (string) wp_parse_url( $to, PHP_URL_HOST ) );
 		$home_host   = strtolower( (string) wp_parse_url( home_url(), PHP_URL_HOST ) );
 		$is_external = ( '' !== $to_host && $to_host !== $home_host );
 
 		$warnings = array();
+		if ( $regex_all ) {
+			$warnings[] = __( 'This pattern matches every request — it will redirect every page on your site.', 'nexter-extension' );
+		}
 		if ( $matches_all && $is_external ) {
 			$warnings[] = __( 'This rule matches all requests (Starts With “/”) and points to an external domain — it will send every visitor off-site.', 'nexter-extension' );
 		} elseif ( $matches_all ) {
@@ -657,12 +874,12 @@ class Nexter_Content_SEO_Redirection {
 		$rule = self::sanitize_rule( $body );
 		$gone = $rule && in_array( (int) $rule['status_code'], self::GONE_STATUS_CODES, true );
 		if ( null === $rule || '' === $rule['from_url'] || ( ! $gone && '' === $rule['to_url'] ) ) {
-			return new WP_Error( 'invalid_rule', __( 'A source URL is required, and a destination URL is required for redirect (3xx) rules.', 'nexter-extension' ), array( 'status' => 400 ) );
+			return new WP_Error( 'invalid_rule', __( 'A valid source is required (a Regex rule needs a pattern that compiles), and a destination URL is required for redirect (3xx) rules.', 'nexter-extension' ), array( 'status' => 400 ) );
 		}
 		$rules = self::get_rules();
 		// Cap the stored rule set so it cannot grow unbounded (which would bloat the option and
 		// slow every front-end match). Filterable; PUT/edit of existing rules is unaffected.
-		$max = (int) apply_filters( 'nexter_content_seo_max_redirect_rules', self::MAX_RULES );
+		$max = self::max_rules();
 		if ( $max > 0 && count( $rules ) >= $max ) {
 			return new WP_Error(
 				'rule_limit_reached',
@@ -704,7 +921,7 @@ class Nexter_Content_SEO_Redirection {
 		$rule       = self::sanitize_rule( $body );
 		$gone       = $rule && in_array( (int) $rule['status_code'], self::GONE_STATUS_CODES, true );
 		if ( null === $rule || '' === $rule['from_url'] || ( ! $gone && '' === $rule['to_url'] ) ) {
-			return new WP_Error( 'invalid_rule', __( 'A source URL is required, and a destination URL is required for redirect (3xx) rules.', 'nexter-extension' ), array( 'status' => 400 ) );
+			return new WP_Error( 'invalid_rule', __( 'A valid source is required (a Regex rule needs a pattern that compiles), and a destination URL is required for redirect (3xx) rules.', 'nexter-extension' ), array( 'status' => 400 ) );
 		}
 		$rules = self::get_rules();
 		$found = false;

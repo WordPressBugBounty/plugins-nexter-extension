@@ -196,7 +196,7 @@ class Nexter_Content_SEO_Sitemap {
 		if ( ! self::defer_sitemap_to_other_seo() ) {
 			$sitemap_options = Nexter_Content_SEO::get_options();
 			if ( ! empty( $sitemap_options['enable_xml_sitemap'] ) ) {
-				$req_uri  = isset( $_SERVER['REQUEST_URI'] ) ? (string) wp_unslash( $_SERVER['REQUEST_URI'] ) : '';
+				$req_uri  = isset( $_SERVER['REQUEST_URI'] ) ? (string) wp_unslash( $_SERVER['REQUEST_URI'] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- path compared after wp_parse_url().
 				$req_path = (string) wp_parse_url( $req_uri, PHP_URL_PATH );
 				if ( '' !== $req_path && preg_match( '#^/wp-sitemap[^/]*\.(?:xml|xsl)$#', $req_path ) ) {
 					global $wp_query;
@@ -1804,7 +1804,7 @@ class Nexter_Content_SEO_Sitemap {
 	/**
 	 * Get images from post content for sitemap.
 	 *
-	 * @param int $post_id Post ID.
+	 * @param int|WP_Post $post Post or post ID.
 	 * @return array Array of { url, title }.
 	 */
 	private static function get_post_images( $post ) {

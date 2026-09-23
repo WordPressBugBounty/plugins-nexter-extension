@@ -41,9 +41,11 @@ wp_register_ability(
 		'execute_callback'    => 'nexter_mcp_get_bulk_image_optimizer_status',
 		'permission_callback' => 'nexter_mcp_permission_callback',
 		'meta'                => array(
-			'show_in_rest' => true,
-			'mcp'          => array( 'public' => true ),
-			'annotations'  => array(
+			'mode'           => 'read',
+			'targets_object' => false,
+			'show_in_rest'   => true,
+			'mcp'            => array( 'public' => true ),
+			'annotations'    => array(
 				'instructions' => 'Inspect the Bulk Image Optimizer state: total/optimized/skipped counts, storage saved, monthly usage and limit, and the next batch of unoptimized attachments (id, filename, original_size, thumbnail_url). Returns enabled=false if the underlying Image Optimization extension is disabled — call nexter/update-image-optimization with enabled=true to turn it on.',
 				'readonly'     => true,
 				'destructive'  => false,
@@ -80,9 +82,11 @@ wp_register_ability(
 		'execute_callback'    => 'nexter_mcp_bulk_optimize_images',
 		'permission_callback' => 'nexter_mcp_permission_callback',
 		'meta'                => array(
-			'show_in_rest' => true,
-			'mcp'          => array( 'public' => true ),
-			'annotations'  => array(
+			'mode'           => 'write',
+			'targets_object' => false,
+			'show_in_rest'   => true,
+			'mcp'            => array( 'public' => true ),
+			'annotations'    => array(
 				'instructions' => 'Optimize attachments via the Nexter Image Optimizer. Provide attachment_ids for targeted optimization, or omit them to grab the next limit (default 5) unoptimized images. Each item returns its own status (success / skipped / failed) with bytes saved. Heavy: each image can take several seconds — keep batches small. Requires the Image Optimization extension enabled; per-image skip reasons mirror what the dashboard would show.',
 				'readonly'     => false,
 				'destructive'  => false,
@@ -107,9 +111,11 @@ wp_register_ability(
 		'execute_callback'    => 'nexter_mcp_restore_original_images',
 		'permission_callback' => 'nexter_mcp_permission_callback',
 		'meta'                => array(
-			'show_in_rest' => true,
-			'mcp'          => array( 'public' => true ),
-			'annotations'  => array(
+			'mode'           => 'write',
+			'targets_object' => false,
+			'show_in_rest'   => true,
+			'mcp'            => array( 'public' => true ),
+			'annotations'    => array(
 				'instructions' => 'Reverts every Nexter-optimized image back to its backed-up original and removes nxt_optimized_file metadata. Site-wide and irreversible without re-running optimization. Use only when the user explicitly asks to roll back bulk optimization.',
 				'readonly'     => false,
 				'destructive'  => true,

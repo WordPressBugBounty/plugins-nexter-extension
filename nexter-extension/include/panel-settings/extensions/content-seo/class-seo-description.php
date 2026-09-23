@@ -156,6 +156,7 @@ class Nexter_Content_SEO_Description {
 			|| defined( 'THE_SEO_FRAMEWORK_VERSION' ) // The SEO Framework (TSF).
 			|| defined( 'SLIM_SEO_VER' )          // Slim SEO.
 			|| defined( 'SQ_VERSION' )            // Squirrly SEO.
+			|| defined( 'SURERANK_VERSION' )      // SureRank.
 			// NOTE: RankReady (AI/LLM SEO) is intentionally NOT listed. It emits no <title>,
 			// meta description, canonical, robots, schema or sitemap, so deferring to it would
 			// suppress Nexter's own output and leave the page with no SEO metadata at all. It
@@ -447,7 +448,7 @@ class Nexter_Content_SEO_Description {
 		if ( '' === $value ) {
 			return '';
 		}
-		$template = preg_replace( '/@([a-z0-9_]+)/i', '%$1%', $value );
+		$template = Nexter_Content_SEO_Settings::expand_variable_shorthand( $value );
 		$resolved = Nexter_Content_SEO_Settings::replace_variables( $template, is_array( $context ) ? $context : array() );
 		return self::cleanup_text( $resolved );
 	}

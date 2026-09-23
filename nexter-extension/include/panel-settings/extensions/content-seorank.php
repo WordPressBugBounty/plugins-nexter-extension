@@ -732,7 +732,11 @@ class Nexter_Content_SeoRank {
 				update_term_meta( $term_id, self::META_SCHEMA_CUSTOM, true );
 				if ( array_key_exists( 'schema_post_rows', $body ) && is_array( $body['schema_post_rows'] ) && class_exists( 'Nexter_Content_SEO_Schema' ) ) {
 					$clean = Nexter_Content_SEO_Schema::sanitize_term_schema_rows_list( $body['schema_post_rows'], $term_id );
-					update_term_meta( $term_id, self::META_SCHEMA_ROWS, wp_json_encode( $clean ) );
+					// Stored, not rendered: this row is json_decode()d back into an array before any
+					// output path re-encodes it with the escaping a <script> tag needs. Escaping here
+					// only makes the stored value opaque — \uXXXX sequences are missed by a migration
+					// search-replace and by meta_value LIKE queries.
+					update_term_meta( $term_id, self::META_SCHEMA_ROWS, wp_json_encode( $clean, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES ) );
 				}
 			}
 		}
@@ -997,7 +1001,11 @@ class Nexter_Content_SeoRank {
 				update_post_meta( $post_id, self::META_SCHEMA_CUSTOM, true );
 				if ( array_key_exists( 'schema_post_rows', $body ) && is_array( $body['schema_post_rows'] ) && class_exists( 'Nexter_Content_SEO_Schema' ) ) {
 					$clean = Nexter_Content_SEO_Schema::sanitize_post_schema_rows_list( $body['schema_post_rows'], $post_id );
-					update_post_meta( $post_id, self::META_SCHEMA_ROWS, wp_json_encode( $clean ) );
+					// Stored, not rendered: this row is json_decode()d back into an array before any
+					// output path re-encodes it with the escaping a <script> tag needs. Escaping here
+					// only makes the stored value opaque — \uXXXX sequences are missed by a migration
+					// search-replace and by meta_value LIKE queries.
+					update_post_meta( $post_id, self::META_SCHEMA_ROWS, wp_json_encode( $clean, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES ) );
 				}
 			}
 		}
@@ -1551,6 +1559,8 @@ class Nexter_Content_SeoRank {
 	 * @param string $hook Current admin page hook.
 	 */
 	public function enqueue_scripts( $hook ) {
+		// Read-only screen detection for script loading; nothing here writes.
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended
 		$page            = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : '';
 		$is_seo_page     = ( $hook === 'nexter_page_nxt_content_seo' || $page === 'nxt_content_seo' );
 		$is_post_edit    = ( $hook === 'post.php' || $hook === 'post-new.php' );
@@ -1576,6 +1586,19 @@ class Nexter_Content_SeoRank {
 		}
 		$ver     = defined( 'NEXTER_EXT_VER' ) ? NEXTER_EXT_VER : '4.6.0';
 		$min_sel = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
+
+		// wp-scripts stamps index.asset.php with a hash of the actual bundle contents. Using that
+		// instead of the static plugin version means every rebuild busts browsers' cached copy of
+		// this JS/CSS on its own — a JS-only fix no longer needs a version bump just to reach
+		// someone whose browser already cached the old index.js under the same "?ver=" query string.
+		$asset_ver = $ver;
+		$asset_php = $build_path . 'index.asset.php';
+		if ( file_exists( $asset_php ) ) {
+			$asset = include $asset_php;
+			if ( is_array( $asset ) && ! empty( $asset['version'] ) ) {
+				$asset_ver = (string) $asset['version'];
+			}
+		}
 		wp_enqueue_style( 'nexter-select-css', NEXTER_EXT_URL . 'assets/css/extra/select2' . $min_sel . '.css', array(), $ver );
 		wp_enqueue_script( 'nexter-select-js', NEXTER_EXT_URL . 'assets/js/extra/select2' . $min_sel . '.js', array( 'jquery' ), $ver, true );
 
@@ -1594,12 +1617,12 @@ class Nexter_Content_SeoRank {
 		 */
 		wp_enqueue_style( 'nexter-welcome-style', NEXTER_EXT_URL . 'dashboard/build/index.css', array(), $ver, 'all' );
 
-		wp_enqueue_style( 'nexter-content-seo', $build_url . 'index.css', array( 'nexter-select-css', 'nexter-welcome-style' ), $ver );
+		wp_enqueue_style( 'nexter-content-seo', $build_url . 'index.css', array( 'nexter-select-css', 'nexter-welcome-style' ), $asset_ver );
 		wp_enqueue_script(
 			'nexter-content-seo',
 			$build_url . 'index.js',
 			array( 'react', 'react-dom', 'wp-element', 'wp-data', 'wp-i18n', 'jquery', 'nexter-select-js' ),
-			$ver,
+			$asset_ver,
 			true
 		);
 		// The Content SEO UI is a React bundle that translates strings via wp.i18n.__(). Without
@@ -1607,12 +1630,13 @@ class Nexter_Content_SeoRank {
 		// stays in English regardless of locale.
 		if ( function_exists( 'wp_set_script_translations' ) ) {
 			wp_set_script_translations( 'nexter-content-seo', 'nexter-extension', WP_LANG_DIR . '/plugins/' );
-			self::load_seo_chunk_translations( $build_path, $build_url, $ver );
+			self::load_seo_chunk_translations( $build_path, $build_url, $asset_ver );
 		}
 		$post_id = 0;
 		if ( $is_post_edit && isset( $_GET['post'] ) ) {
 			$post_id = absint( $_GET['post'] );
 		}
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
 		if ( $is_term_edit ) {
 			wp_enqueue_style( 'dashicons' );
 		}
@@ -1648,7 +1672,12 @@ class Nexter_Content_SeoRank {
 					'brandname' => class_exists( 'Nexter_Content_SEO' ) ? Nexter_Content_SEO::seo_brand_label() : 'Nexter SEO',
 					'brandlogo' => class_exists( 'Nexter_Content_SEO' ) ? Nexter_Content_SEO::seo_brand_logo() : '',
 				),
-				'whiteLabel'          => self::seo_whitelabel_flags(),
+				// 'whiteLabel' (the Pro flag set) is deliberately NOT sent. The dashboard app reads
+				// dashData.whiteLabel.nxt_help_link to hide its documentation links, but the SEO
+				// screens have no help or docs links for it to govern, and the SEO bundle never read
+				// it — so computing and shipping it on every page load bought nothing. Branding IS
+				// white-labelled here, through whiteLabelData above. Re-add the flags alongside the
+				// first help link these screens gain.
 				'homePageEditUrl'     => self::get_home_page_edit_url(),
 				'isWooCommerceActive' => class_exists( 'WooCommerce' ),
 				'postTypes'           => self::get_robots_post_types(),
@@ -1658,29 +1687,26 @@ class Nexter_Content_SeoRank {
 		);
 	}
 
-	/**
-	 * White-label flag set for the SEO app, mirroring the main dashboard's dashData.whiteLabel:
-	 * the Pro white-label option array (tpgb variant under TPGB Pro), or [] on free. Lets the SEO
-	 * React app honor the same switches (e.g. nxt_help_link) as the dashboard.
-	 *
-	 * @return array
-	 */
-	private static function seo_whitelabel_flags() {
-		$flags = defined( 'NXT_PRO_EXT' )
-			? Nxt_Options::white_label()
-			: ( defined( 'TPGBP_VERSION' ) ? Nxt_Options::tpgb_white_label() : array() );
-		return is_array( $flags ) ? $flags : array();
-	}
 
 	/**
-	 * Get public post types for Robots (No Index / No Follow / No Archive) settings.
+	 * Get indexable post types for Robots (No Index / No Follow / No Archive) settings.
+	 *
+	 * Mirrors Nexter_Content_SEO::get_seo_indexable_post_types() — public post types PLUS ones
+	 * registered publicly_queryable => true but public => false (e.g. Complianz's cookie/privacy
+	 * statement type), which still have live front-end URLs and need robots control. Listing
+	 * fewer here than the sanitizer accepts would leave a valid post type with no checkbox to
+	 * toggle it from.
 	 *
 	 * @return array Array of { slug, label }.
 	 */
 	public static function get_robots_post_types() {
-		$types = get_post_types( array( 'public' => true ), 'objects' );
+		$slugs = class_exists( 'Nexter_Content_SEO' ) ? Nexter_Content_SEO::get_seo_indexable_post_types() : array_keys( get_post_types( array( 'public' => true ), 'names' ) );
 		$out   = array();
-		foreach ( $types as $slug => $obj ) {
+		foreach ( $slugs as $slug ) {
+			$obj = get_post_type_object( $slug );
+			if ( ! $obj ) {
+				continue;
+			}
 			$out[] = array(
 				'slug'  => $slug,
 				'label' => $obj->labels->singular_name ?: $obj->label,
