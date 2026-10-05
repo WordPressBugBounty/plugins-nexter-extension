@@ -77,11 +77,10 @@ class Nexter_Ext_Custom_Login_Redirect {
 		$request_URI = wp_parse_url( $request_uri );
 		$path        = ! empty( $request_URI['path'] ) ? untrailingslashit( $request_URI['path'] ) : '';
 		
-		$login_slug     = $this->nxt_custom_login_slug();
-		$get_login_slug = '';
-		if ( ! empty( $login_slug ) && isset( $_GET[ $login_slug ] ) ) {
-			$get_login_slug = sanitize_text_field( wp_unslash( $_GET[ $login_slug ] ) );
-		}
+		$login_slug = $this->nxt_custom_login_slug();
+		// nxt_new_login_url() hands out /?slug with no value on plain permalinks, so the key being
+		// present is the signal. Requiring a value meant the generated URL never opened the form.
+		$has_login_slug = ( ! empty( $login_slug ) && isset( $_GET[ $login_slug ] ) );
 
 		if ( ! is_admin() && ( strpos( rawurldecode( $request_uri ), 'wp-login.php' ) !== false || $path === site_url( 'wp-login', 'relative' ) ) ) {
 			//wp-login.php URL 
@@ -98,7 +97,7 @@ class Nexter_Ext_Custom_Login_Redirect {
 			$_SERVER['REQUEST_URI'] = $this->nxt_user_trailingslashit( '/' . str_repeat( '-/', 10 ) );
 			$pagenow                = 'index.php';
 			
-		} else if ( $path === home_url( $login_slug, 'relative' ) || ( ! get_option( 'permalink_structure' ) && ! empty( $get_login_slug ) ) ) {
+		} else if ( $path === home_url( $login_slug, 'relative' ) || ( ! get_option( 'permalink_structure' ) && $has_login_slug ) ) {
 			//Hidden Login URL
 			$pagenow = 'wp-login.php';
 		}

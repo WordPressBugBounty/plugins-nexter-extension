@@ -673,7 +673,7 @@ class WP_Import extends WP_Importer {
 			if ( ! post_type_exists( $post['post_type'] ) ) {
 				printf(
 					/* translators: 1: post title, 2: post type */
-					/* translators: 1: post title, 2: post type */ __( 'Failed to import &#8220;%1$s&#8221;: Invalid post type %2$s', 'nexter-extension' ),
+					/* translators: 1: post title, 2: post type */ /* translators: 1: post title, 2: post type */ __( 'Failed to import &#8220;%1$s&#8221;: Invalid post type %2$s', 'nexter-extension' ),
 					esc_html( $post['post_title'] ),
 					esc_html( $post['post_type'] ) 
 				); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped

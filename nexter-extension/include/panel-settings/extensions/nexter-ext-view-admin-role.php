@@ -11,10 +11,58 @@ class Nexter_Ext_View_Admin_Role_Switch {
 	 * Constructor
 	 */
 	public function __construct() {
-		add_action( 'admin_bar_menu', [$this, 'view_admin_as_admin_bar_menu'], 8 );
+		// The way back stays registered when the toggle is off, so a lowered account is never stranded.
+		if ( $this->is_enabled() ) {
+			add_action( 'admin_bar_menu', [$this, 'view_admin_as_admin_bar_menu'], 8 );
+		}
 		add_action( 'init', [$this, 'role_switcher_to_view_admin_as'] );
 		add_action( 'profile_update', [$this, 'maybe_prevent_switchback_to_administrator'], 20 );
 		add_action( 'admin_footer', [$this, 'add_floating_reset_button'] );
+		add_action( 'wp_footer', [$this, 'add_floating_reset_button'] );
+	}
+
+	private function is_enabled() {
+		$opts = Nxt_Options::extra_ext() ?: [];
+		return ! empty( $opts['view-admin-role']['switch'] );
+	}
+
+	/**
+	 * Roles recorded before the switch; the only source of truth for switching back.
+	 */
+	private function get_original_roles( $user_id ) {
+		$original = (array) get_user_meta( $user_id, 'nxtext_view_admin_original_role', true );
+		return array_values( array_filter( $original, function ( $r ) {
+			return is_string( $r ) && wp_roles()->is_role( $r );
+		} ) );
+	}
+
+	/**
+	 * Put a switched account back on its recorded roles and drop it from the whitelist.
+	 */
+	private function restore_original_roles( $user ) {
+		$original = $this->get_original_roles( $user->ID );
+		if ( empty( $original ) ) {
+			return false;
+		}
+
+		foreach ( $user->roles as $r ) {
+			$user->remove_role( $r );
+		}
+		foreach ( $original as $r ) {
+			$user->add_role( $r );
+		}
+
+		update_user_meta( $user->ID, 'nxtext_viewing_admin_switch', 'administrator' );
+		delete_user_meta( $user->ID, 'nxtext_view_admin_original_role' );
+
+		$opts    = Nxt_Options::extra_ext() ?: [];
+		$allowed = $opts['view-admin-role']['view_as_users'] ?? [];
+		if ( in_array( $user->user_login, $allowed, true ) ) {
+			$opts['view-admin-role']['view_as_users'] = array_values( array_diff( $allowed, [ $user->user_login ] ) );
+			update_option( 'nexter_extra_ext_options', $opts, true );
+		}
+
+		return true;
 	}
 
 	public function view_admin_as_admin_bar_menu( $admin_bar ) {
@@ -38,7 +86,7 @@ class Nexter_Ext_View_Admin_Role_Switch {
 		$label     = ucfirst( $role_name );
 
 		// Add main admin bar menu item
-		$can_switch = in_array( $username, $whitelist );
+		$can_switch = in_array( $username, $whitelist ) || ! empty( $this->get_original_roles( $user->ID ) );
 		$is_admin   = in_array( 'administrator', $roles );
 
 		if ( $view_role === 'administrator' && $is_admin ) {
@@ -166,7 +214,7 @@ class Nexter_Ext_View_Admin_Role_Switch {
 
 			// --- Switch to role ---
 			if ( $action === 'switch_role_to' ) {
-				if ( ! current_user_can( 'manage_options' ) ) {
+				if ( ! $this->is_enabled() || ! current_user_can( 'manage_options' ) ) {
 					return;
 				}
 
@@ -207,59 +255,38 @@ class Nexter_Ext_View_Admin_Role_Switch {
 				}
 
 				// Only an account this feature actually switched may switch back.
-				if ( ! in_array( $uname, $allowed, true ) || '' === get_user_meta( $user->ID, 'nxtext_view_admin_original_role', true ) ) {
+				if ( ! $this->restore_original_roles( $user ) ) {
 					return;
 				}
 
-				foreach ( $roles as $r ) {
-					$user->remove_role( $r );
-				}
-
-				$original = get_user_meta( $user->ID, 'nxtext_view_admin_original_role', true );
-				foreach ( (array) $original as $r ) {
-					$user->add_role( $r );
-				}
-
-				$opts['view-admin-role']['view_as_users'] = array_values( array_diff( $allowed, [ $uname ] ) );
-				update_option( 'nexter_extra_ext_options', $opts, true );
-
-				update_user_meta( $user->ID, 'nxtext_viewing_admin_switch', 'administrator' );
+				wp_safe_redirect( admin_url() );
+				exit;
 			}       
 		} elseif ( isset( $_REQUEST['reset-view'] ) ) {
 
-			$reset_user = sanitize_user( wp_unslash( $_REQUEST['reset-view'] ) );
-
-			// This ran on 'init' with no nonce and no capability check, so anyone could change the
-			// roles of any whitelisted account. Own view only, unless the caller can promote users.
-			$reset_nonce = isset( $_REQUEST['nonce'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['nonce'] ) ) : '';
-			if ( ! is_user_logged_in()
-				|| ! wp_verify_nonce( $reset_nonce, 'nxtext_view_admin_reset_' . $reset_user )
-				|| ( $reset_user !== $uname && ! current_user_can( 'promote_users' ) ) ) {
+			if ( ! is_user_logged_in() ) {
 				return;
 			}
 
-			if ( in_array( $reset_user, $allowed, true ) ) {
-				$reset_obj = get_user_by( 'login', $reset_user );
-				if ( $reset_obj ) {
-					foreach ( $reset_obj->roles as $r ) {
-						$reset_obj->remove_role( $r );
-					}
+			$reset_user = sanitize_user( wp_unslash( $_REQUEST['reset-view'] ) );
+			$reset_obj  = get_user_by( 'login', $reset_user );
+			if ( ! $reset_obj ) {
+				return;
+			}
 
-					$original = get_user_meta( $reset_obj->ID, 'nxtext_view_admin_original_role', true );
-					foreach ( (array) $original as $r ) {
-						$reset_obj->add_role( $r );
-					}
-
-					update_user_meta( $reset_obj->ID, 'nxtext_viewing_admin_switch', 'administrator' );
-
-					$opts['view-admin-role']['view_as_users'] = array_values( array_diff( $allowed, [ $reset_user ] ) );
-					update_option( 'nexter_extra_ext_options', $opts, true );
-
-					// Redirect to Dashboard (uses custom slug if set)
-					?>
-					<script>window.location.href='<?php echo esc_url( admin_url() ); ?>';</script>
-					<?php
+			// Own view: restoring the caller's own recorded roles grants nothing new, so older
+			// nonce-less links keep working. Anyone else needs a nonce and promote_users.
+			if ( $reset_obj->ID !== $user->ID ) {
+				$reset_nonce = isset( $_REQUEST['nonce'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['nonce'] ) ) : '';
+				if ( ! current_user_can( 'promote_users' )
+					|| ! wp_verify_nonce( $reset_nonce, 'nxtext_view_admin_reset_' . $reset_user ) ) {
+					return;
 				}
+			}
+
+			if ( $this->restore_original_roles( $reset_obj ) ) {
+				wp_safe_redirect( admin_url() );
+				exit;
 			}
 		}
 	}
@@ -274,6 +301,11 @@ class Nexter_Ext_View_Admin_Role_Switch {
 	 */
 	public function maybe_prevent_switchback_to_administrator( $user_id ) {
 
+		// Not a switched account: nothing to protect.
+		if ( empty( $this->get_original_roles( $user_id ) ) ) {
+			return;
+		}
+
 		$view_role = get_user_meta( $user_id, 'nxtext_viewing_admin_switch', true );
 
 		// Only proceed if user is NOT currently viewing as administrator
@@ -282,6 +314,11 @@ class Nexter_Ext_View_Admin_Role_Switch {
 			$user = get_user_by( 'id', $user_id );
 			if ( ! $user ) {
 				return; // invalid user
+			}
+
+			// Unrelated saves (WooCommerce, other plugins) leave the switched role in place; only a manual role change drops the way back.
+			if ( array_values( $user->roles ) === array( $view_role ) ) {
+				return;
 			}
 
 			$uname   = $user->user_login;
@@ -306,28 +343,28 @@ class Nexter_Ext_View_Admin_Role_Switch {
 	 * @since 6.1.3
 	 */
 	public function add_floating_reset_button() {
-		$opts    = Nxt_Options::extra_ext() ?: [];
-		$allowed = $opts['view-admin-role']['view_as_users'] ?? [];
-		$user    = wp_get_current_user();
-		$uname   = $user->user_login;
+		$user = wp_get_current_user();
 
-		// Show only if user is impersonating and NOT an admin
-		if ( ! current_user_can( 'manage_options' ) && in_array( $uname, $allowed, true ) ) {
-			$reset_url = add_query_arg(
-				array(
-					'reset-view' => rawurlencode( $uname ),
-					'nonce'      => wp_create_nonce( 'nxtext_view_admin_reset_' . $uname ),
-				),
-				home_url()
-			);
-			?>
-			<div id="nxt-role-view-reset" style="position:fixed;bottom:20px;right:20px;z-index:9999;">
-				<a href="<?php echo esc_url( $reset_url ); ?>" class="button button-primary">
-					<?php echo esc_html( __( 'Switch back to Administrator', 'nexter-extension' ) ); ?>
-				</a>
-			</div>
-			<?php
+		// Show whenever this account is lowered, on the front end too: WooCommerce blocks wp-admin for customers.
+		if ( ! $user->exists() || empty( $this->get_original_roles( $user->ID ) ) ) {
+			return;
 		}
+
+		$uname     = $user->user_login;
+		$reset_url = add_query_arg(
+			array(
+				'reset-view' => rawurlencode( $uname ),
+				'nonce'      => wp_create_nonce( 'nxtext_view_admin_reset_' . $uname ),
+			),
+			home_url()
+		);
+		?>
+		<div id="nxt-role-view-reset" style="position:fixed;bottom:20px;right:20px;z-index:99999;">
+			<a href="<?php echo esc_url( $reset_url ); ?>" class="button button-primary">
+				<?php echo esc_html( __( 'Switch back to Administrator', 'nexter-extension' ) ); ?>
+			</a>
+		</div>
+		<?php
 	}
 
 

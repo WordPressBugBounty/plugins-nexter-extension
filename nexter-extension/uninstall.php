@@ -8,9 +8,10 @@
  * where it left off and never asked again. Removing the plugin is a withdrawal, so a reinstall has
  * to begin from an unanswered state.
  *
- * Deliberately narrow: this only clears analytics/consent state and the cron it created. The
- * plugin's feature settings (extensions, performance, security, SEO, snippets) are left alone, so
- * deleting and reinstalling does not wipe someone's configuration.
+ * Deliberately narrow: this clears analytics/consent state, the cron it created, and the
+ * migration's own run bookkeeping. The plugin's feature settings (extensions, performance,
+ * security, SEO, snippets) are left alone, as are the per-object import markers and the values
+ * the import wrote, so deleting and reinstalling does not wipe someone's configuration or data.
  *
  * @package NexterExtension
  */

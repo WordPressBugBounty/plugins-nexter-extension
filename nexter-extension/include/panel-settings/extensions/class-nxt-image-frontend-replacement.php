@@ -26,6 +26,9 @@ class Nxt_Image_Frontend_Replacement {
 	/** @var array|null Browser accept header capabilities (avif/webp). */
 	private static $browser_support = null;
 
+	/** @var array Per-URL file-driven variants (avif/webp/original) used by the <picture> output. */
+	private static $variant_cache = array();
+
 	public function __construct( $parent ) {
 		$this->parent = $parent;
 	}
@@ -106,8 +109,9 @@ class Nxt_Image_Frontend_Replacement {
 		// Convert to absolute path
 		$abs = wp_normalize_path( $base_path . '/' . $rel );
 
-		// Check if original file exists
-		if ( ! file_exists( $abs ) ) {
+		// The original may be gone from uploads (kept in the optimizer's backups), so only the
+		// optimised copy has to exist. A path with .. is never mapped.
+		if ( false !== strpos( $rel, '..' ) ) {
 			return false;
 		}
 
@@ -164,6 +168,34 @@ class Nxt_Image_Frontend_Replacement {
 			return $content;
 		}
 
+		// Images become <picture> so the browser picks AVIF/WebP itself instead of the page guessing from
+		// the Accept header. Existing pictures, scripts, styles and similar blocks are split out untouched.
+		$parts = preg_split( '#(<picture\b.*?</picture>|<script\b.*?</script>|<style\b.*?</style>|<textarea\b.*?</textarea>|<noscript\b.*?</noscript>|<template\b.*?</template>)#is', $content, -1, PREG_SPLIT_DELIM_CAPTURE );
+		if ( false === $parts ) {
+			$parts = array( $content );
+		}
+		foreach ( $parts as $i => $part ) {
+			if ( 0 === $i % 2 ) {
+				$done        = preg_replace_callback( '/<img\b[^>]*>/i', array( $this, 'picture_replacement_callback' ), $part );
+				$parts[ $i ] = null === $done ? $part : $done;
+			}
+		}
+		$content = implode( '', $parts );
+
+		// Replace background-image URLs
+		$bg_pattern = '/url\(\s*["\']?([^"\'\)]+)\.(jpg|jpeg|png)([^"\'\)]*)["\']?\s*\)/i';
+		$content    = preg_replace_callback( $bg_pattern, array( $this, 'background_replacement_callback' ), $content );
+
+		return $content;
+	}
+
+	/**
+	 * The Accept-header based img handling, kept for images that cannot be wrapped in <picture>.
+	 *
+	 * @param string $content HTML containing img tags.
+	 * @return string
+	 */
+	private function legacy_replace_images( $content ) {
 		// First pass: Replace src and srcset for images with original formats (jpg/jpeg/png)
 		$img_pattern = '/<img([^>]*?)src=["\']([^"\']+)\.(jpg|jpeg|png)([^"\']*)["\']([^>]*?)>/i';
 		$content     = preg_replace_callback( $img_pattern, array( $this, 'direct_replacement_callback' ), $content );
@@ -174,15 +206,238 @@ class Nxt_Image_Frontend_Replacement {
 
 		// Third pass: Revert optimised URLs back to original if optimised files don't exist
 		$img_optimized_pattern = '/<img([^>]*?)src=["\']([^"\']*nexter-optimizer[^"\']+)\.(webp|avif|jpg|jpeg|png)([^"\']*)["\']([^>]*?)>/i';
-		$content               = preg_replace_callback( $img_optimized_pattern, array( $this, 'revert_optimized_url_callback' ), $content );
-
-		// Replace background-image URLs
-		$bg_pattern = '/url\(\s*["\']?([^"\'\)]+)\.(jpg|jpeg|png)([^"\'\)]*)["\']?\s*\)/i';
-		$content    = preg_replace_callback( $bg_pattern, array( $this, 'background_replacement_callback' ), $content );
-
-		return $content;
+		return preg_replace_callback( $img_optimized_pattern, array( $this, 'revert_optimized_url_callback' ), $content );
 	}
 
+	/**
+	 * Wrap one img tag in <picture> when an AVIF/WebP copy exists on disk, else use the legacy swap.
+	 *
+	 * @param array $matches Regex matches.
+	 * @return string
+	 */
+	private function picture_replacement_callback( $matches ) {
+		$tag = $matches[0];
+		if ( $this->picture_allowed() ) {
+			$picture = $this->build_picture( $tag );
+			if ( false !== $picture ) {
+				return $picture;
+			}
+		}
+		return $this->legacy_replace_images( $tag );
+	}
+
+	/**
+	 * Picture markup is for the public page only, not the editor, REST replies or feeds.
+	 *
+	 * @return bool
+	 */
+	private function picture_allowed() {
+		if ( is_admin() && ! wp_doing_ajax() ) {
+			return false;
+		}
+		if ( ( defined( 'REST_REQUEST' ) && REST_REQUEST ) || isset( $_GET['elementor-preview'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			return false;
+		}
+		return ! ( did_action( 'parse_query' ) && ( is_feed() || is_embed() ) );
+	}
+
+	/**
+	 * Build <picture> for an img tag, or false when no AVIF/WebP copy exists for it.
+	 *
+	 * @param string $tag The img tag.
+	 * @return string|false
+	 */
+	private function build_picture( $tag ) {
+		$src = $this->get_attr( $tag, 'src' );
+		if ( '' === $src || 0 === strpos( $src, 'data:' ) ) {
+			return false;
+		}
+
+		$main = $this->get_variants_for_url( $src );
+		if ( ! $main ) {
+			return false;
+		}
+
+		$srcset  = $this->get_attr( $tag, 'srcset' );
+		$sizes   = $this->get_attr( $tag, 'sizes' );
+		$sources = '';
+		$types   = array(
+			'avif' => 'image/avif',
+			'webp' => 'image/webp',
+		);
+		foreach ( $types as $format => $mime ) {
+			$set = $this->picture_srcset( $src, $srcset, $main, $format );
+			if ( '' !== $set ) {
+				$sources .= '<source type="' . $mime . '" srcset="' . esc_attr( $set ) . '"' . ( '' !== $sizes ? ' sizes="' . esc_attr( $sizes ) . '"' : '' ) . '>';
+			}
+		}
+		if ( '' === $sources ) {
+			return false;
+		}
+
+		// The img stays as the fallback, pointed at a file that exists.
+		$img = $tag;
+		if ( '' !== $main['fallback'] && $main['fallback'] !== $src ) {
+			$img = $this->set_attr( $img, 'src', $main['fallback'] );
+		}
+		if ( '' !== $srcset ) {
+			$img = $this->set_attr( $img, 'srcset', $this->fallback_srcset( $srcset ) );
+		}
+
+		return '<picture class="nxt-optimized-picture" style="display:contents">' . $sources . $img . '</picture>';
+	}
+
+	/**
+	 * Build the srcset for one <source>: the entries of the img's srcset that have a copy in this format.
+	 *
+	 * @param string $src    The img src.
+	 * @param string $srcset The img srcset, or ''.
+	 * @param array  $main   Variants of the src.
+	 * @param string $format 'avif' or 'webp'.
+	 * @return string
+	 */
+	private function picture_srcset( $src, $srcset, $main, $format ) {
+		$entries = '' !== trim( $srcset ) ? explode( ',', $srcset ) : array( $src );
+		$out     = array();
+		foreach ( $entries as $entry ) {
+			$bits = preg_split( '/\s+/', trim( $entry ), 2 );
+			$url  = trim( $bits[0] );
+			if ( '' === $url ) {
+				continue;
+			}
+			$variants = ( $url === $src ) ? $main : $this->get_variants_for_url( $url );
+			if ( $variants && '' !== $variants[ $format ] ) {
+				$out[] = $variants[ $format ] . ( isset( $bits[1] ) ? ' ' . trim( $bits[1] ) : '' );
+			}
+		}
+		return implode( ', ', $out );
+	}
+
+	/**
+	 * The img's own srcset with any entry whose file is gone pointed at the best copy that exists.
+	 *
+	 * @param string $srcset The img srcset.
+	 * @return string
+	 */
+	private function fallback_srcset( $srcset ) {
+		$out = array();
+		foreach ( explode( ',', $srcset ) as $entry ) {
+			$bits = preg_split( '/\s+/', trim( $entry ), 2 );
+			$url  = trim( $bits[0] );
+			if ( '' === $url ) {
+				continue;
+			}
+			$variants = $this->get_variants_for_url( $url );
+			if ( $variants && '' !== $variants['fallback'] ) {
+				$url = $variants['fallback'];
+			}
+			$out[] = $url . ( isset( $bits[1] ) ? ' ' . trim( $bits[1] ) : '' );
+		}
+		return implode( ', ', $out );
+	}
+
+	/**
+	 * Which optimised copies exist on disk for an uploads or optimizer URL. Driven by files only.
+	 *
+	 * @param string $url Image URL.
+	 * @return array|false avif, webp, opt, has_original, fallback; false when the URL is not ours.
+	 */
+	private function get_variants_for_url( $url ) {
+		$clean = preg_replace( '/[?#].*$/', '', (string) $url );
+		if ( ! isset( self::$variant_cache[ $clean ] ) ) {
+			self::$variant_cache[ $clean ] = $this->resolve_variants( $clean );
+		}
+		return self::$variant_cache[ $clean ];
+	}
+
+	/**
+	 * Work out the variants for one clean URL; see get_variants_for_url().
+	 *
+	 * @param string $clean URL without query or fragment.
+	 * @return array|false
+	 */
+	private function resolve_variants( $clean ) {
+		$upload_dir = Nexter_Ext_Image_Upload_Optimization::get_upload_dir();
+		$plain      = preg_replace( '#^(https?:)?//#i', '//', $clean );
+		$uploads    = rtrim( preg_replace( '#^(https?:)?//#i', '//', $upload_dir['baseurl'] ), '/' ) . '/';
+		$optimizer  = preg_replace( '#^(https?:)?//#i', '//', content_url( '/nexter-optimizer/uploads/' ) );
+
+		if ( 0 === strpos( $plain, $optimizer ) ) {
+			$rel = preg_replace( '/\.(webp|avif)$/i', '', substr( $plain, strlen( $optimizer ) ) );
+		} elseif ( 0 === strpos( $plain, $uploads ) ) {
+			$rel = substr( $plain, strlen( $uploads ) );
+		} else {
+			return false;
+		}
+
+		$rel_fs = rawurldecode( ltrim( $rel, '/' ) );
+		if ( '' === $rel_fs || false !== strpos( $rel_fs, '..' ) || ! preg_match( '/\.(jpe?g|png)$/i', $rel_fs ) ) {
+			return false;
+		}
+
+		$opt_base = wp_normalize_path( WP_CONTENT_DIR . '/nexter-optimizer/uploads/' . $rel_fs );
+		$opt_url  = content_url( '/nexter-optimizer/uploads/' . ltrim( $rel, '/' ) );
+		$orig_url = rtrim( $upload_dir['baseurl'], '/' ) . '/' . ltrim( $rel, '/' );
+		$has      = static function ( $path ) {
+			return is_file( $path ) && filesize( $path ) > 0;
+		};
+
+		$avif         = $has( $opt_base . '.avif' ) ? $opt_url . '.avif' : '';
+		$webp         = $has( $opt_base . '.webp' ) ? $opt_url . '.webp' : '';
+		$opt          = $has( $opt_base ) ? $opt_url : '';
+		$has_original = is_file( wp_normalize_path( $upload_dir['basedir'] . '/' . $rel_fs ) );
+
+		if ( '' !== $opt ) {
+			$fallback = $opt;
+		} elseif ( $has_original ) {
+			$fallback = $orig_url;
+		} else {
+			$fallback = '' !== $webp ? $webp : $avif;
+		}
+
+		return array(
+			'avif'         => $avif,
+			'webp'         => $webp,
+			'opt'          => $opt,
+			'has_original' => $has_original,
+			'fallback'     => $fallback,
+		);
+	}
+
+	/**
+	 * Read one attribute value from a tag; '' when absent.
+	 *
+	 * @param string $tag  Tag HTML.
+	 * @param string $name Attribute name.
+	 * @return string
+	 */
+	private function get_attr( $tag, $name ) {
+		if ( preg_match( '/(?<![\w:-])' . preg_quote( $name, '/' ) . '\s*=\s*(?:"([^"]*)"|\'([^\']*)\')/i', $tag, $m ) ) {
+			return '' !== $m[1] ? $m[1] : ( isset( $m[2] ) ? $m[2] : '' );
+		}
+		return '';
+	}
+
+	/**
+	 * Set one attribute value on a tag, keeping the rest as it was.
+	 *
+	 * @param string $tag   Tag HTML.
+	 * @param string $name  Attribute name.
+	 * @param string $value New value.
+	 * @return string
+	 */
+	private function set_attr( $tag, $name, $value ) {
+		$replacement = $name . '="' . esc_attr( $value ) . '"';
+		$done        = preg_replace_callback(
+			'/(?<![\w:-])' . preg_quote( $name, '/' ) . '\s*=\s*(?:"[^"]*"|\'[^\']*\')/i',
+			static function () use ( $replacement ) {
+				return $replacement;
+			},
+			$tag,
+			1
+		);
+		return null === $done ? $tag : $done;
+	}
 	/**
 	 * Callback for img tag URL replacement (and srcset in same tag).
 	 *

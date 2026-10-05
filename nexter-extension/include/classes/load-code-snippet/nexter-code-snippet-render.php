@@ -3635,6 +3635,45 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 		} */
 
 		/**
+		 * Is this a REST or JSON request? REST_REQUEST is not defined yet when snippets load, and
+		 * fetch()/apiFetch send no X-Requested-With, so the URL and Accept header are checked too.
+		 */
+		private static function is_json_request() {
+			if ( defined( 'REST_REQUEST' ) && REST_REQUEST ) {
+				return true;
+			}
+			if ( isset( $_GET['rest_route'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				return true;
+			}
+			$uri = isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
+			if ( '' !== $uri && false !== strpos( $uri, '/' . rest_get_url_prefix() . '/' ) ) {
+				return true;
+			}
+
+			return function_exists( 'wp_is_json_request' ) && wp_is_json_request();
+		}
+
+		/**
+		 * Load a snippet file, discarding anything it prints on a REST/JSON request so it cannot
+		 * corrupt the response. The code still runs, so snippets that register routes keep working.
+		 */
+		private static function include_snippet_quietly( $file_path ) {
+			if ( ! self::is_json_request() ) {
+				return Nexter_Code_Snippets_File_Based::safe_include_file( $file_path );
+			}
+
+			$level = ob_get_level();
+			ob_start();
+			try {
+				return Nexter_Code_Snippets_File_Based::safe_include_file( $file_path );
+			} finally {
+				while ( ob_get_level() > $level ) {
+					ob_end_clean();
+				}
+			}
+		}
+
+		/**
 		 * Immediate PHP Execution Bypass for REST API Registration
 		 * This method executes PHP snippets immediately like the old version
 		 * Bypasses all the new system's security checks and routing for immediate execution
@@ -3761,7 +3800,7 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 										if ( ( ! $is_ajax || ( $on_ajax_work && ! in_array( $request_action, $restricted_actions, true ) ) ) && ! empty( $file_data['file_path'] ) && file_exists( $file_data['file_path'] ) ) {
 											// Use safe file execution method
 											if ( class_exists( 'Nexter_Code_Snippets_File_Based' ) ) {
-												Nexter_Code_Snippets_File_Based::safe_include_file( $file_data['file_path'] );
+												self::include_snippet_quietly( $file_data['file_path'] );
 											} else {
 												// Fallback: basic validation
 												$file_path   = wp_normalize_path( $file_data['file_path'] );

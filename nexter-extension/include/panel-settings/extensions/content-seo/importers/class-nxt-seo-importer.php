@@ -777,9 +777,11 @@ class Nexter_Content_SEO_Importer {
 	 * @param array<string,mixed>|null $source_values Source values keyed by the map's source
 	 *                                                keys. Pass this when the source does not
 	 *                                                store its data in post/term meta.
+	 * @param string                   $source_slug   Source slug. When given, only fields this import
+	 *                                                wrote are checked; values it kept are skipped.
 	 * @return array{checked:int,matched:int,missing:array<int,string>}
 	 */
-	public static function verify_object( $object_type, $object_id, $map, $source_values = null ) {
+	public static function verify_object( $object_type, $object_id, $map, $source_values = null, $source_slug = '' ) {
 		$get     = 'post' === $object_type ? 'get_post_meta' : 'get_term_meta';
 		$checked = 0;
 		$matched = 0;
@@ -790,8 +792,21 @@ class Nexter_Content_SEO_Importer {
 		// so only the first may be verified — checking the second reports a false failure.
 		$seen = array();
 
+		// write_if_empty() leaves a value the user already had, so a kept field never appears in
+		// the record of what this import wrote. No record at all means an import from before it existed.
+		$wrote = null;
+		if ( '' !== $source_slug ) {
+			$saved = call_user_func( $get, $object_id, self::WROTE_PREFIX . $source_slug, true );
+			if ( is_array( $saved ) ) {
+				$wrote = array_fill_keys( array_map( 'strval', $saved ), true );
+			}
+		}
+
 		foreach ( $map as $src => $dst ) {
 			if ( isset( $seen[ $dst ] ) ) {
+				continue;
+			}
+			if ( null !== $wrote && ! isset( $wrote[ $dst ] ) ) {
 				continue;
 			}
 			$source_value = is_array( $source_values )
@@ -799,6 +814,15 @@ class Nexter_Content_SEO_Importer {
 				: call_user_func( $get, $object_id, $src, true );
 			if ( '' === $source_value || null === $source_value || false === $source_value || is_array( $source_value ) ) {
 				continue;
+			}
+
+			// The import stored the sanitized value, so that is what the destination should hold;
+			// a value the sanitizer emptied was never going to land.
+			if ( is_array( $source_values ) && is_string( $source_value ) ) {
+				$source_value = self::sanitize_for_write( $dst, $source_value );
+				if ( '' === $source_value ) {
+					continue;
+				}
 			}
 			++$checked;
 			$seen[ $dst ] = true;
@@ -1185,7 +1209,7 @@ class Nexter_Content_SEO_Importer {
 					continue;
 				}
 
-				$result   = self::verify_object( $object_type, (int) $object_id, $spec['map'], isset( $spec['expected'] ) ? $spec['expected'] : null );
+				$result   = self::verify_object( $object_type, (int) $object_id, $spec['map'], isset( $spec['expected'] ) ? $spec['expected'] : null, $source_slug );
 				$checked += $result['checked'];
 				$matched += $result['matched'];
 				if ( ! empty( $result['missing'] ) ) {
@@ -1368,11 +1392,7 @@ class Nexter_Content_SEO_Importer {
 		// adapter (Yoast/Rank Math/AIOSEO/SureRank) writes through. Images are already escaped by
 		// the caller before reaching here; the canonical URL is not, so it needs the same
 		// treatment as an image rather than the plain-text one.
-		if ( is_string( $value ) ) {
-			$value = ( class_exists( 'Nexter_Content_SEO_Canonical' ) && Nexter_Content_SEO_Canonical::META_CANONICAL === $meta_key )
-				? esc_url_raw( $value )
-				: sanitize_text_field( $value );
-		}
+		$value = self::sanitize_for_write( $meta_key, $value );
 
 		// Recorded before the value, never after: a crash in between leaves a recorded key
 		// whose value is still empty, which costs nothing, where the reverse would leave a
@@ -1381,6 +1401,23 @@ class Nexter_Content_SEO_Importer {
 		call_user_func( $update, $object_id, $meta_key, $value );
 
 		return true;
+	}
+
+	/**
+	 * The sanitizing write_if_empty() applies, shared so verify compares against the same result.
+	 *
+	 * @param string $meta_key Nexter destination meta key.
+	 * @param mixed  $value    Value about to be written.
+	 * @return mixed
+	 */
+	private static function sanitize_for_write( $meta_key, $value ) {
+		if ( ! is_string( $value ) ) {
+			return $value;
+		}
+
+		return ( class_exists( 'Nexter_Content_SEO_Canonical' ) && Nexter_Content_SEO_Canonical::META_CANONICAL === $meta_key )
+			? esc_url_raw( $value )
+			: sanitize_text_field( $value );
 	}
 
 	/**

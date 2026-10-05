@@ -1665,6 +1665,48 @@ class Nexter_Content_SEO {
 	}
 
 	/**
+	 * Is this a well-formed post type slug? WordPress allows 1 to 20 characters of a-z, 0-9,
+	 * underscore and hyphen.
+	 *
+	 * @param mixed $slug Candidate slug.
+	 * @return bool
+	 */
+	public static function is_post_type_slug( $slug ) {
+		return is_string( $slug ) && 1 === preg_match( '/^[a-z0-9_-]{1,20}$/', $slug );
+	}
+
+	/**
+	 * Clean a post type => bool map from the settings.
+	 *
+	 * A slug is accepted on its format, not on whether the post type is registered during this
+	 * request. The settings screen is built in an admin request but the save is a REST request,
+	 * and a plugin that registers its post type only for admin screens is gone by then: checking
+	 * registration threw the toggle away on first save, and wiped an already saved one on any
+	 * unrelated save. Runtime code looks a toggle up by the current post's own type, so a key for
+	 * a type that does not exist is inert. The count is capped so the option cannot be flooded.
+	 *
+	 * @param mixed $map Raw slug => value map.
+	 * @return array<string,bool>
+	 */
+	public static function sanitize_post_type_map( $map ) {
+		$out = array();
+		if ( ! is_array( $map ) ) {
+			return $out;
+		}
+		foreach ( $map as $slug => $val ) {
+			$slug = (string) $slug;
+			if ( ! self::is_post_type_slug( $slug ) ) {
+				continue;
+			}
+			$out[ $slug ] = ! empty( $val );
+			if ( count( $out ) >= 200 ) {
+				break;
+			}
+		}
+		return $out;
+	}
+
+	/**
 	 * Sanitize Robots (No Index / No Follow / No Archive) settings.
 	 * Ensures slug => bool structure; unknown slugs are stripped.
 	 *
@@ -1696,17 +1738,22 @@ class Nexter_Content_SEO {
 			if ( ! isset( $options[ $key ] ) || ! is_array( $options[ $key ] ) ) {
 				continue;
 			}
-			$sanitized = array();
 			if ( strpos( $key, '_post_types' ) !== false ) {
-				$valid = $valid_post_types;
-			} elseif ( strpos( $key, '_taxonomies' ) !== false ) {
-				$valid = $valid_taxonomies;
-			} else {
-				$valid = $valid_archives;
+				$options[ $key ] = self::sanitize_post_type_map( $options[ $key ] );
+				continue;
 			}
+
+			$sanitized = array();
+			$valid     = ( strpos( $key, '_taxonomies' ) !== false ) ? $valid_taxonomies : $valid_archives;
 			foreach ( $options[ $key ] as $slug => $val ) {
-				if ( in_array( (string) $slug, $valid, true ) ) {
-					$sanitized[ (string) $slug ] = ! empty( $val );
+				$slug = (string) $slug;
+				$ok   = in_array( $slug, $valid, true );
+				if ( ! $ok && 0 === strpos( $slug, 'post_type_archive_' ) ) {
+					// A per-post-type archive follows the post type's own rule.
+					$ok = self::is_post_type_slug( substr( $slug, strlen( 'post_type_archive_' ) ) );
+				}
+				if ( $ok ) {
+					$sanitized[ $slug ] = ! empty( $val );
 				}
 			}
 			$options[ $key ] = $sanitized;
@@ -1770,17 +1817,10 @@ class Nexter_Content_SEO {
 			}
 		}
 
-		$valid_post_types = self::get_seo_indexable_post_types();
 		$valid_taxonomies = array_keys( get_taxonomies( array( 'public' => true ), 'names' ) );
 
 		if ( isset( $options['sitemap_exclude_post_types'] ) && is_array( $options['sitemap_exclude_post_types'] ) ) {
-			$sanitized = array();
-			foreach ( $options['sitemap_exclude_post_types'] as $slug => $val ) {
-				if ( in_array( (string) $slug, $valid_post_types, true ) ) {
-					$sanitized[ (string) $slug ] = ! empty( $val );
-				}
-			}
-			$options['sitemap_exclude_post_types'] = $sanitized;
+			$options['sitemap_exclude_post_types'] = self::sanitize_post_type_map( $options['sitemap_exclude_post_types'] );
 		}
 
 		if ( isset( $options['sitemap_exclude_taxonomies'] ) && is_array( $options['sitemap_exclude_taxonomies'] ) ) {
@@ -1823,15 +1863,8 @@ class Nexter_Content_SEO {
 		if ( isset( $options['google_indexing_key'] ) ) {
 			$options['google_indexing_key'] = sanitize_textarea_field( (string) $options['google_indexing_key'] );
 		}
-		$valid_post_types = self::get_seo_indexable_post_types();
 		if ( isset( $options['indexnow_exclude_types'] ) && is_array( $options['indexnow_exclude_types'] ) ) {
-			$sanitized = array();
-			foreach ( $options['indexnow_exclude_types'] as $slug => $val ) {
-				if ( in_array( (string) $slug, $valid_post_types, true ) ) {
-					$sanitized[ (string) $slug ] = ! empty( $val );
-				}
-			}
-			$options['indexnow_exclude_types'] = $sanitized;
+			$options['indexnow_exclude_types'] = self::sanitize_post_type_map( $options['indexnow_exclude_types'] );
 		}
 		return $options;
 	}
@@ -2258,16 +2291,9 @@ class Nexter_Content_SEO {
 			}
 		}
 
-		// Post-types map: slug => bool, restricted to indexable post types.
+		// Post-types map: slug => bool.
 		if ( isset( $options['llms_txt_post_types'] ) && is_array( $options['llms_txt_post_types'] ) ) {
-			$valid_post_types = self::get_seo_indexable_post_types();
-			$sanitized        = array();
-			foreach ( $options['llms_txt_post_types'] as $slug => $val ) {
-				if ( in_array( (string) $slug, $valid_post_types, true ) ) {
-					$sanitized[ (string) $slug ] = ! empty( $val );
-				}
-			}
-			$options['llms_txt_post_types'] = $sanitized;
+			$options['llms_txt_post_types'] = self::sanitize_post_type_map( $options['llms_txt_post_types'] );
 		}
 
 		// Taxonomies map: slug => bool, restricted to public taxonomies.

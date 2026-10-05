@@ -70,11 +70,6 @@ class Nexter_Ext_Extra_Settings {
 				require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-smtp-email.php';
 			}
 
-			//View Admin Switcher
-			if ( isset( $extension_option['view-admin-role'] ) && ! empty( $extension_option['view-admin-role']['switch'] ) ) {
-				require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-view-admin-role.php';
-			}
-
 			//Elementor AdFree
 			if ( isset( $extension_option['elementor-adfree'] ) && ! empty( $extension_option['elementor-adfree']['switch'] ) && class_exists( '\Elementor\Plugin' ) ) {
 				require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-elementor-adfree.php';
@@ -86,6 +81,9 @@ class Nexter_Ext_Extra_Settings {
 			}       
 		}
 		
+		// Not gated on the toggle: the way back for an account left on a lowered role must always load.
+		require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-view-admin-role.php';
+
 		//Local Google Font — load when the extension toggle is on OR when performance google-fonts settings are active
 		$perf_option       = $this->nxt_options_to_array( Nxt_Options::performance() );
 		$local_gfont_ext   = ! empty( ( $extension_option['local-google-font'] ?? array() )['switch'] );

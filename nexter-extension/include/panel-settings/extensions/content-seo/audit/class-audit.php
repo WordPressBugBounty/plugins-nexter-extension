@@ -56,6 +56,12 @@ class Engine {
 	const REDIRECT_MAX_HOPS = 5;
 
 	/**
+	 * Most affected items listed per check. The result is stored in an option and returned over
+	 * REST, so the list is capped; items_total still reports the true figure.
+	 */
+	const ITEM_LIST_LIMIT = 50;
+
+	/**
 	 * Cron callback: store last run without blocking admin.
 	 */
 	public static function cron_run() {
@@ -573,16 +579,18 @@ class Engine {
 	}
 
 	/**
-	 * @param string $id          Issue id.
-	 * @param string $status      critical|warning|suggestion|passed.
-	 * @param string $title       Title.
-	 * @param string $message     Message.
-	 * @param string $recommendation Recommendation text.
-	 * @param bool   $fix_available Fix available.
-	 * @param string $fix_issue_id  ID for fix endpoint.
+	 * @param string     $id             Issue id.
+	 * @param string     $status         critical|warning|suggestion|passed.
+	 * @param string     $title          Title.
+	 * @param string     $message        Message.
+	 * @param string     $recommendation Recommendation text.
+	 * @param bool       $fix_available  Fix available.
+	 * @param string     $fix_issue_id   ID for fix endpoint.
+	 * @param int|null   $count          Optional count of affected items.
+	 * @param array|null $items          Optional list of the affected items themselves.
 	 * @return array<string, mixed>
 	 */
-	private function item( $id, $status, $title, $message, $recommendation = '', $fix_available = false, $fix_issue_id = '', $count = null ) {
+	private function item( $id, $status, $title, $message, $recommendation = '', $fix_available = false, $fix_issue_id = '', $count = null, $items = null ) {
 		$out = array(
 			'id'             => $id,
 			'status'         => $status,
@@ -599,7 +607,63 @@ class Engine {
 		if ( null !== $count ) {
 			$out['count'] = (int) $count;
 		}
+		// The affected items themselves, so a finding can be acted on rather than just read.
+		// Capped for payload size; items_total is the real number.
+		if ( null !== $items ) {
+			$all   = \array_values( (array) $items );
+			$limit = (int) \apply_filters( 'nexter_seo_audit_item_list_limit', self::ITEM_LIST_LIMIT );
+			$limit = \max( 1, \min( 500, $limit ) );
+
+			$out['items']       = \array_slice( $all, 0, $limit );
+			$out['items_total'] = \count( $all );
+		}
 		return $out;
+	}
+
+	/**
+	 * One sampled post as an actionable row: what it is, where to see it, where to fix it.
+	 *
+	 * @param array<string, mixed> $p Sampled post record.
+	 * @return array<string, mixed>
+	 */
+	private function post_item( $p ) {
+		$id   = isset( $p['id'] ) ? (int) $p['id'] : 0;
+		$edit = $id ? (string) \get_edit_post_link( $id, 'raw' ) : '';
+		if ( '' === $edit && $id ) {
+			// get_edit_post_link() returns nothing when the current user cannot edit that post;
+			// the row is still worth showing, so fall back to the canonical edit screen.
+			$edit = (string) \admin_url( 'post.php?post=' . $id . '&action=edit' );
+		}
+		$title = isset( $p['title'] ) ? \trim( (string) $p['title'] ) : '';
+		if ( '' === $title ) {
+			$title = $id ? (string) \get_the_title( $id ) : '';
+		}
+		return array(
+			'id'    => $id,
+			'type'  => isset( $p['type'] ) ? (string) $p['type'] : '',
+			'title' => '' !== $title ? $title : \__( '(no title)', 'nexter-extension' ),
+			'url'   => $id ? (string) \get_permalink( $id ) : '',
+			'edit'  => $edit,
+		);
+	}
+
+	/**
+	 * One probed link as an actionable row.
+	 *
+	 * @param string               $url Probed URL.
+	 * @param array<string, mixed> $r   Probe result.
+	 * @return array<string, mixed>
+	 */
+	private function link_item( $url, $r ) {
+		return array(
+			'id'     => 0,
+			'type'   => 'link',
+			'title'  => (string) $url,
+			'url'    => (string) $url,
+			'edit'   => '',
+			'status' => isset( $r['status'] ) ? (int) $r['status'] : 0,
+			'hops'   => isset( $r['hops'] ) ? (int) $r['hops'] : 0,
+		);
 	}
 
 	/**
@@ -1422,19 +1486,34 @@ class Engine {
 		// Compare the RENDERED <title> each page emits (template resolved per post), not the stored
 		// post/SEO title — otherwise template-driven duplication (a title template with no
 		// %post_title% making every page identical) is invisible.
-		$counts = array();
+		// Grouped, not just counted: knowing three pages clash is useless without knowing which
+		// three and what they clash on.
+		$groups = array();
 		foreach ( $sample['posts'] as $p ) {
 			$rendered = isset( $p['rendered_title'] ) ? (string) $p['rendered_title'] : (string) $p['title'];
 			$key      = \strtolower( \trim( $rendered ) );
 			if ( '' === $key ) {
 				continue;
 			}
-			$counts[ $key ] = isset( $counts[ $key ] ) ? $counts[ $key ] + 1 : 1;
+			if ( ! isset( $groups[ $key ] ) ) {
+				$groups[ $key ] = array(
+					'shared' => \trim( $rendered ),
+					'posts'  => array(),
+				);
+			}
+			$groups[ $key ]['posts'][] = $p;
 		}
 		$dupes = 0;
-		foreach ( $counts as $c ) {
-			if ( $c > 1 ) {
-				$dupes += $c;
+		$items = array();
+		foreach ( $groups as $group ) {
+			if ( \count( $group['posts'] ) < 2 ) {
+				continue;
+			}
+			$dupes += \count( $group['posts'] );
+			foreach ( $group['posts'] as $p ) {
+				$row           = $this->post_item( $p );
+				$row['shared'] = $group['shared'];
+				$items[]       = $row;
 			}
 		}
 		if ( 0 === $dupes ) {
@@ -1464,7 +1543,9 @@ class Engine {
 			),
 			$recommendation,
 			false,
-			''
+			'',
+			$dupes,
+			$items
 		);
 	}
 
@@ -1473,18 +1554,31 @@ class Engine {
 	 */
 	private function check_duplicate_descriptions() {
 		$sample = $this->get_content_sample();
-		$counts = array();
+		$groups = array();
 		foreach ( $sample['posts'] as $p ) {
 			$key = \strtolower( $p['desc'] );
 			if ( '' === $key ) {
 				continue; // No explicit description: resolved from templates, not a duplicate.
 			}
-			$counts[ $key ] = isset( $counts[ $key ] ) ? $counts[ $key ] + 1 : 1;
+			if ( ! isset( $groups[ $key ] ) ) {
+				$groups[ $key ] = array(
+					'shared' => (string) $p['desc'],
+					'posts'  => array(),
+				);
+			}
+			$groups[ $key ]['posts'][] = $p;
 		}
 		$dupes = 0;
-		foreach ( $counts as $c ) {
-			if ( $c > 1 ) {
-				$dupes += $c;
+		$items = array();
+		foreach ( $groups as $group ) {
+			if ( \count( $group['posts'] ) < 2 ) {
+				continue;
+			}
+			$dupes += \count( $group['posts'] );
+			foreach ( $group['posts'] as $p ) {
+				$row           = $this->post_item( $p );
+				$row['shared'] = $group['shared'];
+				$items[]       = $row;
 			}
 		}
 		if ( 0 === $dupes ) {
@@ -1504,7 +1598,9 @@ class Engine {
 			),
 			\__( 'Write a unique meta description per page for distinct search snippets.', 'nexter-extension' ),
 			false,
-			''
+			'',
+			$dupes,
+			$items
 		);
 	}
 
@@ -1519,9 +1615,13 @@ class Engine {
 		$threshold = (int) \apply_filters( 'nexter_seo_audit_thin_word_threshold', self::THIN_WORD_THRESHOLD );
 		$threshold = \max( 50, $threshold );
 		$thin      = 0;
+		$items     = array();
 		foreach ( $sample['posts'] as $p ) {
 			if ( (int) $p['words'] < $threshold ) {
 				++$thin;
+				$row          = $this->post_item( $p );
+				$row['words'] = (int) $p['words'];
+				$items[]      = $row;
 			}
 		}
 		if ( 0 === $thin ) {
@@ -1545,7 +1645,9 @@ class Engine {
 			),
 			\__( 'Expand short pages with useful, original content, or consolidate/noindex them.', 'nexter-extension' ),
 			false,
-			''
+			'',
+			$thin,
+			$items
 		);
 	}
 
@@ -1555,9 +1657,11 @@ class Engine {
 	private function check_noindex_content() {
 		$sample  = $this->get_content_sample();
 		$noindex = 0;
+		$items   = array();
 		foreach ( $sample['posts'] as $p ) {
 			if ( ! empty( $p['noindex'] ) ) {
 				++$noindex;
+				$items[] = $this->post_item( $p );
 			}
 		}
 		if ( 0 === $noindex ) {
@@ -1577,7 +1681,9 @@ class Engine {
 			),
 			\__( 'Confirm these pages are meant to be hidden from search; remove the noindex flag if not.', 'nexter-extension' ),
 			false,
-			''
+			'',
+			$noindex,
+			$items
 		);
 	}
 
@@ -1951,6 +2057,7 @@ class Engine {
 			}
 		}
 		$orphans = 0;
+		$items   = array();
 		foreach ( $posts as $p ) {
 			$path = isset( $p['path'] ) ? (string) $p['path'] : '';
 			if ( '' === $path || '/' === $path ) {
@@ -1958,6 +2065,7 @@ class Engine {
 			}
 			if ( empty( $targets[ $path ] ) ) {
 				++$orphans;
+				$items[] = $this->post_item( $p );
 			}
 		}
 		if ( 0 === $orphans ) {
@@ -1977,7 +2085,9 @@ class Engine {
 			),
 			\__( 'Add internal links from related posts/pages so these pages are discoverable and receive link equity.', 'nexter-extension' ),
 			false,
-			''
+			'',
+			$orphans,
+			$items
 		);
 	}
 
@@ -1998,9 +2108,11 @@ class Engine {
 			return $this->item( 'broken_links', 'suggestion', \__( 'Broken links', 'nexter-extension' ), \__( 'Link checking was skipped because the time budget was reached before any link could be probed.', 'nexter-extension' ), \__( 'Reduce the sampled link count or increase the probe budget, then re-run.', 'nexter-extension' ), false, '' );
 		}
 		$broken = 0;
-		foreach ( $probe['results'] as $r ) {
+		$items  = array();
+		foreach ( $probe['results'] as $url => $r ) {
 			if ( empty( $r['ok'] ) ) {
 				++$broken;
+				$items[] = $this->link_item( $url, $r );
 			}
 		}
 		$note = $this->probe_suffix( $probe );
@@ -2019,7 +2131,9 @@ class Engine {
 			),
 			\__( 'Fix or remove the broken links/images so visitors and crawlers do not hit dead ends.', 'nexter-extension' ),
 			false,
-			''
+			'',
+			$broken,
+			$items
 		);
 	}
 
@@ -2034,9 +2148,11 @@ class Engine {
 			return $this->item( 'redirect_chains', 'passed', \__( 'Redirect chains', 'nexter-extension' ), \__( 'No links were probed for redirect chains.', 'nexter-extension' ), '', false, '' );
 		}
 		$chains = 0;
-		foreach ( $probe['results'] as $r ) {
+		$items  = array();
+		foreach ( $probe['results'] as $url => $r ) {
 			if ( ! empty( $r['chain_exceeded'] ) || ( isset( $r['hops'] ) && (int) $r['hops'] >= 2 ) ) {
 				++$chains;
+				$items[] = $this->link_item( $url, $r );
 			}
 		}
 		$note = $this->probe_suffix( $probe );
@@ -2055,7 +2171,9 @@ class Engine {
 			),
 			\__( 'Point links directly at the final URL to remove intermediate redirect hops.', 'nexter-extension' ),
 			false,
-			''
+			'',
+			$chains,
+			$items
 		);
 	}
 

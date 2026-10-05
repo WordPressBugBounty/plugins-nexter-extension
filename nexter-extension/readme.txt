@@ -3,7 +3,7 @@ Contributors: posimyththemes, nirmalkavaiya, sagarpatel124
 Tags: seo, security, theme-builder, code-snippet, image-optimizer
 Requires at least: 5.9
 Tested up to: 7.1
-Stable tag: 4.7.10
+Stable tag: 4.7.11
 Requires PHP: 7.4
 License: GPLv3
 License URI: https://opensource.org/licenses/GPL-3.0
@@ -271,7 +271,16 @@ Nexter Extension may connect to external services below only when the related fe
 
 ### View Complete Changelog at [roadmap.nexterwp.com](https://roadmap.nexterwp.com/updates?filter=Nexter+Extension+-+FREE)
 
-= V4.7.10 = 23 September 2026
+= V4.7.11 = 05 October 2026
+- Improved : Nexter SEO : Site Audit findings now list the pages they are about, each with a view and an edit link; the CSV and JSON exports carry the same per-item detail.
+- Fixed : Custom Login URL : the hidden login address now works on Plain permalinks. The address the plugin generated opened the home page instead of the login form, leaving no way in.
+- Fixed : View Admin Role Switcher : switching back to your own account no longer breaks when the feature is turned off or an unrelated profile save clears the stored role, and the Switch back button now also appears on the front end.
+- Fixed : Nexter SEO : the post-import check no longer reports a correct import as failed; it now checks only the fields the import actually wrote, against the value that was stored.
+- Fixed : Code Snippets : a PHP snippet could break admin screens and JSON replies, such as the Site Audit, by printing text into them. Snippet output is now discarded during REST and JSON requests, so snippets that register REST routes still work.
+- Fixed : Image Optimisation : AVIF and WebP copies are now served through a picture element, so Safari on iPhone and iPad and search-engine crawlers no longer receive the original JPG or PNG.
+- Fixed : Nexter SEO : No Index, No Follow, No Archive and Exclude from Sitemap now save for a post type that only exists in admin screens, such as Complianz's, and an unrelated save no longer erases them.
+
+= V4.7.10 = 22 September 2026
 - Added : Nexter SEO : the Yoast import now brings across your Organization name and logo into Nexter's Organization schema, so your site identity in search results survives the migration. Anything you had already set there is kept.
 - Added : Nexter SEO : Rank Math's custom robots.txt rules are now imported, so paths you blocked from crawlers stay blocked after the migration. Your own robots.txt is never replaced.
 - Added : Nexter SEO : WooCommerce URL bases can now be removed — separate toggles under Advanced shorten /product/, /product-category/ and /product-tag/ URLs, the old URLs are redirected, and a product or term whose slug is already used by a page or post keeps its original URL instead of taking one that is in use.
