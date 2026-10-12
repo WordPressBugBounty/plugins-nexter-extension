@@ -3,7 +3,7 @@ Contributors: posimyththemes, nirmalkavaiya, sagarpatel124
 Tags: seo, security, theme-builder, code-snippet, image-optimizer
 Requires at least: 5.9
 Tested up to: 7.1
-Stable tag: 4.7.11
+Stable tag: 4.7.12
 Requires PHP: 7.4
 License: GPLv3
 License URI: https://opensource.org/licenses/GPL-3.0
@@ -271,6 +271,12 @@ Nexter Extension may connect to external services below only when the related fe
 
 ### View Complete Changelog at [roadmap.nexterwp.com](https://roadmap.nexterwp.com/updates?filter=Nexter+Extension+-+FREE)
 
+= V4.7.12 = 12 October 2026
+- Fixed : Nexter SEO : with the WooCommerce base removal on, product, product category and product tag links no longer return 404 on permalink structures other than Post name, nested categories included.
+- Fixed : Theme Builder : editing a template's display conditions no longer drops saved Specific Pages/Posts; only the first 20 of each type were loaded, so the rest vanished and were lost on save.
+- Fixed : Nexter SEO : the XML sitemap now lists every language on sites using Polylang. Only the default language was included, so posts and pages under /fr/ or /en/ were missing. All languages are now listed with their hreflang alternates, and the sitemap rebuilds as soon as the plugin is updated or a language is added.
+- Fixed : View Admin Role Switcher : an account demoted through WordPress's bulk role change, the REST API or the single-user edit screen could regain its former Administrator role through the switcher's own restore link; the cleanup now runs on every role change, not only on a profile save.
+
 = V4.7.11 = 05 October 2026
 - Improved : Nexter SEO : Site Audit findings now list the pages they are about, each with a view and an edit link; the CSV and JSON exports carry the same per-item detail.
 - Fixed : Custom Login URL : the hidden login address now works on Plain permalinks. The address the plugin generated opened the home page instead of the login form, leaving no way in.
@@ -279,6 +285,7 @@ Nexter Extension may connect to external services below only when the related fe
 - Fixed : Code Snippets : a PHP snippet could break admin screens and JSON replies, such as the Site Audit, by printing text into them. Snippet output is now discarded during REST and JSON requests, so snippets that register REST routes still work.
 - Fixed : Image Optimisation : AVIF and WebP copies are now served through a picture element, so Safari on iPhone and iPad and search-engine crawlers no longer receive the original JPG or PNG.
 - Fixed : Nexter SEO : No Index, No Follow, No Archive and Exclude from Sitemap now save for a post type that only exists in admin screens, such as Complianz's, and an unrelated save no longer erases them.
+- Fixed : Translations : the translator notes on the SEO import check message and the Search & Replace result message now stay attached to their text in the built files.
 
 = V4.7.10 = 22 September 2026
 - Added : Nexter SEO : the Yoast import now brings across your Organization name and logo into Nexter's Organization schema, so your site identity in search results survives the migration. Anything you had already set there is kept.

@@ -2,14 +2,14 @@
 # This file is distributed under the GPLv3.
 msgid ""
 msgstr ""
-"Project-Id-Version: Nexter Extension 4.7.11\n"
+"Project-Id-Version: Nexter Extension 4.7.12\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/nexter-extension\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-05T08:41:34+02:00\n"
+"POT-Creation-Date: 2026-10-12T10:32:52+02:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: nexter-extension\n"
@@ -377,7 +377,7 @@ msgstr ""
 #: include/custom-options/class-nxt-builder-condition-ui.php:697
 #: include/custom-options/class-nxt-builder-condition-ui.php:757
 #: include/custom-options/module/nexter-display-archives-rules.php:130
-#: include/custom-options/module/nexter-display-conditional-rules.php:1664
+#: include/custom-options/module/nexter-display-conditional-rules.php:1697
 #: include/custom-options/module/nexter-display-singular-archives-rules.php:53
 #: include/custom-options/module/nexter-display-singular-rules.php:172
 #: include/custom-options/nexter-builder-condition.php:577
@@ -943,10 +943,10 @@ msgstr ""
 #: include/custom-options/class-nxt-builder-condition-ui.php:674
 #: include/custom-options/class-nxt-builder-condition-ui.php:722
 #: include/custom-options/class-nxt-builder-condition-ui.php:734
-#: include/custom-options/class-nxt-builder-condition-ui.php:1243
-#: include/custom-options/class-nxt-builder-condition-ui.php:1251
-#: include/custom-options/class-nxt-builder-condition-ui.php:1275
-#: include/custom-options/class-nxt-builder-condition-ui.php:1279
+#: include/custom-options/class-nxt-builder-condition-ui.php:1236
+#: include/custom-options/class-nxt-builder-condition-ui.php:1244
+#: include/custom-options/class-nxt-builder-condition-ui.php:1268
+#: include/custom-options/class-nxt-builder-condition-ui.php:1272
 #: include/custom-options/module/nexter-display-archives-rules.php:88
 #: include/custom-options/module/nexter-display-archives-rules.php:341
 #: include/custom-options/module/nexter-display-archives-rules.php:349
@@ -1617,7 +1617,7 @@ msgid "Particular Posts / Pages / Taxonomies, etc."
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:996
-#: include/custom-options/module/nexter-display-conditional-rules.php:1806
+#: include/custom-options/module/nexter-display-conditional-rules.php:1839
 #: assets/js/admin/index.js:1
 #: content-seo/build/index.js:1
 #: content-seo/build/index.js:3
@@ -1625,7 +1625,7 @@ msgid "Monday"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:997
-#: include/custom-options/module/nexter-display-conditional-rules.php:1807
+#: include/custom-options/module/nexter-display-conditional-rules.php:1840
 #: assets/js/admin/index.js:1
 #: content-seo/build/index.js:1
 #: content-seo/build/index.js:3
@@ -1633,7 +1633,7 @@ msgid "Tuesday"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:998
-#: include/custom-options/module/nexter-display-conditional-rules.php:1808
+#: include/custom-options/module/nexter-display-conditional-rules.php:1841
 #: assets/js/admin/index.js:1
 #: content-seo/build/index.js:1
 #: content-seo/build/index.js:3
@@ -1641,7 +1641,7 @@ msgid "Wednesday"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:999
-#: include/custom-options/module/nexter-display-conditional-rules.php:1809
+#: include/custom-options/module/nexter-display-conditional-rules.php:1842
 #: assets/js/admin/index.js:1
 #: content-seo/build/index.js:1
 #: content-seo/build/index.js:3
@@ -1649,7 +1649,7 @@ msgid "Thursday"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:1000
-#: include/custom-options/module/nexter-display-conditional-rules.php:1810
+#: include/custom-options/module/nexter-display-conditional-rules.php:1843
 #: assets/js/admin/index.js:1
 #: content-seo/build/index.js:1
 #: content-seo/build/index.js:3
@@ -1657,7 +1657,7 @@ msgid "Friday"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:1001
-#: include/custom-options/module/nexter-display-conditional-rules.php:1811
+#: include/custom-options/module/nexter-display-conditional-rules.php:1844
 #: assets/js/admin/index.js:1
 #: content-seo/build/index.js:1
 #: content-seo/build/index.js:3
@@ -1665,7 +1665,7 @@ msgid "Saturday"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:1002
-#: include/custom-options/module/nexter-display-conditional-rules.php:1812
+#: include/custom-options/module/nexter-display-conditional-rules.php:1845
 #: assets/js/admin/index.js:1
 #: content-seo/build/index.js:1
 #: content-seo/build/index.js:3
@@ -1673,105 +1673,105 @@ msgid "Sunday"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:1005
-#: include/custom-options/module/nexter-display-conditional-rules.php:1818
+#: include/custom-options/module/nexter-display-conditional-rules.php:1851
 #: assets/js/admin/index.js:1
 msgid "Windows"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:1006
-#: include/custom-options/module/nexter-display-conditional-rules.php:1819
+#: include/custom-options/module/nexter-display-conditional-rules.php:1852
 #: assets/js/admin/index.js:1
 msgid "OpenBSD"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:1007
-#: include/custom-options/module/nexter-display-conditional-rules.php:1820
+#: include/custom-options/module/nexter-display-conditional-rules.php:1853
 #: assets/js/admin/index.js:1
 msgid "SunOS"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:1008
-#: include/custom-options/module/nexter-display-conditional-rules.php:1821
+#: include/custom-options/module/nexter-display-conditional-rules.php:1854
 #: assets/js/admin/index.js:1
 msgid "Linux"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:1009
 #: include/custom-options/class-nxt-builder-condition-ui.php:1022
-#: include/custom-options/module/nexter-display-conditional-rules.php:1822
-#: include/custom-options/module/nexter-display-conditional-rules.php:1837
+#: include/custom-options/module/nexter-display-conditional-rules.php:1855
+#: include/custom-options/module/nexter-display-conditional-rules.php:1870
 #: assets/js/admin/index.js:1
 msgid "Safari"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:1010
-#: include/custom-options/module/nexter-display-conditional-rules.php:1823
+#: include/custom-options/module/nexter-display-conditional-rules.php:1856
 #: assets/js/admin/index.js:1
 msgid "Mac OS"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:1011
-#: include/custom-options/module/nexter-display-conditional-rules.php:1824
+#: include/custom-options/module/nexter-display-conditional-rules.php:1857
 #: assets/js/admin/index.js:1
 msgid "QNX"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:1012
-#: include/custom-options/module/nexter-display-conditional-rules.php:1825
+#: include/custom-options/module/nexter-display-conditional-rules.php:1858
 #: assets/js/admin/index.js:1
 msgid "BeOS"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:1013
-#: include/custom-options/module/nexter-display-conditional-rules.php:1826
+#: include/custom-options/module/nexter-display-conditional-rules.php:1859
 #: assets/js/admin/index.js:1
 msgid "OS/2"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:1014
-#: include/custom-options/module/nexter-display-conditional-rules.php:1827
+#: include/custom-options/module/nexter-display-conditional-rules.php:1860
 #: assets/js/admin/index.js:1
 msgid "Search Bot"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:1017
-#: include/custom-options/module/nexter-display-conditional-rules.php:1832
+#: include/custom-options/module/nexter-display-conditional-rules.php:1865
 #: assets/js/admin/index.js:1
 msgid "Internet Explorer"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:1018
-#: include/custom-options/module/nexter-display-conditional-rules.php:1833
+#: include/custom-options/module/nexter-display-conditional-rules.php:1866
 #: assets/js/admin/index.js:1
 msgid "Mozilla Firefox"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:1019
-#: include/custom-options/module/nexter-display-conditional-rules.php:1834
+#: include/custom-options/module/nexter-display-conditional-rules.php:1867
 #: assets/js/admin/index.js:1
 msgid "Google Chrome"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:1020
-#: include/custom-options/module/nexter-display-conditional-rules.php:1835
+#: include/custom-options/module/nexter-display-conditional-rules.php:1868
 #: assets/js/admin/index.js:1
 msgid "Opera Mini"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:1021
-#: include/custom-options/module/nexter-display-conditional-rules.php:1836
+#: include/custom-options/module/nexter-display-conditional-rules.php:1869
 #: assets/js/admin/index.js:1
 msgid "Opera"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:1025
-#: include/custom-options/module/nexter-display-conditional-rules.php:1842
+#: include/custom-options/module/nexter-display-conditional-rules.php:1875
 #: assets/js/admin/index.js:1
 msgid "Logged In"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:1026
-#: include/custom-options/module/nexter-display-conditional-rules.php:1843
+#: include/custom-options/module/nexter-display-conditional-rules.php:1876
 #: assets/js/admin/index.js:1
 msgid "Logged Out"
 msgstr ""
@@ -1801,8 +1801,8 @@ msgstr ""
 msgid "Specific Pages/Posts"
 msgstr ""
 
-#: include/custom-options/class-nxt-builder-condition-ui.php:1180
-#: include/custom-options/module/nexter-display-conditional-rules.php:3526
+#: include/custom-options/class-nxt-builder-condition-ui.php:1173
+#: include/custom-options/module/nexter-display-conditional-rules.php:3552
 msgid "---Select---"
 msgstr ""
 
@@ -2483,15 +2483,17 @@ msgstr ""
 msgid "After Cart"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:1746
+#: include/custom-options/module/nexter-display-conditional-rules.php:1684
+#: include/custom-options/module/nexter-display-conditional-rules.php:1779
 msgid " archive page"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:1751
+#: include/custom-options/module/nexter-display-conditional-rules.php:1685
+#: include/custom-options/module/nexter-display-conditional-rules.php:1784
 msgid "All singulars  "
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:1817
+#: include/custom-options/module/nexter-display-conditional-rules.php:1850
 #: assets/js/admin/index.js:1
 msgid "iPhone"
 msgstr ""
@@ -4255,8 +4257,8 @@ msgid "Nexter SEO: llms.txt is enabled but your site uses the \"Plain\" permalin
 msgstr ""
 
 #: include/panel-settings/extensions/content-seo/class-seo-llms.php:249
-#: include/panel-settings/extensions/content-seo/class-seo-sitemap.php:1292
-#: include/panel-settings/extensions/content-seo/class-seo-sitemap.php:1383
+#: include/panel-settings/extensions/content-seo/class-seo-sitemap.php:1300
+#: include/panel-settings/extensions/content-seo/class-seo-sitemap.php:1391
 msgid "Homepage"
 msgstr ""
 
@@ -4711,18 +4713,18 @@ msgid "Short product summary for search and social previews."
 msgstr ""
 
 #. translators: %s: site name (blog title).
-#: include/panel-settings/extensions/content-seo/class-seo-sitemap.php:1276
-#: include/panel-settings/extensions/content-seo/class-seo-sitemap.php:1289
+#: include/panel-settings/extensions/content-seo/class-seo-sitemap.php:1284
+#: include/panel-settings/extensions/content-seo/class-seo-sitemap.php:1297
 #, php-format
 msgid "Sitemap - %s"
 msgstr ""
 
 #. translators: %s: site name (blog title).
-#: include/panel-settings/extensions/content-seo/class-seo-sitemap.php:1290
+#: include/panel-settings/extensions/content-seo/class-seo-sitemap.php:1298
 msgid "A human-readable list of pages on this site."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-sitemap.php:2075
+#: include/panel-settings/extensions/content-seo/class-seo-sitemap.php:2099
 msgid "Sorry, you are not allowed to do that."
 msgstr ""
 
@@ -9430,19 +9432,19 @@ msgstr ""
 msgid "Missing attachment ID."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-view-admin-role.php:100
+#: include/panel-settings/extensions/nexter-ext-view-admin-role.php:103
 msgid "View admin as one of the roles below."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-view-admin-role.php:123
+#: include/panel-settings/extensions/nexter-ext-view-admin-role.php:126
 msgid "Switch back to "
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-view-admin-role.php:176
+#: include/panel-settings/extensions/nexter-ext-view-admin-role.php:179
 msgid "Administrator"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-view-admin-role.php:364
+#: include/panel-settings/extensions/nexter-ext-view-admin-role.php:367
 msgid "Switch back to Administrator"
 msgstr ""
 

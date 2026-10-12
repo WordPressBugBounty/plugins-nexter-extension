@@ -287,6 +287,22 @@ class Nexter_Content_SEO_Woo_Permalinks {
 	 * slug is already claimed.
 	 */
 	public static function register_root_rules() {
+		// Terms first. Rules added at the bottom are tried in the order they were added, and the
+		// product catch-all below matches ANY single segment, so a term rule added after it is
+		// never reached: on a structure where that rule is the one that matches, every product
+		// category and tag link came back 404.
+		foreach ( array( 'product_cat', 'product_tag' ) as $taxonomy ) {
+			if ( ! self::enabled( $taxonomy ) ) {
+				continue;
+			}
+			foreach ( self::term_root_rules( $taxonomy ) as $regex => $query ) {
+				// A nested term ("parent/child") is a two-segment URL that core's attachment and page
+				// rules would claim first. These rules name one real term, so top is safe.
+				$nested = false !== strpos( (string) strtok( $query, '&' ), '/' );
+				add_rewrite_rule( $regex, $query, $nested ? 'top' : 'bottom' );
+			}
+		}
+
 		if ( self::enabled( 'product' ) ) {
 			$product_rules = array(
 				'^([^/]+)/(feed|rdf|rss|rss2|atom)/?$' => 'index.php?product=$matches[1]&feed=$matches[2]',
@@ -301,15 +317,6 @@ class Nexter_Content_SEO_Woo_Permalinks {
 			 */
 			$product_rules = (array) apply_filters( 'nexter_content_seo_woo_product_rewrite_rules', $product_rules );
 			foreach ( $product_rules as $regex => $query ) {
-				add_rewrite_rule( $regex, $query, 'bottom' );
-			}
-		}
-
-		foreach ( array( 'product_cat', 'product_tag' ) as $taxonomy ) {
-			if ( ! self::enabled( $taxonomy ) ) {
-				continue;
-			}
-			foreach ( self::term_root_rules( $taxonomy ) as $regex => $query ) {
 				add_rewrite_rule( $regex, $query, 'bottom' );
 			}
 		}
@@ -401,16 +408,39 @@ class Nexter_Content_SEO_Woo_Permalinks {
 	 * @return array
 	 */
 	public static function resolve_root_request( $query_vars ) {
-		// Only a bare root request is in play: no explicit post type, no page match, no archive.
-		if ( empty( $query_vars['name'] ) || ! is_string( $query_vars['name'] ) ) {
+		// Which query var carries the slug depends on the permalink structure: a post-name rule
+		// sets "name", the generic page rule sets "pagename" (date-based and prefixed structures),
+		// and a structure that starts with %category% sets "category_name". None of those rules
+		// checks the thing exists, so a product slug arrives looking like a page or a category
+		// that is not there. Reading only "name" left every structure but /%postname%/ as a 404.
+		$source = '';
+		foreach ( array( 'name', 'pagename', 'category_name' ) as $var ) {
+			if ( ! empty( $query_vars[ $var ] ) && is_string( $query_vars[ $var ] ) ) {
+				$source = $var;
+				break;
+			}
+		}
+		// An explicit post type means a rule already decided what this is.
+		if ( '' === $source || ! empty( $query_vars['post_type'] ) ) {
 			return $query_vars;
 		}
-		if ( ! empty( $query_vars['post_type'] ) || ! empty( $query_vars['pagename'] ) ) {
-			return $query_vars;
-		}
-		$slug = trim( $query_vars['name'], '/' );
+		$slug = trim( $query_vars[ $source ], '/' );
 		if ( '' === $slug ) {
 			return $query_vars;
+		}
+
+		// Only a root-level request is in play: the slug must be the whole path. A dated post URL
+		// or a category archive carries the same slug at the end of a longer one.
+		global $wp;
+		if ( isset( $wp->request ) && trim( (string) $wp->request, '/' ) !== $slug ) {
+			return $query_vars;
+		}
+
+		// A term URL can be paginated: /slug/page/2/.
+		$paged = 0;
+		if ( preg_match( '#^(.+)/page/([0-9]+)$#', $slug, $m ) ) {
+			$slug  = $m[1];
+			$paged = (int) $m[2];
 		}
 
 		// Published content that already owns the slug wins, every time.
@@ -420,10 +450,15 @@ class Nexter_Content_SEO_Woo_Permalinks {
 		if ( get_page_by_path( $slug ) instanceof WP_Post ) {
 			return $query_vars;
 		}
+		if ( 'category_name' === $source && term_exists( $slug, 'category' ) ) {
+			return $query_vars;
+		}
 
-		if ( self::enabled( 'product' ) && get_page_by_path( $slug, OBJECT, 'product' ) instanceof WP_Post ) {
+		if ( 0 === $paged && self::enabled( 'product' ) && get_page_by_path( $slug, OBJECT, 'product' ) instanceof WP_Post ) {
 			// name + post_type, not the `product` query var: setting both makes WordPress read the
 			// request as the product archive (the Shop page) instead of a single product.
+			unset( $query_vars[ $source ] );
+			$query_vars['name']      = $slug;
 			$query_vars['post_type'] = 'product';
 
 			return $query_vars;
@@ -433,15 +468,37 @@ class Nexter_Content_SEO_Woo_Permalinks {
 			if ( ! self::enabled( $taxonomy ) ) {
 				continue;
 			}
-			if ( term_exists( $slug, $taxonomy ) ) {
-				unset( $query_vars['name'] );
+			if ( self::find_term_by_path( $slug, $taxonomy ) ) {
+				unset( $query_vars[ $source ] );
 				$query_vars[ $taxonomy ] = $slug;
+				if ( $paged > 0 ) {
+					$query_vars['paged'] = $paged;
+				}
 
 				return $query_vars;
 			}
 		}
 
 		return $query_vars;
+	}
+
+	/**
+	 * Find a product term from the slug path in a URL, so "parent/child" resolves the nested term
+	 * and not a top-level one that happens to share the last segment.
+	 *
+	 * @param string $path     Slug or slash-joined slug path.
+	 * @param string $taxonomy Taxonomy name.
+	 * @return WP_Term|null
+	 */
+	private static function find_term_by_path( $path, $taxonomy ) {
+		$path = trim( (string) $path, '/' );
+		if ( '' === $path ) {
+			return null;
+		}
+		$leaf = ( false === strpos( $path, '/' ) ) ? $path : substr( $path, (int) strrpos( $path, '/' ) + 1 );
+		$term = get_term_by( 'slug', $leaf, $taxonomy );
+
+		return ( $term instanceof WP_Term && self::term_slug_path( $term, $taxonomy ) === $path ) ? $term : null;
 	}
 
 	/*

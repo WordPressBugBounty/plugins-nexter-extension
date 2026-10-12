@@ -1657,6 +1657,39 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 		 *
 		 * @since  1.0.0
 		 */
+		/**
+		 * Options for the pages, posts and terms a template already targets.
+		 *
+		 * The picker list is capped for speed, so a saved page outside it has no option to be
+		 * selected in the editor. These are built straight from the saved IDs instead.
+		 *
+		 * @param array $saved Saved ids such as post-12, taxonomy-4 or taxonomy-4-singular-category.
+		 * @return array<string,string> Id => label, in saved order.
+		 */
+		public static function get_saved_specific_options( $saved ) {
+			$options = array();
+			foreach ( (array) $saved as $id ) {
+				$id = (string) $id;
+				if ( preg_match( '/^post-([0-9]+)$/', $id, $m ) ) {
+					$post = get_post( (int) $m[1] );
+					if ( $post instanceof WP_Post && 'trash' !== $post->post_status ) {
+						$title  = $post->post_title;
+						$title .= ( 0 != $post->post_parent ) ? ' (' . get_the_title( $post->post_parent ) . ')' : '';
+						$options[ $id ] = $title;
+					}
+				} elseif ( preg_match( '/^taxonomy-([0-9]+)(?:-singular-.+)?$/', $id, $m ) ) {
+					$term = get_term( (int) $m[1] );
+					if ( $term instanceof WP_Term ) {
+						$options[ $id ] = ( $id === 'taxonomy-' . $m[1] )
+							? $term->name . __( ' archive page', 'nexter-extension' )
+							: __( 'All singulars  ', 'nexter-extension' ) . $term->name;
+					}
+				}
+			}
+
+			return $options;
+		}
+
 		public static function nexter_get_particular_posts_query() {
 
 			// This picker is an editor tool; it had no authorisation check at all.
@@ -3511,18 +3544,11 @@ function nexter_get_posts_query_specific( $post_id = 0, $meta_key = '' ){
 		$specific_value = get_post_meta( get_the_ID(), $meta_key, true );
 	}
 	
-	$data_query = Nexter_Builder_Display_Conditional_Rules::nexter_get_particular_posts_query();
-	
 	$options = array();
 	if ( ! empty( $specific_value ) && $specific_value != 'none' ) {
-		foreach ( $data_query as $key => $parent ) {
-			foreach ( $parent['children'] as $key => $value ) {
-				if ( ! empty( $specific_value ) && in_array( $value['id'], $specific_value ) ) {
-					$options[ $value['id'] ] = $value['text'];
-				}
-			}
-		}
-	} else {      
+		$options = Nexter_Builder_Display_Conditional_Rules::get_saved_specific_options( $specific_value );
+	}
+	if ( empty( $options ) ) {
 		$options['none'] = esc_html__( '---Select---', 'nexter-extension' );
 	}
 	

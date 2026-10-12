@@ -413,7 +413,8 @@ class Nexter_Content_SEO_Sitemap {
 		foreach ( array( 'sitemap_include_images', 'sitemap_exclude_post_types', 'sitemap_exclude_taxonomies', 'noindex_post_types' ) as $k ) {
 			$relevant[ $k ] = isset( $options[ $k ] ) ? $options[ $k ] : null;
 		}
-		return md5( wp_json_encode( $relevant ) . '|' . self::links_per_sitemap() );
+		// The plugin version and language list are part of the key so an update or a new language rebuilds the sitemap at once.
+		return md5( wp_json_encode( $relevant ) . '|' . self::links_per_sitemap() . '|' . ( defined( 'NEXTER_EXT_VER' ) ? NEXTER_EXT_VER : '' ) . '|' . self::sitemap_lang() );
 	}
 
 	/**
@@ -536,6 +537,7 @@ class Nexter_Content_SEO_Sitemap {
 				array(
 					'taxonomy'   => $slug,
 					'hide_empty' => true,
+					'lang'       => self::sitemap_lang(),
 				)
 			);
 			return ! is_wp_error( $c ) && (int) $c > 0;
@@ -582,6 +584,7 @@ class Nexter_Content_SEO_Sitemap {
 				array(
 					'taxonomy'   => $tax,
 					'hide_empty' => true,
+					'lang'       => self::sitemap_lang(),
 				)
 			);
 			$total += is_wp_error( $c ) ? 0 : (int) $c;
@@ -628,6 +631,7 @@ class Nexter_Content_SEO_Sitemap {
 				array(
 					'taxonomy'   => $tax,
 					'hide_empty' => true,
+					'lang'       => self::sitemap_lang(),
 				)
 			);
 			$c = is_wp_error( $c ) ? 0 : (int) $c;
@@ -760,6 +764,7 @@ class Nexter_Content_SEO_Sitemap {
 						'post_type'              => $pt,
 						'post_status'            => 'publish',
 						'posts_per_page'         => $batch_size,
+						'lang'                   => self::sitemap_lang(),
 						'paged'                  => $page,
 						'orderby'                => 'modified',
 						'order'                  => 'DESC',
@@ -801,6 +806,7 @@ class Nexter_Content_SEO_Sitemap {
 				array(
 					'taxonomy'   => $tax,
 					'hide_empty' => true,
+					'lang'       => self::sitemap_lang(),
 				)
 			);
 			if ( is_wp_error( $terms ) ) {
@@ -874,6 +880,7 @@ class Nexter_Content_SEO_Sitemap {
 					'post_type'              => $slug,
 					'post_status'            => 'publish',
 					'posts_per_page'         => $limit,
+					'lang'                   => self::sitemap_lang(),
 					'offset'                 => max( 0, (int) $offset ),
 					'orderby'                => 'modified',
 					'order'                  => 'DESC',
@@ -901,6 +908,7 @@ class Nexter_Content_SEO_Sitemap {
 				array(
 					'taxonomy'   => $slug,
 					'hide_empty' => true,
+					'lang'       => self::sitemap_lang(),
 					'number'     => $per,
 					'offset'     => ( $page - 1 ) * $per,
 				)
@@ -1692,6 +1700,21 @@ class Nexter_Content_SEO_Sitemap {
 	}
 
 	/**
+	 * Value for a query's `lang` argument that spans every Polylang language.
+	 *
+	 * Polylang narrows front-end queries to the current language, which on /sitemap.xml is the
+	 * default one, so translations were left out. Empty when Polylang is not active.
+	 *
+	 * @return string
+	 */
+	private static function sitemap_lang() {
+		if ( ! self::is_polylang_active() ) {
+			return '';
+		}
+		$slugs = pll_languages_list();
+		return is_array( $slugs ) ? implode( ',', $slugs ) : '';
+	}
+	/**
 	 * Get alternate URLs for homepage (all languages).
 	 *
 	 * @return array Lang code => URL.
@@ -1876,6 +1899,7 @@ class Nexter_Content_SEO_Sitemap {
 				'post_type'              => 'any',
 				'post_status'            => 'publish',
 				'posts_per_page'         => 1,
+				'lang'                   => self::sitemap_lang(),
 				'orderby'                => 'modified',
 				'order'                  => 'DESC',
 				'fields'                 => 'ids',

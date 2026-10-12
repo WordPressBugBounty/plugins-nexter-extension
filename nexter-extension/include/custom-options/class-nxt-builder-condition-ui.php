@@ -1165,18 +1165,11 @@ class Nxt_Builder_Condition_UI {
 	public static function nexter_get_posts_query_specific_new( $specific_id, $post_id ){
 		$specific_value = get_post_meta( $post_id, $specific_id, true );
 
-		$data_query = Nexter_Builder_Display_Conditional_Rules::nexter_get_particular_posts_query();
-
 		$options = array();
 		if ( ! empty( $specific_value ) && $specific_value != 'none' ) {
-			foreach ( $data_query as $key => $parent ) {
-				foreach ( $parent['children'] as $key => $value ) {
-					if ( ! empty( $specific_value ) && in_array( $value['id'], $specific_value ) ) {
-						$options[ $value['id'] ] = $value['text'];
-					}
-				}
-			}
-		} else {
+			$options = Nexter_Builder_Display_Conditional_Rules::get_saved_specific_options( $specific_value );
+		}
+		if ( empty( $options ) ) {
 			$options['none'] = esc_html__( '---Select---', 'nexter-extension' );
 		}
 

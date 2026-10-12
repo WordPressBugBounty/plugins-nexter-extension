@@ -17,6 +17,9 @@ class Nexter_Ext_View_Admin_Role_Switch {
 		}
 		add_action( 'init', [$this, 'role_switcher_to_view_admin_as'] );
 		add_action( 'profile_update', [$this, 'maybe_prevent_switchback_to_administrator'], 20 );
+		// WP_User::set_role() (bulk role change, REST, the single-edit screen) never fires
+		// profile_update, so a demotion through it left the stale original-role meta in place.
+		add_action( 'set_user_role', [$this, 'maybe_prevent_switchback_to_administrator'], 20, 1 );
 		add_action( 'admin_footer', [$this, 'add_floating_reset_button'] );
 		add_action( 'wp_footer', [$this, 'add_floating_reset_button'] );
 	}
