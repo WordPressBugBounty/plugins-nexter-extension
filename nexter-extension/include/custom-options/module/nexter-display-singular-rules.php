@@ -314,51 +314,6 @@ class Nexter_Builders_Singular_Conditional_Rules {
 
 new Nexter_Builders_Singular_Conditional_Rules();
 
-/*Singular Posts options_cb */
-function nxt_get_type_singular_field( $field ) {
-	
-	$group_field = $field->args( 'id' );
-	$group_field = str_replace( 'nxt-singular-group_', '', $group_field );    
-	$index_id    = str_replace( '_nxt-singular-conditional-type', '', $group_field );
-	
-	$group_value = get_post_meta( get_the_ID(), 'nxt-singular-group', true );
-	
-	$index_id = ( ! empty( $index_id )) ? $index_id : 0;
-	$options  = '';
-	$data     = Nexter_Builders_Singular_Conditional_Rules::$Nexter_Singular_Config;
-	
-	if ( ! empty( $group_value ) && isset( $group_value[ $index_id ]['nxt-singular-conditional-rule'] ) ) {
-		$value = $group_value[ $index_id ]['nxt-singular-conditional-rule'];
-		if ( isset( $data[ $value ] ) ) {
-			$query          = $data[ $value ];
-			$query['rules'] = $value;
-			$options        = Nexter_Builders_Singular_Conditional_Rules::get_singular_options( $query );
-		}
-	} else {
-		$query          = $data['post'];
-		$query['rules'] = 'post';
-		$options        = Nexter_Builders_Singular_Conditional_Rules::get_singular_options( $query );
-	}
-	
-	return $options;
-}
-
-/*
- * Preview Data Post Type Get List Posts
- * @since 1.0.1
- */
-function nxt_get_type_singular_preview_id( $field ) {
-	
-	$type_value = get_post_meta( get_the_ID(), 'nxt-singular-preview-type', true );
-	if ( ! empty( $type_value ) ) {
-		$options = Nexter_Builders_Singular_Conditional_Rules::get_post_type_posts_list( $type_value );
-	} else {
-		$options = Nexter_Builders_Singular_Conditional_Rules::get_post_type_posts_list( 'post' );
-	}
-	
-	return $options;
-}
-
 if ( ! class_exists( 'Nxt_Front_Page' ) ) {
 	class Nxt_Front_Page {
 

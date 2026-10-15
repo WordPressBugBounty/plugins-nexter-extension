@@ -118,9 +118,15 @@ class Nexter_Ext_SVG_Upload {
 		$file_tmp_name = $file['tmp_name']; // full path
 		$file_name     = isset( $file['name'] ) ? sanitize_file_name( $file['name'] ) : '';
 		
-		// Security: Validate file is actually an uploaded file
-		if ( ! is_uploaded_file( $file_tmp_name ) ) {
+		// A sideload is server-made, so is_uploaded_file() is always false for it and rejected every
+		// sideloaded file. Sideloads are still sanitized below.
+		$is_sideload = ( 'wp_handle_sideload_prefilter' === current_filter() );
+		if ( ! $is_sideload && ! is_uploaded_file( $file_tmp_name ) ) {
 			$file['error'] = __( 'Invalid file upload.', 'nexter-extension' );
+			return $file;
+		}
+		if ( $is_sideload && ! is_readable( $file_tmp_name ) ) {
+			$file['error'] = __( 'Failed to read file.', 'nexter-extension' );
 			return $file;
 		}
 		
@@ -276,9 +282,15 @@ class Nexter_Ext_SVG_Upload {
 			}
 			
 			// Security: Disable external entity loading to prevent XXE attacks
-			$old_value = libxml_disable_entity_loader( true );
-			$svg       = @simplexml_load_file( $svg_path );
-			libxml_disable_entity_loader( $old_value );
+			// Deprecated since PHP 8.0 (a no-op there: libxml >= 2.9 loads no external entities).
+			$old_value = null;
+			if ( PHP_VERSION_ID < 80000 && function_exists( 'libxml_disable_entity_loader' ) ) {
+				$old_value = libxml_disable_entity_loader( true );
+			}
+			$svg = @simplexml_load_file( $svg_path );
+			if ( null !== $old_value ) {
+				libxml_disable_entity_loader( $old_value );
+			}
 
 			$width = $height = 0;
 

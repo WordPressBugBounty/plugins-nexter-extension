@@ -257,6 +257,62 @@ if ( ! function_exists( 'mysql_escape_mimic' ) ) {
 	}
 }
 
+if ( ! function_exists( 'nxt_replace_plain' ) ) {
+	/**
+	 * Replace in one plain string.
+	 *
+	 * Also replaces the JSON-escaped form (http:\/\/old.test): Elementor and other builders store URLs that way,
+	 * and Elementor's own Replace URL tool does the same.
+	 *
+	 * @param string $from   Old value.
+	 * @param string $to     New value.
+	 * @param string $subject Subject.
+	 * @param string $ci   'yes' for case-insensitive.
+	 * @return string
+	 */
+	function nxt_replace_plain( $from, $to, $subject, $ci ) {
+		$replace = ( 'yes' === $ci ) ? 'str_ireplace' : 'str_replace';
+		$subject = $replace( $from, $to, $subject );
+		if ( false !== strpos( $from, '/' ) ) {
+			$subject = $replace( str_replace( '/', '\\/', $from ), str_replace( '/', '\\/', $to ), $subject );
+		}
+		return $subject;
+	}
+}
+
+if ( ! function_exists( 'nxt_replace_serialized_text' ) ) {
+	/**
+	 * Replace inside serialized data that holds objects, without unserializing it (so no object can be created).
+	 * Every string's length is rewritten; a string that is itself serialized data is handled the same way.
+	 *
+	 * @param string $from Old value.
+	 * @param string $to   New value.
+	 * @param string $data Serialized data.
+	 * @param string $ci 'yes' for case-insensitive.
+	 * @return string
+	 */
+	function nxt_replace_serialized_text( $from, $to, $data, $ci ) {
+		$out = '';
+		$pos = 0;
+		while ( preg_match( '/s:(\d+):"/', $data, $m, PREG_OFFSET_CAPTURE, $pos ) ) {
+			$start = $m[0][1];
+			$len   = (int) $m[1][0];
+			$body  = $start + strlen( $m[0][0] );
+			if ( '";' !== substr( $data, $body + $len, 2 ) ) {
+				// Not a real string header: keep it as it is and carry on after it.
+				$out .= substr( $data, $pos, $body - $pos );
+				$pos  = $body;
+				continue;
+			}
+			$str  = substr( $data, $body, $len );
+			$new  = is_serialized( $str ) ? nxt_replace_serialized_text( $from, $to, $str, $ci ) : nxt_replace_plain( $from, $to, $str, $ci );
+			$out .= substr( $data, $pos, $start - $pos ) . 's:' . strlen( $new ) . ':"' . $new . '";';
+			$pos  = $body + $len + 2;
+		}
+		return $out . substr( $data, $pos );
+	}
+}
+
 if ( ! function_exists( 'nxt_unserialize_replace' ) ) {
 	function nxt_unserialize_replace( $from = '', $to = '', $data = '', $serialised = false, $case = false ) {
 		try {
@@ -273,6 +329,10 @@ if ( ! function_exists( 'nxt_unserialize_replace_inner' ) ) {
 		// Only unserialize data that we control (from database, not user input)
 		
 		if ( is_string( $data ) && ! is_serialized_string( $data ) && is_serialized( $data ) ) {
+			// Serialized objects are rewritten as text: unserializing them would instantiate arbitrary classes.
+			if ( preg_match( '/(?:^|[;{}])[OC]:\d+:"/', trim( $data ) ) ) {
+				return nxt_replace_serialized_text( $from, $to, $data, $case );
+			}
 			$unserialized = false;
 			if ( ! is_serialized( $data ) ) {
 				$unserialized = false;
@@ -359,11 +419,7 @@ if ( ! function_exists( 'nxt_unserialize_replace_inner' ) ) {
 			}
 		} else {
 			if ( is_string( $data ) ) {
-				if ( 'yes' === $case ) {
-					$data = str_ireplace( $from, $to, $data );
-				} else {
-					$data = str_replace( $from, $to, $data );
-				}
+				$data = nxt_replace_plain( $from, $to, $data, $case );
 			}
 		}
 		if ( $serialised ) {

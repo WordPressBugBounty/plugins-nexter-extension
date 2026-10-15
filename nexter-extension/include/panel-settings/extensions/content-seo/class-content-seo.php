@@ -688,6 +688,8 @@ class Nexter_Content_SEO {
 				'permission_callback' => $permission,
 				'args'                => array(
 					'settings' => array(
+						'sanitize_callback' => 'rest_sanitize_request_arg',
+						'validate_callback' => 'rest_validate_request_arg',
 						'type'     => 'object',
 						'required' => false,
 					),
@@ -713,7 +715,9 @@ class Nexter_Content_SEO {
 				'callback'            => array( 'Nexter_Content_SEO_Schema', 'rest_save_schema' ),
 				'permission_callback' => $permission,
 				'args'                => array(
-					'schema' => array( 'type' => 'object' ),
+					'schema' => array(
+						'sanitize_callback' => 'rest_sanitize_request_arg',
+						'validate_callback' => 'rest_validate_request_arg', 'type' => 'object' ),
 				),
 			)
 		);
@@ -763,10 +767,14 @@ class Nexter_Content_SEO {
 					'permission_callback' => $permission,
 					'args'                => array(
 						'urls'   => array(
+							'sanitize_callback' => 'rest_sanitize_request_arg',
+							'validate_callback' => 'rest_validate_request_arg',
 							'type'  => 'array',
 							'items' => array( 'type' => 'string' ),
 						),
 						'action' => array(
+							'sanitize_callback' => 'rest_sanitize_request_arg',
+							'validate_callback' => 'rest_validate_request_arg',
 							'type' => 'string',
 							'enum' => array( 'update', 'remove' ),
 						),
@@ -786,22 +794,30 @@ class Nexter_Content_SEO {
 					'permission_callback' => $permission,
 					'args'                => array(
 						'page'     => array(
+							'sanitize_callback' => 'rest_sanitize_request_arg',
+							'validate_callback' => 'rest_validate_request_arg',
 							'type'    => 'integer',
 							'default' => 1,
 							'minimum' => 1,
 						),
 						'per_page' => array(
+							'sanitize_callback' => 'rest_sanitize_request_arg',
+							'validate_callback' => 'rest_validate_request_arg',
 							'type'    => 'integer',
 							'default' => 20,
 							'minimum' => 5,
 							'maximum' => 100,
 						),
 						'orderby'  => array(
+							'sanitize_callback' => 'rest_sanitize_request_arg',
+							'validate_callback' => 'rest_validate_request_arg',
 							'type'    => 'string',
 							'default' => 'time',
 							'enum'    => array( 'time', 'url', 'response' ),
 						),
 						'order'    => array(
+							'sanitize_callback' => 'rest_sanitize_request_arg',
+							'validate_callback' => 'rest_validate_request_arg',
 							'type'    => 'string',
 							'default' => 'desc',
 							'enum'    => array( 'asc', 'desc' ),
@@ -826,6 +842,8 @@ class Nexter_Content_SEO {
 				'permission_callback' => $permission,
 				'args'                => array(
 					'include' => array(
+						'sanitize_callback' => 'rest_sanitize_request_arg',
+						'validate_callback' => 'rest_validate_request_arg',
 						'type'     => 'object',
 						'required' => false,
 					),
@@ -841,6 +859,8 @@ class Nexter_Content_SEO {
 				'permission_callback' => $permission,
 				'args'                => array(
 					'bundle' => array(
+						'sanitize_callback' => 'rest_sanitize_request_arg',
+						'validate_callback' => 'rest_validate_request_arg',
 						'type'     => 'object',
 						'required' => false,
 					),
@@ -876,6 +896,8 @@ class Nexter_Content_SEO {
 				'permission_callback' => $permission,
 				'args'                => array(
 					'issue_id' => array(
+						'sanitize_callback' => 'rest_sanitize_request_arg',
+						'validate_callback' => 'rest_validate_request_arg',
 						'type'     => 'string',
 						'required' => true,
 					),
@@ -907,6 +929,8 @@ class Nexter_Content_SEO {
 				'permission_callback' => $permission,
 				'args'                => array(
 					'limit' => array(
+						'sanitize_callback' => 'rest_sanitize_request_arg',
+						'validate_callback' => 'rest_validate_request_arg',
 						'type'     => 'integer',
 						'required' => false,
 						'default'  => 50,
@@ -936,6 +960,8 @@ class Nexter_Content_SEO {
 						'permission_callback' => $permission,
 						'args'                => array(
 							'page'     => array(
+								'sanitize_callback' => 'rest_sanitize_request_arg',
+								'validate_callback' => 'rest_validate_request_arg',
 								'type'    => 'integer',
 								'default' => 1,
 								'minimum' => 1,
@@ -944,22 +970,30 @@ class Nexter_Content_SEO {
 							// fetches everything once and filters/paginates client-side; fetch_rows still
 							// clamps to MAX_ROWS, which equals the table's hard row cap.
 							'per_page' => array(
+								'sanitize_callback' => 'rest_sanitize_request_arg',
+								'validate_callback' => 'rest_validate_request_arg',
 								'type'    => 'integer',
 								'default' => 20,
 								'minimum' => 1,
 								'maximum' => Nexter_Content_SEO_404_Monitor::MAX_ROWS,
 							),
 							'orderby'  => array(
+								'sanitize_callback' => 'rest_sanitize_request_arg',
+								'validate_callback' => 'rest_validate_request_arg',
 								'type'    => 'string',
 								'default' => 'last_seen',
 								'enum'    => array( 'last_seen', 'first_seen', 'hits', 'url' ),
 							),
 							'order'    => array(
+								'sanitize_callback' => 'rest_sanitize_request_arg',
+								'validate_callback' => 'rest_validate_request_arg',
 								'type'    => 'string',
 								'default' => 'desc',
 								'enum'    => array( 'asc', 'desc' ),
 							),
 							'search'   => array(
+								'sanitize_callback' => 'rest_sanitize_request_arg',
+								'validate_callback' => 'rest_validate_request_arg',
 								'type'    => 'string',
 								'default' => '',
 							),
@@ -997,6 +1031,8 @@ class Nexter_Content_SEO {
 					'permission_callback' => $permission,
 					'args'                => array(
 						'id' => array(
+							'sanitize_callback' => 'rest_sanitize_request_arg',
+							'validate_callback' => 'rest_validate_request_arg',
 							'type'     => 'integer',
 							'required' => true,
 						),

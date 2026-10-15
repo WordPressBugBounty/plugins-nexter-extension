@@ -48,8 +48,6 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 
 		private static $file_count_cache = null;
 
-		private static $code_snippets_enabled_cache = null;
-
 		private static $file_code_list_cache_with_meta = null;
 
 		private static $file_code_list_cache_without_meta = null;
@@ -76,25 +74,6 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 		 * @var array<int, array<string, array>>
 		 */
 		private static $post_meta_cache = [];
-
-		/**
-		 * Check if code snippets functionality is enabled (with cache)
-		 */
-		private function is_code_snippets_enabled() {
-			if ( self::$code_snippets_enabled_cache !== null ) {
-				return self::$code_snippets_enabled_cache;
-			}
-
-			$get_opt               = Nxt_Options::extra_ext();
-			$code_snippets_enabled = true;
-
-			if ( isset( $get_opt['code-snippets'] ) && isset( $get_opt['code-snippets']['switch'] ) ) {
-				$code_snippets_enabled = ! empty( $get_opt['code-snippets']['switch'] );
-			}
-
-			self::$code_snippets_enabled_cache = $code_snippets_enabled;
-			return $code_snippets_enabled;
-		}
 
 		/**
 		 * Prime and return all meta for a snippet post in one call.
@@ -472,21 +451,6 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 		}
 
 		/**
-		 * Check if class exists (cached)
-		 * 
-		 * @param string $class_name Class name to check
-		 * @return bool
-		 */
-		private static $class_exists_cache = [];
-
-		private function class_exists_cached( $class_name ) {
-			if ( ! isset( self::$class_exists_cache[ $class_name ] ) ) {
-				self::$class_exists_cache[ $class_name ] = class_exists( $class_name );
-			}
-			return self::$class_exists_cache[ $class_name ];
-		}
-
-		/**
 		 *  Initiator
 		 */
 		public static function get_instance() {
@@ -597,75 +561,6 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 			}
 			return '';
 		}
-
-		/* public function home_page_code_execute(){
-			if(isset($_GET['test_code']) && $_GET['test_code']=='code_test' && isset($_GET['code_id']) && !empty($_GET['code_id'])){ // phpcs:ignore WordPress.Security.NonceVerification.Recommended, handled by the core method already.
-				$code_id = isset($_GET['code_id']) ? sanitize_text_field(wp_unslash($_GET['code_id'])) : '';
-				$this->nexter_code_test_php_snippets($code_id);
-			}
-		} */
-
-		/*
-		 * Get Code Snippets Php Execute
-		 * @since 1.0.4
-		 */
-		/* public function nexter_code_test_php_snippets( $post_id = null){
-			
-			if(empty($post_id)){
-				return false;
-			}
-			if ( current_user_can('administrator') ) {
-				if(!empty($post_id)){
-					$php_code = get_post_meta( $post_id, 'nxt-php-code', true );
-					if(!empty($php_code) ){
-						// Start output buffering to prevent interference with AJAX responses
-						if (defined('DOING_AJAX') && DOING_AJAX) {
-							ob_start();
-						}
-						
-						// Apply filter to allow Pro version to pass shortcode attributes
-						$attributes = apply_filters('nexter_php_snippet_attributes', array(), $post_id, $php_code);
-						$result = Nexter_Builder_Code_Snippets_Executor::get_instance()->execute_php_snippet($php_code, $post_id, true, $attributes);
-						
-						// Clean buffer for AJAX requests to prevent output interference
-						if (defined('DOING_AJAX') && DOING_AJAX) {
-							ob_end_clean();
-							
-							// If there's an error, return it for AJAX handling
-							if (is_wp_error($result)) {
-								return $result;
-							}
-							return true;
-						} else {
-							// For non-AJAX requests, allow normal output
-							// Apply filter to allow Pro version to pass shortcode attributes
-							$attributes = apply_filters('nexter_php_snippet_attributes', array(), $post_id, $php_code);
-							Nexter_Builder_Code_Snippets_Executor::get_instance()->execute_php_snippet($php_code, $post_id, false, $attributes);
-						}
-					}
-				}
-			}
-		} */
-		
-		/**
-		 * List of Data Get Load Snippets
-		 */
-		/* public function get_snippet_ids(){
-			$options = [
-				'location'  => 'nxt-add-display-rule',
-				'exclusion' => 'nxt-exclude-display-rule',
-			];
-
-			$check_posts = get_posts([
-				'post_type'      => self::$snippet_type,
-				'posts_per_page' => 1,
-				'fields'         => 'ids',
-			]);
-			
-			if (!empty($check_posts)) {
-				self::$snippet_ids = Nexter_Builder_Display_Conditional_Rules::get_instance()->get_templates_by_sections_conditions( self::$snippet_type, $options );
-			}
-		} */
 
 		/**
 		 * Load Snippets get IDs
@@ -969,43 +864,6 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 				}
 			}
 		
-			/* $search_query = isset($_POST['q']) ? sanitize_text_field($_POST['q']) : '';
-		
-			$args = array(
-			'post_type'      => self::$snippet_type,
-			'post_status'    => 'publish',
-			'posts_per_page' => 50, // Limit results for performance
-			'orderby'        => 'title',
-			'order'          => 'ASC'
-			);
-		
-			// Add search query if provided
-			if (!empty($search_query)) {
-			$args['s'] = $search_query;
-			}
-		
-			$query = new WP_Query($args);
-			$snippet_list = [];
-
-			if ($query->have_posts()) {
-			while ($query->have_posts()) {
-				$query->the_post();
-				$post_id = get_the_ID();
-				// Batch get_post_meta calls for better performance
-				$all_meta = get_post_meta($post_id);
-				$type = isset($all_meta['nxt-code-type'][0]) ? $all_meta['nxt-code-type'][0] : '';
-				$status = isset($all_meta['nxt-code-status'][0]) ? $all_meta['nxt-code-status'][0] : '';
-				
-				$snippet_list[] = [
-					'id' => $post_id,
-					'name' => get_the_title(),
-					'type' => $type ?: 'unknown',
-					'status' => $status ? 'active' : 'inactive'
-				];
-			}
-			wp_reset_postdata();
-			} */
-	
 			wp_send_json_success( $snippet_list );
 		}
 
@@ -1616,30 +1474,6 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 			}
 
 			check_ajax_referer( 'nxt-code-snippet', 'nonce' );
-			/*$post_id = isset($_POST['post_id']) && is_numeric($_POST['post_id']) ? intval($_POST['post_id']) : 0;
-
-			 if ($post_id) {
-				$post = get_post($post_id);
-		
-				if ($post && $post->post_type === self::$snippet_type) {
-					if ( isset($_POST['title']) ) {
-						$title = sanitize_text_field(wp_unslash($_POST['title']));
-						if(empty($title)){
-							wp_send_json_error(__('Enter Name Snippet', 'nexter-extension'));
-						}
-						$post_data = array(
-							'ID'         => $post_id,
-							'post_title' => $title,
-						);
-						wp_update_post($post_data);
-					}
-
-					$this->add_update_metadata($post_id);
-					wp_send_json_success(__('Snippet Updated Successfully.', 'nexter-extension'));
-				} else {
-					wp_send_json_error(['message' => __('Invalid post or post type', 'nexter-extension')]);
-				}
-			}else */
 			if ( isset( $_POST['post_id'] ) && ! empty( $_POST['post_id'] ) ) {
 				$post_id    = isset( $_POST['post_id'] ) ? sanitize_text_field( $_POST['post_id'] ) : '';
 				$file_based = $this->get_file_based_instance();
@@ -1956,35 +1790,6 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 			}
 			check_ajax_referer( 'nxt-code-snippet', 'nonce' );
 			$code_list = [];
-			/* $args = array(
-				'post_type'      => self::$snippet_type,
-				'post_status'    => 'publish',
-				'posts_per_page' => -1,
-			);
-		
-			$query = new WP_Query($args);
-			
-			if ($query->have_posts()) {
-				while ($query->have_posts()) {
-					$query->the_post();
-					$type = get_post_meta(get_the_ID(), 'nxt-code-type', true);
-					$code_list[] = [
-						'id' => $post_id,
-						'name'        => get_post_field('post_title', $post_id, 'raw'),
-						'description'   => isset($all_meta['nxt-code-note'][0]) ? $all_meta['nxt-code-note'][0] : '',
-						'type'  => $type,
-						'tags'  => isset($all_meta['nxt-code-tags'][0]) ? $all_meta['nxt-code-tags'][0] : '',
-						'code-execute'  => isset($all_meta['nxt-code-execute'][0]) ? $all_meta['nxt-code-execute'][0] : '',
-						'status'    => isset($all_meta['nxt-code-status'][0]) ? $all_meta['nxt-code-status'][0] : '',
-						'priority' => isset($all_meta['nxt-code-hooks-priority'][0]) ? $all_meta['nxt-code-hooks-priority'][0] : '',
-						'last_updated' => get_the_modified_time('F j, Y'),
-					];
-					
-				}
-				wp_reset_postdata();
-			}else{
-				wp_send_json_error(__('No List Found.', 'nexter-extension'));
-			} */
 			
 			$file_code_list = $this->get_file_code_list_without_meta();
 			if ( ! empty( $file_code_list ) ) {
@@ -2620,54 +2425,6 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 			}
 			check_ajax_referer( 'nxt-code-snippet', 'nonce' );
 
-			/*$post_id = isset($_POST['post_id']) && is_numeric($_POST['post_id']) ? intval($_POST['post_id']) : 0;
-			 if ($post_id) {
-				$post = get_post($post_id);
-		
-				if ($post && $post->post_type === self::$snippet_type) {
-					$type = get_post_meta($post->ID, 'nxt-code-type', true);
-					$current_location = get_post_meta($post->ID, 'nxt-code-location', true);
-					
-					// Perform location migration if needed
-					$migrated_location = $this->migrate_location_if_needed($post->ID, $type, $current_location);
-					
-					$get_data = [
-						'id' => $post->ID,
-						'name'        => $post->post_title,
-						'description'   => get_post_meta($post->ID, 'nxt-code-note', true),
-						'type'  => $type,
-						'insertion' => get_post_meta($post->ID, 'nxt-code-insertion', true),
-						'location' => $migrated_location,
-						'customname' => get_post_meta($post->ID, 'nxt-code-customname', true),
-						'compresscode' => get_post_meta($post->ID, 'nxt-code-compresscode', true),
-						'startDate' => get_post_meta($post->ID, 'nxt-code-startdate', true),
-						'endDate' => get_post_meta($post->ID, 'nxt-code-enddate', true),
-						'shortcodeattr' => get_post_meta($post->ID, 'nxt-code-shortcodeattr', true),
-						'tags'  => get_post_meta($post->ID, 'nxt-code-tags', true),
-						'codeExecute'   => get_post_meta($post->ID, 'nxt-code-execute', true),
-						'status'    => get_post_meta($post->ID, 'nxt-code-status', true),
-						'langCode' => get_post_meta( $post->ID, 'nxt-'.$type.'-code', true ),
-						'htmlHooks' => get_post_meta( $post->ID, 'nxt-code-html-hooks', true ),
-						'hooksPriority' => get_post_meta( $post->ID, 'nxt-code-hooks-priority', true ),
-						'include_data' => get_post_meta( $post->ID, 'nxt-add-display-rule', true ),
-						'exclude_data' => get_post_meta( $post->ID, 'nxt-exclude-display-rule', true ),
-						'in_sub_data' => get_post_meta( $post->ID, 'nxt-in-sub-rule', true ),
-						'ex_sub_data' => get_post_meta( $post->ID, 'nxt-ex-sub-rule', true ),
-						// Word-based insertion settings
-						'word_count' => get_post_meta( $post->ID, 'nxt-insert-word-count', true ) ?: 100,
-						'word_interval' => get_post_meta( $post->ID, 'nxt-insert-word-interval', true ) ?: 200,
-						'post_number' => get_post_meta( $post->ID, 'nxt-post-number', true ) ?: 1,
-						// Dynamic Conditional Logic data
-						'smart_conditional_logic' => get_post_meta( $post->ID, 'nxt-smart-conditional-logic', true ) ?: [],
-						// CSS Selector settings
-						'css_selector' => get_post_meta( $post->ID, 'nxt-css-selector', true ),
-						'element_index' => get_post_meta( $post->ID, 'nxt-element-index', true ) ?: 0,
-					];
-					wp_send_json_success($get_data);
-				} else {
-					wp_send_json_error(['message' => __('Invalid post or post type', 'nexter-extension')]);
-				}
-			} */
 			if ( isset( $_POST['post_id'] ) && ! empty( $_POST['post_id'] ) ) {
 				$post_id    = $this->sanitize_post( 'post_id', '' );
 				$file_based = $this->get_file_based_instance();
@@ -3060,63 +2817,6 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 		}
 
 		/**
-		 * PHP snippets hooks actions with location support
-		 * Enhanced to support location-based execution for PHP snippets
-		 */
-		/* public static function nexter_code_php_hooks_actions() {
-			$php_snippets = self::get_snippets_ids_list('php');
-			// Enhanced fallback: Always ensure we have all active PHP snippets
-			if (empty($php_snippets)) {
-				$php_snippets = self::get_snippets_fallback('php');
-			}
-			
-			if (!empty($php_snippets)) {
-				foreach ($php_snippets as $post_id) {
-					$post_type = get_post_type();
-
-					if (self::$snippet_type != $post_type) {
-						// Skip shortcode insertion type for auto execution
-						$insertion_type = get_post_meta($post_id, 'nxt-code-insertion', true);
-						if (!empty($insertion_type) && $insertion_type == 'shortcode') {
-							continue;
-						}
-
-						// Check Pro restrictions (device and scheduling)
-						if (self::should_skip_due_to_pro_restrictions($post_id)) {
-							continue; // Skip this snippet due to Pro restrictions
-						}
-
-						// Smart Conditional Logic check
-						$smart_conditions = get_post_meta($post_id, 'nxt-smart-conditional-logic', true);
-						if (!empty($smart_conditions) && class_exists('Nexter_Builder_Display_Conditional_Rules')) {
-							if (!Nexter_Builder_Display_Conditional_Rules::evaluate_smart_conditional_logic($smart_conditions)) {
-								continue; // Skip this snippet, Smart Conditional Logic not met
-							}
-						}
-
-						self::$snippet_loaded_ids['php'][] = $post_id;
-						
-						// Get PHP code
-						$php_code = get_post_meta($post_id, 'nxt-php-code', true);
-						if (!empty($php_code)) {
-							// Check for new location system
-							$location = get_post_meta($post_id, 'nxt-code-location', true);
-							if (!empty($location)) {
-								// Use new location-based system
-								self::execute_php_at_location($post_id, $php_code, $location);
-								return;
-							} else {
-								// Skip old system basic execution types - they're handled by bypass
-								// (global, admin, front-end are handled immediately in bypass system)
-								// This prevents duplication between bypass system and hook-based system
-							}
-						}
-					}
-				}
-			}
-		} */
-
-		/**
 		 * HTML Snippets Hooks for Admin (Optimized for PHP 7.4 + Memory)
 		 */
 		public static function nexter_code_html_hooks_actions_admin() {
@@ -3132,54 +2832,6 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 				//$html_snippets = self::get_snippets_fallback('htmlmixed');
 				$file_snippets = self::get_file_snippets_fallback( 'htmlmixed' );
 			}
-
-			/** ------------------------------------------------------------------
-			 * PROCESS POST-BASED SNIPPETS
-			 * -------------------------------------------------------------------*/
-			/* if (!empty($html_snippets)) {
-
-				foreach ($html_snippets as $post_id) {
-
-					// Skip if invalid post (prevents unnecessary memory load)
-					if (!get_post($post_id)) {
-						continue;
-					}
-
-					// Skip shortcode insertion
-					$insertion = get_post_meta($post_id, 'nxt-code-insertion', true);
-					if ($insertion === 'shortcode') {
-						continue;
-					}
-
-					// Get location once
-					$location = get_post_meta($post_id, 'nxt-code-location', true);
-					if (!isset($location[0]) || !in_array($location, $admin_locations, true)) {
-						continue;
-					}
-
-					// Pro logic checks
-					if (self::should_skip_due_to_pro_restrictions($post_id)) {
-						continue;
-					}
-
-					// Smart conditional logic
-					$conditions = get_post_meta($post_id, 'nxt-smart-conditional-logic', true);
-					if ($conditions && class_exists('Nexter_Builder_Display_Conditional_Rules')) {
-						if (!Nexter_Builder_Display_Conditional_Rules::evaluate_smart_conditional_logic($conditions)) {
-							continue;
-						}
-					}
-
-					// Mark snippet as loaded
-					self::$snippet_loaded_ids['htmlmixed'][] = $post_id;
-
-					// Load HTML code once and render
-					$html_code = get_post_meta($post_id, 'nxt-htmlmixed-code', true);
-					if (!empty($html_code)) {
-						self::output_html_at_location($post_id, $html_code, $location);
-					}
-				}
-			} */
 
 			/** ------------------------------------------------------------------
 			 * PROCESS FILE-BASED SNIPPETS (Fallback)
@@ -3329,33 +2981,6 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 			}
 		}
 
-
-		/**
-		 * Fallback method to get snippets when display rules don't work
-		 */
-		/* private static function get_snippets_fallback($code_type) {
-			$args = array(
-				'post_type' => self::$snippet_type,
-				'post_status' => 'publish',
-				'posts_per_page' => -1,
-				'fields' => 'ids',
-				'meta_query' => array(
-					'relation' => 'AND',
-					array(
-						'key' => 'nxt-code-type',
-						'value' => $code_type,
-						'compare' => '='
-					),
-					array(
-						'key' => 'nxt-code-status',
-						'value' => '1',
-						'compare' => '='
-					)
-				)
-			);
-			
-			return get_posts($args);
-		} */
 
 		private static function get_file_snippets_fallback( $code_type ) {
 			$cache_key       = self::get_file_snippet_transient_key( $code_type );
@@ -3530,109 +3155,6 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 			// Free plugin fallback - no CSS selector processing in Free version
 				return $output;
 		}
-
-		/*
-		 * Get Code Snippets Php Execute
-		 * @since 1.0.4
-		 */
-		/* public function nexter_code_php_snippets_actions(){
-			global $wpdb;
-			
-			$code_snippet = 'nxt-code-type';
-			
-			$join_meta = "pm.meta_value = 'php'";
-			
-			$nxt_option = 'nxt-build-get-data';
-			$get_data = get_option( $nxt_option );
-			
-			if( $get_data === false ){
-				$get_data = ['saved' => strtotime('now'), 'singular_updated' => '','archives_updated' => '','sections_updated' => '','code_updated' => ''];
-				add_option( $nxt_option, $get_data );
-			}
-
-			$posts = [];
-			if(!empty($get_data) && isset($get_data['saved']) && ((isset($get_data['code_updated']) && $get_data['saved'] !== $get_data['code_updated'])) || !isset($get_data['code_updated'])){
-				
-				$sqlquery = "SELECT p.ID, pm.meta_value FROM {$wpdb->postmeta} as pm INNER JOIN {$wpdb->posts} as p ON pm.post_id = p.ID WHERE (pm.meta_key = %s) AND p.post_type = %s AND p.post_status = 'publish' AND ( {$join_meta} ) ORDER BY p.post_date DESC";
-				
-				$sql3 = $wpdb->prepare( $sqlquery , [ $code_snippet, self::$snippet_type] ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-				
-				$posts  = $wpdb->get_results( $sql3 ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-
-				$get_data['code_updated'] = $get_data['saved'];
-				$get_data[ 'code_snippet' ] = $posts;
-				update_option( $nxt_option, $get_data );
-
-			}else if( isset($get_data[ 'code_snippet' ]) && !empty($get_data[ 'code_snippet' ])){
-				$posts = $get_data[ 'code_snippet' ];
-			}
-			
-			$php_snippet_filter = apply_filters('nexter_php_codesnippet_execute',true);
-			if( !empty($posts) && !empty($php_snippet_filter)){
-				foreach ( $posts as $post_data ) {
-					
-					$get_layout_type = get_post_meta( $post_data->ID , $code_snippet, false );
-					
-					if(!empty($get_layout_type) && !empty($get_layout_type[0]) && 'php' == $get_layout_type[0]){
-						$post_id = isset($post_data->ID) ? $post_data->ID : '';
-						
-						if(!empty($post_id)){
-							// Skip shortcode insertion type for auto execution
-							$insertion_type = get_post_meta($post_id, 'nxt-code-insertion', true);
-							if (!empty($insertion_type) && $insertion_type == 'shortcode') {
-								continue;
-							}
-
-							// Validate eCommerce location before proceeding
-							$location = get_post_meta($post_id, 'nxt-code-location', true);
-							if (!$this->validate_ecommerce_location($location)) {
-								continue; // Skip this snippet if invalid eCommerce location
-							}
-
-							// Check Pro restrictions (device and scheduling)
-							if (self::should_skip_due_to_pro_restrictions($post_id)) {
-								continue; // Skip this snippet due to Pro restrictions
-							}
-
-							// Smart Conditional Logic check
-							$smart_conditions = get_post_meta($post_id, 'nxt-smart-conditional-logic', true);
-							if (!empty($smart_conditions) && class_exists('Nexter_Builder_Display_Conditional_Rules')) {
-								if(!Nexter_Builder_Display_Conditional_Rules::evaluate_smart_conditional_logic($smart_conditions)) {
-									continue; // Skip this snippet, Smart Conditional Logic not met
-								}
-							}
-
-							$code_status = get_post_meta( $post_id, 'nxt-code-status', true );
-							
-							$authorID = get_post_field( 'post_author', $post_id );
-							$theAuthorDataRoles = get_userdata($authorID);
-							$theRolesAuthor = isset($theAuthorDataRoles->roles) ? $theAuthorDataRoles->roles : [];
-							
-							if ( in_array( 'administrator', $theRolesAuthor ) && !empty($code_status)) {
-								$php_code = get_post_meta( $post_id, 'nxt-php-code', true );
-								$code_execute = get_post_meta( $post_id, 'nxt-code-execute', true );
-								$code_hidden_execute = get_post_meta( $post_id, 'nxt-code-php-hidden-execute', true );
-
-								// Security check: Only proceed if PHP execution is explicitly enabled
-								if(!empty($code_hidden_execute) && $code_hidden_execute === 'yes' && !empty($php_code)){
-									self::$snippet_loaded_ids['php'][] = $post_id;
-									
-									// Check if using new location system (excluding basic locations handled by bypass)
-									if (!empty($location) && !in_array($location, ['run_everywhere', 'frontend_only', 'admin_only'])) {
-										// Use new location-based system with specialized handlers for complex locations
-										// Basic locations (run_everywhere, frontend_only, admin_only) are handled by bypass
-										self::execute_php_at_location($post_id, $php_code, $location);
-									} 
-									// Skip old system basic execution types - they're handled by bypass
-									// (global, admin, front-end are handled immediately in bypass system)
-								}
-							}
-						}
-					}
-					
-				}
-			}
-		} */
 
 		/**
 		 * Is this a REST or JSON request? REST_REQUEST is not defined yet when snippets load, and
@@ -3825,202 +3347,8 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 					}
 				}
 			}
-			// Get all PHP snippets directly from database (like old version)
-			/* $sqlquery = "SELECT p.ID FROM {$wpdb->postmeta} as pm INNER JOIN {$wpdb->posts} as p ON pm.post_id = p.ID WHERE (pm.meta_key = 'nxt-code-type') AND p.post_type = %s AND p.post_status = 'publish' AND pm.meta_value = 'php' ORDER BY p.post_date DESC";
-			$posts = $wpdb->get_results( $wpdb->prepare( $sqlquery, self::$snippet_type ) );
-			
-			if( !empty($posts) ){
-				foreach ( $posts as $post_data ) {
-					$post_id = $post_data->ID;
-					
-					// Basic checks only (like old version)
-					$code_status = get_post_meta( $post_id, 'nxt-code-status', true );
-					$authorID = get_post_field( 'post_author', $post_id );
-					$theAuthorDataRoles = get_userdata($authorID);
-					$theRolesAuthor = isset($theAuthorDataRoles->roles) ? $theAuthorDataRoles->roles : [];
-					
-					if ( in_array( 'administrator', $theRolesAuthor ) && !empty($code_status)) {
-						// Skip shortcode insertion type for auto execution (same as main system)
-						$insertion_type = get_post_meta($post_id, 'nxt-code-insertion', true);
-						if (!empty($insertion_type) && $insertion_type == 'shortcode') {
-							continue;
-						}
-						
-						$php_code = get_post_meta( $post_id, 'nxt-php-code', true );
-						$code_execute = get_post_meta( $post_id, 'nxt-code-execute', true );
-						$code_location = get_post_meta( $post_id, 'nxt-code-location', true );
-						$code_hidden_execute = get_post_meta( $post_id, 'nxt-code-php-hidden-execute', true );
-						
-						// Apply same validation checks as main system for consistency
-						// Validate eCommerce location before proceeding
-						if (!$this->validate_ecommerce_location($code_location)) {
-							continue; // Skip this snippet if invalid eCommerce location
-						}
-
-						// Check Pro restrictions (device and scheduling)
-						if (self::should_skip_due_to_pro_restrictions($post_id)) {
-							continue; // Skip this snippet due to Pro restrictions
-						}
-
-						// Smart Conditional Logic check
-						$smart_conditions = get_post_meta($post_id, 'nxt-smart-conditional-logic', true);
-						if (!empty($smart_conditions) && class_exists('Nexter_Builder_Display_Conditional_Rules')) {
-							if(!Nexter_Builder_Display_Conditional_Rules::evaluate_smart_conditional_logic($smart_conditions)) {
-								continue; // Skip this snippet, Smart Conditional Logic not met
-							}
-						}
-
-						// Auto-enable execution if not set (like old version)
-						if (empty($code_hidden_execute)) {
-							update_post_meta( $post_id, 'nxt-code-php-hidden-execute', 'yes');
-							$code_hidden_execute = 'yes';
-						}
-
-						// Execute immediately if conditions are met (like old version)
-						if(!empty($php_code) && $code_hidden_execute === 'yes'){
-							
-							// Only handle basic locations in bypass (for REST API registration)
-							$should_execute_immediately = false;
-							
-							// Check new location system - only basic locations
-							if (!empty($code_location)) {
-								if (in_array($code_location, ['run_everywhere', 'frontend_only', 'admin_only'])) {
-									// Check admin context for admin_only and frontend_only
-									if ($code_location === 'admin_only' && !is_admin()) {
-										$should_execute_immediately = false;
-									} elseif ($code_location === 'frontend_only' && is_admin()) {
-										$should_execute_immediately = false;
-									} else {
-										$should_execute_immediately = true;
-									}
-								}
-							}
-							// Check old system - only basic execution types
-							elseif (!empty($code_execute)) {
-								if ($code_execute === 'global') {
-									$should_execute_immediately = true;
-								} elseif ($code_execute === 'admin' && is_admin()) {
-									$should_execute_immediately = true;
-								} elseif ($code_execute === 'front-end' && !is_admin()) {
-									$should_execute_immediately = true;
-								}
-							}
-							// Default to run_everywhere for snippets without location
-							else {
-								$should_execute_immediately = true;
-								// Auto-set to run_everywhere
-								update_post_meta( $post_id, 'nxt-code-location', 'run_everywhere');
-							}
-							
-							// Execute immediately using old-style direct execution
-							if ($should_execute_immediately) {
-								$this->nexter_direct_php_execute($php_code, $post_id);
-							}
-						}
-					}
-				}
-			} */
 		}
 
-		/**
-		 * Direct PHP execution with simple error handling
-		 * Prevents site crashes and disables problematic snippets
-		 */
-		/* private function nexter_direct_php_execute($code, $post_id = null) {
-			if (empty($code)) {
-				return false;
-			}
-			
-			// Clean the code like old version
-			$code = html_entity_decode(htmlspecialchars_decode($code));
-			
-			// Set up error handling to prevent site crashes
-			$old_error_reporting = error_reporting();
-			$old_display_errors = ini_get('display_errors');
-			
-			// Suppress errors to prevent site crash
-			error_reporting(0);
-			ini_set('display_errors', 0);
-			
-			// Use output buffering for AJAX requests to prevent interference
-			$is_ajax = (defined('DOING_AJAX') && DOING_AJAX) || 
-					   (defined('REST_REQUEST') && REST_REQUEST) ||
-					   (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest');
-			
-			// Allow filtering to control output buffering behavior
-			// To allow PHP output during AJAX (for debugging), use:
-			// add_filter('nexter_suppress_php_output_during_ajax', '__return_false');
-			$suppress_ajax_output = apply_filters('nexter_suppress_php_output_during_ajax', true);
-			
-			if ($is_ajax && $suppress_ajax_output) {
-				ob_start();
-			}
-			
-			try {
-				// Execute the code through centralized guarded executor.
-				if ( self::ensure_php_executor_loaded() ) {
-					Nexter_Builder_Code_Snippets_Executor::get_instance()->execute_php_snippet( $code, $post_id, false, array() );
-				}
-				
-				// Clean output buffer for AJAX requests
-				if ($is_ajax && $suppress_ajax_output) {
-					$output = ob_get_clean();
-					// Optionally log the output for debugging
-					if (!empty($output) && defined('WP_DEBUG') && WP_DEBUG) {
-						error_log("Nexter Extension: PHP snippet {$post_id} produced output during AJAX: " . substr($output, 0, 100));
-					}
-				}
-				
-				// Restore error handling
-				error_reporting($old_error_reporting);
-				ini_set('display_errors', $old_display_errors);
-				
-				return true;
-				
-			} catch (ParseError $e) {
-				// Clean output buffer if needed
-				if ($is_ajax && $suppress_ajax_output && ob_get_level() > 0) {
-					ob_end_clean();
-				}
-				
-				// Restore error handling
-				error_reporting($old_error_reporting);
-				ini_set('display_errors', $old_display_errors);
-				
-				// Disable snippet on parse error
-				$this->disable_problematic_snippet($post_id);
-				return false;
-				
-			} catch (Error $e) {
-				// Clean output buffer if needed
-				if ($is_ajax && $suppress_ajax_output && ob_get_level() > 0) {
-					ob_end_clean();
-				}
-				
-				// Restore error handling
-				error_reporting($old_error_reporting);
-				ini_set('display_errors', $old_display_errors);
-				
-				// Disable snippet on fatal error
-				$this->disable_problematic_snippet($post_id);
-				return false;
-				
-			} catch (Exception $e) {
-				// Clean output buffer if needed
-				if ($is_ajax && $suppress_ajax_output && ob_get_level() > 0) {
-					ob_end_clean();
-				}
-				
-				// Restore error handling
-				error_reporting($old_error_reporting);
-				ini_set('display_errors', $old_display_errors);
-				
-				// Disable snippet on exception
-				$this->disable_problematic_snippet($post_id);
-				return false;
-			}
-		} */
-		
 		/**
 		 * Simple method to disable problematic snippets
 		 */

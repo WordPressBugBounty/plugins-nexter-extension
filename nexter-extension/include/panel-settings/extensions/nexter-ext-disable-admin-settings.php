@@ -43,15 +43,18 @@ class Nexter_Ext_Disable_Admin_Settings {
 					add_filter( 'pre_site_transient_update_core','__return_false' );
 					//add_filter('site_transient_update_core','__return_false');
 
-					function remove_core_updates () {
-						global $wp_version;
-						return(object) array(
-							 'last_checked'    => time(),
-							 'version_checked' => $wp_version,
-							 'updates'         => array()
-						);
-					}
-					add_filter( 'pre_site_transient_update_core','remove_core_updates' );
+					// A closure: the common snippet name remove_core_updates() is often already defined by another plugin (fatal on redeclare).
+					add_filter(
+						'pre_site_transient_update_core',
+						function () {
+							global $wp_version;
+							return (object) array(
+								'last_checked'    => time(),
+								'version_checked' => $wp_version,
+								'updates'         => array(),
+							);
+						}
+					);
 				}
 				if ( in_array( "remove_admin_panel",$disable_values ) ) {
 					add_action(

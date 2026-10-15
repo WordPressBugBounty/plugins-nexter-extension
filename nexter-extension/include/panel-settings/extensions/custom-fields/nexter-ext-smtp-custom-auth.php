@@ -122,16 +122,8 @@ add_action(
 				$phpmailer->setFrom( $smtp_custom['username'], $from_name, false );
 			}
 		
-			// Always allow self-signed / mismatched certs — matches behaviour of WP Mail SMTP,
-			// Fluent SMTP and other plugins; without this shared-hosting servers fail with
-			// "Peer certificate CN did not match" even when credentials are correct.
-			$phpmailer->SMTPOptions = [
-			'ssl' => [
-				'verify_peer'       => false,
-				'verify_peer_name'  => false,
-				'allow_self_signed' => true,
-			],
-			];
+			// Verify the server certificate unless the site owner opted out (see Nexter_Ext_SMTP_Email::tls_options()).
+			$phpmailer->SMTPOptions = Nexter_Ext_SMTP_Email::tls_options( $smtp_custom );
 
 			// Set CharSet and encoding
 			$phpmailer->CharSet  = 'UTF-8';

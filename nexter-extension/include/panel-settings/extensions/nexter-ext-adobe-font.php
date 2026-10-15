@@ -217,7 +217,12 @@ class Nexter_Ext_Adobe_Font {
 		$option_page = 'nexter_extra_ext_options';
 		$get_option  = get_option( $option_page );
 
-		if ( ! empty( $ext ) && $ext === 'adobe-font' && ! empty( $project_id ) ) {
+		// Only this module's own key is ever written, and a kit id is letters and digits (it goes into two URLs).
+		if ( 'adobe-font' !== $ext || ( '' !== $project_id && ! preg_match( '/^[A-Za-z0-9]+$/', $project_id ) ) ) {
+			wp_send_json_error();
+		}
+
+		if ( ! empty( $project_id ) ) {
 			if ( ! empty( $get_option ) && isset( $get_option[ $ext ] ) ) {
 				
 				$get_fonts = $this->get_adobe_font_api( $project_id );
@@ -234,13 +239,15 @@ class Nexter_Ext_Adobe_Font {
 				update_option( $option_page, $get_option );
 				wp_send_json_success( ['settings' => $settings] );
 			}
-		} else if ( ! isset( $project_id ) || empty( $project_id ) ) {
+		} else {
+			// Empty id: clear the kit.
 			$settings                     = [
 				'project_id' => '',
 				'fonts'      => [],
 			];
 			$get_option[ $ext ]['values'] = $settings;
 			update_option( $option_page, $get_option );
+			wp_send_json_success( [ 'settings' => $settings ] );
 		}
 		wp_send_json_error();
 	}

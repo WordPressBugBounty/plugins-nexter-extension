@@ -39,9 +39,12 @@ class Nexter_Builder_Ele_Document_Base extends Elementor\Core\Base\Document {
 
 		Nexter_Theme_Builder_Load()->documents->switch_to_preview_query();
 
-		$editor_data = parent::get_elements_raw_data( $data, $with_html_content );
-
-		Nexter_Theme_Builder_Load()->documents->restore_current_query();
+		// finally: a throwing widget must not leave the global query switched for the rest of the request.
+		try {
+			$editor_data = parent::get_elements_raw_data( $data, $with_html_content );
+		} finally {
+			Nexter_Theme_Builder_Load()->documents->restore_current_query();
+		}
 
 		return $editor_data;
 
@@ -59,9 +62,12 @@ class Nexter_Builder_Ele_Document_Base extends Elementor\Core\Base\Document {
 
 		Nexter_Theme_Builder_Load()->documents->switch_to_preview_query();
 
-		$render_html = parent::render_element( $data );
-
-		Nexter_Theme_Builder_Load()->documents->restore_current_query();
+		// finally: this method is documented @throws Exception.
+		try {
+			$render_html = parent::render_element( $data );
+		} finally {
+			Nexter_Theme_Builder_Load()->documents->restore_current_query();
+		}
 
 		return $render_html;
 
@@ -82,9 +88,11 @@ class Nexter_Builder_Ele_Document_Base extends Elementor\Core\Base\Document {
 
 		Nexter_Theme_Builder_Load()->documents->switch_to_preview_query();
 
-		$elements = parent::get_elements_data( $status );
-
-		Nexter_Theme_Builder_Load()->documents->restore_current_query();
+		try {
+			$elements = parent::get_elements_data( $status );
+		} finally {
+			Nexter_Theme_Builder_Load()->documents->restore_current_query();
+		}
 
 		return $elements;
 

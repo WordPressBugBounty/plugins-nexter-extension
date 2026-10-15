@@ -15,7 +15,14 @@ class Nexter_Builder_Import_Export {
 	private static $instance;
 
 	const NXT_NONCE_KEY = 'nxt_ajax';
-	
+
+	/**
+	 * Template id validated by export_template_data(); filter_query() reads this, not $_GET.
+	 *
+	 * @var int
+	 */
+	private $export_post_id = 0;
+
 	const ADMIN_SCREEN_ID = 'edit-'.NEXTER_EXT_CPT;
 	
 	/**
@@ -131,6 +138,11 @@ class Nexter_Builder_Import_Export {
 			$this->handle_direct_action_error( 'Access Denied' );
 		}
 
+		// Import runs the full WXR importer, so it needs manage_options; the CPT's edit_posts is edit_pages.
+		if ( 'import_template' === $nxt_action && ! current_user_can( 'manage_options' ) ) {
+			$this->handle_direct_action_error( 'Access Denied' );
+		}
+
 		$result = $this->$nxt_action( $_REQUEST );
 
 		if ( is_wp_error( $result ) ) {
@@ -193,6 +205,14 @@ class Nexter_Builder_Import_Export {
 	 * Export Nexter builder data.
 	 */
 	public function export_template_data( $post_id ) {
+		// Only an editable template may be exported; filter_query() exports whatever id it is given.
+		$post_id = absint( $post_id );
+		$post    = $post_id ? get_post( $post_id ) : null;
+		if ( ! $post || NEXTER_EXT_CPT !== $post->post_type || ! current_user_can( 'edit_post', $post_id ) ) {
+			return new \WP_Error( 'export_denied', 'You are not allowed to export this template' );
+		}
+		$this->export_post_id = $post_id;
+
 		$prepare_file_data = $this->prepare_template_export( $post_id );
 
 		if ( is_wp_error( $prepare_file_data ) ) {
@@ -221,7 +241,7 @@ class Nexter_Builder_Import_Export {
 		global $wpdb;
 		if ( stripos( $query, NEXTER_EXT_CPT ) ) {
 			remove_filter( 'query', array( $this, 'filter_query' ) );
-			$post_id  = ( isset( $_GET['post_id'] ) ) ? (int) sanitize_key( wp_unslash( $_GET['post_id'] ) ) : '';
+			$post_id  = $this->export_post_id; // The id export_template_data() validated, never raw request input.
 			$post_ids = array( $post_id );
 			// Now get fields           
 			if ( ! empty( $post_ids ) ) {

@@ -371,20 +371,48 @@ class Nexter_Content_SeoRank {
 							return is_numeric( $v ) && (int) $v > 0;
 						},
 					),
-					'meta_title'       => array( 'type' => 'string' ),
-					'meta_description' => array( 'type' => 'string' ),
-					'focus_keyword'    => array( 'type' => 'string' ),
-					'fb_title'         => array( 'type' => 'string' ),
-					'fb_description'   => array( 'type' => 'string' ),
-					'fb_image'         => array( 'type' => 'string' ),
-					'tw_title'         => array( 'type' => 'string' ),
-					'tw_description'   => array( 'type' => 'string' ),
-					'tw_image'         => array( 'type' => 'string' ),
-					'noindex'          => array( 'type' => 'boolean' ),
-					'nofollow'         => array( 'type' => 'boolean' ),
-					'noarchive'        => array( 'type' => 'boolean' ),
-					'canonical_url'    => array( 'type' => 'string' ),
-					'schema_type'      => array( 'type' => 'string' ),
+					'meta_title'       => array(
+						'sanitize_callback' => 'rest_sanitize_request_arg',
+						'validate_callback' => 'rest_validate_request_arg', 'type' => 'string' ),
+					'meta_description' => array(
+						'sanitize_callback' => 'rest_sanitize_request_arg',
+						'validate_callback' => 'rest_validate_request_arg', 'type' => 'string' ),
+					'focus_keyword'    => array(
+						'sanitize_callback' => 'rest_sanitize_request_arg',
+						'validate_callback' => 'rest_validate_request_arg', 'type' => 'string' ),
+					'fb_title'         => array(
+						'sanitize_callback' => 'rest_sanitize_request_arg',
+						'validate_callback' => 'rest_validate_request_arg', 'type' => 'string' ),
+					'fb_description'   => array(
+						'sanitize_callback' => 'rest_sanitize_request_arg',
+						'validate_callback' => 'rest_validate_request_arg', 'type' => 'string' ),
+					'fb_image'         => array(
+						'sanitize_callback' => 'rest_sanitize_request_arg',
+						'validate_callback' => 'rest_validate_request_arg', 'type' => 'string' ),
+					'tw_title'         => array(
+						'sanitize_callback' => 'rest_sanitize_request_arg',
+						'validate_callback' => 'rest_validate_request_arg', 'type' => 'string' ),
+					'tw_description'   => array(
+						'sanitize_callback' => 'rest_sanitize_request_arg',
+						'validate_callback' => 'rest_validate_request_arg', 'type' => 'string' ),
+					'tw_image'         => array(
+						'sanitize_callback' => 'rest_sanitize_request_arg',
+						'validate_callback' => 'rest_validate_request_arg', 'type' => 'string' ),
+					'noindex'          => array(
+						'sanitize_callback' => 'rest_sanitize_request_arg',
+						'validate_callback' => 'rest_validate_request_arg', 'type' => 'boolean' ),
+					'nofollow'         => array(
+						'sanitize_callback' => 'rest_sanitize_request_arg',
+						'validate_callback' => 'rest_validate_request_arg', 'type' => 'boolean' ),
+					'noarchive'        => array(
+						'sanitize_callback' => 'rest_sanitize_request_arg',
+						'validate_callback' => 'rest_validate_request_arg', 'type' => 'boolean' ),
+					'canonical_url'    => array(
+						'sanitize_callback' => 'rest_sanitize_request_arg',
+						'validate_callback' => 'rest_validate_request_arg', 'type' => 'string' ),
+					'schema_type'      => array(
+						'sanitize_callback' => 'rest_sanitize_request_arg',
+						'validate_callback' => 'rest_validate_request_arg', 'type' => 'string' ),
 				),
 			)
 		);
@@ -396,11 +424,21 @@ class Nexter_Content_SeoRank {
 				'callback'            => array( $this, 'rest_analyze' ),
 				'permission_callback' => array( $this, 'rest_permission' ),
 				'args'                => array(
-					'post_id'          => array( 'type' => 'integer' ),
-					'content'          => array( 'type' => 'string' ),
-					'title'            => array( 'type' => 'string' ),
-					'meta_description' => array( 'type' => 'string' ),
-					'focus_keyword'    => array( 'type' => 'string' ),
+					'post_id'          => array(
+						'sanitize_callback' => 'rest_sanitize_request_arg',
+						'validate_callback' => 'rest_validate_request_arg', 'type' => 'integer' ),
+					'content'          => array(
+						'sanitize_callback' => 'rest_sanitize_request_arg',
+						'validate_callback' => 'rest_validate_request_arg', 'type' => 'string' ),
+					'title'            => array(
+						'sanitize_callback' => 'rest_sanitize_request_arg',
+						'validate_callback' => 'rest_validate_request_arg', 'type' => 'string' ),
+					'meta_description' => array(
+						'sanitize_callback' => 'rest_sanitize_request_arg',
+						'validate_callback' => 'rest_validate_request_arg', 'type' => 'string' ),
+					'focus_keyword'    => array(
+						'sanitize_callback' => 'rest_sanitize_request_arg',
+						'validate_callback' => 'rest_validate_request_arg', 'type' => 'string' ),
 				),
 			)
 		);
@@ -440,20 +478,48 @@ class Nexter_Content_SeoRank {
 				'args'                => array(
 					'id'               => $term_id_arg,
 					'taxonomy'         => $taxonomy_arg,
-					'meta_title'       => array( 'type' => 'string' ),
-					'meta_description' => array( 'type' => 'string' ),
-					'focus_keyword'    => array( 'type' => 'string' ),
-					'fb_title'         => array( 'type' => 'string' ),
-					'fb_description'   => array( 'type' => 'string' ),
-					'fb_image'         => array( 'type' => 'string' ),
-					'tw_title'         => array( 'type' => 'string' ),
-					'tw_description'   => array( 'type' => 'string' ),
-					'tw_image'         => array( 'type' => 'string' ),
-					'noindex'          => array( 'type' => 'boolean' ),
-					'nofollow'         => array( 'type' => 'boolean' ),
-					'noarchive'        => array( 'type' => 'boolean' ),
-					'canonical_url'    => array( 'type' => 'string' ),
-					'schema_type'      => array( 'type' => 'string' ),
+					'meta_title'       => array(
+						'sanitize_callback' => 'rest_sanitize_request_arg',
+						'validate_callback' => 'rest_validate_request_arg', 'type' => 'string' ),
+					'meta_description' => array(
+						'sanitize_callback' => 'rest_sanitize_request_arg',
+						'validate_callback' => 'rest_validate_request_arg', 'type' => 'string' ),
+					'focus_keyword'    => array(
+						'sanitize_callback' => 'rest_sanitize_request_arg',
+						'validate_callback' => 'rest_validate_request_arg', 'type' => 'string' ),
+					'fb_title'         => array(
+						'sanitize_callback' => 'rest_sanitize_request_arg',
+						'validate_callback' => 'rest_validate_request_arg', 'type' => 'string' ),
+					'fb_description'   => array(
+						'sanitize_callback' => 'rest_sanitize_request_arg',
+						'validate_callback' => 'rest_validate_request_arg', 'type' => 'string' ),
+					'fb_image'         => array(
+						'sanitize_callback' => 'rest_sanitize_request_arg',
+						'validate_callback' => 'rest_validate_request_arg', 'type' => 'string' ),
+					'tw_title'         => array(
+						'sanitize_callback' => 'rest_sanitize_request_arg',
+						'validate_callback' => 'rest_validate_request_arg', 'type' => 'string' ),
+					'tw_description'   => array(
+						'sanitize_callback' => 'rest_sanitize_request_arg',
+						'validate_callback' => 'rest_validate_request_arg', 'type' => 'string' ),
+					'tw_image'         => array(
+						'sanitize_callback' => 'rest_sanitize_request_arg',
+						'validate_callback' => 'rest_validate_request_arg', 'type' => 'string' ),
+					'noindex'          => array(
+						'sanitize_callback' => 'rest_sanitize_request_arg',
+						'validate_callback' => 'rest_validate_request_arg', 'type' => 'boolean' ),
+					'nofollow'         => array(
+						'sanitize_callback' => 'rest_sanitize_request_arg',
+						'validate_callback' => 'rest_validate_request_arg', 'type' => 'boolean' ),
+					'noarchive'        => array(
+						'sanitize_callback' => 'rest_sanitize_request_arg',
+						'validate_callback' => 'rest_validate_request_arg', 'type' => 'boolean' ),
+					'canonical_url'    => array(
+						'sanitize_callback' => 'rest_sanitize_request_arg',
+						'validate_callback' => 'rest_validate_request_arg', 'type' => 'string' ),
+					'schema_type'      => array(
+						'sanitize_callback' => 'rest_sanitize_request_arg',
+						'validate_callback' => 'rest_validate_request_arg', 'type' => 'string' ),
 				),
 			)
 		);

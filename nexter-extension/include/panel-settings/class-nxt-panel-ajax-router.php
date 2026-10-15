@@ -775,10 +775,17 @@ class Nxt_Panel_Ajax_Router {
 
 		// Special handling for wp-debug-mode
 		if ( $data === 'wp-debug-mode' && $option_page === 'nexter_extra_ext_options' ) {
-			if ( $is_active ) {
-				require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/custom-fields/nxt-debug-mode-active.php';
-			} else {
-				require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/custom-fields/nxt-debug-mode-deactive.php';
+			try {
+				if ( $is_active ) {
+					require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/custom-fields/nxt-debug-mode-active.php';
+				} else {
+					require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/custom-fields/nxt-debug-mode-deactive.php';
+				}
+			} catch ( \Exception $e ) {
+				// wp-config.php was not changed, so put the switch back and say why instead of dying with a 500.
+				$option[ $data ]['switch'] = ! $is_active;
+				update_option( $option_page, $option );
+				wp_send_json_error( array( 'content' => $e->getMessage() ) );
 			}
 		}
 
@@ -840,11 +847,10 @@ class Nxt_Panel_Ajax_Router {
 
 			wp_send_json( ['Sucees' => false] );
 		} else {
-			// Security: Safe unserialize with error checking. Restrict to stdClass — the wp.org info
-			// API returns a serialized stdClass, so allowing it keeps the is_object()/->name/
-			// ->download_link checks working while blocking arbitrary-class object injection.
+			// Security: JSON first, restricted unserialize as fallback — blocks arbitrary-class
+			// object injection either way; see decode_wp_org_api_response().
 			$body       = wp_remote_retrieve_body( $response );
-			$theme_info = unserialize( $body, array( 'allowed_classes' => array( 'stdClass' ) ) );
+			$theme_info = self::decode_wp_org_api_response( $body );
 
 			// Security: Validate unserialize was successful and is an object
 			if ( false === $theme_info || ! is_object( $theme_info ) ) {
@@ -945,11 +951,10 @@ class Nxt_Panel_Ajax_Router {
 			)
 		);
 
-		// Security: Safe unserialize with error checking. Restrict to stdClass — the wp.org info
-		// API returns a serialized stdClass, so allowing it keeps the is_object()/->name/
-		// ->download_link checks working while blocking arbitrary-class object injection.
+		// Security: JSON first, restricted unserialize as fallback — blocks arbitrary-class
+		// object injection either way; see decode_wp_org_api_response().
 		$body        = wp_remote_retrieve_body( $response );
-		$plugin_info = unserialize( $body, array( 'allowed_classes' => array( 'stdClass' ) ) );
+		$plugin_info = self::decode_wp_org_api_response( $body );
 
 		// Security: Validate unserialize was successful and is an object
 		if ( false === $plugin_info || ! is_object( $plugin_info ) ) {
@@ -1468,5 +1473,22 @@ class Nxt_Panel_Ajax_Router {
 		}
 
 		return (bool) preg_match( '/(^|\.)wordpress\.org$/i', $parts['host'] );
+	}
+
+	/**
+	 * Decode a wordpress.org info-API response. JSON is tried first so the endpoint can move to
+	 * it with no further change here; the fallback stays restricted to stdClass so a serialized
+	 * response still can't be used to instantiate an arbitrary class.
+	 *
+	 * @param string $body Raw response body.
+	 * @return object|false
+	 */
+	private static function decode_wp_org_api_response( $body ) {
+		$decoded = json_decode( $body );
+		if ( is_object( $decoded ) ) {
+			return $decoded;
+		}
+
+		return unserialize( $body, array( 'allowed_classes' => array( 'stdClass' ) ) ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_unserialize
 	}
 }

@@ -10,10 +10,14 @@ class Nexter_Ext_SMTP_Email {
 	public static $smtp_opt = [];
 
 	public function __construct() {
+		$this->migrate_tls_setting();
+		add_action( 'admin_notices', [ $this, 'tls_notice' ] );
+		add_action( 'admin_init', [ $this, 'tls_notice_dismiss' ] );
 		$this->nxt_get_data_settings();
-		if ( ! empty( self::$smtp_opt ) && self::$smtp_opt['type'] == 'gmail' ) {
+		$smtp_type = isset( self::$smtp_opt['type'] ) ? self::$smtp_opt['type'] : '';
+		if ( 'gmail' === $smtp_type ) {
 			require_once __DIR__ . '/custom-fields/nexter-ext-smtp-gmail-auth.php';
-		} else if ( ! empty( self::$smtp_opt ) && self::$smtp_opt['type'] == 'custom' ) {
+		} else if ( 'custom' === $smtp_type ) {
 			require_once __DIR__ . '/custom-fields/nexter-ext-smtp-custom-auth.php';
 		}
 
@@ -78,6 +82,80 @@ class Nexter_Ext_SMTP_Email {
 			}
 			</script>
 			<?php
+		}
+	}
+
+	/**
+	 * Stream options for the SMTP connection.
+	 *
+	 * The server certificate is verified unless the site owner opted out with allow_self_signed, the
+	 * NEXTER_SMTP_ALLOW_SELF_SIGNED constant (true or false wins over the setting) or the
+	 * nxt_smtp_allow_self_signed filter.
+	 *
+	 * @param array $custom Custom SMTP settings.
+	 * @return array
+	 */
+	public static function tls_options( $custom ) {
+		$custom = is_object( $custom ) ? (array) $custom : $custom;
+		$allow  = is_array( $custom ) && ! empty( $custom['allow_self_signed'] );
+		if ( defined( 'NEXTER_SMTP_ALLOW_SELF_SIGNED' ) ) {
+			$allow = (bool) NEXTER_SMTP_ALLOW_SELF_SIGNED;
+		}
+		$allow = (bool) apply_filters( 'nxt_smtp_allow_self_signed', $allow, $custom );
+
+		return array(
+			'ssl' => array(
+				'verify_peer'       => ! $allow,
+				'verify_peer_name'  => ! $allow,
+				'allow_self_signed' => $allow,
+			),
+		);
+	}
+
+	/**
+	 * One time: sites configured before certificates were verified keep working, so mark them as
+	 * "allow self-signed" and tell the administrator. New setups verify by default.
+	 */
+	private function migrate_tls_setting() {
+		if ( get_option( 'nxt_smtp_tls_migrated' ) ) {
+			return;
+		}
+
+		$raw = get_option( 'nexter_extra_ext_options', array() );
+		$raw = json_decode( wp_json_encode( $raw ), true );
+		if ( is_array( $raw ) && ! empty( $raw['smtp-email']['values']['custom']['host'] ) && ! isset( $raw['smtp-email']['values']['custom']['allow_self_signed'] ) ) {
+			$raw['smtp-email']['values']['custom']['allow_self_signed'] = true;
+			update_option( 'nexter_extra_ext_options', $raw );
+			update_option( 'nxt_smtp_tls_notice', 1 );
+			if ( class_exists( 'Nxt_Options' ) ) {
+				Nxt_Options::flush( 'nexter_extra_ext_options' );
+			}
+		}
+		update_option( 'nxt_smtp_tls_migrated', 1 );
+	}
+
+	/**
+	 * Tell administrators that an existing SMTP setup still skips certificate verification.
+	 */
+	public function tls_notice() {
+		if ( ! get_option( 'nxt_smtp_tls_notice' ) || ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+		$dismiss = wp_nonce_url( add_query_arg( 'nxt_dismiss_smtp_tls', '1' ), 'nxt_dismiss_smtp_tls' );
+		printf(
+			'<div class="notice notice-warning"><p>%s <a href="%s">%s</a></p></div>',
+			esc_html__( 'Nexter SMTP now verifies the mail server certificate. Your existing setup was kept as it was (self-signed certificates allowed) so mail keeps working. To turn verification on, add define( \'NEXTER_SMTP_ALLOW_SELF_SIGNED\', false ); to wp-config.php.', 'nexter-extension' ),
+			esc_url( $dismiss ),
+			esc_html__( 'Dismiss', 'nexter-extension' )
+		);
+	}
+
+	/**
+	 * Handle the notice's dismiss link.
+	 */
+	public function tls_notice_dismiss() {
+		if ( isset( $_GET['nxt_dismiss_smtp_tls'] ) && current_user_can( 'manage_options' ) && check_admin_referer( 'nxt_dismiss_smtp_tls' ) ) {
+			delete_option( 'nxt_smtp_tls_notice' );
 		}
 	}
 
@@ -392,6 +470,9 @@ class Nexter_Ext_SMTP_Email {
 				'from_name'  => sanitize_text_field( $smtp_custom['from_name'] ),
 			],
 		);
+		if ( isset( $smtp_custom['allow_self_signed'] ) ) {
+			$option['smtp-email']['values']['custom']['allow_self_signed'] = ! empty( $smtp_custom['allow_self_signed'] );
+		}
 
 		update_option( 'nexter_extra_ext_options', $option );
 		self::$smtp_opt = $option['smtp-email']['values'];
@@ -440,16 +521,8 @@ class Nexter_Ext_SMTP_Email {
 			$mail->SMTPSecure  = $encryption;
 			$mail->SMTPAutoTLS = ( $encryption === 'ssl' ) ? false : ! empty( $settings['autoTLS'] );
 
-			// Always allow self-signed / mismatched certs — matches behaviour of WP Mail SMTP,
-			// Fluent SMTP and other plugins; without this shared-hosting servers fail with
-			// "Peer certificate CN did not match" even when credentials are correct.
-			$mail->SMTPOptions = [
-				'ssl' => [
-					'verify_peer'       => false,
-					'verify_peer_name'  => false,
-					'allow_self_signed' => true,
-				],
-			];
+			// Verify the server certificate unless the site owner opted out (see tls_options()).
+			$mail->SMTPOptions = self::tls_options( $settings );
 
 			// Apply From values only if provided
 			if ( $from_email ) {

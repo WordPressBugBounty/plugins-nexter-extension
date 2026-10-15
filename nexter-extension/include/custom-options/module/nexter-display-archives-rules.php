@@ -133,7 +133,9 @@ class Nexter_Builders_Archives_Conditional_Rules {
 		if ( ! empty( $taxonomy ) ) {
 			$data = $taxonomy;
 		} else {
+			// Always an array before ["rules"] is assigned: a string offset on '' is a fatal TypeError on PHP 8.
 			$data          = ( ! empty( $_POST['data'] )) ? self::sanitize_array_recursive( json_decode( stripslashes_deep( $_POST['data'] ), true ) ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+			$data          = is_array( $data ) ? $data : [];
 			$data["rules"] = ( ! empty( $_POST['rules'] )) ? sanitize_text_field( wp_unslash( $_POST['rules'] ) ) : '';
 		}
 			
@@ -143,10 +145,15 @@ class Nexter_Builders_Archives_Conditional_Rules {
 
 		$query_data = Nexter_Builder_Pages_Conditional::get_query_singular_archive_data( $data );
 
-		if ( is_wp_error( $query_data ) ) {             
+		if ( is_wp_error( $query_data ) ) {
+			// Over admin-ajax an uncaught Exception is a fatal error page; answer with a JSON error.
+			// Internal (non-AJAX) callers keep the exception they were written for.
+			if ( wp_doing_ajax() ) {
+				wp_send_json_error( array( 'content' => $query_data->get_error_message() ), 400 );
+			}
 			throw new \Exception( $query_data->get_error_code() . ':' . $query_data->get_error_message() );
 		}
-			
+
 		$results      = [];
 		$results_data = [];
 		$query_args   = $query_data['query'];
@@ -171,6 +178,11 @@ class Nexter_Builders_Archives_Conditional_Rules {
 				}
 			} else if ( $query_data['object'] == 'author' || $query_data['object'] == 'user' ) {
 
+				// Listing arbitrary users needs `list_users`, as core's own user search does. The
+				// `author` object is unaffected: it is forced to has_published_posts, which is public.
+				if ( 'user' === $query_data['object'] && wp_doing_ajax() && ! current_user_can( 'list_users' ) ) {
+					wp_send_json_error( array( 'content' => __( 'Insufficient permissions.', 'nexter-extension' ) ), 403 );
+				}
 				$user_query = new \WP_User_Query( $query_args );
 				foreach ( $user_query->get_results() as $user ) {
 					$results[] = [
@@ -316,72 +328,6 @@ class Nexter_Builders_Archives_Conditional_Rules {
 }
 
 new Nexter_Builders_Archives_Conditional_Rules();
-
-/*Archives Posts options_cb */
-function nxt_get_type_archives_field( $field ) {
-	
-	$group_field = $field->args( 'id' );
-	$group_field = str_replace( 'nxt-archive-group_', '', $group_field ); 
-	$index_id    = str_replace( '_nxt-archive-conditional-type', '', $group_field );
-	
-	$group_value = get_post_meta( get_the_ID(), 'nxt-archive-group', true );
-	
-	$index_id = ( ! empty( $index_id )) ? $index_id : 0;
-	$options  = '';
-	$data     = Nexter_Builders_Archives_Conditional_Rules::$Nexter_Archives_Config;
-	
-	if ( ! empty( $group_value ) && isset( $group_value[ $index_id ]['nxt-archive-conditional-rule'] ) ) {
-		
-		$value = $group_value[ $index_id ]['nxt-archive-conditional-rule'];
-		if ( isset( $data[ $value ] ) && ! empty( $data[ $value ]["condition_type"] ) && $data[ $value ]["condition_type"] == 'yes' ) {
-			$query          = $data[ $value ];
-			$query['rules'] = $value;               
-			$options        = Nexter_Builders_Archives_Conditional_Rules::get_archives_options( $query );
-		} else {
-			$options = array('all' => __( 'All','nexter-extension' ));
-		}   
-	} else {
-		$data = $data['all'];
-		if ( ! empty( $data["condition_type"] ) && $data["condition_type"] == 'yes' ) {
-			$query['rules'] = 'all';
-			$options        = Nexter_Builders_Archives_Conditional_Rules::get_archives_options( $query );
-		} else {
-			$options = array('all' => __( 'All','nexter-extension' ));
-		}
-	}
-	
-	return $options;
-}
-
-/*
- * Preview Archives Page Id
- * @since 1.0.1
- */
-function nxt_get_type_archives_preview_id( $field ){
-	
-	$archive_value = get_post_meta( get_the_ID(), 'nxt-archive-preview-type', true );
-	$data          = Nexter_Builders_Archives_Conditional_Rules::$Nexter_Archives_Config;
-	
-	if ( ! empty( $archive_value ) && isset( $data[ $archive_value ] ) && ! empty( $data[ $archive_value ]["condition_type"] ) && $data[ $archive_value ]["condition_type"] == 'yes' ) {
-			$query          = $data[ $archive_value ];
-			$query['rules'] = $archive_value;
-		$options            = Nexter_Builders_Archives_Conditional_Rules::get_terms_by_taxonomy( $query );
-	} else {
-		$data = $data['category'];
-		if ( ! empty( $data["condition_type"] ) && $data["condition_type"] == 'yes' ) {
-			$query          = $data;
-			$query['rules'] = 'category';
-			$options        = Nexter_Builders_Archives_Conditional_Rules::get_terms_by_taxonomy( $query );
-		} else {
-			$options = array( 'all' => __( 'All','nexter-extension' ) );
-		}
-	}
-	if ( empty( $options ) ) {
-		$options = array( 'all' => __( 'All','nexter-extension' ) );
-	}
-	
-	return $options;
-}
 
 if ( ! class_exists( 'Nexter_All_Archive' ) ) {
 	class Nexter_All_Archive {

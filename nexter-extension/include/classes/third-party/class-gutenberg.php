@@ -21,7 +21,11 @@ if ( ! class_exists( 'Nexter_Gutenberg_Editor' ) ) {
 			$output = '';
 			if ( ! empty( $post_id ) && $post_id != 'none' ) {
 				$current_post = get_post( $post_id, OBJECT );
-				
+				// A deleted/stale template id gives null; reading ->post_content on it is a PHP 8 warning.
+				if ( ! $current_post ) {
+					return;
+				}
+
 				if ( has_blocks( $current_post ) ) {
 					$blocks = parse_blocks( $current_post->post_content );
 					foreach ( $blocks as $block ) {

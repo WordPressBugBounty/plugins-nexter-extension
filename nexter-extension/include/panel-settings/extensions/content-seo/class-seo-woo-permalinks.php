@@ -84,7 +84,7 @@ class Nexter_Content_SEO_Woo_Permalinks {
 			}
 			foreach ( array( 'created_', 'edited_', 'delete_' ) as $event ) {
 				// The added ruleset is built from the terms that exist right now.
-				add_action( $event . $taxonomy, 'flush_rewrite_rules' );
+				add_action( $event . $taxonomy, array( 'Nexter_Content_SEO_Permalinks', 'queue_rewrite_flush' ) );
 			}
 		}
 

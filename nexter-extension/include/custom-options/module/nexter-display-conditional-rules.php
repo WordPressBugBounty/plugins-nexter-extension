@@ -198,7 +198,8 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 
 			$post_type = $post ? $post->post_type : get_post_type( $post_id );
 	
-			if ( ( NXT_BUILD_POST !== $post_type || ! current_user_can( 'edit_post', $post_id ) ) ) {
+			// No capability check: this only bumps a cache timestamp, and WP-CLI, cron (scheduled publish) and importers save with no user.
+			if ( NXT_BUILD_POST !== $post_type ) {
 				return;
 			}
 
@@ -214,7 +215,12 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 				];
 				add_option( $option, $value, '', 'yes' );
 			} else if ( ! empty( $get_data ) ) {
-				$get_data['saved'] = strtotime( 'now' );
+				// Readers compare `saved` with what they last rebuilt for; two saves in one second must still differ.
+				$now = strtotime( 'now' );
+				if ( isset( $get_data['saved'] ) && $now <= (int) $get_data['saved'] ) {
+					$now = (int) $get_data['saved'] + 1;
+				}
+				$get_data['saved'] = $now;
 				update_option( $option, $get_data, true );
 			}
 		}
@@ -429,7 +435,7 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 		public static function check_condition_os( $set_os = [], $display = false ) {
 			if ( ! empty( $set_os ) ) {
 				$display    = false;
-				$user_agent = (isset($_SERVER['HTTP_USER_AGENT'])) ? $_SERVER['HTTP_USER_AGENT'] : '';	// phpcs:ignore 
+				$user_agent = isset( $_SERVER['HTTP_USER_AGENT'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ) : '';
 				foreach ( $set_os as $value ) {
 					$display_os = preg_match( '@' . self::$os_list[ $value ] . '@', $user_agent );
 					if ( $display_os ) {
@@ -446,7 +452,7 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 		
 			if ( ! empty( $set_browser ) ) {
 				$display    = false;
-				$user_agent = (isset($_SERVER['HTTP_USER_AGENT'])) ? $_SERVER['HTTP_USER_AGENT'] : '';	// phpcs:ignore 
+				$user_agent = isset( $_SERVER['HTTP_USER_AGENT'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ) : '';
 				foreach ( $set_browser as $value ) {
 					if ( $value === 'ie' ) {
 						if ( strpos( $user_agent, self::$browsers[ $value ][0] ) !== false || strpos( $user_agent, self::$browsers[ $value ][1] ) !== false ) {
@@ -1097,60 +1103,6 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 			
 			if ( ! empty( $current_page_type_name ) ) {
 				
-				//$join_meta .= " OR pm.meta_value LIKE '%\"particular-post\"%'";
-				
-				//if( $current_page_type_name == 'is_home' ){
-				//  $join_meta .= " OR pm.meta_value LIKE '%\"default-blog\"%'";
-				//}else if( $current_page_type_name == 'is_front_page' ){
-					/* $current_id      = esc_sql( get_the_id() );
-					$join_meta      .= " OR pm.meta_value LIKE '%\"post-{$current_id}\"%'";
-					$join_meta      .= " OR pm.meta_value LIKE '%\"default-front\"%'";
-					$join_meta      .= " OR pm.meta_value LIKE '%\"{$current_post_type}|entire\"%'"; */
-					
-				//}else if( $current_page_type_name == 'is_404' ){
-				//  $join_meta .= " pm.meta_value LIKE '%\default-404\%' OR pm.meta_value LIKE '%page-404%'";
-				//}else if( $current_page_type_name == 'is_search' ){
-					//$join_meta .= " OR pm.meta_value LIKE '%\"default-search\"%'";
-				//}else if( $current_page_type_name == 'is_singular' ){
-					/* $current_id      = esc_sql( get_the_id() );
-					$join_meta      .= " OR pm.meta_value LIKE '%\"standard-singulars\"%'";
-					$join_meta      .= " OR pm.meta_value LIKE '%\"{$current_post_type}|entire\"%'";
-					$join_meta      .= " OR pm.meta_value LIKE '%\"post-{$current_id}\"%'";
-					
-					$singular_post_type = $current_post_type;
-					if(!empty($queried_object) && isset($queried_object->post_type) && !empty($queried_object->post_type)){
-						$singular_post_type = $queried_object->post_type;
-					}
-					$taxonomies = get_object_taxonomies( $singular_post_type );
-					
-					$singular_id = get_queried_object_id();
-					if(!empty($queried_object) && isset($queried_object->ID) && !empty($queried_object->ID)){
-						$singular_id = $queried_object->ID;
-					}
-					$terms = wp_get_post_terms( $singular_id, $taxonomies );
-
-					foreach ( $terms as $key => $term ) {
-						$join_meta .= " OR pm.meta_value LIKE '%\"taxonomy-{$term->term_id}-singular-{$term->taxonomy}\"%'";
-					} */
-					
-				//}else if( $current_page_type_name == 'is_archive' || $current_page_type_name == 'is_tax' || $current_page_type_name == 'is_date' || $current_page_type_name == 'is_author' ){
-					/* $join_meta .= " OR pm.meta_value LIKE '%\"standard-archives\"%'";
-					$join_meta .= " OR pm.meta_value LIKE '%\"{$current_post_type}|entire|archive\"%'";
-
-					if ( $current_page_type_name == 'is_tax' && ( is_category() || is_tag() || is_tax() ) ) {
-						if ( is_object( $queried_object ) ) {
-							$join_meta .= " OR pm.meta_value LIKE '%\"{$current_post_type}|entire|tax-archive|{$queried_object->taxonomy}\"%'";
-							$join_meta .= " OR pm.meta_value LIKE '%\"taxonomy-{$queried_object->term_id}\"%'";
-						}
-					} else if ( $current_page_type_name == 'is_date' ) {
-						$join_meta .= " OR pm.meta_value LIKE '%\"default-date\"%'";
-					} else if ( $current_page_type_name == 'is_author' ) {
-						$join_meta .= " OR pm.meta_value LIKE '%\"default-author\"%'";
-					} */
-					
-				//}else if( $current_page_type_name == 'is_shop_page' ){
-					//$join_meta .= " OR pm.meta_value LIKE '%\"default-woo-shop\"%'";
-				//}
 				if ( has_filter( 'nexter_advanced_sections_query_meta' ) ) {
 					$join_meta .= apply_filters( 'nexter_advanced_sections_query_meta', $current_page_type_name );
 				}
@@ -2392,8 +2344,13 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 		}
 
 		/**
-		 * Get the user's real IP address
-		 * 
+		 * Get the visitor's IP address for a show/hide-by-IP display condition.
+		 *
+		 * Headers like X-Forwarded-For are set by the client's own request, not just by a trusted
+		 * proxy, so any of these values can be spoofed. Fine here, since the worst case is a
+		 * visitor seeing content meant for a different IP range — never use this for an
+		 * authentication or authorization decision.
+		 *
 		 * @return string The user's IP address
 		 */
 		private static function get_user_ip_address() {
@@ -2502,7 +2459,7 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 		 * Evaluate browser type condition
 		 */
 		private static function evaluate_browser_type_condition( $operator, $values ) {
-			$user_agent = isset( $_SERVER['HTTP_USER_AGENT'] ) ? $_SERVER['HTTP_USER_AGENT'] : '';
+			$user_agent = isset( $_SERVER['HTTP_USER_AGENT'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ) : '';
 			
 			// Handle different operators
 			switch ( $operator ) {
@@ -2599,7 +2556,7 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 		 * Evaluate operating system condition
 		 */
 		private static function evaluate_operating_system_condition( $operator, $values ) {
-			$user_agent = isset( $_SERVER['HTTP_USER_AGENT'] ) ? $_SERVER['HTTP_USER_AGENT'] : '';
+			$user_agent = isset( $_SERVER['HTTP_USER_AGENT'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ) : '';
 			
 			// Handle different operators
 			switch ( $operator ) {
@@ -3534,23 +3491,3 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 }
 
 Nexter_Builder_Display_Conditional_Rules::get_instance();
-
-/**
- * Get Specific Posts Query Display Rules
- */
-function nexter_get_posts_query_specific( $post_id = 0, $meta_key = '' ){
-	$specific_value = 'none';
-	if ( ! empty( $meta_key ) && ! empty( $post_id ) ) {
-		$specific_value = get_post_meta( get_the_ID(), $meta_key, true );
-	}
-	
-	$options = array();
-	if ( ! empty( $specific_value ) && $specific_value != 'none' ) {
-		$options = Nexter_Builder_Display_Conditional_Rules::get_saved_specific_options( $specific_value );
-	}
-	if ( empty( $options ) ) {
-		$options['none'] = esc_html__( '---Select---', 'nexter-extension' );
-	}
-	
-	return $options;
-}

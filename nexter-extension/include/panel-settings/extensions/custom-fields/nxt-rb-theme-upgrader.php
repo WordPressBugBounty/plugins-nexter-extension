@@ -20,14 +20,6 @@ class Nxt_Ext_RB_Theme_Upgrader extends Theme_Upgrader {
 		$parsed_args = wp_parse_args( $args, $defaults );
 		$this->init();
 		$this->upgrade_strings();
-		if ( 0 ) {
-			$this->skin->before();
-			$this->skin->set_result( false );
-			$this->skin->error( 'up_to_date' );
-			$this->skin->after();
-
-			return false;
-		}
 		$theme_slug    = $this->skin->theme;
 		$theme_version = $this->skin->options['version'];
 

@@ -183,9 +183,11 @@ class WP_Import extends WP_Importer {
 		$this->base_url   = esc_url( $import_data['base_url'] );
 
 		$base_url_with_trailing_slash = rtrim( $import_data['base_url'], '/' ) . '/';
-		$this->base_url_parsed        = WPURL::parse( $base_url_with_trailing_slash );
+		// WPURL ships with the upstream WordPress Importer plugin, not with this copy. Without the guard
+		// every template import is a fatal ("Class WPURL not found"). Only used when rewrite_urls is on.
+		$this->base_url_parsed        = class_exists( 'WPURL' ) ? WPURL::parse( $base_url_with_trailing_slash ) : wp_parse_url( $base_url_with_trailing_slash );
 		$site_url_with_trailing_slash = rtrim( get_site_url(), '/' ) . '/';
-		$this->site_url_parsed        = WPURL::parse( $site_url_with_trailing_slash );
+		$this->site_url_parsed        = class_exists( 'WPURL' ) ? WPURL::parse( $site_url_with_trailing_slash ) : wp_parse_url( $site_url_with_trailing_slash );
 
 		wp_defer_term_counting( true );
 		wp_defer_comment_counting( true );
@@ -673,7 +675,7 @@ class WP_Import extends WP_Importer {
 			if ( ! post_type_exists( $post['post_type'] ) ) {
 				printf(
 					/* translators: 1: post title, 2: post type */
-					/* translators: 1: post title, 2: post type */ __( 'Failed to import &#8220;%1$s&#8221;: Invalid post type %2$s', 'nexter-extension' ),
+					__( 'Failed to import &#8220;%1$s&#8221;: Invalid post type %2$s', 'nexter-extension' ),
 					esc_html( $post['post_title'] ),
 					esc_html( $post['post_type'] ) 
 				); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped

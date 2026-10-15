@@ -137,6 +137,9 @@ if ( ! class_exists( 'Nexter_Builder_Compatibility' ) ) {
 		public function render_content( $post_id ) {
 
 			$cur_post = get_post( $post_id, OBJECT );
+			if ( ! $cur_post ) {
+				return; // Deleted or stale template id.
+			}
 			ob_start();
 				echo apply_filters( 'the_content', wp_kses_post( $cur_post->post_content ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			$output = ob_get_clean();

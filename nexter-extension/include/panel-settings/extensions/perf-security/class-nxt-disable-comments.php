@@ -123,6 +123,8 @@ class Nxt_Disable_Comments {
 			}
 		}
 
+		add_filter( 'render_block', [ $this, 'nxt_hide_comment_blocks' ], 10, 2 );
+
 		add_filter(
 			'comments_array',
 			function( $comments, $post_id ) {
@@ -257,8 +259,33 @@ class Nxt_Disable_Comments {
 	}
 
 	public function nxt_filter_rest_endpoints( $endpoints ) {
-		unset( $endpoints['comments'] );
+		// Route keys look like '/wp/v2/comments', so unset( $endpoints['comments'] ) removed nothing.
+		foreach ( array_keys( $endpoints ) as $route ) {
+			if ( 0 === strpos( $route, '/wp/v2/comments' ) ) {
+				unset( $endpoints[ $route ] );
+			}
+		}
 		return $endpoints;
+	}
+
+	/**
+	 * Hide the comment blocks of block themes: they read comments directly, so the comments_array and
+	 * comments_template filters never reach them.
+	 *
+	 * @param string $content Rendered block.
+	 * @param array  $block   Parsed block.
+	 * @return string
+	 */
+	public function nxt_hide_comment_blocks( $content, $block ) {
+		$name = isset( $block['blockName'] ) ? (string) $block['blockName'] : '';
+		if ( 0 !== strpos( $name, 'core/comment' ) && 0 !== strpos( $name, 'core/post-comment' ) && 'core/latest-comments' !== $name ) {
+			return $content;
+		}
+		$data = $this->nxt_comments_enabled();
+		if ( 'all' === $data['disable_comments'] || $this->nxt_comment_post_type_disabled( get_post_type() ) ) {
+			return '';
+		}
+		return $content;
 	}
 
 	public function nxt_comment_template() {

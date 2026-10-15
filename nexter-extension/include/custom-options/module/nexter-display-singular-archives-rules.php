@@ -69,10 +69,15 @@ class Nexter_Singular_Archives_Rules {
 
 		$query_data = Nexter_Builder_Pages_Conditional::get_query_singular_archive_data( $data );
 
-		if ( is_wp_error( $query_data ) ) {             
+		if ( is_wp_error( $query_data ) ) {
+			// Over admin-ajax an uncaught Exception is a fatal error page; answer with a JSON error.
+			// Internal (non-AJAX) callers keep the exception they were written for.
+			if ( wp_doing_ajax() ) {
+				wp_send_json_error( array( 'content' => $query_data->get_error_message() ), 400 );
+			}
 			throw new \Exception( $query_data->get_error_code() . ':' . $query_data->get_error_message() );
 		}
-		
+
 		$results      = [];
 		$results_data = [];
 		$query_args   = $query_data['query'];
@@ -102,23 +107,32 @@ class Nexter_Singular_Archives_Rules {
 				$post_query = new \WP_Query( $query_args );
 
 				foreach ( $post_query->posts as $post ) {
+					// WP_Query does not enforce read permission on a request-chosen post_status.
+					if ( wp_doing_ajax() && ! current_user_can( 'read_post', $post->ID ) ) {
+						continue;
+					}
 					$post_type_obj = get_post_type_object( $post->post_type );
 					$text          = ( $post_type_obj->hierarchical ) ? self::nexter_post_name_with_parents( $post ) : $post->post_title;
 						$results[] = [
 							'id'   => $post->ID,
 							'text' => $text,
 						];
-				}           
+				}
 			} else if ( $query_data['object'] == 'author' || $query_data['object'] == 'user' ) {
-			
+
+				// Listing arbitrary users needs `list_users`, as core's own user search does. The
+				// `author` object is unaffected: it is forced to has_published_posts, which is public.
+				if ( 'user' === $query_data['object'] && wp_doing_ajax() && ! current_user_can( 'list_users' ) ) {
+					wp_send_json_error( array( 'content' => __( 'Insufficient permissions.', 'nexter-extension' ) ), 403 );
+				}
 				$user_query = new \WP_User_Query( $query_args );
 				foreach ( $user_query->get_results() as $user ) {
 					$results[] = [
 						'id'   => $user->ID,
 						'text' => $user->display_name,
 					];
-				}           
-			}       
+				}
+			}
 		} else {
 			$results = false;
 		}

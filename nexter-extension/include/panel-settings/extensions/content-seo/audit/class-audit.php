@@ -1300,6 +1300,25 @@ class Engine {
 	}
 
 	/**
+	 * Post types the audit does not treat as content: builder/template types and the ones excluded
+	 * from the sitemap.
+	 *
+	 * @return string[]
+	 */
+	private function excluded_post_types() {
+		$opts     = \class_exists( 'Nexter_Content_SEO' ) ? Nexter_Content_SEO::get_options() : array();
+		$excluded = \class_exists( 'Nexter_Content_SEO_Sitemap' ) ? Nexter_Content_SEO_Sitemap::excluded_post_types( $opts ) : array( 'nxt_builder' );
+
+		/**
+		 * Filter the post types left out of the Site Audit content checks.
+		 *
+		 * @param string[] $excluded Post type slugs.
+		 * @param array    $opts     SEO options.
+		 */
+		return (array) \apply_filters( 'nexter_seo_audit_excluded_post_types', \array_values( (array) $excluded ), $opts );
+	}
+
+	/**
 	 * Sample published content once per run (single post query, primed meta cache).
 	 *
 	 * @return array{posts: array<int, array<string, mixed>>, total: int, limited: bool}
@@ -1314,6 +1333,8 @@ class Engine {
 
 		$types = \get_post_types( array( 'public' => true ), 'names' );
 		unset( $types['attachment'] );
+		// Templates, popups and anything the user keeps out of the sitemap are not public content pages.
+		$types = \array_diff( $types, $this->excluded_post_types() );
 		if ( empty( $types ) ) {
 			$this->content_sample = array(
 				'posts'   => array(),

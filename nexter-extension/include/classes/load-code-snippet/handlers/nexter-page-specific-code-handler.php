@@ -788,73 +788,6 @@ class Nexter_Page_Specific_Code_Handler {
 	}
 
 	/**
-	 * Insert content into post content
-	 */
-	private static function insert_into_content($content, $insert_content, $location) {
-		switch ( $location ) {
-			case 'insert_before_content':
-				return $insert_content . $content;
-			case 'insert_after_content':
-				return $content . $insert_content;
-			case 'insert_before_paragraph':
-				return self::insert_before_first_paragraph( $content, $insert_content );
-			case 'insert_after_paragraph':
-				return self::insert_after_first_paragraph( $content, $insert_content );
-			default:
-				return $content;
-		}
-	}
-
-	/**
-	 * Register loop-based hooks
-	 */
-	private static function register_loop_based_hooks($snippet_id, $code, $location, $priority) {
-		static $post_counter = 0;
-		
-		switch ( $location ) {
-			case 'between_posts':
-				add_action(
-					'the_post',
-					function() use ($snippet_id, $code, &$post_counter) {
-						if ( $post_counter > 0 && self::should_execute_snippet( $snippet_id ) ) {
-							echo "<!-- Nexter: Between Posts -->\n";
-							self::execute_php_safely( $snippet_id, $code );
-						}
-						$post_counter++;
-					},
-					$priority
-				);
-				break;
-				
-			case 'before_post':
-				add_action(
-					'the_post',
-					function() use ($snippet_id, $code) {
-						if ( self::should_execute_snippet( $snippet_id ) ) {
-							echo "<!-- Nexter: Before Post in Loop -->\n";
-							self::execute_php_safely( $snippet_id, $code );
-						}
-					},
-					$priority - 1
-				);
-				break;
-				
-			case 'after_post':
-				add_action(
-					'the_post',
-					function() use ($snippet_id, $code) {
-						if ( self::should_execute_snippet( $snippet_id ) ) {
-							echo "<!-- Nexter: After Post in Loop -->\n";
-							self::execute_php_safely( $snippet_id, $code );
-						}
-					},
-					$priority + 1
-				);
-				break;
-		}
-	}
-
-	/**
 	 * Enqueue CSS for page-specific locations
 	 */
 	public static function enqueue_page_specific_css($snippet_id, $css, $location) {
@@ -1764,105 +1697,6 @@ class Nexter_Page_Specific_Code_Handler {
 	}
 
 	/**
-	 * Register HTML loop-based hooks
-	 */
-	private static function register_html_loop_hooks($snippet_id, $html, $location, $priority) {
-		static $post_counter = 0;
-		
-		switch ( $location ) {
-			case 'between_posts':
-				add_action(
-					'the_post',
-					function() use ($snippet_id, $html, &$post_counter) {
-						if ( $post_counter > 0 && self::should_execute_html_snippet( $snippet_id ) ) {
-							echo "<!-- Nexter HTML: Between Posts -->\n";
-							echo apply_filters( 'nexter_html_snippets_executed', $html, $snippet_id );
-						}
-						$post_counter++;
-					},
-					$priority
-				);
-				break;
-				
-			case 'before_post':
-				add_action(
-					'the_post',
-					function() use ($snippet_id, $html) {
-						if ( self::should_execute_html_snippet( $snippet_id ) ) {
-							echo "<!-- Nexter HTML: Before Post in Loop -->\n";
-							echo apply_filters( 'nexter_html_snippets_executed', $html, $snippet_id );
-						}
-					},
-					$priority - 1
-				);
-				break;
-				
-			case 'after_post':
-				add_action(
-					'the_post',
-					function() use ($snippet_id, $html) {
-						if ( self::should_execute_html_snippet( $snippet_id ) ) {
-							echo "<!-- Nexter HTML: After Post in Loop -->\n";
-							echo apply_filters( 'nexter_html_snippets_executed', $html, $snippet_id );
-						}
-					},
-					$priority + 1
-				);
-				break;
-		}
-	}
-
-	/**
-	 * Register archive-specific hooks for better live site compatibility
-	 */
-	private static function register_archive_hooks($snippet_id, $html, $location, $priority) {
-		switch ( $location ) {
-			case 'insert_before_excerpt':
-				add_filter(
-					'the_excerpt',
-					function($excerpt) use ($snippet_id, $html) {
-						$is_active = get_post_meta( $snippet_id, 'nxt-code-status', true );
-						if ( $is_active == '1' ) {
-							$insert_content = apply_filters( 'nexter_html_snippets_executed', $html, $snippet_id );
-							return $insert_content . $excerpt;
-						}
-						return $excerpt;
-					},
-					$priority
-				);
-				break;
-				
-			case 'insert_after_excerpt':
-				add_filter(
-					'the_excerpt',
-					function($excerpt) use ($snippet_id, $html) {
-						$is_active = get_post_meta( $snippet_id, 'nxt-code-status', true );
-						if ( $is_active == '1' ) {
-							$insert_content = apply_filters( 'nexter_html_snippets_executed', $html, $snippet_id );
-							return $excerpt . $insert_content;
-						}
-						return $excerpt;
-					},
-					$priority
-				);
-				break;
-				
-			case 'between_posts':
-			case 'before_post':
-			case 'after_post':
-				// Use loop_start and loop_end for better compatibility
-				add_action(
-					'loop_start',
-					function() use ($snippet_id, $html, $location, $priority) {
-						self::register_loop_hooks( $snippet_id, $html, $location, $priority );
-					},
-					1
-				);
-				break;
-		}
-	}
-
-	/**
 	 * Register loop-specific hooks
 	 */
 	private static function register_loop_hooks($snippet_id, $html, $location, $priority) {
@@ -1914,20 +1748,6 @@ class Nexter_Page_Specific_Code_Handler {
 	}
 
 	/**
-	 * Get the appropriate hook for singular post locations
-	 */
-	private static function get_singular_hook_for_location($location) {
-		switch ( $location ) {
-			case 'insert_before_post':
-				return 'the_post'; // Hook into the_post action for proper post element insertion
-			case 'insert_after_post':
-				return 'the_content'; // Hook into the_content filter for proper post element insertion
-			default:
-				return 'wp_head';
-		}
-	}
-
-	/**
 	 * Insert content at advanced locations (word/percentage based)
 	 */
 	private static function insert_content_at_advanced_location($content, $insert_content, $location, $snippet_id) {
@@ -1935,16 +1755,6 @@ class Nexter_Page_Specific_Code_Handler {
 		// Route them through the Pro plugin filter system
 		return apply_filters( 'nexter_process_pro_content_insertion', $content, $location, $insert_content, $snippet_id );
 	}
-
-	/**
-	 * Insert content at a specific percentage of the total content
-	 * This is a Pro feature - should only be called by Pro plugin
-	 */
-	/* private static function insert_at_content_percentage($content, $insert_content, $percentage) {
-		// This method should only be used by the Pro plugin
-		// If we reach here without Pro plugin, return original content
-		return $content;
-	} */
 
 	/**
 	 * Insert content after a specific word count

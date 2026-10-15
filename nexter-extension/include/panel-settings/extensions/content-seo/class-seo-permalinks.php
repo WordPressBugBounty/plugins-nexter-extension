@@ -64,8 +64,16 @@ class Nexter_Content_SEO_Permalinks {
 		// added, renamed or removed afterwards needs a fresh flush to pick up the change — a plain
 		// settings save (the only other trigger) may not happen for months.
 		foreach ( array( 'created_category', 'edited_category', 'delete_category' ) as $hook ) {
-			add_action( $hook, 'flush_rewrite_rules' );
+			add_action( $hook, array( __CLASS__, 'queue_rewrite_flush' ) );
 		}
+	}
+
+	/**
+	 * Flush the rewrite rules once at the end of the request. Flushing on every term event made a bulk
+	 * import of N categories rebuild (and, in admin, rewrite .htaccess for) a ruleset that grows with N, N times.
+	 */
+	public static function queue_rewrite_flush() {
+		add_action( 'shutdown', 'flush_rewrite_rules' ); // Same callback and priority is only registered once.
 	}
 
 	/**

@@ -58,6 +58,23 @@ if ( ! class_exists( 'Nexter_Theme_Builder_Load' ) ) {
 			require NEXTER_EXT_DIR . 'include/classes/third-party/class-nexter-builder-documents.php';
 		}
 		
+		/**
+		 * URL of the archive an Archives template previews. 'nxt_author' stores a user id, every
+		 * other type a term id (get_category_link() returns '' for a user id).
+		 *
+		 * @param string $preview_type  nxt-archive-preview-type.
+		 * @param mixed  $preview_id    nxt-archive-preview-id.
+		 * @param int    $fallback_id   Legacy fallback id when no preview id is stored.
+		 * @return string
+		 */
+		public function get_archive_preview_link( $preview_type, $preview_id, $fallback_id = 0 ) {
+			if ( 'nxt_author' === $preview_type ) {
+				return get_author_posts_url( $preview_id ? (int) $preview_id : get_current_user_id() );
+			}
+
+			return get_category_link( $preview_id ? $preview_id : $fallback_id );
+		}
+
 		/*
 		 * Nexter Builder Post Preview Link
 		 */
@@ -103,8 +120,8 @@ if ( ! class_exists( 'Nexter_Theme_Builder_Load' ) ) {
 				$post_id = (isset( $NexterPreview['preview_id'] ) && ! empty( $NexterPreview['preview_id'] )) ? $NexterPreview['preview_id'] : $current_post_id;
 				$link    = get_permalink( $post_id );
 			} else if ( isset( $NexterPreview['type'] ) && $NexterPreview['type'] == 'archives' ) {
-				$category_id = (isset( $NexterPreview['preview_id'] ) && ! empty( $NexterPreview['preview_id'] )) ? $NexterPreview['preview_id'] : $current_post_id;
-				$link        = esc_url( get_category_link( $category_id ) );
+				$preview_id = (isset( $NexterPreview['preview_id'] ) && ! empty( $NexterPreview['preview_id'] )) ? $NexterPreview['preview_id'] : 0;
+				$link       = esc_url( $this->get_archive_preview_link( isset( $NexterPreview['preview_type'] ) ? $NexterPreview['preview_type'] : '', $preview_id, $current_post_id ) );
 			}
 			
 			return add_query_arg(

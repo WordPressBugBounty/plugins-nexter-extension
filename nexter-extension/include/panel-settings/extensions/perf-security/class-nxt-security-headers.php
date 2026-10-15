@@ -76,24 +76,29 @@ class Nxt_Security_Headers {
 	}
 
 	public function remove_meta_generator() {
-		if ( ! headers_sent() ) {
-			add_action( 'get_header', [ $this, 'clean_generated_header' ], 50 );
-			add_action(
-				'wp_footer',
-				function() {
-					if ( ob_get_level() > 0 ) {
-						ob_end_flush();
-					}
-				},
-				100 
-			);
-		}
+		// Buffer from template_redirect: block themes never fire get_header, so hooking that did nothing there.
+		add_action( 'template_redirect', [ $this, 'clean_generated_header' ], 0 );
 	}
 
-	public function clean_generated_header( $generated_html ) {
-		if ( ob_get_level() === 0 ) {
-			ob_start( 'nxt_remove_meta_tags' );
+	/**
+	 * Start a buffer that strips generator metas, and close it once wp_head is done (only the head is needed).
+	 */
+	public function clean_generated_header() {
+		if ( headers_sent() || is_feed() || is_embed() || wp_doing_ajax() || ( defined( 'REST_REQUEST' ) && REST_REQUEST ) ) {
+			return;
 		}
+		ob_start( 'nxt_remove_meta_tags' );
+		$level = ob_get_level();
+		add_action(
+			'wp_head',
+			function() use ( $level ) {
+				// Flush only the buffer started here, never one that belongs to another plugin.
+				if ( ob_get_level() === $level ) {
+					ob_end_flush();
+				}
+			},
+			PHP_INT_MAX
+		);
 	}
 
 	/**

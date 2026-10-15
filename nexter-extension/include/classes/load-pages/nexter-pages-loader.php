@@ -142,20 +142,6 @@ class Nexter_Builder_Pages_Loader {
 							}
 						}
 					}
-					
-					//Front Page
-					if ( $get_condition ) {
-						$post_status = get_post_status( $template_id );
-						if ( $post_status !== 'publish' ) {
-							continue;
-						}
-						
-						if ( 'include' === $include ) {
-							$priority_cond[ $template_id ] = self::get_condition_rules_priority( $type,$check_condition_rule );                                 
-						} else {
-							$excludes_ids[] = $template_id;
-						}
-					}               
 				}//end sub foreach
 			}//end foreach
 		}//end pages_conditions

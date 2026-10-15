@@ -143,6 +143,22 @@ if ( ! empty( $extension_option['wp-duplicate-post']['values'] ) ) {
 	}
 
 	/**
+	 * Like maybe_unserialize(), but refuses to instantiate objects: meta can come from a
+	 * lower-privileged role or another plugin, and core's maybe_unserialize() has no such guard.
+	 *
+	 * @param mixed $value Raw meta value.
+	 * @return mixed
+	 */
+	if ( ! function_exists( 'nxt_duplicate_post_maybe_unserialize' ) ) {
+		function nxt_duplicate_post_maybe_unserialize( $value ) {
+			if ( is_serialized( $value ) ) {
+				return @unserialize( trim( $value ), array( 'allowed_classes' => false ) ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_unserialize, WordPress.PHP.NoSilencedErrors.Discouraged
+			}
+			return $value;
+		}
+	}
+
+	/**
 	 * Copy post meta from DB (preserves Elementor JSON, Bricks arrays, serialized builder data).
 	 *
 	 * @param int $original_id  Source post ID.
@@ -172,7 +188,7 @@ if ( ! empty( $extension_option['wp-duplicate-post']['values'] ) ) {
 				if ( in_array( $meta->meta_key, $skip_keys, true ) ) {
 					continue;
 				}
-				$value = maybe_unserialize( $meta->meta_value );
+				$value = nxt_duplicate_post_maybe_unserialize( $meta->meta_value );
 				// $value comes straight from the DB (already in WP's stored, slashed form).
 				// add_post_meta() runs wp_unslash() internally, so re-slash here to keep the
 				// value byte-identical — critical for builder payloads like Elementor's
@@ -407,6 +423,12 @@ if ( ! empty( $extension_option['wp-duplicate-post']['values'] ) ) {
 					$new_status = sanitize_text_field( $settings['status'] );
 				}
 
+				// The configured status must not give a user a right they lack (Contributors cannot publish).
+				$post_type_obj = get_post_type_object( $original_post->post_type );
+				if ( in_array( $new_status, array( 'publish', 'future', 'private' ), true ) && $post_type_obj && ! current_user_can( $post_type_obj->cap->publish_posts ) ) {
+					$new_status = 'pending';
+				}
+
 				// Set the post date
 				$timestamp     = ( $settings['timestamp'] == 'original_date' ) ? strtotime( $original_post->post_date ) : current_time( 'timestamp', 0 );
 				$timestamp_gmt = ( $settings['timestamp'] == 'original_date' ) ? strtotime( $original_post->post_date_gmt ) : current_time( 'timestamp', 1 );
@@ -485,7 +507,9 @@ if ( ! empty( $extension_option['wp-duplicate-post']['values'] ) ) {
 				wp_send_json_error( __( 'You do not have permission to duplicate this post.','nexter-extension' ) );
 			}
 
-			$total = ( isset( $_POST['total'] ) ) ? sanitize_text_field( intval( $_POST['total'] ) ) : '';
+			// Cap the count: any user who can edit a post can call this, and each copy is a full post insert.
+			$max_copies = (int) apply_filters( 'nxt_duplicate_post_max_copies', 50 );
+			$total      = isset( $_POST['total'] ) ? min( absint( $_POST['total'] ), $max_copies ) : 0;
 
 			for ( $p = 1; $p <= $total;$p++ ) {
 				nxt_post_duplicate( $original_id,$p );

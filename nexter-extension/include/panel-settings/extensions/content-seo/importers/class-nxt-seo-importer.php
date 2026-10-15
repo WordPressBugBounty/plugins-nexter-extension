@@ -156,18 +156,26 @@ class Nexter_Content_SEO_Importer {
 				'permission_callback' => array( __CLASS__, 'rest_permission' ),
 				'args'                => array(
 					'source'     => array(
+						'sanitize_callback' => 'rest_sanitize_request_arg',
+						'validate_callback' => 'rest_validate_request_arg',
 						'type'     => 'string',
 						'required' => true,
 					),
 					'categories' => array(
+						'sanitize_callback' => 'rest_sanitize_request_arg',
+						'validate_callback' => 'rest_validate_request_arg',
 						'type'     => 'array',
 						'required' => false,
 					),
 					'batch_size' => array(
+						'sanitize_callback' => 'rest_sanitize_request_arg',
+						'validate_callback' => 'rest_validate_request_arg',
 						'type'     => 'integer',
 						'required' => false,
 					),
 					'retry'      => array(
+						'sanitize_callback' => 'rest_sanitize_request_arg',
+						'validate_callback' => 'rest_validate_request_arg',
 						'type'     => 'boolean',
 						'required' => false,
 					),
@@ -184,10 +192,14 @@ class Nexter_Content_SEO_Importer {
 				'permission_callback' => array( __CLASS__, 'rest_permission' ),
 				'args'                => array(
 					'source' => array(
+						'sanitize_callback' => 'rest_sanitize_request_arg',
+						'validate_callback' => 'rest_validate_request_arg',
 						'type'     => 'string',
 						'required' => true,
 					),
 					'sample' => array(
+						'sanitize_callback' => 'rest_sanitize_request_arg',
+						'validate_callback' => 'rest_validate_request_arg',
 						'type'     => 'integer',
 						'required' => false,
 					),

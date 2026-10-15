@@ -32,6 +32,9 @@ if ( ! class_exists( 'Nexter_Visual_Composer_Builder' ) ) :
 		public function render_content( $post_id ) {
 
 			$cur_post = get_post( $post_id, OBJECT );
+			if ( ! $cur_post ) {
+				return; // Deleted or stale template id.
+			}
 
 			echo do_shortcode( $cur_post->post_content );
 		}

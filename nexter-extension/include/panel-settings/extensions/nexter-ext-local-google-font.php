@@ -155,25 +155,6 @@ class Nexter_Ext_Local_Google_Font {
 			}
 		);
 
-		/*add_filter('stackable_enqueue_font', function ($gfont) {
-			$local_font = $this->check_nxt_ext_local_google_font(true);
-
-			if ( !isset($local_font) || empty($local_font) ) {
-				return $gfont;
-			}
-
-			return false;
-		});
-
-		add_filter('kadence_blocks_print_google_fonts', function ($gfont) {
-			$local_font = $this->check_nxt_ext_local_google_font(true);
-
-			if ( !isset($local_font) || empty($local_font) ) {
-				return $gfont;
-			}
-
-			return false;
-		});*/
 	}
 
 	/**
@@ -236,8 +217,8 @@ class Nexter_Ext_Local_Google_Font {
 			wp_mkdir_p( $directory );
 		}
 	
-		// Match Google Fonts links in the HTML
-		preg_match_all( '#<link[^>]+?href=(["\'])([^>]*?fonts\.googleapis\.com\/css.*?)\1.*?>#i', $html, $google_fonts, PREG_SET_ORDER );
+		// Match Google Fonts links in the HTML. The host must be fonts.googleapis.com itself, not a URL that merely contains it.
+		preg_match_all( '#<link[^>]+?href=(["\'])((?:https?:)?//fonts\.googleapis\.com/css[^"\']*)\1[^>]*>#i', $html, $google_fonts, PREG_SET_ORDER );
 	
 		// Process each Google Font link
 		if ( ! empty( $google_fonts ) ) {
@@ -247,9 +228,19 @@ class Nexter_Ext_Local_Google_Font {
 				$file_path = $directory . $file_name;
 				$file_url  = content_url( 'nxt_assets/localfonts/' . $file_name );
 	
-				// Download Google Fonts CSS file if not already cached
-				if ( ! $wp_filesystem->exists( $file_path ) ) {
+				// Download Google Fonts CSS file if not already cached. After a failure wait before retrying,
+				// so an unreachable Google does not add a blocking request to every page view.
+				$fail_key = 'nxt_gfont_fail_' . substr( md5( $google_font[2] ), 0, 12 );
+				if ( ! $wp_filesystem->exists( $file_path ) && ! get_transient( $fail_key ) ) {
 					$this->nxt_download_google_font( $google_font[2], $file_path );
+					if ( ! $wp_filesystem->exists( $file_path ) ) {
+						set_transient( $fail_key, 1, 15 * MINUTE_IN_SECONDS );
+					}
+				}
+
+				// Nothing was saved: keep the original link rather than point the page at a missing file.
+				if ( ! $wp_filesystem->exists( $file_path ) ) {
+					continue;
 				}
 	
 				// Replace the Google Fonts link in the HTML with the local file path
@@ -276,7 +267,7 @@ class Nexter_Ext_Local_Google_Font {
 		}
 	
 		// Fetch the Google Fonts CSS file
-		$response = wp_remote_get( $url );
+		$response = wp_safe_remote_get( $url );
 	
 		// Check if the response is valid
 		if ( is_wp_error( $response ) || wp_remote_retrieve_response_code( $response ) !== 200 ) {
@@ -340,7 +331,7 @@ class Nexter_Ext_Local_Google_Font {
 		global $wp_filesystem;
 	
 		// Fetch the font file
-		$response = wp_remote_get( $font_url );
+		$response = wp_safe_remote_get( $font_url );
 	
 		// Check if the response is valid
 		if ( is_wp_error( $response ) || wp_remote_retrieve_response_code( $response ) !== 200 ) {

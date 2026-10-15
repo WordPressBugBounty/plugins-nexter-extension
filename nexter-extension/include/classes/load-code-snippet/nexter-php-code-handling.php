@@ -220,7 +220,8 @@ class Nexter_Builder_Code_Snippets_Executor {
 		// Check if code contains file write functions
 		$has_file_write = false;
 		foreach ( $file_write_functions as $func_pattern ) {
-			if ( preg_match( '/' . $func_pattern . '\s*\(/i', $code ) ) {
+			// Not preceded by a name character, $, -> or :: , so get_permalink( or $o->copy( are not file writes.
+			if ( preg_match( '/(?<![\w$>:])(?:' . $func_pattern . ')\s*\(/i', $code ) ) {
 				$has_file_write = true;
 				break;
 			}
@@ -251,9 +252,9 @@ class Nexter_Builder_Code_Snippets_Executor {
 			return true; // Permission violation
 		}
 		
-		// Check for direct root directory file writes
-		// Pattern: '/filename' or "/filename" (absolute paths to root)
-		if ( preg_match( '/[\'"]\s*\/\s*[\w\-\.]+\.(txt|php|htaccess|htpasswd|log|ini|conf)\s*[\'"]/i', $code ) ) {
+		// Direct root directory file writes: an absolute '/filename' handed straight to a file function.
+		// A "/filename" appended to a base folder ($dir . '/x.log') is a normal relative path, not the root.
+		if ( preg_match( '/(?<![\w$>:])(?:' . implode( '|', $file_write_functions ) . ')\s*\(\s*[\'"]\s*\/\s*[\w\-\.]+\.(txt|php|htaccess|htpasswd|log|ini|conf)\s*[\'"]/i', $code ) ) {
 			return true; // Permission violation
 		}
 		
@@ -267,21 +268,15 @@ class Nexter_Builder_Code_Snippets_Executor {
 		// Remove comments and strings to avoid false positives
 		$clean_code = $this->strip_comments_and_strings( $code );
 		
-		// Check for while(true) patterns
-		if ( preg_match( '/while\s*\(\s*true\s*\)/i', $clean_code ) ) {
-			return true;
+		// while(true), while(1) and for(;;) are only infinite when the body has no way out.
+		if ( preg_match_all( '/while\s*\(\s*(?:true|1)\s*\)|for\s*\(\s*;\s*;\s*\)/i', $clean_code, $loops, PREG_OFFSET_CAPTURE ) ) {
+			foreach ( $loops[0] as $loop ) {
+				if ( ! $this->loop_body_can_exit( $clean_code, $loop[1] + strlen( $loop[0] ) ) ) {
+					return true;
+				}
+			}
 		}
-		
-		// Check for for(;;) patterns (infinite for loop)
-		if ( preg_match( '/for\s*\(\s*;\s*;\s*\)/i', $clean_code ) ) {
-			return true;
-		}
-		
-		// Check for while(1) patterns
-		if ( preg_match( '/while\s*\(\s*1\s*\)/i', $clean_code ) ) {
-			return true;
-		}
-		
+
 		// Check for time-based busy-wait loops (CPU exhaustion pattern)
 		// Pattern: while (time() - $start < X) or while(time() - $start < X)
 		// These are dangerous as they burn CPU cycles
@@ -294,6 +289,29 @@ class Nexter_Builder_Code_Snippets_Executor {
 			return true;
 		}
 		
+		return false;
+	}
+
+	/**
+	 * Whether the loop body that starts at $offset contains break, return, exit, die, throw or goto.
+	 *
+	 * @param string $code   Code with comments and strings removed.
+	 * @param int    $offset Position just after the loop header.
+	 * @return bool
+	 */
+	private function loop_body_can_exit( $code, $offset ) {
+		$open = strpos( $code, '{', $offset );
+		if ( false === $open || '' !== trim( substr( $code, $offset, $open - $offset ) ) ) {
+			return false; // no braced body: while(true); never ends.
+		}
+		$depth = 0;
+		for ( $i = $open, $len = strlen( $code ); $i < $len; $i++ ) {
+			if ( '{' === $code[ $i ] ) {
+				++$depth;
+			} elseif ( '}' === $code[ $i ] && 0 === --$depth ) {
+				return (bool) preg_match( '/\b(?:break|return|exit|die|throw|goto)\b/i', substr( $code, $open, $i - $open ) );
+			}
+		}
 		return false;
 	}
 
@@ -1409,75 +1427,6 @@ class Nexter_Builder_Code_Snippets_Executor {
 	}
 	
 	/**
-	 * Get short error message for fatal errors
-	 */
-	private function get_fatal_error_help($error_message, $problem_line) {
-		return "";
-	}
-
-	/**
-	 * Check if a constant is a WordPress constant being checked with defined()
-	 * This recognizes common WordPress security patterns
-	 */
-	private function is_wordpress_constant($constant_name, $code_context) {
-		// Common WordPress constants that are typically checked with defined()
-		$wordpress_constants = [
-			'ABSPATH',
-			'WPINC',
-			'WP_CONTENT_DIR',
-			'WP_PLUGIN_DIR',
-			'WP_DEBUG',
-			'DOING_AJAX',
-			'DOING_CRON',
-			'WP_ADMIN',
-			'WP_CLI',
-			'REST_REQUEST',
-			'WP_INSTALLING',
-			'WP_UNINSTALL_PLUGIN'
-		];
-		
-		// Check if it's a known WordPress constant
-		if ( ! in_array( $constant_name, $wordpress_constants ) ) {
-			return false;
-		}
-		
-		// Check if the constant is being used with defined() function
-		// Pattern: defined('CONSTANT_NAME') or defined("CONSTANT_NAME")
-		$pattern = '/defined\s*\(\s*[\'"]' . preg_quote( $constant_name, '/' ) . '[\'"]\s*\)/i';
-		if ( preg_match( $pattern, $code_context ) ) {
-			return true;
-		}
-		
-		// Also check if it's in a security check pattern: if (!defined('CONSTANT'))
-		$security_pattern = '/if\s*\(\s*!\s*defined\s*\(\s*[\'"]' . preg_quote( $constant_name, '/' ) . '[\'"]\s*\)\s*\)/i';
-		if ( preg_match( $security_pattern, $code_context ) ) {
-			return true;
-		}
-		
-		return false;
-	}
-
-	/**
-	 * Check if code contains WordPress security check pattern
-	 * Pattern: if (!defined('ABSPATH')) { exit; }
-	 */
-	private function has_wordpress_security_check($code) {
-		// Check for common WordPress security patterns
-		$patterns = [
-			'/if\s*\(\s*!\s*defined\s*\(\s*[\'"]ABSPATH[\'"]\s*\)\s*\)\s*\{[^}]*exit/i',
-			'/if\s*\(\s*!\s*defined\s*\(\s*[\'"]ABSPATH[\'"]\s*\)\s*\)\s*\{[^}]*die/i',
-		];
-		
-		foreach ( $patterns as $pattern ) {
-			if ( preg_match( $pattern, $code ) ) {
-				return true;
-			}
-		}
-		
-		return false;
-	}
-
-	/**
 	 * Detect "headers already sent" pattern - output before wp_redirect() or header() calls
 	 * Returns descriptive message if pattern is detected, false otherwise
 	 */
@@ -1568,13 +1517,6 @@ class Nexter_Builder_Code_Snippets_Executor {
 				$error_message
 			)
 		);
-	}
-
-	/**
-	 * Get short error message
-	 */
-	private function get_error_help($error_message, $problem_line) {
-		return "";
 	}
 
 	/**

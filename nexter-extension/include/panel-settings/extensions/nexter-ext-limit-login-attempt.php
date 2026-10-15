@@ -23,11 +23,6 @@ class Nexter_Ext_Limit_Login_Attempt {
 		add_action( 'wp_login_failed', [ $this, 'log_failed_login_attempt' ], 5 ); // Higher priority than one in Change Login URL
 		
 		add_action( 'wp_login', [ $this, 'reset_failed_login_log' ] );
-		// Log table clean up
-		/* add_action( 'added_option', [ $this, 'maybe_schedule_failed_login_cleanup' ] );
-		add_action( 'updated_option', [ $this, 'maybe_schedule_failed_login_cleanup' ] );
-		add_action( 'plugins_loaded', [ $this, 'schedule_failed_login_log_cleanup' ] );
-		add_action( 'nxt_ext_login_log_cleanup', [ $this, 'clean_old_login_logs' ] ); */
 		if ( is_admin() ) {
 			add_action( 'wp_ajax_nexter_ext_get_login_attempt_data', [ $this, 'nexter_ext_get_login_attempt'] );
 		}
@@ -372,10 +367,11 @@ class Nexter_Ext_Limit_Login_Attempt {
 
 		$table = $wpdb->prefix . 'nxtext_login_failed';
 
-		$ip         = $nxt_ext_limit_login['ip_address'] ?? '';
+		// A failure that does not pass the authenticate filter (a wrong second-factor code) has no state yet: use the client's own address.
+		$ip         = $nxt_ext_limit_login['ip_address'] ?? $this->get_client_ip( 'ip', 'limit-login-attempt' );
 		$uri        = $nxt_ext_limit_login['request_uri'] ?? '';
-		$max_fails  = $nxt_ext_limit_login['failed_login'] ?? 5;
-		$max_blocks = $nxt_ext_limit_login['lockout_login'] ?? 5;
+		$max_fails  = $nxt_ext_limit_login['failed_login'] ?? ( self::$limit_login_opt['failed_login'] ?? 5 );
+		$max_blocks = $nxt_ext_limit_login['lockout_login'] ?? ( self::$limit_login_opt['lockout_login'] ?? 5 );
 
 		// Fetch previous login attempts for IP. The table name is built from $wpdb->prefix
 		// (trusted, not user input) and SQL identifiers cannot be bound as placeholders, so the
@@ -479,63 +475,6 @@ class Nexter_Ext_Limit_Login_Attempt {
 			[ '%s' ]
 		);
 	}
-
-	/**
-	 * Trigger log cleanup scheduling when the corresponding option is updated.
-	 */
-	/* public function maybe_schedule_failed_login_cleanup( $option_name ) {
-	   if ( 'fail_login_schedule_cleanup' === $option_name ) {
-		   $this->schedule_failed_login_log_cleanup();
-	   }
-	} */
-
-	/**
-	 * Schedule or clear the failed login attempts cleanup event based on settings.
-	 */
-	/* public function schedule_failed_login_log_cleanup() {
-	   $enabled = self::$limit_login_opt['fail_login_schedule_cleanup'] ?? false;
-
-	   $hook = 'nxt_ext_login_log_cleanup';
-
-	   if ( ! $enabled ) {
-		   // Unschedule if the feature is disabled
-		   wp_clear_scheduled_hook( $hook );
-		   return;
-	   }
-
-	   // Schedule cleanup event if not already scheduled
-	   if ( ! wp_next_scheduled( $hook ) ) {
-		   wp_schedule_event( time(), 'hourly', $hook );
-	   }
-	} */
-
-	/**
-	 * Clean up old failed login attempts, keeping only the latest N entries.
-	 */
-	/* public function clean_old_login_logs() {
-	   global $wpdb;
-
-	   $enabled  = self::$limit_login_opt['fail_login_schedule_cleanup'] ?? false;
-	   $keep_max = 1000;
-
-	   if ( ! $enabled || ! is_numeric( $keep_max ) || $keep_max <= 0 ) {
-		   return;
-	   }
-
-	   $table = $wpdb->prefix . 'nxtext_login_failed';
-
-	   // Run cleanup using a DELETE with JOIN to keep only recent records
-	   $cleanup_sql = "
-		   DELETE log_old FROM {$table} AS log_old
-		   JOIN (
-			   SELECT id FROM {$table}
-			   ORDER BY id DESC
-			   LIMIT 1 OFFSET %d
-		   ) AS log_limit ON log_old.id <= log_limit.id
-	   ";
-
-	   $wpdb->query( $wpdb->prepare( $cleanup_sql, $keep_max ) );
-	} */
 
 	public function nexter_ext_get_login_attempt() {
 		global $wpdb;

@@ -430,8 +430,8 @@ class Nexter_Ext_Content_Post_Order {
 	* Clear cache plugins
 	*/
 	static public function site_cache_clear() {
-		wp_cache_flush();
-		
+		// No wp_cache_flush(), opcache_reset() or apc_clear_cache(): a reorder only changes post rows, clean_post_cache() already
+		// invalidated them and the posts query cache, and those three calls empty caches shared with every other request and site.
 		$cleared_cache = FALSE;
 		if ( function_exists( 'wp_cache_clear_cache' ) ) {
 			wp_cache_clear_cache();
@@ -443,11 +443,6 @@ class Nexter_Ext_Content_Post_Order {
 			$cleared_cache = TRUE;
 		}
 			
-		if ( function_exists( 'opcache_reset' ) && ! ini_get( 'opcache.restrict_api' ) ) {
-			@opcache_reset();
-			$cleared_cache = TRUE;
-		}
-		
 		if ( function_exists( 'rocket_clean_domain' ) ) {
 			rocket_clean_domain();
 			$cleared_cache = TRUE;
@@ -464,11 +459,6 @@ class Nexter_Ext_Content_Post_Order {
 			$cleared_cache = TRUE;
 		}
 	
-		if ( function_exists( 'apc_clear_cache' ) ) {
-			apc_clear_cache();
-			$cleared_cache = TRUE;
-		}
-			
 		if ( function_exists( 'fvm_purge_all' ) ) {
 			fvm_purge_all();
 			$cleared_cache = TRUE;
@@ -560,8 +550,8 @@ class Nexter_Ext_Content_Post_Order {
 			return;
 		}
 
-		// Frontend: Skip search results
-		if ( is_admin() || $query->is_search() ) {
+		// Frontend: Skip search results, and a sort the visitor asked for (?orderby=, e.g. a shop's sorting dropdown)
+		if ( is_admin() || $query->is_search() || ! empty( $get_orderby ) ) {
 			return;
 		}
 

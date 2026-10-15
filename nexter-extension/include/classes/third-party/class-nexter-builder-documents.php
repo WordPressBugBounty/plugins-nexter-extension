@@ -176,7 +176,11 @@ if ( ! class_exists( 'Nexter_Builder_Elementor_Documents' ) ) {
 				$post_id = $main_post_id;
 			}
 			
-			if ( get_post_type() == NXT_BUILD_POST ) {
+			// Check the post we were asked about, not the global one: get_wp_preview_url() passes an
+			// explicit id while the global post is often something else, which returned [] and made
+			// the preview button open the wrong page. With no argument $post_id is get_the_ID(), so
+			// callers that pass nothing behave exactly as before.
+			if ( get_post_type( $post_id ) == NXT_BUILD_POST ) {
 				$hook_layout          = get_post_meta( $post_id, 'nxt-hooks-layout', true );
 				$hook_layout_pages    = get_post_meta( $post_id, 'nxt-hooks-layout-pages', true );
 				$hook_layout_sections = get_post_meta( $post_id, 'nxt-hooks-layout-sections', true );

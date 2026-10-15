@@ -1222,17 +1222,6 @@ class Nexter_Content_SEO_Schema {
 	}
 
 	/**
-	 * All schema rows from option (merged), for JSON-LD rendering.
-	 *
-	 * @return array
-	 */
-	private static function get_merged_schema_rows() {
-		$option = get_option( self::OPTION_SCHEMA, array() );
-		$lists  = self::normalize_schema_lists( $option );
-		return array_merge( $lists['site_wide'], $lists['page_specific'] );
-	}
-
-	/**
 	 * Get schema variables (placeholders for dynamic replacement).
 	 * Template variable map for schema replacement.
 	 *

@@ -358,6 +358,13 @@ class Nexter_Ext_Cloudflare_Captcha {
 	}
 
 	/**
+	 * True when both keys are set, i.e. the widget is shown and a missing token is a bypass.
+	 */
+	private function turnstile_is_configured() {
+		return ! empty( self::$captcha_opt['turnSiteKey'] ) && ! empty( self::$captcha_opt['turnSecretKey'] );
+	}
+
+	/**
 	 * Authenticate user login via Turnstile verification.
 	 */
 	public function validate_turnstile_on_login( $user ) {
@@ -379,8 +386,8 @@ class Nexter_Ext_Cloudflare_Captcha {
 			return $user;
 		}
 
-		// Skip if Turnstile response is not present
-		if ( empty( $_POST['cf-turnstile-response'] ) ) {
+		// Programmatic sign-ins (no login form POST) or keys not set (no widget shown): nothing to check.
+		if ( empty( $_POST['log'] ) || ! $this->turnstile_is_configured() ) {
 			return $user;
 		}
 
@@ -406,8 +413,8 @@ class Nexter_Ext_Cloudflare_Captcha {
 			return $errors;
 		}
 
-		// Skip if Turnstile response is missing (i.e. CAPTCHA not shown)
-		if ( empty( $_POST['cf-turnstile-response'] ) ) {
+		// Keys not set means no widget was shown, so do not block the form.
+		if ( ! $this->turnstile_is_configured() ) {
 			return $errors;
 		}
 
@@ -441,8 +448,8 @@ class Nexter_Ext_Cloudflare_Captcha {
 			return $errors;
 		}
 
-		// Skip if no Turnstile response is present (i.e., widget not loaded)
-		if ( empty( $_POST['cf-turnstile-response'] ) ) {
+		// Keys not set means no widget was shown, so do not block the form.
+		if ( ! $this->turnstile_is_configured() ) {
 			return $errors;
 		}
 
@@ -463,8 +470,10 @@ class Nexter_Ext_Cloudflare_Captcha {
 	 * Validates Cloudflare Turnstile CAPTCHA on comment submission.
 	 */
 	public function validate_turnstile_on_comment( $comment ) {
-		// Skip if Turnstile response is not present (i.e., widget not rendered)
-		if ( empty( $_POST['cf-turnstile-response'] ) ) {
+		// Only the public comment form shows the widget: not logged-in users, pingbacks, REST or admin replies.
+		$is_public_form = isset( $_SERVER['SCRIPT_NAME'] ) && 'wp-comments-post.php' === basename( sanitize_text_field( wp_unslash( $_SERVER['SCRIPT_NAME'] ) ) );
+		$is_comment     = empty( $comment['comment_type'] ) || 'comment' === $comment['comment_type'];
+		if ( ! $is_public_form || ! $is_comment || is_user_logged_in() || ! $this->turnstile_is_configured() ) {
 			return $comment;
 		}
 

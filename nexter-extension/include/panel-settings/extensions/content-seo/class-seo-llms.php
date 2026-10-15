@@ -140,7 +140,7 @@ class Nexter_Content_SEO_LLMs {
 		// Key the cache on the options that shape the output (picked pages, post types, etc.).
 		// Any settings change yields a new key, so selections always reflect immediately even if
 		// a stale transient lingers under a persistent object cache.
-		$key = self::CACHE_KEY . '_v' . self::cache_version() . '_' . self::cache_fingerprint( $options );
+		$key = self::CACHE_KEY . '_v' . self::cache_version() . '_' . self::cache_fingerprint( $options ) . '_' . self::llms_txt_lang();
 
 		if ( $ttl > 0 ) {
 			$cached = get_transient( $key );
@@ -307,6 +307,9 @@ class Nexter_Content_SEO_LLMs {
 				'no_found_rows'  => true,
 				'has_password'   => false,
 				'post__not_in'   => array_keys( $picked_set ),
+				// Without this, Polylang narrows the query to the current/default language, same
+				// gap already fixed on the sitemap: every other language's posts were left out.
+				'lang'           => self::llms_txt_lang(),
 			);
 			if ( $freshness_months > 0 ) {
 				// Published OR updated inside the window. Matching post_date alone dropped every
@@ -372,6 +375,9 @@ class Nexter_Content_SEO_LLMs {
 					'orderby'    => 'count',
 					'order'      => 'DESC',
 					'hide_empty' => true,
+					// Same reason as the post-type query above: Polylang otherwise only returns
+					// terms in the current/default language.
+					'lang'       => self::llms_txt_lang(),
 				)
 			);
 			if ( is_wp_error( $terms ) || empty( $terms ) ) {
@@ -470,6 +476,23 @@ class Nexter_Content_SEO_LLMs {
 		}
 		$options = Nexter_Content_SEO::get_options();
 		return ! empty( $options['noindex_taxonomies'][ $term->taxonomy ] );
+	}
+
+	/**
+	 * Value for a query's `lang` argument that spans every Polylang language.
+	 *
+	 * Mirrors Nexter_Content_SEO_Sitemap::sitemap_lang() — Polylang narrows post/term queries to
+	 * the current (default) language, which left every other language's posts and tags out of
+	 * llms.txt even though admin-picked pages, looked up directly by ID, were unaffected.
+	 *
+	 * @return string
+	 */
+	private static function llms_txt_lang() {
+		if ( ! function_exists( 'pll_languages_list' ) || ! function_exists( 'pll_get_post' ) ) {
+			return '';
+		}
+		$slugs = pll_languages_list();
+		return is_array( $slugs ) ? implode( ',', $slugs ) : '';
 	}
 
 	/**

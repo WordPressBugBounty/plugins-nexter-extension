@@ -50,6 +50,11 @@ class Nexter_Content_SEO_Sitemap {
 		foreach ( array( 'created_term', 'edited_term', 'delete_term' ) as $term_hook ) {
 			add_action( $term_hook, array( __CLASS__, 'bump_cache_version' ) );
 		}
+		// A post marked noindex must leave the sitemap at once, also when only its meta changes (the SEO panel saves it
+		// through its own route, an import writes it directly) and no save_post fires.
+		foreach ( array( 'added_post_meta', 'updated_post_meta', 'deleted_post_meta' ) as $meta_hook ) {
+			add_action( $meta_hook, array( __CLASS__, 'maybe_bump_cache_version_for_meta' ), 10, 3 );
+		}
 		if ( class_exists( 'Nexter_Content_SEO' ) && defined( 'Nexter_Content_SEO::OPTION_NAME' ) ) {
 			add_action( 'update_option_' . Nexter_Content_SEO::OPTION_NAME, array( __CLASS__, 'bump_cache_version' ) );
 		}
@@ -400,6 +405,19 @@ class Nexter_Content_SEO_Sitemap {
 			return;
 		}
 		self::bump_cache_version();
+	}
+
+	/**
+	 * Bump the sitemap cache when the noindex flag of a post changes.
+	 *
+	 * @param int|int[] $meta_id  Meta ID(s).
+	 * @param int       $post_id  Post ID.
+	 * @param string    $meta_key Meta key.
+	 */
+	public static function maybe_bump_cache_version_for_meta( $meta_id, $post_id, $meta_key ) {
+		if ( '_nxt_seo_noindex' === $meta_key ) {
+			self::bump_cache_version();
+		}
 	}
 
 	/**
@@ -971,7 +989,7 @@ class Nexter_Content_SEO_Sitemap {
 	 * @param array $options SEO options.
 	 * @return string[]
 	 */
-	private static function excluded_post_types( $options ) {
+	public static function excluded_post_types( $options ) {
 		$user     = ( isset( $options['sitemap_exclude_post_types'] ) && is_array( $options['sitemap_exclude_post_types'] ) )
 			? array_keys( array_filter( $options['sitemap_exclude_post_types'] ) )
 			: array();
@@ -1926,17 +1944,6 @@ class Nexter_Content_SEO_Sitemap {
 		}
 
 		return gmdate( 'c' );
-	}
-
-	/**
-	 * Flush buffered output while streaming sitemap response.
-	 *
-	 * Helps lower peak memory for large sitemap responses.
-	 */
-	private static function maybe_flush_sitemap_output() {
-		if ( function_exists( 'flush' ) ) {
-			flush();
-		}
 	}
 
 	/**

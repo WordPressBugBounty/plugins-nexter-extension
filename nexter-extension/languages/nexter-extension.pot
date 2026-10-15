@@ -2,14 +2,14 @@
 # This file is distributed under the GPLv3.
 msgid ""
 msgstr ""
-"Project-Id-Version: Nexter Extension 4.7.12\n"
+"Project-Id-Version: Nexter Extension 4.7.13\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/nexter-extension\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-12T10:32:52+02:00\n"
+"POT-Creation-Date: 2026-10-15T09:07:14+02:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: nexter-extension\n"
@@ -360,42 +360,44 @@ msgstr ""
 
 #: include/class-nexter-load-ext.php:982
 #: include/class-nexter-load-ext.php:997
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:840
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:900
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:951
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1170
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1615
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1955
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2001
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2294
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2444
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2522
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2619
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:735
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:795
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:846
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1028
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1473
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1789
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1806
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2099
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2249
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2327
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2424
 #: include/custom-options/class-nxt-builder-condition-ui.php:52
 #: include/custom-options/class-nxt-builder-condition-ui.php:283
 #: include/custom-options/class-nxt-builder-condition-ui.php:410
 #: include/custom-options/class-nxt-builder-condition-ui.php:697
 #: include/custom-options/class-nxt-builder-condition-ui.php:757
 #: include/custom-options/module/nexter-display-archives-rules.php:130
-#: include/custom-options/module/nexter-display-conditional-rules.php:1697
+#: include/custom-options/module/nexter-display-archives-rules.php:184
+#: include/custom-options/module/nexter-display-conditional-rules.php:1649
 #: include/custom-options/module/nexter-display-singular-archives-rules.php:53
+#: include/custom-options/module/nexter-display-singular-archives-rules.php:126
 #: include/custom-options/module/nexter-display-singular-rules.php:172
 #: include/custom-options/nexter-builder-condition.php:577
 #: include/custom-options/nexter-builder-condition.php:625
 #: include/panel-settings/class-nxt-panel-ajax-router.php:705
 #: include/panel-settings/class-nxt-panel-ajax-router.php:722
-#: include/panel-settings/class-nxt-panel-ajax-router.php:913
-#: include/panel-settings/class-nxt-panel-ajax-router.php:1023
-#: include/panel-settings/class-nxt-panel-ajax-router.php:1160
-#: include/panel-settings/class-nxt-panel-ajax-router.php:1202
-#: include/panel-settings/class-nxt-panel-ajax-router.php:1222
+#: include/panel-settings/class-nxt-panel-ajax-router.php:919
+#: include/panel-settings/class-nxt-panel-ajax-router.php:1028
+#: include/panel-settings/class-nxt-panel-ajax-router.php:1165
+#: include/panel-settings/class-nxt-panel-ajax-router.php:1207
+#: include/panel-settings/class-nxt-panel-ajax-router.php:1227
 #: include/panel-settings/extensions/nexter-ext-image-sizes.php:69
-#: include/panel-settings/extensions/nexter-ext-local-google-font.php:406
-#: include/panel-settings/extensions/nexter-ext-post-duplicator.php:479
+#: include/panel-settings/extensions/nexter-ext-local-google-font.php:397
+#: include/panel-settings/extensions/nexter-ext-post-duplicator.php:501
 #: include/panel-settings/extensions/nexter-ext-replace-url.php:23
 #: include/panel-settings/extensions/nexter-ext-replace-url.php:118
 #: include/panel-settings/extensions/nexter-ext-rollback-manager.php:213
-#: include/panel-settings/extensions/nexter-ext-svg-upload.php:338
+#: include/panel-settings/extensions/nexter-ext-svg-upload.php:350
 #: include/panel-settings/nexter-ext-library.php:61
 #: include/panel-settings/nexter-ext-library.php:195
 msgid "Insufficient permissions."
@@ -403,7 +405,7 @@ msgstr ""
 
 #: include/class-nexter-load-ext.php:992
 #: include/classes/class-nxt-ajax-guard.php:44
-#: include/panel-settings/class-nxt-panel-ajax-router.php:1386
+#: include/panel-settings/class-nxt-panel-ajax-router.php:1391
 #: include/panel-settings/extensions/nexter-ext-rollback-manager.php:364
 #: include/panel-settings/extensions/nexter-ext-rollback-manager.php:456
 msgid "Security check failed."
@@ -474,8 +476,9 @@ msgstr ""
 
 #: include/classes/class-nexter-ext-base.php:110
 #: include/panel-settings/extensions/nexter-ext-bulk-images.php:469
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1815
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1978
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1818
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1827
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:2038
 msgid "Permission denied."
 msgstr ""
 
@@ -491,173 +494,173 @@ msgstr ""
 msgid "You do not have permission to perform this action."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:596
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:560
 msgid "Failed to load HTML. Check syntax."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:937
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:832
 #: assets/js/admin/index.js:1
 msgid "Authors"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1064
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:922
 #: assets/js/admin/index.js:1
 msgid "Default Template"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1165
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1610
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2202
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2289
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2517
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1023
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1468
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2007
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2094
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2322
 msgid "File-based snippets require write access. This environment restricts file creation."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1178
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1680
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1036
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1514
 msgid "Enter Name Snippet"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1196
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1668
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2488
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2566
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1054
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1502
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2293
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2371
 msgid "Invalid file path detected."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1201
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1059
 msgid "File already exists. Please try a different name."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1215
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1695
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1073
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1529
 msgid "Please remove <?php from the beginning of the code"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1227
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1085
 msgid "Failed to create snippet file."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1244
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1102
 msgid "Snippet Created Successfully."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1254
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1112
 msgid "Missing required fields."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1469
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1327
 msgid "PHP executor unavailable."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1483
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1341
 msgid "Snippet has been disabled for safety"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1485
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1343
 msgid "Check the line numbers and suggestions above. Snippet is disabled until fixed."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1650
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1484
 msgid "Storage directory not available."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1658
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2020
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2555
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1492
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1825
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2360
 msgid "Invalid snippet ID."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1673
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2500
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2603
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1507
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2305
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2408
 msgid "Snippet ID does not exist."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1706
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1540
 msgid "Snippet Updated Successfully."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1708
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2600
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1542
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2405
 msgid "Failed to update snippet file."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1711
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1545
 msgid "File-based storage not available"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1714
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2504
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2507
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1548
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2309
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2312
 msgid "Invalid Snippet ID"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2113
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1918
 msgid "No valid snippets found to export."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2207
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2374
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2012
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2179
 msgid "Unknown snippet"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2211
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2016
 msgid "Snippet name is required"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2216
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2021
 msgid "Untitled snippet"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2225
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2030
 msgid "File based storage not available"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2230
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2035
 msgid "Storage directory not available"
 msgstr ""
 
 #. translators: %s: snippet name
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2241
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2046
 #, php-format
 msgid "\"%s\" already exists - edit the existing snippet instead of importing a second copy."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2299
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2104
 msgid "No file uploaded or file upload error."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2305
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2110
 msgid "File size exceeds maximum allowed size (10MB)."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2327
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2132
 msgid "Invalid file type. Only JSON files are allowed."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2335
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2140
 msgid "Invalid file upload detected."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2342
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2147
 msgid "Empty or unreadable file."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2348
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2153
 msgid "Invalid snippet file."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2392
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2197
 msgid "No snippets were imported."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2400
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2205
 msgid "Snippet imported successfully."
 msgstr ""
 
 #. translators: %d: Number of snippets imported successfully
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2404
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2209
 #, php-format
 msgid "%d snippet imported successfully."
 msgid_plural "%d snippets imported successfully."
@@ -665,49 +668,49 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: %d: Number of snippets that failed to import
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2415
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2220
 #, php-format
 msgid "%d snippet failed."
 msgid_plural "%d snippets failed."
 msgstr[0] ""
 msgstr[1] ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2458
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2263
 msgid "Snippet deleted successfully"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2460
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2265
 msgid "Failed to delete Snippet"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2463
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2268
 msgid "You do not have permission to delete this snippet"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2466
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2544
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2271
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2349
 msgid "Invalid post or post type"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2473
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2278
 msgid "Invalid snippet ID format."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2498
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2303
 msgid "Snippet deleted successfully."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2540
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2345
 msgid "Updated Status Successfully"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2596
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2401
 msgid "Updated Status Successfully."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2606
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2609
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2693
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2411
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2414
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2450
 msgid "Invalid post ID"
 msgstr ""
 
@@ -782,116 +785,116 @@ msgid "Fatal error: %1$s on line %2$d"
 msgstr ""
 
 #. translators: %s: Comma-separated list of function names
-#: include/classes/load-code-snippet/nexter-php-code-handling.php:485
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:503
 #, php-format
 msgid "Functions already exist: %s"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-php-code-handling.php:523
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:541
 msgid "Empty code provided"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-php-code-handling.php:524
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:542
 msgid "No PHP code provided"
 msgstr ""
 
 #. translators: %s: Syntax error message
-#: include/classes/load-code-snippet/nexter-php-code-handling.php:539
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:557
 #, php-format
 msgid "Syntax error detected: %s"
 msgstr ""
 
 #. translators: %s: Execution error message
-#: include/classes/load-code-snippet/nexter-php-code-handling.php:551
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:569
 #, php-format
 msgid "Execution error detected: %s"
 msgstr ""
 
 #. translators: 1: Function name (typo), 2: Line number
-#: include/classes/load-code-snippet/nexter-php-code-handling.php:699
-#: include/classes/load-code-snippet/nexter-php-code-handling.php:711
-#: include/classes/load-code-snippet/nexter-php-code-handling.php:737
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:717
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:729
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:755
 #, php-format
 msgid "Syntax Error: Unknown function '%1$s' on line %2$d"
 msgstr ""
 
 #. translators: %d: Line number
-#: include/classes/load-code-snippet/nexter-php-code-handling.php:787
-#: include/classes/load-code-snippet/nexter-php-code-handling.php:799
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:805
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:817
 #, php-format
 msgid "Syntax Error: Unterminated string on line %d"
 msgstr ""
 
 #. translators: %d: Line number
-#: include/classes/load-code-snippet/nexter-php-code-handling.php:822
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:840
 #, php-format
 msgid "Syntax Error: Unexpected identifier on line %d"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-php-code-handling.php:867
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:885
 msgid "Unknown syntax error"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-php-code-handling.php:918
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:936
 msgid "CPU-intensive busy-wait loop detected"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-php-code-handling.php:924
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:942
 msgid "Infinite loop detected"
 msgstr ""
 
 #. translators: %s: Hook name
-#: include/classes/load-code-snippet/nexter-php-code-handling.php:936
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:954
 #, php-format
 msgid "Recursive hook detected: %s"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-php-code-handling.php:1028
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:1046
 msgid "Headers already sent error detected"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-php-code-handling.php:1041
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:1059
 msgid "Code execution timeout"
 msgstr ""
 
 #. translators: 1: Line number, 2: Exception message
-#: include/classes/load-code-snippet/nexter-php-code-handling.php:1110
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:1128
 #, php-format
 msgid "Runtime Exception on line %1$d: %2$s"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-php-code-handling.php:1336
-#: include/classes/load-code-snippet/nexter-php-code-handling.php:1344
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:1354
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:1362
 #: content-seo/build/index.js:3
 #: dashboard/build/index.js:1
 msgid "Warning"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-php-code-handling.php:1338
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:1356
 msgid "Fatal Error"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-php-code-handling.php:1340
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:1358
 msgid "Exception"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-php-code-handling.php:1342
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:1360
 #: assets/js/admin/index.js:4
 msgid "Notice"
 msgstr ""
 
 #. translators: 1: Error type name, 2: Line number, 3: Error message
-#: include/classes/load-code-snippet/nexter-php-code-handling.php:1349
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:1367
 #, php-format
 msgid "%1$s on line %2$d: %3$s"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-php-code-handling.php:1351
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:1369
 msgid "unknown"
 msgstr ""
 
 #. translators: %d: Number of execution errors
-#: include/classes/load-code-snippet/nexter-php-code-handling.php:1361
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:1379
 #, php-format
 msgid "Found %d execution error:"
 msgid_plural "Found %d execution errors:"
@@ -899,31 +902,31 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: 1: Line number, 2: Parse error message
-#: include/classes/load-code-snippet/nexter-php-code-handling.php:1386
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:1404
 #, php-format
 msgid "Parse Error on line %1$d: %2$s"
 msgstr ""
 
 #. translators: 1: Line number, 2: Fatal error message
-#: include/classes/load-code-snippet/nexter-php-code-handling.php:1404
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:1422
 #, php-format
 msgid "Fatal Error on line %1$d: %2$s"
 msgstr ""
 
 #. translators: 1: Output line number, 2: Output line content, 3: Redirect line number, 4: Redirect line content
-#: include/classes/load-code-snippet/nexter-php-code-handling.php:1546
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:1495
 #, php-format
 msgid "Output on line %1$d ('%2$s') appears before redirect/header call on line %3$d ('%4$s')"
 msgstr ""
 
 #. translators: 1: Line number, 2: Syntax error message
-#: include/classes/load-code-snippet/nexter-php-code-handling.php:1566
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:1515
 #, php-format
 msgid "Syntax Error on line %1$d: %2$s"
 msgstr ""
 
 #. translators: %d: Number of syntax errors
-#: include/classes/load-code-snippet/nexter-php-code-handling.php:1587
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:1529
 #, php-format
 msgid "Found %d syntax error:"
 msgid_plural "Found %d syntax errors:"
@@ -931,7 +934,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: 1: Line number, 2: Error message
-#: include/classes/load-code-snippet/nexter-php-code-handling.php:1595
+#: include/classes/load-code-snippet/nexter-php-code-handling.php:1537
 #, php-format
 msgid "Line %1$d: %2$s"
 msgstr ""
@@ -948,10 +951,6 @@ msgstr ""
 #: include/custom-options/class-nxt-builder-condition-ui.php:1268
 #: include/custom-options/class-nxt-builder-condition-ui.php:1272
 #: include/custom-options/module/nexter-display-archives-rules.php:88
-#: include/custom-options/module/nexter-display-archives-rules.php:341
-#: include/custom-options/module/nexter-display-archives-rules.php:349
-#: include/custom-options/module/nexter-display-archives-rules.php:376
-#: include/custom-options/module/nexter-display-archives-rules.php:380
 #: include/custom-options/module/nexter-display-singular-rules.php:115
 #: include/custom-options/nexter-builder-condition.php:717
 #: dashboard/build/index.js:1
@@ -1077,7 +1076,7 @@ msgstr ""
 #: include/classes/load-sections/nexter-sections-loader.php:367
 #: include/custom-options/nexter-builder-condition.php:125
 #: include/custom-options/nexter-builder-condition.php:145
-#: include/panel-settings/class-nxt-panel-ajax-router.php:1039
+#: include/panel-settings/class-nxt-panel-ajax-router.php:1044
 #: content-seo/build/index.js:1
 #: dashboard/build/index.js:6
 msgid "None"
@@ -1094,9 +1093,9 @@ msgstr ""
 #: include/classes/load-sections/nexter-sections-loader.php:212
 #: include/custom-options/class-nxt-builder-condition-ui.php:69
 #: include/custom-options/class-nxt-builder-condition-ui.php:910
-#: include/custom-options/module/nexter-display-conditional-rules.php:254
+#: include/custom-options/module/nexter-display-conditional-rules.php:260
 #: include/custom-options/nexter-builder-condition.php:141
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2040
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2029
 #: assets/js/admin/index.js:1
 #: theme-builder/build/index.js:1
 msgid "404 Page"
@@ -1160,22 +1159,22 @@ msgid "After Page"
 msgstr ""
 
 #: include/classes/third-party/class-beaver-build-theme.php:89
-#: include/custom-options/module/nexter-display-conditional-rules.php:534
-#: include/custom-options/module/nexter-display-conditional-rules.php:550
-#: include/custom-options/module/nexter-display-conditional-rules.php:616
-#: include/custom-options/module/nexter-display-conditional-rules.php:647
-#: include/custom-options/module/nexter-display-conditional-rules.php:671
-#: include/custom-options/module/nexter-display-conditional-rules.php:700
+#: include/custom-options/module/nexter-display-conditional-rules.php:540
+#: include/custom-options/module/nexter-display-conditional-rules.php:556
+#: include/custom-options/module/nexter-display-conditional-rules.php:622
+#: include/custom-options/module/nexter-display-conditional-rules.php:653
+#: include/custom-options/module/nexter-display-conditional-rules.php:677
+#: include/custom-options/module/nexter-display-conditional-rules.php:706
 msgid "Header Before"
 msgstr ""
 
 #: include/classes/third-party/class-beaver-build-theme.php:90
-#: include/custom-options/module/nexter-display-conditional-rules.php:535
-#: include/custom-options/module/nexter-display-conditional-rules.php:551
-#: include/custom-options/module/nexter-display-conditional-rules.php:617
-#: include/custom-options/module/nexter-display-conditional-rules.php:648
-#: include/custom-options/module/nexter-display-conditional-rules.php:672
-#: include/custom-options/module/nexter-display-conditional-rules.php:701
+#: include/custom-options/module/nexter-display-conditional-rules.php:541
+#: include/custom-options/module/nexter-display-conditional-rules.php:557
+#: include/custom-options/module/nexter-display-conditional-rules.php:623
+#: include/custom-options/module/nexter-display-conditional-rules.php:654
+#: include/custom-options/module/nexter-display-conditional-rules.php:678
+#: include/custom-options/module/nexter-display-conditional-rules.php:707
 msgid "Header After"
 msgstr ""
 
@@ -1187,57 +1186,57 @@ msgstr ""
 
 #: include/classes/third-party/class-beaver-build-theme.php:96
 #: include/classes/third-party/class-beaver-build-theme.php:103
-#: include/custom-options/module/nexter-display-conditional-rules.php:538
-#: include/custom-options/module/nexter-display-conditional-rules.php:651
-#: include/custom-options/module/nexter-display-conditional-rules.php:703
+#: include/custom-options/module/nexter-display-conditional-rules.php:544
+#: include/custom-options/module/nexter-display-conditional-rules.php:657
+#: include/custom-options/module/nexter-display-conditional-rules.php:709
 msgid "Content Top"
 msgstr ""
 
 #: include/classes/third-party/class-beaver-build-theme.php:97
 #: include/classes/third-party/class-beaver-build-theme.php:104
-#: include/custom-options/module/nexter-display-conditional-rules.php:539
-#: include/custom-options/module/nexter-display-conditional-rules.php:652
-#: include/custom-options/module/nexter-display-conditional-rules.php:704
+#: include/custom-options/module/nexter-display-conditional-rules.php:545
+#: include/custom-options/module/nexter-display-conditional-rules.php:658
+#: include/custom-options/module/nexter-display-conditional-rules.php:710
 msgid "Content Bottom"
 msgstr ""
 
 #: include/classes/third-party/class-beaver-build-theme.php:108
-#: include/custom-options/module/nexter-display-conditional-rules.php:685
+#: include/custom-options/module/nexter-display-conditional-rules.php:691
 msgid "Sidebar"
 msgstr ""
 
 #: include/classes/third-party/class-beaver-build-theme.php:110
-#: include/custom-options/module/nexter-display-conditional-rules.php:601
-#: include/custom-options/module/nexter-display-conditional-rules.php:655
-#: include/custom-options/module/nexter-display-conditional-rules.php:709
+#: include/custom-options/module/nexter-display-conditional-rules.php:607
+#: include/custom-options/module/nexter-display-conditional-rules.php:661
+#: include/custom-options/module/nexter-display-conditional-rules.php:715
 msgid "Sidebar Before"
 msgstr ""
 
 #: include/classes/third-party/class-beaver-build-theme.php:111
-#: include/custom-options/module/nexter-display-conditional-rules.php:656
-#: include/custom-options/module/nexter-display-conditional-rules.php:710
+#: include/custom-options/module/nexter-display-conditional-rules.php:662
+#: include/custom-options/module/nexter-display-conditional-rules.php:716
 msgid "Sidebar After"
 msgstr ""
 
 #: include/classes/third-party/class-beaver-build-theme.php:117
-#: include/custom-options/module/nexter-display-conditional-rules.php:542
-#: include/custom-options/module/nexter-display-conditional-rules.php:567
-#: include/custom-options/module/nexter-display-conditional-rules.php:593
-#: include/custom-options/module/nexter-display-conditional-rules.php:636
-#: include/custom-options/module/nexter-display-conditional-rules.php:658
-#: include/custom-options/module/nexter-display-conditional-rules.php:687
-#: include/custom-options/module/nexter-display-conditional-rules.php:712
+#: include/custom-options/module/nexter-display-conditional-rules.php:548
+#: include/custom-options/module/nexter-display-conditional-rules.php:573
+#: include/custom-options/module/nexter-display-conditional-rules.php:599
+#: include/custom-options/module/nexter-display-conditional-rules.php:642
+#: include/custom-options/module/nexter-display-conditional-rules.php:664
+#: include/custom-options/module/nexter-display-conditional-rules.php:693
+#: include/custom-options/module/nexter-display-conditional-rules.php:718
 msgid "Footer Before"
 msgstr ""
 
 #: include/classes/third-party/class-beaver-build-theme.php:118
-#: include/custom-options/module/nexter-display-conditional-rules.php:543
-#: include/custom-options/module/nexter-display-conditional-rules.php:572
-#: include/custom-options/module/nexter-display-conditional-rules.php:596
-#: include/custom-options/module/nexter-display-conditional-rules.php:637
-#: include/custom-options/module/nexter-display-conditional-rules.php:659
-#: include/custom-options/module/nexter-display-conditional-rules.php:688
-#: include/custom-options/module/nexter-display-conditional-rules.php:713
+#: include/custom-options/module/nexter-display-conditional-rules.php:549
+#: include/custom-options/module/nexter-display-conditional-rules.php:578
+#: include/custom-options/module/nexter-display-conditional-rules.php:602
+#: include/custom-options/module/nexter-display-conditional-rules.php:643
+#: include/custom-options/module/nexter-display-conditional-rules.php:665
+#: include/custom-options/module/nexter-display-conditional-rules.php:694
+#: include/custom-options/module/nexter-display-conditional-rules.php:719
 msgid "Footer After"
 msgstr ""
 
@@ -1248,13 +1247,13 @@ msgid "Posts"
 msgstr ""
 
 #: include/classes/third-party/class-beaver-build-theme.php:124
-#: include/custom-options/module/nexter-display-conditional-rules.php:682
-#: include/custom-options/module/nexter-display-conditional-rules.php:706
+#: include/custom-options/module/nexter-display-conditional-rules.php:688
+#: include/custom-options/module/nexter-display-conditional-rules.php:712
 msgid "Comments Before"
 msgstr ""
 
 #: include/classes/third-party/class-beaver-build-theme.php:125
-#: include/custom-options/module/nexter-display-conditional-rules.php:707
+#: include/custom-options/module/nexter-display-conditional-rules.php:713
 msgid "Comments After"
 msgstr ""
 
@@ -1450,12 +1449,12 @@ msgid "Select where you want to load the template"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:352
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2217
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2206
 msgid "Include In"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:358
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2223
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2212
 msgid "Exclude From"
 msgstr ""
 
@@ -1506,8 +1505,8 @@ msgstr ""
 
 #. translators: %s: Post Label
 #: include/custom-options/class-nxt-builder-condition-ui.php:876
-#: include/custom-options/module/nexter-display-conditional-rules.php:346
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2067
+#: include/custom-options/module/nexter-display-conditional-rules.php:352
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2056
 #, php-format
 msgid "All %s"
 msgstr ""
@@ -1515,109 +1514,109 @@ msgstr ""
 #. translators: %s: Post type or taxonomy archive label
 #: include/custom-options/class-nxt-builder-condition-ui.php:880
 #: include/custom-options/class-nxt-builder-condition-ui.php:887
-#: include/custom-options/module/nexter-display-conditional-rules.php:350
-#: include/custom-options/module/nexter-display-conditional-rules.php:357
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2069
+#: include/custom-options/module/nexter-display-conditional-rules.php:356
+#: include/custom-options/module/nexter-display-conditional-rules.php:363
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2058
 #, php-format
 msgid "All %s Archive"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:899
-#: include/custom-options/module/nexter-display-conditional-rules.php:241
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2029
+#: include/custom-options/module/nexter-display-conditional-rules.php:247
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2018
 #: assets/js/admin/index.js:1
 msgid "Entire Website"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:900
-#: include/custom-options/module/nexter-display-conditional-rules.php:242
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2030
+#: include/custom-options/module/nexter-display-conditional-rules.php:248
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2019
 msgid "All Singulars"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:901
-#: include/custom-options/module/nexter-display-archives-rules.php:397
-#: include/custom-options/module/nexter-display-conditional-rules.php:243
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2031
+#: include/custom-options/module/nexter-display-archives-rules.php:343
+#: include/custom-options/module/nexter-display-conditional-rules.php:249
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2020
 msgid "All Archives"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:905
-#: include/custom-options/module/nexter-display-conditional-rules.php:249
+#: include/custom-options/module/nexter-display-conditional-rules.php:255
 #: include/custom-options/module/nexter-display-singular-rules.php:261
 #: include/custom-options/module/nexter-display-singular-rules.php:262
-#: include/custom-options/module/nexter-display-singular-rules.php:370
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2037
+#: include/custom-options/module/nexter-display-singular-rules.php:325
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2026
 #: assets/js/admin/index.js:1
 msgid "Front Page"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:906
-#: include/custom-options/module/nexter-display-conditional-rules.php:250
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2038
+#: include/custom-options/module/nexter-display-conditional-rules.php:256
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2027
 msgid "Blog / Posts Page"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:907
-#: include/custom-options/module/nexter-display-conditional-rules.php:251
-#: include/custom-options/module/nexter-display-singular-archives-rules.php:424
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2042
+#: include/custom-options/module/nexter-display-conditional-rules.php:257
+#: include/custom-options/module/nexter-display-singular-archives-rules.php:438
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2031
 #: assets/js/admin/index.js:1
 msgid "Date Archive"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:908
-#: include/custom-options/module/nexter-display-conditional-rules.php:252
-#: include/custom-options/module/nexter-display-singular-archives-rules.php:391
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2041
+#: include/custom-options/module/nexter-display-conditional-rules.php:258
+#: include/custom-options/module/nexter-display-singular-archives-rules.php:405
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2030
 msgid "Author Archive"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:909
-#: include/custom-options/module/nexter-display-conditional-rules.php:253
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2039
+#: include/custom-options/module/nexter-display-conditional-rules.php:259
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2028
 #: assets/js/admin/index.js:1
 msgid "Search Page"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:913
-#: include/custom-options/module/nexter-display-conditional-rules.php:258
+#: include/custom-options/module/nexter-display-conditional-rules.php:264
 msgid "WooCommerce Shop Page"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:917
-#: include/custom-options/module/nexter-display-conditional-rules.php:270
+#: include/custom-options/module/nexter-display-conditional-rules.php:276
 msgid "Day of Week"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:921
-#: include/custom-options/module/nexter-display-conditional-rules.php:276
+#: include/custom-options/module/nexter-display-conditional-rules.php:282
 #: include/panel-settings/extensions/content-seo/schema-types/fields-software-application.php:270
 msgid "Operating System"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:922
-#: include/custom-options/module/nexter-display-conditional-rules.php:277
+#: include/custom-options/module/nexter-display-conditional-rules.php:283
 msgid "Browser"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:923
-#: include/custom-options/module/nexter-display-conditional-rules.php:278
+#: include/custom-options/module/nexter-display-conditional-rules.php:284
 msgid "Login Status"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:924
-#: include/custom-options/module/nexter-display-conditional-rules.php:279
+#: include/custom-options/module/nexter-display-conditional-rules.php:285
 msgid "User Roles"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:928
-#: include/custom-options/module/nexter-display-conditional-rules.php:324
+#: include/custom-options/module/nexter-display-conditional-rules.php:330
 msgid "Particular Posts / Pages / Taxonomies, etc."
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:996
-#: include/custom-options/module/nexter-display-conditional-rules.php:1839
+#: include/custom-options/module/nexter-display-conditional-rules.php:1791
 #: assets/js/admin/index.js:1
 #: content-seo/build/index.js:1
 #: content-seo/build/index.js:3
@@ -1625,7 +1624,7 @@ msgid "Monday"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:997
-#: include/custom-options/module/nexter-display-conditional-rules.php:1840
+#: include/custom-options/module/nexter-display-conditional-rules.php:1792
 #: assets/js/admin/index.js:1
 #: content-seo/build/index.js:1
 #: content-seo/build/index.js:3
@@ -1633,7 +1632,7 @@ msgid "Tuesday"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:998
-#: include/custom-options/module/nexter-display-conditional-rules.php:1841
+#: include/custom-options/module/nexter-display-conditional-rules.php:1793
 #: assets/js/admin/index.js:1
 #: content-seo/build/index.js:1
 #: content-seo/build/index.js:3
@@ -1641,7 +1640,7 @@ msgid "Wednesday"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:999
-#: include/custom-options/module/nexter-display-conditional-rules.php:1842
+#: include/custom-options/module/nexter-display-conditional-rules.php:1794
 #: assets/js/admin/index.js:1
 #: content-seo/build/index.js:1
 #: content-seo/build/index.js:3
@@ -1649,7 +1648,7 @@ msgid "Thursday"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:1000
-#: include/custom-options/module/nexter-display-conditional-rules.php:1843
+#: include/custom-options/module/nexter-display-conditional-rules.php:1795
 #: assets/js/admin/index.js:1
 #: content-seo/build/index.js:1
 #: content-seo/build/index.js:3
@@ -1657,7 +1656,7 @@ msgid "Friday"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:1001
-#: include/custom-options/module/nexter-display-conditional-rules.php:1844
+#: include/custom-options/module/nexter-display-conditional-rules.php:1796
 #: assets/js/admin/index.js:1
 #: content-seo/build/index.js:1
 #: content-seo/build/index.js:3
@@ -1665,7 +1664,7 @@ msgid "Saturday"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:1002
-#: include/custom-options/module/nexter-display-conditional-rules.php:1845
+#: include/custom-options/module/nexter-display-conditional-rules.php:1797
 #: assets/js/admin/index.js:1
 #: content-seo/build/index.js:1
 #: content-seo/build/index.js:3
@@ -1673,105 +1672,105 @@ msgid "Sunday"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:1005
-#: include/custom-options/module/nexter-display-conditional-rules.php:1851
+#: include/custom-options/module/nexter-display-conditional-rules.php:1803
 #: assets/js/admin/index.js:1
 msgid "Windows"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:1006
-#: include/custom-options/module/nexter-display-conditional-rules.php:1852
+#: include/custom-options/module/nexter-display-conditional-rules.php:1804
 #: assets/js/admin/index.js:1
 msgid "OpenBSD"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:1007
-#: include/custom-options/module/nexter-display-conditional-rules.php:1853
+#: include/custom-options/module/nexter-display-conditional-rules.php:1805
 #: assets/js/admin/index.js:1
 msgid "SunOS"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:1008
-#: include/custom-options/module/nexter-display-conditional-rules.php:1854
+#: include/custom-options/module/nexter-display-conditional-rules.php:1806
 #: assets/js/admin/index.js:1
 msgid "Linux"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:1009
 #: include/custom-options/class-nxt-builder-condition-ui.php:1022
-#: include/custom-options/module/nexter-display-conditional-rules.php:1855
-#: include/custom-options/module/nexter-display-conditional-rules.php:1870
+#: include/custom-options/module/nexter-display-conditional-rules.php:1807
+#: include/custom-options/module/nexter-display-conditional-rules.php:1822
 #: assets/js/admin/index.js:1
 msgid "Safari"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:1010
-#: include/custom-options/module/nexter-display-conditional-rules.php:1856
+#: include/custom-options/module/nexter-display-conditional-rules.php:1808
 #: assets/js/admin/index.js:1
 msgid "Mac OS"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:1011
-#: include/custom-options/module/nexter-display-conditional-rules.php:1857
+#: include/custom-options/module/nexter-display-conditional-rules.php:1809
 #: assets/js/admin/index.js:1
 msgid "QNX"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:1012
-#: include/custom-options/module/nexter-display-conditional-rules.php:1858
+#: include/custom-options/module/nexter-display-conditional-rules.php:1810
 #: assets/js/admin/index.js:1
 msgid "BeOS"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:1013
-#: include/custom-options/module/nexter-display-conditional-rules.php:1859
+#: include/custom-options/module/nexter-display-conditional-rules.php:1811
 #: assets/js/admin/index.js:1
 msgid "OS/2"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:1014
-#: include/custom-options/module/nexter-display-conditional-rules.php:1860
+#: include/custom-options/module/nexter-display-conditional-rules.php:1812
 #: assets/js/admin/index.js:1
 msgid "Search Bot"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:1017
-#: include/custom-options/module/nexter-display-conditional-rules.php:1865
+#: include/custom-options/module/nexter-display-conditional-rules.php:1817
 #: assets/js/admin/index.js:1
 msgid "Internet Explorer"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:1018
-#: include/custom-options/module/nexter-display-conditional-rules.php:1866
+#: include/custom-options/module/nexter-display-conditional-rules.php:1818
 #: assets/js/admin/index.js:1
 msgid "Mozilla Firefox"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:1019
-#: include/custom-options/module/nexter-display-conditional-rules.php:1867
+#: include/custom-options/module/nexter-display-conditional-rules.php:1819
 #: assets/js/admin/index.js:1
 msgid "Google Chrome"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:1020
-#: include/custom-options/module/nexter-display-conditional-rules.php:1868
+#: include/custom-options/module/nexter-display-conditional-rules.php:1820
 #: assets/js/admin/index.js:1
 msgid "Opera Mini"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:1021
-#: include/custom-options/module/nexter-display-conditional-rules.php:1869
+#: include/custom-options/module/nexter-display-conditional-rules.php:1821
 #: assets/js/admin/index.js:1
 msgid "Opera"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:1025
-#: include/custom-options/module/nexter-display-conditional-rules.php:1875
+#: include/custom-options/module/nexter-display-conditional-rules.php:1827
 #: assets/js/admin/index.js:1
 msgid "Logged In"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:1026
-#: include/custom-options/module/nexter-display-conditional-rules.php:1876
+#: include/custom-options/module/nexter-display-conditional-rules.php:1828
 #: assets/js/admin/index.js:1
 msgid "Logged Out"
 msgstr ""
@@ -1797,720 +1796,719 @@ msgid "Select User Roles"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:1111
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2158
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2147
 msgid "Specific Pages/Posts"
 msgstr ""
 
 #: include/custom-options/class-nxt-builder-condition-ui.php:1173
-#: include/custom-options/module/nexter-display-conditional-rules.php:3552
 msgid "---Select---"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-archives-rules.php:141
+#: include/custom-options/module/nexter-display-archives-rules.php:143
 #: include/custom-options/module/nexter-display-singular-archives-rules.php:67
 msgid "Empty Data"
 msgstr ""
 
 #. translators: %s: Archive
-#: include/custom-options/module/nexter-display-archives-rules.php:450
+#: include/custom-options/module/nexter-display-archives-rules.php:396
 #, php-format
 msgid "Default %s Archive"
 msgstr ""
 
 #. translators: %s: Taxonomy Label
-#: include/custom-options/module/nexter-display-archives-rules.php:572
+#: include/custom-options/module/nexter-display-archives-rules.php:518
 #, php-format
 msgid "%1$s : First Child %2$s"
 msgstr ""
 
 #. translators: 1: Post type label, 2: Taxonomy singular name
-#: include/custom-options/module/nexter-display-archives-rules.php:607
-#: include/custom-options/module/nexter-display-singular-archives-rules.php:325
+#: include/custom-options/module/nexter-display-archives-rules.php:553
+#: include/custom-options/module/nexter-display-singular-archives-rules.php:339
 #, php-format
 msgid "%1$s : Child %2$s"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:239
+#: include/custom-options/module/nexter-display-conditional-rules.php:245
 msgid "Standard"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:264
+#: include/custom-options/module/nexter-display-conditional-rules.php:270
 msgid "Default Pages"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:268
+#: include/custom-options/module/nexter-display-conditional-rules.php:274
 msgid "Date & Time"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:274
+#: include/custom-options/module/nexter-display-conditional-rules.php:280
 msgid "Visitors Source"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:322
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2075
+#: include/custom-options/module/nexter-display-conditional-rules.php:328
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2064
 msgid "Particular Posts/Pages/Taxonomies"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:523
-#: include/custom-options/module/nexter-display-conditional-rules.php:531
-#: include/custom-options/module/nexter-display-conditional-rules.php:549
-#: include/custom-options/module/nexter-display-conditional-rules.php:577
-#: include/custom-options/module/nexter-display-conditional-rules.php:614
-#: include/custom-options/module/nexter-display-conditional-rules.php:645
-#: include/custom-options/module/nexter-display-conditional-rules.php:667
-#: include/custom-options/module/nexter-display-conditional-rules.php:697
+#: include/custom-options/module/nexter-display-conditional-rules.php:529
+#: include/custom-options/module/nexter-display-conditional-rules.php:537
+#: include/custom-options/module/nexter-display-conditional-rules.php:555
+#: include/custom-options/module/nexter-display-conditional-rules.php:583
+#: include/custom-options/module/nexter-display-conditional-rules.php:620
+#: include/custom-options/module/nexter-display-conditional-rules.php:651
+#: include/custom-options/module/nexter-display-conditional-rules.php:673
+#: include/custom-options/module/nexter-display-conditional-rules.php:703
 msgid "Wp Head"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:524
-#: include/custom-options/module/nexter-display-conditional-rules.php:545
-#: include/custom-options/module/nexter-display-conditional-rules.php:573
-#: include/custom-options/module/nexter-display-conditional-rules.php:610
-#: include/custom-options/module/nexter-display-conditional-rules.php:639
-#: include/custom-options/module/nexter-display-conditional-rules.php:660
-#: include/custom-options/module/nexter-display-conditional-rules.php:690
-#: include/custom-options/module/nexter-display-conditional-rules.php:715
+#: include/custom-options/module/nexter-display-conditional-rules.php:530
+#: include/custom-options/module/nexter-display-conditional-rules.php:551
+#: include/custom-options/module/nexter-display-conditional-rules.php:579
+#: include/custom-options/module/nexter-display-conditional-rules.php:616
+#: include/custom-options/module/nexter-display-conditional-rules.php:645
+#: include/custom-options/module/nexter-display-conditional-rules.php:666
+#: include/custom-options/module/nexter-display-conditional-rules.php:696
+#: include/custom-options/module/nexter-display-conditional-rules.php:721
 msgid "Wp Footer"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:528
-#: include/custom-options/module/nexter-display-conditional-rules.php:664
-#: include/custom-options/module/nexter-display-conditional-rules.php:694
+#: include/custom-options/module/nexter-display-conditional-rules.php:534
+#: include/custom-options/module/nexter-display-conditional-rules.php:670
+#: include/custom-options/module/nexter-display-conditional-rules.php:700
 msgid "Html Before"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:529
-#: include/custom-options/module/nexter-display-conditional-rules.php:643
-#: include/custom-options/module/nexter-display-conditional-rules.php:665
-#: include/custom-options/module/nexter-display-conditional-rules.php:695
+#: include/custom-options/module/nexter-display-conditional-rules.php:535
+#: include/custom-options/module/nexter-display-conditional-rules.php:649
+#: include/custom-options/module/nexter-display-conditional-rules.php:671
+#: include/custom-options/module/nexter-display-conditional-rules.php:701
 msgid "Head Top"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:530
-#: include/custom-options/module/nexter-display-conditional-rules.php:644
-#: include/custom-options/module/nexter-display-conditional-rules.php:666
-#: include/custom-options/module/nexter-display-conditional-rules.php:696
+#: include/custom-options/module/nexter-display-conditional-rules.php:536
+#: include/custom-options/module/nexter-display-conditional-rules.php:650
+#: include/custom-options/module/nexter-display-conditional-rules.php:672
+#: include/custom-options/module/nexter-display-conditional-rules.php:702
 msgid "Head Bottom"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:533
-#: include/custom-options/module/nexter-display-conditional-rules.php:615
-#: include/custom-options/module/nexter-display-conditional-rules.php:669
-#: include/custom-options/module/nexter-display-conditional-rules.php:699
+#: include/custom-options/module/nexter-display-conditional-rules.php:539
+#: include/custom-options/module/nexter-display-conditional-rules.php:621
+#: include/custom-options/module/nexter-display-conditional-rules.php:675
+#: include/custom-options/module/nexter-display-conditional-rules.php:705
 msgid "Body Top"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:537
-#: include/custom-options/module/nexter-display-conditional-rules.php:558
-#: include/custom-options/module/nexter-display-conditional-rules.php:584
-#: include/custom-options/module/nexter-display-conditional-rules.php:622
-#: include/custom-options/module/nexter-display-conditional-rules.php:650
-#: include/custom-options/module/nexter-display-conditional-rules.php:678
+#: include/custom-options/module/nexter-display-conditional-rules.php:543
+#: include/custom-options/module/nexter-display-conditional-rules.php:564
+#: include/custom-options/module/nexter-display-conditional-rules.php:590
+#: include/custom-options/module/nexter-display-conditional-rules.php:628
+#: include/custom-options/module/nexter-display-conditional-rules.php:656
+#: include/custom-options/module/nexter-display-conditional-rules.php:684
 msgid "Content Before"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:540
-#: include/custom-options/module/nexter-display-conditional-rules.php:561
-#: include/custom-options/module/nexter-display-conditional-rules.php:589
-#: include/custom-options/module/nexter-display-conditional-rules.php:602
-#: include/custom-options/module/nexter-display-conditional-rules.php:633
-#: include/custom-options/module/nexter-display-conditional-rules.php:653
-#: include/custom-options/module/nexter-display-conditional-rules.php:679
+#: include/custom-options/module/nexter-display-conditional-rules.php:546
+#: include/custom-options/module/nexter-display-conditional-rules.php:567
+#: include/custom-options/module/nexter-display-conditional-rules.php:595
+#: include/custom-options/module/nexter-display-conditional-rules.php:608
+#: include/custom-options/module/nexter-display-conditional-rules.php:639
+#: include/custom-options/module/nexter-display-conditional-rules.php:659
+#: include/custom-options/module/nexter-display-conditional-rules.php:685
 msgid "Content After"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:544
-#: include/custom-options/module/nexter-display-conditional-rules.php:638
-#: include/custom-options/module/nexter-display-conditional-rules.php:689
-#: include/custom-options/module/nexter-display-conditional-rules.php:714
+#: include/custom-options/module/nexter-display-conditional-rules.php:550
+#: include/custom-options/module/nexter-display-conditional-rules.php:644
+#: include/custom-options/module/nexter-display-conditional-rules.php:695
+#: include/custom-options/module/nexter-display-conditional-rules.php:720
 msgid "Body Bottom"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:553
+#: include/custom-options/module/nexter-display-conditional-rules.php:559
 msgid "Site Container Inside"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:554
+#: include/custom-options/module/nexter-display-conditional-rules.php:560
 msgid "Container Inside"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:556
-#: include/custom-options/module/nexter-display-conditional-rules.php:620
+#: include/custom-options/module/nexter-display-conditional-rules.php:562
+#: include/custom-options/module/nexter-display-conditional-rules.php:626
 msgid "Main Content Before"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:557
+#: include/custom-options/module/nexter-display-conditional-rules.php:563
 msgid "Template Part Before"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:559
+#: include/custom-options/module/nexter-display-conditional-rules.php:565
 msgid "Page Title Before"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:560
+#: include/custom-options/module/nexter-display-conditional-rules.php:566
 msgid "Page Title After"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:562
+#: include/custom-options/module/nexter-display-conditional-rules.php:568
 msgid "Template Part After"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:563
-#: include/custom-options/module/nexter-display-conditional-rules.php:634
+#: include/custom-options/module/nexter-display-conditional-rules.php:569
+#: include/custom-options/module/nexter-display-conditional-rules.php:640
 msgid "Main Content After"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:564
+#: include/custom-options/module/nexter-display-conditional-rules.php:570
 msgid "Sidebar Content Before"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:565
+#: include/custom-options/module/nexter-display-conditional-rules.php:571
 msgid "Sidebar Content After"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:568
+#: include/custom-options/module/nexter-display-conditional-rules.php:574
 msgid "Footer Content Before"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:569
+#: include/custom-options/module/nexter-display-conditional-rules.php:575
 msgid "Copyright Before"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:570
+#: include/custom-options/module/nexter-display-conditional-rules.php:576
 msgid "Footer Info"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:571
+#: include/custom-options/module/nexter-display-conditional-rules.php:577
 msgid "Footer Content After"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:578
+#: include/custom-options/module/nexter-display-conditional-rules.php:584
 msgid "Body Start Wrap"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:579
+#: include/custom-options/module/nexter-display-conditional-rules.php:585
 msgid "Body End Wrap"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:581
+#: include/custom-options/module/nexter-display-conditional-rules.php:587
 msgid "Header Top Bar"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:582
+#: include/custom-options/module/nexter-display-conditional-rules.php:588
 msgid "Content Before Main"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:583
+#: include/custom-options/module/nexter-display-conditional-rules.php:589
 msgid "Content Before Wrap"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:585
+#: include/custom-options/module/nexter-display-conditional-rules.php:591
 msgid "Content Before Inner"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:586
+#: include/custom-options/module/nexter-display-conditional-rules.php:592
 msgid "Content Page Before"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:587
+#: include/custom-options/module/nexter-display-conditional-rules.php:593
 msgid "Content Page After"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:588
+#: include/custom-options/module/nexter-display-conditional-rules.php:594
 msgid "Content After Inner"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:590
+#: include/custom-options/module/nexter-display-conditional-rules.php:596
 msgid "Content After Wrap"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:591
+#: include/custom-options/module/nexter-display-conditional-rules.php:597
 msgid "Content After Main"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:594
+#: include/custom-options/module/nexter-display-conditional-rules.php:600
 msgid "Footer Before Inner"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:595
+#: include/custom-options/module/nexter-display-conditional-rules.php:601
 msgid "Footer After Inner"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:598
-#: include/custom-options/module/nexter-display-conditional-rules.php:675
+#: include/custom-options/module/nexter-display-conditional-rules.php:604
+#: include/custom-options/module/nexter-display-conditional-rules.php:681
 msgid "Content Primary Before"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:599
-#: include/custom-options/module/nexter-display-conditional-rules.php:680
+#: include/custom-options/module/nexter-display-conditional-rules.php:605
+#: include/custom-options/module/nexter-display-conditional-rules.php:686
 msgid "Content Primary After"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:604
+#: include/custom-options/module/nexter-display-conditional-rules.php:610
 msgid "Footer Before Widgets Inner"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:605
+#: include/custom-options/module/nexter-display-conditional-rules.php:611
 msgid "Footer After Widgets Inner"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:606
+#: include/custom-options/module/nexter-display-conditional-rules.php:612
 msgid "Footer Before Bottom"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:607
+#: include/custom-options/module/nexter-display-conditional-rules.php:613
 msgid "Footer Before Bottom Inner"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:608
+#: include/custom-options/module/nexter-display-conditional-rules.php:614
 msgid "Footer After Bottom Inner"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:609
+#: include/custom-options/module/nexter-display-conditional-rules.php:615
 msgid "Footer After Bottom"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:619
+#: include/custom-options/module/nexter-display-conditional-rules.php:625
 msgid "Header Hero"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:623
+#: include/custom-options/module/nexter-display-conditional-rules.php:629
 msgid "Inner Content Before"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:624
+#: include/custom-options/module/nexter-display-conditional-rules.php:630
 msgid "Content Entry Header Before"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:625
+#: include/custom-options/module/nexter-display-conditional-rules.php:631
 msgid "Content Entry Header"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:626
+#: include/custom-options/module/nexter-display-conditional-rules.php:632
 msgid "Content Before Entry Title"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:627
+#: include/custom-options/module/nexter-display-conditional-rules.php:633
 msgid "Content After Entry Title"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:628
+#: include/custom-options/module/nexter-display-conditional-rules.php:634
 msgid "Content Entry Header After"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:630
+#: include/custom-options/module/nexter-display-conditional-rules.php:636
 msgid "Content Entry Before"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:631
+#: include/custom-options/module/nexter-display-conditional-rules.php:637
 msgid "Content Entry After"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:632
+#: include/custom-options/module/nexter-display-conditional-rules.php:638
 msgid "Inner Content After"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:670
+#: include/custom-options/module/nexter-display-conditional-rules.php:676
 msgid "Header Wrap Before"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:673
+#: include/custom-options/module/nexter-display-conditional-rules.php:679
 msgid "Header Wrap After"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:676
+#: include/custom-options/module/nexter-display-conditional-rules.php:682
 msgid "Page Before Header"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:677
+#: include/custom-options/module/nexter-display-conditional-rules.php:683
 msgid "Page Header"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:683
+#: include/custom-options/module/nexter-display-conditional-rules.php:689
 #: dashboard/build/index.js:4
 msgid "Pagination"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:723
+#: include/custom-options/module/nexter-display-conditional-rules.php:729
 #: assets/js/admin/index.js:4
 msgid "Before Single Product"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:724
+#: include/custom-options/module/nexter-display-conditional-rules.php:730
 msgid "Before Single Product Summary"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:725
+#: include/custom-options/module/nexter-display-conditional-rules.php:731
 msgid "Single Product Summary"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:726
+#: include/custom-options/module/nexter-display-conditional-rules.php:732
 msgid "Before Add To Cart Form"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:727
+#: include/custom-options/module/nexter-display-conditional-rules.php:733
 msgid "Single Product Price"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:728
+#: include/custom-options/module/nexter-display-conditional-rules.php:734
 msgid "Before Variations Form"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:729
+#: include/custom-options/module/nexter-display-conditional-rules.php:735
 msgid "Before Add To Cart Button"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:730
+#: include/custom-options/module/nexter-display-conditional-rules.php:736
 msgid "Before Single Variation"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:731
+#: include/custom-options/module/nexter-display-conditional-rules.php:737
 msgid "Single Variation"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:732
+#: include/custom-options/module/nexter-display-conditional-rules.php:738
 msgid "Before Add To Cart"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:733
+#: include/custom-options/module/nexter-display-conditional-rules.php:739
 msgid "After Add To Cart"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:734
+#: include/custom-options/module/nexter-display-conditional-rules.php:740
 msgid "After Single Variation"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:735
+#: include/custom-options/module/nexter-display-conditional-rules.php:741
 msgid "After Add To Cart Button"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:736
+#: include/custom-options/module/nexter-display-conditional-rules.php:742
 msgid "After Variation Form"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:737
+#: include/custom-options/module/nexter-display-conditional-rules.php:743
 msgid "After Add To Cart Form"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:738
+#: include/custom-options/module/nexter-display-conditional-rules.php:744
 msgid "Product Meta Start"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:739
+#: include/custom-options/module/nexter-display-conditional-rules.php:745
 msgid "Product Meta (SKU, category, tags)"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:740
+#: include/custom-options/module/nexter-display-conditional-rules.php:746
 msgid "Product Meta End"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:741
+#: include/custom-options/module/nexter-display-conditional-rules.php:747
 msgid "WooCommerce Share"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:742
+#: include/custom-options/module/nexter-display-conditional-rules.php:748
 msgid "After Single Product Summary"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:743
+#: include/custom-options/module/nexter-display-conditional-rules.php:749
 #: assets/js/admin/index.js:4
 msgid "After Single Product"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:746
+#: include/custom-options/module/nexter-display-conditional-rules.php:752
 msgid "Before Main Content"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:747
+#: include/custom-options/module/nexter-display-conditional-rules.php:753
 msgid "Archive Description"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:748
+#: include/custom-options/module/nexter-display-conditional-rules.php:754
 msgid "Before Shop Loop"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:749
+#: include/custom-options/module/nexter-display-conditional-rules.php:755
 msgid "Before Shop Loop Item"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:750
+#: include/custom-options/module/nexter-display-conditional-rules.php:756
 msgid "Before Shop Loop Item Title"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:751
+#: include/custom-options/module/nexter-display-conditional-rules.php:757
 msgid "Shop Loop Item Title"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:752
+#: include/custom-options/module/nexter-display-conditional-rules.php:758
 msgid "After Shop Loop Item Title"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:753
+#: include/custom-options/module/nexter-display-conditional-rules.php:759
 msgid "After Shop Loop Item"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:754
+#: include/custom-options/module/nexter-display-conditional-rules.php:760
 msgid "After Shop Loop"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:755
+#: include/custom-options/module/nexter-display-conditional-rules.php:761
 msgid "After Main Content"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:759
+#: include/custom-options/module/nexter-display-conditional-rules.php:765
 msgid "Account Navigation"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:760
+#: include/custom-options/module/nexter-display-conditional-rules.php:766
 msgid "Before Account Navigation"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:761
+#: include/custom-options/module/nexter-display-conditional-rules.php:767
 msgid "After Account Navigation"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:762
+#: include/custom-options/module/nexter-display-conditional-rules.php:768
 msgid "Account Dashboard"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:763
+#: include/custom-options/module/nexter-display-conditional-rules.php:769
 msgid "Before Account Orders Pagination"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:764
+#: include/custom-options/module/nexter-display-conditional-rules.php:770
 msgid "Before Available Downloads"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:765
+#: include/custom-options/module/nexter-display-conditional-rules.php:771
 msgid "After Available Downloads"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:766
+#: include/custom-options/module/nexter-display-conditional-rules.php:772
 msgid "After Account Downloads"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:767
+#: include/custom-options/module/nexter-display-conditional-rules.php:773
 msgid "Account Content"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:768
+#: include/custom-options/module/nexter-display-conditional-rules.php:774
 msgid "Before Edit Account Address Form"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:769
+#: include/custom-options/module/nexter-display-conditional-rules.php:775
 msgid "After Edit Account Address form"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:770
+#: include/custom-options/module/nexter-display-conditional-rules.php:776
 msgid "Before Edit Account Form"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:771
+#: include/custom-options/module/nexter-display-conditional-rules.php:777
 msgid "Edit Account Form Start"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:772
+#: include/custom-options/module/nexter-display-conditional-rules.php:778
 msgid "Edit Account Form"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:773
+#: include/custom-options/module/nexter-display-conditional-rules.php:779
 msgid "Edit Account Form End"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:774
+#: include/custom-options/module/nexter-display-conditional-rules.php:780
 msgid "After Edit Account Form"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:776
+#: include/custom-options/module/nexter-display-conditional-rules.php:782
 #: assets/js/admin/index.js:4
 msgid "Before Checkout Form"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:777
+#: include/custom-options/module/nexter-display-conditional-rules.php:783
 msgid "Checkout Before Customer Details"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:778
+#: include/custom-options/module/nexter-display-conditional-rules.php:784
 msgid "Before Checkout Billing Form"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:779
+#: include/custom-options/module/nexter-display-conditional-rules.php:785
 msgid "After Checkout Billing Form"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:780
+#: include/custom-options/module/nexter-display-conditional-rules.php:786
 msgid "Before Checkout Shipping Form"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:781
+#: include/custom-options/module/nexter-display-conditional-rules.php:787
 msgid "After Checkout Shipping Form"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:782
+#: include/custom-options/module/nexter-display-conditional-rules.php:788
 msgid "Before Order Notes"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:783
+#: include/custom-options/module/nexter-display-conditional-rules.php:789
 msgid "After Order Notes"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:784
+#: include/custom-options/module/nexter-display-conditional-rules.php:790
 msgid "Checkout After Customer Details"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:785
+#: include/custom-options/module/nexter-display-conditional-rules.php:791
 msgid "Checkout Before Order Review"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:786
+#: include/custom-options/module/nexter-display-conditional-rules.php:792
 msgid "Review Order Before Cart Contents"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:787
+#: include/custom-options/module/nexter-display-conditional-rules.php:793
 msgid "Review Order After Cart Contents"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:788
+#: include/custom-options/module/nexter-display-conditional-rules.php:794
 msgid "Review Order Before Shipping"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:789
+#: include/custom-options/module/nexter-display-conditional-rules.php:795
 msgid "Review Order After Shipping"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:790
+#: include/custom-options/module/nexter-display-conditional-rules.php:796
 msgid "Review Order Before Order Total"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:791
+#: include/custom-options/module/nexter-display-conditional-rules.php:797
 msgid "Review Order After Order Total"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:792
+#: include/custom-options/module/nexter-display-conditional-rules.php:798
 msgid "Review Order Before Payment"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:793
+#: include/custom-options/module/nexter-display-conditional-rules.php:799
 msgid "Review Order Before Submit"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:794
+#: include/custom-options/module/nexter-display-conditional-rules.php:800
 msgid "Review Order After Submit"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:795
+#: include/custom-options/module/nexter-display-conditional-rules.php:801
 msgid "Review Order After Payment"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:796
+#: include/custom-options/module/nexter-display-conditional-rules.php:802
 msgid "Checkout After Order Review"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:797
+#: include/custom-options/module/nexter-display-conditional-rules.php:803
 #: assets/js/admin/index.js:4
 msgid "After Checkout Form"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:800
+#: include/custom-options/module/nexter-display-conditional-rules.php:806
 msgid "Before Cart"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:801
+#: include/custom-options/module/nexter-display-conditional-rules.php:807
 msgid "Before Cart Table"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:802
+#: include/custom-options/module/nexter-display-conditional-rules.php:808
 msgid "Before Cart Contents"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:803
+#: include/custom-options/module/nexter-display-conditional-rules.php:809
 msgid "Cart Contents"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:804
+#: include/custom-options/module/nexter-display-conditional-rules.php:810
 msgid "Cart Coupon"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:805
+#: include/custom-options/module/nexter-display-conditional-rules.php:811
 msgid "After Cart Contents"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:806
+#: include/custom-options/module/nexter-display-conditional-rules.php:812
 msgid "After Cart Table"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:807
+#: include/custom-options/module/nexter-display-conditional-rules.php:813
 msgid "Cart Collaterals"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:808
+#: include/custom-options/module/nexter-display-conditional-rules.php:814
 msgid "Before Cart Totals"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:809
+#: include/custom-options/module/nexter-display-conditional-rules.php:815
 msgid "Cart Totals Before Shipping"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:810
+#: include/custom-options/module/nexter-display-conditional-rules.php:816
 msgid "Before Shipping Calculator"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:811
+#: include/custom-options/module/nexter-display-conditional-rules.php:817
 msgid "After Shipping Calculator"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:812
+#: include/custom-options/module/nexter-display-conditional-rules.php:818
 msgid "Cart Totals After Shipping"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:813
+#: include/custom-options/module/nexter-display-conditional-rules.php:819
 msgid "Cart Totals Before Order Total"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:814
+#: include/custom-options/module/nexter-display-conditional-rules.php:820
 msgid "Cart Totals After Order Total"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:815
+#: include/custom-options/module/nexter-display-conditional-rules.php:821
 msgid "Proceed To Checkout"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:816
+#: include/custom-options/module/nexter-display-conditional-rules.php:822
 msgid "After Cart Totals"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:817
+#: include/custom-options/module/nexter-display-conditional-rules.php:823
 msgid "After Cart"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:1684
-#: include/custom-options/module/nexter-display-conditional-rules.php:1779
+#: include/custom-options/module/nexter-display-conditional-rules.php:1636
+#: include/custom-options/module/nexter-display-conditional-rules.php:1731
 msgid " archive page"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:1685
-#: include/custom-options/module/nexter-display-conditional-rules.php:1784
+#: include/custom-options/module/nexter-display-conditional-rules.php:1637
+#: include/custom-options/module/nexter-display-conditional-rules.php:1736
 msgid "All singulars  "
 msgstr ""
 
-#: include/custom-options/module/nexter-display-conditional-rules.php:1850
+#: include/custom-options/module/nexter-display-conditional-rules.php:1802
 #: assets/js/admin/index.js:1
 msgid "iPhone"
 msgstr ""
 
 #. translators: %s: Taxonomy Label
-#: include/custom-options/module/nexter-display-singular-archives-rules.php:278
+#: include/custom-options/module/nexter-display-singular-archives-rules.php:292
 #, php-format
 msgid "%1$s : %2$s"
 msgstr ""
 
 #. translators: %s: By Author
-#: include/custom-options/module/nexter-display-singular-archives-rules.php:357
+#: include/custom-options/module/nexter-display-singular-archives-rules.php:371
 #, php-format
 msgid "%s : By Author"
 msgstr ""
 
-#: include/custom-options/module/nexter-display-singular-archives-rules.php:456
+#: include/custom-options/module/nexter-display-singular-archives-rules.php:470
 msgid "Search Results"
 msgstr ""
 
@@ -2588,9 +2586,9 @@ msgstr ""
 
 #: include/nexter-template/importer/class.wordpress-importer.php:162
 #: include/nexter-template/importer/class.wordpress-importer.php:171
-#: include/nexter-template/importer/class.wordpress-importer.php:227
-#: include/nexter-template/importer/class.wordpress-importer.php:231
-#: include/nexter-template/importer/class.wordpress-importer.php:241
+#: include/nexter-template/importer/class.wordpress-importer.php:229
+#: include/nexter-template/importer/class.wordpress-importer.php:233
+#: include/nexter-template/importer/class.wordpress-importer.php:243
 msgid "Sorry, there has been an error."
 msgstr ""
 
@@ -2598,188 +2596,188 @@ msgstr ""
 msgid "The file does not exist, please try again."
 msgstr ""
 
-#: include/nexter-template/importer/class.wordpress-importer.php:211
+#: include/nexter-template/importer/class.wordpress-importer.php:213
 msgid "All done."
 msgstr ""
 
-#: include/nexter-template/importer/class.wordpress-importer.php:211
+#: include/nexter-template/importer/class.wordpress-importer.php:213
 msgid "Have fun!"
 msgstr ""
 
-#: include/nexter-template/importer/class.wordpress-importer.php:212
+#: include/nexter-template/importer/class.wordpress-importer.php:214
 msgid "Remember to update the passwords and roles of imported users."
 msgstr ""
 
 #. translators: %s: export file
-#: include/nexter-template/importer/class.wordpress-importer.php:233
+#: include/nexter-template/importer/class.wordpress-importer.php:235
 #, php-format
 msgid "The export file could not be found at <code>%s</code>. It is likely that this was caused by a permissions problem."
 msgstr ""
 
 #. translators: %s: version
-#: include/nexter-template/importer/class.wordpress-importer.php:250
+#: include/nexter-template/importer/class.wordpress-importer.php:252
 #, php-format
 msgid "This WXR file (version %s) may not be supported by this version of the importer. Please consider updating."
 msgstr ""
 
 #. translators: %s: post author
-#: include/nexter-template/importer/class.wordpress-importer.php:276
+#: include/nexter-template/importer/class.wordpress-importer.php:278
 #, php-format
 msgid "Failed to import author %s. Their posts will be attributed to the current user."
 msgstr ""
 
-#: include/nexter-template/importer/class.wordpress-importer.php:303
+#: include/nexter-template/importer/class.wordpress-importer.php:305
 msgid "Assign Authors"
 msgstr ""
 
-#: include/nexter-template/importer/class.wordpress-importer.php:304
+#: include/nexter-template/importer/class.wordpress-importer.php:306
 msgid "To make it easier for you to edit and save the imported content, you may want to reassign the author of the imported item to an existing user of this site. For example, you may want to import all the entries as <code>admin</code>s entries."
 msgstr ""
 
 #. translators: %s: user role
-#: include/nexter-template/importer/class.wordpress-importer.php:307
+#: include/nexter-template/importer/class.wordpress-importer.php:309
 #, php-format
 msgid "If a new user is created by WordPress, a new password will be randomly generated and the new user&#8217;s role will be set as %s. Manually changing the new user&#8217;s details will be necessary."
 msgstr ""
 
-#: include/nexter-template/importer/class.wordpress-importer.php:317
+#: include/nexter-template/importer/class.wordpress-importer.php:319
 msgid "Import Attachments"
 msgstr ""
 
-#: include/nexter-template/importer/class.wordpress-importer.php:320
+#: include/nexter-template/importer/class.wordpress-importer.php:322
 msgid "Download and import file attachments"
 msgstr ""
 
-#: include/nexter-template/importer/class.wordpress-importer.php:323
+#: include/nexter-template/importer/class.wordpress-importer.php:325
 msgid "Content Options"
 msgstr ""
 
-#: include/nexter-template/importer/class.wordpress-importer.php:326
+#: include/nexter-template/importer/class.wordpress-importer.php:328
 msgid "Change all imported URLs that currently link to the previous site so that they now link to this site"
 msgstr ""
 
-#: include/nexter-template/importer/class.wordpress-importer.php:328
+#: include/nexter-template/importer/class.wordpress-importer.php:330
 msgid "Submit"
 msgstr ""
 
-#: include/nexter-template/importer/class.wordpress-importer.php:341
+#: include/nexter-template/importer/class.wordpress-importer.php:343
 msgid "Import author:"
 msgstr ""
 
-#: include/nexter-template/importer/class.wordpress-importer.php:352
+#: include/nexter-template/importer/class.wordpress-importer.php:354
 msgid "or create new user with login name:"
 msgstr ""
 
-#: include/nexter-template/importer/class.wordpress-importer.php:355
+#: include/nexter-template/importer/class.wordpress-importer.php:357
 msgid "as a new user:"
 msgstr ""
 
-#: include/nexter-template/importer/class.wordpress-importer.php:363
+#: include/nexter-template/importer/class.wordpress-importer.php:365
 msgid "assign posts to an existing user:"
 msgstr ""
 
-#: include/nexter-template/importer/class.wordpress-importer.php:364
+#: include/nexter-template/importer/class.wordpress-importer.php:366
 msgid "or assign posts to an existing user:"
 msgstr ""
 
-#: include/nexter-template/importer/class.wordpress-importer.php:371
+#: include/nexter-template/importer/class.wordpress-importer.php:373
 msgid "- Select -"
 msgstr ""
 
 #. translators: %s: author name
-#: include/nexter-template/importer/class.wordpress-importer.php:426
+#: include/nexter-template/importer/class.wordpress-importer.php:428
 #, php-format
 msgid "Failed to create new user for %s. Their posts will be attributed to the current user."
 msgstr ""
 
 #. translators: %s: category name
-#: include/nexter-template/importer/class.wordpress-importer.php:479
+#: include/nexter-template/importer/class.wordpress-importer.php:481
 #, php-format
 msgid "Failed to import category %s"
 msgstr ""
 
 #. translators: %s: tag name
-#: include/nexter-template/importer/class.wordpress-importer.php:525
+#: include/nexter-template/importer/class.wordpress-importer.php:527
 #, php-format
 msgid "Failed to import post tag %s"
 msgstr ""
 
 #. translators: 1: Taxonomy name, 2: Term name
-#: include/nexter-template/importer/class.wordpress-importer.php:581
-#: include/nexter-template/importer/class.wordpress-importer.php:821
+#: include/nexter-template/importer/class.wordpress-importer.php:583
+#: include/nexter-template/importer/class.wordpress-importer.php:823
 #, php-format
 msgid "Failed to import %1$s %2$s"
 msgstr ""
 
 #. translators: 1: post title, 2: post type
-#: include/nexter-template/importer/class.wordpress-importer.php:676
+#: include/nexter-template/importer/class.wordpress-importer.php:678
 #, php-format
 msgid "Failed to import &#8220;%1$s&#8221;: Invalid post type %2$s"
 msgstr ""
 
 #. translators: %s: post title
-#: include/nexter-template/importer/class.wordpress-importer.php:787
+#: include/nexter-template/importer/class.wordpress-importer.php:789
 #, php-format
 msgid "Failed to import %1$s &#8220;%2$s&#8221;"
 msgstr ""
 
-#: include/nexter-template/importer/class.wordpress-importer.php:976
+#: include/nexter-template/importer/class.wordpress-importer.php:978
 msgid "Menu item skipped due to missing menu slug"
 msgstr ""
 
 #. translators: %s: menu slug
-#: include/nexter-template/importer/class.wordpress-importer.php:984
+#: include/nexter-template/importer/class.wordpress-importer.php:986
 #, php-format
 msgid "Menu item skipped due to invalid menu slug: %s"
 msgstr ""
 
-#: include/nexter-template/importer/class.wordpress-importer.php:1054
+#: include/nexter-template/importer/class.wordpress-importer.php:1056
 msgid "Fetching attachments is not enabled"
 msgstr ""
 
-#: include/nexter-template/importer/class.wordpress-importer.php:1067
+#: include/nexter-template/importer/class.wordpress-importer.php:1069
 msgid "Invalid file type"
 msgstr ""
 
-#: include/nexter-template/importer/class.wordpress-importer.php:1123
+#: include/nexter-template/importer/class.wordpress-importer.php:1125
 msgid "Remote server did not respond"
 msgstr ""
 
 #. translators: 1: HTTP response code, 2: HTTP status description
-#: include/nexter-template/importer/class.wordpress-importer.php:1132
+#: include/nexter-template/importer/class.wordpress-importer.php:1134
 #, php-format
 msgid "Remote server returned error response %1$d %2$s"
 msgstr ""
 
-#: include/nexter-template/importer/class.wordpress-importer.php:1139
+#: include/nexter-template/importer/class.wordpress-importer.php:1141
 msgid "Remote file is incorrect size"
 msgstr ""
 
-#: include/nexter-template/importer/class.wordpress-importer.php:1144
+#: include/nexter-template/importer/class.wordpress-importer.php:1146
 msgid "Zero size file downloaded"
 msgstr ""
 
 #. translators: %s: Maximum file size limit
-#: include/nexter-template/importer/class.wordpress-importer.php:1151
+#: include/nexter-template/importer/class.wordpress-importer.php:1153
 #, php-format
 msgid "Remote file is too large, limit is %s"
 msgstr ""
 
-#: include/nexter-template/importer/class.wordpress-importer.php:1254
+#: include/nexter-template/importer/class.wordpress-importer.php:1256
 msgid "Import WordPress"
 msgstr ""
 
 #. translators: %s: new version
-#: include/nexter-template/importer/class.wordpress-importer.php:1262
+#: include/nexter-template/importer/class.wordpress-importer.php:1264
 #, php-format
 msgid "A new version of this importer is available. Please update to version %s to ensure compatibility with newer export files."
 msgstr ""
 
-#: include/nexter-template/importer/class.wordpress-importer.php:1277
+#: include/nexter-template/importer/class.wordpress-importer.php:1279
 msgid "Howdy! Upload your WordPress eXtended RSS (WXR) file and we&#8217;ll import the posts, pages, comments, custom fields, categories, and tags into this site."
 msgstr ""
 
-#: include/nexter-template/importer/class.wordpress-importer.php:1278
+#: include/nexter-template/importer/class.wordpress-importer.php:1280
 msgid "Choose a WXR (.xml) file to upload, then click Upload file and import."
 msgstr ""
 
@@ -2899,30 +2897,30 @@ msgstr ""
 msgid "Post Type Description"
 msgstr ""
 
-#: include/nexter-template/template-import-export.php:81
+#: include/nexter-template/template-import-export.php:88
 #: assets/js/admin/index.js:1
 #: theme-builder/build/index.js:1
 msgid "Export Template"
 msgstr ""
 
-#: include/nexter-template/template-import-export.php:147
+#: include/nexter-template/template-import-export.php:159
 msgid "Imported Successfully"
 msgstr ""
 
-#: include/nexter-template/template-import-export.php:260
+#: include/nexter-template/template-import-export.php:280
 msgid "Theme Logo"
 msgstr ""
 
-#: include/nexter-template/template-import-export.php:266
+#: include/nexter-template/template-import-export.php:286
 msgid "Choose a Nexter Builder template XML file of Builder templates, and add them to the list of templates available in your builder."
 msgstr ""
 
-#: include/nexter-template/template-import-export.php:273
+#: include/nexter-template/template-import-export.php:293
 #: assets/js/admin/index.js:1
 msgid "Import Now"
 msgstr ""
 
-#: include/nexter-template/template-import-export.php:278
+#: include/nexter-template/template-import-export.php:298
 #: include/panel-settings/nexter-ext-panel-settings.php:265
 #: include/panel-settings/nexter-ext-panel-settings.php:266
 #: include/panel-settings/nexter-ext-panel-settings.php:274
@@ -2933,17 +2931,17 @@ msgstr ""
 msgid "Theme Builder"
 msgstr ""
 
-#: include/nexter-template/template-import-export.php:279
+#: include/nexter-template/template-import-export.php:299
 #: theme-builder/build/index.js:1
 msgid "Import Templates"
 msgstr ""
 
-#: include/nexter-template/template-import-export.php:283
+#: include/nexter-template/template-import-export.php:303
 #: theme-builder/build/index.js:1
 msgid "Import Pre-Designed Section"
 msgstr ""
 
-#: include/nexter-template/template-import-export.php:292
+#: include/nexter-template/template-import-export.php:312
 msgid "Switch to grid view"
 msgstr ""
 
@@ -2987,109 +2985,109 @@ msgstr ""
 msgid "Server not found."
 msgstr ""
 
-#: include/panel-settings/class-nxt-panel-ajax-router.php:787
+#: include/panel-settings/class-nxt-panel-ajax-router.php:794
 #: include/panel-settings/nexter-ext-panel-settings.php:505
 #: dashboard/build/index.js:1
 #: dashboard/build/index.js:6
 msgid "Activated"
 msgstr ""
 
-#: include/panel-settings/class-nxt-panel-ajax-router.php:787
+#: include/panel-settings/class-nxt-panel-ajax-router.php:794
 #: include/panel-settings/nexter-ext-panel-settings.php:505
 msgid "DeActivated"
 msgstr ""
 
-#: include/panel-settings/class-nxt-panel-ajax-router.php:800
+#: include/panel-settings/class-nxt-panel-ajax-router.php:807
 msgid "You are not allowed to do this action"
 msgstr ""
 
-#: include/panel-settings/class-nxt-panel-ajax-router.php:851
+#: include/panel-settings/class-nxt-panel-ajax-router.php:857
 msgid "Invalid theme information format."
 msgstr ""
 
-#: include/panel-settings/class-nxt-panel-ajax-router.php:856
+#: include/panel-settings/class-nxt-panel-ajax-router.php:862
 msgid "Invalid theme information structure."
 msgstr ""
 
-#: include/panel-settings/class-nxt-panel-ajax-router.php:864
-#: include/panel-settings/class-nxt-panel-ajax-router.php:973
+#: include/panel-settings/class-nxt-panel-ajax-router.php:870
+#: include/panel-settings/class-nxt-panel-ajax-router.php:978
 msgid "Refusing to install a package from an unexpected host."
 msgstr ""
 
-#: include/panel-settings/class-nxt-panel-ajax-router.php:873
+#: include/panel-settings/class-nxt-panel-ajax-router.php:879
 msgid "Could not download the theme package."
 msgstr ""
 
-#: include/panel-settings/class-nxt-panel-ajax-router.php:956
+#: include/panel-settings/class-nxt-panel-ajax-router.php:961
 msgid "Failed to retrieve plugin information or invalid format."
 msgstr ""
 
-#: include/panel-settings/class-nxt-panel-ajax-router.php:961
+#: include/panel-settings/class-nxt-panel-ajax-router.php:966
 msgid "Invalid plugin information structure."
 msgstr ""
 
-#: include/panel-settings/class-nxt-panel-ajax-router.php:1096
+#: include/panel-settings/class-nxt-panel-ajax-router.php:1101
 msgid "Not a permission"
 msgstr ""
 
-#: include/panel-settings/class-nxt-panel-ajax-router.php:1101
+#: include/panel-settings/class-nxt-panel-ajax-router.php:1106
 msgid "Security check failed"
 msgstr ""
 
-#: include/panel-settings/class-nxt-panel-ajax-router.php:1108
-#: include/panel-settings/class-nxt-panel-ajax-router.php:1114
+#: include/panel-settings/class-nxt-panel-ajax-router.php:1113
+#: include/panel-settings/class-nxt-panel-ajax-router.php:1119
 msgid "File Import failed"
 msgstr ""
 
-#: include/panel-settings/class-nxt-panel-ajax-router.php:1121
+#: include/panel-settings/class-nxt-panel-ajax-router.php:1126
 msgid "Valid .json file extension"
 msgstr ""
 
-#: include/panel-settings/class-nxt-panel-ajax-router.php:1127
+#: include/panel-settings/class-nxt-panel-ajax-router.php:1132
 msgid "Please upload a file"
 msgstr ""
 
-#: include/panel-settings/class-nxt-panel-ajax-router.php:1140
+#: include/panel-settings/class-nxt-panel-ajax-router.php:1145
 msgid "Invalid JSON format"
 msgstr ""
 
-#: include/panel-settings/class-nxt-panel-ajax-router.php:1145
+#: include/panel-settings/class-nxt-panel-ajax-router.php:1150
 msgid "Customizer settings imported successfully"
 msgstr ""
 
-#: include/panel-settings/class-nxt-panel-ajax-router.php:1148
+#: include/panel-settings/class-nxt-panel-ajax-router.php:1153
 msgid "No valid settings found in the file"
 msgstr ""
 
-#: include/panel-settings/class-nxt-panel-ajax-router.php:1170
+#: include/panel-settings/class-nxt-panel-ajax-router.php:1175
 msgid "Code snippet setting is already enabled."
 msgstr ""
 
-#: include/panel-settings/class-nxt-panel-ajax-router.php:1188
+#: include/panel-settings/class-nxt-panel-ajax-router.php:1193
 msgid "Code snippet setting enabled successfully."
 msgstr ""
 
-#: include/panel-settings/class-nxt-panel-ajax-router.php:1229
+#: include/panel-settings/class-nxt-panel-ajax-router.php:1234
 msgid "Invalid HTTP method."
 msgstr ""
 
-#: include/panel-settings/class-nxt-panel-ajax-router.php:1245
+#: include/panel-settings/class-nxt-panel-ajax-router.php:1250
 msgid "Unauthorized API endpoint."
 msgstr ""
 
-#: include/panel-settings/class-nxt-panel-ajax-router.php:1398
+#: include/panel-settings/class-nxt-panel-ajax-router.php:1403
 msgid "No data provided."
 msgstr ""
 
-#: include/panel-settings/class-nxt-panel-ajax-router.php:1412
+#: include/panel-settings/class-nxt-panel-ajax-router.php:1417
 msgid "Invalid data format."
 msgstr ""
 
-#: include/panel-settings/class-nxt-panel-ajax-router.php:1435
+#: include/panel-settings/class-nxt-panel-ajax-router.php:1440
 msgid "Settings saved successfully."
 msgstr ""
 
-#: include/panel-settings/class-nxt-panel-ajax-router.php:1442
+#: include/panel-settings/class-nxt-panel-ajax-router.php:1447
 msgid "Failed to save settings. No changes were made."
 msgstr ""
 
@@ -3127,7 +3125,7 @@ msgid "Forbidden."
 msgstr ""
 
 #: include/panel-settings/extensions/content-seo/audit/class-audit-ajax.php:45
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:1944
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:1980
 msgid "Audit queued in background. Showing last available snapshot until the run completes."
 msgstr ""
 
@@ -3538,226 +3536,226 @@ msgid "Uncheck “Discourage search engines…” in Settings → Reading unless
 msgstr ""
 
 #. translators: %d: number of items analyzed
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1471
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1492
 #, php-format
 msgid "(Analysis limited to the %d most recently modified items.)"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1484
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1520
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1535
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1505
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1541
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1556
 msgid "Duplicate titles"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1484
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1505
 msgid "No published content to analyze for duplicate titles."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1520
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1541
 msgid "All sampled pages render a unique title."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1529
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1550
 msgid "Give each page a unique SEO title (Nexter SEO meta box) or revise duplicated post titles."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1530
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1551
 msgid "Your title template has no per-page token, so every page renders the same title. Add %post_title% (and %term_title% for archives) to the title template under On-Page → Meta Template."
 msgstr ""
 
 #. translators: %d: number of items
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1540
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1561
 #, php-format
 msgid "%d published pages render the same <title> as another page. Duplicate titles confuse search engines and split ranking signals."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1585
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1590
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1606
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1611
 msgid "Duplicate meta descriptions"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1585
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1606
 msgid "No duplicate custom meta descriptions detected."
 msgstr ""
 
 #. translators: %d: number of items
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1595
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1616
 #, php-format
 msgid "%d items share an identical custom meta description."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1599
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1620
 msgid "Write a unique meta description per page for distinct search snippets."
 msgstr ""
 
 #. translators: %d: minimum word count threshold
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1613
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1629
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1636
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1634
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1650
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1657
 msgid "Thin content"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1613
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1634
 msgid "No published content to analyze."
 msgstr ""
 
 #. translators: %d: minimum word count threshold
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1629
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1650
 #, php-format
 msgid "All sampled items have at least %d words."
 msgstr ""
 
 #. translators: 1: count of thin items, 2: word threshold
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1641
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1662
 #, php-format
 msgid "%1$d sampled item(s) have fewer than %2$d words."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1646
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1667
 msgid "Expand short pages with useful, original content, or consolidate/noindex them."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1668
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1689
 msgid "Indexable content"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1668
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1689
 msgid "No published items are individually set to noindex."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1673
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1694
 msgid "Noindex content"
 msgstr ""
 
 #. translators: %d: number of items
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1678
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1699
 #, php-format
 msgid "%d published item(s) are set to noindex and will be excluded from search results."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1682
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1703
 msgid "Confirm these pages are meant to be hidden from search; remove the noindex flag if not."
 msgstr ""
 
 #. translators: 1: links checked, 2: links found
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1958
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1979
 #, php-format
 msgid "Checked %1$d of %2$d link(s) found in sampled content."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1963
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:1984
 msgid "(stopped early at the time limit)"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2049
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2072
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2077
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2070
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2093
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2098
 msgid "Orphan pages"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2049
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2070
 msgid "Not enough published content to evaluate internal linking."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2072
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2093
 msgid "Every sampled page is linked from other content."
 msgstr ""
 
 #. translators: %d: number of orphan pages
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2082
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2103
 #, php-format
 msgid "%d sampled page(s) are not linked from any other sampled content (orphaned)."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2086
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2107
 msgid "Add internal links from related posts/pages so these pages are discoverable and receive link equity."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2101
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2105
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2108
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2120
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2125
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2122
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2126
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2129
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2141
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2146
 msgid "Broken links"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2105
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2126
 msgid "No links were found in the sampled content to check."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2108
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2129
 msgid "Link checking was skipped because the time budget was reached before any link could be probed."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2108
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2129
 msgid "Reduce the sampled link count or increase the probe budget, then re-run."
 msgstr ""
 
 #. translators: 1: number of broken links, 2: probe summary
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2128
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2149
 #, php-format
 msgid "%1$d link(s) returned a connection error or a 4xx/5xx status. %2$s"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2132
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2153
 msgid "Fix or remove the broken links/images so visitors and crawlers do not hit dead ends."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2148
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2160
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2165
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2169
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2181
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2186
 msgid "Redirect chains"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2148
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2169
 msgid "No links were probed for redirect chains."
 msgstr ""
 
 #. translators: 1: number of chained links, 2: probe summary
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2168
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2189
 #, php-format
 msgid "%1$d link(s) reach their destination through 2 or more redirects. %2$s"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2172
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2193
 msgid "Point links directly at the final URL to remove intermediate redirect hops."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2194
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2215
 msgid "Search visibility updated: search engines are no longer discouraged."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2205
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2226
 msgid "Nexter XML sitemap has been enabled. Flush permalinks if the sitemap URL still 404s."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2211
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2232
 msgid "Open WordPress General settings to set the tagline."
 msgstr ""
 
 #. translators: %s: connection error message
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2236
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2257
 #, php-format
 msgid "HTTPS is not reachable yet (%s). Install or repair your SSL certificate first — the URLs were NOT changed, to avoid locking you out."
 msgstr ""
 
 #. translators: %d: HTTP status code
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2248
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2269
 #, php-format
 msgid "HTTPS responded with HTTP %d, so it is not serving your site correctly. Fix SSL first — the URLs were NOT changed."
 msgstr ""
 
 #. translators: %s: WordPress-address host
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2280
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2301
 #, php-format
 msgid "HTTPS is not serving your WordPress Address host (%s) yet. Fix SSL there first — the URLs were NOT changed, to avoid locking you out of wp-admin."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2298
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2319
 msgid "HTTPS verified reachable. Site URL and Home URL were updated to HTTPS; add a server-level http→https redirect to finish."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2302
+#: include/panel-settings/extensions/content-seo/audit/class-audit.php:2323
 msgid "No automated fix is available for this issue."
 msgstr ""
 
@@ -3766,7 +3764,7 @@ msgid "404 log row not found."
 msgstr ""
 
 #: include/panel-settings/extensions/content-seo/class-content-seo.php:42
-#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer.php:1020
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer.php:1032
 #: include/panel-settings/extensions/content-seorank.php:82
 #: include/panel-settings/extensions/content-seorank.php:318
 #: include/panel-settings/nexter-ext-panel-settings.php:393
@@ -3784,62 +3782,62 @@ msgstr ""
 msgid "Nexter Content SEO global settings"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:1122
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:1158
 msgid "Invalid settings."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:1218
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:1254
 msgid "The Image SEO module is not available. Make sure the Nexter Extension SEO module is enabled and updated to a version that includes Image SEO."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:1340
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:1376
 #: content-seo/build/606.js:1
 msgid "Select at least one group to export."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:1361
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:1397
 msgid "Secret credentials (IndexNow API key, Google Indexing private key) were omitted from this export for security. Re-enter them on the destination site."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:1488
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:1524
 msgid "Invalid or empty import data."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:1497
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:1533
 msgid "The file does not contain any importable SEO data."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:1505
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:1541
 msgid "Unsupported export file version."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:1513
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:1549
 msgid "This JSON file is not a Nexter Content SEO export."
 msgstr ""
 
 #. translators: 1: applied count, 2: skipped count
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:1540
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:1576
 #, php-format
 msgid "Imported %1$d credential/verification value(s); skipped %2$d invalid."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:1545
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:1581
 msgid "This file includes verification/API-key values. They were NOT applied. Re-run the import with the “Import credentials” option enabled to review and apply them."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:1916
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:1957
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:1976
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:1994
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:2164
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:1952
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:1993
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:2012
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:2030
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:2200
 msgid "Audit module not loaded."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:1935
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:1971
 msgid "Could not complete the SEO audit."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-content-seo.php:2004
+#: include/panel-settings/extensions/content-seo/class-content-seo.php:2040
 msgid "Schedule saved."
 msgstr ""
 
@@ -4257,8 +4255,8 @@ msgid "Nexter SEO: llms.txt is enabled but your site uses the \"Plain\" permalin
 msgstr ""
 
 #: include/panel-settings/extensions/content-seo/class-seo-llms.php:249
-#: include/panel-settings/extensions/content-seo/class-seo-sitemap.php:1300
-#: include/panel-settings/extensions/content-seo/class-seo-sitemap.php:1391
+#: include/panel-settings/extensions/content-seo/class-seo-sitemap.php:1318
+#: include/panel-settings/extensions/content-seo/class-seo-sitemap.php:1409
 msgid "Homepage"
 msgstr ""
 
@@ -4285,301 +4283,301 @@ msgstr ""
 msgid "Nexter SEO: a physical robots.txt file exists in your site root (e.g. created by your host/HestiaCP), so WordPress cannot serve a dynamic robots.txt. Your custom robots.txt rules and the Sitemap: directive are being ignored. Remove or edit the physical robots.txt file to let Nexter manage it."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1272
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1261
 #: include/panel-settings/extensions/content-seo/class-seo-settings.php:29
 #: content-seo/build/index.js:3
 msgid "Post Title"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1273
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1262
 msgid "Post ID"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1274
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1263
 #: include/panel-settings/extensions/content-seo/class-seo-settings.php:30
 #: content-seo/build/index.js:3
 msgid "Post Excerpt"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1275
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1264
 #: include/panel-settings/extensions/content-seo/class-seo-settings.php:31
 #: content-seo/build/index.js:3
 msgid "Post Content"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1276
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1265
 #: include/panel-settings/extensions/content-seo/class-seo-settings.php:35
 #: content-seo/build/index.js:3
 msgid "Post URL"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1277
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1266
 msgid "Post Slug"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1278
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1267
 #: dashboard/build/index.js:4
 msgid "Post Date"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1279
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1268
 msgid "Post Modified Date"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1280
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1269
 msgid "Post Date (ISO 8601)"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1281
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1270
 msgid "Post Modified Date (ISO 8601)"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1282
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1271
 msgid "Post Thumbnail"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1283
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1272
 msgid "Post Comment Count"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1284
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1273
 msgid "Post Word Count"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1285
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1274
 msgid "Post Tags"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1286
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1275
 msgid "Post Categories"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1287
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1276
 msgid "Breadcrumb ListItems (JSON)"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1302
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1291
 #: include/panel-settings/extensions/content-seo/class-seo-settings.php:49
 msgid "Product SKU (WooCommerce)"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1303
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1292
 #: include/panel-settings/extensions/content-seo/class-seo-settings.php:47
 msgid "Product price (WooCommerce)"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1304
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1293
 msgid "Store currency code (WooCommerce)"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1305
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1294
 msgid "Availability schema.org URL (WooCommerce)"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1306
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1295
 msgid "Product image URL (WooCommerce)"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1307
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1296
 msgid "Product image width (WooCommerce)"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1308
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1297
 msgid "Product image height (WooCommerce)"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1309
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1298
 msgid "Low price / min variation (WooCommerce)"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1310
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1299
 msgid "High price / max variation (WooCommerce)"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1311
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1300
 msgid "Variation count (WooCommerce)"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1312
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1301
 msgid "Average rating (WooCommerce)"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1313
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1302
 msgid "Average rating value (WooCommerce)"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1314
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1303
 msgid "Rating/review count (WooCommerce)"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1315
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1304
 #: include/panel-settings/extensions/content-seo/class-seo-settings.php:50
 msgid "Product short description (WooCommerce)"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1411
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1400
 msgid "Term ID"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1412
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1401
 msgid "Term Name"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1413
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1402
 msgid "Term Slug"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1414
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1403
 msgid "Term Taxonomy"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1415
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1404
 #: include/panel-settings/extensions/content-seo/class-seo-settings.php:32
 #: include/panel-settings/extensions/content-seo/class-seo-settings.php:255
 #: content-seo/build/index.js:3
 msgid "Term Description"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1416
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1405
 msgid "Term URL"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1427
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1416
 msgid "Author ID"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1428
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1417
 msgid "Author First Name"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1429
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1418
 msgid "Author Last Name"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1430
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1419
 msgid "Author Display Name"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1431
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1420
 msgid "Author Username"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1432
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1421
 msgid "Author Nickname"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1433
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1422
 msgid "Author Website URL"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1434
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1423
 msgid "Author Nicename"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1435
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1424
 msgid "Author Description"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1436
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1425
 msgid "Author Posts URL"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1437
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1426
 msgid "Author Avatar"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1460
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1449
 msgid "Site Title"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1461
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1450
 msgid "Site Description"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1462
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1451
 msgid "Site URL"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1463
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1452
 msgid "Site search URL (SearchAction target template)"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1464
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1453
 msgid "Site Language"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1465
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1454
 msgid "Site Icon"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1466
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1455
 msgid "Primary user (ID 1) display name"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1493
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1482
 msgid "Current Page Title"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1494
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1483
 msgid "Current Page URL"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1505
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1494
 msgid "Website Name"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1506
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1495
 msgid "Business Description"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1507
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1496
 msgid "Website Owner Name"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1508
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1497
 msgid "Organization Type"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1509
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1498
 msgid "Website Owner Phone"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1510
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1499
 msgid "Website Logo"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1522
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1511
 msgid "Current schema entry ID (replaced when JSON-LD is output)"
 msgstr ""
 
 #. translators: %s: schema type name
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1528
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:1517
 #, php-format
 msgid "%s Schema"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2027
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2016
 msgid "Basic"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2035
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2024
 msgid "Special Pages"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2077
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2066
 msgid "Specific Pages / Posts / Taxonomies, etc."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2135
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2124
 msgid "singulars"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2141
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:2130
 msgid "archive"
 msgstr ""
 
 #. translators: %s: schema title/label
-#: include/panel-settings/extensions/content-seo/class-seo-schema.php:5561
+#: include/panel-settings/extensions/content-seo/class-seo-schema.php:5550
 #, php-format
 msgid "“%s” (FAQ Page) needs at least one question and answer before it can be saved."
 msgstr ""
@@ -4713,18 +4711,18 @@ msgid "Short product summary for search and social previews."
 msgstr ""
 
 #. translators: %s: site name (blog title).
-#: include/panel-settings/extensions/content-seo/class-seo-sitemap.php:1284
-#: include/panel-settings/extensions/content-seo/class-seo-sitemap.php:1297
+#: include/panel-settings/extensions/content-seo/class-seo-sitemap.php:1302
+#: include/panel-settings/extensions/content-seo/class-seo-sitemap.php:1315
 #, php-format
 msgid "Sitemap - %s"
 msgstr ""
 
 #. translators: %s: site name (blog title).
-#: include/panel-settings/extensions/content-seo/class-seo-sitemap.php:1298
+#: include/panel-settings/extensions/content-seo/class-seo-sitemap.php:1316
 msgid "A human-readable list of pages on this site."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/class-seo-sitemap.php:2099
+#: include/panel-settings/extensions/content-seo/class-seo-sitemap.php:2106
 msgid "Sorry, you are not allowed to do that."
 msgstr ""
 
@@ -5059,63 +5057,63 @@ msgstr ""
 msgid "These regex redirects use a pattern Nexter cannot compile, so they are skipped."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer.php:253
-#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer.php:313
-#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer.php:714
-#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer.php:755
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer.php:265
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer.php:325
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer.php:726
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer.php:767
 msgid "Unknown import source."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer.php:256
-#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer.php:319
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer.php:268
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer.php:331
 msgid "No data from this plugin was found on the site."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer.php:294
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer.php:306
 msgid "The preview could not be built from this plugin's data. The import itself handles each step separately, so it can still run and will report whatever it cannot read."
 msgstr ""
 
 #. translators: %d: seconds until the import lock expires.
-#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer.php:350
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer.php:362
 #, php-format
 msgid "An import from this plugin is already running. It releases in about %d second. If no import is actually running, use Reset markers and start again."
 msgid_plural "An import from this plugin is already running. It releases in about %d seconds. If no import is actually running, use Reset markers and start again."
 msgstr[0] ""
 msgstr[1] ""
 
-#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer.php:758
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer.php:770
 msgid "This source does not support verification."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer.php:1046
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer.php:1058
 msgid "Per-author SEO settings"
 msgstr ""
 
 #. translators: 1: source SEO plugin name, 2: product name.
-#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer.php:1050
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer.php:1062
 #, php-format
 msgid "These users have an author title, description or noindex set in %1$s. %2$s has no per-author fields yet, so they are not imported and the author archives will use your global archive template instead."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer.php:1083
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer.php:1095
 msgid "Per-language global settings"
 msgstr ""
 
 #. translators: 1: multilingual plugin name, 2: source SEO plugin name.
-#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer.php:1087
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer.php:1099
 #, php-format
 msgid "%1$s is active. %3$s keeps one set of global settings for the whole site, so the title and description templates, robots defaults and social settings are imported once from %2$s and then apply to every language. Your per-post SEO is unaffected: each translation is its own post with its own values."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer.php:1164
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer.php:1176
 msgid "Nothing has been imported from this source yet, so there is nothing to verify."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer.php:1166
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer.php:1178
 msgid "The imported objects were found, but not one source field could be read from them. The import wrote nothing — treat this as a failure and re-run it after resetting the markers."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer.php:1168
+#: include/panel-settings/extensions/content-seo/importers/class-nxt-seo-importer.php:1180
 msgid "Some values the source holds are missing or different in Nexter. The affected objects are listed below."
 msgstr ""
 
@@ -8435,82 +8433,82 @@ msgstr ""
 msgid "Open the Nexter SEO panel to edit title, description, social previews, and advanced settings for this archive page."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seorank.php:476
-#: include/panel-settings/extensions/content-seorank.php:495
+#: include/panel-settings/extensions/content-seorank.php:542
+#: include/panel-settings/extensions/content-seorank.php:561
 msgid "Term not found."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seorank.php:479
-#: include/panel-settings/extensions/content-seorank.php:887
-#: include/panel-settings/extensions/content-seorank.php:1089
+#: include/panel-settings/extensions/content-seorank.php:545
+#: include/panel-settings/extensions/content-seorank.php:953
+#: include/panel-settings/extensions/content-seorank.php:1155
 msgid "Not allowed."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seorank.php:753
+#: include/panel-settings/extensions/content-seorank.php:819
 msgid "Invalid post ID."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seorank.php:763
+#: include/panel-settings/extensions/content-seorank.php:829
 msgid "Post not found."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seorank.php:1345
-#: include/panel-settings/extensions/content-seorank.php:1350
-#: include/panel-settings/extensions/content-seorank.php:1548
+#: include/panel-settings/extensions/content-seorank.php:1411
+#: include/panel-settings/extensions/content-seorank.php:1416
+#: include/panel-settings/extensions/content-seorank.php:1614
 msgid "SEO Checks"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seorank.php:1388
+#: include/panel-settings/extensions/content-seorank.php:1454
 msgid "Not analyzed"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seorank.php:1394
+#: include/panel-settings/extensions/content-seorank.php:1460
 #: content-seo/build/index.js:3
 msgid "Good"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seorank.php:1400
+#: include/panel-settings/extensions/content-seorank.php:1466
 msgid "Fair"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seorank.php:1405
+#: include/panel-settings/extensions/content-seorank.php:1471
 #: content-seo/build/index.js:3
 msgid "Needs work"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seorank.php:1546
+#: include/panel-settings/extensions/content-seorank.php:1612
 msgid "Analyzing…"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seorank.php:1547
+#: include/panel-settings/extensions/content-seorank.php:1613
 msgid "Could not load SEO checks."
 msgstr ""
 
-#: include/panel-settings/extensions/content-seorank.php:1549
+#: include/panel-settings/extensions/content-seorank.php:1615
 msgid "Score"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seorank.php:1550
+#: include/panel-settings/extensions/content-seorank.php:1616
 #: content-seo/build/index.js:3
 msgid "Edit SEO"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seorank.php:1748
+#: include/panel-settings/extensions/content-seorank.php:1814
 msgid "Search Pages"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seorank.php:1752
+#: include/panel-settings/extensions/content-seorank.php:1818
 msgid "Author Archives"
 msgstr ""
 
-#: include/panel-settings/extensions/content-seorank.php:1756
+#: include/panel-settings/extensions/content-seorank.php:1822
 msgid "Date Archives"
 msgstr ""
 
 #. translators: 1: Required PHP version, 2: Current version
 #: include/panel-settings/extensions/custom-fields/nexter-ext-smtp-gmail-auth.php:16
-#: include/panel-settings/extensions/nexter-ext-smtp-email.php:151
-#: include/panel-settings/extensions/nexter-ext-smtp-email.php:254
+#: include/panel-settings/extensions/nexter-ext-smtp-email.php:229
+#: include/panel-settings/extensions/nexter-ext-smtp-email.php:332
 #, php-format
 msgid "The Nexter Extension SMTP integration requires PHP version %1$s or higher. You are using %2$s."
 msgstr ""
@@ -8693,7 +8691,7 @@ msgid "Errors Found"
 msgstr ""
 
 #: include/panel-settings/extensions/nexter-ext-bulk-images.php:119
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:902
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:903
 msgid "Optimising..."
 msgstr ""
 
@@ -8706,8 +8704,8 @@ msgid "After"
 msgstr ""
 
 #: include/panel-settings/extensions/nexter-ext-bulk-images.php:122
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:783
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:908
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:784
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:909
 msgid "Original Size"
 msgstr ""
 
@@ -8809,8 +8807,8 @@ msgid "Storage Saved"
 msgstr ""
 
 #: include/panel-settings/extensions/nexter-ext-bulk-images.php:283
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:755
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:910
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:756
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:911
 msgid "Monthly Usage"
 msgstr ""
 
@@ -8874,33 +8872,33 @@ msgstr ""
 msgid "Great job! All images in the queue have been successfully optimised. Upload more images to continue optimising."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-cloudflare-captcha.php:393
-#: include/panel-settings/extensions/nexter-ext-cloudflare-captcha.php:420
-#: include/panel-settings/extensions/nexter-ext-cloudflare-captcha.php:455
-#: include/panel-settings/extensions/nexter-ext-cloudflare-captcha.php:475
-#: include/panel-settings/extensions/nexter-ext-cloudflare-captcha.php:505
-#: include/panel-settings/extensions/nexter-ext-cloudflare-captcha.php:573
-#: include/panel-settings/extensions/nexter-ext-cloudflare-captcha.php:581
-#: include/panel-settings/extensions/nexter-ext-cloudflare-captcha.php:629
-#: include/panel-settings/extensions/nexter-ext-cloudflare-captcha.php:637
-#: include/panel-settings/extensions/nexter-ext-cloudflare-captcha.php:662
-#: include/panel-settings/extensions/nexter-ext-cloudflare-captcha.php:670
-#: include/panel-settings/extensions/nexter-ext-cloudflare-captcha.php:697
-#: include/panel-settings/extensions/nexter-ext-cloudflare-captcha.php:705
-#: include/panel-settings/extensions/nexter-ext-cloudflare-captcha.php:732
-#: include/panel-settings/extensions/nexter-ext-cloudflare-captcha.php:740
+#: include/panel-settings/extensions/nexter-ext-cloudflare-captcha.php:400
+#: include/panel-settings/extensions/nexter-ext-cloudflare-captcha.php:427
+#: include/panel-settings/extensions/nexter-ext-cloudflare-captcha.php:462
+#: include/panel-settings/extensions/nexter-ext-cloudflare-captcha.php:484
+#: include/panel-settings/extensions/nexter-ext-cloudflare-captcha.php:514
+#: include/panel-settings/extensions/nexter-ext-cloudflare-captcha.php:582
+#: include/panel-settings/extensions/nexter-ext-cloudflare-captcha.php:590
+#: include/panel-settings/extensions/nexter-ext-cloudflare-captcha.php:638
+#: include/panel-settings/extensions/nexter-ext-cloudflare-captcha.php:646
+#: include/panel-settings/extensions/nexter-ext-cloudflare-captcha.php:671
+#: include/panel-settings/extensions/nexter-ext-cloudflare-captcha.php:679
+#: include/panel-settings/extensions/nexter-ext-cloudflare-captcha.php:706
+#: include/panel-settings/extensions/nexter-ext-cloudflare-captcha.php:714
+#: include/panel-settings/extensions/nexter-ext-cloudflare-captcha.php:741
+#: include/panel-settings/extensions/nexter-ext-cloudflare-captcha.php:749
 msgid "Please verify that you are human."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-cloudflare-captcha.php:476
+#: include/panel-settings/extensions/nexter-ext-cloudflare-captcha.php:485
 msgid "Comment Blocked"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-cloudflare-captcha.php:495
+#: include/panel-settings/extensions/nexter-ext-cloudflare-captcha.php:504
 msgid "Invalid CAPTCHA validation response format."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-cloudflare-captcha.php:511
+#: include/panel-settings/extensions/nexter-ext-cloudflare-captcha.php:520
 msgid "Cloudflare Turnstile validated successfully."
 msgstr ""
 
@@ -9001,7 +8999,7 @@ msgid "Security check failed. Please reload the page and try again."
 msgstr ""
 
 #: include/panel-settings/extensions/nexter-ext-image-sizes.php:83
-#: include/panel-settings/extensions/nexter-ext-svg-upload.php:347
+#: include/panel-settings/extensions/nexter-ext-svg-upload.php:359
 msgid "Invalid attachment."
 msgstr ""
 
@@ -9018,167 +9016,167 @@ msgid "File is not a regenerable image."
 msgstr ""
 
 #: include/panel-settings/extensions/nexter-ext-image-sizes.php:126
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1643
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1644
 msgid "Invalid attachment ID."
 msgstr ""
 
 #. translators: %d: Number of days until monthly limit resets
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:758
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:912
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:759
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:913
 #, php-format
 msgid "Resets in %d days"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:776
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:905
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:777
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:906
 msgid "Image Successfully Optimised"
 msgstr ""
 
 #. translators: 1: Image format (e.g. WebP, AVIF), 2: Percentage of file size reduction
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:778
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:779
 #, php-format
 msgid "Your image has been optimised and converted to %1$s format, reducing file size by %2$s%%."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:784
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:909
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:785
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:910
 msgid "Optimised Size"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:789
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:815
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:914
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:790
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:816
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:915
 msgid "Upgrade Pro"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:792
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:913
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:793
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:914
 msgid "Re-convert Image"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:808
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:809
 msgid "Image Needs To Be Optimised"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:809
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:810
 msgid "Optimising this image will reduce its file size and help the page load faster with Nexter Image Optimiser."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:818
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1545
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:819
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1546
 msgid "Optimise Image"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:903
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:904
 msgid "Image converted successfully!"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:904
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:905
 msgid "Conversion failed. Please try again."
 msgstr ""
 
 #. translators: 1: Image format (e.g. WebP, AVIF), 2: Percentage of file size reduction — replaced client-side by JS
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:907
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:908
 #, php-format
 msgid "Your image has been optimised and converted to %1$s format, reducing file size by %2$s%."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:916
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1526
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:917
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1527
 msgid "Image Optimised"
 msgstr ""
 
 #. translators: %s: Amount the image is smaller (e.g. "45%")
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:918
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1537
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:919
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1538
 #, php-format
 msgid "%s smaller"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1470
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1471
 msgid "Optimise"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1500
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1501
 msgid "Excluded via settings"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1651
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1652
 msgid "File not found."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1659
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1660
 msgid "File is empty or invalid. Skipped."
 msgstr ""
 
 #. translators: %s: Maximum file size (e.g. "20 MB")
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1667
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1669
 #, php-format
 msgid "File exceeds maximum size for optimisation (%s). Skipped."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1675
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1677
 msgid "Already optimised."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1683
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1685
 msgid "Unsupported image format. Skipped."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1691
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1693
 msgid "Image path is excluded from optimisation in settings. Skipped."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1698
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1700
 msgid "Image Optimisation is disabled."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1709
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1711
 msgid "Imagick or GD is required for image optimisation. Skipped."
 msgstr ""
 
 #. translators: %d: Monthly image optimisation limit
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1717
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1720
 #, php-format
 msgid "Monthly Optimisation limit reached (%d images). Upgrade to Pro for unlimited Optimisation."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1863
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1872
 msgid "Optimisation failed. The image may be in an unsupported format or state, or the server could not process it."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1867
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1876
 msgid "Optimised file was not saved. Check folder permissions for wp-content/nexter-optimizer."
 msgstr ""
 
 #. translators: %d: Number of image sizes converted
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1956
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:1965
 #, php-format
 msgid "Image Optimised (%d sizes converted)."
 msgstr ""
 
 #. translators: 1: Number of images restored, 2: Number of images that failed to restore
-#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:2094
+#: include/panel-settings/extensions/nexter-ext-image-upload-optimize.php:2154
 #: dashboard/build/index.js:8
 #, php-format,js-format
 msgid "Restored %1$d images. %2$d failed."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-limit-login-attempt.php:258
-#: include/panel-settings/extensions/nexter-ext-limit-login-attempt.php:355
+#: include/panel-settings/extensions/nexter-ext-limit-login-attempt.php:253
+#: include/panel-settings/extensions/nexter-ext-limit-login-attempt.php:350
 msgid "Error:"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-limit-login-attempt.php:259
-#: include/panel-settings/extensions/nexter-ext-limit-login-attempt.php:356
+#: include/panel-settings/extensions/nexter-ext-limit-login-attempt.php:254
+#: include/panel-settings/extensions/nexter-ext-limit-login-attempt.php:351
 msgid "Invalid username/email or incorrect password."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-limit-login-attempt.php:546
+#: include/panel-settings/extensions/nexter-ext-limit-login-attempt.php:485
 msgid "Unauthorized access."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-limit-login-attempt.php:553
+#: include/panel-settings/extensions/nexter-ext-limit-login-attempt.php:492
 msgid "Table not found."
 msgstr ""
 
@@ -9186,7 +9184,7 @@ msgstr ""
 msgid "Local Google Fonts"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-local-google-font.php:414
+#: include/panel-settings/extensions/nexter-ext-local-google-font.php:405
 msgid "Local fonts cleared."
 msgstr ""
 
@@ -9219,13 +9217,13 @@ msgstr ""
 msgid "Duplicate"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-post-duplicator.php:399
+#: include/panel-settings/extensions/nexter-ext-post-duplicator.php:415
 #: dashboard/build/index.js:6
 #: dashboard/build/index.js:8
 msgid "Copy"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-post-duplicator.php:485
+#: include/panel-settings/extensions/nexter-ext-post-duplicator.php:507
 msgid "You do not have permission to duplicate this post."
 msgstr ""
 
@@ -9289,146 +9287,156 @@ msgstr ""
 msgid "Invalid version format."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-smtp-email.php:33
+#: include/panel-settings/extensions/nexter-ext-smtp-email.php:37
 msgid "Gmail SMTP Settings"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-smtp-email.php:34
+#: include/panel-settings/extensions/nexter-ext-smtp-email.php:38
 #: dashboard/build/index.js:6
 msgid "Gmail SMTP"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-smtp-email.php:75
+#: include/panel-settings/extensions/nexter-ext-smtp-email.php:79
 msgid "Failed to process authorization"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-smtp-email.php:117
-#: include/panel-settings/extensions/nexter-ext-smtp-email.php:163
-#: include/panel-settings/extensions/nexter-ext-smtp-email.php:248
-#: include/panel-settings/extensions/nexter-ext-smtp-email.php:282
-#: include/panel-settings/extensions/nexter-ext-smtp-email.php:359
-msgid "Unauthorized access"
+#: include/panel-settings/extensions/nexter-ext-smtp-email.php:147
+msgid "Nexter SMTP now verifies the mail server certificate. Your existing setup was kept as it was (self-signed certificates allowed) so mail keeps working. To turn verification on, add define( 'NEXTER_SMTP_ALLOW_SELF_SIGNED', false ); to wp-config.php."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-smtp-email.php:144
-msgid "OAuth redirect cannot run on localhost. Please use a live or staging domain."
-msgstr ""
-
-#: include/panel-settings/extensions/nexter-ext-smtp-email.php:173
-msgid "Invalid authorization code format."
-msgstr ""
-
-#: include/panel-settings/extensions/nexter-ext-smtp-email.php:178
-msgid "Invalid OAuth state"
-msgstr ""
-
-#: include/panel-settings/extensions/nexter-ext-smtp-email.php:182
-msgid "Invalid OAuth nonce"
-msgstr ""
-
-#: include/panel-settings/extensions/nexter-ext-smtp-email.php:186
-msgid "Missing authorization code"
+#: include/panel-settings/extensions/nexter-ext-smtp-email.php:149
+#: include/posimyth-sdk/class-posimyth-consent-notice.php:255
+msgid "Dismiss"
 msgstr ""
 
 #: include/panel-settings/extensions/nexter-ext-smtp-email.php:195
+#: include/panel-settings/extensions/nexter-ext-smtp-email.php:241
+#: include/panel-settings/extensions/nexter-ext-smtp-email.php:326
+#: include/panel-settings/extensions/nexter-ext-smtp-email.php:360
+#: include/panel-settings/extensions/nexter-ext-smtp-email.php:437
+msgid "Unauthorized access"
+msgstr ""
+
+#: include/panel-settings/extensions/nexter-ext-smtp-email.php:222
+msgid "OAuth redirect cannot run on localhost. Please use a live or staging domain."
+msgstr ""
+
+#: include/panel-settings/extensions/nexter-ext-smtp-email.php:251
+msgid "Invalid authorization code format."
+msgstr ""
+
+#: include/panel-settings/extensions/nexter-ext-smtp-email.php:256
+msgid "Invalid OAuth state"
+msgstr ""
+
+#: include/panel-settings/extensions/nexter-ext-smtp-email.php:260
+msgid "Invalid OAuth nonce"
+msgstr ""
+
+#: include/panel-settings/extensions/nexter-ext-smtp-email.php:264
+msgid "Missing authorization code"
+msgstr ""
+
+#: include/panel-settings/extensions/nexter-ext-smtp-email.php:273
 msgid "Missing Client ID or Secret"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-smtp-email.php:213
+#: include/panel-settings/extensions/nexter-ext-smtp-email.php:291
 msgid "Token request failed: "
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-smtp-email.php:218
+#: include/panel-settings/extensions/nexter-ext-smtp-email.php:296
 msgid "Access token not found in response"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-smtp-email.php:242
-#: include/panel-settings/extensions/nexter-ext-smtp-email.php:270
+#: include/panel-settings/extensions/nexter-ext-smtp-email.php:320
+#: include/panel-settings/extensions/nexter-ext-smtp-email.php:348
 msgid "Successfully authorized with Gmail!"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-smtp-email.php:274
+#: include/panel-settings/extensions/nexter-ext-smtp-email.php:352
 msgid "Authorization failed: Unable to verify token."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-smtp-email.php:287
+#: include/panel-settings/extensions/nexter-ext-smtp-email.php:365
 msgid "Please Enter a valid Email ID to send the test mail."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-smtp-email.php:295
+#: include/panel-settings/extensions/nexter-ext-smtp-email.php:373
 msgid "SMTP is not enabled. Please enable SMTP first."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-smtp-email.php:301
+#: include/panel-settings/extensions/nexter-ext-smtp-email.php:379
 msgid "SMTP is not configured. Please configure SMTP settings first."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-smtp-email.php:308
+#: include/panel-settings/extensions/nexter-ext-smtp-email.php:386
 msgid "SMTP connection not verified. Please test the connection first."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-smtp-email.php:313
+#: include/panel-settings/extensions/nexter-ext-smtp-email.php:391
 msgid "Custom SMTP Test Email"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-smtp-email.php:314
+#: include/panel-settings/extensions/nexter-ext-smtp-email.php:392
 msgid "Gmail SMTP Test Email"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-smtp-email.php:345
+#: include/panel-settings/extensions/nexter-ext-smtp-email.php:423
 msgid "Test email sent successfully!"
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-smtp-email.php:349
+#: include/panel-settings/extensions/nexter-ext-smtp-email.php:427
 msgid "Unknown error occurred while sending email. Please check your SMTP settings and server logs."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-smtp-email.php:351
+#: include/panel-settings/extensions/nexter-ext-smtp-email.php:429
 msgid "Failed to send test email: "
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-smtp-email.php:369
+#: include/panel-settings/extensions/nexter-ext-smtp-email.php:447
 msgid "Invalid JSON data."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-smtp-email.php:407
+#: include/panel-settings/extensions/nexter-ext-smtp-email.php:488
 msgid "Please Select SMTP Type Custom."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-smtp-email.php:418
+#: include/panel-settings/extensions/nexter-ext-smtp-email.php:499
 msgid "Invalid From Email address."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-smtp-email.php:465
+#: include/panel-settings/extensions/nexter-ext-smtp-email.php:538
 msgid "Could not connect to host."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-smtp-email.php:466
-#: include/panel-settings/extensions/nexter-ext-smtp-email.php:487
+#: include/panel-settings/extensions/nexter-ext-smtp-email.php:539
+#: include/panel-settings/extensions/nexter-ext-smtp-email.php:560
 msgid "SMTP Connection failed."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-smtp-email.php:483
+#: include/panel-settings/extensions/nexter-ext-smtp-email.php:556
 msgid "SMTP Connection successful."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-svg-upload.php:123
+#: include/panel-settings/extensions/nexter-ext-svg-upload.php:125
 msgid "Invalid file upload."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-svg-upload.php:134
-msgid "File size exceeds maximum allowed size."
-msgstr ""
-
-#: include/panel-settings/extensions/nexter-ext-svg-upload.php:142
+#: include/panel-settings/extensions/nexter-ext-svg-upload.php:129
+#: include/panel-settings/extensions/nexter-ext-svg-upload.php:148
 msgid "Failed to read file."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-svg-upload.php:150
+#: include/panel-settings/extensions/nexter-ext-svg-upload.php:140
+msgid "File size exceeds maximum allowed size."
+msgstr ""
+
+#: include/panel-settings/extensions/nexter-ext-svg-upload.php:156
 msgid "SVG could not be sanitized and was not uploaded for security reasons."
 msgstr ""
 
-#: include/panel-settings/extensions/nexter-ext-svg-upload.php:353
+#: include/panel-settings/extensions/nexter-ext-svg-upload.php:365
 msgid "Missing attachment ID."
 msgstr ""
 
@@ -9467,8 +9475,8 @@ msgid "Please disable and then activate the module again."
 msgstr ""
 
 #: include/panel-settings/extensions/perf-security/class-nxt-disable-comments.php:56
-#: include/panel-settings/extensions/perf-security/class-nxt-disable-comments.php:222
-#: include/panel-settings/extensions/perf-security/class-nxt-disable-comments.php:226
+#: include/panel-settings/extensions/perf-security/class-nxt-disable-comments.php:224
+#: include/panel-settings/extensions/perf-security/class-nxt-disable-comments.php:228
 msgid "Comments are disabled."
 msgstr ""
 
@@ -9740,10 +9748,6 @@ msgstr ""
 
 #: include/posimyth-sdk/class-posimyth-consent-notice.php:254
 msgid "Allow"
-msgstr ""
-
-#: include/posimyth-sdk/class-posimyth-consent-notice.php:255
-msgid "Dismiss"
 msgstr ""
 
 #: include/posimyth-sdk/class-posimyth-deactivation-survey.php:183

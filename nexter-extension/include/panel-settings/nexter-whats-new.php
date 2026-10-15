@@ -60,6 +60,36 @@ if ( ! class_exists( 'Nxt_Ext_Whats_New' ) ) {
 		}
 
 		/**
+		 * Clean the remote feed before it is stored or sent to the dashboard, which prints desc as HTML and link / image as URLs.
+		 *
+		 * @param mixed $items Decoded feed items.
+		 * @return array
+		 */
+		private function sanitize_feed_items( $items ) {
+			$clean = [];
+			foreach ( (array) $items as $item ) {
+				if ( ! is_array( $item ) ) {
+					continue;
+				}
+				$row = [];
+				foreach ( $item as $key => $value ) {
+					if ( ! is_scalar( $value ) ) {
+						continue;
+					}
+					if ( in_array( $key, [ 'link', 'image', 'url' ], true ) ) {
+						$row[ $key ] = esc_url_raw( (string) $value, [ 'http', 'https' ] );
+					} elseif ( 'desc' === $key || 'content' === $key ) {
+						$row[ $key ] = wp_kses_post( (string) $value );
+					} else {
+						$row[ $key ] = sanitize_text_field( (string) $value );
+					}
+				}
+				$clean[] = $row;
+			}
+			return $clean;
+		}
+
+		/**
 		 * Unified function to fetch or return cached feed data
 		 */
 		private function get_or_fetch_feed_items() {
@@ -81,7 +111,7 @@ if ( ! class_exists( 'Nxt_Ext_Whats_New' ) ) {
 				return [];
 			}
 
-			$results = isset( $data['all'] ) ? $data['all'] : (isset( $data['nexter-extension'] ) ? $data['nexter-extension'] : []);
+			$results = $this->sanitize_feed_items( isset( $data['all'] ) ? $data['all'] : (isset( $data['nexter-extension'] ) ? $data['nexter-extension'] : []) );
 
 			set_transient( self::TRANSIENT_FEED, $results, 4 * DAY_IN_SECONDS );
 
@@ -113,7 +143,8 @@ if ( ! class_exists( 'Nxt_Ext_Whats_New' ) ) {
 				wp_send_json_error( 'No cached feed data found.' );
 			}
 
-			wp_send_json_success( $cached );
+			// Also clean what an older version may already have cached.
+			wp_send_json_success( $this->sanitize_feed_items( $cached ) );
 		}
 
 		/**
@@ -130,9 +161,9 @@ if ( ! class_exists( 'Nxt_Ext_Whats_New' ) ) {
 			}
 
 			$new_item  = $cached[0];
-			$new_title = $new_item['title'];
-			$new_link  = $new_item['link'];
-			$new_date  = strtotime( $new_item['date'] );
+			$new_title = isset( $new_item['title'] ) ? $new_item['title'] : '';
+			$new_link  = isset( $new_item['link'] ) ? $new_item['link'] : '';
+			$new_date  = isset( $new_item['date'] ) ? strtotime( $new_item['date'] ) : 0;
 
 			$stored = get_transient( self::TRANSIENT_ITEM );
 			if ( empty( $stored ) || ( isset( $stored['title'] ) && $stored['title'] !== $new_title ) ) {

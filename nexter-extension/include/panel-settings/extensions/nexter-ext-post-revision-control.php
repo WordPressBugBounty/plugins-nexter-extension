@@ -29,7 +29,8 @@ final class Nexter_Ext_Post_Revision_Control {
 			! empty( $options['post-revision-control']['switch'] ) &&
 			! empty( $options['post-revision-control']['values'] )
 		) {
-			self::$revision_settings = $options['post-revision-control']['values'];
+			// The options layer returns arrays, but this class reads ->revision and ->posts.
+			self::$revision_settings = (object) $options['post-revision-control']['values'];
 		}
 	}
 

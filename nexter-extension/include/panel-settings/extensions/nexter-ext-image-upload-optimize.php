@@ -435,6 +435,7 @@ class Nexter_Ext_Image_Upload_Optimization {
 		add_filter( 'wp_generate_attachment_metadata', array( $this, 'inject_upload_metadata' ), 10, 2 );
 		add_action( 'wp_ajax_nxt_ext_image_restore_originals', array( $this, 'ajax_restore_originals' ) );
 		add_action( 'wp_ajax_nxt_ext_image_convert_attachment', array( $this, 'ajax_convert_attachment' ) );
+		add_action( 'delete_attachment', array( $this, 'delete_optimised_files' ) );
 		add_filter( 'attachment_fields_to_edit', array( $this, 'add_convert_button' ), 10, 2 );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_media_convert_script' ) );
 		add_action( 'elementor/editor/after_enqueue_scripts', array( $this, 'enqueue_media_convert_script_elementor_editor' ) );
@@ -1664,7 +1665,8 @@ class Nexter_Ext_Image_Upload_Optimization {
 		if ( $max_size > 0 && $file_size > $max_size ) {
 			return array(
 			'skip'    => true,
-			'message' => sprintf( /* translators: %s: Maximum file size (e.g. "20 MB") */ __( 'File exceeds maximum size for optimisation (%s). Skipped.', 'nexter-extension' ), size_format( $max_size ) )
+			/* translators: %s: Maximum file size (e.g. "20 MB") */
+			'message' => sprintf( __( 'File exceeds maximum size for optimisation (%s). Skipped.', 'nexter-extension' ), size_format( $max_size ) )
 			);
 		}
 
@@ -1714,7 +1716,8 @@ class Nexter_Ext_Image_Upload_Optimization {
 		if ( ! $limit_handler->can_optimize( $attachment_id ) ) {
 			return array(
 			'skip'    => true,
-			'message' => sprintf( /* translators: %d: Monthly image optimisation limit */ __( 'Monthly Optimisation limit reached (%d images). Upgrade to Pro for unlimited Optimisation.', 'nexter-extension' ), $limit_handler->get_monthly_limit() )
+			/* translators: %d: Monthly image optimisation limit */
+			'message' => sprintf( __( 'Monthly Optimisation limit reached (%d images). Upgrade to Pro for unlimited Optimisation.', 'nexter-extension' ), $limit_handler->get_monthly_limit() )
 			);
 		}
 
@@ -1817,6 +1820,12 @@ class Nexter_Ext_Image_Upload_Optimization {
 
 		$attachment_id = isset( $_POST['attachment_id'] ) ? absint( $_POST['attachment_id'] ) : 0;
 		$offset        = isset( $_POST['offset'] ) ? absint( wp_unslash( $_POST['offset'] ) ) : 0;
+
+		// `upload_files` is a blanket capability (Authors have it), but converting rewrites this
+		// attachment's file and metadata on disk, so the caller must be able to edit THIS attachment.
+		if ( ! $attachment_id || 'attachment' !== get_post_type( $attachment_id ) || ! current_user_can( 'edit_post', $attachment_id ) ) {
+			wp_send_json_error( array( 'message' => __( 'Permission denied.', 'nexter-extension' ) ) );
+		}
 
 		// This used to convert the original and every thumbnail size in one request, which ran the
 		// PHP worker out of memory or time on large libraries and reached the browser as a 503.
@@ -1967,6 +1976,57 @@ class Nexter_Ext_Image_Upload_Optimization {
 		$data['stats'] = $limit_handler->get_ui_stats();
 
 		wp_send_json_success( $data );
+	}
+
+	/**
+	 * Delete the converted copies and backups made from an attachment when that attachment is deleted.
+	 *
+	 * Both live in wp-content/nexter-optimizer, which is web-readable, so leaving them behind keeps a deleted image
+	 * downloadable and doubles the disk use. Only files inside that folder are ever removed.
+	 *
+	 * @param int $attachment_id Attachment being deleted.
+	 */
+	public function delete_optimised_files( $attachment_id ) {
+		$meta = wp_get_attachment_metadata( $attachment_id );
+		if ( empty( $meta ) || ! is_array( $meta ) ) {
+			return;
+		}
+		$paths = array();
+		foreach ( array( 'nxt_optimized_file', 'nxt_backup_file' ) as $key ) {
+			if ( ! empty( $meta[ $key ] ) ) {
+				$paths[] = $meta[ $key ];
+			}
+		}
+		if ( ! empty( $meta['nxt_optimized_sizes'] ) && is_array( $meta['nxt_optimized_sizes'] ) ) {
+			foreach ( $meta['nxt_optimized_sizes'] as $size ) {
+				foreach ( array( 'file', 'backup_file' ) as $key ) {
+					if ( ! empty( $size[ $key ] ) ) {
+						$paths[] = $size[ $key ];
+					}
+				}
+			}
+		}
+		$real_root = realpath( WP_CONTENT_DIR . '/nexter-optimizer' );
+		if ( ! $real_root ) {
+			return;
+		}
+		$root = wp_normalize_path( $real_root ) . '/';
+		foreach ( $paths as $path ) {
+			$abs = self::get_absolute_path( $path );
+			// realpath() resolves any ../ in a stored path, so only a file that really sits inside nexter-optimizer/ is removed.
+			$real = $abs ? realpath( $abs ) : false;
+			if ( ! $real || 0 !== strpos( wp_normalize_path( $real ), $root ) ) {
+				continue;
+			}
+			// Smart mode keeps both .avif and .webp next to each other.
+			$base = preg_replace( '/\.(webp|avif)$/i', '', wp_normalize_path( $real ) );
+			foreach ( array( '', '.avif', '.webp' ) as $ext ) {
+				if ( is_file( $base . $ext ) ) {
+					wp_delete_file( $base . $ext );
+				}
+			}
+		}
+		self::$direct_replacement_cache = array();
 	}
 
 	/**
