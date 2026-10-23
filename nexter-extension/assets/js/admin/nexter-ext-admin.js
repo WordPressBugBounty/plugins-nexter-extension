@@ -93,7 +93,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
             }).then(res => res.json())
             .then((response) => {
                 if (response.success && checked) {
-                    window.location.href = nxtext_ajax_object.adminUrl + 'admin.php?page=nxt_builder';
+                    window.location.href = nxtext_ajax_object.adminUrl + 'admin.php?page=nexter_welcome#/theme-builder';
                 }
             });
         });

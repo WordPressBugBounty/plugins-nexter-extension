@@ -3,7 +3,7 @@ Contributors: posimyththemes, nirmalkavaiya, sagarpatel124
 Tags: seo, security, theme-builder, code-snippet, image-optimizer
 Requires at least: 5.9
 Tested up to: 7.1
-Stable tag: 4.7.13
+Stable tag: 4.7.14
 Requires PHP: 7.4
 License: GPLv3
 License URI: https://opensource.org/licenses/GPL-3.0
@@ -271,14 +271,29 @@ Nexter Extension may connect to external services below only when the related fe
 
 ### View Complete Changelog at [roadmap.nexterwp.com](https://roadmap.nexterwp.com/updates?filter=Nexter+Extension+-+FREE)
 
+= V4.7.14 = 23 October
+- Improved : New Dashboard : refreshed the admin dashboard's UI with clearer visual hierarchy, more consistent spacing and iconography, and more legible controls across every tab.
+- Improved : Translations : every translatable string with a placeholder in the dashboard now carries a translators comment, so generating the translation file no longer warns about them.
+- Improved : Code Snippets : the "MemberPress not installed" notice now uses the same confirmation dialog design as the WooCommerce notice, for a consistent look across eCommerce plugin checks.
+- Improved : Code Snippets : the Location picker and Conditions tab's selected checkmark and tooltip no longer overlap, and all four condition tabs are evenly spaced.
+- Improved : Theme Builder : White Label's "Hide WDesignKit Integration" toggle and the WDesignKit import option are no longer limited to Pro.
+- Improved : Theme Builder : the "Set Display Conditions" panel is now wider (800px) so multiselect fields are no longer cut off.
+- Compatibility : Abilities (MCP) : each ability file now stops early when the WordPress Abilities API (WordPress 6.9+) is not available, so sites on older WordPress versions never call wp_register_ability().
+- Fixed : Theme Builder : "Edit conditions" no longer appears for Section-type templates, since sections don't support display conditions.
+- Fixed : Theme Builder : creating a Sections-type template no longer shows both a "Next" and a "Create" button at once.
+- Fixed : Theme Builder : closing the create/edit template popup before it finishes loading, or choosing an archive/singular condition type with no matching post type, no longer throws a console error.
+
+
 = V4.7.13 = 15 October 2026
 - Improved : Nexter SEO : the Site Audit no longer checks Theme Builder templates (headers, footers, sections) or other builder and template types, so they stop appearing under Orphan pages and Thin content. Post types you exclude from the sitemap are skipped by the audit too, and developers can adjust the list with the nexter_seo_audit_excluded_post_types filter.
 - Improved : Nexter SEO : the category base and WooCommerce base options now flush rewrite rules once per request instead of once per category or product term, so bulk imports no longer rebuild the rules for every term.
 - Improved : SMTP Email : the mail server's certificate is now verified by default, so a server that only pretends to be your mail host can no longer receive your SMTP login and your mail. Sites that already had SMTP set up are kept as they were, with self-signed certificates still allowed, and see a notice explaining the change. A site that needs self-signed certificates can use the allow_self_signed setting, the NEXTER_SMTP_ALLOW_SELF_SIGNED constant or the nxt_smtp_allow_self_signed filter.
 - Improved : Dashboard : keyboard users can now see which control has focus on buttons, switches and the upgrade and install pop-up buttons, focus rings and some borders have more contrast, and pop-up dialogs move focus into the dialog, keep Tab inside it and make the rest of the admin inert while it is open.
+- Improved : internal security hardening from a full code audit: the Theme Builder visitor-IP display condition is documented as non-authoritative, a browser-detection header read is now sanitized, duplicating a post no longer unserializes its meta without restricting which classes may be instantiated, the plugin/theme installer's wordpress.org lookups try JSON before falling back to a restricted unserialize, and the SEO settings, import and post/term REST endpoints now validate and sanitize every parameter against its declared schema. No user-facing behaviour changes.
 - Fixed : Theme Builder : importing a template no longer ends in a fatal error. Importing now needs the manage options permission, which the Editor role did not have by design, and a template can only be exported by someone who can edit it.
 - Fixed : Theme Builder : a widget that throws an error no longer leaves the page's main query switched, a template with no post no longer causes an error, and the preview link for an Author Archive template now works.
 - Fixed : Theme Builder : a template made for one specific page no longer loses to an All Pages template just because it is older, and templates saved without a logged-in user (WP-CLI, importer, cron) now refresh the cached template list.
+- Fixed : Theme Builder : editing a template's display conditions no longer drops saved Specific Pages/Posts; only the first 20 of each type were loaded, so the rest vanished and were lost on save.
 - Fixed : Display Conditions : the Specific Pages and Archives pickers no longer crash on an empty request.
 - Fixed : Display Conditions : the pickers no longer show other users' private and draft posts, or the full user list, to Contributors.
 - Fixed : Image Optimisation : converting an image now requires permission to edit that image, so an Author can no longer convert or overwrite someone else's.
@@ -290,6 +305,10 @@ Nexter Extension may connect to external services below only when the related fe
 - Fixed : Code Snippets : the safety check no longer switches off ordinary snippets, such as loops that contain a break, code that calls get_permalink(), or file writes to a path built in the code.
 - Fixed : Replace URL : now also replaces the JSON-escaped URLs that Elementor and other builders store, and handles serialized objects, so a domain change no longer leaves old images and links behind.
 - Fixed : Nexter SEO : a post marked noindex is now dropped from the sitemap straight away instead of staying for up to 12 hours.
+- Fixed : Nexter SEO : the XML sitemap now lists every language on sites using Polylang. Only the default language was included, so posts and pages under /fr/ or /en/ were missing. All languages are now listed with their hreflang alternates, and the sitemap rebuilds as soon as the plugin is updated or a language is added.
+- Fixed : Nexter SEO : llms.txt now lists posts and tags in every language on sites using Polylang, the same gap already fixed on the XML sitemap. Only the default language was included before; pages were unaffected since they're chosen by hand.
+- Fixed : Nexter SEO : with the WooCommerce base removal on, product, product category and product tag links no longer return 404 on permalink structures other than Post name, nested categories included.
+- Fixed : View Admin Role Switcher : an account demoted through WordPress's bulk role change, the REST API or the single-user edit screen could regain its former Administrator role through the switcher's own restore link; the cleanup now runs on every role change, not only on a profile save.
 - Fixed : Advance Security : Remove Meta Generator now works on block themes such as Twenty Twenty-Five, and no longer closes another plugin's output buffer.
 - Fixed : Disable Comments : the comments REST routes are now really closed, and existing comments are hidden on block themes too.
 - Fixed : Post Revision Control : the revision limit and the post-type setting now take effect. Before, a post edited 8 times kept 8 revisions with the limit set to 3.
@@ -300,14 +319,6 @@ Nexter Extension may connect to external services below only when the related fe
 - Fixed : Login Limiter : a wrong two-factor code is now counted against the visitor's IP address, so it counts toward the lockout.
 - Fixed : Adobe Fonts : saving now changes only its own setting, checks the kit ID, and reports success when the kit is cleared. SMTP also no longer shows a warning when its saved values have no type.
 - Fixed : Post Duplicator : the number of copies is capped at 50, adjustable with the nxt_duplicate_post_max_copies filter, and a user who cannot publish now gets a pending copy instead of a published one.
-
-= V4.7.12 = 15 October 2026
-- Improved : internal security hardening from a full code audit: the Theme Builder visitor-IP display condition is documented as non-authoritative, a browser-detection header read is now sanitized, duplicating a post no longer unserializes its meta without restricting which classes may be instantiated, the plugin/theme installer's wordpress.org lookups try JSON before falling back to a restricted unserialize, and the SEO settings, import and post/term REST endpoints now validate and sanitize every parameter against its declared schema. No user-facing behaviour changes.
-- Fixed : Nexter SEO : with the WooCommerce base removal on, product, product category and product tag links no longer return 404 on permalink structures other than Post name, nested categories included.
-- Fixed : Theme Builder : editing a template's display conditions no longer drops saved Specific Pages/Posts; only the first 20 of each type were loaded, so the rest vanished and were lost on save.
-- Fixed : Nexter SEO : the XML sitemap now lists every language on sites using Polylang. Only the default language was included, so posts and pages under /fr/ or /en/ were missing. All languages are now listed with their hreflang alternates, and the sitemap rebuilds as soon as the plugin is updated or a language is added.
-- Fixed : View Admin Role Switcher : an account demoted through WordPress's bulk role change, the REST API or the single-user edit screen could regain its former Administrator role through the switcher's own restore link; the cleanup now runs on every role change, not only on a profile save.
-- Fixed : Nexter SEO : llms.txt now lists posts and tags in every language on sites using Polylang, the same gap already fixed on the XML sitemap. Only the default language was included before; pages were unaffected since they're chosen by hand.
 
 = V4.7.11 = 05 October 2026
 - Improved : Nexter SEO : Site Audit findings now list the pages they are about, each with a view and an edit link; the CSV and JSON exports carry the same per-item detail.

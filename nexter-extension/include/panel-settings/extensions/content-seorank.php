@@ -1753,6 +1753,46 @@ class Nexter_Content_SeoRank {
 		);
 	}
 
+	/**
+	 * Config the SEO screens read as `nxtContentSeoConfig`, for callers other than this class's
+	 * own enqueue_scripts() above (which builds its own array inline for the editor/term panels
+	 * and the standalone page). Used by the main Nexter dashboard, which hosts the SEO settings
+	 * screens under #/seo and needs the same REST routes, nonce and robots/branding data without
+	 * duplicating this shape.
+	 *
+	 * @param array $overrides Context-specific keys (postId, context, termId, taxonomy, termArchiveUrl).
+	 * @return array
+	 */
+	public static function get_app_config( $overrides = array() ) {
+		$ver = defined( 'NEXTER_EXT_VER' ) ? NEXTER_EXT_VER : '4.6.0';
+
+		return array_merge(
+			array(
+				'restUrl'             => rest_url( self::REST_NAMESPACE ),
+				'restNonce'           => wp_create_nonce( 'wp_rest' ),
+				'ajaxUrl'             => admin_url( 'admin-ajax.php' ),
+				'postId'              => 0,
+				'context'             => 'dashboard',
+				'termId'              => 0,
+				'taxonomy'            => '',
+				'termArchiveUrl'      => '',
+				'version'             => $ver,
+				'adminUrl'            => admin_url( 'admin.php?page=nxt_content_seo' ),
+				'dashboardUrl'        => admin_url( 'admin.php?page=nexter_welcome' ),
+				'whiteLabelData'      => array(
+					'brandname' => class_exists( 'Nexter_Content_SEO' ) ? Nexter_Content_SEO::seo_brand_label() : 'Nexter SEO',
+					'brandlogo' => class_exists( 'Nexter_Content_SEO' ) ? Nexter_Content_SEO::seo_brand_logo() : '',
+				),
+				'homePageEditUrl'     => self::get_home_page_edit_url(),
+				'isWooCommerceActive' => class_exists( 'WooCommerce' ),
+				'postTypes'           => self::get_robots_post_types(),
+				'taxonomies'          => self::get_robots_taxonomies(),
+				'archives'            => self::get_robots_archives(),
+			),
+			$overrides
+		);
+	}
+
 
 	/**
 	 * Get indexable post types for Robots (No Index / No Follow / No Archive) settings.

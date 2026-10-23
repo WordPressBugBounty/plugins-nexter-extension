@@ -69,6 +69,8 @@ if ( ! class_exists( 'Nexter_Ext_Panel_Settings' ) ) {
 
 				$this->get_nxt_brand_name();
 				add_action( 'admin_menu', array( $this, 'nxt_add_menu_page' ) );
+				// WordPress checks page access before admin_init; this action fires just before it stops with "not allowed".
+				add_action( 'admin_page_access_denied', array( $this, 'redirect_legacy_builder_page' ) );
 
 				// Dashboard data handles admin enqueue scripts
 				$this->dashboard_data->register_hooks();
@@ -216,6 +218,16 @@ if ( ! class_exists( 'Nexter_Ext_Panel_Settings' ) ) {
 			}
 		}
 
+		/* The full-screen Theme Builder page no longer exists: send old links to the dashboard's Theme Builder. */
+		public function redirect_legacy_builder_page() {
+			$page = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- only picks a redirect target.
+			if ( 'nxt_builder' !== $page || ! current_user_can( 'manage_options' ) ) {
+				return;
+			}
+			wp_safe_redirect( admin_url( 'admin.php?page=nexter_welcome' ) . '#/theme-builder' );
+			exit;
+		}
+
 		/* Settings Admin Menu */
 		public function nxt_add_menu_page(){
 			global $submenu;
@@ -265,9 +277,21 @@ if ( ! class_exists( 'Nexter_Ext_Panel_Settings' ) ) {
 					__( 'Theme Builder', 'nexter-extension' ),
 					__( 'Theme Builder', 'nexter-extension' ),
 					'manage_options',
-					'nxt_builder',
-					array($this, 'nexter_theme_builder_display')
+					'nexter_welcome#/theme-builder',
+					array( $this, 'nexter_ext_dashboard' )
 				);
+				/*
+				 * Theme Builder opens inside the dashboard now. Its full-screen page stays
+				 * registered, out of the menu, so existing links to it keep working.
+				 
+				add_submenu_page(
+					'options.php',
+					__( 'Theme Builder', 'nexter-extension' ),
+					__( 'Theme Builder', 'nexter-extension' ),
+					'manage_options',
+					'nxt_builder',
+					array( $this, 'nexter_theme_builder_display' )
+				);*/
 			} else {
 				add_submenu_page(
 					'nexter_welcome',
@@ -292,8 +316,20 @@ if ( ! class_exists( 'Nexter_Ext_Panel_Settings' ) ) {
 					__( 'Code Snippets', 'nexter-extension' ),
 					__( 'Code Snippets', 'nexter-extension' ),
 					'manage_options',
+					'nexter_welcome#/code_snippets',
+					array( $this, 'nexter_ext_dashboard' )
+				);
+				/*
+				 * Code Snippets opens inside the dashboard now. Its own page stays registered,
+				 * out of the menu, so links such as the admin bar's snippet edit links keep working.
+				 */
+				add_submenu_page(
+					'options.php',
+					__( 'Code Snippets', 'nexter-extension' ),
+					__( 'Code Snippets', 'nexter-extension' ),
+					'manage_options',
 					'nxt_code_snippets',
-					array($this, 'nexter_code_snippet_display'),
+					array( $this, 'nexter_code_snippet_display' )
 				);
 			}
 			$seo_enabled = false;
@@ -304,6 +340,19 @@ if ( ! class_exists( 'Nexter_Ext_Panel_Settings' ) ) {
 			if ( $seo_enabled ) {
 				add_submenu_page(
 					'nexter_welcome',
+					__( 'SEO', 'nexter-extension' ),
+					__( 'SEO', 'nexter-extension' ),
+					'manage_options',
+					'nexter_welcome#/seo',
+					array( $this, 'nexter_ext_dashboard' )
+				);
+				/*
+				 * The old standalone SEO page, kept registered but out of the menu so bookmarks,
+				 * the audit email and the editor panel's settings links keep working. It only
+				 * forwards into the dashboard - see nexter_ext_seo_page().
+				 */
+				add_submenu_page(
+					'options.php',
 					__( 'SEO', 'nexter-extension' ),
 					__( 'SEO', 'nexter-extension' ),
 					'manage_options',
@@ -355,8 +404,8 @@ if ( ! class_exists( 'Nexter_Ext_Panel_Settings' ) ) {
 			if ( ! defined( 'NXT_PRO_EXT' ) && ! defined( 'TPGBP_VERSION' ) ) {
 				add_submenu_page( 
 					'nexter_welcome', 
-					esc_html__( 'Get Pro Nexter', 'nexter-extension' ), 
-					esc_html__( 'Get Pro Nexter', 'nexter-extension' ), 
+					esc_html__( 'Get Nexter Pro', 'nexter-extension' ), 
+					esc_html__( 'Get Nexter Pro', 'nexter-extension' ), 
 					'manage_options', 
 					esc_url( 'https://nexterwp.com/pricing/?utm_source=wpbackend&utm_medium=blocks&utm_campaign=nextersettings' )
 				);
@@ -387,14 +436,21 @@ if ( ! class_exists( 'Nexter_Ext_Panel_Settings' ) ) {
 		 * Render Content SEO admin page.
 		 */
 		public function nexter_ext_seo_page() {
-			// Accessible page title: the React app's visual header starts its headings at H3, so
-			// without this the page has no H1 and screen-reader heading navigation is broken. Kept
-			// screen-reader-only (no visual change) and honours the Pro white-label brand label.
-			$heading = class_exists( 'Nexter_Content_SEO' ) ? Nexter_Content_SEO::seo_brand_label() : __( 'Nexter SEO', 'nexter-extension' );
+			/*
+			 * The SEO screens now live in the Nexter dashboard under #/seo. This page only forwards,
+			 * and it does so in the browser because the old deep links carry their section in the
+			 * fragment (#/technical/sitemaps), which never reaches the server.
+			 */
+			$target = admin_url( 'admin.php?page=nexter_welcome' );
 			printf(
-				'<h1 class="screen-reader-text">%1$s</h1><div id="nexter-content-seo" class="%2$s"></div>',
-				esc_html( $heading ),
-				esc_attr( 'wrap nxt-content-seo-mount' )
+				'<div class="wrap"><h1 class="screen-reader-text">%1$s</h1><p><a href="%2$s#/seo">%3$s</a></p></div>',
+				esc_html__( 'SEO', 'nexter-extension' ),
+				esc_url( $target ),
+				esc_html__( 'Open SEO settings', 'nexter-extension' )
+			);
+			printf(
+				'<script>(function(){var h=(window.location.hash||"").replace(/^#\/?/,"");window.location.replace(%1$s+"#/seo"+(h?"/"+h:""));})();</script>',
+				wp_json_encode( $target )
 			);
 		}
 
