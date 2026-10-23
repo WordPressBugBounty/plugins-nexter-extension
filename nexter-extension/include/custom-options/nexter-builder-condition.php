@@ -345,7 +345,7 @@ if ( ! class_exists( 'Nexter_Builder_Condition' ) ) {
 						}
 					}
 					// Redirect to the edit page
-					wp_safe_redirect( admin_url( 'post.php?post=' . $template_id . '&action=edit' ) );
+					wp_redirect( admin_url( 'post.php?post=' . $template_id . '&action=edit' ) );
 					exit;
 				}
 			}

@@ -142,7 +142,7 @@ if ( ! class_exists( 'Nexter_Builder_Sections_Conditional' ) ) {
 		 */
 		public function nexter_builder_template_frontend() {
 			if ( is_singular( NXT_BUILD_POST ) && ! current_user_can( 'edit_posts' ) ) {
-				wp_safe_redirect( home_url(), 301 );
+				wp_redirect( home_url(), 301 );
 				die;
 			}
 		}

@@ -299,21 +299,14 @@ class NexterBuilder {
                                     return;
                                 }
 
-                                /* Every type below shows this toggle (the markup is unconditional), but
-                                   only header/footer/hooks used to be wired up here - any other type
-                                   (breadcrumb, sections, single page, archive page, 404 page, ...) had
-                                   nothing to open, since hooksSec - the generic Actions Hooks/Priority
-                                   panel they all share - was gated behind `getSel.value == 'hooks'`
-                                   specifically. It is now the fallback for anything that is not
-                                   header/footer. */
-                                {
+                                if(getSel.value == 'header' || getSel.value == 'footer' || getSel.value == 'hooks'){
                                     if(at.currentTarget.classList.contains('active')){
                                         at.currentTarget.classList.remove('active');
                                         if(getSel.value == 'header' && headerSec){
                                             headerSec.classList.remove('active');
                                         }else if(getSel.value == 'footer' && footerSec){
                                             footerSec.classList.remove('active');
-                                        }else if(hooksSec){
+                                        }else if(getSel.value == 'hooks' && hooksSec){
                                             hooksSec.classList.remove('active');
                                         }
 
@@ -330,7 +323,7 @@ class NexterBuilder {
                                             headerSec.classList.add('active');
                                         }else if(getSel.value == 'footer' && footerSec){
                                             footerSec.classList.add('active');
-                                        }else if(hooksSec){
+                                        }else if(getSel.value == 'hooks' && hooksSec){
                                             hooksSec.classList.add('active');
                                         }
 
@@ -377,22 +370,14 @@ class NexterBuilder {
                                         hiddenField.type = 'hidden';
                                         hiddenField.name = 'action';
                                         hiddenField.id = 'nxt_section_action';
-                                        hiddenField.value = 'nexter_ext_save_template';
+                                        hiddenField.value = 'nexter_ext_save_template'; 
                                         form.appendChild(hiddenField); */
-                                        /* Editing an existing template renders this as .temp-next-button rather
-                                           than .temp-action-btn (PHP uses a different class once a post_id
-                                           exists) - only hiding .temp-action-btn left that one on screen
-                                           alongside the Create button this block adds below. Setting display
-                                           inline rather than toggling the .nxt-hide class, since an unrelated,
-                                           unscoped stylesheet rule has twice now silently out-specified a
-                                           scoped one in this codebase - inline style always wins regardless. */
-                                        let getAction = popEle.querySelector('.temp-action-btn, .temp-next-button');
+                                        let getAction = popEle.querySelector('.temp-action-btn');
                                         if(getAction){
                                             getAction.classList.add('nxt-hide');
-                                            getAction.style.display = 'none';
                                         }
                                         let getbtnAction = popEle.querySelector('.nxt-temp-action');
-                                        if(getbtnAction && !popEle.querySelector('.nxt-action-btn-wrap')){
+                                        if(getbtnAction){
                                             var nxtCreateBtnLabel = ( typeof NexterConfig !== 'undefined' && NexterConfig.createLabel ) ? NexterConfig.createLabel : 'Create';
                                             nxtCreateBtnLabel = String( nxtCreateBtnLabel ).replace( /&/g, '&amp;' ).replace( /</g, '&lt;' );
                                             getbtnAction.insertAdjacentHTML('beforeend', '<div class="nxt-action-btn-wrap"><input type="hidden" name="action" value="nexter_ext_save_template" id="nxt_section_action" /><input type="hidden" name="nonce" value="'+NexterConfig.hiddennonce+'" /><button type="submit" class="temp-create-btn">' + nxtCreateBtnLabel + '</button></div>');
@@ -404,10 +389,9 @@ class NexterBuilder {
                                     if(btn_wrap){
                                         btn_wrap.remove()
                                     }
-                                    let getAction = popEle.querySelector('.temp-action-btn, .temp-next-button');
+                                    let getAction = popEle.querySelector('.temp-action-btn');
                                     if(getAction){
                                         getAction.classList.remove('nxt-hide');
-                                        getAction.style.display = '';
                                     }
                                     form.removeAttribute('action', NexterConfig.adminPostUrl);
                                 }
@@ -497,7 +481,7 @@ class NexterBuilder {
                         let container = popEle.querySelector('#accordion-container');
                         if(container){
                             let $this = this;
-                            jQuery('.nxt-single-archive-post').select2({dropdownCssClass: 'nxt-builder-select', dropdownParent: jQuery(document.body)});
+                            jQuery('.nxt-single-archive-post').select2({dropdownCssClass: 'nxt-builder-select'});
 
                             let getItemOld = container.querySelectorAll('.accordion-item');
                             var nxt_configold = JSON.parse(JSON.stringify(NexterConfig));
@@ -541,7 +525,7 @@ class NexterBuilder {
                                             nxt_configold = NexterConfig
                                         }
 
-                                        jQuery('.nxt-single-archive-post').select2({dropdownCssClass: 'nxt-builder-select', dropdownParent: jQuery(document.body)});
+                                        jQuery('.nxt-single-archive-post').select2({dropdownCssClass: 'nxt-builder-select'});
 
                                         setTimeout(()=>{
                                             let getAllItems = container.querySelectorAll('.accordion-item');
@@ -602,9 +586,6 @@ class NexterBuilder {
                         // jQuery(document).on('change', '.' + singular_cond_rule + ' .archive-select', function(e) {
                         jQuery(document).on('change', '.nxt-singular-group-select', function(e) {
                             var cond_type = e.currentTarget.closest(".accordion-item").querySelector('.nxt-single-archive-post');
-                            /* Some rule types (a taxonomy/category condition, say) have no
-                               .nxt-single-archive-post dropdown at all - nothing below applies. */
-                            if (!cond_type) return;
                                 var data = {
                                 action: "nxt_singular_archives_filters_ajax"
                             };
@@ -662,11 +643,8 @@ class NexterBuilder {
                         });
 
                         jQuery(document).on('change', '.nxt-archive-group-select', function(e) {
-                            var $this = this.value;
+                            var $this = this.value;        
                             var cond_type = e.currentTarget.closest(".accordion-item").querySelector('.nxt-single-archive-post');
-                            /* Some rule types (a taxonomy/category condition, say) have no
-                               .nxt-single-archive-post dropdown at all - nothing below applies. */
-                            if (!cond_type) return;
                             cond_type.style.display = 'block';
                             cond_type.nextElementSibling.style.display = 'block';
                             var data = {
@@ -914,16 +892,12 @@ class NexterBuilder {
         const displayRulesPh = ( type === 'include' )
             ? nxtBuilderT( 'placeholderInclude', 'Select locations where you want to show your template.' )
             : nxtBuilderT( 'placeholderExclude', 'Select locations where you want to hide your template.' );
-        /* dropdownParent: document.body - without it, select2 appends the dropdown inside
-           its own offset parent, and this popup can sit inside an ancestor with a CSS
-           transform (the dashboard panel's slide-in), which breaks its absolute
-           positioning math into a squeezed, misplaced box. */
-        jQuery(inexrule).select2({ dropdownCssClass: 'nxt-builder-select', value: '', placeholder: displayRulesPh, allowClear: true, dropdownParent: jQuery(document.body)});
-        jQuery('.nxt-set-day').select2({ dropdownCssClass: 'nxt-builder-select', value: '', placeholder: '', allowClear: true, dropdownParent: jQuery(document.body)});
-        jQuery('.nxt-layout-os').select2({ dropdownCssClass: 'nxt-builder-select', value: '', placeholder: '', allowClear: true, dropdownParent: jQuery(document.body)});
-        jQuery('.nxt-layout-browser').select2({ dropdownCssClass: 'nxt-builder-select', value: '', placeholder: '', allowClear: true, dropdownParent: jQuery(document.body)});
-        jQuery('.nxt-layout-login-status').select2({ dropdownCssClass: 'nxt-builder-select', value: '', placeholder: '', allowClear: true, dropdownParent: jQuery(document.body)});
-        jQuery('.nxt-layout-user-roles').select2({ dropdownCssClass: 'nxt-builder-select', value: '', placeholder: '', allowClear: true, dropdownParent: jQuery(document.body)});
+        jQuery(inexrule).select2({ dropdownCssClass: 'nxt-builder-select', value: '', placeholder: displayRulesPh, allowClear: true});
+        jQuery('.nxt-set-day').select2({ dropdownCssClass: 'nxt-builder-select', value: '', placeholder: '', allowClear: true});
+        jQuery('.nxt-layout-os').select2({ dropdownCssClass: 'nxt-builder-select', value: '', placeholder: '', allowClear: true});
+        jQuery('.nxt-layout-browser').select2({ dropdownCssClass: 'nxt-builder-select', value: '', placeholder: '', allowClear: true});
+        jQuery('.nxt-layout-login-status').select2({ dropdownCssClass: 'nxt-builder-select', value: '', placeholder: '', allowClear: true});
+        jQuery('.nxt-layout-user-roles').select2({ dropdownCssClass: 'nxt-builder-select', value: '', placeholder: '', allowClear: true});
 
         function updateActiveStates() {
             var selectedValue = jQuery(inexrule).val();
@@ -1015,24 +989,18 @@ class NexterBuilder {
             let selVal = getArchiveRule.value;
             if (selVal != undefined && nxt_configold?.nxt_archives[selVal]?.condition_type!='' && nxt_configold?.nxt_archives[selVal]?.condition_type!=undefined && nxt_configold?.nxt_archives[selVal]?.condition_type == 'yes') {
                 /* Do Nothing */
-            }else if(getArchiveType){
-                /* This row's condition type (e.g. a taxonomy/category selection) has no
-                   .nxt-single-archive-post element at all, so this was null here. */
+            }else{
                 getArchiveType.style.display = 'none';
-                if(getArchiveType.nextElementSibling){
-                    getArchiveType.nextElementSibling.style.display = 'none';
-                }
+                getArchiveType.nextElementSibling.style.display = 'none';
             }
         }
         let getSingularRule = ele.querySelector('.nxt-singular-group-select');
         if(getSingularRule){
             let getSingularType = ele.querySelector('.nxt-single-archive-post')
             let selVal = getSingularRule.value;
-            if (selVal != undefined && selVal == 'front_page' && getSingularType){
+            if (selVal != undefined && selVal == 'front_page') {
                 getSingularType.style.display = 'none';
-                if(getSingularType.nextElementSibling){
-                    getSingularType.nextElementSibling.style.display = 'none';
-                }
+                getSingularType.nextElementSibling.style.display = 'none';
             }
         }
     }
@@ -1046,21 +1014,12 @@ class NexterBuilder {
 
         let form = getInner.querySelector('form');
 
-        /* A click outside the popup while it is still loading (the spinner markup
-           from getPopupHTML(), before the AJAX content - and its <form> - has
-           rendered) left nothing here to read, and `new FormData(null)` threw.
-           Nothing to compare for unsaved changes either, so just close it. */
-        if (!form) {
-            ell.remove();
-            return;
-        }
-
         /* Get Latest form data */
         let gFormData = new FormData(form);
         let gParams = new URLSearchParams();
         gFormData.forEach((value, key) => {
             let gElement = form.querySelector(`[name="${key}"]`);
-            const isVisible = gElement && window.getComputedStyle(gElement.parentElement).display !== 'none';
+            const isVisible = window.getComputedStyle(gElement.parentElement).display !== 'none';
 
             if (key !== 'action' && isVisible) {
                 gParams.append(key, value);

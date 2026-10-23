@@ -148,7 +148,7 @@ class Engine {
 		}
 		$lines[] = '';
 		/* translators: %s: admin report URL */
-		$lines[] = sprintf( \__( 'View the full report: %s', 'nexter-extension' ), \admin_url( 'admin.php?page=nexter_welcome#/seo/site-audit' ) );
+		$lines[] = sprintf( \__( 'View the full report: %s', 'nexter-extension' ), \admin_url( 'admin.php?page=nxt_content_seo' ) );
 
 		$body    = implode( "\n", $lines );
 		$subject = \apply_filters( 'nexter_seo_audit_email_subject', $subject, $result, $schedule );

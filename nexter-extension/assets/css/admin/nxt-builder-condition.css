@@ -160,16 +160,6 @@ body.post-php .nxt-ext-setting-pop, body.post-php .nxt-ext-setting-pop:after {
     align-items: center;
     row-gap: 50px;
 }
-/* The "Set Display Conditions" popup (identified by its .nxt-condition-main-wrap
-   content) always needs the full 800px regardless of context - the rule above
-   narrows every popup sharing .nxt-ext-pop-inner to 750px on the classic
-   post-type-nxt_builder screen, "Create your New Templates" included, which
-   this is not meant to follow. Placed after it, at equal specificity, so it
-   wins by source order for just this one. */
-.nxt-ext-pop-inner:has(.nxt-condition-main-wrap) {
-    width: 800px;
-    max-width: 800px;
-}
 .nxt-ext-pop-inner .ext-close-button {
     position: absolute;
     top: 25px;
@@ -295,7 +285,7 @@ body.post-php .nxt-ext-setting-pop, body.post-php .nxt-ext-setting-pop:after {
     width: 100% !important;
 }
 
-:is(.post-type-nxt_builder, .nxt-tb-embedded) .nxt-condition-include .select2-container, :is(.post-type-nxt_builder, .nxt-tb-embedded) .nxt-condition-exclude .select2-container{
+.post-type-nxt_builder .nxt-condition-include .select2-container, .post-type-nxt_builder .nxt-condition-exclude .select2-container{
     width: auto !important;
 }
 
@@ -468,8 +458,7 @@ a.nxt-temp-info:hover::before {
 .temp-action-btn:hover, .temp-next-button:hover, a.temp-create-btn:hover {
     color: #fff;
 }
-.nxt-hide.temp-action-btn,
-.nxt-hide.temp-next-button {
+.nxt-hide.temp-action-btn {
     display: none;
 }
 .nxt-footer-smart-bgcolor {
@@ -545,19 +534,15 @@ a.nxt-temp-info:hover::before {
     width: 40px;
     position: relative;
 }
-/* Unscoped, unlike the rest of this popup's rules: this toggle also renders inside the
-   dashboard's embedded Theme Builder (#/theme-builder), which never carries the
-   .post-type-nxt_builder body class, so a scoped-only rule here left the checkbox
-   toggling internally while the slider never visibly moved. */
-.nxt-trans-header-inner input:checked + label::after {
+.post-type-nxt_builder .nxt-trans-header-inner input:checked + label::after {
     background: #fff;
     border-color: #fff;
     left: 20px
 }
-/* .nxt-trans-header-inner input:checked + label:active::after {
+/* .post-type-nxt_builder .nxt-trans-header-inner input:checked + label:active::after {
     transform: translateX(11px);
 } */
-.nxt-trans-header-inner input:checked + label::before {
+.post-type-nxt_builder .nxt-trans-header-inner input:checked + label::before {
     border-color: #1717CC;
     background-color: #1717CC;
     transform: none;
@@ -588,73 +573,63 @@ a.nxt-temp-info:hover::before {
     background-color: #F0F0F0;
     color: #696959;
 }
-:is(.post-type-nxt_builder, .nxt-tb-embedded) .nxt-ext-setting-pop .select2-container--default .select2-results__option--selected {
+.post-type-nxt_builder .nxt-ext-setting-pop .select2-container--default .select2-results__option--selected {
     background-color: #F0F0F0;
     color: #696959;
 }
-:is(.post-type-nxt_builder, .nxt-tb-embedded) .nxt-ext-setting-pop .select2-container--default .select2-selection--multiple {
+.post-type-nxt_builder .nxt-ext-setting-pop .select2-container--default .select2-selection--multiple {
     padding: 5px;
     border: 1px solid #D9D9D9;
     max-height: 200px;
     overflow: hidden;
     overflow-y: auto;
-    /* Select2's own markup floats its <ul> rendered list, so with nothing in
-       it yet (just the placeholder) the search field sits at the top of
-       whatever height the container ends up with, not centered in it. */
-    display: flex;
-    align-items: center;
 }
-:is(.post-type-nxt_builder, .nxt-tb-embedded) .nxt-ext-setting-pop .select2-container--default .select2-selection--multiple .select2-selection__rendered {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-}
-:is(.post-type-nxt_builder, .nxt-tb-embedded) .nxt-ext-setting-pop .select2-container--default .select2-selection--multiple .select2-search__field {
+.post-type-nxt_builder .nxt-ext-setting-pop .select2-container--default .select2-selection--multiple .select2-search__field {
     margin-top: 0px;
     height: 28px;
     line-height: 28px;
 }
-:is(.post-type-nxt_builder, .nxt-tb-embedded) .nxt-ext-setting-pop .select2-container--default .select2-selection--multiple .select2-selection__clear {
+.post-type-nxt_builder .nxt-ext-setting-pop .select2-container--default .select2-selection--multiple .select2-selection__clear {
     top: 5px;
 }
-:is(.post-type-nxt_builder, .nxt-tb-embedded) .nxt-ext-setting-pop .select2-container--default .select2-selection--multiple .select2-selection__rendered {
+.post-type-nxt_builder .nxt-ext-setting-pop .select2-container--default .select2-selection--multiple .select2-selection__rendered {
     margin: 0;
     width: auto;
     padding: 0;
 }
-:is(.post-type-nxt_builder, .nxt-tb-embedded) .nxt-ext-setting-pop .select2-container--default .select2-selection--multiple .select2-selection__choice {
+.post-type-nxt_builder .nxt-ext-setting-pop .select2-container--default .select2-selection--multiple .select2-selection__choice {
     background-color: #F5F5F5;
     border-color: #F0F0F0;
     padding: 3px 20px 3px 5px;
     margin-bottom: 5px;
 }
-:is(.post-type-nxt_builder, .nxt-tb-embedded) .nxt-ext-setting-pop .select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+.post-type-nxt_builder .nxt-ext-setting-pop .select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
     right: 6px;
     top: 4px;
     border-radius: 5px;
     left: auto;
     border: none;
 }
-:is(.post-type-nxt_builder, .nxt-tb-embedded) .nxt-ext-setting-pop .select2-container--default .select2-selection--multiple {
+.post-type-nxt_builder .nxt-ext-setting-pop .select2-container--default .select2-selection--multiple {
     border-color: #D9D9D9;
     text-align: left;
 }
-:is(.post-type-nxt_builder, .nxt-tb-embedded) .nxt-ext-setting-pop .select2-search__field::placeholder{
+.post-type-nxt_builder .nxt-ext-setting-pop .select2-search__field::placeholder{
     color: #4B465C80;
 }
-:is(.post-type-nxt_builder, .nxt-tb-embedded) .nxt-ext-setting-pop .select2-container--default .select2-selection--multiple .select2-selection__choice__display{
+.post-type-nxt_builder .nxt-ext-setting-pop .select2-container--default .select2-selection--multiple .select2-selection__choice__display{
     font-size: 12px;
     color: #4B465C;
     font-weight: 500;
 }
-:is(.post-type-nxt_builder, .nxt-tb-embedded) .accordion-content .select2-selection--multiple .select2-selection__choice__display {
+.post-type-nxt_builder .accordion-content .select2-selection--multiple .select2-selection__choice__display {
     max-width: 150px;
     width: auto;
     display: inline-block;
     text-wrap-mode: wrap;
 }
 
-:is(.post-type-nxt_builder, .nxt-tb-embedded) .nxt-ext-setting-pop select {
+.post-type-nxt_builder .nxt-ext-setting-pop select {
     margin: 0;
     border: 1px solid #F5F5F5;
     color: #000000D9;
@@ -663,15 +638,15 @@ a.nxt-temp-info:hover::before {
     min-height: 40px;
     background-position: right 5px top 50%;
 }
-:is(.post-type-nxt_builder, .nxt-tb-embedded) .nxt-ext-setting-pop select:not(:disabled):hover, :is(.post-type-nxt_builder, .nxt-tb-embedded) .nxt-ext-setting-pop select:not(:disabled):focus {
+.post-type-nxt_builder .nxt-ext-setting-pop select:not(:disabled):hover, .post-type-nxt_builder .nxt-ext-setting-pop select:not(:disabled):focus {
     border-color: #1717CC;
 }
 
-:is(.post-type-nxt_builder, .nxt-tb-embedded) .select2-container .select2-selection--multiple{
+.post-type-nxt_builder .select2-container .select2-selection--multiple{
     border-color: #F5F5F5;
     border-radius: 5px;
 }
-:is(.post-type-nxt_builder, .nxt-tb-embedded) .nxt-ext-setting-pop .select2-container.select2-container--open .select2-selection--multiple, :is(.post-type-nxt_builder, .nxt-tb-embedded) .nxt-ext-setting-pop .select2-container--default.select2-container--focus .select2-selection--multiple{
+.post-type-nxt_builder .nxt-ext-setting-pop .select2-container.select2-container--open .select2-selection--multiple, .post-type-nxt_builder .nxt-ext-setting-pop .select2-container--default.select2-container--focus .select2-selection--multiple{
     border-color: #1717CC;
 }
 .nxt-single-archive-post {
@@ -720,21 +695,6 @@ a.nxt-temp-info:hover::before {
     gap: 7px;
     /* border: 1px solid #ccc; */
 }
-/* The row is Include/Exclude, then the rule type, then this multiselect value
-   field (select2-ified) - with no explicit widths all three shared equally,
-   squeezing a multi-value selection (several category tags, say) down to
-   where its own chosen items no longer fit and get cut off. The first two
-   stay compact; this one takes the room they free up. */
-.accordion-content > select:nth-of-type(1),
-.accordion-content > select:nth-of-type(2) {
-    flex: 0 0 170px;
-    width: 170px;
-}
-.accordion-content .select2-container {
-    flex: 1 1 auto;
-    min-width: 220px;
-    max-width: 600px;
-}
 .accordion-content:not(:first-child) {
     margin-top: 10px;
 }
@@ -775,13 +735,6 @@ a.nxt-temp-info:hover::before {
 .nxt-footer-smart-bgcolor .wp-picker-holder {
     position: absolute;
     top: 30px;
-    /* Without an explicit left, the panel anchors to .wp-picker-container's own
-       default inline position rather than the swatch button itself, landing
-       away from the field it belongs to; raised above the "Additional
-       Settings" / "Close Settings" toggle below it, which it would otherwise
-       render tucked behind instead of clearly on top of. */
-    left: 0;
-    z-index: 50;
 }
 .nxt-footer-smart-bgcolor .wp-picker-input-wrap label {
     margin: 0;

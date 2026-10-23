@@ -597,23 +597,7 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 		 * @since 2.0.0
 		 */
 		public function enqueue_scripts_admin( $hook_suffix ) {
-
-			/*
-			 * The dashboard's embedded #/code_snippets list and editor are the same
-			 * All_list/Create_Edit_Snippet components bundled into its own script (see
-			 * code-snippets/src/ds/cs-embed.jsx and the dashboard's webpack alias), and they read
-			 * nxt_code_snippet_data directly. Without it there, CodeSnippets (the dashboard wrapper)
-			 * finds isOn-but-not-ready and falls back to redirecting to this standalone page instead
-			 * of showing the list in place.
-			 */
-			if ( false !== strpos( (string) $hook_suffix, 'nexter' ) ) {
-				if ( ! function_exists( 'get_editable_roles' ) ) {
-					require_once ABSPATH . 'wp-admin/includes/user.php';
-				}
-				wp_localize_script( 'nexter-ext-dashscript', 'nxt_code_snippet_data', $this->get_code_snippet_localize_data() );
-				return;
-			}
-
+			
 			// Code Snippet Dashboard enquque
 			if ( strpos( $hook_suffix, 'nxt_code_snippets' ) === false ) {
 				return;
@@ -626,7 +610,7 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 
 			wp_enqueue_script( 'nxt-code-snippet', NEXTER_EXT_URL . 'assets/js/admin/index.js', array( 'react', 'react-dom', 'react-jsx-runtime', 'wp-dom-ready', 'wp-element', 'lodash', 'wp-i18n' ), NEXTER_EXT_VER, true );
 			//wp_enqueue_script( 'nxt-code-snippet', NEXTER_EXT_URL . 'code-snippets/build/index.js', array( 'react', 'react-dom', 'react-jsx-runtime', 'wp-dom-ready', 'wp-element','lodash', 'wp-i18n' ), NEXTER_EXT_VER, true );
-
+			
 			// Attach JavaScript translations
 			wp_set_script_translations(
 				'nxt-code-snippet',  // Handle must match enqueue
@@ -638,49 +622,41 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 			if ( ! function_exists( 'get_editable_roles' ) ) {
 				require_once ABSPATH . 'wp-admin/includes/user.php';
 			}
-
-			wp_localize_script( 'nxt-code-snippet', 'nxt_code_snippet_data', $this->get_code_snippet_localize_data() );
-		}
-
-		/**
-		 * The nxt_code_snippet_data payload, shared by the standalone Code Snippets admin page
-		 * and its dashboard embed — see enqueue_scripts_admin().
-		 *
-		 * @return array
-		 */
-		private function get_code_snippet_localize_data() {
+			
 			$extensioninstall     = defined( 'NEXTER_EXT_VER' );
 			$cached_localize_data = $this->get_cached_snippets_admin_localize_data();
 
-			return array(
-				'adminUrl'                => admin_url(),
-				'ajax_url'                => admin_url( 'admin-ajax.php' ),
-				'nonce'                   => wp_create_nonce( 'nxt-code-snippet' ),
-				// The dashboard's module switch (nexter_extra_ext_deactivate) checks this one, so the page can turn the module off.
-				'module_nonce'            => wp_create_nonce( 'nexter_admin_nonce' ),
-				'nxt_url'                 => NEXTER_EXT_URL.'code-snippets/',
-				'assets'                  => NEXTER_EXT_URL . 'assets/',
-				'htmlHooks'               => isset( $cached_localize_data['htmlHooks'] ) ? $cached_localize_data['htmlHooks'] : [],
-				'in_ex_option'            => isset( $cached_localize_data['in_ex_option'] ) ? $cached_localize_data['in_ex_option'] : [],
-				'user_role'               => isset( $cached_localize_data['user_role'] ) ? $cached_localize_data['user_role'] : [],
-				'post_types'              => isset( $cached_localize_data['post_types'] ) ? $cached_localize_data['post_types'] : [],
-				'taxonomies'              => isset( $cached_localize_data['taxonomies'] ) ? $cached_localize_data['taxonomies'] : [],
-				'page_templates'          => isset( $cached_localize_data['page_templates'] ) ? $cached_localize_data['page_templates'] : [],
-				'whiteLabel'              => Nxt_Options::white_label(),
-				'isactivate'              => (defined( 'NXT_PRO_EXT' ) && class_exists( 'Nexter_Pro_Ext_Activate' )) ? Nexter_Pro_Ext_Activate::get_instance()->nexter_activate_status() : '',
-				'is_pro'                  => (defined( 'NXT_PRO_EXT' )) ? true : false,
-				'ecommerce_plugins'       => array(
-					'woocommerce' => class_exists( 'WooCommerce' ),
-					'edd'         => class_exists( 'Easy_Digital_Downloads' ),
-					'memberpress' => class_exists( 'MeprAppCtrl' )
-				),
-				'memberpress_memberships' => isset( $cached_localize_data['memberpress_memberships'] ) ? $cached_localize_data['memberpress_memberships'] : [],
-				'cs_pro_svg'              => NEXTER_EXT_URL . 'assets/images/cs_pro.svg',
-				'cs_premium_icon'         => NEXTER_EXT_URL . 'dashboard/assets/svg/premium_icon.svg',
-				'cs_ec_required_icon'     => NEXTER_EXT_URL . 'assets/images/cs_ec_require.svg',
-				'extensioninstall'        => $extensioninstall,
-				'nxtExtra'                => Nxt_Options::extra_ext(),
-				'dashboard_url'           => admin_url( 'admin.php?page=nexter_welcome' ),
+			wp_localize_script(
+				'nxt-code-snippet',
+				'nxt_code_snippet_data',
+				array(
+					'adminUrl'                => admin_url(),
+					'ajax_url'                => admin_url( 'admin-ajax.php' ),
+					'nonce'                   => wp_create_nonce( 'nxt-code-snippet' ),
+					'nxt_url'                 => NEXTER_EXT_URL.'code-snippets/',
+					'assets'                  => NEXTER_EXT_URL . 'assets/',
+					'htmlHooks'               => isset( $cached_localize_data['htmlHooks'] ) ? $cached_localize_data['htmlHooks'] : [],
+					'in_ex_option'            => isset( $cached_localize_data['in_ex_option'] ) ? $cached_localize_data['in_ex_option'] : [],
+					'user_role'               => isset( $cached_localize_data['user_role'] ) ? $cached_localize_data['user_role'] : [],
+					'post_types'              => isset( $cached_localize_data['post_types'] ) ? $cached_localize_data['post_types'] : [],
+					'taxonomies'              => isset( $cached_localize_data['taxonomies'] ) ? $cached_localize_data['taxonomies'] : [],
+					'page_templates'          => isset( $cached_localize_data['page_templates'] ) ? $cached_localize_data['page_templates'] : [],
+					'whiteLabel'              => Nxt_Options::white_label(),
+					'isactivate'              => (defined( 'NXT_PRO_EXT' ) && class_exists( 'Nexter_Pro_Ext_Activate' )) ? Nexter_Pro_Ext_Activate::get_instance()->nexter_activate_status() : '',
+					'is_pro'                  => (defined( 'NXT_PRO_EXT' )) ? true : false,
+					'ecommerce_plugins'       => array(
+						'woocommerce' => class_exists( 'WooCommerce' ),
+						'edd'         => class_exists( 'Easy_Digital_Downloads' ),
+						'memberpress' => class_exists( 'MeprAppCtrl' )
+					),
+					'memberpress_memberships' => isset( $cached_localize_data['memberpress_memberships'] ) ? $cached_localize_data['memberpress_memberships'] : [],
+					'cs_pro_svg'              => NEXTER_EXT_URL . 'assets/images/cs_pro.svg',
+					'cs_premium_icon'         => NEXTER_EXT_URL . 'dashboard/assets/svg/premium_icon.svg',
+					'cs_ec_required_icon'     => NEXTER_EXT_URL . 'assets/images/cs_ec_require.svg',
+					'extensioninstall'        => $extensioninstall,
+					'nxtExtra'                => Nxt_Options::extra_ext(),
+					'dashboard_url'           => admin_url( 'admin.php?page=nexter_welcome' ),
+				)
 			);
 		}
 
