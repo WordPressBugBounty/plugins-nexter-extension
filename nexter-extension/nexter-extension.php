@@ -3,7 +3,7 @@
  * Plugin Name: Nexter Extension
  * Plugin URI: https://nexterwp.com
  * Description: Nexter Extension adds lightweight performance, security, and admin features to WordPress so you can improve and manage your website without installing many plugins.
- * Version: 4.7.13
+ * Version: 4.8.0
  * Author: POSIMYTH
  * Author URI: https://posimyth.com
  * Text Domain: nexter-extension
@@ -26,12 +26,15 @@ define( 'NEXTER_EXT_BASE', plugin_basename( NEXTER_EXT_FILE ) );
 define( 'NEXTER_EXT_DIR', plugin_dir_path( NEXTER_EXT_FILE ) );
 define( 'NEXTER_EXT_URL', plugins_url( '/', NEXTER_EXT_FILE ) );
 define( 'NEXTER_EXT_CPT', 'nxt_builder' );
-define( 'NEXTER_EXT_VER', '4.7.13' );
+define( 'NEXTER_EXT_VER', '4.8.0' );
 // Rewrite-rules revision for the Theme Builder CPT. Bump this whenever the CPT's slug or
 // rewrite args change to trigger a one-time automatic flush (see nxt_ext_flush_rewrite_rules
 // / nxt_ext_maybe_flush_rewrite_rules). Mirrors Elementor's activation + admin_init upgrade
 // flush model so users never have to open Settings → Permalinks.
 define( 'NEXTER_EXT_REWRITE_VER', '1' );
+
+// Bump whenever create_consent_log_table()'s columns change; dbDelta() adds them without touching rows.
+define( 'NEXTER_EXT_CONSENT_DB_VER', '2' ); // 2: also takes the settings option off autoload
 
 if ( ! defined( 'NXT_BUILD_POST' ) ) {
 	define( 'NXT_BUILD_POST', 'nxt_builder' );
@@ -319,6 +322,15 @@ function nxt_ext_activate() {
 	if ( class_exists( 'Nexter_Ext_Activation' ) ) {
 		$activation = new Nexter_Ext_Activation();
 		$activation->create_login_attempt_table();
+
+		// One consent-log table per site on network activation; later sites are covered by wp_initialize_site.
+		if ( is_multisite() && function_exists( 'get_sites' ) ) {
+			foreach ( get_sites( array( 'fields' => 'ids' ) ) as $site_id ) {
+				$activation->create_consent_log_table( (int) $site_id );
+			}
+		} else {
+			$activation->create_consent_log_table();
+		}
 	}
 	delete_transient( 'nxtext_cached_feed_data' );
 
@@ -383,6 +395,9 @@ function nxt_ext_deactivate() {
 	} else {
 		wp_clear_scheduled_hook( 'posimyth_heartbeat_ne' );
 	}
+
+	// Records stay; uninstall.php decides their fate per site via the delete-on-uninstall setting.
+	wp_clear_scheduled_hook( 'nxt_cookie_consent_retention_cron' );
 }
 
 // Plugin Activation and Deactivation Hooks
@@ -408,6 +423,63 @@ function nxt_ext_maybe_flush_rewrite_rules() {
 	nxt_ext_flush_rewrite_rules();
 }
 add_action( 'admin_init', 'nxt_ext_maybe_flush_rewrite_rules' );
+
+/**
+ * Cookie Consent: creates the consent-log table on every NEW subsite, not just on network activation.
+ *
+ * @param \WP_Site $new_site Newly created site.
+ * @return void
+ */
+function nxt_ext_cookie_consent_new_site( $new_site ) {
+	require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/class-activation.php';
+	if ( class_exists( 'Nexter_Ext_Activation' ) ) {
+		( new Nexter_Ext_Activation() )->create_consent_log_table( (int) $new_site->blog_id );
+	}
+}
+add_action( 'wp_initialize_site', 'nxt_ext_cookie_consent_new_site', 20 );
+
+/**
+ * Drops the consent-log table with its site; never on deactivation, because it is proof of consent.
+ *
+ * @param \WP_Site $old_site Site being deleted.
+ * @return void
+ */
+function nxt_ext_cookie_consent_delete_site( $old_site ) {
+	global $wpdb;
+	switch_to_blog( (int) $old_site->blog_id );
+	$wpdb->query( "DROP TABLE IF EXISTS `{$wpdb->prefix}nexter_consent_log`" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+	restore_current_blog();
+}
+add_action( 'wp_uninitialize_site', 'nxt_ext_cookie_consent_delete_site' );
+
+/**
+ * Creates or upgrades the consent-log table on sites that arrived by update.
+ *
+ * Admin screens only, and a no-op once the stored revision matches NEXTER_EXT_CONSENT_DB_VER.
+ *
+ * @return void
+ */
+function nxt_ext_maybe_upgrade_consent_table() {
+	if ( get_option( 'nexter_ext_consent_db_ver' ) === NEXTER_EXT_CONSENT_DB_VER ) {
+		return;
+	}
+
+	require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/class-activation.php';
+	if ( ! class_exists( 'Nexter_Ext_Activation' ) ) {
+		return;
+	}
+
+	( new Nexter_Ext_Activation() )->create_consent_log_table();
+
+	// update_option() ignores its autoload argument for an unchanged value, so an already-stored
+	// settings option stays autoloaded until this flips it (WP 6.4+; older cores keep the old behaviour).
+	if ( function_exists( 'wp_set_option_autoload' ) && false !== get_option( 'nexter_cookie_consent_settings', false ) ) {
+		wp_set_option_autoload( 'nexter_cookie_consent_settings', false );
+	}
+
+	update_option( 'nexter_ext_consent_db_ver', NEXTER_EXT_CONSENT_DB_VER, false );
+}
+add_action( 'admin_init', 'nxt_ext_maybe_upgrade_consent_table' );
 /**
  * Nexter Ext notice for minimum PHP version.
  */

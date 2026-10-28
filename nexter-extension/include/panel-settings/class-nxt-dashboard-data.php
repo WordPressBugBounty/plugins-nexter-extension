@@ -45,6 +45,29 @@ class Nxt_Dashboard_Data {
 		wp_send_json_success( [ 'nxt_onboarding' => '1' ] );
 	}
 
+	/**
+	 * The white-label name in force for each product, for the dashboard's lists and menu.
+	 * White label is a Pro feature, so a product's name is only sent while its Pro plugin is
+	 * active; the Pro name wins, then the Free one, and empty means "use the stock name".
+	 */
+	public function nxt_wl_product_names() {
+		$names = array( 'blocks' => '', 'extension' => '' );
+
+		$blk = get_option( 'tpgb_white_label' );
+		if ( defined( 'TPGBP_VERSION' ) && is_array( $blk ) ) {
+			$name = ! empty( $blk['tpgb_plugin_name'] ) ? $blk['tpgb_plugin_name'] : ( ! empty( $blk['tpgb_free_plugin_name'] ) ? $blk['tpgb_free_plugin_name'] : '' );
+			$names['blocks'] = sanitize_text_field( $name );
+		}
+
+		$ext = get_option( 'nexter_white_label' );
+		if ( defined( 'NXT_PRO_EXT' ) && is_array( $ext ) ) {
+			$name = ! empty( $ext['nxt_pro_plugin_name'] ) ? $ext['nxt_pro_plugin_name'] : ( ! empty( $ext['nxt_free_plugin_name'] ) ? $ext['nxt_free_plugin_name'] : '' );
+			$names['extension'] = sanitize_text_field( $name );
+		}
+
+		return $names;
+	}
+
 	public function get_setting_name() {
 		return $this->setting_name;
 	}
@@ -87,6 +110,15 @@ class Nxt_Dashboard_Data {
 			}
 		}
 		return $data;
+	}
+
+	private function get_cookie_consent_dashboard_data() {
+		$file = NEXTER_EXT_DIR . 'include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php';
+		if ( ! is_readable( $file ) ) {
+			return array();
+		}
+		require_once $file;
+		return Nxt_Cookie_Consent::get_settings();
 	}
 
 	public function get_nxt_brand_name(){
@@ -245,6 +277,7 @@ class Nxt_Dashboard_Data {
 		$tpaePlugin    = false;
 		$wdkPlugin     = false;
 		$uichemyPlugin = false;
+		$shePlugin     = false;
 
 		include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
 		$pluginslist = get_plugins();
@@ -304,17 +337,55 @@ class Nxt_Dashboard_Data {
 			}
 		}
 
-		if ( ! is_customize_preview() ) {
-			wp_enqueue_style( 'nexter-welcome-style', NEXTER_EXT_URL . 'dashboard/build/index.css', array(), NEXTER_EXT_VER, 'all' );
+		// Sticky Header Effects for Elementor, listed under More Products and on Home.
+		$sheactive = false;
+		if ( isset( $pluginslist['sticky-header-effects-for-elementor/sticky-header-effects-for-elementor.php'] ) ) {
+			if ( is_plugin_active( 'sticky-header-effects-for-elementor/sticky-header-effects-for-elementor.php' ) ) {
+				$shePlugin = true;
+			} else {
+				$sheactive = true;
+			}
 		}
 
-		wp_enqueue_script( 'nexter-ext-dashscript', NEXTER_EXT_URL . 'dashboard/build/index.js', array( 'react', 'react-dom', 'wp-i18n', 'wp-dom-ready', 'wp-element', 'wp-components', 'wp-block-editor', 'wp-editor' ), NEXTER_EXT_VER, true );
+		/*
+		 * The build's own content hash is the asset version, so a rebuilt bundle is fetched even
+		 * when the plugin version has not changed; the plugin version is the fallback.
+		 */
+		$dash_ver = NEXTER_EXT_VER;
+		$ver_file = NEXTER_EXT_DIR . 'dashboard/build/index.asset.php';
+		if ( file_exists( $ver_file ) ) {
+			$ver_asset = include $ver_file;
+			if ( is_array( $ver_asset ) && ! empty( $ver_asset['version'] ) ) {
+				$dash_ver = $ver_asset['version'];
+			}
+		}
+
+		if ( ! is_customize_preview() ) {
+			wp_enqueue_style( 'nexter-welcome-style', NEXTER_EXT_URL . 'dashboard/build/index.css', array(), $dash_ver, 'all' );
+		}
+
+		/*
+		 * The build's own list of what it imports from WordPress (react-jsx-runtime, lodash, ...)
+		 * is merged in, so a screen bundled in later - Code Snippets, Theme Builder - never loads
+		 * before a dependency it needs.
+		 */
+		$dash_deps  = array( 'react', 'react-dom', 'wp-i18n', 'wp-dom-ready', 'wp-element', 'wp-components', 'wp-block-editor', 'wp-editor' );
+		$dash_asset = NEXTER_EXT_DIR . 'dashboard/build/index.asset.php';
+		if ( file_exists( $dash_asset ) ) {
+			$asset = include $dash_asset;
+			if ( is_array( $asset ) && ! empty( $asset['dependencies'] ) ) {
+				$dash_deps = array_values( array_unique( array_merge( $dash_deps, $asset['dependencies'] ) ) );
+			}
+		}
+		wp_enqueue_script( 'nexter-ext-dashscript', NEXTER_EXT_URL . 'dashboard/build/index.js', $dash_deps, $dash_ver, true );
 
 		wp_set_script_translations(
 			'nexter-ext-dashscript',
 			'nexter-extension',
 			NEXTER_EXT_DIR . 'languages'
 		);
+		// Lazy chunks (135.js etc.) have their own JSON files that WP never loads; merge them into the main handle.
+		add_filter( 'pre_load_script_translations', array( $this, 'nexter_ext_merge_chunk_translations' ), 10, 4 );
 
 		if ( is_multisite() ) {
 			$main_site_id = get_main_site_id();
@@ -346,11 +417,13 @@ class Nxt_Dashboard_Data {
 			// key, so the bundle falls back to the Nexter Blocks wording and NB is unchanged. Without
 			// it, the Nexter Blocks wizard asked users to help make "Nexter Extension" faster.
 			'productName'                    => esc_html__( 'Nexter Extension', 'nexter-extension' ),
+			'wlProductNames'                 => $this->nxt_wl_product_names(),
 			'whiteLabelData'                 => [
 				'brandname' => $this->setting_name,
 				'brandlogo' => $this->setting_logo
 			],
 			'nxtExtra'                       => Nxt_Options::extra_ext(),
+			'cookieConsent'                  => $this->get_cookie_consent_dashboard_data(),
 			'nxtPerformance'                 => Nxt_Options::performance(),
 			'intermediateImgSize'            => $intermediate_image,
 			'nxtGetImgSize'                  => $get_image_sizes,
@@ -394,6 +467,8 @@ class Nxt_Dashboard_Data {
 			'wdkVersion'                     => isset( $wdkVersion ) ? $wdkVersion : '1.0.0',
 			'uichemy'                        => $uichemyPlugin,
 			'uichemyactive'                  => $uichemyactive,
+			'sheAddon'                       => $shePlugin,
+			'sheactive'                      => $sheactive,
 			'woocommerce'                    => class_exists( 'WooCommerce' ) ? true : false,
 			'ext_rollbacVer'                 => NxtExt_Rollback::get_rollback_versions(),
 			'rollbackUrl'                    => $rollback_url,
@@ -428,6 +503,14 @@ class Nxt_Dashboard_Data {
 		if ( false === $themebuilder_status ) {
 			$themebuilder_status = true;
 		}
+		/*
+		 * The grid/table toggle saves the strings 'true' / 'false', but the dashboard sidebar
+		 * checks for '1'. Passing the raw string meant the sidebar's Theme Builder link always
+		 * opened the table view once the toggle had been used. Normalise to a real boolean
+		 * (localised as '1' or '') using the same rule as the admin menu in
+		 * Nexter_Ext_Panel_Settings::nxt_add_menu_page().
+		 */
+		$themebuilder_status = ( true === $themebuilder_status || 'true' === $themebuilder_status );
 
 		$locallize_data = array(
 			'adminUrl'               => admin_url(),
@@ -477,16 +560,56 @@ class Nxt_Dashboard_Data {
 
 		wp_localize_script( 'nexter-ext-dashscript', 'nexter_admin_config', $nexter_admin_localize );
 
-		if ( isset( $_GET['page'] ) && $_GET['page'] === 'nxt_builder' ) {
-			wp_enqueue_style( 'nexter-theme-builder', NEXTER_EXT_URL . 'theme-builder/build/index.css', array(), NEXTER_EXT_VER, 'all' );
+		/*
+		 * The SEO settings screens live inside this dashboard (#/seo) and read the same config the
+		 * SEO editor panel does. Only on the dashboard page itself, and only while the SEO module is
+		 * on - the class is not even loaded otherwise, and the robots lists it builds are not free.
+		 */
+		$current_page = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only screen detection.
+		// select2 is needed by both the schema picker below and the Theme Builder popup that opens inside this page.
+		if ( 'nexter_welcome' === $current_page ) {
+			wp_enqueue_style( 'nexter-select-css', NEXTER_EXT_URL . 'assets/css/extra/select2' . $minified . '.css', array(), NEXTER_EXT_VER );
+			wp_enqueue_script( 'nexter-select-js', NEXTER_EXT_URL . 'assets/js/extra/select2' . $minified . '.js', array( 'jquery' ), NEXTER_EXT_VER, true );
+		}
+		if ( 'nexter_welcome' === $current_page && class_exists( 'Nexter_Content_SeoRank' ) ) {
+			wp_localize_script( 'nexter-ext-dashscript', 'nxtContentSeoConfig', Nexter_Content_SeoRank::get_app_config() );
+		}
 
-			wp_enqueue_script( 'nexter-theme-builder', NEXTER_EXT_URL . 'theme-builder/build/index.js', array( 'react', 'react-dom', 'wp-dom-ready', 'wp-i18n' ), NEXTER_EXT_VER, true );
+		/*
+		 * Theme Builder also opens inside this dashboard (#/theme-builder), bundled with it, so
+		 * the dashboard page gets the same config its own admin page localizes. The standalone
+		 * page keeps working as before. Code Snippets needs no equivalent block here:
+		 * Nexter_Builder_Code_Snippets_Render::enqueue_scripts_admin() already localizes
+		 * nxt_code_snippet_data for any admin screen whose hook suffix contains "nexter",
+		 * which covers this dashboard page too.
+		 */
+		$is_builder_page = ( isset( $_GET['page'] ) && $_GET['page'] === 'nxt_builder' ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only screen detection.
+		$is_dashboard    = ( 'nexter_welcome' === $current_page );
 
-			wp_set_script_translations(
-				'nexter-theme-builder',
-				'nexter-extension',
-				NEXTER_EXT_DIR . 'languages'
-			);
+		if ( $is_builder_page || $is_dashboard ) {
+			$tb_handle = $is_builder_page ? 'nexter-theme-builder' : 'nexter-ext-dashscript';
+			if ( $is_builder_page ) {
+				// This bundle's own content hash is its version, as for the dashboard: with the plugin
+				// version alone a rebuilt bundle kept being served from the browser's cache.
+				$tb_ver   = NEXTER_EXT_VER;
+				$tb_asset = NEXTER_EXT_DIR . 'theme-builder/build/index.asset.php';
+				if ( file_exists( $tb_asset ) ) {
+					$tb_info = include $tb_asset;
+					if ( is_array( $tb_info ) && ! empty( $tb_info['version'] ) ) {
+						$tb_ver = $tb_info['version'];
+					}
+				}
+
+				wp_enqueue_style( 'nexter-theme-builder', NEXTER_EXT_URL . 'theme-builder/build/index.css', array(), $tb_ver, 'all' );
+
+				wp_enqueue_script( 'nexter-theme-builder', NEXTER_EXT_URL . 'theme-builder/build/index.js', array( 'react', 'react-dom', 'wp-dom-ready', 'wp-i18n' ), $tb_ver, true );
+
+				wp_set_script_translations(
+					'nexter-theme-builder',
+					'nexter-extension',
+					NEXTER_EXT_DIR . 'languages'
+				);
+			}
 
 			$extension_option  = Nxt_Options::extra_ext();
 			$duplicate_enabled = false;
@@ -511,7 +634,7 @@ class Nxt_Dashboard_Data {
 				'duplicateEnabled'  => $duplicate_enabled,
 			);
 
-			wp_localize_script( 'nexter-theme-builder', 'nexter_theme_builder_config', $nexter_theme_builder_config );
+			wp_localize_script( $tb_handle, 'nexter_theme_builder_config', $nexter_theme_builder_config );
 
 		}
 	}
@@ -610,6 +733,55 @@ class Nxt_Dashboard_Data {
 		return $taxonomies;
 	}
 
+	public function nexter_ext_merge_chunk_translations( $translations, $file, $handle, $domain ) {
+		if ( 'nexter-ext-dashscript' !== $handle || 'nexter-extension' !== $domain ) {
+			return $translations;
+		}
+		static $merged = null;
+		if ( null !== $merged ) {
+			return $merged;
+		}
+
+		$locale   = determine_locale();
+		$dirs     = array( WP_LANG_DIR . '/plugins/', NEXTER_EXT_DIR . 'languages/' );
+		$chunks   = glob( NEXTER_EXT_DIR . 'dashboard/build/*.js' );
+		$messages = array();
+		$header   = null;
+
+		foreach ( (array) $chunks as $chunk ) {
+			$md5 = md5( 'dashboard/build/' . basename( $chunk ) );
+			foreach ( $dirs as $dir ) {
+				$json_file = $dir . $domain . '-' . $locale . '-' . $md5 . '.json';
+				if ( ! is_readable( $json_file ) ) {
+					continue;
+				}
+				$data = json_decode( file_get_contents( $json_file ), true );
+				if ( empty( $data['locale_data'] ) || ! is_array( $data['locale_data'] ) ) {
+					continue;
+				}
+				$set = reset( $data['locale_data'] );
+				if ( null === $header && isset( $set[''] ) ) {
+					$header = $set[''];
+				}
+				$messages = array_merge( $set, $messages );
+				break;
+			}
+		}
+
+		if ( empty( $messages ) ) {
+			$merged = $translations;
+			return $merged;
+		}
+		$messages[''] = $header ? $header : array( 'domain' => 'messages' );
+		$merged       = wp_json_encode(
+			array(
+				'domain'      => 'messages',
+				'locale_data' => array( 'messages' => $messages ),
+			)
+		);
+		return $merged;
+	}
+
 	public function nexter_ext_get_users_roles(){
 		global $wp_roles;
 
@@ -620,7 +792,7 @@ class Nxt_Dashboard_Data {
 		$roles      = $wp_roles->roles;
 		$role_names = array_map(
 			function($role) {
-				return $role['name'];
+				return translate_user_role( $role['name'] );
 			},
 			$roles
 		);

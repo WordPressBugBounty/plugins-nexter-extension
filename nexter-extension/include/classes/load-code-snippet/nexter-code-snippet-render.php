@@ -17,6 +17,7 @@ require_once NEXTER_EXT_DIR . 'include/classes/load-code-snippet/handlers/nexter
 require_once NEXTER_EXT_DIR . 'include/classes/load-code-snippet/handlers/nexter-page-specific-code-handler.php';
 require_once NEXTER_EXT_DIR . 'include/classes/load-code-snippet/handlers/nexter-ecommerce-code-handler.php';
 require_once NEXTER_EXT_DIR . 'include/classes/load-code-snippet/handlers/nexter-memberpress-hook-handler.php';
+require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent-gate.php';
 // require_once NEXTER_EXT_DIR . 'include/classes/load-code-snippet/nexter-php-code-handling.php';
 if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 
@@ -303,6 +304,8 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 					'status'             => 0,
 					'smart-logic'        => isset( $snippet['smart_conditional_logic'] ) ? $snippet['smart_conditional_logic'] : [],
 					'php-hidden-execute' => isset( $snippet['php_hidden_execute'] ) ? $snippet['php_hidden_execute'] : 'no',
+					// 'always' = never gated; the dispatchers re-check it at output time, so never trust it alone.
+					'consent_category'   => isset( $snippet['consent_category'] ) ? sanitize_key( $snippet['consent_category'] ) : 'always',
 				],
 			];
 		}
@@ -597,7 +600,23 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 		 * @since 2.0.0
 		 */
 		public function enqueue_scripts_admin( $hook_suffix ) {
-			
+
+			/*
+			 * The dashboard's embedded #/code_snippets list and editor are the same
+			 * All_list/Create_Edit_Snippet components bundled into its own script (see
+			 * code-snippets/src/ds/cs-embed.jsx and the dashboard's webpack alias), and they read
+			 * nxt_code_snippet_data directly. Without it there, CodeSnippets (the dashboard wrapper)
+			 * finds isOn-but-not-ready and falls back to redirecting to this standalone page instead
+			 * of showing the list in place.
+			 */
+			if ( false !== strpos( (string) $hook_suffix, 'nexter' ) ) {
+				if ( ! function_exists( 'get_editable_roles' ) ) {
+					require_once ABSPATH . 'wp-admin/includes/user.php';
+				}
+				wp_localize_script( 'nexter-ext-dashscript', 'nxt_code_snippet_data', $this->get_code_snippet_localize_data() );
+				return;
+			}
+
 			// Code Snippet Dashboard enquque
 			if ( strpos( $hook_suffix, 'nxt_code_snippets' ) === false ) {
 				return;
@@ -610,7 +629,7 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 
 			wp_enqueue_script( 'nxt-code-snippet', NEXTER_EXT_URL . 'assets/js/admin/index.js', array( 'react', 'react-dom', 'react-jsx-runtime', 'wp-dom-ready', 'wp-element', 'lodash', 'wp-i18n' ), NEXTER_EXT_VER, true );
 			//wp_enqueue_script( 'nxt-code-snippet', NEXTER_EXT_URL . 'code-snippets/build/index.js', array( 'react', 'react-dom', 'react-jsx-runtime', 'wp-dom-ready', 'wp-element','lodash', 'wp-i18n' ), NEXTER_EXT_VER, true );
-			
+
 			// Attach JavaScript translations
 			wp_set_script_translations(
 				'nxt-code-snippet',  // Handle must match enqueue
@@ -622,41 +641,49 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 			if ( ! function_exists( 'get_editable_roles' ) ) {
 				require_once ABSPATH . 'wp-admin/includes/user.php';
 			}
-			
+
+			wp_localize_script( 'nxt-code-snippet', 'nxt_code_snippet_data', $this->get_code_snippet_localize_data() );
+		}
+
+		/**
+		 * The nxt_code_snippet_data payload, shared by the standalone Code Snippets admin page
+		 * and its dashboard embed — see enqueue_scripts_admin().
+		 *
+		 * @return array
+		 */
+		private function get_code_snippet_localize_data() {
 			$extensioninstall     = defined( 'NEXTER_EXT_VER' );
 			$cached_localize_data = $this->get_cached_snippets_admin_localize_data();
 
-			wp_localize_script(
-				'nxt-code-snippet',
-				'nxt_code_snippet_data',
-				array(
-					'adminUrl'                => admin_url(),
-					'ajax_url'                => admin_url( 'admin-ajax.php' ),
-					'nonce'                   => wp_create_nonce( 'nxt-code-snippet' ),
-					'nxt_url'                 => NEXTER_EXT_URL.'code-snippets/',
-					'assets'                  => NEXTER_EXT_URL . 'assets/',
-					'htmlHooks'               => isset( $cached_localize_data['htmlHooks'] ) ? $cached_localize_data['htmlHooks'] : [],
-					'in_ex_option'            => isset( $cached_localize_data['in_ex_option'] ) ? $cached_localize_data['in_ex_option'] : [],
-					'user_role'               => isset( $cached_localize_data['user_role'] ) ? $cached_localize_data['user_role'] : [],
-					'post_types'              => isset( $cached_localize_data['post_types'] ) ? $cached_localize_data['post_types'] : [],
-					'taxonomies'              => isset( $cached_localize_data['taxonomies'] ) ? $cached_localize_data['taxonomies'] : [],
-					'page_templates'          => isset( $cached_localize_data['page_templates'] ) ? $cached_localize_data['page_templates'] : [],
-					'whiteLabel'              => Nxt_Options::white_label(),
-					'isactivate'              => (defined( 'NXT_PRO_EXT' ) && class_exists( 'Nexter_Pro_Ext_Activate' )) ? Nexter_Pro_Ext_Activate::get_instance()->nexter_activate_status() : '',
-					'is_pro'                  => (defined( 'NXT_PRO_EXT' )) ? true : false,
-					'ecommerce_plugins'       => array(
-						'woocommerce' => class_exists( 'WooCommerce' ),
-						'edd'         => class_exists( 'Easy_Digital_Downloads' ),
-						'memberpress' => class_exists( 'MeprAppCtrl' )
-					),
-					'memberpress_memberships' => isset( $cached_localize_data['memberpress_memberships'] ) ? $cached_localize_data['memberpress_memberships'] : [],
-					'cs_pro_svg'              => NEXTER_EXT_URL . 'assets/images/cs_pro.svg',
-					'cs_premium_icon'         => NEXTER_EXT_URL . 'dashboard/assets/svg/premium_icon.svg',
-					'cs_ec_required_icon'     => NEXTER_EXT_URL . 'assets/images/cs_ec_require.svg',
-					'extensioninstall'        => $extensioninstall,
-					'nxtExtra'                => Nxt_Options::extra_ext(),
-					'dashboard_url'           => admin_url( 'admin.php?page=nexter_welcome' ),
-				)
+			return array(
+				'adminUrl'                => admin_url(),
+				'ajax_url'                => admin_url( 'admin-ajax.php' ),
+				'nonce'                   => wp_create_nonce( 'nxt-code-snippet' ),
+				// The dashboard's module switch (nexter_extra_ext_deactivate) checks this one, so the page can turn the module off.
+				'module_nonce'            => wp_create_nonce( 'nexter_admin_nonce' ),
+				'nxt_url'                 => NEXTER_EXT_URL.'code-snippets/',
+				'assets'                  => NEXTER_EXT_URL . 'assets/',
+				'htmlHooks'               => isset( $cached_localize_data['htmlHooks'] ) ? $cached_localize_data['htmlHooks'] : [],
+				'in_ex_option'            => isset( $cached_localize_data['in_ex_option'] ) ? $cached_localize_data['in_ex_option'] : [],
+				'user_role'               => isset( $cached_localize_data['user_role'] ) ? $cached_localize_data['user_role'] : [],
+				'post_types'              => isset( $cached_localize_data['post_types'] ) ? $cached_localize_data['post_types'] : [],
+				'taxonomies'              => isset( $cached_localize_data['taxonomies'] ) ? $cached_localize_data['taxonomies'] : [],
+				'page_templates'          => isset( $cached_localize_data['page_templates'] ) ? $cached_localize_data['page_templates'] : [],
+				'whiteLabel'              => Nxt_Options::white_label(),
+				'isactivate'              => (defined( 'NXT_PRO_EXT' ) && class_exists( 'Nexter_Pro_Ext_Activate' )) ? Nexter_Pro_Ext_Activate::get_instance()->nexter_activate_status() : '',
+				'is_pro'                  => (defined( 'NXT_PRO_EXT' )) ? true : false,
+				'ecommerce_plugins'       => array(
+					'woocommerce' => class_exists( 'WooCommerce' ),
+					'edd'         => class_exists( 'Easy_Digital_Downloads' ),
+					'memberpress' => class_exists( 'MeprAppCtrl' )
+				),
+				'memberpress_memberships' => isset( $cached_localize_data['memberpress_memberships'] ) ? $cached_localize_data['memberpress_memberships'] : [],
+				'cs_pro_svg'              => NEXTER_EXT_URL . 'assets/images/cs_pro.svg',
+				'cs_premium_icon'         => NEXTER_EXT_URL . 'dashboard/assets/svg/premium_icon.svg',
+				'cs_ec_required_icon'     => NEXTER_EXT_URL . 'assets/images/cs_ec_require.svg',
+				'extensioninstall'        => $extensioninstall,
+				'nxtExtra'                => Nxt_Options::extra_ext(),
+				'dashboard_url'           => admin_url( 'admin.php?page=nexter_welcome' ),
 			);
 		}
 
@@ -1171,6 +1198,13 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 				$metaData['condition']['insertion'] = $insertion;
 				//update_post_meta( $post_id , 'nxt-code-insertion', $insertion );
 			}
+
+			// Allowlist, not sanitize_key alone: an unrecognised value must fall back to 'always'.
+			$consent_category = ( isset( $_POST['consent_category'] ) ) ? sanitize_key( wp_unslash( $_POST['consent_category'] ) ) : 'always';
+			if ( ! in_array( $consent_category, array( 'always', 'necessary', 'functional', 'analytics', 'marketing' ), true ) ) {
+				$consent_category = 'always';
+			}
+			$metaData['condition']['consent_category'] = $consent_category;
 
 			$location = (isset( $_POST['location'] ) && ! empty( $_POST['location'] )) ? sanitize_text_field( wp_unslash( $_POST['location'] ) ) : '';
 			
@@ -2601,6 +2635,11 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 						}
 					}
 
+					// Cookie Consent gating: the snippet is absent from the page source until consent.
+					if ( ! Nxt_Cookie_Consent_Gate::is_allowed( isset( $css_snippet['consent_category'] ) ? $css_snippet['consent_category'] : 'always' ) ) {
+						continue;
+					}
+
 					self::$snippet_loaded_ids['css'][] = $post_id;
 					
 					// Check for new location system
@@ -2665,6 +2704,11 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 						if ( ! Nexter_Builder_Display_Conditional_Rules::should_display_snippet( $post_id, $js_snippet ) ) {
 							continue; // Skip this snippet, conditional logic not met
 						}
+					}
+
+					// Cookie Consent gating: the snippet is absent from the page source until consent.
+					if ( ! Nxt_Cookie_Consent_Gate::is_allowed( isset( $js_snippet['consent_category'] ) ? $js_snippet['consent_category'] : 'always' ) ) {
+						continue;
 					}
 
 					self::$snippet_loaded_ids['javascript'][] = $post_id;
@@ -2918,6 +2962,12 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 
 				if ( ! empty( $smart_logic ) && class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 					if ( ! Nexter_Builder_Display_Conditional_Rules::evaluate_smart_conditional_logic( $smart_logic )) return;
+				}
+
+				// Cookie Consent gating: absent from the page source until consent.
+				$consent_category = $is_file ? ( isset( $data['consent_category'] ) ? $data['consent_category'] : 'always' ) : 'always';
+				if ( ! Nxt_Cookie_Consent_Gate::is_allowed( $consent_category ) ) {
+					return;
 				}
 
 				self::$snippet_loaded_ids['htmlmixed'][] = $id;
@@ -3249,6 +3299,11 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 							if ( ! Nexter_Builder_Display_Conditional_Rules::evaluate_smart_conditional_logic( $smart_conditions ) ) {
 								continue; // Skip this snippet, Smart Conditional Logic not met
 							}
+						}
+
+						// Cookie Consent gating: the snippet is absent from the page source until consent.
+						if ( ! Nxt_Cookie_Consent_Gate::is_allowed( isset( $file_data['consent_category'] ) ? $file_data['consent_category'] : 'always' ) ) {
+							continue;
 						}
 						
 						// Auto-enable execution if not set (like old version)

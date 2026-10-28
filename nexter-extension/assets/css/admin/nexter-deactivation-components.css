@@ -1,0 +1,1253 @@
+/*
+ * GENERATED - do not edit.
+ *
+ * Built from design-system/tokens.css and design-system/components.css by
+ * scripts/sync-design-system.mjs. Edit those, not this file; the next build
+ * regenerates it.
+ */
+
+/* ==========================================================================
+   Nexter Design System - Tokens
+   Geometry, type, elevation and motion are matched to boardui.com exactly
+   (values read off their shipped CSS, not eyeballed). Colour is the ONLY
+   thing changed: their blue is replaced by the Nexter brand #1717cc, with
+   ramps generated in OKLCH so the steps stay perceptually even.
+   ========================================================================== */
+
+.nxt-ds {
+  /* ---- Colour ramps (Nexter) --------------------------------------- */
+  /* brand */
+  --nx-brand-50: #f1f7ff;
+  --nx-brand-100: #d3dffb;
+  --nx-brand-200: #abc1f6;
+  --nx-brand-300: #7ea0f6;
+  --nx-brand-400: #517af5;
+  --nx-brand-500: #2c4fe8;
+  --nx-brand-600: #1717cc;
+  --nx-brand-700: #1300b5;
+  --nx-brand-800: #0e0097;
+  --nx-brand-900: #0a0079;
+  --nx-brand-950: #040055;
+
+  /* accent */
+  --nx-accent-50: #fff2f0;
+  --nx-accent-100: #fedbd6;
+  --nx-accent-200: #fdbcb3;
+  --nx-accent-300: #ff9589;
+  --nx-accent-400: #fd665b;
+  --nx-accent-500: #f12d2d;
+  --nx-accent-600: #d70000;
+  --nx-accent-700: #b40000;
+  --nx-accent-800: #8f0000;
+  --nx-accent-900: #6a0000;
+  --nx-accent-950: #430000;
+
+  /* neutral */
+  --nx-neutral-50: #fafafa;
+  --nx-neutral-100: #f7f7f7;
+  --nx-neutral-200: #ebebeb;
+  --nx-neutral-300: #d4d4d4;
+  --nx-neutral-400: #a1a1a1;
+  --nx-neutral-500: #737373;
+  --nx-neutral-600: #525252;
+  --nx-neutral-700: #404040;
+  --nx-neutral-800: #262626;
+  --nx-neutral-900: #171717;
+  --nx-neutral-950: #0a0a0a;
+
+  /* success */
+  --nx-success-50: #f1faf1;
+  --nx-success-100: #d9ebda;
+  --nx-success-200: #b8daba;
+  --nx-success-300: #90ca94;
+  --nx-success-400: #62b86b;
+  --nx-success-500: #2ea343;
+  --nx-success-600: #008818;
+  --nx-success-700: #006d00;
+  --nx-success-800: #005200;
+  --nx-success-900: #003900;
+  --nx-success-950: #002100;
+
+  /* warning */
+  --nx-warning-50: #f9f7ef;
+  --nx-warning-100: #eee9da;
+  --nx-warning-200: #e1d9bb;
+  --nx-warning-300: #d6c795;
+  --nx-warning-400: #c9b46a;
+  --nx-warning-500: #bba13f;
+  --nx-warning-600: #aa8d10;
+  --nx-warning-700: #846900;
+  --nx-warning-800: #624a00;
+  --nx-warning-900: #412e00;
+  --nx-warning-950: #221500;
+
+  /* danger */
+  --nx-danger-50: #fff3f2;
+  --nx-danger-100: #fededc;
+  --nx-danger-200: #fdc3bf;
+  --nx-danger-300: #ffa19d;
+  --nx-danger-400: #ff7a79;
+  --nx-danger-500: #f65258;
+  --nx-danger-600: #d81934;
+  --nx-danger-700: #b4001b;
+  --nx-danger-800: #8c0008;
+  --nx-danger-900: #660000;
+  --nx-danger-950: #3e0000;
+  --nx-white: #ffffff;
+  --nx-black: #000000;
+
+  /* ---- Type scale - BoardUI, exact ---------------------------------- */
+  --nx-font-sans: "Inter", "Inter var", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  --nx-font-mono: ui-monospace, "SF Mono", "Cascadia Code", "Fira Mono", monospace;
+
+  /* size / line-height / letter-spacing, per BoardUI's semantic scale */
+  --nx-caption-2-size: 11px;  --nx-caption-2-lh: 15px;  --nx-caption-2-ls: .2px;
+  --nx-caption-1-size: 12px;  --nx-caption-1-lh: 16px;  --nx-caption-1-ls: .15px;
+  --nx-body-2-size:    13px;  --nx-body-2-lh:    18px;  --nx-body-2-ls:    0;
+  --nx-body-size:      14px;  --nx-body-lh:      20px;  --nx-body-ls:      0;
+  --nx-headline-size:  16px;  --nx-headline-lh:  22px;  --nx-headline-ls:  0;
+  --nx-title-3-size:   18px;  --nx-title-3-lh:   26px;  --nx-title-3-ls:   0;
+  --nx-title-2-size:   20px;  --nx-title-2-lh:   26px;  --nx-title-2-ls:   0;
+  --nx-title-1-size:   24px;  --nx-title-1-lh:   34px;  --nx-title-1-ls:   0;
+  --nx-display-4-size: 32px;  --nx-display-4-lh: 44px;  --nx-display-4-ls: 0;
+  --nx-display-3-size: 40px;  --nx-display-3-lh: 54px;  --nx-display-3-ls: 0;
+  --nx-display-2-size: 48px;  --nx-display-2-lh: 64px;  --nx-display-2-ls: 0;
+  --nx-display-1-size: 56px;  --nx-display-1-lh: 72px;  --nx-display-1-ls: 0;
+  --nx-large-title-size: 64px; --nx-large-title-lh: 80px; --nx-large-title-ls: 0;
+
+  --nx-weight-regular: 400;
+  --nx-weight-medium: 500;
+  --nx-weight-semibold: 600;
+  --nx-weight-bold: 700;
+
+  /* ---- Radius - BoardUI, exact -------------------------------------- */
+  --nx-radius-xs:   2px;    /* .125rem */
+  --nx-radius-sm:   4px;    /* .25rem  */
+  --nx-radius-md:   6px;    /* .375rem */
+  --nx-radius-lg:   8px;    /* .5rem   */
+  --nx-radius-2lg:  10px;   /* button / input / card */
+  --nx-radius-xl:   12px;   /* .75rem  */
+  --nx-radius-2xl:  16px;   /* 1rem    */
+  --nx-radius-2-5xl:20px;
+  --nx-radius-3xl:  24px;   /* 1.5rem  */
+  --nx-radius-full: 9999px;
+  --nx-radius-ctrl: var(--nx-radius-2lg);
+
+  /* ---- Elevation - BoardUI, exact ----------------------------------- */
+  --nx-shadow-2xs: 0 1px #0000000d;
+  --nx-shadow-xs:  0 1px 2px 0 #0000000d;
+  --nx-shadow-sm:  0 1px 2px 0 #0000000f, 0 1px 3px 0 #0000001a;
+  --nx-shadow-md:  0 2px 4px -1px #0000000f, 0 4px 6px -1px #0000001a;
+  --nx-shadow-lg:  0 4px 6px -2px #0000000d, 0 10px 15px -3px #0000001a;
+  --nx-shadow-xl:  0 10px 10px -5px #0000000a, 0 20px 25px -5px #0000001a;
+  --nx-shadow-card: 0 1px 1px 0 #0000000d;
+  --nx-shadow-dropdown: 0 1px 1px 0 #0000000a, 0 4px 4px 0 #00000005;
+  --nx-shadow-sidebar: 0 1px 0 0 #00000005, 0 1px 12px 0 #0000000f, 0 0 1px 0 #00000052;
+  --nx-shadow-btn: 0 1px 2px 0 #0000000d;
+
+  /* ---- Motion - BoardUI, exact -------------------------------------- */
+  --nx-dur: .15s;                                   /* default-transition-duration */
+  --nx-dur-press: .42s;                             /* transform, release         */
+  --nx-dur-press-in: .22s;                          /* transform, on press        */
+  --nx-ease: cubic-bezier(.4, 0, .2, 1);            /* default timing function    */
+  --nx-ease-in:  cubic-bezier(.4, 0, 1, 1);
+  --nx-ease-out: cubic-bezier(0, 0, .2, 1);
+  --nx-ease-in-out: cubic-bezier(.4, 0, .2, 1);
+  --nx-ease-spring: cubic-bezier(.34, 1.56, .64, 1);
+  --nx-press-scale: .98;
+  --nx-dur-input: .15s;
+
+  /* ---- Spacing (4px base) ------------------------------------------- */
+  --nx-space-0: 0px;  --nx-space-1: 4px;   --nx-space-2: 8px;   --nx-space-3: 12px;
+  --nx-space-4: 16px; --nx-space-5: 20px;  --nx-space-6: 24px;  --nx-space-8: 32px;
+  --nx-space-10: 40px; --nx-space-12: 48px; --nx-space-16: 64px; --nx-space-20: 80px;
+
+  /* ---- Control sizing ------------------------------------------------ */
+  --nx-ctrl-h-sm: 28px;   /* BoardUI small  */
+  --nx-ctrl-h-md: 36px;   /* BoardUI default */
+  --nx-ctrl-h-lg: 40px;
+  --nx-ctrl-pad: 8px;     /* outer button padding; the label span adds 4px */
+  --nx-ctrl-label-pad: 4px;
+  --nx-ctrl-gap: 2px;
+
+  --nx-z-base: 0; --nx-z-sticky: 100; --nx-z-dropdown: 1000;
+  --nx-z-overlay: 1100; --nx-z-modal: 1200; --nx-z-toast: 1300; --nx-z-tooltip: 1400;
+}
+
+/* ==========================================================================
+   Semantic layer. Role names and the gradient mechanism follow BoardUI:
+   every filled button is a 180deg two-stop gradient, and hover is a second
+   gradient cross-faded in on a ::before rather than a background swap.
+   Step pattern, identical to theirs:
+     default  500 -> 600      hover     400 -> 500
+     active   600 -> 700      disabled  n200 -> n300
+   ========================================================================== */
+
+.nxt-ds {
+  /* Surfaces */
+  --nx-bg:              var(--nx-white);
+  --nx-bg-subtle:       var(--nx-neutral-50);
+  --nx-bg-muted:        var(--nx-neutral-100);
+  --nx-bg-emphasis:     var(--nx-neutral-200);
+  --nx-surface:         var(--nx-white);
+  --nx-surface-raised:  var(--nx-white);
+  --nx-surface-overlay: rgb(10 10 10 / .45);
+  --nx-surface-hover:   var(--nx-neutral-100);
+  --nx-surface-active:  var(--nx-neutral-200);
+
+  /* Text — BoardUI's primary/secondary/tertiary ladder */
+  --nx-text:             var(--nx-neutral-950);
+  --nx-text-secondary:   var(--nx-neutral-500);
+  --nx-text-tertiary:    var(--nx-neutral-400);
+  --nx-text-muted:       var(--nx-neutral-500);
+  --nx-text-placeholder: var(--nx-neutral-500);
+  --nx-text-disabled:    var(--nx-neutral-300);
+  --nx-text-inverse:     var(--nx-white);
+  --nx-text-link:        var(--nx-brand-600);
+  --nx-text-link-hover:  var(--nx-brand-700);
+
+  /* Borders — BoardUI's button border ladder */
+  --nx-border:         var(--nx-neutral-200);   /* #ebebeb */
+  --nx-border-subtle:  var(--nx-neutral-100);
+  --nx-border-hover:   var(--nx-neutral-300);
+  --nx-border-active:  var(--nx-neutral-400);
+  --nx-border-strong:  var(--nx-neutral-300);
+  --nx-border-focus:   var(--nx-brand-500);
+  --nx-border-error:   var(--nx-danger-600);
+
+  /* Brand */
+  --nx-primary:              var(--nx-brand-600);
+  --nx-primary-hover:        var(--nx-brand-700);
+  --nx-primary-active:       var(--nx-brand-800);
+  --nx-primary-subtle:       var(--nx-brand-50);
+  --nx-primary-subtle-hover: var(--nx-brand-100);
+  --nx-primary-border:       var(--nx-brand-200);
+  --nx-primary-fg:           var(--nx-white);
+  --nx-primary-text:         var(--nx-brand-700);
+  --nx-primary-start:        var(--nx-brand-500);
+  --nx-primary-end:          var(--nx-brand-600);
+  --nx-badge-primary-bg:     var(--nx-brand-400);
+
+  /* Button gradients — the BoardUI mechanism, Nexter steps */
+  --nx-grad-primary:          linear-gradient(180deg, var(--nx-brand-500) 0%, var(--nx-brand-600) 100%);
+  --nx-grad-primary-hover:    linear-gradient(180deg, var(--nx-brand-400) 0%, var(--nx-brand-500) 100%);
+  --nx-grad-primary-active:   linear-gradient(180deg, var(--nx-brand-600) 0%, var(--nx-brand-700) 100%);
+  --nx-grad-primary-disabled: linear-gradient(180deg, var(--nx-neutral-200) 0%, var(--nx-neutral-300) 100%);
+
+  --nx-grad-danger:          linear-gradient(180deg, var(--nx-danger-500) 0%, var(--nx-danger-600) 100%);
+  --nx-grad-danger-hover:    linear-gradient(180deg, var(--nx-danger-400) 0%, var(--nx-danger-500) 100%);
+  --nx-grad-danger-active:   linear-gradient(180deg, var(--nx-danger-600) 0%, var(--nx-danger-700) 100%);
+  --nx-grad-danger-disabled: linear-gradient(180deg, var(--nx-danger-100) 0%, var(--nx-danger-200) 100%);
+
+  --nx-grad-success:       linear-gradient(180deg, var(--nx-success-500) 0%, var(--nx-success-600) 100%);
+  --nx-grad-success-hover: linear-gradient(180deg, var(--nx-success-400) 0%, var(--nx-success-500) 100%);
+
+  /* Tinted "ghost" button — BoardUI tints this with the brand, not grey */
+  --nx-ghost-bg:       var(--nx-brand-100);
+  --nx-ghost-fg:       var(--nx-brand-700);
+  --nx-ghost-hover:    var(--nx-brand-200);
+  --nx-ghost-active:   var(--nx-brand-300);
+  --nx-ghost-disabled: var(--nx-brand-50);
+  --nx-ghost-disabled-fg: var(--nx-brand-300);
+  --nx-btn-disabled-fg: var(--nx-neutral-400);
+  --nx-btn-danger-disabled-fg: var(--nx-danger-300);   /* BoardUI red-300 */
+
+  /* Secondary button — BoardUI background-primary-* / border-button-* */
+  --nx-btn-sec-bg:           var(--nx-white);
+  --nx-btn-sec-bg-hover:     var(--nx-neutral-100);
+  --nx-btn-sec-bg-active:    var(--nx-neutral-200);
+  --nx-btn-sec-bg-disabled:  var(--nx-neutral-100);
+  --nx-btn-sec-fg:           var(--nx-neutral-950);
+  --nx-btn-sec-fg-disabled:  var(--nx-neutral-400);
+  --nx-btn-sec-border:        var(--nx-neutral-200);
+  --nx-btn-sec-border-hover:  var(--nx-neutral-300);
+  --nx-btn-sec-border-active: var(--nx-neutral-400);
+
+  /* Button focus — Tailwind ring-2 + ring-offset-2. BoardUI never overrides
+     the offset colour, so it stays #fff in BOTH themes. */
+  --nx-btn-focus-ring:   var(--nx-brand-500);
+  --nx-btn-ring-offset:  #fff;
+
+  /* Status */
+  --nx-success: var(--nx-success-600); --nx-success-fg: var(--nx-white);
+  --nx-success-subtle: var(--nx-success-50); --nx-success-border: var(--nx-success-200);
+  --nx-success-text: var(--nx-success-700);
+  --nx-warning: var(--nx-warning-700); --nx-warning-fg: var(--nx-white);
+  --nx-warning-subtle: var(--nx-warning-50); --nx-warning-border: var(--nx-warning-200);
+  --nx-warning-text: var(--nx-warning-700);
+  --nx-danger: var(--nx-danger-600); --nx-danger-fg: var(--nx-white);
+  --nx-danger-subtle: var(--nx-danger-50); --nx-danger-border: var(--nx-danger-200);
+  --nx-danger-text: var(--nx-danger-700);
+  --nx-info: var(--nx-brand-600); --nx-info-fg: var(--nx-white);
+  --nx-info-subtle: var(--nx-brand-50); --nx-info-border: var(--nx-brand-200);
+  --nx-info-text: var(--nx-brand-700);
+  --nx-accent: var(--nx-accent-600); --nx-accent-fg: var(--nx-white);
+  --nx-accent-subtle: var(--nx-accent-50);
+
+  /* Notification — BoardUI gives each tone its own badge pair */
+  --nx-note-info-bg:    var(--nx-brand-100);
+  --nx-note-info-fg:    var(--nx-brand-600);
+  --nx-note-error-bg:   var(--nx-danger-100);
+  --nx-note-error-fg:   var(--nx-danger-600);
+  --nx-note-success-bg: var(--nx-success-100);
+  --nx-note-success-fg: var(--nx-success-600);
+  --nx-note-warning-bg: var(--nx-warning-100);
+  --nx-note-warning-fg: var(--nx-warning-700);
+  --nx-note-progress:   var(--nx-brand-600);
+
+  /* Tabs + segmented */
+  /* A step darker than a muted surface on purpose: the thumb is white, and
+     against neutral-100 there was almost no edge between the selected tab and
+     the track it sits in. */
+  --nx-segmented-bg:          var(--nx-neutral-200);
+  /* Panel group (inspector settings card, after BoardUI's agent editor): a
+     soft fill that sets the group off from the white panel, and fields inside
+     it one step darker so they read without a border. */
+  --nx-pgroup-bg:             var(--nx-neutral-100);
+  --nx-pgroup-field-bg:       var(--nx-neutral-200);
+  --nx-pgroup-field-bg-hover: var(--nx-neutral-300);
+
+  /* Rating stars: a warm gold of their own. The warning scale reads olive
+     at the weights that pass contrast, and a star is decoration beside its
+     label, not text. */
+  --nx-rating: #f9b744;
+  --nx-segmented-selected-bg: var(--nx-white);
+  --nx-tab-count-bg:          rgb(0 0 0 / .1);
+  --nx-tab-count-selected-bg: var(--nx-brand-100);
+  --nx-tab-indicator:         var(--nx-brand-600);
+  /* Pill tabs mark the selection with a filled shape behind the tab rather
+     than a bar under it, so the selected label stays plain text rather than
+     taking the indicator colour. */
+  --nx-tab-pill-bg:           var(--nx-bg-emphasis);
+  --nx-tab-pill-fg:           var(--nx-text);
+  --nx-tab-count-pill-bg:     var(--nx-neutral-600);
+  --nx-tab-count-pill-bg:     var(--nx-neutral-300);
+
+  /* Switch thumb — BoardUI gives it its own vertical gradient */
+  --nx-control-indicator:        var(--nx-white);
+  --nx-control-indicator-subtle: var(--nx-neutral-100);
+  --nx-switch-track-off:         var(--nx-neutral-200);
+  /* switch thumb's inner chip - BoardUI gives it its own pair, a touch
+     deeper than the 500/600 ramp steps. Derived with their OKLCH delta. */
+  --nx-switch-chip-start: #2c3ee8;
+  --nx-switch-chip-end:   #1900b9;
+  --nx-switch-chip-off-start: var(--nx-white);
+  --nx-switch-chip-off-end:   var(--nx-neutral-100);
+
+  /* Checkbox — BoardUI's own border tokens */
+  --nx-checkbox-border:        var(--nx-neutral-300);
+  --nx-checkbox-border-active: var(--nx-neutral-400);
+
+  /* Input — BoardUI fills the field and uses an INSET ring, no border */
+  /* Fields sit on the surface, not in a grey well. Grey is reserved for the
+     disabled state, so a filled field never reads as unavailable. The resting
+     edge is an inset ring on .nx-input rather than a fill. */
+  --nx-input-bg:          var(--nx-surface);
+  --nx-input-bg-hover:    var(--nx-bg-muted);
+  --nx-input-bg-disabled: var(--nx-neutral-100);
+  --nx-input-text-disabled: var(--nx-neutral-300);
+  --nx-input-icon:        var(--nx-neutral-400);
+  --nx-input-ring:        var(--nx-brand-500);
+  --nx-input-ring-error:  var(--nx-danger-500);
+
+  /* Focus — BoardUI uses a 2px ring in the brand colour */
+  --nx-focus-ring: 0 0 0 2px var(--nx-brand-500);
+  --nx-focus-ring-danger: 0 0 0 2px var(--nx-danger-500);
+  --nx-checkbox-selected-shadow: inset 0 2px 0 0 #ffffff40, inset 0 0 0 1px var(--nx-brand-500);
+}
+
+/* ---- Dark theme -------------------------------------------------------
+   Values read off boardui.com with their own toggle flipped to dark.
+   Two things worth noting, because both are counter-intuitive:
+     1. The button gradients do NOT change between themes. Only `disabled`
+        differs (it drops to neutral-700 -> neutral-800).
+     2. The page background is #121212, but surfaces sit ABOVE it at
+        neutral-800 - so cards are lighter than the page, not darker.
+   ----------------------------------------------------------------------- */
+.nxt-ds[data-theme="dark"] {
+  /* Surfaces */
+  --nx-bg:              #121212;                  /* background-full        */
+  --nx-bg-subtle:       var(--nx-neutral-900);    /* background-secondary   */
+  --nx-bg-muted:        var(--nx-neutral-800);    /* background-tertiary    */
+  --nx-bg-emphasis:     #3f3f3f;                  /* background-primary-hover */
+  --nx-surface:         var(--nx-neutral-800);    /* background-primary     */
+  --nx-surface-raised:  var(--nx-neutral-800);
+  --nx-surface-overlay: rgb(0 0 0 / .65);
+  --nx-surface-hover:   #3f3f3f;
+  --nx-surface-active:  var(--nx-neutral-700);
+
+  /* Text */
+  --nx-text:             var(--nx-neutral-50);    /* #fafafa */
+  --nx-text-secondary:   var(--nx-neutral-500);   /* #737373 */
+  --nx-text-tertiary:    var(--nx-neutral-400);   /* #a1a1a1 - placeholder  */
+  --nx-text-muted:       var(--nx-neutral-500);
+  --nx-text-placeholder: var(--nx-neutral-400);
+  --nx-text-disabled:    var(--nx-neutral-600);
+  --nx-text-inverse:     var(--nx-neutral-950);
+  --nx-text-link:        var(--nx-brand-300);
+  --nx-text-link-hover:  var(--nx-brand-200);
+
+  /* Borders */
+  --nx-border:         var(--nx-neutral-700);     /* #404040 */
+  --nx-border-subtle:  var(--nx-neutral-800);
+  --nx-border-hover:   var(--nx-neutral-500);     /* #737373 */
+  --nx-border-active:  var(--nx-neutral-400);
+  --nx-border-strong:  var(--nx-neutral-600);
+  --nx-border-focus:   var(--nx-brand-500);
+  --nx-border-error:   var(--nx-danger-500);
+
+  /* Brand — unchanged from light, exactly as BoardUI does it */
+  --nx-primary:              var(--nx-brand-600);
+  --nx-primary-hover:        var(--nx-brand-700);
+  --nx-primary-active:       var(--nx-brand-800);
+  --nx-primary-subtle:       var(--nx-brand-950);
+  --nx-primary-subtle-hover: var(--nx-brand-900);
+  --nx-primary-border:       var(--nx-brand-800);
+  --nx-primary-fg:           var(--nx-white);
+  --nx-primary-text:         var(--nx-brand-300);
+  --nx-primary-start:        var(--nx-brand-500);
+  --nx-primary-end:          var(--nx-brand-600);
+  --nx-badge-primary-bg:     var(--nx-brand-400);
+
+  /* Gradients — identical to light; only disabled differs */
+  --nx-grad-primary:          linear-gradient(180deg, var(--nx-brand-500) 0%, var(--nx-brand-600) 100%);
+  --nx-grad-primary-hover:    linear-gradient(180deg, var(--nx-brand-400) 0%, var(--nx-brand-500) 100%);
+  --nx-grad-primary-active:   linear-gradient(180deg, var(--nx-brand-600) 0%, var(--nx-brand-700) 100%);
+  --nx-grad-primary-disabled: linear-gradient(180deg, var(--nx-neutral-700) 0%, var(--nx-neutral-800) 100%);
+  --nx-grad-danger:          linear-gradient(180deg, var(--nx-danger-500) 0%, var(--nx-danger-600) 100%);
+  --nx-grad-danger-hover:    linear-gradient(180deg, var(--nx-danger-400) 0%, var(--nx-danger-500) 100%);
+  --nx-grad-danger-active:   linear-gradient(180deg, var(--nx-danger-600) 0%, var(--nx-danger-700) 100%);
+  --nx-grad-danger-disabled: linear-gradient(180deg, var(--nx-danger-900) 0%, var(--nx-danger-950) 100%);
+  --nx-grad-success:       linear-gradient(180deg, var(--nx-success-500) 0%, var(--nx-success-600) 100%);
+  --nx-grad-success-hover: linear-gradient(180deg, var(--nx-success-400) 0%, var(--nx-success-500) 100%);
+
+  /* Ghost — brand-900 fill with brand-300 text, per their dark tokens */
+  --nx-ghost-bg:          var(--nx-brand-900);
+  --nx-ghost-fg:          var(--nx-brand-300);
+  --nx-ghost-hover:       var(--nx-brand-800);
+  --nx-ghost-active:      var(--nx-brand-700);
+  --nx-ghost-disabled:    var(--nx-neutral-800);
+  --nx-ghost-disabled-fg: var(--nx-neutral-600);
+  --nx-btn-disabled-fg:   var(--nx-neutral-500);
+  --nx-btn-danger-disabled-fg: var(--nx-danger-400);   /* BoardUI red-400 */
+
+  --nx-btn-sec-bg:           var(--nx-neutral-800);
+  --nx-btn-sec-bg-hover:     #40404099;             /* neutral-700 @ 60% */
+  --nx-btn-sec-bg-active:    var(--nx-neutral-800);
+  --nx-btn-sec-bg-disabled:  var(--nx-neutral-800);
+  --nx-btn-sec-fg:           var(--nx-neutral-50);
+  --nx-btn-sec-fg-disabled:  var(--nx-neutral-600);
+  --nx-btn-sec-border:        var(--nx-neutral-700);
+  --nx-btn-sec-border-hover:  var(--nx-neutral-500);
+  --nx-btn-sec-border-active: var(--nx-neutral-600);
+
+  --nx-note-info-bg:    var(--nx-brand-950);   --nx-note-info-fg:    var(--nx-brand-300);
+  --nx-note-error-bg:   var(--nx-danger-950);  --nx-note-error-fg:   var(--nx-danger-300);
+  --nx-note-success-bg: var(--nx-success-950); --nx-note-success-fg: var(--nx-success-300);
+  --nx-note-warning-bg: var(--nx-warning-950); --nx-note-warning-fg: var(--nx-warning-300);
+  --nx-note-progress:   var(--nx-brand-400);
+
+  --nx-segmented-bg:          var(--nx-neutral-900);
+  --nx-pgroup-bg:             var(--nx-neutral-900);
+  --nx-pgroup-field-bg:       var(--nx-neutral-800);
+  --nx-pgroup-field-bg-hover: #3f3f3f;
+  --nx-segmented-selected-bg: var(--nx-neutral-700);
+  --nx-tab-count-bg:          rgb(255 255 255 / .1);
+  --nx-tab-count-selected-bg: var(--nx-brand-900);
+  --nx-tab-indicator:         var(--nx-brand-400);
+  --nx-tab-pill-bg:           var(--nx-bg-emphasis);
+  --nx-tab-pill-fg:           var(--nx-text);
+
+  --nx-control-indicator:        var(--nx-neutral-300);
+  --nx-control-indicator-subtle: var(--nx-neutral-400);
+  --nx-switch-track-off:         var(--nx-neutral-700);
+  --nx-switch-chip-start: #2c3ee8;
+  --nx-switch-chip-end:   #1900b9;
+  --nx-switch-chip-off-start: var(--nx-neutral-300);
+  --nx-switch-chip-off-end:   var(--nx-neutral-400);
+
+  --nx-checkbox-border:        var(--nx-neutral-700);
+  --nx-checkbox-border-active: var(--nx-neutral-500);
+
+  /* Input — fill is neutral-800, same inset-ring model */
+  --nx-input-bg:            var(--nx-neutral-800);
+  --nx-input-bg-hover:      #3f3f3f;
+  --nx-input-bg-disabled:   #242424;
+  --nx-input-text-disabled: var(--nx-neutral-600);
+  --nx-input-icon:          var(--nx-neutral-500);
+  --nx-input-ring:          var(--nx-brand-500);
+  --nx-input-ring-error:    var(--nx-danger-500);
+
+  /* Status */
+  --nx-success: var(--nx-success-600); --nx-success-fg: var(--nx-white);
+  --nx-success-subtle: var(--nx-success-950); --nx-success-border: var(--nx-success-800);
+  --nx-success-text: var(--nx-success-300);
+  --nx-warning: var(--nx-warning-700); --nx-warning-fg: var(--nx-white);
+  --nx-warning-subtle: var(--nx-warning-950); --nx-warning-border: var(--nx-warning-800);
+  --nx-warning-text: var(--nx-warning-300);
+  --nx-danger: var(--nx-danger-600); --nx-danger-fg: var(--nx-white);
+  --nx-danger-subtle: var(--nx-danger-950); --nx-danger-border: var(--nx-danger-800);
+  --nx-danger-text: var(--nx-danger-300);
+  --nx-info: var(--nx-brand-600); --nx-info-fg: var(--nx-white);
+  --nx-info-subtle: var(--nx-brand-950); --nx-info-border: var(--nx-brand-800);
+  --nx-info-text: var(--nx-brand-300);
+  --nx-accent: var(--nx-accent-600); --nx-accent-fg: var(--nx-white);
+  --nx-accent-subtle: var(--nx-accent-950);
+
+  /* Elevation — their dark alphas, not a recolour of the light ones */
+  --nx-shadow-2xs: 0 1px #00000029;
+  --nx-shadow-xs:  0 1px 2px 0 #0000002e;
+  --nx-shadow-sm:  0 1px 2px 0 #0000001f, 0 1px 3px 0 #00000029;
+  --nx-shadow-md:  0 2px 4px -1px #0000001f, 0 4px 6px -1px #0000002e;
+  --nx-shadow-lg:  0 4px 6px -2px #0000001a, 0 10px 15px -3px #0000002e;
+  --nx-shadow-xl:  0 10px 10px -5px #00000014, 0 20px 25px -5px #0003;
+  --nx-shadow-card: 0 1px 1px 0 #00000024;
+  --nx-shadow-dropdown: 0 1px 1px 0 #00000024, 0 4px 4px 0 #0000001a;
+  --nx-shadow-btn: 0 1px 2px 0 #0000002e;
+
+  --nx-focus-ring: 0 0 0 2px var(--nx-brand-500);
+  --nx-focus-ring-danger: 0 0 0 2px var(--nx-danger-500);
+  --nx-checkbox-selected-shadow: inset 0 2px 0 0 #ffffff26, inset 0 0 0 1px var(--nx-brand-500);
+}
+
+
+.nxt-ds.nxt-ds :where(input, select, textarea) {
+	all: revert;
+	box-sizing: border-box;
+	margin: 0;
+	font: inherit;
+	color: inherit;
+	line-height: inherit;
+}
+
+.nxt-ds.nxt-ds :where(input, select, textarea):focus {
+	outline: none;
+	box-shadow: none;
+	border-color: transparent;
+}
+
+/* ==========================================================================
+   Nexter Design System - Components
+   Geometry, elevation and motion mirror boardui.com exactly; colour is Nexter.
+   Every rule reads semantic tokens only, never a raw ramp step.
+   ========================================================================== */.nxt-ds *, .nxt-ds *::before, .nxt-ds *::after { box-sizing: border-box; }.nxt-ds .nx-root {
+  font-family: var(--nx-font-sans);
+  font-size: var(--nx-body-size); line-height: var(--nx-body-lh);
+  letter-spacing: var(--nx-body-ls);
+  color: var(--nx-text); background: var(--nx-bg);
+  -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+}/* ---- Typography - BoardUI's semantic scale ----------------------------- */.nxt-ds .nx-caption-2 { font-size: var(--nx-caption-2-size); line-height: var(--nx-caption-2-lh); letter-spacing: var(--nx-caption-2-ls); margin: 0; }.nxt-ds .nx-caption { font-size: var(--nx-caption-1-size); line-height: var(--nx-caption-1-lh); letter-spacing: var(--nx-caption-1-ls); margin: 0; color: var(--nx-text-secondary); }.nxt-ds .nx-body-2 { font-size: var(--nx-body-2-size);    line-height: var(--nx-body-2-lh);    letter-spacing: var(--nx-body-2-ls);    margin: 0; }.nxt-ds .nx-body { font-size: var(--nx-body-size);      line-height: var(--nx-body-lh);      letter-spacing: var(--nx-body-ls);      margin: 0; }.nxt-ds .nx-headline { font-size: var(--nx-headline-size);  line-height: var(--nx-headline-lh);  margin: 0; font-weight: var(--nx-weight-semibold); }.nxt-ds .nx-title-3, .nxt-ds .nx-subheading { font-size: var(--nx-title-3-size); line-height: var(--nx-title-3-lh); margin: 0; font-weight: var(--nx-weight-semibold); }.nxt-ds .nx-title-2, .nxt-ds .nx-heading { font-size: var(--nx-title-2-size); line-height: var(--nx-title-2-lh); margin: 0; font-weight: var(--nx-weight-semibold); }.nxt-ds .nx-title-1, .nxt-ds .nx-title { font-size: var(--nx-title-1-size); line-height: var(--nx-title-1-lh); margin: 0; font-weight: var(--nx-weight-semibold); }.nxt-ds .nx-display-4 { font-size: var(--nx-display-4-size); line-height: var(--nx-display-4-lh); margin: 0; font-weight: var(--nx-weight-semibold); }.nxt-ds .nx-display-3 { font-size: var(--nx-display-3-size); line-height: var(--nx-display-3-lh); margin: 0; font-weight: var(--nx-weight-semibold); }.nxt-ds .nx-display-2 { font-size: var(--nx-display-2-size); line-height: var(--nx-display-2-lh); margin: 0; font-weight: var(--nx-weight-semibold); }.nxt-ds .nx-display-1, .nxt-ds .nx-display { font-size: var(--nx-display-1-size); line-height: var(--nx-display-1-lh); margin: 0; font-weight: var(--nx-weight-semibold); }.nxt-ds .nx-large-title { font-size: var(--nx-large-title-size); line-height: var(--nx-large-title-lh); margin: 0; font-weight: var(--nx-weight-semibold); }.nxt-ds .nx-w-regular { font-weight: 400 }.nxt-ds .nx-w-medium { font-weight: 500 }.nxt-ds .nx-w-semibold { font-weight: 600 }.nxt-ds .nx-w-bold { font-weight: 700 }.nxt-ds .nx-mono { font-family: var(--nx-font-mono); font-size: var(--nx-caption-1-size); }.nxt-ds .nx-muted { color: var(--nx-text-secondary); }.nxt-ds .nx-link { color: var(--nx-text-link); text-decoration: none; font-weight: var(--nx-weight-medium); border-radius: var(--nx-radius-sm); }.nxt-ds .nx-link:hover { color: var(--nx-text-link-hover); text-decoration: underline; text-underline-offset: 2px; }.nxt-ds .nx-link:focus-visible { outline: none; box-shadow: var(--nx-focus-ring); }/* ---- Button ------------------------------------------------------------
+   1:1 port of BoardUI components/base/buttons/button.tsx (Tailwind v4).
+   Only colour differs: BoardUI blue -> Nexter brand, Tailwind red -> Nexter danger.
+
+                    medium            small               xs
+   container        h36 p8 r10        h32 px8 py6 r8      h24 px8 r4
+   gap              2px               2px                 2px
+   icon             20                18                  14
+   label wrapper    px4               px2                 px2
+   text             14/20 500         14/20 500           12/16 600 +.15px
+   icon-only        36x36 (content)   32x32 p0            24x24 p0
+
+   box-shadow is Tailwind's five-layer stack
+     inset-shadow, inset-ring, ring-offset, ring, shadow
+   so the focus ring interpolates layer-by-layer exactly like theirs.
+   ------------------------------------------------------------------------ */.nxt-ds .nx-btn {
+  --nx-btn-ring-offset-shadow: 0 0 #0000;
+  --nx-btn-ring-shadow: 0 0 #0000;
+  --nx-btn-shadow: 0 0 #0000;
+  -webkit-appearance: button; appearance: button;
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: 2px; white-space: nowrap; overflow: hidden;
+  height: 36px; margin: 0; padding: 8px;
+  font-family: var(--nx-font-sans);
+  font-size: 14px; line-height: 20px; letter-spacing: 0; font-weight: 500;
+  font-feature-settings: normal; font-variation-settings: normal;
+  font-kerning: normal; font-variant-ligatures: contextual;
+  text-decoration: none; text-transform: none;
+  color: inherit; background-color: transparent;
+  border: 0 solid; border-radius: 10px;
+  cursor: pointer; user-select: none; -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
+  /* button-press-motion */
+  transition: background-color var(--nx-dur) ease, border-color var(--nx-dur) ease,
+              box-shadow var(--nx-dur) ease, color var(--nx-dur) ease,
+              transform .42s cubic-bezier(.4, 0, .2, 1);
+}.nxt-ds .nx-btn__label { display: inline-flex; align-items: center; justify-content: center; padding: 0 4px; flex-shrink: 0; }.nxt-ds .nx-btn > svg { width: 20px; height: 20px; flex-shrink: 0; }.nxt-ds .nx-btn:active:not(:disabled):not([aria-disabled="true"]) {
+  transition-duration: .15s, .15s, .15s, .15s, .22s;
+  transform: scale(.98);
+}.nxt-ds .nx-btn:disabled, .nxt-ds .nx-btn[aria-disabled="true"] { cursor: not-allowed; transform: none; }/* shadow-xs / shadow-none / focus-visible:ring-2 ring-offset-2 */.nxt-ds .nx-btn--primary, .nxt-ds .nx-btn--danger, .nxt-ds .nx-btn--secondary {
+  --nx-btn-shadow: var(--nx-shadow-btn);
+  box-shadow: 0 0 #0000, 0 0 #0000, var(--nx-btn-ring-offset-shadow), var(--nx-btn-ring-shadow), var(--nx-btn-shadow);
+}.nxt-ds .nx-btn:disabled, .nxt-ds .nx-btn[aria-disabled="true"] {
+  --nx-btn-shadow: 0 0 #0000;
+  box-shadow: 0 0 #0000, 0 0 #0000, var(--nx-btn-ring-offset-shadow), var(--nx-btn-ring-shadow), var(--nx-btn-shadow);
+}/* BoardUI quirk, copied on purpose: its unlayered `.dark .shadow-xs` outranks the
+   layered `disabled:shadow-none`, so in dark mode disabled primary / secondary /
+   danger buttons KEEP their shadow-xs. Ghost has no shadow-xs, so it stays flat. */:root[data-theme="dark"] .nxt-ds .nx-btn--primary:is(:disabled, [aria-disabled="true"]), :root[data-theme="dark"] .nxt-ds .nx-btn--secondary:is(:disabled, [aria-disabled="true"]), :root[data-theme="dark"] .nxt-ds .nx-btn--danger:is(:disabled, [aria-disabled="true"]) { --nx-btn-shadow: var(--nx-shadow-btn); }.nxt-ds .nx-btn:focus-visible {
+  --nx-btn-ring-offset-shadow: 0 0 0 2px var(--nx-btn-ring-offset);
+  --nx-btn-ring-shadow: 0 0 0 4px var(--nx-btn-focus-ring);
+  box-shadow: 0 0 #0000, 0 0 #0000, var(--nx-btn-ring-offset-shadow), var(--nx-btn-ring-shadow), var(--nx-btn-shadow);
+}/* primary / danger — gradient base, hover gradient cross-faded on ::before */.nxt-ds .nx-btn--primary, .nxt-ds .nx-btn--danger { isolation: isolate; position: relative; color: var(--nx-white); }.nxt-ds .nx-btn--primary::before, .nxt-ds .nx-btn--danger::before {
+  content: ""; position: absolute; inset: 0; z-index: -1;
+  pointer-events: none; border-radius: inherit; opacity: 0;
+  transition: opacity var(--nx-dur) ease;
+}.nxt-ds .nx-btn--primary:hover:not(:disabled):not([aria-disabled="true"])::before, .nxt-ds .nx-btn--danger:hover:not(:disabled):not([aria-disabled="true"])::before { opacity: 1; }.nxt-ds .nx-btn--primary:active:not(:disabled):not([aria-disabled="true"])::before, .nxt-ds .nx-btn--danger:active:not(:disabled):not([aria-disabled="true"])::before { opacity: 0; }.nxt-ds .nx-btn--primary:disabled::before, .nxt-ds .nx-btn--primary[aria-disabled="true"]::before, .nxt-ds .nx-btn--danger:disabled::before, .nxt-ds .nx-btn--danger[aria-disabled="true"]::before { display: none; }.nxt-ds .nx-btn--primary { background-image: var(--nx-grad-primary); }.nxt-ds .nx-btn--primary::before { background-image: var(--nx-grad-primary-hover); }.nxt-ds .nx-btn--primary:active:not(:disabled):not([aria-disabled="true"]) { background-image: var(--nx-grad-primary-active); }.nxt-ds .nx-btn--primary:disabled, .nxt-ds .nx-btn--primary[aria-disabled="true"] { background-image: var(--nx-grad-primary-disabled); color: var(--nx-btn-disabled-fg); }.nxt-ds .nx-btn--danger { background-image: var(--nx-grad-danger); }.nxt-ds .nx-btn--danger::before { background-image: var(--nx-grad-danger-hover); }.nxt-ds .nx-btn--danger:active:not(:disabled):not([aria-disabled="true"]) { background-image: var(--nx-grad-danger-active); }.nxt-ds .nx-btn--danger:disabled, .nxt-ds .nx-btn--danger[aria-disabled="true"] { background-image: var(--nx-grad-danger-disabled); color: var(--nx-btn-danger-disabled-fg); }/* secondary — surface + hairline border; bg AND border step through states */.nxt-ds .nx-btn--secondary {
+  background-color: var(--nx-btn-sec-bg); color: var(--nx-btn-sec-fg);
+  border: 1px solid var(--nx-btn-sec-border);
+}@media (hover: hover) {.nxt-ds .nx-btn--secondary:hover { background-color: var(--nx-btn-sec-bg-hover); border-color: var(--nx-btn-sec-border-hover); }
+}.nxt-ds .nx-btn--secondary:active { background-color: var(--nx-btn-sec-bg-active); border-color: var(--nx-btn-sec-border-active); }.nxt-ds .nx-btn--secondary:disabled, .nxt-ds .nx-btn--secondary[aria-disabled="true"] {
+  background-color: var(--nx-btn-sec-bg-disabled); border-color: var(--nx-btn-sec-border); color: var(--nx-btn-sec-fg-disabled);
+}/* ghost — brand-tinted surface, no shadow */.nxt-ds .nx-btn--ghost { background-color: var(--nx-ghost-bg); color: var(--nx-ghost-fg); }@media (hover: hover) {.nxt-ds .nx-btn--ghost:hover { background-color: var(--nx-ghost-hover); }
+}.nxt-ds .nx-btn--ghost:active { background-color: var(--nx-ghost-active); }.nxt-ds .nx-btn--ghost:disabled, .nxt-ds .nx-btn--ghost[aria-disabled="true"] { background-color: var(--nx-ghost-disabled); color: var(--nx-ghost-disabled-fg); }/* sizes */.nxt-ds .nx-btn--sm { height: 32px; border-radius: 8px; padding: 6px 8px; }.nxt-ds .nx-btn--sm .nx-btn__label { padding: 0 2px; }.nxt-ds .nx-btn--sm > svg { width: 18px; height: 18px; }.nxt-ds .nx-btn--xs { height: 24px; border-radius: 4px; padding: 0 8px; font-size: 12px; line-height: 16px; letter-spacing: .15px; font-weight: 600; }.nxt-ds .nx-btn--xs .nx-btn__label { padding: 0 2px; }.nxt-ds .nx-btn--xs > svg { width: 14px; height: 14px; }/* icon-only — medium stays content-sized (8+20+8), small/xs are forced squares */.nxt-ds .nx-btn--sm.nx-btn--icon { width: 32px; height: 32px; padding: 0; }.nxt-ds .nx-btn--xs.nx-btn--icon { width: 24px; height: 24px; padding: 0; }/* ---- Legacy, not part of BoardUI's Button (kept only so older markup
+   such as gallery.html still renders). Not shown on the Button page. ----- */.nxt-ds .nx-btn--success { isolation: isolate; position: relative; color: var(--nx-white); background-image: var(--nx-grad-success);
+  --nx-btn-shadow: var(--nx-shadow-btn);
+  box-shadow: 0 0 #0000, 0 0 #0000, var(--nx-btn-ring-offset-shadow), var(--nx-btn-ring-shadow), var(--nx-btn-shadow); }.nxt-ds .nx-btn--plain, .nxt-ds .nx-btn--soft { background: transparent; color: var(--nx-text-secondary); }.nxt-ds .nx-btn--plain:hover:not(:disabled), .nxt-ds .nx-btn--soft:hover:not(:disabled) { background: var(--nx-surface-hover); color: var(--nx-text); }.nxt-ds .nx-btn--plain:active:not(:disabled), .nxt-ds .nx-btn--soft:active:not(:disabled) { background: var(--nx-surface-active); }.nxt-ds .nx-btn--plain:disabled, .nxt-ds .nx-btn--soft:disabled { color: var(--nx-text-disabled); }.nxt-ds .nx-btn--link { background: transparent; color: var(--nx-text-link); height: auto; padding: 2px 4px; }.nxt-ds .nx-btn--link:hover:not(:disabled) { text-decoration: underline; text-underline-offset: 2px; }.nxt-ds .nx-btn--link:disabled { color: var(--nx-text-disabled); text-decoration: none; }.nxt-ds .nx-btn--lg { height: 40px; }.nxt-ds .nx-btn--block { width: 100%; }.nxt-ds .nx-btn--loading { position: relative; color: transparent !important; pointer-events: none; }.nxt-ds .nx-btn--loading::after {
+  content: ""; position: absolute; width: 14px; height: 14px; border-radius: 50%;
+  border: 2px solid currentColor; border-top-color: transparent; color: #fff;
+  animation: nx-spin .6s linear infinite; z-index: 1;
+}.nxt-ds .nx-btn--secondary.nx-btn--loading::after, .nxt-ds .nx-btn--plain.nx-btn--loading::after { color: var(--nx-text); }@keyframes nx-spin {to { transform: rotate(360deg); } }/* ---- Icon button ------------------------------------------------------- */.nxt-ds .nx-iconbtn {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: var(--nx-ctrl-h-md); height: var(--nx-ctrl-h-md); padding: 0;
+  border: 1px solid transparent; border-radius: var(--nx-radius-2lg);
+  background: transparent; color: var(--nx-text-secondary); cursor: pointer;
+  transition: background-color var(--nx-dur) ease, border-color var(--nx-dur) ease,
+              color var(--nx-dur) ease, box-shadow var(--nx-dur) ease,
+              transform var(--nx-dur-press) var(--nx-ease);
+}.nxt-ds .nx-iconbtn:hover:not(:disabled) { background: var(--nx-surface-hover); color: var(--nx-text); }.nxt-ds .nx-iconbtn:active:not(:disabled) { transition-duration: var(--nx-dur),var(--nx-dur),var(--nx-dur),var(--nx-dur),var(--nx-dur-press-in); transform: scale(var(--nx-press-scale)); }.nxt-ds .nx-iconbtn:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--nx-bg), 0 0 0 4px var(--nx-input-ring); }.nxt-ds .nx-iconbtn:disabled { color: var(--nx-text-disabled); cursor: not-allowed; transform: none; }.nxt-ds .nx-iconbtn--bordered { border-color: var(--nx-border); background: var(--nx-surface); box-shadow: var(--nx-shadow-btn); }.nxt-ds .nx-iconbtn--bordered:hover:not(:disabled) { border-color: var(--nx-border-hover); }.nxt-ds .nx-iconbtn--sm { width: var(--nx-ctrl-h-sm); height: var(--nx-ctrl-h-sm); border-radius: var(--nx-radius-md); }.nxt-ds .nx-iconbtn--lg { width: var(--nx-ctrl-h-lg); height: var(--nx-ctrl-h-lg); }.nxt-ds .nx-social { width: 300px; max-width: 100%; gap: 8px; padding-inline: 12px; }.nxt-ds .nx-social--sm { width: 250px; height: 32px; }.nxt-ds .nx-btngroup { display: inline-flex; border: 1px solid var(--nx-border); border-radius: var(--nx-radius-2lg); box-shadow: var(--nx-shadow-btn); overflow: hidden; }.nxt-ds .nx-btngroup .nx-btn { height: 34px; padding-inline: 12px; border: 0; border-radius: 0; box-shadow: none; }.nxt-ds .nx-btngroup .nx-btn:has(.nx-btn__label) { padding-inline: 8px; }.nxt-ds .nx-btngroup .nx-btn + .nx-btn { border-left: 1px solid var(--nx-border); }.nxt-ds .nx-btngroup .nx-btn[aria-pressed="true"] { background: var(--nx-surface-active); color: var(--nx-text); z-index: 1; }@media (prefers-reduced-motion: reduce) {.nxt-ds .nx-btn, .nxt-ds .nx-iconbtn { transition: none; transform: none; }.nxt-ds .nx-btn:active, .nxt-ds .nx-iconbtn:active { transform: none; }
+}/* ---- Field wrapper ----------------------------------------------------- */.nxt-ds .nx-field { display: flex; flex-direction: column; gap: 6px; }.nxt-ds .nx-label { font-size: var(--nx-body-2-size); font-weight: var(--nx-weight-medium); color: var(--nx-text); display: inline-flex; align-items: center; gap: 4px; }.nxt-ds .nx-label__req { color: var(--nx-danger); }.nxt-ds .nx-hint { font-size: var(--nx-caption-1-size); color: var(--nx-text-muted); }.nxt-ds .nx-error { font-size: var(--nx-caption-1-size); color: var(--nx-danger-text); display: inline-flex; align-items: center; gap: 4px; }/* ---- Input -------------------------------------------------------------
+   BoardUI fills the field (neutral-200) with NO border, 10px radius, 8px pad,
+   and expresses focus as a 2px INSET ring rather than an outer glow.
+   ------------------------------------------------------------------------ */.nxt-ds .nx-input {
+  position: relative; display: flex; width: 100%; align-items: center;
+  height: var(--nx-ctrl-h-md); padding: 8px 12px;
+  font-family: inherit; font-size: var(--nx-body-size); line-height: var(--nx-body-lh);
+  color: var(--nx-text); background: var(--nx-input-bg);
+  border: 0; border-radius: var(--nx-radius-2lg);
+  box-shadow: inset 0 0 0 1px var(--nx-border);
+  transition: background-color var(--nx-dur-input) var(--nx-ease),
+              box-shadow var(--nx-dur-input) var(--nx-ease),
+              color var(--nx-dur-input) var(--nx-ease);
+}.nxt-ds .nx-input::placeholder { color: var(--nx-text-tertiary); }.nxt-ds .nx-input:hover:not(:disabled):not(:focus) { background: var(--nx-input-bg-hover); }.nxt-ds .nx-input:focus { outline: none; box-shadow: inset 0 0 0 2px var(--nx-input-ring); }.nxt-ds .nx-input:disabled { background: var(--nx-input-bg-disabled); color: var(--nx-input-text-disabled); cursor: not-allowed; }.nxt-ds .nx-input[readonly] { background: var(--nx-bg-muted); }.nxt-ds .nx-input--error { box-shadow: inset 0 0 0 2px var(--nx-input-ring-error); }.nxt-ds .nx-input--error:focus { box-shadow: inset 0 0 0 2px var(--nx-input-ring-error); }.nxt-ds .nx-input--success { box-shadow: inset 0 0 0 2px var(--nx-success); }.nxt-ds .nx-input--sm { height: var(--nx-ctrl-h-sm); font-size: var(--nx-body-2-size); border-radius: var(--nx-radius-md); padding-inline: 10px; }.nxt-ds .nx-input--lg { height: var(--nx-ctrl-h-lg); }.nxt-ds .nx-inputwrap { position: relative; display: flex; align-items: center; width: 100%; }.nxt-ds .nx-inputwrap .nx-input { padding-left: 32px; }.nxt-ds .nx-inputwrap__icon {
+  position: absolute; left: 10px; display: inline-flex; color: var(--nx-input-icon);
+  pointer-events: none; width: 16px; height: 16px; z-index: 1;
+}.nxt-ds .nx-inputwrap--trail .nx-input { padding-left: 12px; padding-right: 32px; }.nxt-ds .nx-inputwrap--trail .nx-inputwrap__icon { left: auto; right: 10px; }.nxt-ds .nx-inputgroup { display: flex; width: 100%; }.nxt-ds .nx-inputgroup__addon {
+  display: inline-flex; align-items: center; padding-inline: 12px; height: var(--nx-ctrl-h-md);
+  background: var(--nx-bg-muted); color: var(--nx-text-secondary);
+  font-size: var(--nx-body-2-size); white-space: nowrap; border: 0;
+}.nxt-ds .nx-inputgroup__addon:first-child { border-start-start-radius: var(--nx-radius-2lg); border-end-start-radius: var(--nx-radius-2lg); }.nxt-ds .nx-inputgroup__addon:last-child { border-start-end-radius: var(--nx-radius-2lg); border-end-end-radius: var(--nx-radius-2lg); }.nxt-ds .nx-inputgroup .nx-input { border-radius: 0; }.nxt-ds .nx-inputgroup .nx-input:first-child { border-start-start-radius: var(--nx-radius-2lg); border-end-start-radius: var(--nx-radius-2lg); }.nxt-ds .nx-inputgroup .nx-input:last-child { border-start-end-radius: var(--nx-radius-2lg); border-end-end-radius: var(--nx-radius-2lg); }.nxt-ds .nx-textarea { min-height: 84px; padding: 8px 12px; resize: vertical; line-height: var(--nx-body-lh); height: auto; display: block; }.nxt-ds .nx-textarea-count { display: flex; justify-content: flex-end; font-size: var(--nx-caption-2-size); color: var(--nx-text-secondary); }.nxt-ds .nx-select {
+  width: 100%; height: var(--nx-ctrl-h-md); padding: 0 32px 0 12px;
+  font-family: inherit; font-size: var(--nx-body-size); color: var(--nx-text);
+  background-color: var(--nx-input-bg); border: 0;
+  border-radius: var(--nx-radius-2lg); box-shadow: inset 0 0 0 1px var(--nx-border);
+  appearance: none; cursor: pointer;
+  /* A native select aligns its value to the start; a <button> carrying this
+     class would centre it, since that is the browser's default for buttons,
+     and the two would not match. */
+  text-align: start; line-height: var(--nx-ctrl-h-md);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23a1a1a1' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+  background-repeat: no-repeat; background-position: right 10px center;
+  transition: background-color var(--nx-dur-input) var(--nx-ease), box-shadow var(--nx-dur-input) var(--nx-ease);
+}.nxt-ds .nx-select:hover:not(:disabled):not(:focus) { background-color: var(--nx-input-bg-hover); }.nxt-ds .nx-select:focus { outline: none; box-shadow: inset 0 0 0 2px var(--nx-input-ring); }.nxt-ds .nx-select:disabled { background-color: var(--nx-input-bg-disabled); color: var(--nx-input-text-disabled); cursor: not-allowed; }/* ---- Checkbox ----------------------------------------------------------
+   BoardUI: a 16px box with a 4px radius and a 1px neutral-300 border. When
+   selected the border is removed entirely and replaced by a 500->600 gradient
+   plus an inset highlight, and the tick is an SVG path DRAWN with a
+   stroke-dashoffset animation - not a scaled-in pseudo-element.
+   ------------------------------------------------------------------------ */.nxt-ds .nx-check {
+  display: inline-flex; align-items: center; gap: 8px;
+  cursor: pointer; user-select: none;
+  font-size: var(--nx-body-size); line-height: var(--nx-body-lh); color: var(--nx-text);
+}/* the native input stays in the DOM for semantics, visually hidden the way they do it */.nxt-ds .nx-check input {
+  position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+  border: 0; overflow: hidden; white-space: nowrap;
+  clip: rect(0 0 0 0); clip-path: inset(50%);
+}.nxt-ds .nx-check__box {
+  display: flex; flex-shrink: 0; align-items: center; justify-content: center;
+  width: 16px; height: 16px; border-radius: var(--nx-radius-sm);
+  border: 1px solid var(--nx-checkbox-border);
+  background: var(--nx-surface); box-shadow: var(--nx-shadow-xs);
+  transition: background-color var(--nx-dur) var(--nx-ease),
+              border-color var(--nx-dur) var(--nx-ease),
+              box-shadow var(--nx-dur) var(--nx-ease);
+}.nxt-ds .nx-check:hover input:not(:disabled) + .nx-check__box { border-color: var(--nx-checkbox-border-active); }.nxt-ds .nx-check__icon { width: 16px; height: 16px; display: block; }.nxt-ds .nx-check__tick, .nxt-ds .nx-check__dash { display: none; }/* selected + indeterminate share the fill; only the glyph differs */.nxt-ds .nx-check input:checked + .nx-check__box, .nxt-ds .nx-check input:indeterminate + .nx-check__box {
+  border: 0; background: none;
+  background-image: var(--nx-grad-primary);
+  box-shadow: var(--nx-checkbox-selected-shadow);
+  /* the glyph strokes with currentColor; BoardUI's is white */
+  color: var(--nx-primary-fg);
+}.nxt-ds .nx-check input:checked + .nx-check__box .nx-check__tick { display: block; }.nxt-ds .nx-check input:indeterminate + .nx-check__box .nx-check__tick { display: none; }.nxt-ds .nx-check input:indeterminate + .nx-check__box .nx-check__dash { display: block; }/* the tick draws itself: pathLength=1 so the dash maths is resolution-free */.nxt-ds .nx-check__tick { stroke-dasharray: 1; stroke-dashoffset: 1px;
+  animation: nx-check-draw .2s cubic-bezier(.65, 0, .35, 1) forwards; }@keyframes nx-check-draw {0% { stroke-dashoffset: 1px; }to { stroke-dashoffset: 0; } }.nxt-ds .nx-check input:focus-visible + .nx-check__box {
+  outline: none; box-shadow: 0 0 0 2px var(--nx-bg), 0 0 0 4px var(--nx-input-ring);
+}/* disabled is a flat 50% on the whole control, not a colour change */.nxt-ds .nx-check:has(input:disabled) { cursor: not-allowed; }.nxt-ds .nx-check input:disabled + .nx-check__box { opacity: .5; }.nxt-ds .nx-check:has(input:disabled) > :not(.nx-check__box):not(input) { opacity: .5; }.nxt-ds .nx-check--sm .nx-check__box, .nxt-ds .nx-check--sm .nx-check__icon { width: 14px; height: 14px; }@media (prefers-reduced-motion: reduce) {.nxt-ds .nx-check__tick { stroke-dashoffset: 0; animation: none; }
+}.nxt-ds .nx-check-card {
+  display: flex; align-items: flex-start; gap: 10px; padding: 12px 14px;
+  border: 1px solid var(--nx-border); border-radius: var(--nx-radius-xl);
+  background: var(--nx-surface); cursor: pointer; box-shadow: var(--nx-shadow-xs);
+  transition: border-color var(--nx-dur) var(--nx-ease), background-color var(--nx-dur) var(--nx-ease);
+}.nxt-ds .nx-check-card:hover { border-color: var(--nx-border-hover); }.nxt-ds .nx-check-card:has(input:checked) { border-color: var(--nx-primary); background: var(--nx-primary-subtle); }/* ---- Radio -------------------------------------------------------------
+   The checkbox's twin, and built the same way: the native input stays for
+   semantics and keyboard behaviour, visually hidden, and what you see is the
+   box beside it. Two differences only - the box is round, and selection is a
+   dot rather than a drawn tick, because a radio cannot be indeterminate and
+   has nothing to animate into.
+
+   It shares the checkbox's border and selected-shadow tokens: the two sit
+   next to each other in forms and would look wrong drawn from different
+   greys.
+   ------------------------------------------------------------------------ */.nxt-ds .nx-radio {
+  display: inline-flex; align-items: center; gap: 8px;
+  cursor: pointer; user-select: none;
+  font-size: var(--nx-body-size); line-height: var(--nx-body-lh); color: var(--nx-text);
+}.nxt-ds .nx-radio input {
+  position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+  border: 0; overflow: hidden; white-space: nowrap;
+  clip: rect(0 0 0 0); clip-path: inset(50%);
+}.nxt-ds .nx-radio__box {
+  display: flex; flex-shrink: 0; align-items: center; justify-content: center;
+  width: 16px; height: 16px; border-radius: var(--nx-radius-full);
+  border: 1px solid var(--nx-checkbox-border);
+  background: var(--nx-surface); box-shadow: var(--nx-shadow-xs);
+  transition: background-color var(--nx-dur) var(--nx-ease),
+              border-color var(--nx-dur) var(--nx-ease),
+              box-shadow var(--nx-dur) var(--nx-ease);
+}.nxt-ds .nx-radio:hover input:not(:disabled) + .nx-radio__box { border-color: var(--nx-checkbox-border-active); }/* The dot scales in rather than appearing, which is the only motion a radio
+   has to give. */.nxt-ds .nx-radio__dot {
+  width: 6px; height: 6px; border-radius: var(--nx-radius-full);
+  background: var(--nx-primary-fg); scale: 0;
+  transition: scale var(--nx-dur) var(--nx-ease-out);
+}.nxt-ds .nx-radio input:checked + .nx-radio__box {
+  border: 0; background: none;
+  background-image: var(--nx-grad-primary);
+  box-shadow: var(--nx-checkbox-selected-shadow);
+}.nxt-ds .nx-radio input:checked + .nx-radio__box .nx-radio__dot { scale: 1; }.nxt-ds .nx-radio input:focus-visible + .nx-radio__box {
+  outline: none; box-shadow: 0 0 0 2px var(--nx-bg), 0 0 0 4px var(--nx-input-ring);
+}.nxt-ds .nx-radio:has(input:disabled) { cursor: not-allowed; }.nxt-ds .nx-radio input:disabled + .nx-radio__box { opacity: .5; }.nxt-ds .nx-radio:has(input:disabled) > :not(.nx-radio__box):not(input) { opacity: .5; }.nxt-ds .nx-radio--sm .nx-radio__box { width: 14px; height: 14px; }.nxt-ds .nx-radio--sm .nx-radio__dot { width: 5px; height: 5px; }/* The group. Stacked by default, since options are usually sentences; the
+   inline modifier is for two or three short ones. */.nxt-ds .nx-radiogroup { display: flex; flex-direction: column; gap: 8px; }.nxt-ds .nx-radiogroup--inline { flex-direction: row; flex-wrap: wrap; gap: 16px; }/* The same control in a bordered card, matching .nx-check-card. */.nxt-ds .nx-radio-card {
+  display: flex; align-items: center; gap: 10px; padding: 12px 14px;
+  border: 1px solid var(--nx-border); border-radius: var(--nx-radius-xl);
+  background: var(--nx-surface); cursor: pointer; box-shadow: var(--nx-shadow-xs);
+  transition: border-color var(--nx-dur) var(--nx-ease), background-color var(--nx-dur) var(--nx-ease);
+}.nxt-ds .nx-radio-card:hover { border-color: var(--nx-border-hover); }.nxt-ds .nx-radio-card:has(input:checked) { border-color: var(--nx-primary); background: var(--nx-primary-subtle); }@media (prefers-reduced-motion: reduce) {.nxt-ds .nx-radio__dot { transition: none; }
+}/* ---- Switch ------------------------------------------------------------
+   BoardUI: three sizes, thumb inset evenly and moved with the `translate`
+   property. The ON track is a 500->600 gradient with the same inset highlight
+   the checkbox uses, scaled per size. The thumb has its OWN vertical gradient
+   (white -> neutral-100 in oklab, first stop at 43.837%).
+
+   The gradient stops are registered with @property so the OFF -> ON change
+   actually animates. Tailwind gets this for free by transitioning
+   --tw-gradient-from/to; plain background-image is not animatable.
+   ------------------------------------------------------------------------ */@property --nx-sw-from { syntax: '<color>'; inherits: false; initial-value: transparent; }@property --nx-sw-to { syntax: '<color>'; inherits: false; initial-value: transparent; }.nxt-ds .nx-switch {
+  display: inline-flex; align-items: center; gap: 8px;
+  cursor: pointer; user-select: none;
+  font-size: var(--nx-body-size); line-height: var(--nx-body-lh); color: var(--nx-text);
+}.nxt-ds .nx-switch input {
+  position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+  border: 0; overflow: hidden; white-space: nowrap;
+  clip: rect(0 0 0 0); clip-path: inset(50%);
+}.nxt-ds .nx-switch__track {
+  position: relative; flex-shrink: 0;
+  width: 42px; height: 24px; border-radius: var(--nx-radius-full);
+  --nx-sw-from: var(--nx-switch-track-off);
+  --nx-sw-to:   var(--nx-switch-track-off);
+  background-image: linear-gradient(180deg, var(--nx-sw-from) 0%, var(--nx-sw-to) 100%);
+  box-shadow: none;
+  transition: --nx-sw-from .2s var(--nx-ease), --nx-sw-to .2s var(--nx-ease),
+              box-shadow .2s var(--nx-ease);
+}.nxt-ds .nx-switch__track::after {
+  content: ""; position: absolute; inset: 3px auto 3px 3px;
+  width: 18px; height: 18px; border-radius: var(--nx-radius-full);
+  background-image: linear-gradient(in oklab, var(--nx-control-indicator) 43.837%, var(--nx-control-indicator-subtle) 100%);
+  box-shadow: 0 3px 3px 0 rgb(0 0 0 / .03), 0 .75px 0 0 rgb(0 0 0 / .05);
+  translate: 0;
+  transition: transform .2s var(--nx-ease), translate .2s var(--nx-ease),
+              scale .2s var(--nx-ease), rotate .2s var(--nx-ease);
+}.nxt-ds .nx-switch input:checked + .nx-switch__track {
+  --nx-sw-from: var(--nx-brand-500);
+  --nx-sw-to:   var(--nx-brand-600);
+  box-shadow: inset 0 1.5px 0 0 rgb(255 255 255 / .25), inset 0 0 0 .75px var(--nx-brand-500);
+}.nxt-ds .nx-switch input:checked + .nx-switch__track::after { translate: 18px; }/* the thumb carries an inner chip - easy to miss, but it is what makes the
+   switch read as "on" at a glance. It travels with the thumb. */.nxt-ds .nx-switch__track::before {
+  content: ""; position: absolute; z-index: 1;
+  left: 8.25px; top: 8.25px; width: 7.5px; height: 7.5px;
+  border-radius: var(--nx-radius-full);
+  border: .375px solid transparent;
+  background-image: linear-gradient(to top, var(--nx-switch-chip-off-start) 43.837%, var(--nx-switch-chip-off-end) 100%);
+  box-shadow: 0 3px 3px 0 rgb(0 0 0 / .03);
+  translate: 0;
+  transition: transform .2s var(--nx-ease), translate .2s var(--nx-ease),
+              scale .2s var(--nx-ease), rotate .2s var(--nx-ease);
+}.nxt-ds .nx-switch input:checked + .nx-switch__track::before {
+  border-color: var(--nx-brand-600);
+  background-image: linear-gradient(to top, var(--nx-switch-chip-start) 43.837%, var(--nx-switch-chip-end) 100%);
+  translate: 18px;
+}.nxt-ds .nx-switch--sm .nx-switch__track::before {
+  left: 5.5px; top: 5.5px; width: 5px; height: 5px;
+  border-width: .25px; box-shadow: 0 2px 2px 0 rgb(0 0 0 / .03);
+}.nxt-ds .nx-switch--sm input:checked + .nx-switch__track::before { translate: 12px; }.nxt-ds .nx-switch--lg .nx-switch__track::before {
+  left: 11px; top: 11px; width: 10px; height: 10px;
+  border-width: .5px; box-shadow: 0 4px 4px 0 rgb(0 0 0 / .03);
+}.nxt-ds .nx-switch--lg input:checked + .nx-switch__track::before { translate: 24px; }.nxt-ds .nx-switch input:focus-visible + .nx-switch__track {
+  outline: none; box-shadow: 0 0 0 2px var(--nx-bg), 0 0 0 4px var(--nx-input-ring);
+}/* No disabled switch exists on BoardUI's page to measure; this follows the
+   opacity-50 pattern their checkbox uses. */.nxt-ds .nx-switch:has(input:disabled) { cursor: not-allowed; }.nxt-ds .nx-switch input:disabled + .nx-switch__track { opacity: .5; }.nxt-ds .nx-switch:has(input:disabled) > :not(.nx-switch__track):not(input) { opacity: .5; }/* sm — 28x16, thumb 12, travel 12 */.nxt-ds .nx-switch--sm .nx-switch__track { width: 28px; height: 16px; }.nxt-ds .nx-switch--sm .nx-switch__track::after { inset: 2px auto 2px 2px; width: 12px; height: 12px; }.nxt-ds .nx-switch--sm input:checked + .nx-switch__track { box-shadow: inset 0 1px 0 0 rgb(255 255 255 / .25), inset 0 0 0 .5px var(--nx-brand-500); }.nxt-ds .nx-switch--sm input:checked + .nx-switch__track::after { translate: 12px; }/* lg — 56x32, thumb 24, travel 24 */.nxt-ds .nx-switch--lg .nx-switch__track { width: 56px; height: 32px; }.nxt-ds .nx-switch--lg .nx-switch__track::after { inset: 4px auto 4px 4px; width: 24px; height: 24px; }.nxt-ds .nx-switch--lg input:checked + .nx-switch__track { box-shadow: inset 0 2px 0 0 rgb(255 255 255 / .25), inset 0 0 0 1px var(--nx-brand-500); }.nxt-ds .nx-switch--lg input:checked + .nx-switch__track::after { translate: 24px; }@media (prefers-reduced-motion: reduce) {.nxt-ds .nx-switch__track, .nxt-ds .nx-switch__track::after, .nxt-ds .nx-switch__track::before { transition: none; }
+}/* ---- Slider ------------------------------------------------------------ */.nxt-ds .nx-slider { width: 100%; height: 20px; appearance: none; background: transparent; cursor: pointer; }.nxt-ds .nx-slider::-webkit-slider-runnable-track { height: 6px; border-radius: var(--nx-radius-full); background: linear-gradient(to right, var(--nx-primary-start) 0%, var(--nx-primary-end) var(--nx-slider-value, 50%), var(--nx-bg-emphasis) var(--nx-slider-value, 50%)); box-shadow: inset 0 0 0 1px var(--nx-border-subtle); }.nxt-ds .nx-slider::-webkit-slider-thumb {
+  appearance: none; width: 20px; height: 20px; margin-top: -7px; border-radius: 50%;
+  background: var(--nx-white); border: 1px solid var(--nx-border); box-shadow: 0 2px 4px #0000001a, inset 0 2px 0 #ffffff40;
+  transition: transform var(--nx-dur) var(--nx-ease-out);
+}.nxt-ds .nx-slider::-webkit-slider-thumb:hover { transform: scale(1.12); }.nxt-ds .nx-slider:focus-visible::-webkit-slider-thumb { box-shadow: var(--nx-focus-ring); }.nxt-ds .nx-slider::-moz-range-track { height: 6px; border-radius: var(--nx-radius-full); background: var(--nx-bg-emphasis); }.nxt-ds .nx-slider::-moz-range-progress { height: 6px; border-radius: var(--nx-radius-full); background: var(--nx-grad-primary); }.nxt-ds .nx-slider::-moz-range-thumb { width: 20px; height: 20px; border-radius: 50%; background: var(--nx-white); border: 1px solid var(--nx-border); box-shadow: 0 2px 4px #0000001a; }.nxt-ds .nx-slider:disabled { opacity: .5; cursor: not-allowed; }/* ---- Segmented control ------------------------------------------------- */.nxt-ds .nx-segmented {
+  display: inline-flex; padding: 4px; gap: 2px; background: var(--nx-segmented-bg);
+  border-radius: var(--nx-radius-2lg); border: 0;
+}.nxt-ds .nx-segmented__item {
+  appearance: none; border: 0; background: transparent; cursor: pointer;
+  height: 28px; padding-inline: 12px; border-radius: var(--nx-radius-md);
+  font-family: inherit; font-size: var(--nx-body-2-size); font-weight: var(--nx-weight-medium);
+  color: var(--nx-text-secondary);
+  transition: background-color var(--nx-dur) var(--nx-ease-out), color var(--nx-dur) var(--nx-ease-out);
+}.nxt-ds .nx-segmented__item:hover:not([aria-selected="true"]):not(:disabled) { color: var(--nx-text); }.nxt-ds .nx-segmented__item[aria-selected="true"] { background: var(--nx-surface); color: var(--nx-text); box-shadow: var(--nx-shadow-xs); }.nxt-ds .nx-segmented__item:focus-visible { outline: none; box-shadow: var(--nx-focus-ring); }.nxt-ds .nx-segmented__item:disabled { color: var(--nx-text-disabled); cursor: not-allowed; }/* ---- OTP --------------------------------------------------------------- */.nxt-ds .nx-otp { display: inline-flex; gap: 8px; }.nxt-ds .nx-otp__cell {
+  width: 48px; height: 48px; text-align: center; font-family: var(--nx-font-sans); font-size: var(--nx-headline-size);
+  font-weight: var(--nx-weight-medium); font-variant-numeric: tabular-nums;
+  border: 1px solid var(--nx-border); border-radius: var(--nx-radius-2lg);
+  background: var(--nx-surface); color: var(--nx-text); box-shadow: var(--nx-shadow-xs);
+}.nxt-ds .nx-otp__cell:focus { outline: none; border-color: var(--nx-border-focus); box-shadow: var(--nx-focus-ring); }.nxt-ds .nx-otp--filled .nx-otp__cell { border-color: var(--nx-success); }.nxt-ds .nx-otp__cell:disabled { background: var(--nx-input-bg-disabled); color: var(--nx-input-text-disabled); cursor: not-allowed; }.nxt-ds .nx-otp__cell[aria-invalid="true"] { border-color: var(--nx-border-error); background: var(--nx-danger-subtle); }/* ---- File upload ------------------------------------------------------
+   BoardUI stacks four layers over one 164px zone:
+     1. a dashed border overlay, which fades OUT once uploading starts
+     2. an SVG whose stroke draws the progress around the perimeter - it
+        starts at top centre and runs clockwise, with pathLength="100" so the
+        dash array is literally the percentage
+     3. a percentage pill sitting 9.5px above the top edge
+     4. content layers that cross-fade with a staggered blur+slide
+   ----------------------------------------------------------------------- */.nxt-ds .nx-upload {
+  position: relative; height: 164px; width: 100%; flex-shrink: 0;
+  border-radius: var(--nx-radius-2xl);
+  background: var(--nx-bg-muted);
+  cursor: pointer; outline: none; display: block;
+  transition: background-color .3s var(--nx-ease-out), color .3s var(--nx-ease-out);
+}.nxt-ds .nx-upload input[type="file"] { position: absolute; width: 1px; height: 1px; opacity: 0; clip-path: inset(50%); }/* 1 - dashed resting border */.nxt-ds .nx-upload__dashes {
+  pointer-events: none; position: absolute; inset: 0;
+  border: 2px dashed var(--nx-checkbox-border); border-radius: var(--nx-radius-2xl);
+  opacity: 1;
+  transition: opacity .3s var(--nx-ease-out), border-color .3s var(--nx-ease-out);
+}.nxt-ds .nx-upload:hover .nx-upload__dashes { border-color: var(--nx-border-active); }.nxt-ds .nx-upload.is-uploading .nx-upload__dashes, .nxt-ds .nx-upload.is-done .nx-upload__dashes { opacity: 0; }/* 2 - progress ring */.nxt-ds .nx-upload__ring {
+  pointer-events: none; position: absolute; inset: 0; width: 100%; height: 100%;
+  opacity: 0; transition: opacity .3s var(--nx-ease-out);
+}.nxt-ds .nx-upload.is-uploading .nx-upload__ring, .nxt-ds .nx-upload.is-done .nx-upload__ring { opacity: 1; }.nxt-ds .nx-upload__ring-track { stroke: var(--nx-border); stroke-width: 2; fill: none; }.nxt-ds .nx-upload__ring-bar {
+  stroke: var(--nx-brand-400); stroke-width: 2; fill: none; stroke-linecap: round;
+  transition: stroke-dasharray .2s linear;
+}/* 3 - percentage pill */.nxt-ds .nx-upload__pct {
+  position: absolute; top: -9.5px; left: 50%;
+  border-radius: var(--nx-radius-md); background: var(--nx-brand-400);
+  padding: 2px 6px; white-space: nowrap; color: var(--nx-white);
+  font-size: var(--nx-caption-1-size); line-height: var(--nx-caption-1-lh);
+  font-weight: var(--nx-weight-medium); letter-spacing: var(--nx-caption-1-ls);
+  font-variant-numeric: tabular-nums;
+  opacity: 0; translate: -50% -10px;
+  transition: opacity 160ms var(--nx-ease-out), filter 160ms var(--nx-ease-out), translate 300ms var(--nx-ease-out);
+}.nxt-ds .nx-upload.is-uploading .nx-upload__pct, .nxt-ds .nx-upload.is-done .nx-upload__pct { opacity: 1; translate: -50% 0; }/* 4 - content layers *//* Exactly one layer is visible at a time, driven purely by the zone's state.
+   `is-shown` must NOT control layer opacity - it only arms the stagger lines,
+   and the idle layer carries it from the start. */.nxt-ds .nx-upload__layer {
+  position: absolute; inset: 0; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 14px;
+  opacity: 0; visibility: hidden; pointer-events: none;
+  transition: opacity .3s var(--nx-ease-out), visibility 0s linear .3s;
+}.nxt-ds .nx-upload:not(.is-uploading):not(.is-done) .nx-upload__layer--idle, .nxt-ds .nx-upload.is-uploading .nx-upload__layer--busy, .nxt-ds .nx-upload.is-done .nx-upload__layer--busy {
+  opacity: 1; visibility: visible; transition: opacity .3s var(--nx-ease-out), visibility 0s;
+}/* the staggered blur + slide, straight from their .t-stagger-line */.nxt-ds .nx-stagger-line {
+  opacity: 0; transform: translateY(12px); filter: blur(3px);
+  transition: opacity .5s cubic-bezier(.22, 1, .36, 1),
+              transform .5s cubic-bezier(.22, 1, .36, 1),
+              filter .5s cubic-bezier(.22, 1, .36, 1);
+  will-change: transform, opacity, filter;
+}.nxt-ds .nx-stagger-line--2 { transition-delay: 40ms; }.nxt-ds .nx-stagger-line--3 { transition-delay: 80ms; }.nxt-ds .is-shown .nx-stagger-line { opacity: 1; transform: translateY(0); filter: blur(0); }.nxt-ds .nx-upload__icon {
+  display: flex; width: 40px; height: 40px; padding: 10px; flex-shrink: 0;
+  align-items: center; justify-content: center; border-radius: var(--nx-radius-full);
+  background: var(--nx-checkbox-border); color: var(--nx-text-tertiary);
+  transition: color var(--nx-dur) var(--nx-ease), background-color var(--nx-dur) var(--nx-ease);
+}.nxt-ds .nx-upload:hover .nx-upload__icon { color: var(--nx-text-secondary); }/* once a file is in flight the badge turns into an outlined white tile */.nxt-ds .nx-upload__icon--file { background: var(--nx-surface); border: 1px solid var(--nx-border); color: var(--nx-text-secondary); }.nxt-ds .nx-upload__name { font-size: var(--nx-body-size); line-height: var(--nx-body-lh); font-weight: var(--nx-weight-medium); color: var(--nx-text); }.nxt-ds .nx-upload__status { font-size: var(--nx-body-2-size); line-height: var(--nx-body-2-lh); color: var(--nx-text-secondary); }.nxt-ds .nx-upload__hint { font-size: var(--nx-body-2-size); line-height: var(--nx-body-2-lh); color: var(--nx-text-tertiary); }.nxt-ds .nx-upload__pick { color: var(--nx-brand-500); }@media (prefers-reduced-motion: reduce) {.nxt-ds .nx-stagger-line { transition: none; transform: none; filter: none; opacity: 1; }.nxt-ds .nx-upload__ring-bar, .nxt-ds .nx-upload__pct, .nxt-ds .nx-upload__dashes { transition: none; }
+}.nxt-ds .nx-upload__list { display: flex; flex-direction: column; gap: 9px; margin-top: 9px; width: 100%; }.nxt-ds .nx-upload__file {
+  display: flex; align-items: center; gap: 10px; padding: 10px 12px; width: 100%;
+  border: 1px solid var(--nx-border); border-radius: var(--nx-radius-xl); background: var(--nx-surface);
+}/* ---- Tabs --------------------------------------------------------------
+   Two variants, both driven by an indicator that SLIDES rather than
+   re-painting the active item:
+     underline  a 2px bar, sibling of the list, moved with transform + width
+     segmented  a white tile behind the items, moved with transform and
+                resized with width/height
+   Both animate over .2s cubic-bezier(.4, 0, .2, 1).
+   ------------------------------------------------------------------------ *//* --- underline --- */.nxt-ds .nx-tabs { position: relative; }.nxt-ds .nx-tabs__list {
+  display: flex; width: 100%; align-items: center; gap: 4px;
+  border-bottom: 1px solid var(--nx-border);
+}.nxt-ds .nx-tabs__tab {
+  position: relative; display: inline-flex; align-items: center; gap: 10px;
+  padding: 8px 10px; white-space: nowrap; cursor: pointer;
+  background: none; border: 0; font-family: inherit; outline: none;
+  transition: color var(--nx-dur) var(--nx-ease), background-color var(--nx-dur) var(--nx-ease);
+}/* Inset, not an outer ring: a tab row scrolls, and a scroll container clips
+   on every edge - an outer ring was cut off the first tab's top and left. */.nxt-ds .nx-tabs__tab:focus-visible { border-radius: var(--nx-radius-sm); box-shadow: inset 0 0 0 2px var(--nx-input-ring); }.nxt-ds .nx-tabs__tab:disabled { cursor: not-allowed; opacity: .5; }.nxt-ds .nx-tabs__label {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: var(--nx-body-size); line-height: var(--nx-body-lh);
+  font-weight: var(--nx-weight-regular); color: var(--nx-text);
+}.nxt-ds .nx-tabs__tab[aria-selected="true"] .nx-tabs__label { font-weight: var(--nx-weight-medium); color: var(--nx-tab-indicator); }.nxt-ds .nx-tabs__count {
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: var(--nx-radius-sm); padding: 1px 4px; white-space: nowrap;
+  font-size: var(--nx-caption-1-size); line-height: var(--nx-caption-1-lh);
+  font-weight: var(--nx-weight-medium); letter-spacing: var(--nx-caption-1-ls);
+  background: var(--nx-tab-count-bg); color: var(--nx-text);
+}.nxt-ds .nx-tabs__tab[aria-selected="true"] .nx-tabs__count { background: var(--nx-tab-count-selected-bg); color: var(--nx-tab-indicator); }.nxt-ds .nx-tabs__bar {
+  pointer-events: none; position: absolute; bottom: 0; left: 0;
+  height: 2px; width: 0; background: var(--nx-tab-indicator); transform: translateX(0);
+  transition: transform .2s var(--nx-ease), width .2s var(--nx-ease);
+}/* --- tabs, pill variant ---
+   The same row, marking the selection with a filled shape behind the tab
+   instead of a bar under it. The indicator takes the tab's whole box, so it
+   also animates height, and the list is padded to keep the shape clear of the
+   rule beneath it. The tabs are lifted over the indicator, which follows them
+   in the DOM and would otherwise paint on top of their labels. */.nxt-ds .nx-tabs--pill .nx-tabs__list { padding-bottom: 6px; }.nxt-ds .nx-tabs--pill .nx-tabs__tab { z-index: 1; }.nxt-ds .nx-tabs--pill .nx-tabs__bar {
+  top: 0; bottom: auto; height: 0;
+  border-radius: var(--nx-radius-lg); background: var(--nx-tab-pill-bg);
+  transition: transform .2s var(--nx-ease), width .2s var(--nx-ease), height .2s var(--nx-ease);
+}/* Follows the shape it is marking rather than the default tab radius. */.nxt-ds .nx-tabs--pill .nx-tabs__tab:focus-visible { border-radius: var(--nx-radius-lg); }/* The selected count is a step darker than the shape it sits on, not a colour
+   of its own: the underline variant tints it to match a brand-coloured label,
+   but here the label is plain text and a blue chip was the only colour in the
+   row. */.nxt-ds .nx-tabs--pill .nx-tabs__tab[aria-selected="true"] .nx-tabs__count {
+  background: var(--nx-tab-count-pill-bg); color: var(--nx-text);
+}.nxt-ds .nx-tabs--pill .nx-tabs__tab[aria-selected="true"] .nx-tabs__label { color: var(--nx-tab-pill-fg); }/* --- segmented --- */.nxt-ds .nx-segmented {
+  position: relative; display: inline-flex; align-items: flex-start; gap: 2px;
+  padding: 4px; border-radius: var(--nx-radius-2lg); background: var(--nx-segmented-bg);
+}.nxt-ds .nx-segmented__thumb {
+  pointer-events: none; position: absolute; left: 0; top: 0;
+  border-radius: var(--nx-radius-md); background: var(--nx-segmented-selected-bg);
+  box-shadow: var(--nx-shadow-2xs); transform: translate(4px, 4px);
+  transition: transform .2s var(--nx-ease), width .2s var(--nx-ease), height .2s var(--nx-ease);
+}.nxt-ds .nx-segmented__item {
+  position: relative; z-index: 1; display: inline-flex; align-items: center; justify-content: center;
+  padding: 4px 10px; border-radius: var(--nx-radius-md); border: 0; background: none;
+  cursor: pointer; text-align: center; white-space: nowrap; font-family: inherit;
+  font-size: var(--nx-body-size); line-height: var(--nx-body-lh); font-weight: var(--nx-weight-medium);
+  color: var(--nx-text-secondary);
+  transition: color .2s var(--nx-ease), background-color .2s var(--nx-ease);
+}.nxt-ds .nx-segmented__item[aria-selected="true"], .nxt-ds .nx-segmented__item[aria-checked="true"] { color: var(--nx-text); }.nxt-ds .nx-segmented__item:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--nx-input-ring); }.nxt-ds .nx-segmented__item:disabled { color: var(--nx-text-disabled); cursor: not-allowed; }@media (prefers-reduced-motion: reduce) {.nxt-ds .nx-tabs__bar, .nxt-ds .nx-segmented__thumb { transition: none; }
+}/* ---- Breadcrumb --------------------------------------------------------
+   BoardUI: 12px caption text, a 10px gap between items, chevron SVGs as
+   separators, and - counter-intuitively - the CURRENT page is DARKER than the
+   links rather than bolder. Links sit at tertiary, current at secondary, and
+   only the links get a hover surface.
+   ------------------------------------------------------------------------ */.nxt-ds .nx-crumbs {
+  display: flex; width: 100%; align-items: center;
+  overflow-x: auto; scrollbar-width: none;
+}.nxt-ds .nx-crumbs::-webkit-scrollbar { display: none; }.nxt-ds .nx-crumbs__list {
+  display: flex; align-items: center; gap: 10px;
+  padding: 0 4px; margin: 0; list-style: none;
+}.nxt-ds .nx-crumbs__item { display: flex; align-items: center; }.nxt-ds .nx-crumbs__link {
+  display: flex; align-items: center; gap: 6px; margin-inline: -4px;
+  padding: 2px 4px; border-radius: var(--nx-radius-md);
+  white-space: nowrap; text-decoration: none;
+  font-size: var(--nx-caption-1-size); line-height: var(--nx-caption-1-lh);
+  font-weight: var(--nx-weight-medium); letter-spacing: var(--nx-caption-1-ls);
+  color: var(--nx-text-tertiary);
+  transition: color var(--nx-dur) var(--nx-ease), background-color var(--nx-dur) var(--nx-ease);
+}.nxt-ds .nx-crumbs__link:hover { background: var(--nx-surface-hover); color: var(--nx-text); }.nxt-ds .nx-crumbs__link:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--nx-input-ring); }/* the current page is plain text, not a link */.nxt-ds .nx-crumbs__current {
+  display: flex; align-items: center; gap: 6px; white-space: nowrap;
+  font-size: var(--nx-caption-1-size); line-height: var(--nx-caption-1-lh);
+  font-weight: var(--nx-weight-medium); letter-spacing: var(--nx-caption-1-ls);
+  color: var(--nx-text-secondary);
+}.nxt-ds .nx-crumbs__sep { display: block; width: 12px; height: 12px; flex: none; color: var(--nx-text-tertiary); }/* ---- Pagination -------------------------------------------------------- */.nxt-ds .nx-pagination { display: inline-flex; align-items: center; gap: 8px; }.nxt-ds .nx-pagination__item {
+  min-width: 32px; height: 32px; padding-inline: 8px; border-radius: var(--nx-radius-md);
+  display: inline-flex; align-items: center; justify-content: center; cursor: pointer;
+  border: 1px solid transparent; background: transparent; color: var(--nx-text-secondary);
+  font-family: inherit; font-size: var(--nx-body-2-size); font-weight: var(--nx-weight-medium);
+  transition: background-color var(--nx-dur) var(--nx-ease-out);
+}.nxt-ds .nx-pagination__item:hover:not(:disabled):not([aria-current]) { background: var(--nx-surface-hover); color: var(--nx-text); }.nxt-ds .nx-pagination__item[aria-current="page"] { background: var(--nx-primary); color: var(--nx-primary-fg); }.nxt-ds .nx-pagination__item:disabled { color: var(--nx-text-disabled); cursor: not-allowed; }.nxt-ds .nx-pagination__gap { color: var(--nx-text-muted); padding-inline: 4px; user-select: none; }/* ---- Progress / Spinner / Skeleton ------------------------------------- */.nxt-ds .nx-progress { width: 100%; height: 6px; border-radius: var(--nx-radius-full); background: var(--nx-bg-emphasis); overflow: hidden; }.nxt-ds .nx-progress__bar { height: 100%; border-radius: inherit; background: var(--nx-primary); transition: width .38s var(--nx-ease); }.nxt-ds .nx-progress--success .nx-progress__bar { background: var(--nx-success); }.nxt-ds .nx-progress--danger  .nx-progress__bar { background: var(--nx-danger); }.nxt-ds .nx-progress--indeterminate .nx-progress__bar { width: 35% !important; animation: nx-indet 1.2s var(--nx-ease-out) infinite; }@keyframes nx-indet {0% { transform: translateX(-100%); }100% { transform: translateX(340%); } }.nxt-ds .nx-ring { transform: rotate(-90deg); }.nxt-ds .nx-ring__track { stroke: var(--nx-bg-emphasis); }.nxt-ds .nx-ring__bar { stroke: var(--nx-primary); stroke-linecap: round; transition: stroke-dashoffset .38s var(--nx-ease); }.nxt-ds .nx-spinner {
+  width: 18px; height: 18px; border-radius: 50%; display: inline-block;
+  border: 2px solid var(--nx-bg-emphasis); border-top-color: var(--nx-primary);
+  animation: nx-spin 0.6s linear infinite;
+}.nxt-ds .nx-spinner--sm { width: 14px; height: 14px; border-width: 1.5px; }.nxt-ds .nx-spinner--lg { width: 26px; height: 26px; border-width: 2.5px; }.nxt-ds .nx-skeleton {
+  background: linear-gradient(90deg, var(--nx-bg-muted) 25%, var(--nx-bg-emphasis) 37%, var(--nx-bg-muted) 63%);
+  background-size: 400% 100%; border-radius: var(--nx-radius-md);
+  animation: nx-shimmer 1.4s ease-in-out infinite; height: 12px;
+}.nxt-ds .nx-skeleton--text { height: 12px; border-radius: var(--nx-radius-xs); }.nxt-ds .nx-skeleton--circle { border-radius: 50%; }@keyframes nx-shimmer {0% { background-position: 100% 50%; }100% { background-position: 0 50%; } }@media (prefers-reduced-motion: reduce) {.nxt-ds .nx-skeleton, .nxt-ds .nx-spinner, .nxt-ds .nx-dot--pulse::after, .nxt-ds .nx-progress--indeterminate .nx-progress__bar { animation: none; }.nxt-ds * { transition-duration: 0.01ms !important; }
+}/* ---- Alert / Banner ---------------------------------------------------- */.nxt-ds .nx-alert {
+  display: flex; gap: 10px; padding: 12px 14px; border-radius: var(--nx-radius-lg);
+  border: 1px solid var(--nx-border); background: var(--nx-bg-subtle);
+  font-size: var(--nx-body-2-size); color: var(--nx-text); align-items: flex-start;
+}.nxt-ds .nx-alert__icon { flex: none; width: 18px; height: 18px; margin-top: 1px; color: var(--nx-text-muted); }.nxt-ds .nx-alert__title { font-weight: var(--nx-weight-semibold); margin: 0 0 2px; font-size: var(--nx-body-2-size); }.nxt-ds .nx-alert__body { color: var(--nx-text-secondary); }.nxt-ds .nx-alert--info { background: var(--nx-info-subtle);    border-color: var(--nx-info-border); }.nxt-ds .nx-alert--info    .nx-alert__icon { color: var(--nx-info-text); }.nxt-ds .nx-alert--success { background: var(--nx-success-subtle); border-color: var(--nx-success-border); }.nxt-ds .nx-alert--success .nx-alert__icon { color: var(--nx-success-text); }.nxt-ds .nx-alert--warning { background: var(--nx-warning-subtle); border-color: var(--nx-warning-border); }.nxt-ds .nx-alert--warning .nx-alert__icon { color: var(--nx-warning-text); }.nxt-ds .nx-alert--danger { background: var(--nx-danger-subtle);  border-color: var(--nx-danger-border); }.nxt-ds .nx-alert--danger  .nx-alert__icon { color: var(--nx-danger-text); }.nxt-ds .nx-banner {
+  display: flex; align-items: center; gap: 10px; padding: 10px 14px;
+  border-radius: var(--nx-radius-lg); background: var(--nx-neutral-950); color: var(--nx-white);
+  font-size: var(--nx-body-2-size);
+}.nxt-ds .nx-banner--brand { background: var(--nx-primary); color: var(--nx-primary-fg); }.nxt-ds .nx-banner--gradient { background: linear-gradient(100deg, var(--nx-brand-700), var(--nx-brand-500)); color: #fff; }/* ---- Notification / Toast ----------------------------------------------
+   BoardUI: a 400px card with a 40px tone badge, a 44px right inset for the
+   close button, and an optional 3px countdown bar pinned to the bottom edge
+   that empties with scaleX from a left origin. Enter and exit animate
+   opacity, blur and transform together - the same blur-in used by the upload.
+   ------------------------------------------------------------------------ */.nxt-ds .nx-toast {
+  position: relative; display: flex; width: 400px; max-width: 100%;
+  align-items: flex-start; gap: 12px; overflow: hidden;
+  padding: 16px 44px 16px 16px; border-radius: var(--nx-radius-2xl);
+  border: 1px solid var(--nx-border); background: var(--nx-surface);
+  box-shadow: var(--nx-shadow-dropdown);
+}.nxt-ds .nx-toast__badge {
+  position: relative; display: flex; width: 40px; height: 40px; flex-shrink: 0;
+  align-items: center; justify-content: center; border-radius: var(--nx-radius-full);
+  background: var(--nx-note-info-bg); color: var(--nx-note-info-fg);
+}.nxt-ds .nx-toast--error   .nx-toast__badge { background: var(--nx-note-error-bg);   color: var(--nx-note-error-fg); }.nxt-ds .nx-toast--success .nx-toast__badge { background: var(--nx-note-success-bg); color: var(--nx-note-success-fg); }.nxt-ds .nx-toast--warning .nx-toast__badge { background: var(--nx-note-warning-bg); color: var(--nx-note-warning-fg); }.nxt-ds .nx-toast__badge > svg { width: 20px; height: 20px; }/* the avatar variant swaps the badge for a real portrait */.nxt-ds .nx-toast__badge--avatar { background: var(--nx-bg-emphasis); color: var(--nx-text-secondary); overflow: hidden; font-size: var(--nx-body-2-size); font-weight: var(--nx-weight-medium); }/* --- toast, compact ---
+   A toast with a title and nothing else. The default is built for a title
+   over a line or two of body, so with one line the 40px badge towers over it
+   and flex-start leaves the title riding high against it. Here the row is
+   centred on the title and the badge is sized to it. */.nxt-ds .nx-toast--compact { align-items: center; padding-block: 12px; }.nxt-ds .nx-toast--compact .nx-toast__badge { width: 32px; height: 32px; }.nxt-ds .nx-toast--compact .nx-toast__badge > svg { width: 16px; height: 16px; }.nxt-ds .nx-toast--compact .nx-toast__content { gap: 0; }.nxt-ds .nx-toast__content { display: flex; min-width: 0; flex: 1; flex-direction: column; gap: 4px; }.nxt-ds .nx-toast__head { display: flex; min-width: 0; flex-wrap: wrap; align-items: baseline; column-gap: 8px; row-gap: 2px; }.nxt-ds .nx-toast__title {
+  margin: 0; font-size: var(--nx-body-size); line-height: var(--nx-body-lh);
+  font-weight: var(--nx-weight-medium); color: var(--nx-text);
+}.nxt-ds .nx-toast__time { font-size: var(--nx-caption-1-size); line-height: var(--nx-caption-1-lh); color: var(--nx-text-tertiary); }.nxt-ds .nx-toast__body {
+  margin: 0; font-size: var(--nx-body-size); line-height: var(--nx-body-lh);
+  font-weight: var(--nx-weight-regular); color: var(--nx-text-secondary);
+}.nxt-ds .nx-toast__actions { display: flex; gap: 8px; margin-top: 8px; }.nxt-ds .nx-toast__close {
+  position: absolute; top: 12px; right: 12px; width: 20px; height: 20px;
+  display: inline-flex; flex-shrink: 0; align-items: center; justify-content: center;
+  border: 0; border-radius: var(--nx-radius-full); cursor: pointer;
+  background: var(--nx-bg-emphasis); color: var(--nx-text-secondary);
+  transition: color var(--nx-dur) var(--nx-ease), background-color var(--nx-dur) var(--nx-ease);
+}.nxt-ds .nx-toast__close:hover { background: var(--nx-border-hover); color: var(--nx-text); }.nxt-ds .nx-toast__close:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--nx-input-ring); }.nxt-ds .nx-toast__close > svg { width: 11px; height: 11px; }/* countdown: empties left-to-right, so the remaining time reads as width */.nxt-ds .nx-toast__progress {
+  position: absolute; inset-inline: 0; bottom: 0; height: 3px;
+  transform-origin: left; background: var(--nx-note-progress);
+  transform: scaleX(1);
+}.nxt-ds .nx-toast--error   .nx-toast__progress { background: var(--nx-note-error-fg); }.nxt-ds .nx-toast--success .nx-toast__progress { background: var(--nx-note-success-fg); }/* enter / exit — opacity, blur and lift move together */.nxt-ds .nx-toast { opacity: 1; filter: blur(0); transform: none;
+  transition: opacity .3s var(--nx-ease-out), filter .3s var(--nx-ease-out), transform .3s var(--nx-ease-out); }.nxt-ds .nx-toast.is-entering, .nxt-ds .nx-toast.is-leaving { opacity: 0; filter: blur(3px); transform: translateY(12px); }.nxt-ds .nx-toaster {
+  position: fixed; right: 24px; bottom: 24px; z-index: var(--nx-z-toast);
+  display: flex; flex-direction: column-reverse; gap: 10px; pointer-events: none;
+}.nxt-ds .nx-toaster > * { pointer-events: auto; }@media (prefers-reduced-motion: reduce) {.nxt-ds .nx-toast { transition: none; }.nxt-ds .nx-toast__progress { transition: none !important; }
+}/* ---- Card -------------------------------------------------------------- */.nxt-ds .nx-card {
+  background: var(--nx-surface); border: 1px solid var(--nx-border);
+  border-radius: var(--nx-radius-xl); box-shadow: var(--nx-shadow-xs); overflow: hidden;
+}.nxt-ds .nx-card__body { padding: 16px; }.nxt-ds .nx-card__header { padding: 14px 16px; border-bottom: 1px solid var(--nx-border-subtle); display: flex; align-items: center; justify-content: space-between; gap: 10px; }.nxt-ds .nx-card__footer { padding: 12px 16px; border-top: 1px solid var(--nx-border-subtle); background: var(--nx-bg-subtle); }.nxt-ds .nx-card--hover { transition: box-shadow var(--nx-dur) var(--nx-ease-out), transform var(--nx-dur) var(--nx-ease-out); }.nxt-ds .nx-card--hover:hover { box-shadow: var(--nx-shadow-md); transform: translateY(-2px); }.nxt-ds .nx-stat { display: flex; flex-direction: column; gap: 4px; }.nxt-ds .nx-stat__label { font-size: var(--nx-caption-1-size); color: var(--nx-text-muted); font-weight: var(--nx-weight-medium); }.nxt-ds .nx-stat__value { font-size: var(--nx-title-1-size); font-weight: var(--nx-weight-semibold);  line-height: 1.1; }.nxt-ds .nx-stat__delta { font-size: var(--nx-caption-1-size); font-weight: var(--nx-weight-medium); display: inline-flex; align-items: center; gap: 3px; }.nxt-ds .nx-stat__delta--up { color: var(--nx-success-text); }.nxt-ds .nx-stat__delta--down { color: var(--nx-danger-text); }/* ---- Table ------------------------------------------------------------- */.nxt-ds .nx-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: var(--nx-body-size); line-height: var(--nx-body-lh); }.nxt-ds .nx-table th {
+  text-align: left; font-weight: var(--nx-weight-medium); color: var(--nx-text-muted);
+  height: 45px; padding: 10px 12px; background: var(--nx-bg-subtle); white-space: nowrap;
+  border-bottom: 1px solid var(--nx-border);
+}.nxt-ds .nx-table th:first-child { border-start-start-radius: var(--nx-radius-md); }.nxt-ds .nx-table th:last-child { border-start-end-radius: var(--nx-radius-md); }.nxt-ds .nx-table td { height: 59px; padding: 10px 12px; border-bottom: 1px solid var(--nx-border-subtle); color: var(--nx-text); font-weight: var(--nx-weight-medium); }.nxt-ds .nx-table tbody tr:last-child td { border-bottom: 0; }.nxt-ds .nx-table tbody tr:hover td { background: var(--nx-bg-subtle); }.nxt-ds .nx-table__sort { display: inline-flex; align-items: center; gap: 4px; cursor: pointer; }.nxt-ds .nx-table__sort:hover { color: var(--nx-text); }/* ---- Tooltip -----------------------------------------------------------
+   Not a dark chip. BoardUI's tooltip is a WHITE bordered card with the
+   dropdown shadow, and the arrow is a filled SVG triangle carrying the same
+   border stroke plus its own drop-shadow so it reads as part of the card.
+   Enter and exit both scale from .9, fade from 0 and blur 4px, over .2s
+   ease-out.
+   ------------------------------------------------------------------------ */.nxt-ds .nx-tooltip {
+  position: relative; display: inline-block; pointer-events: none;
+  max-width: 240px; user-select: none;
+  padding: 8px 12px; border-radius: var(--nx-radius-2lg);
+  border: 1px solid var(--nx-border); background: var(--nx-surface);
+  color: var(--nx-text); box-shadow: var(--nx-shadow-dropdown);
+  font-size: var(--nx-body-size); line-height: var(--nx-body-lh);
+  font-weight: var(--nx-weight-medium);
+  transition: opacity .2s var(--nx-ease-out), transform .2s var(--nx-ease-out), filter .2s var(--nx-ease-out);
+}.nxt-ds .nx-tooltip--sm {
+  padding: 6px 10px; border-radius: var(--nx-radius-lg);
+  font-size: var(--nx-caption-1-size); line-height: var(--nx-caption-1-lh);
+  letter-spacing: var(--nx-caption-1-ls);
+}/* entering and exiting are the SAME treatment, as on theirs */.nxt-ds .nx-tooltip.is-entering, .nxt-ds .nx-tooltip.is-exiting { opacity: 0; transform: scale(.9); filter: blur(4px); }.nxt-ds .nx-tooltip__arrow {
+  position: absolute; display: block; overflow: visible;
+  width: 12px; height: 7px;
+  fill: var(--nx-surface); stroke: var(--nx-border); stroke-width: 1;
+  filter: drop-shadow(0 1.5px 1px rgb(0 0 0 / .05));
+}/* Pulled back 1px so the card's own border does not run across the arrow's
+   open top edge - without this the join reads as a notch rather than a point. */.nxt-ds .nx-tooltip--top    .nx-tooltip__arrow { bottom: -6px; left: 50%; transform: translateX(-50%); }.nxt-ds .nx-tooltip--bottom .nx-tooltip__arrow { top: -6px; left: 50%; transform: translateX(-50%) rotate(180deg); }.nxt-ds .nx-tooltip--left   .nx-tooltip__arrow { right: -8px; top: 50%; transform: translateY(-50%) rotate(-90deg); }.nxt-ds .nx-tooltip--right  .nx-tooltip__arrow { left: -8px; top: 50%; transform: translateY(-50%) rotate(90deg); }.nxt-ds .nx-tooltip--noarrow .nx-tooltip__arrow { display: none; }/* --- live trigger ---
+   A positioning layer holds the placement offset so the tooltip keeps its own
+   transform for the scale animation; the two would otherwise fight. Hidden
+   with visibility so it is not focusable or hit-testable while closed, and
+   the visibility delay lets the exit animation finish before it disappears. */.nxt-ds .nx-tip { position: relative; display: inline-flex; }.nxt-ds .nx-tip__layer {
+  position: absolute; z-index: var(--nx-z-tooltip);
+  opacity: 0; visibility: hidden;
+  transition: opacity .2s var(--nx-ease-out), visibility 0s linear .2s;
+}.nxt-ds .nx-tip:hover .nx-tip__layer, .nxt-ds .nx-tip:focus-within .nx-tip__layer {
+  opacity: 1; visibility: visible; transition: opacity .2s var(--nx-ease-out), visibility 0s;
+}.nxt-ds .nx-tip__layer .nx-tooltip { opacity: 0; transform: scale(.9); filter: blur(4px); }.nxt-ds .nx-tip:hover .nx-tip__layer .nx-tooltip, .nxt-ds .nx-tip:focus-within .nx-tip__layer .nx-tooltip { opacity: 1; transform: none; filter: blur(0); }.nxt-ds .nx-tip--top .nx-tip__layer { bottom: calc(100% + 8px); left: 50%; translate: -50% 0; }.nxt-ds .nx-tip--bottom .nx-tip__layer { top: calc(100% + 8px); left: 50%; translate: -50% 0; }.nxt-ds .nx-tip--left .nx-tip__layer { right: calc(100% + 8px); top: 50%; translate: 0 -50%; }.nxt-ds .nx-tip--right .nx-tip__layer { left: calc(100% + 8px); top: 50%; translate: 0 -50%; }@media (prefers-reduced-motion: reduce) {.nxt-ds .nx-tooltip { transition: none; } }.nxt-ds .nx-menu {
+  min-width: 200px; padding: 5px; border-radius: var(--nx-radius-2xl);
+  background: var(--nx-surface-raised); border: 1px solid var(--nx-border);
+  box-shadow: var(--nx-shadow-dropdown);
+}.nxt-ds .nx-menu__item {
+  display: flex; align-items: center; gap: 9px; width: 100%; padding: 7px 9px;
+  border: 0; background: transparent; border-radius: var(--nx-radius-md); cursor: pointer;
+  font-family: inherit; font-size: var(--nx-body-2-size); color: var(--nx-text); text-align: left;
+}.nxt-ds .nx-menu__item:hover:not(:disabled) { background: var(--nx-surface-hover); }.nxt-ds .nx-menu__item:focus-visible { outline: none; background: var(--nx-surface-hover); box-shadow: var(--nx-focus-ring); }.nxt-ds .nx-menu__item--danger { color: var(--nx-danger-text); }.nxt-ds .nx-menu__item--danger:hover { background: var(--nx-danger-subtle); }.nxt-ds .nx-menu__item:disabled { color: var(--nx-text-disabled); cursor: not-allowed; }.nxt-ds .nx-menu__sep { height: 1px; background: var(--nx-border-subtle); margin: 5px 0; border: 0; }.nxt-ds .nx-menu__label { padding: 6px 9px 4px; font-size: var(--nx-caption-2-size); font-weight: var(--nx-weight-semibold); color: var(--nx-text-muted); text-transform: uppercase;  }.nxt-ds .nx-popover {
+  min-width: 240px; padding: 14px; border-radius: var(--nx-radius-xl);
+  background: var(--nx-surface-raised); border: 1px solid var(--nx-border); box-shadow: var(--nx-shadow-lg);
+}/* ---- Modal -------------------------------------------------------------
+   BoardUI ships no standalone modal, so this follows the conventions their
+   notification already sets: 16px radius, the dropdown shadow, and a 40px
+   round tone badge holding a 20px icon.
+   ------------------------------------------------------------------------ */.nxt-ds .nx-modal {
+  width: 440px; max-width: 100%;
+  border-radius: var(--nx-radius-2xl);
+  background: var(--nx-surface); border: 1px solid var(--nx-border);
+  box-shadow: var(--nx-shadow-xl); overflow: hidden;
+}.nxt-ds .nx-modal__header { padding: 20px 20px 0; }.nxt-ds .nx-modal__icon {
+  display: flex; width: 40px; height: 40px; flex-shrink: 0; margin-bottom: 14px;
+  align-items: center; justify-content: center; border-radius: var(--nx-radius-full);
+  background: var(--nx-note-info-bg); color: var(--nx-note-info-fg);
+}.nxt-ds .nx-modal__icon > svg { width: 20px; height: 20px; }.nxt-ds .nx-modal--danger  .nx-modal__icon { background: var(--nx-note-error-bg);   color: var(--nx-note-error-fg); }.nxt-ds .nx-modal--success .nx-modal__icon { background: var(--nx-note-success-bg); color: var(--nx-note-success-fg); }.nxt-ds .nx-modal--warning .nx-modal__icon { background: var(--nx-note-warning-bg); color: var(--nx-note-warning-fg); }.nxt-ds .nx-modal__title {
+  margin: 0; font-size: var(--nx-title-3-size); line-height: var(--nx-title-3-lh);
+  font-weight: var(--nx-weight-semibold); color: var(--nx-text);
+}.nxt-ds .nx-modal__body {
+  padding: 6px 20px 20px; margin: 0;
+  font-size: var(--nx-body-size); line-height: var(--nx-body-lh);
+  color: var(--nx-text-secondary);
+}.nxt-ds .nx-modal__footer {
+  display: flex; justify-content: flex-end; gap: 8px;
+  padding: 14px 20px; background: var(--nx-bg-subtle);
+  border-top: 1px solid var(--nx-border-subtle);
+}.nxt-ds .nx-scrim { position: absolute; inset: 0; background: var(--nx-surface-overlay); border-radius: inherit; }.nxt-ds .nx-drawer {
+  width: 300px; height: 100%; background: var(--nx-surface-raised);
+  border-left: 1px solid var(--nx-border); box-shadow: var(--nx-shadow-xl);
+  display: flex; flex-direction: column;
+}/* ---- Badge, Dot, Chip, Kbd ---------------------------------------------
+   These had spec entries in the showroom but no CSS, so the Badge page
+   rendered unstyled. Subtle fills throughout; solid is deliberately rare and
+   reserved for the one thing on a screen that has to win attention.
+   ------------------------------------------------------------------------ */.nxt-ds .nx-badge {
+  display: inline-flex; align-items: center; justify-content: center; gap: 5px;
+  height: 22px; padding: 0 8px; border-radius: var(--nx-radius-full);
+  font-family: inherit; font-size: var(--nx-caption-1-size); line-height: 1;
+  font-weight: var(--nx-weight-medium); letter-spacing: var(--nx-caption-1-ls);
+  white-space: nowrap; border: 1px solid transparent;
+  background: var(--nx-surface-hover); color: var(--nx-text-secondary);
+}.nxt-ds .nx-badge--primary { background: var(--nx-info-subtle);    color: var(--nx-info-text); }.nxt-ds .nx-badge--success { background: var(--nx-success-subtle); color: var(--nx-success-text); }.nxt-ds .nx-badge--warning { background: var(--nx-warning-subtle); color: var(--nx-warning-text); }.nxt-ds .nx-badge--danger { background: var(--nx-danger-subtle);  color: var(--nx-danger-text); }.nxt-ds .nx-badge--info { background: var(--nx-info-subtle);    color: var(--nx-info-text); }.nxt-ds .nx-badge--solid { background: var(--nx-brand-600); color: var(--nx-primary-fg); }.nxt-ds .nx-badge--outline { background: transparent; border-color: var(--nx-border); color: var(--nx-text-secondary); }.nxt-ds .nx-badge--square { border-radius: var(--nx-radius-sm); }.nxt-ds .nx-badge--sm { height: 18px; padding: 0 6px; font-size: var(--nx-caption-2-size); }.nxt-ds .nx-badge--lg { height: 26px; padding: 0 10px; font-size: var(--nx-body-2-size); }.nxt-ds .nx-dot {
+  display: inline-block; position: relative; flex: none;
+  width: 8px; height: 8px; border-radius: var(--nx-radius-full);
+  background: var(--nx-text-muted);
+}.nxt-ds .nx-dot--primary { background: var(--nx-brand-600); }.nxt-ds .nx-dot--success { background: var(--nx-success); }.nxt-ds .nx-dot--warning { background: var(--nx-warning); }.nxt-ds .nx-dot--danger { background: var(--nx-danger); }.nxt-ds .nx-dot--pulse::after {
+  content: ""; position: absolute; inset: 0; border-radius: inherit;
+  background: inherit; animation: nx-dot-pulse 1.8s ease-out infinite;
+}@keyframes nx-dot-pulse {0% { transform: scale(1);   opacity: .6; }100% { transform: scale(2.6); opacity: 0; }
+}.nxt-ds .nx-chip {
+  display: inline-flex; align-items: center; gap: 4px;
+  height: 28px; padding: 0 6px 0 10px; border-radius: var(--nx-radius-full);
+  font-family: inherit; font-size: var(--nx-body-2-size); line-height: 1;
+  font-weight: var(--nx-weight-medium); white-space: nowrap;
+  background: var(--nx-surface-hover); color: var(--nx-text);
+  border: 1px solid transparent;
+}.nxt-ds .nx-chip--selected { background: var(--nx-info-subtle); border-color: var(--nx-info-border); color: var(--nx-info-text); }.nxt-ds .nx-chip__x {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 18px; height: 18px; padding: 0; border: 0; border-radius: var(--nx-radius-full);
+  background: transparent; color: inherit; font-family: inherit; font-size: 14px;
+  line-height: 1; cursor: pointer; opacity: .6;
+  transition: opacity var(--nx-dur) var(--nx-ease), background-color var(--nx-dur) var(--nx-ease);
+}.nxt-ds .nx-chip__x:hover { opacity: 1; background: var(--nx-surface-hover); }.nxt-ds .nx-chip__x:focus-visible { outline: none; opacity: 1; box-shadow: 0 0 0 2px var(--nx-input-ring); }.nxt-ds .nx-kbd {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 22px; height: 22px; padding: 0 6px;
+  border-radius: var(--nx-radius-md); border: 1px solid var(--nx-border);
+  background: var(--nx-surface); color: var(--nx-text-secondary);
+  font-family: var(--nx-font-mono, ui-monospace, monospace);
+  font-size: var(--nx-caption-1-size); line-height: 1;
+}/* ---- Empty / Accordion / Stepper / Divider ----------------------------- */.nxt-ds .nx-empty { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 6px; padding: 34px 20px; }.nxt-ds .nx-empty__art {
+  width: 46px; height: 46px; border-radius: var(--nx-radius-xl); margin-bottom: 4px;
+  background: var(--nx-bg-muted); color: var(--nx-text-muted);
+  display: inline-flex; align-items: center; justify-content: center;
+}/* The hidden attribute always wins: a component's own display rule would
+   otherwise show an element the markup asked to hide (a native file input
+   behind a picker button, say). */.nxt-ds [hidden] { display: none !important; }/* ---- Accordion ---------------------------------------------------------
+   BoardUI ships no accordion, so this follows our own system. The panel
+   collapses with grid-template-rows 0fr -> 1fr, which animates to the real
+   content height without measuring it in JS - the same technique BoardUI uses
+   for its row-grow-in keyframes.
+   ------------------------------------------------------------------------ */.nxt-ds .nx-accordion { border: 1px solid var(--nx-border); border-radius: var(--nx-radius-2xl); overflow: hidden; background: var(--nx-surface); }.nxt-ds .nx-accordion__item + .nx-accordion__item { border-top: 1px solid var(--nx-border-subtle); }.nxt-ds .nx-accordion__trigger {
+  width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  padding: 13px 15px; background: transparent; border: 0; cursor: pointer; text-align: left;
+  font-family: inherit; font-size: var(--nx-body-size); line-height: var(--nx-body-lh);
+  font-weight: var(--nx-weight-medium); color: var(--nx-text);
+  transition: background-color var(--nx-dur) var(--nx-ease);
+}.nxt-ds .nx-accordion__trigger:hover { background: var(--nx-bg-subtle); }.nxt-ds .nx-accordion__trigger:focus-visible { outline: none; box-shadow: inset 0 0 0 2px var(--nx-input-ring); }.nxt-ds .nx-accordion__chev {
+  display: inline-flex; flex: none; color: var(--nx-text-secondary);
+  transition: transform .2s var(--nx-ease);
+}.nxt-ds .nx-accordion__trigger[aria-expanded="true"] .nx-accordion__chev { transform: rotate(180deg); }.nxt-ds .nx-accordion__panel {
+  display: grid; grid-template-rows: 0fr;
+  transition: grid-template-rows .2s var(--nx-ease);
+}.nxt-ds .nx-accordion__trigger[aria-expanded="true"] + .nx-accordion__panel { grid-template-rows: 1fr; }/* The grid item must carry NO padding: 0fr zeroes the content row but padding
+   is not part of it, so a padded grid item stays visible at its padding
+   height. The padding therefore lives one level deeper. */.nxt-ds .nx-accordion__panel-inner { overflow: hidden; min-height: 0; }.nxt-ds .nx-accordion__panel-body {
+  padding: 0 15px 14px; color: var(--nx-text-secondary);
+  font-size: var(--nx-body-2-size); line-height: var(--nx-body-2-lh);
+}@media (prefers-reduced-motion: reduce) {.nxt-ds .nx-accordion__panel, .nxt-ds .nx-accordion__chev { transition: none; }
+}.nxt-ds .nx-stepper { display: flex; align-items: center; gap: 0; }.nxt-ds .nx-stepper__step { display: inline-flex; align-items: center; gap: 8px; }.nxt-ds .nx-stepper__dot {
+  width: 24px; height: 24px; border-radius: 50%; flex: none;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: var(--nx-caption-1-size); font-weight: var(--nx-weight-semibold);
+  background: var(--nx-bg-emphasis); color: var(--nx-text-muted);
+}.nxt-ds .nx-stepper__step--done .nx-stepper__dot { background: var(--nx-success); color: var(--nx-success-fg); }.nxt-ds .nx-stepper__step--active .nx-stepper__dot { background: var(--nx-primary); color: var(--nx-primary-fg); box-shadow: var(--nx-focus-ring); }.nxt-ds .nx-stepper__bar { width: 44px; height: 2px; background: var(--nx-bg-emphasis); margin-inline: 10px; border-radius: 1px; }.nxt-ds .nx-stepper__bar--done { background: var(--nx-success); }.nxt-ds .nx-divider { height: 1px; background: var(--nx-border); border: 0; margin: 0; }.nxt-ds .nx-divider--label { display: flex; align-items: center; gap: 12px; color: var(--nx-text-muted); font-size: var(--nx-caption-1-size); }.nxt-ds .nx-divider--label::before, .nxt-ds .nx-divider--label::after { content: ""; flex: 1; height: 1px; background: var(--nx-border); }/* ---- Sidebar -----------------------------------------------------------
+   BoardUI's sidebar: a raised panel whose border is LIGHTER than its fill,
+   which is what makes it read as lifted rather than outlined. Rows are 36px
+   on a 4px rhythm, and the selected row takes the same 500->600 gradient and
+   inset highlight the buttons and controls use - selection is one gesture
+   across the whole system.
+   ------------------------------------------------------------------------ */.nxt-ds .nx-sidebar {
+  display: flex; flex-direction: column; justify-content: space-between;
+  width: 260px; padding: 12px; overflow: hidden;
+  border-radius: var(--nx-radius-3xl);
+  border: 1px solid var(--nx-white);
+  background: var(--nx-neutral-100);
+  box-shadow: var(--nx-shadow-sidebar);
+}.nxt-ds .nx-sidebar__group { display: flex; flex-direction: column; gap: 4px; }.nxt-ds .nx-sidebar__section {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  padding: 16px 8px 6px;
+  font-size: var(--nx-caption-2-size); line-height: var(--nx-caption-2-lh);
+  font-weight: var(--nx-weight-semibold); letter-spacing: .06em;
+  text-transform: uppercase; color: var(--nx-text-tertiary);
+}.nxt-ds .nx-sidebar__item {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  width: 100%; min-height: 36px; padding: 8px; border: 0;
+  border-radius: var(--nx-radius-2lg); overflow: hidden;
+  background: none; cursor: pointer; text-align: left; text-decoration: none;
+  font-family: inherit; font-size: var(--nx-body-size); line-height: var(--nx-body-lh);
+  font-weight: var(--nx-weight-medium); color: var(--nx-text-secondary);
+  /* Only the hover fill eases. The active fill is a gradient image, which
+     cannot animate, so it switches at once - an easing text colour lagged
+     behind it: grey on blue on the new item, white on white on the old. */
+  transition: background-color .3s var(--nx-ease);
+}.nxt-ds .nx-sidebar__item:hover:not(.is-active):not(:disabled) { background: var(--nx-neutral-200); color: var(--nx-text); }.nxt-ds .nx-sidebar__item:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--nx-input-ring); }.nxt-ds .nx-sidebar__item:disabled { opacity: .55; cursor: default; }.nxt-ds .nx-sidebar__lead { display: inline-flex; align-items: center; gap: 8px; min-width: 0; }.nxt-ds .nx-sidebar__item svg { width: 20px; height: 20px; flex: none; }.nxt-ds .nx-sidebar__label { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }.nxt-ds .nx-sidebar__item.is-active {
+  background-image: var(--nx-grad-primary);
+  box-shadow: inset 0 1px 0 0 rgb(255 255 255 / .25);
+  color: var(--nx-white);
+}.nxt-ds .nx-sidebar__count {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 1px 4px; border-radius: var(--nx-radius-sm);
+  font-size: var(--nx-caption-1-size); line-height: var(--nx-caption-1-lh);
+  font-weight: var(--nx-weight-semibold); white-space: nowrap;
+  background: var(--nx-neutral-300); color: var(--nx-text-secondary);
+}.nxt-ds .nx-sidebar__item.is-active .nx-sidebar__count { background: var(--nx-brand-400); color: var(--nx-white); }.nxt-ds .nx-sidebar__status {
+  display: inline-flex; align-items: center; gap: 5px; height: 20px;
+  padding: 0 8px; border-radius: var(--nx-radius-full);
+  font-size: var(--nx-caption-2-size); font-weight: var(--nx-weight-medium);
+  letter-spacing: 0; text-transform: none; white-space: nowrap;
+}.nxt-ds .nx-sidebar__status::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }.nxt-ds .nx-sidebar__status--active { background: var(--nx-success-subtle); color: var(--nx-success-text); }.nxt-ds .nx-sidebar__status--install { background: var(--nx-danger-subtle); color: var(--nx-danger-text); }.nxt-ds .nx-sidebar__divider { height: 1px; margin: 8px 0; background: var(--nx-border); border: 0; }.nxt-ds .nx-sidebar__lock { display: inline-flex; color: var(--nx-text-tertiary); }.nxt-ds .nx-sidebar__lock svg { width: 14px; height: 14px; }/* ---- Panel group + row --------------------------------------------------
+   The settings layout inside a side panel, taken from BoardUI's agent editor.
+   Settings are split into groups; each group is one soft card with no border
+   or shadow - the fill alone sets it off from the white panel. Inside, rows
+   are split by a hairline that runs between rows only. A row is either
+   inline (name and help on the left, control on the right) or stacked (a
+   wide control beneath its name). Fields inside a group take a darker fill
+   instead of a border.
+   ------------------------------------------------------------------------ */.nxt-ds .nx-pgroup { display: flex; flex-direction: column; gap: 8px; }.nxt-ds .nx-pgroup + .nx-pgroup { margin-top: 12px; }.nxt-ds .nx-pgroup__head { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding-inline: 4px; }.nxt-ds .nx-pgroup__title {
+  margin: 0; font-size: var(--nx-body-2-size); line-height: var(--nx-body-2-lh);
+  font-weight: var(--nx-weight-medium); color: var(--nx-text-secondary);
+}.nxt-ds .nx-pgroup__card {
+  display: flex; flex-direction: column;
+  padding: 0 12px; border-radius: var(--nx-radius-2xl);
+  background: var(--nx-pgroup-bg);
+}.nxt-ds .nx-pgroup__card--pad { padding: 12px; gap: 12px; }.nxt-ds .nx-prow {
+  position: relative;
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  min-height: 52px; padding: 10px 0;
+}/* Any block placed straight in a card is a row: a hairline between it and
+   the next, and room above and below. Rows set their own padding. */.nxt-ds .nx-pgroup__card > * + * { border-top: 1px solid var(--nx-border); }.nxt-ds .nx-pgroup__card > :not(.nx-prow) { padding-block: 12px; }.nxt-ds .nx-pgroup__card--pad > * + * { border-top: 0; }.nxt-ds .nx-pgroup__card--pad > :not(.nx-prow) { padding-block: 0; }/* Collapsible group: for long style forms. The first row of the card is the
+   trigger - the group's name and a chevron - so a collapsed group still reads
+   as one card in a stack of them. The body is unmounted while closed, so
+   popovers and menus inside are never clipped by a collapse animation. *//* A run of collapsible groups sits closer than ordinary groups: they read as
+   one list of sections. Wrap the run in .nx-pgroup-stack. */.nxt-ds .nx-pgroup-stack { display: flex; flex-direction: column; gap: 8px; }.nxt-ds .nx-pgroup-stack > .nx-pgroup + .nx-pgroup { margin-top: 0; }.nxt-ds .nx-pgroup__trigger {
+  width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  min-height: 48px; padding: 12px 0; margin: 0; border: 0; background: transparent; cursor: pointer;
+  font-family: inherit; text-align: left; color: var(--nx-text);
+  font-size: var(--nx-body-2-size); line-height: var(--nx-body-2-lh); font-weight: var(--nx-weight-medium);
+}.nxt-ds .nx-pgroup__trigger:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--nx-input-ring); border-radius: var(--nx-radius-md); }.nxt-ds .nx-pgroup__trigger-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }.nxt-ds .nx-pgroup__trigger-desc { font-size: var(--nx-caption-1-size); line-height: var(--nx-caption-1-lh); font-weight: var(--nx-weight-regular); color: var(--nx-text-secondary); }.nxt-ds .nx-pgroup__chev { display: inline-flex; flex: none; color: var(--nx-text-secondary); transition: transform var(--nx-dur) var(--nx-ease); }.nxt-ds .nx-pgroup__trigger[aria-expanded="true"] .nx-pgroup__chev { transform: rotate(180deg); }.nxt-ds .nx-pgroup__card > .nx-pgroup__body { display: flex; flex-direction: column; padding-block: 0; border-top: 0; }/* The trigger sits above, so every block in the body takes a hairline. */.nxt-ds .nx-pgroup__body > * { border-top: 1px solid var(--nx-border); }.nxt-ds .nx-pgroup__body > :not(.nx-prow) { padding-block: 12px; }.nxt-ds .nx-prow--stacked { flex-direction: column; align-items: stretch; gap: 8px; padding: 12px 0; }.nxt-ds .nx-prow__head { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-width: 0; }.nxt-ds .nx-prow__lead { display: flex; align-items: center; gap: 10px; min-width: 0; flex: 1 1 auto; }.nxt-ds .nx-prow__icon { display: inline-flex; flex: none; color: var(--nx-text-secondary); }.nxt-ds .nx-prow__icon svg { width: 20px; height: 20px; }.nxt-ds .nx-prow__text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }.nxt-ds .nx-prow__label {
+  margin: 0; font-size: var(--nx-body-2-size); line-height: var(--nx-body-2-lh);
+  font-weight: var(--nx-weight-medium); color: var(--nx-text);
+}.nxt-ds .nx-prow__desc {
+  margin: 0; font-size: var(--nx-caption-1-size); line-height: var(--nx-caption-1-lh);
+  color: var(--nx-text-secondary);
+}.nxt-ds .nx-prow__control { display: flex; align-items: center; justify-content: flex-end; gap: 8px; flex: none; max-width: 60%; }.nxt-ds .nx-prow__body { display: flex; flex-direction: column; gap: 8px; min-width: 0; }.nxt-ds .nx-prow.is-disabled .nx-prow__label, .nxt-ds .nx-prow.is-disabled .nx-prow__desc { color: var(--nx-text-disabled); }/* Fields inside a group: the darker fill stands in for a border. */.nxt-ds .nx-pgroup__card :is(.nx-input, .nx-select, .nx-textarea) { background-color: var(--nx-pgroup-field-bg); }.nxt-ds .nx-pgroup__card :is(.nx-input, .nx-select, .nx-textarea):hover:not(:disabled):not(:focus) { background-color: var(--nx-pgroup-field-bg-hover); }.nxt-ds .nx-pgroup__card .nx-segmented { background: var(--nx-pgroup-field-bg); }/* Choice rows: one-of-many inside a group. The radio leads, the option's name
+   and one line of what it does follow, a badge may trail. */.nxt-ds .nx-pchoices { display: flex; flex-direction: column; }.nxt-ds .nx-pchoices > .nx-prow + .nx-prow { border-top: 1px solid var(--nx-border); }.nxt-ds .nx-pgroup__card > .nx-pchoices { padding-block: 0; }.nxt-ds .nx-prow--choice { justify-content: flex-start; align-items: flex-start; cursor: pointer; }.nxt-ds .nx-prow--choice > .nx-radio { flex: none; margin-top: 2px; }.nxt-ds .nx-prow--choice > .nx-prow__text { flex: 1 1 auto; }.nxt-ds .nx-prow--choice.is-disabled { cursor: not-allowed; }/* A choice with no line of help centres on its name. */.nxt-ds .nx-prow--choice:not(:has(.nx-prow__desc)) { align-items: center; }.nxt-ds .nx-prow--choice:not(:has(.nx-prow__desc)) > .nx-radio { margin-top: 0; }.nxt-ds .nx-prow--choice.is-disabled .nx-radio__box { opacity: .5; }

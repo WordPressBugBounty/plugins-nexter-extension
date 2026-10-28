@@ -305,7 +305,7 @@ class Nexter_Builder_Import_Export {
 				<div id="nxt-builder-switcher-toggle" class="nxt-builder-switcher-wrap">
 					<div class="nxt-temp-tbl-switch">
 						<div class="nxt-post-status-wrap">
-							<input class="nxt-post-status" id="nxt_thtgl_sw" type="checkbox" <?php checked( $builder_switch, true ); ?> />
+							<input class="nxt-post-status" id="nxt_thtgl_sw" type="checkbox" <?php checked( true === $builder_switch || 'true' === $builder_switch ); ?> />
 							<label class="nxt-temp-sw-lbl" for="nxt_thtgl_sw">
 							</label>
 						</div>

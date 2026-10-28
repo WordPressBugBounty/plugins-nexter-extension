@@ -136,7 +136,7 @@ class Nexter_Content_SEO_Migrate_Notice {
 			return;
 		}
 
-		$migrate_url = admin_url( 'admin.php?page=nxt_content_seo#/tools/seo-import' );
+		$migrate_url = admin_url( 'admin.php?page=nexter_welcome#/seo/tools/seo-import' );
 
 		echo '<div class="notice notice-info is-dismissible nxt-notice-wrap" data-notice-id="' . esc_attr( self::NOTICE_ID ) . '" data-nonce="' . esc_attr( wp_create_nonce( 'nexter_admin_nonce' ) ) . '">';
 			echo '<div class="nexter-license-activate">';

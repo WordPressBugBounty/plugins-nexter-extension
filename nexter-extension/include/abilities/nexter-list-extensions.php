@@ -9,6 +9,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit();
 }
 
+// The Abilities API arrived in WordPress 6.9; older sites skip this file.
+if ( ! function_exists( 'wp_register_ability' ) ) {
+	return;
+}
+
 wp_register_ability(
 	'nexter/list-extensions',
 	[

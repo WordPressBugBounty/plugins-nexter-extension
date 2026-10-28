@@ -1144,6 +1144,12 @@ PHP;
 				$snippet_id = preg_replace( '/\.php$/', '', basename( $meta['file_name'] ) );
 			}
 
+			// Resolve the default before validating it, so a snippet without the key yields 'always', not null.
+			$consent_category = isset( $cond['consent_category'] ) ? sanitize_key( $cond['consent_category'] ) : 'always';
+			if ( ! in_array( $consent_category, array( 'always', 'necessary', 'functional', 'analytics', 'marketing' ), true ) ) {
+				$consent_category = 'always';
+			}
+
 			// Process PHP code - remove opening tag
 			if ( isset( $meta['type'] ) && 'php' === $meta['type'] && isset( $data['code'] ) && is_string( $data['code'] ) ) {
 				$data['code'] = preg_replace( '/^<\?php\s*/', '', $data['code'] );
@@ -1183,6 +1189,8 @@ PHP;
 				'css_selector'            => isset( $cond['css_selector'] ) ? sanitize_text_field( $cond['css_selector'] ) : '',
 				'element_index'           => isset( $cond['element_index'] ) ? absint( $cond['element_index'] ) : 0,
 				'php_hidden_execute'      => isset( $cond['php-hidden-execute'] ) ? sanitize_text_field( $cond['php-hidden-execute'] ) : 'no',
+				// Enforced by the dispatchers in nexter-code-snippet-render.php, not here.
+				'consent_category'        => $consent_category,
 			);
 		}
 

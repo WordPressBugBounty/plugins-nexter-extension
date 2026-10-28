@@ -103,3 +103,44 @@ unset( $nxt_ext_seo_source );
 
 // Derived cache, rebuilt from the rules option on demand.
 delete_transient( 'nxt_content_seo_redirect_compiled' );
+
+/*
+ * Cookie Consent, run once per site (a network uninstall executes this file a single time).
+ *
+ * Consent records are proof of consent, so the table and the settings go only when the owner
+ * opted in via records.delete_on_uninstall. Housekeeping state and the retention cron always go.
+ */
+if ( ! function_exists( 'nxt_cc_uninstall_site' ) ) {
+	function nxt_cc_uninstall_site() {
+		global $wpdb;
+
+		$settings = get_option( 'nexter_cookie_consent_settings', array() );
+		$purge    = is_array( $settings ) && ! empty( $settings['records']['delete_on_uninstall'] );
+
+		if ( $purge ) {
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name, not user input.
+			$wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}nexter_consent_log" );
+			foreach ( array( 'nexter_cookie_consent_settings', 'nexter_cookie_consent_cookies', 'nexter_cookie_consent_third_party_domains', 'nexter_ext_consent_db_ver' ) as $option ) {
+				delete_option( $option );
+			}
+		}
+
+		delete_option( 'nexter_cc_last_purge' );
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- prefix is a constant.
+		$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->options} WHERE option_name LIKE %s", $wpdb->esc_like( 'nxt_cc_rl_' ) . '%' ) );
+		wp_clear_scheduled_hook( 'nxt_cookie_consent_retention_cron' );
+	}
+}
+
+if ( is_multisite() && function_exists( 'get_sites' ) ) {
+	foreach ( get_sites( array( 'fields' => 'ids', 'number' => 0 ) ) as $nxt_cc_site_id ) {
+		switch_to_blog( (int) $nxt_cc_site_id );
+		nxt_cc_uninstall_site();
+		restore_current_blog();
+	}
+} else {
+	nxt_cc_uninstall_site();
+}
+
+// Per-user: the fallback notice's dismissal flag. Network-wide on purpose, since user meta is shared.
+delete_metadata( 'user', 0, 'nxt_cc_fallback_notice_dismissed', '', true );

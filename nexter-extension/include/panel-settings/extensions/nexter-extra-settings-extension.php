@@ -84,6 +84,12 @@ class Nexter_Ext_Extra_Settings {
 		// Not gated on the toggle: the way back for an account left on a lowered role must always load.
 		require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/nexter-ext-view-admin-role.php';
 
+		// The engine registers its own AJAX/admin hooks, so it must load in admin even while the switch is off.
+		if ( ! empty( $extension_option['cookie-consent']['switch'] ) || is_admin() ) {
+			require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php';
+			new Nxt_Cookie_Consent();
+		}
+
 		//Local Google Font — load when the extension toggle is on OR when performance google-fonts settings are active
 		$perf_option       = $this->nxt_options_to_array( Nxt_Options::performance() );
 		$local_gfont_ext   = ! empty( ( $extension_option['local-google-font'] ?? array() )['switch'] );

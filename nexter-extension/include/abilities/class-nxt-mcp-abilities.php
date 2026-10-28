@@ -141,9 +141,13 @@ class Nxt_MCP_Abilities {
 		// Must load before the ability files: wp_register_ability_args only reaches abilities
 		// registered after the filter is attached.
 		require_once $base . 'lifecycle-filters.php';
+		require_once $base . 'nexter-dry-run.php';
 
 		foreach ( array(
 			'nexter-bulk-image-optimizer',
+			'nexter-cookie-consent-compliance-check',
+			'nexter-cookie-consent-cookies',
+			'nexter-cookie-consent-settings',
 			'nexter-create-snippet',
 			'nexter-create-template',
 			'nexter-custom-fonts',

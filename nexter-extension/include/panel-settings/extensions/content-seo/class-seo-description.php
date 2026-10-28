@@ -363,15 +363,22 @@ class Nexter_Content_SEO_Description {
 				if ( '' !== $builder ) {
 					return $builder;
 				}
-				// Render blocks and shortcodes so Gutenberg-block / shortcode-built pages yield real
-				// text — their content is stored in post_content as block/shortcode markup, which
-				// wp_strip_all_tags alone would reduce to little or nothing.
+				// Render blocks so Gutenberg-block-built pages yield real text — their content is
+				// stored in post_content as block markup, which wp_strip_all_tags alone would
+				// reduce to little or nothing.
 				$raw = (string) $post->post_content;
 				if ( function_exists( 'has_blocks' ) && has_blocks( $raw ) ) {
 					$raw = do_blocks( $raw );
 				}
+				// Shortcodes are stripped, not executed: do_shortcode() here (at wp_head, ahead of
+				// the real the_content() render in the loop) runs the shortcode's PHP a second time
+				// purely to harvest text. A shortcode whose side effects include registering an
+				// action hook (e.g. a dashboard nav shortcode hooking a render callback onto a
+				// shared action) ends up registered twice, so the real render later fires that
+				// callback twice and duplicates its own output. Stripping avoids executing
+				// arbitrary third-party shortcode code just to build a meta tag.
 				if ( false !== strpos( $raw, '[' ) ) {
-					$raw = do_shortcode( $raw );
+					$raw = strip_shortcodes( $raw );
 				}
 				$content = self::strip_builder_placeholders( wp_strip_all_tags( $raw ) );
 				$content = self::cleanup_text( wp_trim_words( $content, 30 ) );

@@ -48,6 +48,7 @@ class Nxt_Options {
 		'tpgb_white_label'     => 'tpgb_white_label',
 		'notice_count'         => 'nxt_ext_menu_notice_count',
 		'tpgb_connection_data' => 'tpgb_connection_data',
+		'cookie_consent'       => 'nexter_cookie_consent_settings',
 	];
 
 	/**
@@ -68,6 +69,7 @@ class Nxt_Options {
 		'settings_opts',
 		'tpgb_white_label',
 		'tpgb_connection_data',
+		'cookie_consent',
 	];
 
 	// ── Public getters ─────────────────────────────────────────────
@@ -168,6 +170,13 @@ class Nxt_Options {
 	 */
 	public static function notice_count() {
 		return self::get( 'notice_count' );
+	}
+
+	/**
+	 * @return array|false  nexter_cookie_consent_settings value.
+	 */
+	public static function cookie_consent() {
+		return self::get( 'cookie_consent' );
 	}
 
 	// ── Cache management ───────────────────────────────────────────
