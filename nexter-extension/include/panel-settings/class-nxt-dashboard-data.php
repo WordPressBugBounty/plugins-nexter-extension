@@ -738,12 +738,18 @@ class Nxt_Dashboard_Data {
 			return $translations;
 		}
 		static $merged = null;
+		static $busy   = false;
+		// load_script_translations() below re-fires this filter; let those inner calls read their file normally.
+		if ( $busy ) {
+			return $translations;
+		}
 		if ( null !== $merged ) {
 			return $merged;
 		}
+		$busy = true;
 
 		$locale   = determine_locale();
-		$dirs     = array( WP_LANG_DIR . '/plugins/', NEXTER_EXT_DIR . 'languages/' );
+		$dirs     = array( NEXTER_EXT_DIR . 'languages/', WP_LANG_DIR . '/plugins/', WP_LANG_DIR . '/loco/plugins/' );
 		$chunks   = glob( NEXTER_EXT_DIR . 'dashboard/build/*.js' );
 		$messages = array();
 		$header   = null;
@@ -751,11 +757,12 @@ class Nxt_Dashboard_Data {
 		foreach ( (array) $chunks as $chunk ) {
 			$md5 = md5( 'dashboard/build/' . basename( $chunk ) );
 			foreach ( $dirs as $dir ) {
-				$json_file = $dir . $domain . '-' . $locale . '-' . $md5 . '.json';
-				if ( ! is_readable( $json_file ) ) {
+				// WP's own loader runs load_script_translation_file, so Loco Translate and custom locations are honoured.
+				$json = load_script_translations( $dir . $domain . '-' . $locale . '-' . $md5 . '.json', $handle, $domain );
+				if ( ! $json ) {
 					continue;
 				}
-				$data = json_decode( file_get_contents( $json_file ), true );
+				$data = json_decode( $json, true );
 				if ( empty( $data['locale_data'] ) || ! is_array( $data['locale_data'] ) ) {
 					continue;
 				}
@@ -767,6 +774,7 @@ class Nxt_Dashboard_Data {
 				break;
 			}
 		}
+		$busy = false;
 
 		if ( empty( $messages ) ) {
 			$merged = $translations;

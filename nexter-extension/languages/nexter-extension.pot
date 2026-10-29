@@ -2,14 +2,14 @@
 # This file is distributed under the GPLv3.
 msgid ""
 msgstr ""
-"Project-Id-Version: Nexter Extension 4.8.0\n"
+"Project-Id-Version: Nexter Extension 4.8.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/nexter-extension\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-28T12:30:00+01:00\n"
+"POT-Creation-Date: 2026-10-29T05:56:17+01:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: nexter-extension\n"
@@ -124,14 +124,14 @@ msgstr ""
 #: include/classes/load-code-snippet/nexter-code-snippet-render.php:762
 #: include/classes/load-code-snippet/nexter-code-snippet-render.php:822
 #: include/classes/load-code-snippet/nexter-code-snippet-render.php:873
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1055
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1507
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1823
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1840
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2133
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2283
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2361
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2458
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1054
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1506
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1822
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1839
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2132
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2282
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2360
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2457
 #: include/custom-options/class-nxt-builder-condition-ui.php:52
 #: include/custom-options/class-nxt-builder-condition-ui.php:283
 #: include/custom-options/class-nxt-builder-condition-ui.php:410
@@ -535,161 +535,161 @@ msgstr ""
 msgid "Default Template"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1050
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1502
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2041
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2128
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2356
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1049
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1501
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2040
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2127
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2355
 msgid "File-based snippets require write access. This environment restricts file creation."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1063
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1548
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1062
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1547
 msgid "Enter Name Snippet"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1081
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1536
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2327
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2405
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1080
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1535
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2326
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2404
 msgid "Invalid file path detected."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1086
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1085
 msgid "File already exists. Please try a different name."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1100
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1563
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1099
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1562
 msgid "Please remove <?php from the beginning of the code"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1112
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1111
 msgid "Failed to create snippet file."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1129
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1128
 msgid "Snippet Created Successfully."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1139
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1138
 msgid "Missing required fields."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1361
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1360
 msgid "PHP executor unavailable."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1375
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1374
 msgid "Snippet has been disabled for safety"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1377
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1376
 msgid "Check the line numbers and suggestions above. Snippet is disabled until fixed."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1518
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1517
 msgid "Storage directory not available."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1526
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1859
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2394
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1525
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1858
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2393
 msgid "Invalid snippet ID."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1541
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2339
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2442
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1540
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2338
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2441
 msgid "Snippet ID does not exist."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1574
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1573
 msgid "Snippet Updated Successfully."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1576
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2439
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1575
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2438
 msgid "Failed to update snippet file."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1579
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1578
 msgid "File-based storage not available"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1582
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2343
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2346
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1581
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2342
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2345
 msgid "Invalid Snippet ID"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1952
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:1951
 msgid "No valid snippets found to export."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2046
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2213
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2045
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2212
 msgid "Unknown snippet"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2050
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2049
 msgid "Snippet name is required"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2055
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2054
 #: assets/js/admin/index.js:6
 #: dashboard/build/135.js:4
 msgid "Untitled snippet"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2064
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2063
 msgid "File based storage not available"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2069
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2068
 msgid "Storage directory not available"
 msgstr ""
 
 #. translators: %s: snippet name
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2080
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2079
 #, php-format
 msgid "\"%s\" already exists - edit the existing snippet instead of importing a second copy."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2138
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2137
 msgid "No file uploaded or file upload error."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2144
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2143
 msgid "File size exceeds maximum allowed size (10MB)."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2166
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2165
 msgid "Invalid file type. Only JSON files are allowed."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2174
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2173
 msgid "Invalid file upload detected."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2181
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2180
 msgid "Empty or unreadable file."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2187
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2186
 msgid "Invalid snippet file."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2231
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2230
 msgid "No snippets were imported."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2239
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2238
 msgid "Snippet imported successfully."
 msgstr ""
 
 #. translators: %d: Number of snippets imported successfully
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2243
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2242
 #, php-format
 msgid "%d snippet imported successfully."
 msgid_plural "%d snippets imported successfully."
@@ -697,49 +697,49 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: %d: Number of snippets that failed to import
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2254
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2253
 #, php-format
 msgid "%d snippet failed."
 msgid_plural "%d snippets failed."
 msgstr[0] ""
 msgstr[1] ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2297
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2296
 msgid "Snippet deleted successfully"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2299
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2298
 msgid "Failed to delete Snippet"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2302
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2301
 msgid "You do not have permission to delete this snippet"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2305
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2383
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2304
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2382
 msgid "Invalid post or post type"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2312
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2311
 msgid "Invalid snippet ID format."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2337
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2336
 msgid "Snippet deleted successfully."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2379
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2378
 msgid "Updated Status Successfully"
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2435
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2434
 msgid "Updated Status Successfully."
 msgstr ""
 
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2445
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2448
-#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2484
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2444
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2447
+#: include/classes/load-code-snippet/nexter-code-snippet-render.php:2483
 msgid "Invalid post ID"
 msgstr ""
 
@@ -1073,7 +1073,7 @@ msgstr ""
 #: include/panel-settings/extensions/content-seo/schema-types/fields-software-application.php:23
 #: include/panel-settings/extensions/content-seo/schema-types/fields-video-object.php:23
 #: include/panel-settings/extensions/content-seo/schema-types/fields-web-page.php:28
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:2385
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:2418
 #: dashboard/build/index.js:15
 #: dashboard/build/index.js:16
 #: dashboard/build/index.js:22
@@ -5284,7 +5284,7 @@ msgstr ""
 #: include/panel-settings/extensions/content-seo/schema-types/fields-video-object.php:30
 #: include/panel-settings/extensions/content-seo/schema-types/fields-web-page.php:36
 #: include/panel-settings/extensions/content-seo/schema-types/fields-website.php:14
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:2380
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:2413
 #: assets/js/admin/index.js:7
 #: dashboard/build/135.js:5
 #: dashboard/build/index.js:15
@@ -7082,7 +7082,7 @@ msgid "Enter the date when the video was uploaded."
 msgstr ""
 
 #: include/panel-settings/extensions/content-seo/schema-types/fields-video-object.php:58
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:2383
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:2416
 msgid "Duration"
 msgstr ""
 
@@ -8537,542 +8537,546 @@ msgstr ""
 msgid "Date Archives"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:189
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:188
 msgid "The front page returned an empty response."
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:393
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:392
 msgid "Strictly Necessary"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:398
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:397
 msgid "Functional"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:403
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:402
 msgid "Analytics"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:408
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:407
 msgid "Marketing"
 msgstr ""
 
 #. translators: %s: name of the blocked cookie vendor/category, e.g. YouTube
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:836
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:835
 #, php-format
 msgid "This content is blocked until you accept %s cookies."
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:837
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:836
 msgid "Blocked content"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:838
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:837
 msgid "Accept and show"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:839
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:838
 msgid "Cookie settings"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:840
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:839
 msgid "Your cookie preferences have been saved."
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:944
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:943
 msgid "Distinguishes individual visitors so visit statistics can be compiled"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:945
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:944
 msgid "Stores and counts page views for a specific GA4 property"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:946
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:945
 msgid "Distinguishes individual visitors over a single day"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:947
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:946
 msgid "Limits how often data is sent to Google Analytics"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:948
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:947
 msgid "Stores and tracks ad conversions"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:949
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:948
 msgid "Remembers Google preferences and is used for advertising and security"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:950
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:949
 msgid "Measures and reports on advertising performance"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:951
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:950
 msgid "First-party ad conversion measurement"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:952
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:951
 msgid "Used for debugging analytics and advertising reporting"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:954
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:953
 msgid "Identifies browsers for advertising and site analytics"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:955
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:954
 msgid "Stores the last ad click that led to the site"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:956
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:955
 msgid "Delivers, measures and improves advertising relevance"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:957
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:956
 msgid "Identifies the browser for security and integrity purposes"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:959
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:958
 msgid "Identifies a returning visitor across sessions"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:960
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:959
 msgid "Holds current session data"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:961
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:960
 msgid "Records whether this is a visitor's first session"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:962
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:961
 msgid "Determines whether the session is included in sampling"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:963
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:962
 msgid "Retains a Clarity user ID and settings"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:964
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:963
 msgid "Combines multiple page views into one session recording"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:965
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:964
 msgid "Identifies the first time Clarity saw this visitor"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:966
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:965
 msgid "Identifies unique browsers for advertising and analytics"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:967
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:966
 msgid "Stores a visitor ID"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:968
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:967
 msgid "Stores short-lived session data"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:970
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:969
 msgid "Browser identifier for probabilistic ad matching"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:971
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:970
 msgid "Browser identifier used for LinkedIn platform features"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:972
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:971
 msgid "Routes requests to the correct LinkedIn data centre"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:973
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:972
 msgid "Synchronises the LinkedIn Ads identifier"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:974
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:973
 msgid "Measures and improves TikTok advertising performance"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:975
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:974
 msgid "Records whether TikTok pixel cookies may be used"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:976
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:975
 msgid "Groups actions for Pinterest conversion tracking"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:977
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:976
 msgid "Groups actions for users who cannot be identified"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:978
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:977
 msgid "Supports advertising personalisation"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:979
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:978
 msgid "Measures advertising performance"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:980
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:979
 msgid "Main HubSpot analytics cookie tracking visitors over time"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:981
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:980
 msgid "Identifies a visitor and links them to contact records"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:982
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:981
 msgid "Tracks sessions for HubSpot analytics"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:984
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:983
 msgid "Estimates bandwidth and selects the video player interface"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:985
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:984
 msgid "Records a unique ID for statistics on videos viewed"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:986
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:985
 msgid "Stores video player preferences such as playback settings"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:987
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:986
 msgid "Stores viewing history for Vimeo analytics"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:988
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:987
 msgid "Stores video player preferences"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:990
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:989
 msgid "Keeps a logged-in user authenticated"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:991
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:990
 msgid "Secures the admin area for logged-in users"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:992
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:991
 msgid "Stores personal admin interface preferences"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:993
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:992
 msgid "Checks whether the browser accepts cookies"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:994
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:993
 msgid "Remembers the name entered when leaving a comment"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:995
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:994
 msgid "Remembers the email entered when leaving a comment"
 msgstr ""
 
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:995
 #: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:996
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:997
 msgid "Detects when the cart contents change"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:998
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:997
 msgid "Holds a unique code for each customer's cart and session data"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:999
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:998
 msgid "Powers the recently viewed products widget"
 msgstr ""
 
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:999
 #: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1000
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1001
 msgid "Remembers the selected site language"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1002
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1001
 msgid "Stores this visitor's cookie consent choices so the banner is not shown again"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1004
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1003
 msgid "Fraud prevention for payment processing"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1005
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1004
 msgid "Fraud prevention during a checkout session"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1006
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1005
 msgid "Distinguishes humans from bots to protect forms"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1007
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1006
 msgid "Distinguishes humans from bots for security"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1008
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1007
 msgid "Records that a visitor passed a security challenge"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1009
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1008
 msgid "Maintains server-side session state"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1147
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1198
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1239
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1284
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1607
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1646
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1146
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1197
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1238
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1283
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1640
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1679
 #: include/panel-settings/extensions/nexter-ext-custom-login-redirect.php:256
 #: include/panel-settings/extensions/perf-security/class-nxt-security-network.php:153
 msgid "Forbidden"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1202
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1201
 #: dashboard/build/index.js:4
 msgid "Home"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1206
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1205
 msgid "Latest post"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1211
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1210
 msgid "A page"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1215
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1214
 msgid "Shop"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1215
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1214
 msgid "Cart"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1215
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1214
 #: dashboard/build/index.js:34
 msgid "Checkout"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1225
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1224
 #: dashboard/build/index.js:15
 msgid "Contact"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1245
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1290
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1244
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1289
 msgid "A cookie name is required"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1391
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1417
+msgid "Invalid request origin"
+msgstr ""
+
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1422
 msgid "Rate limited"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1396
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1429
 msgid "Invalid action"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1430
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1463
 msgid "Consent record could not be saved"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1618
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1651
 msgid "Invalid payload"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1671
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1704
 msgid "Non-essential scripts blocked before consent"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1674
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1707
 msgid "Script blocking is enabled."
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1675
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1708
 msgid "Script blocking is OFF — non-essential scripts run before any consent decision."
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1688
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1721
 msgid "Consent records enabled"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1693
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1726
 msgid "Consent records are on, but the table they are written to does not exist — nothing is being stored. Open any admin screen so it can be created, then run this check again."
 msgstr ""
 
 #. translators: 1: IP mode, 2: retention days
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1697
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1730
 #, php-format
 msgid "Recording consent decisions (%1$s IP, %2$d-day retention)."
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1701
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1734
 msgid "Consent records are off. Nothing is stored as proof of consent — this may be a deliberate choice, but it means there is no audit trail if a visitor disputes their consent."
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1706
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1739
 msgid "Privacy policy URL set"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1709
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1742
 msgid "A privacy policy URL is configured."
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1710
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1743
 msgid "No privacy policy URL set."
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1715
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1748
 msgid "Cookie policy URL set"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1718
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1751
 msgid "A cookie policy URL is configured."
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1719
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1752
 msgid "No cookie policy URL set — the Cookie Declaration block has nowhere to live yet."
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1725
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1738
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1758
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1771
 msgid "Google Consent Mode / GTM alignment"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1727
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1760
 msgid "Consent Mode not enabled — nothing to check."
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1741
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1774
 msgid "Consent Mode is set to the GTM-managed path, but the Google Tag Manager blocking rule is not \"Never block\". The runtime never actually blocks GTM in this mode, but the stored rule should be corrected to avoid confusion."
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1742
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1775
 msgid "Consent Mode configuration is internally consistent."
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1751
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1784
 msgid "Old consent records are being purged"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1754
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1787
 msgid "The scheduled retention purge has not run recently, and WP-Cron appears to be disabled — consent records, and the IP data in them, are not aging out on schedule. Set up a real server cron to hit wp-cron.php; the purge also runs whenever an administrator opens a dashboard screen."
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1755
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1788
 msgid "Expired consent records are purged on schedule."
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1761
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1794
 msgid "No other cookie-consent plugin active"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1764
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1797
 msgid "No other known cookie-consent plugin is active."
 msgstr ""
 
 #. translators: %s: comma-separated plugin names
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1767
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1800
 #, php-format
 msgid "Active alongside this plugin: %s. Two consent tools show two banners and hold two contradictory records of one visitor's choice. Keep one."
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1778
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1786
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1797
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1811
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1819
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1830
 msgid "Vendor tags this plugin cannot block"
 msgstr ""
 
 #. translators: %s: error returned while fetching the front page
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1781
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1814
 #, php-format
 msgid "Could not scan the front page (%s). Server-side blocking only covers scripts added with wp_enqueue_script(); tags pasted directly into a page or theme are never blocked."
 msgstr ""
 
 #. translators: %s: comma-separated service names
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1790
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1823
 #, php-format
 msgid "These tags load before consent and this plugin cannot stop them: %s. They are inline snippets, which cannot be held back without breaking them. Replace them with a plugin or theme that enqueues the script, or remove them and let a tag manager handle consent. This scans the front page only — other templates may carry more."
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1799
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1832
 msgid "No directly-printed vendor tags found on the front page. Note this scans the front page only — another template could still carry one."
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1862
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1895
 msgid "Reject button present and equally prominent"
 msgstr ""
 
 #. translators: %s: error message
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1869
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1902
 #, php-format
 msgid "Could not fetch the front page to inspect the banner: %s"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1870
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1903
 msgid "No Nexter Blocks Cookie Consent banner was found on the front page, so there is nothing to inspect. Place the block on the page (or in a footer template part) and re-check."
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1881
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1914
 msgid "The banner has an Accept button but no Reject button at the first layer. Turn on \"Show Reject\" in the Cookie Consent block."
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1887
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1920
 msgid "The banner has no Accept button, so there is nothing to compare Reject against. Check the block settings."
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1892
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1925
 msgid "A Reject button sits beside Accept in the banner and uses the same button component. Colour and size come from your design settings, which this check cannot measure — look at both buttons if you restyled either one."
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1903
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1936
 msgid "Banner passes contrast and keyboard checks"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1908
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1941
 msgid "No Nexter Blocks Cookie Consent banner was found on the front page, so there is nothing to inspect."
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1916
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1949
 msgid "consent banner"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1917
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1950
 msgid "preferences dialog"
 msgstr ""
 
 #. translators: %s: translated name of the banner part (e.g. "consent banner")
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1926
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1959
 #, php-format
 msgid "the %s has no dialog role"
 msgstr ""
 
 #. translators: %s: translated name of the banner part (e.g. "consent banner")
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1933
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1966
 #, php-format
 msgid "the %s has no accessible name"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1938
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1971
 msgid "an action is not a <button>"
 msgstr ""
 
 #. translators: %s: list of problems
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1945
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1978
 #, php-format
 msgid "Structure problems: %s."
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1951
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1984
 msgid "The markup is sound: dialogs have roles and accessible names and every action is a real button. Colour contrast and focus order need a rendered-page scan, which this check does not run — test them in a browser."
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1961
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1994
 msgid "All detected cookies have a category and purpose"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1980
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:2013
 msgid "No cookies have been detected yet. The scanner records them while you browse the front of the site logged in as an administrator — visit a few pages, then run this check again."
 msgstr ""
 
 #. translators: 1: number of cookies, 2: cookie names
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:1988
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:2021
 #, php-format
 msgid "%1$d detected cookie has no category or purpose: %2$s. Until it has both, it cannot be declared on the Cookie Declaration or gated by consent."
 msgid_plural "%1$d detected cookies have no category or purpose: %2$s. Until each has both, it cannot be declared on the Cookie Declaration or gated by consent."
@@ -9080,52 +9084,52 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: %d: number of cookies
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:2003
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:2036
 #, php-format
 msgid "All %d detected cookie has a category and a purpose."
 msgid_plural "All %d detected cookies have a category and a purpose."
 msgstr[0] ""
 msgstr[1] ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:2259
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:2292
 msgid "No cookies have been declared yet."
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:2341
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:2374
 msgid "Unclassified"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:2346
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:2379
 msgid "Unknown provider"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:2381
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:2414
 #: dashboard/build/index.js:34
 #: dashboard/build/index.js:39
 msgid "Provider"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:2382
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:2415
 msgid "Purpose"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:2384
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:2417
 #: assets/js/admin/index.js:5
 #: dashboard/build/135.js:3
 #: dashboard/build/index.js:15
 msgid "Category"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:2399
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:2432
 msgid "Unrecognised — add a description"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:2420
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:2453
 msgid "Session"
 msgstr ""
 
 #. translators: %d: number of minutes
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:2433
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:2466
 #, php-format
 msgid "%d minute"
 msgid_plural "%d minutes"
@@ -9133,7 +9137,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: %d: number of hours
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:2437
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:2470
 #, php-format
 msgid "%d hour"
 msgid_plural "%d hours"
@@ -9141,7 +9145,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: %d: number of days
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:2441
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:2474
 #, php-format
 msgid "%d day"
 msgid_plural "%d days"
@@ -9149,7 +9153,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: %d: number of months
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:2445
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:2478
 #, php-format
 msgid "%d month"
 msgid_plural "%d months"
@@ -9157,77 +9161,77 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: %d: number of years
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:2449
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:2482
 #, php-format
 msgid "%d year"
 msgid_plural "%d years"
 msgstr[0] ""
 msgstr[1] ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:2460
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:2493
 msgid "EEA/UK"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:2461
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:2494
 msgid "configurable"
 msgstr ""
 
 #. translators: 1: translated duration (e.g. "2 years"), 2: translated qualifier (e.g. "configurable")
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:2466
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:2499
 #, php-format
 msgid "%1$s (%2$s)"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:2476
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:2509
 msgid "Cookie declaration"
 msgstr ""
 
 #. translators: %s: formatted date
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:2565
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:2598
 #, php-format
 msgid "Last scanned: %s"
 msgstr ""
 
 #. translators: %d: cookie count
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:2571
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:2604
 #, php-format
 msgid "%d cookie"
 msgid_plural "%d cookies"
 msgstr[0] ""
 msgstr[1] ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:2685
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:2698
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:2718
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:2731
 msgid "Cookie preferences"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:2765
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:2798
 msgid "We use cookies"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:2766
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:2799
 msgid "We use cookies to improve your experience. Choose which categories you are comfortable with."
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:2770
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:2803
 msgid "Accept All"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:2771
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:2804
 msgid "Reject All"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:2772
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:2805
 #: dashboard/build/index.js:4
 #: dashboard/build/index.js:8
 msgid "Customize"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:2773
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:2806
 msgid "Save preferences"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:2774
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:2807
 #: assets/js/admin/index.js:1
 #: dashboard/build/218.js:1
 #: dashboard/build/index.js:3
@@ -9236,25 +9240,25 @@ msgstr ""
 msgid "Close"
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:2927
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:2960
 msgid "Two cookie-consent plugins are active."
 msgstr ""
 
 #. translators: %s: comma-separated plugin names
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:2932
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:2965
 #, php-format
 msgid "Nexter Cookie Consent is running alongside %s. Visitors see two banners, and a choice made in one is not seen by the other — scripts it blocked stay blocked while Nexter records them as allowed. Keep one: deactivate the other plugin, or turn Cookie Consent off in Nexter."
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:2983
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:3016
 msgid "Cookie Consent is using its built-in fallback banner."
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:2985
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:3018
 msgid "Scripts are being blocked until visitors choose, and the fallback is what they see. Install Nexter Blocks and place the Cookie Consent block for a banner you can design."
 msgstr ""
 
-#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:2986
+#: include/panel-settings/extensions/cookie-consent/class-nxt-cookie-consent.php:3019
 #: include/panel-settings/extensions/nexter-ext-smtp-email.php:149
 #: include/posimyth-sdk/class-posimyth-consent-notice.php:255
 #: assets/js/admin/index.js:3

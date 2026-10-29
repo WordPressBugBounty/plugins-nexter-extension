@@ -57,8 +57,7 @@ class Nxt_Cookie_Consent {
 		$this->settings = self::get_settings();
 
 		// Consent-write endpoint: accepts only a category set + action (PART 4.3 "write path").
-		// nopriv because most visitors are logged out; a nonce still protects it from
-		// cross-site replay without requiring a WordPress session.
+		// nopriv because most visitors are logged out; an Origin check blocks cross-site posts.
 		add_action( 'wp_ajax_nexter_consent_write', array( $this, 'ajax_write_consent' ) );
 		add_action( 'wp_ajax_nopriv_nexter_consent_write', array( $this, 'ajax_write_consent' ) );
 		add_action( 'wp_ajax_nexter_consent_nonce', array( $this, 'ajax_consent_nonce' ) );
@@ -1319,8 +1318,8 @@ class Nxt_Cookie_Consent {
 	 * A fresh write nonce for pages served from a cache.
 	 *
 	 * Public by necessity — the visitor is logged out — and that is fine: a logged-out nonce is
-	 * not an auth credential, it is a cheap tick-based tag, and the write it unlocks is already
-	 * rate-limited and accepts only a category set. Never cacheable: a cached copy would hand
+	 * not an auth credential, so the write also requires a same-origin request, is rate-limited
+	 * and accepts only a category set. Never cacheable: a cached copy would hand
 	 * every visitor the same stale value, which is the bug this exists to fix.
 	 *
 	 * @return void
@@ -1328,6 +1327,34 @@ class Nxt_Cookie_Consent {
 	public function ajax_consent_nonce() {
 		nocache_headers();
 		wp_send_json_success( array( 'nonce' => wp_create_nonce( 'nxt-cookie-consent' ) ) );
+	}
+
+	/**
+	 * True when the browser's Origin (or Referer, if Origin is absent) host is this site.
+	 *
+	 * @return bool
+	 */
+	private function is_same_origin_request() {
+		$source = isset( $_SERVER['HTTP_ORIGIN'] ) ? wp_unslash( $_SERVER['HTTP_ORIGIN'] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		if ( '' === $source || 'null' === $source ) {
+			$source = wp_get_raw_referer();
+		}
+		$host = $source ? wp_parse_url( $source, PHP_URL_HOST ) : '';
+		if ( empty( $host ) ) {
+			return false;
+		}
+
+		$allowed = array(
+			wp_parse_url( home_url(), PHP_URL_HOST ),
+			wp_parse_url( site_url(), PHP_URL_HOST ),
+		);
+		// Covers multi-domain setups (WPML per-language domains) where the page host differs from home_url.
+		if ( isset( $_SERVER['HTTP_HOST'] ) ) {
+			$allowed[] = wp_parse_url( 'http://' . sanitize_text_field( wp_unslash( $_SERVER['HTTP_HOST'] ) ), PHP_URL_HOST );
+		}
+		$allowed = array_map( 'strtolower', array_filter( (array) apply_filters( 'nexter_consent_allowed_hosts', $allowed ) ) );
+
+		return in_array( strtolower( $host ), $allowed, true );
 	}
 
 	/** Consent writes allowed per visitor per minute on the public endpoint. */
@@ -1381,15 +1408,21 @@ class Nxt_Cookie_Consent {
 	 * @return void
 	 */
 	public function ajax_write_consent() {
-		check_ajax_referer( 'nxt-cookie-consent', 'nonce' );
-
-		if ( empty( $this->settings['records']['enabled'] ) ) {
+		if ( empty( $this->settings['switch'] ) || empty( $this->settings['records']['enabled'] ) ) {
 			wp_send_json_success( array( 'logged' => false ) );
 		}
 
+		// The public nonce alone can't stop a cross-site form, so the browser's Origin must be this site.
+		if ( ! $this->is_same_origin_request() ) {
+			wp_send_json_error( array( 'message' => __( 'Invalid request origin', 'nexter-extension' ) ), 403 );
+		}
+
+		// Rate limit before the nonce check so failed and forged attempts count too.
 		if ( self::rate_limit_hit( md5( $this->visitor_ip() ) ) > self::RATE_LIMIT_PER_MINUTE ) {
 			wp_send_json_error( array( 'message' => __( 'Rate limited', 'nexter-extension' ) ), 429 );
 		}
+
+		check_ajax_referer( 'nxt-cookie-consent', 'nonce' );
 
 		$action = isset( $_POST['action_type'] ) ? sanitize_key( wp_unslash( $_POST['action_type'] ) ) : '';
 		if ( ! in_array( $action, array( 'accept_all', 'reject_all', 'custom', 'revoke' ), true ) ) {

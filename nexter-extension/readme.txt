@@ -3,7 +3,7 @@ Contributors: posimyththemes, nirmalkavaiya, sagarpatel124
 Tags: seo, security, theme-builder, code-snippet, image-optimizer
 Requires at least: 5.9
 Tested up to: 7.1
-Stable tag: 4.8.0
+Stable tag: 4.8.1
 Requires PHP: 7.4
 License: GPLv3
 License URI: https://opensource.org/licenses/GPL-3.0
@@ -288,6 +288,11 @@ Nexter Extension may connect to external services below only when the related fe
 == Changelog ==
 
 ### View Complete Changelog at [roadmap.nexterwp.com](https://roadmap.nexterwp.com/updates?filter=Nexter+Extension+-+FREE)
+
+= V4.8.1 = 29 October 2026
+- Fixed : Code Snippets : on multisite, only a Super Admin can now create, import or run snippets; site administrators no longer can.
+- Fixed : Cookie Consent : the consent-record endpoint now rejects cross-site requests and checks the module switch and rate limit before accepting a write, so consent-log records can no longer be forged.
+- Fixed : Dashboard : Theme Builder and Code Snippets strings in the lazily loaded dashboard screens now pick up translations kept in custom locations such as Loco Translate.
 
 = V4.8.0 = 28 October 2026
 - Added : Cookie Consent : collect, store and honour visitor cookie consent, with prior script blocking of non-essential vendors until a visitor decides, consent-record logging with configurable IP handling and retention, Google Consent Mode v2 integration, and a live Compliance Check report.
@@ -596,104 +601,3 @@ Nexter Extension may connect to external services below only when the related fe
 - New : Nexter SEO : Import / Export — move your entire SEO configuration between sites with a single JSON file.
 - Fixed : Custom Font Upload : Variable Font Compatibility Register font Elementor bug fix
 - Fixed : Bug Fixes and Improvements
-
-= V4.6.17 = 08 July 2026
-- Fixed : Image Optimization : Large images (over 2560px, WordPress "-scaled") are now optimised and served as WebP/AVIF instead of the original JPEG
-- Fixed : Image Optimization : "Run in Background" now defers conversion to the cron queue so uploads are not blocked, and the queue no longer reprocesses already-optimised images
-- Fixed : Google Fonts : Self-Host Google Fonts now works on fresh installs (the local fonts directory was not created before first use)
-- Fixed : Security : iFrame Security now correctly sends the X-Frame-Options header (clickjacking protection)
-- Fixed : Bug Fixes and Improvements
-
-= V4.6.16 = 02 July 2026
-- Fixed : Theme Builder : "Edit with Elementor" rewrite rules flush automatically
-- Improved : Theme Builder : Register the template post type before Elementor initializes for reliable editor detection
-- Fixed : Bug Fixes and Improvements
-
-= V4.6.15 = 30 June 2026
-- Fixed : MCP Abilities : All abilities failed to register (none appeared in SproutOS / WP Abilities API) due to a missing permission callback dependency
-- Fixed : Security : Custom Login URL : "Change WP Admin Login Path" stripped "/" so multi-segment login paths were broken
-- Fixed : Bug Fixes and Improvements
-
-= V4.6.14 = 25 June 2026
-- Fixed : Translate : Missing text-domain in Dashboard, Code Snippets and Theme Builder
-- Fixed : Bug Fixes and Improvements
-
-= V4.6.13 = 22 June 2026
-- Fixed : Disable Gutenberg : "Except On" and "All Post Types" modes not disabling the block editor for selected post types
-- Fixed : Code Snippets : wp_head PHP snippet (e.g. Add Google Analytics Tracking Code) not loading on the frontend
-- Fixed : Code Snippets : JavaScript error when selecting a field in Conditional Logic
-- Fixed : Post Duplicate : Elementor content not copied correctly on duplicated pages
-- Fixed : Translate : Missing text-domain in Dashboard, Code Snippets and Theme Builder
-- Fixed : Dashboard : Responsive Mobile Devices
-- Fixed : Bug Fixes and Improvements
-
-= V4.6.12 = 16 June 2026
-- Improve : Dashboard : Converted dashboard modules to a component-based structure for improved maintainability and scalability
-- Fixed : Custom Upload Font : TTF, Woff2 , Woff compatibility Upload file
-- Fixed : Image Optimisation : Improve Image optimization
-- Fixed : Bug Fixes and Improvements
-
-= V4.6.11 = 28 May 2026
-- New : MCP Abilities : 26 Added WordPress Abilities API integration for templates, snippets, extensions, SMTP, security, performance, image optimization, and custom fonts.
-- Added : Dashboard : Settings : "Enable MCP Abilities" setting in Connection.
-- Improved : Utilities : SMTP Email : improve SMTP connection.
-
-= V4.6.10 = 20 May 2026
-- Compatibility : WordPress 7.0 Tested
-
-= V4.6.9 = 11 May 2026
-- Fixed : Utilities : Post Duplicate : Post content bug Fix duplicate post.
-- Fixed : Bug Fixes and Improvements.
-
-= V4.6.8 = 07 May 2026
-- Fixed : Rollback Manager : options object fatal error bug Fix
-- Fixed : Translate : Some text update translation
-- Fixed : Theme Builder : bug Fix
-- Fixed : Bug Fixes and Improvements.
-
-= V4.6.7 = 13 April 2026
-- Fixed : Theme Builder : Translate Localization support in the Nexter Theme Builder scripts.
-- Fixed : Dashboard : Corrected untranslated text strings for improved localization support.
-- Fixed : Bug Fixes and Improvements.
-
-= V4.6.6 = 11 April 2026
-- Fixed : Advanced Security : options object fatal error bug Fix
-- Fixed : Custom Login URL : bug fix
-- Fixed : Bug Fixes and Improvements.
-
-= V4.6.5 = 08 April 2026
-- Fixed : Post Duplicate : Fix issue on duplicate post data
-- Fixed : Advanced Security : Options Bug fix
-- Fixed : Bug Fixes and Improvements.
-
-= V4.6.4 = 07 April 2026
-- Fixed : Bug Fixes and Improvements.
-
-= V4.6.3 = 06 April 2026
-- Improved : Bootstrap & Core : Optimized initialization flow and conditional loading for better performance and stability.
-- Improved : Architecture : Refactored core modules into smaller classes for enhanced maintainability, performance, and clearer separation of logic.
-- Improved : General : Applied strict checks, cleanup handling, and overall performance and stability enhancements.
-- Fixed : Code Snippets : Corrected snippet display logic to use in-memory data for accurate conditional evaluation and avoid redundant meta queries.
-- Fixed : Admin & Assets : Resolved issue where dashboard/admin assets were skipped due to over-restricted enqueue conditions after refactor.
-- Fixed : Theme Builder : Singular & Archive Templates : Resolved issue where templates were not rendering on the frontend due to premature post type check before registration.
-- Fixed : Admin Interface : Notice Dismiss : Fixed "Invalid Notice ID" error when dismissing pro license notices, added extensible filter for notice ID whitelist.
-- Fixed : Performance : Template Resolution : Consolidated three separate nxt-build-get-data option reads per frontend request into a single cached read.
-- Fixed : General bug fixes and performance improvements.
-
-= V4.6.2 = 25 March 2026
-- Fixed : Custom Font Upload : font-face Italic style font bug fix
-- Fixed : Code Snippet : Create Snippet Register Custom Post type or Taxonomy Load Issue Bug Fix.
-- Fixed : General bug fixes and performance improvements
-
-= V4.6.1 = 18 March 2026
-- Fixed : Utilities : Replace URL & Text : Improved search and replace functionality with code-level fixes for more accurate data handling.
-- Fixed : Performance : Image Optimisation : Fixed white label content issue.
-- Fixed : Performance : Image Optimisation : Resolved issue where SVG images included in the skip list were still being optimized.
-- Fixed : Admin interface : Elementor AdFree : Fixed dynamic field icon display bug.
-- Fixed : General bug fixes and performance improvements
-
-= V4.6.0 = 13 March 2026
-- Added : Image Optimization : WebP / AVIF support, including compression, resizing, and bulk optimization.
-- Improved : Admin Interface : Clean Admin Bar : Added an option to toggle ON/OFF all third-party plugin nodes in the admin bar.
-- Fixed : Code Snippets : Resolved an issue where the "Add On AJAX Work" option was not executing PHP snippets correctly.
-- Fixed : Elementor AdFree : Dynamic Fields Hide bug Fixed CSS

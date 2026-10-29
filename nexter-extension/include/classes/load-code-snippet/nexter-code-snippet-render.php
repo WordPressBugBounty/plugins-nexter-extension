@@ -973,10 +973,9 @@ if ( ! class_exists( 'Nexter_Builder_Code_Snippets_Render' ) ) {
 			if ( empty( $user ) ) {
 				return false;
 			}
-			// A multisite Super Admin does not necessarily hold the administrator role on every
-			// subsite, so the role check below would refuse them on their own network.
-			if ( is_multisite() && is_super_admin( $user->ID ) ) {
-				return true;
+			// Snippets run PHP, so on multisite only a Super Admin may manage them; a subsite administrator may not.
+			if ( is_multisite() ) {
+				return is_super_admin( $user->ID );
 			}
 
 			$allowed_roles = array( 'administrator' );
