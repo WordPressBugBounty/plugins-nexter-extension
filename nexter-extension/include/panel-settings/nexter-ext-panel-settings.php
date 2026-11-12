@@ -332,6 +332,30 @@ if ( ! class_exists( 'Nexter_Ext_Panel_Settings' ) ) {
 					array( $this, 'nexter_code_snippet_display' )
 				);
 			}
+
+			/*
+			 * Content Fields opens inside the dashboard too. Its own page stays registered, out of
+			 * the menu, so the React app has a screen that enqueues it on its own — the dashboard
+			 * route falls back to this URL when the bundle's config is not localized.
+			 */
+			if ( Nxt_Options::fields_enabled() ) {
+				add_submenu_page(
+					'nexter_welcome',
+					__( 'Content Fields', 'nexter-extension' ),
+					__( 'Content Fields', 'nexter-extension' ),
+					'manage_options',
+					'nexter_welcome#/content_fields',
+					array( $this, 'nexter_ext_dashboard' )
+				);
+				add_submenu_page(
+					'options.php',
+					__( 'Content Fields', 'nexter-extension' ),
+					__( 'Content Fields', 'nexter-extension' ),
+					'manage_options',
+					'nxt_content_types',
+					array( $this, 'nexter_content_types_display' )
+				);
+			}
 			$seo_enabled = false;
 
 			if ( isset( $get_opt['seo'] ) && isset( $get_opt['seo']['switch'] ) ) {
@@ -430,6 +454,14 @@ if ( ! class_exists( 'Nexter_Ext_Panel_Settings' ) ) {
 		 */
 		public function nexter_code_snippet_display() {
 			echo '<div id="nexter-code-snippets"></div>';
+		}
+
+		/**
+		 * Content Fields render html.
+		 * Loads the React app from content-fields/build; same pattern as Code Snippets.
+		 */
+		public function nexter_content_types_display() {
+			echo '<div id="nexter-content-fields"></div>';
 		}
 
 		/**

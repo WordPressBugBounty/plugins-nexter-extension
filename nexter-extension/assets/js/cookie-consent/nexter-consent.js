@@ -236,9 +236,18 @@
 		var nodes = document.querySelectorAll( 'script[data-nexter-consent-category]' );
 		// Re-inserted in original DOM order (PART 2.1) by walking the NodeList in document order,
 		// which querySelectorAll already guarantees.
+		var queue = [];
 		nodes.forEach( function ( node ) {
-			var category = node.getAttribute( 'data-nexter-consent-category' );
-			if ( categories.indexOf( category ) === -1 ) {
+			if ( categories.indexOf( node.getAttribute( 'data-nexter-consent-category' ) ) !== -1 ) {
+				node.setAttribute( 'data-nexter-consent-queued', '1' );
+				node.removeAttribute( 'data-nexter-consent-category' );
+				queue.push( node );
+			}
+		} );
+		// Inline after-scripts must wait for the external script before them, as WordPress prints them.
+		( function releaseNext() {
+			var node = queue.shift();
+			if ( ! node ) {
 				return;
 			}
 			var src = node.getAttribute( 'data-nexter-consent-src' );
@@ -251,12 +260,22 @@
 				real.setAttribute( attr.name, attr.value );
 			}
 			if ( src ) {
+				var waits = queue.length && ! queue[ 0 ].getAttribute( 'data-nexter-consent-src' );
+				real.async = false;
+				if ( waits ) {
+					real.onload = real.onerror = releaseNext;
+				}
 				real.src = src;
+				node.parentNode.replaceChild( real, node );
+				if ( ! waits ) {
+					releaseNext();
+				}
 			} else {
 				real.text = node.text;
+				node.parentNode.replaceChild( real, node );
+				releaseNext();
 			}
-			node.parentNode.replaceChild( real, node );
-		} );
+		} )();
 	}
 
 	// ---------------------------------------------------------------------

@@ -28,6 +28,10 @@ let htmlcode = `<div class='nxt-wdk-overlay'></div><div id='nxt-preset-btn-wrap'
 
                             $(document).on("click", ".nxt-theme-preset-btn-enable-preset", function (e) {
                                 e.preventDefault();
+                                // One request per click; a double click must not start a second install.
+                                var $btn = $(this), btnLabel = $btn.html();
+                                if ($btn.data('nxtBusy')) { return; }
+                                $btn.data('nxtBusy', true);
                                 if(nxt_ele_wdkit.wdkactivate){
                                     $(this).html(i18n.activating_wdk);
                                 }else{
@@ -46,14 +50,16 @@ let htmlcode = `<div class='nxt-wdk-overlay'></div><div id='nxt-preset-btn-wrap'
                                     processData: false,
                                     contentType: false,
                                     success: function (response) {
-                                        if (response) {
-                                            //window.location.hash = window.location.hash + '?wdesignkit=open';
+                                        if (response && response.success !== false && response.Success !== false) {
                                             window.location.reload();
                                         } else {
-                                            alert(i18n.install_failed + ' ' + response.message);
+                                            $btn.data('nxtBusy', false).html(btnLabel);
+                                            alert(i18n.install_failed + ' ' + ((response && response.data && response.data.content) || ''));
                                         }
                                     },
                                     error: function (xhr, status, error) {
+                                        $btn.data('nxtBusy', false).html(btnLabel);
+                                        alert(i18n.install_failed);
                                         console.error("Error cache.", error);
                                     }
                                 });
@@ -206,6 +212,10 @@ let htmlcode = `<div class='nxt-wdk-overlay'></div><div id='nxt-preset-btn-wrap'
         function setupPopupEvents() {
             $(document).on("click", ".nxt-theme-preset-btn-enable-preset", function (e) {
                 e.preventDefault();
+                // One request per click; a double click must not start a second install.
+                var $btn = $(this), btnLabel = $btn.html();
+                if ($btn.data('nxtBusy')) { return; }
+                $btn.data('nxtBusy', true);
                 if(nxt_ele_wdkit.wdkactivate){
                     $(this).html(i18n.activating_wdk);
                 }else{
@@ -224,14 +234,16 @@ let htmlcode = `<div class='nxt-wdk-overlay'></div><div id='nxt-preset-btn-wrap'
                     processData: false,
                     contentType: false,
                     success: function (response) {
-                        if (response) {
-                            //window.location.hash = window.location.hash + '?wdesignkit=open';
+                        if (response && response.success !== false && response.Success !== false) {
                             window.location.reload();
                         } else {
-                            alert(i18n.install_failed + ' ' + response.message);
+                            $btn.data('nxtBusy', false).html(btnLabel);
+                            alert(i18n.install_failed + ' ' + ((response && response.data && response.data.content) || ''));
                         }
                     },
                     error: function (xhr, status, error) {
+                        $btn.data('nxtBusy', false).html(btnLabel);
+                        alert(i18n.install_failed);
                         console.error("Error cache.", error);
                     }
                 });

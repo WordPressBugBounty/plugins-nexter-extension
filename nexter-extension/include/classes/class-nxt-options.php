@@ -89,6 +89,26 @@ class Nxt_Options {
 	}
 
 	/**
+	 * Whether the Content Fields module is switched on.
+	 *
+	 * Defaults to ON when the key was never written, unlike the SEO switch: a site upgrading with
+	 * existing post types, taxonomies and field groups would otherwise have them all unregister on
+	 * update, taking their content out of the admin with it. Only an explicit false disables it.
+	 *
+	 * @return bool
+	 */
+	public static function fields_enabled() {
+		$ext = self::extra_ext();
+		if ( ! is_array( $ext ) || ! isset( $ext['fields'] ) || ! is_array( $ext['fields'] ) ) {
+			return true;
+		}
+		if ( ! array_key_exists( 'switch', $ext['fields'] ) ) {
+			return true;
+		}
+		return ! empty( $ext['fields']['switch'] );
+	}
+
+	/**
 	 * @return array|false  nexter_site_performance value.
 	 */
 	public static function performance() {

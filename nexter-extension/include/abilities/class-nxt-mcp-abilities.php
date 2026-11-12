@@ -138,30 +138,58 @@ class Nxt_MCP_Abilities {
 
 		$base = NEXTER_EXT_DIR . 'include/abilities/';
 
+		// The journal store, ahead of the lifecycle that writes to it.
+		require_once $base . 'class-nxt-ability-journal.php';
+
 		// Must load before the ability files: wp_register_ability_args only reaches abilities
 		// registered after the filter is attached.
 		require_once $base . 'lifecycle-filters.php';
+
+		// Loaded ahead of the loop: every Content Fields ability calls these helpers from its execute_callback.
+		require_once $base . 'nexter-content-types-shared.php';
+
+		// Loaded ahead of the loop for the same reason, but used by write abilities in every module.
 		require_once $base . 'nexter-dry-run.php';
 
+		// Registers no ability — it attaches the MCP handshake filter and generates the manual from
+		// whatever ends up registered below.
+		require_once $base . 'nexter-mcp-manual.php';
+
+		// Must be attached before the first ability registers, or the preset does not reach it.
+		require_once $base . 'nexter-mcp-exposure.php';
+
 		foreach ( array(
+			'nexter-apply-changes',
 			'nexter-bulk-image-optimizer',
+			'nexter-content-model',
+			'nexter-content-types',
+			'nexter-content-types-model',
 			'nexter-cookie-consent-compliance-check',
 			'nexter-cookie-consent-cookies',
 			'nexter-cookie-consent-settings',
+			'nexter-cpt',
 			'nexter-create-snippet',
 			'nexter-create-template',
 			'nexter-custom-fonts',
 			'nexter-delete-snippet',
 			'nexter-delete-template',
+			'nexter-docs',
+			'nexter-field-groups',
+			'nexter-field-values',
+			'nexter-fields',
 			'nexter-get-snippet',
 			'nexter-get-template',
 			'nexter-image-optimization',
+			'nexter-list-changes',
 			'nexter-list-extensions',
 			'nexter-list-snippets',
 			'nexter-list-templates',
 			'nexter-performance-settings',
+			'nexter-scaffold',
+			'nexter-schema',
 			'nexter-security-settings',
 			'nexter-smtp-settings',
+			'nexter-taxonomy',
 			'nexter-toggle-extension',
 			'nexter-toggle-snippet',
 			'nexter-toggle-template',

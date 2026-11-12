@@ -52,6 +52,14 @@ if ( ! class_exists( 'Nexter_Extensions_Load' ) ) {
 					}
 				} 
 			);
+			// Content Fields dynamic tags for Elementor. Guarded inside the file on both Elementor and
+			// the Fields module, so requiring it unconditionally is safe.
+			add_action(
+				'after_setup_theme',
+				function() {
+					require_once NEXTER_EXT_DIR . 'include/classes/third-party/class-nexter-fields-dynamic-tags.php';
+				}
+			);
 			add_action( 'after_setup_theme', [ $this, 'theme_after_setup' ] );
 
 			$nexter_white_label = Nxt_Options::white_label();
@@ -68,6 +76,9 @@ if ( ! class_exists( 'Nexter_Extensions_Load' ) ) {
 						$page = isset( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : '';
 						if ( $page === 'nxt_code_snippets' ) {
 							$classes .= ' nxt-code-snippet-page ';
+						}
+						if ( $page === 'nxt_content_types' ) {
+							$classes .= ' nxt-content-types-page ';
 						}
 						return $classes;
 					},
@@ -582,6 +593,12 @@ if ( ! class_exists( 'Nexter_Extensions_Load' ) ) {
 			$mcp_option        = get_option( 'tpgb_connection_data', array() );
 			$mcp_ability_value = isset( $mcp_option['nxt_enable_mcp_abilities'] ) ? $mcp_option['nxt_enable_mcp_abilities'] : 'enable';
 			if ( empty( $mcp_option ) || 'enable' === $mcp_ability_value ) {
+				// Loaded here rather than with the ability files: abilities register lazily, and the
+				// journal's installer has to be attached to admin_init whether or not anything reads
+				// the registry on this request.
+				require_once NEXTER_EXT_DIR . 'include/abilities/class-nxt-ability-journal.php';
+				Nxt_Ability_Journal::init();
+
 				require_once NEXTER_EXT_DIR . 'include/abilities/class-nxt-mcp-abilities.php';
 				Nxt_MCP_Abilities::instance();
 				self::$mcp_abilities_bootstrapped = true;
@@ -597,6 +614,15 @@ if ( ! class_exists( 'Nexter_Extensions_Load' ) ) {
 			require_once NEXTER_EXT_DIR . 'include/rollback.php';
 			require_once NEXTER_EXT_DIR . 'include/classes/nexter-class-load.php';
 			require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/custom-fields/nxt-custom-fields.php';
+
+			// Content Fields is switch-gated like SEO. Nothing from the module loads when it is off,
+			// so its CPT/taxonomy registration, REST routes, render hooks and template API all go
+			// with it — and the content-types abilities self-disable, because every one of them tests
+			// class_exists( 'Nxt_Content_Types_Admin_Logic' ) first.
+			if ( Nxt_Options::fields_enabled() ) {
+				require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/content-types/content-types-bootstrap.php';
+			}
+
 			$get_opt     = Nxt_Options::extra_ext();
 			$seo_enabled = false;
 
@@ -612,6 +638,10 @@ if ( ! class_exists( 'Nexter_Extensions_Load' ) ) {
 			}
 			
 			if ( is_admin() ) {
+				// Black Friday offer notice (free → Pro, Pro → Lifetime); self-gates on dates and white-label.
+				require_once NEXTER_EXT_DIR . 'include/panel-settings/extensions/class-nxt-bfcm-notice.php';
+				new Nxt_Bfcm_Notice();
+
 				// The legacy deactivation popup (nxt-deactivate.php) was removed in 4.7.3 — the
 				// POSIMYTH SDK survey (Posimyth_Deactivation_Survey, booted from the main plugin
 				// file) is now the single deactivation form, with the 3-way consent model.
@@ -647,6 +677,14 @@ if ( ! class_exists( 'Nexter_Extensions_Load' ) ) {
 					// Beaver Theme Build — file already self-gates with FLBuilderModel + FLThemeBuilderLoader
 					require_once $include_uri . 'class-beaver-build-theme.php';
 				}
+
+				// Nexter Blocks Pro Dynamic Fields — exposes Content Fields groups as dynamic
+				// options. Deliberately NOT gated on Tpgbp_Pro_Blocks_Helper: that class is not
+				// defined yet at this point in the load order, so the check would always fail. The
+				// file only registers two filters, which cost nothing when Nexter Blocks is absent
+				// and never fires them, and it self-gates on the Content Fields module — which does
+				// not ship in every build.
+				require_once $include_uri . 'class-nexter-blocks-dynamic-fields.php';
 			}
 
 			require_once $custom_opt_uri . 'module/nexter-display-conditional-rules.php';
@@ -1075,7 +1113,11 @@ if ( ! class_exists( 'Nexter_Extensions_Load' ) ) {
 		/*
 		 * Wdesignkit Preset Load templates Elementor Builder
 		 */
-		public function nxt_elementor_wdk_preset_script( $hook_suffix ){
+		public function nxt_elementor_wdk_preset_script( $hook_suffix = '' ){
+			// Elementor's editor hook passes no screen; its editor runs on post.php.
+			if ( empty( $hook_suffix ) && doing_action( 'elementor/editor/before_enqueue_scripts' ) ) {
+				$hook_suffix = 'post.php';
+			}
 			if ( $this->is_nxt_builder_admin_screen( $hook_suffix ) ) {
 				$wdkPlugin   = false;
 				$wdkVersion  = '';

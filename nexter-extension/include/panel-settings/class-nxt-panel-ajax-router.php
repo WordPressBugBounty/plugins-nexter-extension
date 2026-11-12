@@ -46,6 +46,8 @@ class Nxt_Panel_Ajax_Router {
 		add_action( 'wp_ajax_nexter_temp_api_call', [ $this, 'nexter_temp_api_call' ] );
 		add_action( 'admin_init', [ $this, 'nxt_customizer_export_data' ] );
 		add_action( 'wp_ajax_nxt_import_customizer_data', [ $this, 'nxt_customizer_import_data' ] );
+		add_action( 'wp_ajax_nexter_ai_access_get', [ $this, 'nexter_ai_access_get_ajax' ] );
+		add_action( 'wp_ajax_nexter_ai_access_save', [ $this, 'nexter_ai_access_save_ajax' ] );
 		if ( ! defined( 'TPGB_VERSION' ) ) {
 			add_action( 'wp_ajax_tpgb_connection_data_save', array( $this, 'nexter_ext_connection_data_save_action' ) );
 		}
@@ -979,22 +981,33 @@ class Nxt_Panel_Ajax_Router {
 			}
 
 			$installed = $upgrader->install( $plugin_info->download_link );
-
-			$activation_result = activate_plugin( $plugin_basename );
-			if ( ! empty( $plu_slug ) && $plu_slug == 'wdesignkit' ) {
-				$this->wdk_installed_settings_enable();
+			if ( true !== $installed ) {
+				self::send_plugin_install_result( false, __( 'Could not install the plugin. Please install it manually from WordPress.org.', 'nexter-extension' ) );
 			}
-			$success = null === $activation_result;
-			wp_send_json( ['Sucees' => true] );
-
-		} elseif ( isset( $installed_plugins[ $plugin_basename ] ) ) {
-			$activation_result = activate_plugin( $plugin_basename );
-			if ( ! empty( $plu_slug ) && $plu_slug == 'wdesignkit' ) {
-				$this->wdk_installed_settings_enable();
-			}
-			$success = null === $activation_result;
-			wp_send_json( ['Sucees' => true] );
 		}
+
+		$activation_result = activate_plugin( $plugin_basename );
+		if ( is_wp_error( $activation_result ) ) {
+			self::send_plugin_install_result( false, $activation_result->get_error_message() );
+		}
+		if ( 'wdesignkit' === $plu_slug ) {
+			$this->wdk_installed_settings_enable();
+		}
+		self::send_plugin_install_result( true );
+	}
+
+	/**
+	 * Install/activate response. `Sucees` is kept for older callers that still read the typo.
+	 */
+	private static function send_plugin_install_result( $ok, $message = '' ) {
+		wp_send_json(
+			array(
+				'success' => $ok,
+				'Success' => $ok,
+				'Sucees'  => $ok,
+				'data'    => array( 'content' => $message ),
+			)
+		);
 	}
 
 	/**
@@ -1006,14 +1019,14 @@ class Nxt_Panel_Ajax_Router {
 			'gutenberg_builder'  => true,
 			'gutenberg_template' => true
 			);
-			$builder  = array( 'elementor' );
+			$builder  = array( 'nexter-blocks' );
 			do_action( 'wdkit_active_settings', $settings, $builder );
 		} else if ( defined( 'ELEMENTOR_VERSION' ) ) {
 			$settings = array(
 			'elementor_builder'  => true,
 			'elementor_template' => true
 			);
-			$builder  = array( 'nexter-blocks');
+			$builder  = array( 'elementor' );
 			do_action( 'wdkit_active_settings', $settings, $builder );
 		}
 	}
@@ -1491,4 +1504,183 @@ class Nxt_Panel_Ajax_Router {
 
 		return unserialize( $body, array( 'allowed_classes' => array( 'stdClass' ) ) ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_unserialize
 	}
+
+	/**
+	 * Make the abilities layer exist before reading anything from it.
+	 *
+	 * Registration is lazy, so on an admin-ajax request nothing in include/abilities/ is loaded —
+	 * not the helper functions, not the option-name constants. Both handlers below have to trigger
+	 * the read themselves.
+	 *
+	 * @return bool Whether the layer is present.
+	 */
+	private function nexter_boot_abilities() {
+		if ( ! function_exists( 'wp_get_abilities' ) ) {
+			return false;
+		}
+		wp_get_abilities();
+		return function_exists( 'nexter_ext_ability_exposure' ) && defined( 'NEXTER_MCP_PRESET_OPTION' );
+	}
+
+	/**
+	 * What an assistant can currently reach, for the AI Access screen.
+	 *
+	 * @since 4.8.1
+	 */
+	public function nexter_ai_access_get_ajax() {
+		check_ajax_referer( 'nexter_admin_nonce', 'nexter_nonce' );
+
+		if ( ! is_user_logged_in() || ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array( 'content' => __( 'Insufficient permissions.', 'nexter-extension' ) ) );
+		}
+
+		if ( ! $this->nexter_boot_abilities() ) {
+			wp_send_json_error( array( 'content' => __( 'Nexter abilities are not available on this site.', 'nexter-extension' ) ) );
+		}
+
+		$exposure  = nexter_ext_ability_exposure();
+		$overrides = nexter_ext_mcp_overrides();
+
+		$presets = array();
+		foreach ( nexter_ext_mcp_presets() as $key => $preset ) {
+			$presets[] = array(
+				'key'         => $key,
+				'label'       => $preset['label'],
+				'description' => $preset['description'],
+			);
+		}
+
+		$abilities = array();
+		$groups    = array();
+		foreach ( array_merge( $exposure['public'], $exposure['closed'] ) as $name ) {
+			$ability    = wp_get_ability( $name );
+			$mode       = nexter_ext_ability_mode( $name );
+			$reversible = '' !== nexter_ext_ability_reverses( $name );
+			$group      = $ability ? nexter_ext_ability_group( $ability ) : array(
+				'key'   => 'other',
+				'label' => __( 'Other', 'nexter-extension' ),
+			);
+
+			$groups[ $group['key'] ] = $group['label'];
+
+			$abilities[] = array(
+				'name'        => $name,
+				'label'       => ( $ability && method_exists( $ability, 'get_label' ) ) ? $ability->get_label() : $name,
+				'description' => ( $ability && method_exists( $ability, 'get_description' ) ) ? $ability->get_description() : '',
+				'mode'        => $mode,
+				'group'       => $group['key'],
+				'open'        => in_array( $name, $exposure['public'], true ),
+				'overridden'  => array_key_exists( $name, $overrides ),
+				'reversible'  => $reversible,
+				// The screen's filter chips key off this, so the three kinds are named once, here.
+				'tag'         => ( 'write' !== $mode ) ? 'read' : ( $reversible ? 'undoable' : 'no-undo' ),
+				// One phrase the screen shows verbatim, so the wording lives with the rule it describes.
+				'kind'        => ( 'write' !== $mode )
+					? __( 'READ', 'nexter-extension' )
+					: ( $reversible ? __( 'UNDOABLE', 'nexter-extension' ) : __( 'NO UNDO', 'nexter-extension' ) ),
+			);
+		}
+
+		usort(
+			$abilities,
+			static function ( $a, $b ) {
+				if ( $a['mode'] === $b['mode'] ) {
+					return strcmp( $a['name'], $b['name'] );
+				}
+				return ( 'write' === $a['mode'] ) ? 1 : -1;
+			}
+		);
+
+		// Fixed order where we have an opinion, then anything new on the end rather than hidden.
+		$order    = array( 'content-types', 'field-groups', 'field-values', 'model', 'snippets', 'templates', 'settings', 'images', 'extensions', 'activity', 'guidance' );
+		$ordered  = array();
+		foreach ( $order as $key ) {
+			if ( isset( $groups[ $key ] ) ) {
+				$ordered[] = array(
+					'key'   => $key,
+					'label' => $groups[ $key ],
+				);
+				unset( $groups[ $key ] );
+			}
+		}
+		foreach ( $groups as $key => $label ) {
+			$ordered[] = array(
+				'key'   => $key,
+				'label' => $label,
+			);
+		}
+
+		$open_writes = 0;
+		foreach ( $abilities as $row ) {
+			if ( 'write' === $row['mode'] && $row['open'] ) {
+				++$open_writes;
+			}
+		}
+
+		wp_send_json_success(
+			array(
+				'preset'      => nexter_ext_mcp_preset(),
+				'presets'     => $presets,
+				'abilities'   => $abilities,
+				'groups'      => $ordered,
+				'open_writes' => $open_writes,
+				// The flag is read by an MCP adapter. Without one it is inert, and the screen says so
+				// rather than implying an assistant is connected.
+				'adapter'     => class_exists( 'WP\\MCP\\Core\\McpAdapter' ) || class_exists( 'WP\\MCP\\Core\\McpServer' ),
+			)
+		);
+	}
+
+	/**
+	 * Store the AI Access preset and its per-ability overrides.
+	 *
+	 * @since 4.8.1
+	 */
+	public function nexter_ai_access_save_ajax() {
+		check_ajax_referer( 'nexter_admin_nonce', 'nexter_nonce' );
+
+		if ( ! is_user_logged_in() || ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array( 'content' => __( 'Insufficient permissions.', 'nexter-extension' ) ) );
+		}
+
+		if ( ! $this->nexter_boot_abilities() ) {
+			wp_send_json_error( array( 'content' => __( 'Nexter abilities are not available on this site.', 'nexter-extension' ) ) );
+		}
+
+		$presets = nexter_ext_mcp_presets();
+		$preset  = isset( $_POST['preset'] ) ? sanitize_key( wp_unslash( $_POST['preset'] ) ) : 'reads';
+		if ( ! isset( $presets[ $preset ] ) ) {
+			$preset = 'reads';
+		}
+		update_option( NEXTER_MCP_PRESET_OPTION, $preset );
+
+		$opened = isset( $_POST['open'] ) ? json_decode( wp_unslash( $_POST['open'] ), true ) : array();
+		$opened = is_array( $opened ) ? array_map( 'sanitize_text_field', $opened ) : array();
+
+		// Resolved against every registered ability, not against a list the browser sent: a posted
+		// name that is not a real ability must not be able to write itself into the overrides.
+		$exposure  = nexter_ext_ability_exposure();
+		$overrides = array();
+		foreach ( array_merge( $exposure['public'], $exposure['closed'] ) as $name ) {
+			$by_preset = nexter_ext_mcp_preset_allows( $preset, $name, nexter_ext_ability_mode( $name ) );
+			$by_form   = in_array( $name, $opened, true );
+
+			// Store only the disagreements. An override that repeats the preset would freeze this
+			// ability's answer the next time the preset changes.
+			if ( $by_form !== $by_preset ) {
+				$overrides[ $name ] = $by_form;
+			}
+		}
+
+		update_option( NEXTER_MCP_OVERRIDES_OPTION, $overrides );
+
+		wp_send_json_success(
+			array(
+				'message'   => __( 'AI access saved.', 'nexter-extension' ),
+				'preset'    => $preset,
+				'overrides' => count( $overrides ),
+			)
+		);
+	}
+
 }

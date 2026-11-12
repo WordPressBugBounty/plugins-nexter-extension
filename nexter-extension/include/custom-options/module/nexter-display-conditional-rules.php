@@ -348,7 +348,7 @@ if ( ! class_exists( 'Nexter_Builder_Display_Conditional_Rules' ) ) {
 			
 			$options = array();
 
-			/* translators: %s: Post Label */
+			/* translators: %s: plural name */
 			$options[ $post_name . '|entire' ] = sprintf( __( 'All %s', 'nexter-extension' ), $post_label );
 
 			if ( $post_key != 'pages' ) {

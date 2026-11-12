@@ -3,7 +3,7 @@ Contributors: posimyththemes, nirmalkavaiya, sagarpatel124
 Tags: seo, security, theme-builder, code-snippet, image-optimizer
 Requires at least: 5.9
 Tested up to: 7.1
-Stable tag: 4.8.1
+Stable tag: 4.9.0
 Requires PHP: 7.4
 License: GPLv3
 License URI: https://opensource.org/licenses/GPL-3.0
@@ -126,6 +126,23 @@ Cookie Consent gives you the tools to collect and record consent. Review your se
 
 ---
 
+== 🗂️ Content Fields: Custom Post Types, Taxonomies & Field Groups ==
+
+Build your own content model without a separate custom fields plugin. Turn it on under **Nexter > Content Fields**. Create post types, taxonomies and field groups from one screen, then show the values anywhere on your site.
+
+* **Custom Post Types**: Register post types with their labels, menu icon, supported features, archive and permalink slug, and REST API visibility.
+* **Custom Taxonomies**: Create categories or tags for any post type, hierarchical or flat, with their own labels and rewrite slug.
+* **Field Groups**: Group fields and decide where they appear with location rules: post type, taxonomy term, user role, user profile and registration forms, and comments.
+* **22 Field Types**: Text, Textarea, Number, Range, Email, URL, Image, File, WYSIWYG Editor, Select, Checkbox, Radio Button, True / False, Link, Post Object, Page Link, Taxonomy, User, Date, Time, Date Time and Color pickers. *(Pro)* adds Relationship and Repeater.
+* **Safe Saving**: Every value is checked against its field type when it is saved, and each screen is protected by a nonce and a capability check.
+* **Show Values on the Frontend**: Use `nxt_field_value()` to get a value or `nxt_print_field()` to print it, already escaped, in your theme templates.
+* **REST API**: Field values are available in the REST API for post types that support custom fields.
+* **Import from Other Plugins**: Bring post types, taxonomies and field groups across from ACF, JetEngine, Meta Box and Pods.
+
+When you turn Content Fields off, none of its files load, on the dashboard or on the frontend.
+
+---
+
 == 📧 WordPress SMTP Email ==
 
 Fix WordPress emails going to spam in minutes. The built-in [WordPress smtp plugin](https://nexterwp.com/nexter-extensions/email-smtp-for-wordpress/?utm_source=wordpress&utm_medium=readmepage&utm_campaign=nexterextension) routes your contact forms, order notifications, and password resets through a real mail provider — so they actually arrive.
@@ -226,6 +243,9 @@ Yes. The **Self-Host Google Fonts** feature downloads fonts to your own server a
 = Does Nexter Extension include a cookie consent banner? =
 Yes. Enable **Cookie Consent** under Nexter > Security > Privacy. It handles cookie categories, prior script blocking, consent records, Google Consent Mode v2 and a Compliance Check report. Design the banner, preferences button and cookie declaration table with the free Cookie Consent blocks in Nexter Blocks. [Read the docs →](https://nexterwp.com/help/nexter-extension/cookie-consent/?utm_source=wordpress&utm_medium=readmepage&utm_campaign=nexterextension)
 
+= Can I create custom post types and custom fields without ACF? =
+Yes. Enable **Content Fields** under Nexter > Content Fields. Create custom post types, taxonomies and field groups, place the fields on posts, terms, user profiles and comments, and show the values in your templates with `nxt_field_value()`. Already using ACF, JetEngine, Meta Box or Pods? Import your existing setup.
+
 = Can I white-label this for client sites? =
 Yes. **Branded Admin Interface** *(Pro)* lets you add your logo and brand colors to the WP login page. **Admin Menu Organizer** *(Pro)* lets you reorder, rename, and hide menu items for clean client dashboards. Combined with **Elementor Ad-Free**, clients see only what you want them to see.
 
@@ -289,10 +309,23 @@ Nexter Extension may connect to external services below only when the related fe
 
 ### View Complete Changelog at [roadmap.nexterwp.com](https://roadmap.nexterwp.com/updates?filter=Nexter+Extension+-+FREE)
 
-= V4.8.1 = 29 October 2026
+= V4.9.0 = 12 November 2026
+- Added : Content Fields : new Content Fields module - create custom post types, taxonomies and field groups with 25 field types, shown on post, term, user profile and comment screens, with a PHP API (nxt_field_value, nxt_print_field) to show values on the frontend.
+- Added : Admin Notice : dismissible Black Friday offer notice - free users see the Upgrade to Pro offer, Pro users see the Upgrade to Lifetime offer. Hidden on white-labelled sites and on the Lifetime Unlimited plan.
+- Improved : Cookie Consent : turning Cookie Consent on or off now also turns the Cookie Consent, Cookie Declaration and Cookie Preferences Button blocks on or off in Nexter Blocks, when it is installed.
 - Fixed : Code Snippets : on multisite, only a Super Admin can now create, import or run snippets; site administrators no longer can.
+- Fixed : Code Snippets : Save to cloud in the snippet row menu now opens the WDesignKit save popup instead of doing nothing.
 - Fixed : Cookie Consent : the consent-record endpoint now rejects cross-site requests and checks the module switch and rate limit before accepting a write, so consent-log records can no longer be forged.
 - Fixed : Dashboard : Theme Builder and Code Snippets strings in the lazily loaded dashboard screens now pick up translations kept in custom locations such as Loco Translate.
+- Fixed : Dashboard : on screens 1280px wide or smaller, settings side panels (such as Security > Configure) opened invisibly, including in Safari; they now slide in over the page.
+- Fixed : Nexter SEO : the Site Audit lists the affected pages for each finding again, with View and Edit links, and the CSV export has one row per affected page. The list was lost when the dashboard was redesigned.
+- Fixed : Cookie Consent : inline scripts attached to a blocked script (for example Site Kit's gtag config) now keep their code and run after that script once consent is given, so Google Analytics receives hits again.
+- Fixed : Cookie Consent : Scan Now now removes scanned cookies and storage keys that are no longer found on the site, so deleted cookies (for example leftovers from another consent plugin) drop out of the cookie table. Entries you added or edited are kept.
+- Fixed : WDesignKit : installing or activating WDesignKit from Nexter now reports a failed download or activation instead of showing success, and the Templates, Theme Builder, Code Snippets and Elementor preset buttons show the error and stay on the page.
+- Fixed : WDesignKit : clicking an install button twice no longer starts a second install request.
+- Fixed : WDesignKit : after installing from Nexter, the Nexter Blocks and Elementor templates in WDesignKit are now enabled correctly (the builder names were swapped).
+- Fixed : Elementor : the Nexter preset button in the Elementor editor now loads its script.
+- Fixed : WDesignKit : Theme Builder and the Templates import popup now say Activate WDesignKit when it is installed but inactive, and Installing WDesignKit during a fresh install.
 
 = V4.8.0 = 28 October 2026
 - Added : Cookie Consent : collect, store and honour visitor cookie consent, with prior script blocking of non-essential vendors until a visitor decides, consent-record logging with configurable IP handling and retention, Google Consent Mode v2 integration, and a live Compliance Check report.
@@ -352,6 +385,11 @@ Nexter Extension may connect to external services below only when the related fe
 - Fixed : Login Limiter : a wrong two-factor code is now counted against the visitor's IP address, so it counts toward the lockout.
 - Fixed : Adobe Fonts : saving now changes only its own setting, checks the kit ID, and reports success when the kit is cleared. SMTP also no longer shows a warning when its saved values have no type.
 - Fixed : Post Duplicator : the number of copies is capped at 50, adjustable with the nxt_duplicate_post_max_copies filter, and a user who cannot publish now gets a pending copy instead of a published one.
+- Fixed : Content Fields : opening a Repeater's sub-field settings no longer closes or hides the parent panel.
+- Fixed : Content Fields : Conditional Logic and Location Rules rows no longer squash their selects or let the remove button cover the And button.
+- Fixed : Content Fields : the import summary icon lines up with its heading, the Dismiss button matches the other buttons, the trash empty message is padded, and long upload file names wrap inside the drop zone.
+- Fixed : Content Fields : removed the extra logo in the header, and the header title now uses the same size as the other dashboard pages.
+- Fixed : Content Fields : select options in field group meta boxes are no longer cut off on the left.
 
 = V4.7.11 = 05 October 2026
 - Improved : Nexter SEO : Site Audit findings now list the pages they are about, each with a view and an edit link; the CSV and JSON exports carry the same per-item detail.
@@ -601,3 +639,104 @@ Nexter Extension may connect to external services below only when the related fe
 - New : Nexter SEO : Import / Export — move your entire SEO configuration between sites with a single JSON file.
 - Fixed : Custom Font Upload : Variable Font Compatibility Register font Elementor bug fix
 - Fixed : Bug Fixes and Improvements
+
+= V4.6.17 = 08 July 2026
+- Fixed : Image Optimization : Large images (over 2560px, WordPress "-scaled") are now optimised and served as WebP/AVIF instead of the original JPEG
+- Fixed : Image Optimization : "Run in Background" now defers conversion to the cron queue so uploads are not blocked, and the queue no longer reprocesses already-optimised images
+- Fixed : Google Fonts : Self-Host Google Fonts now works on fresh installs (the local fonts directory was not created before first use)
+- Fixed : Security : iFrame Security now correctly sends the X-Frame-Options header (clickjacking protection)
+- Fixed : Bug Fixes and Improvements
+
+= V4.6.16 = 02 July 2026
+- Fixed : Theme Builder : "Edit with Elementor" rewrite rules flush automatically
+- Improved : Theme Builder : Register the template post type before Elementor initializes for reliable editor detection
+- Fixed : Bug Fixes and Improvements
+
+= V4.6.15 = 30 June 2026
+- Fixed : MCP Abilities : All abilities failed to register (none appeared in SproutOS / WP Abilities API) due to a missing permission callback dependency
+- Fixed : Security : Custom Login URL : "Change WP Admin Login Path" stripped "/" so multi-segment login paths were broken
+- Fixed : Bug Fixes and Improvements
+
+= V4.6.14 = 25 June 2026
+- Fixed : Translate : Missing text-domain in Dashboard, Code Snippets and Theme Builder
+- Fixed : Bug Fixes and Improvements
+
+= V4.6.13 = 22 June 2026
+- Fixed : Disable Gutenberg : "Except On" and "All Post Types" modes not disabling the block editor for selected post types
+- Fixed : Code Snippets : wp_head PHP snippet (e.g. Add Google Analytics Tracking Code) not loading on the frontend
+- Fixed : Code Snippets : JavaScript error when selecting a field in Conditional Logic
+- Fixed : Post Duplicate : Elementor content not copied correctly on duplicated pages
+- Fixed : Translate : Missing text-domain in Dashboard, Code Snippets and Theme Builder
+- Fixed : Dashboard : Responsive Mobile Devices
+- Fixed : Bug Fixes and Improvements
+
+= V4.6.12 = 16 June 2026
+- Improve : Dashboard : Converted dashboard modules to a component-based structure for improved maintainability and scalability
+- Fixed : Custom Upload Font : TTF, Woff2 , Woff compatibility Upload file
+- Fixed : Image Optimisation : Improve Image optimization
+- Fixed : Bug Fixes and Improvements
+
+= V4.6.11 = 28 May 2026
+- New : MCP Abilities : 26 Added WordPress Abilities API integration for templates, snippets, extensions, SMTP, security, performance, image optimization, and custom fonts.
+- Added : Dashboard : Settings : "Enable MCP Abilities" setting in Connection.
+- Improved : Utilities : SMTP Email : improve SMTP connection.
+
+= V4.6.10 = 20 May 2026
+- Compatibility : WordPress 7.0 Tested
+
+= V4.6.9 = 11 May 2026
+- Fixed : Utilities : Post Duplicate : Post content bug Fix duplicate post.
+- Fixed : Bug Fixes and Improvements.
+
+= V4.6.8 = 07 May 2026
+- Fixed : Rollback Manager : options object fatal error bug Fix
+- Fixed : Translate : Some text update translation
+- Fixed : Theme Builder : bug Fix
+- Fixed : Bug Fixes and Improvements.
+
+= V4.6.7 = 13 April 2026
+- Fixed : Theme Builder : Translate Localization support in the Nexter Theme Builder scripts.
+- Fixed : Dashboard : Corrected untranslated text strings for improved localization support.
+- Fixed : Bug Fixes and Improvements.
+
+= V4.6.6 = 11 April 2026
+- Fixed : Advanced Security : options object fatal error bug Fix
+- Fixed : Custom Login URL : bug fix
+- Fixed : Bug Fixes and Improvements.
+
+= V4.6.5 = 08 April 2026
+- Fixed : Post Duplicate : Fix issue on duplicate post data
+- Fixed : Advanced Security : Options Bug fix
+- Fixed : Bug Fixes and Improvements.
+
+= V4.6.4 = 07 April 2026
+- Fixed : Bug Fixes and Improvements.
+
+= V4.6.3 = 06 April 2026
+- Improved : Bootstrap & Core : Optimized initialization flow and conditional loading for better performance and stability.
+- Improved : Architecture : Refactored core modules into smaller classes for enhanced maintainability, performance, and clearer separation of logic.
+- Improved : General : Applied strict checks, cleanup handling, and overall performance and stability enhancements.
+- Fixed : Code Snippets : Corrected snippet display logic to use in-memory data for accurate conditional evaluation and avoid redundant meta queries.
+- Fixed : Admin & Assets : Resolved issue where dashboard/admin assets were skipped due to over-restricted enqueue conditions after refactor.
+- Fixed : Theme Builder : Singular & Archive Templates : Resolved issue where templates were not rendering on the frontend due to premature post type check before registration.
+- Fixed : Admin Interface : Notice Dismiss : Fixed "Invalid Notice ID" error when dismissing pro license notices, added extensible filter for notice ID whitelist.
+- Fixed : Performance : Template Resolution : Consolidated three separate nxt-build-get-data option reads per frontend request into a single cached read.
+- Fixed : General bug fixes and performance improvements.
+
+= V4.6.2 = 25 March 2026
+- Fixed : Custom Font Upload : font-face Italic style font bug fix
+- Fixed : Code Snippet : Create Snippet Register Custom Post type or Taxonomy Load Issue Bug Fix.
+- Fixed : General bug fixes and performance improvements
+
+= V4.6.1 = 18 March 2026
+- Fixed : Utilities : Replace URL & Text : Improved search and replace functionality with code-level fixes for more accurate data handling.
+- Fixed : Performance : Image Optimisation : Fixed white label content issue.
+- Fixed : Performance : Image Optimisation : Resolved issue where SVG images included in the skip list were still being optimized.
+- Fixed : Admin interface : Elementor AdFree : Fixed dynamic field icon display bug.
+- Fixed : General bug fixes and performance improvements
+
+= V4.6.0 = 13 March 2026
+- Added : Image Optimization : WebP / AVIF support, including compression, resizing, and bulk optimization.
+- Improved : Admin Interface : Clean Admin Bar : Added an option to toggle ON/OFF all third-party plugin nodes in the admin bar.
+- Fixed : Code Snippets : Resolved an issue where the "Add On AJAX Work" option was not executing PHP snippets correctly.
+- Fixed : Elementor AdFree : Dynamic Fields Hide bug Fixed CSS

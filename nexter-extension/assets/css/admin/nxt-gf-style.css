@@ -1,0 +1,999 @@
+/**
+ * Field Groups (Group Fields) metabox styles – admin post edit screen.
+ *
+ * @package Nexter_Extension
+ * @since 4.6.0
+ */
+.nxt-gf-metabox {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+.nxt-gf-metabox label.nxt-gf-label {
+    padding: 0;
+    margin: 0;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 17px;
+    color: #1a1a1a;
+}
+
+.nxt-gf-metabox .nxt-gf-field-row {
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+	width: 100%;
+}
+
+.nxt-gf-metabox .nxt-gf-checkbox-horizontal, .nxt-gf-metabox .nxt-gf-radio-horizontal {
+    margin-right: 16px;
+    font-size: 14px;
+    clear: none;
+    float: left;
+    vertical-align: middle;
+}
+
+.nxt-gf-metabox .nxt-gf-checkbox-toggle-all {
+	font-weight: 500;
+}
+
+.nxt-gf-boolean-toggle-wrap {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.nxt-gf-boolean-toggle-input {
+	display: none;
+}
+
+.nxt-gf-boolean-toggle {
+	display: inline-flex;
+	align-items: center;
+	border-radius: 3px;
+	overflow: hidden;
+	border: 1px solid #007cba;
+	cursor: pointer;
+}
+
+.nxt-gf-boolean-on,
+.nxt-gf-boolean-off {
+	padding: 4px 10px;
+	font-size: 13px;
+	line-height: 1.4;
+}
+
+.nxt-gf-boolean-on {
+	background: #007cba;
+	color: #fff;
+}
+
+.nxt-gf-boolean-off {
+	background: #fff;
+	color: #007cba;
+}
+
+.nxt-gf-boolean-toggle-input:not(:checked) + .nxt-gf-boolean-toggle .nxt-gf-boolean-on {
+	background: #fff;
+	color: #007cba;
+}
+
+.nxt-gf-boolean-toggle-input:not(:checked) + .nxt-gf-boolean-toggle .nxt-gf-boolean-off {
+	background: #007cba;
+	color: #fff;
+}
+
+.nxt-gf-boolean-label {
+	font-size: 13px;
+}
+
+/* Prepend/append input group – single row, aligned borders */
+.nxt-gf-metabox .nxt-gf-input-group {
+	display: inline-flex;
+	align-items: stretch;
+	max-width: 100%;
+	width: 100%;
+}
+
+.nxt-gf-metabox .nxt-gf-input-group .nxt-gf-prepend,
+.nxt-gf-metabox .nxt-gf-input-group .nxt-gf-append {
+	display: inline-flex;
+	align-items: center;
+	padding: 0 10px;
+	font-size: 13px;
+	line-height: 2;
+	background: #f0f0f1; /* match ACF grey chip */
+	border: 1px solid #d1d1d6;
+	color: #1d2327;
+	white-space: nowrap;
+	box-sizing: border-box;
+}
+
+.nxt-gf-metabox .nxt-gf-input-group .nxt-gf-prepend {
+	border-right: 0;
+	border-radius: 3px 0 0 3px;
+}
+
+.nxt-gf-metabox .nxt-gf-input-group .nxt-gf-append {
+	border-left: 0;
+	border-radius: 0 3px 3px 0;
+}
+
+.nxt-gf-metabox .nxt-gf-input {
+    flex: 1;
+    min-width: 0;
+    margin: 0;
+    border-radius: 3px;
+    border-color: #d1d1d6;
+    width: 100%;
+    color: #1a1a1a;
+    font-size: 14px;
+    line-height: 17px;
+    padding: 8px;
+	/*
+	 * White, like every native WordPress form control. This was `transparent`, which only looked
+	 * right inside a postbox — on the term add/edit screens the surrounding page is #f0f0f1, so
+	 * Nexter's fields came out grey while the Name / Slug / Description fields right above them
+	 * stayed white.
+	 *
+	 * background-COLOR, not the `background` shorthand: WordPress draws the <select> chevron as a
+	 * background-image and sets appearance:none, so a shorthand here wipes the arrow out and leaves
+	 * a select with no dropdown indicator at all (which is what `background: transparent` had been
+	 * doing).
+	 */
+	background-color: #fff;
+}
+
+/*
+ * Every plugin <select>, not just the ones in the time panel, needs the same gutter the chevron is
+ * drawn into — the shared .nxt-gf-input padding is 8px all round, which puts the arrow on top of
+ * the value. WordPress uses 24px for its own selects.
+ */
+.nxt-gf-metabox select.nxt-gf-input {
+	padding-right: 24px;
+	text-indent: 0;
+	text-overflow: clip;
+}
+
+/* Option text starts at the list's own left edge in the open dropdown. */
+.nxt-gf-metabox select.nxt-gf-input option {
+	padding-left: 8px;
+	text-indent: 0;
+}
+
+.nxt-gf-image-wrap {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.nxt-gf-image-preview {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    border: 1px solid #c3c4c7;
+    background: #f6f7f7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.nxt-gf-image-preview img {
+    max-width: 100%;
+    max-height: 100%;
+    display: block;
+}
+
+.nxt-gf-image-edit,
+.nxt-gf-image-remove {
+    position: absolute;
+    top: 6px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(0,0,0,0.6);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.nxt-gf-image-edit {
+    right: 36px;
+}
+
+.nxt-gf-image-remove {
+    right: 6px;
+}
+
+.nxt-gf-image-wrap:not(.nxt-gf-image-has-value) .nxt-gf-image-preview img {
+    display: none;
+}
+
+.nxt-gf-image-wrap:not(.nxt-gf-image-has-value) .nxt-gf-image-edit,
+.nxt-gf-image-wrap:not(.nxt-gf-image-has-value) .nxt-gf-image-remove {
+    display: none;
+}
+
+.nxt-gf-metabox .nxt-gf-media-button {
+    vertical-align: middle;
+}
+
+.nxt-gf-file-wrap {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.nxt-gf-file-preview {
+    display: inline-flex;
+    align-items: flex-start;
+    gap: 8px;
+    border: 2px solid #007cba;
+    padding: 8px 10px;
+    background: #f6f7f7;
+    min-width: 260px;
+}
+
+.nxt-gf-file-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    max-width: 100%;
+}
+
+.nxt-gf-file-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: #1d2327;
+}
+
+.nxt-gf-file-row {
+    font-size: 12px;
+    color: #50575e;
+}
+
+.nxt-gf-file-label {
+    font-weight: 500;
+}
+
+.nxt-gf-file-link {
+    word-break: break-all;
+}
+
+.nxt-gf-file-edit,
+.nxt-gf-file-remove {
+    margin-left: 4px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    color: #666;
+}
+
+.nxt-gf-file-wrap:not(.nxt-gf-file-has-value) .nxt-gf-file-name {
+    display: none;
+}
+
+.nxt-gf-file-wrap:not(.nxt-gf-file-has-value) .nxt-gf-file-edit,
+.nxt-gf-file-wrap:not(.nxt-gf-file-has-value) .nxt-gf-file-remove {
+    display: none;
+}
+
+/* Link field — WordPress Insert/edit link (wplink) */
+button.nxt-gf-link-open {
+    width: max-content;
+}
+.nxt-gf-link-wrap {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	max-width: 100%;
+}
+
+.nxt-gf-link-preview {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px 12px;
+	padding: 10px 12px;
+	border: 1px solid #d1d1d6;
+	border-radius: 4px;
+	background: #f9fafb;
+}
+
+.nxt-gf-link-title-text {
+	font-weight: 500;
+	font-size: 14px;
+	color: #1a1a1a;
+	line-height: 1.4;
+}
+
+.nxt-gf-link-url-a {
+	font-size: 13px;
+	line-height: 1.4;
+	color: #2271b1;
+	text-decoration: none;
+	word-break: break-all;
+}
+
+.nxt-gf-link-url-a:hover {
+	color: #135e96;
+	text-decoration: underline;
+}
+
+.nxt-gf-link-preview-actions {
+	display: inline-flex;
+	align-items: center;
+	gap: 2px;
+	margin-left: auto;
+	flex-shrink: 0;
+}
+
+.nxt-gf-link-edit,
+.nxt-gf-link-remove {
+	border: none;
+	background: transparent;
+	cursor: pointer;
+	color: #646970;
+	padding: 2px 4px;
+	line-height: 1;
+}
+
+.nxt-gf-link-edit .dashicons,
+.nxt-gf-link-remove .dashicons {
+	width: 18px;
+	height: 18px;
+	font-size: 18px;
+}
+
+.nxt-gf-link-wrap:not(.nxt-gf-link-has-value) .nxt-gf-link-preview {
+	display: none;
+}
+
+.nxt-gf-link-wrap.nxt-gf-link-has-value .nxt-gf-link-open {
+	display: none;
+}
+
+.nxt-gf-wrap-image .nxt-gf-input-media {
+    display: none;
+}
+.nxt-gf-metabox .nxt-gf-input-group .nxt-gf-prepend + .nxt-gf-input-in-group {
+	border-top-left-radius: 0;
+	border-bottom-left-radius: 0;
+}
+
+.nxt-gf-metabox .nxt-gf-input-group .nxt-gf-input-in-group:only-of-type {
+	border-radius: 3px;
+}
+
+.nxt-gf-metabox .nxt-gf-input-group .nxt-gf-input-in-group:not(:first-child) {
+	border-top-left-radius: 0;
+	border-bottom-left-radius: 0;
+}
+
+.nxt-gf-metabox .nxt-gf-input-group .nxt-gf-input-in-group:not(:last-child) {
+	border-top-right-radius: 0;
+	border-bottom-right-radius: 0;
+}
+.nxt-gf-metabox .nxt-gf-instruction {
+    font-size: 12px;
+    line-height: 18px;
+    color: #666;
+    margin: 0;
+}
+.nxt-gf-input-wrap .select2-container--default .select2-selection--multiple {
+    padding-bottom: 0;
+    border-color: #d1d1d6;
+    padding: 1px;
+}
+.nxt-gf-input-wrap .select2-container--default .select2-search--inline .select2-search__field{
+	margin-bottom: 5px;
+}
+
+/* Page Link field — full-width Select2 (archives / posts / media groups) */
+.nxt-gf-page-link-wrap {
+	width: 100%;
+	max-width: 100%;
+	min-width: 0;
+}
+.nxt-gf-page-link-wrap .select2-container {
+	width: 100% !important;
+	max-width: 100%;
+}
+/* User field — full-width Select2 (grouped by role) */
+.nxt-gf-user-wrap {
+	width: 100%;
+	max-width: 100%;
+	min-width: 0;
+}
+.nxt-gf-user-wrap .select2-container {
+	width: 100% !important;
+	max-width: 100%;
+}
+.nxt-gf-input-wrap .nxt-gf-date-input,
+.nxt-gf-input-wrap .nxt-gf-datetime-input,
+.nxt-gf-input-wrap .nxt-gf-time-input {
+	max-width: 220px;
+}
+
+/* Time Picker field — popover under input */
+.nxt-gf-input-wrap .nxt-gf-time-wrap {
+	position: relative;
+	display: inline-block;
+	max-width: 100%;
+}
+.nxt-gf-time-panel {
+	display: none;
+	position: absolute;
+	left: 0;
+	top: 100%;
+	margin-top: 4px;
+	min-width: 280px;
+	z-index: 100001;
+	background: #fff;
+	border: 1px solid #c3c4c7;
+	border-radius: 4px;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+	padding: 0;
+}
+.nxt-gf-time-panel-title {
+	text-align: center;
+	font-weight: 600;
+	font-size: 13px;
+	padding: 10px 12px 8px;
+	border-bottom: 1px solid #dcdcde;
+	color: #1d2327;
+}
+.nxt-gf-time-panel-body {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 6px 8px;
+	padding: 10px 12px;
+	background: #f6f7f7;
+}
+.nxt-gf-time-panel-body .nxt-gf-tm-lbl {
+	font-size: 12px;
+	font-weight: 600;
+	color: #1d2327;
+	margin-right: 4px;
+}
+.nxt-gf-time-panel .nxt-gf-input.nxt-gf-tm-hour,
+.nxt-gf-time-panel .nxt-gf-input.nxt-gf-tm-min,
+.nxt-gf-time-panel .nxt-gf-input.nxt-gf-tm-sec,
+.nxt-gf-time-panel .nxt-gf-input.nxt-gf-tm-ampm {
+	width: auto;
+	/*
+	 * WordPress paints the <select> chevron as a background image pinned to the right edge and
+	 * reserves room for it with padding-right: 24px. Overriding padding wholesale took that room
+	 * away, so the arrow sat on top of the value — "12" and "am" were both partly hidden behind it.
+	 * Keep the compact look, but leave the chevron its gutter, and widen the minimum to match.
+	 */
+	min-width: 4.5em;
+	max-width: 7em;
+	font-size: 13px;
+	padding: 2px 24px 2px 8px;
+	height: auto;
+	line-height: 1.4;
+}
+.nxt-gf-time-panel .nxt-gf-tm-sep {
+	color: #50575e;
+	font-weight: 600;
+}
+.nxt-gf-time-panel-actions {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 8px;
+	padding: 8px 12px 10px;
+	border-top: 1px solid #dcdcde;
+}
+.nxt-gf-time-panel-actions .button {
+	margin: 0;
+}
+/*
+ * Base theme for the jQuery UI datepicker popup. WordPress enqueues the
+ * datepicker SCRIPT but no jQuery UI theme stylesheet, so without these rules
+ * the calendar renders with a transparent background and no border — letting
+ * adjacent fields (Time / DateTime / Color) bleed through. These give it a
+ * solid, self-contained surface so it overlays cleanly.
+ */
+.ui-datepicker {
+	z-index: 100000 !important;
+	/*
+	 * 20em rather than jQuery UI's 18em: the DateTime field appends a time row (label + up to four
+	 * selects) below the calendar, which does not fit on one line at 18em. The calendar table is
+	 * width:100%, so it simply gets slightly roomier.
+	 */
+	width: 20em;
+	padding: 0.3em;
+	background: #fff;
+	border: 1px solid #c3c4c7;
+	border-radius: 4px;
+	box-shadow: 0 2px 8px rgba( 0, 0, 0, 0.15 );
+	font-size: 13px;
+	line-height: 1.4;
+	display: none;
+}
+.ui-datepicker .ui-datepicker-header {
+	position: relative;
+	padding: 0.4em 0;
+	margin-bottom: 0.25em;
+	border-bottom: 1px solid #f0f0f1;
+}
+.ui-datepicker .ui-datepicker-title {
+	font-weight: 600;
+	text-align: center;
+	margin: 0 2.3em;
+	line-height: 1.8;
+}
+.ui-datepicker .ui-datepicker-title select {
+	margin: 0 2px;
+	font-size: 13px;
+}
+.ui-datepicker .ui-datepicker-prev,
+.ui-datepicker .ui-datepicker-next {
+	position: absolute;
+	top: 0.4em;
+	width: 1.8em;
+	height: 1.8em;
+	cursor: pointer;
+	border-radius: 3px;
+	overflow: hidden;
+	text-indent: -9999px;
+}
+.ui-datepicker .ui-datepicker-prev { left: 0.2em; }
+.ui-datepicker .ui-datepicker-next { right: 0.2em; }
+.ui-datepicker .ui-datepicker-prev:hover,
+.ui-datepicker .ui-datepicker-next:hover {
+	background: #f0f0f1;
+}
+.ui-datepicker .ui-datepicker-prev::before,
+.ui-datepicker .ui-datepicker-next::before {
+	content: "";
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 0.5em;
+	height: 0.5em;
+	margin: -0.3em 0 0 -0.3em;
+	border-top: 2px solid #50575e;
+	border-left: 2px solid #50575e;
+	text-indent: 0;
+}
+.ui-datepicker .ui-datepicker-prev::before { transform: rotate( -45deg ); }
+.ui-datepicker .ui-datepicker-next::before { transform: rotate( 135deg ); margin-left: -0.4em; }
+.ui-datepicker .ui-datepicker-prev.ui-state-disabled,
+.ui-datepicker .ui-datepicker-next.ui-state-disabled {
+	opacity: 0.4;
+	cursor: default;
+}
+.ui-datepicker table.ui-datepicker-calendar {
+	width: 100%;
+	border-collapse: collapse;
+	margin: 0;
+	font-size: 13px;
+}
+.ui-datepicker th {
+	padding: 0.4em 0;
+	text-align: center;
+	font-weight: 600;
+	color: #50575e;
+	border: 0;
+}
+.ui-datepicker td {
+	padding: 1px;
+	border: 0;
+	text-align: center;
+}
+.ui-datepicker td a,
+.ui-datepicker td span {
+	display: block;
+	padding: 0.3em 0;
+	text-align: center;
+	text-decoration: none;
+	color: #1d2327;
+	border-radius: 3px;
+}
+.ui-datepicker td a:hover {
+	background: #f0f0f1;
+}
+.ui-datepicker td a.ui-state-active,
+.ui-datepicker td a.ui-state-highlight {
+	background: #2271b1;
+	color: #fff;
+}
+.ui-datepicker td span.ui-state-disabled {
+	color: #a7aaad;
+}
+
+/* DateTime field — time + actions inside jQuery UI datepicker popup */
+.ui-datepicker .nxt-gf-dp-time {
+	border-top: 1px solid #dcdcde;
+	margin: 0.35em -0.2em 0;
+	padding: 0.65em 0.35em 0.5em;
+	background: #f6f7f7;
+}
+.ui-datepicker .nxt-gf-dp-time-row {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 6px 3px;
+	margin-bottom: 0.5em;
+}
+.ui-datepicker .nxt-gf-dp-time .nxt-gf-dt-time-label {
+	font-size: 12px;
+	font-weight: 600;
+	color: #1d2327;
+	/*
+	 * No margin-right — the row is a flex container with its own gap, so this was adding a second
+	 * 4px on top of it. With seconds enabled that was the difference between the row fitting on one
+	 * line and am/pm wrapping underneath.
+	 */
+}
+.ui-datepicker .nxt-gf-dp-time .nxt-gf-input.nxt-gf-dt-hour,
+.ui-datepicker .nxt-gf-dp-time .nxt-gf-input.nxt-gf-dt-min,
+.ui-datepicker .nxt-gf-dp-time .nxt-gf-input.nxt-gf-dt-sec,
+.ui-datepicker .nxt-gf-dp-time .nxt-gf-input.nxt-gf-dt-ampm {
+	width: auto;
+	/*
+	 * WordPress paints the <select> chevron as a background image pinned to the right edge and
+	 * reserves room for it with padding-right: 24px. Overriding padding wholesale took that room
+	 * away, so the arrow sat on top of the value — "12" and "am" were both partly hidden behind it.
+	 *
+	 * These are TIGHTER than the standalone Time panel's equivalents, and deliberately so: this row
+	 * lives inside the datepicker popup, which is a fixed 18em wide. Sized to match that panel, the
+	 * label + three selects no longer fit on one line and am/pm wrapped underneath. The budget here
+	 * is ~226px of content width, so the three selects get ~46px each — still enough for "12" /
+	 * "pm" plus the chevron's gutter, and the row stays on one line.
+	 */
+	/*
+	 * An explicit width, not min-width + auto: a browser sizes an `auto` select from its widest
+	 * <option> plus its own internal chrome, which came out at 63px here regardless of any
+	 * min-width — wide enough that the label and three selects no longer fit the popup's line and
+	 * am/pm wrapped underneath. 48px leaves ~26px of text box, which clears "12" and "pm" with the
+	 * chevron's gutter intact.
+	 */
+	width: 47px;
+	min-width: 0;
+	max-width: none;
+	font-size: 13px;
+	padding: 2px 18px 2px 4px;
+	height: auto;
+	line-height: 1.4;
+}
+.ui-datepicker .nxt-gf-dp-time .nxt-gf-dt-sep {
+	color: #50575e;
+	font-weight: 600;
+}
+.ui-datepicker .nxt-gf-dp-time-actions {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 8px;
+	padding-top: 0.35em;
+	border-top: 1px solid #dcdcde;
+}
+.ui-datepicker .nxt-gf-dp-time-actions .button {
+	margin: 0;
+}
+.nxt-gf-input-wrap .select2-container--default .select2-results__option[role="group"] {
+	padding: 0;
+}
+.nxt-gf-input-wrap .select2-container--default .select2-results__group {
+	font-weight: 600;
+	font-size: 13px;
+	color: #50575e;
+	padding: 6px 8px 4px;
+}
+.nxt-gf-input-wrap .select2-container--default .select2-results__options--nested .select2-results__option {
+	padding-left: 12px;
+	font-size: 13px;
+}
+.nxt-gf-wrap-checkbox, .nxt-gf-wrap-radio {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.nxt-gf-wrap-checkbox.nxt-gf-wrap-horizontal, .nxt-gf-wrap-radio.nxt-gf-wrap-horizontal {
+    display: block;
+}
+
+/* Range field: slider + number input in one row */
+.nxt-gf-metabox .nxt-gf-range-wrap {
+    display: flex;
+    align-items: center;
+    gap: 0.75em;
+    flex: 1;
+    min-width: 0;
+}
+
+.nxt-gf-metabox .nxt-gf-range-wrap .nxt-gf-range-slider {
+    flex: 1;
+    min-width: 0;
+    height: 24px;
+    margin: 0;
+    padding: 0;
+    vertical-align: middle;
+    background: transparent;
+}
+
+/* Range track – WebKit
+.nxt-gf-metabox .nxt-gf-range-wrap .nxt-gf-range-slider::-webkit-slider-runnable-track {
+    height: 6px;
+    background: #d1d1d6;
+    border-radius: 3px;
+}
+
+.nxt-gf-metabox .nxt-gf-range-wrap .nxt-gf-range-slider::-moz-range-track {
+    height: 6px;
+    background: #d1d1d6;
+    border-radius: 3px;
+}
+
+.nxt-gf-metabox .nxt-gf-range-wrap .nxt-gf-range-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    margin-top: -6px;
+    background: #007cba;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+}
+
+.nxt-gf-metabox .nxt-gf-range-wrap .nxt-gf-range-slider::-webkit-slider-thumb:hover {
+    background: #005a87;
+}
+
+.nxt-gf-metabox .nxt-gf-range-wrap .nxt-gf-range-slider::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    background: #007cba;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+}
+
+.nxt-gf-metabox .nxt-gf-range-wrap .nxt-gf-range-slider::-moz-range-thumb:hover {
+    background: #005a87;
+}*/
+
+/* Number input beside range */
+.nxt-gf-metabox .nxt-gf-range-wrap .nxt-gf-range-number {
+    width: 5em;
+    flex: 0 0 auto;
+    min-width: 0;
+    margin: 0;
+    padding: 6px 8px;
+    font-size: 14px;
+    line-height: 1.4;
+    text-align: center;
+    border-radius: 3px;
+    border: 1px solid #d1d1d6;
+    color: #1a1a1a;
+    background: #fff;
+}
+
+.nxt-gf-metabox .nxt-gf-range-wrap .nxt-gf-range-number:focus {
+    border-color: #007cba;
+    outline: none;
+    box-shadow: 0 0 0 1px #007cba;
+}
+
+/* Taxonomy field */
+.nxt-gf-metabox .nxt-gf-taxonomy-wrap {
+	width: 100%;
+	max-width: 640px;
+}
+.nxt-gf-metabox .nxt-gf-taxonomy-inner {
+	display: flex;
+	align-items: stretch;
+	gap: 12px;
+}
+.nxt-gf-metabox .nxt-gf-taxonomy-inner:not(.nxt-gf-taxonomy-inner--stack) {
+	border: 1px solid #c3c4c7;
+	border-radius: 4px;
+	background: #fff;
+	padding: 10px 12px;
+	min-height: 48px;
+	box-sizing: border-box;
+}
+.nxt-gf-metabox .nxt-gf-taxonomy-inner--stack {
+	flex-direction: column;
+	align-items: stretch;
+	gap: 8px;
+	border: 0;
+	border-radius: 0;
+	background: transparent;
+	padding: 0;
+	min-height: 0;
+}
+.nxt-gf-metabox .nxt-gf-taxonomy-list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	flex: 1 1 auto;
+	min-width: 0;
+}
+.nxt-gf-metabox .nxt-gf-taxonomy-item {
+	margin: 0 0 8px;
+	padding: 0;
+	font-size: 14px;
+	line-height: 1.45;
+}
+.nxt-gf-metabox .nxt-gf-taxonomy-item:last-child {
+	margin-bottom: 0;
+}
+.nxt-gf-metabox .nxt-gf-taxonomy-check-label,
+.nxt-gf-metabox .nxt-gf-taxonomy-radio-label {
+	display: inline-flex;
+	align-items: flex-start;
+	gap: 8px;
+	cursor: pointer;
+	color: #1a1a1a;
+}
+.nxt-gf-metabox .nxt-gf-taxonomy-cb,
+.nxt-gf-metabox .nxt-gf-taxonomy-radio {
+	margin: 2px 0 0;
+	flex: 0 0 auto;
+}
+.nxt-gf-metabox .nxt-gf-taxonomy-term-name {
+	word-break: break-word;
+}
+.nxt-gf-metabox .nxt-gf-taxonomy-inner--stack .nxt-gf-taxonomy-select {
+	width: 100%;
+	max-width: 100%;
+}
+
+/* Color field — WordPress wp-color-picker in metabox */
+.nxt-gf-metabox .nxt-gf-color-wrap {
+	display: block;
+	max-width: 100%;
+}
+.nxt-gf-metabox .nxt-gf-color-wrap .wp-picker-container {
+	display: inline-block;
+	vertical-align: middle;
+	max-width: 100%;
+}
+.nxt-gf-metabox .nxt-gf-color-wrap .wp-picker-input-wrap .nxt-gf-input.nxt-gf-color-input {
+	min-width: 6em;
+}
+.nxt-gf-metabox .nxt-gf-color-no-wheel .iris-square {
+	display: none !important;
+}
+/**
+ * Label placement — "Left aligned" (group setting `label_placement`).
+ *
+ * Rows default to a stacked column (see .nxt-gf-field-row above); this turns the row into two
+ * columns with the label and its instruction in the first. Scoped to the modifier class so the
+ * default top-aligned layout is untouched.
+ */
+.nxt-gf-metabox .nxt-gf-field-row.nxt-gf-labels-left {
+	flex-direction: row;
+	align-items: flex-start;
+	gap: 16px;
+}
+
+.nxt-gf-metabox .nxt-gf-field-row.nxt-gf-labels-left > .nxt-gf-label-col {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	flex: 0 0 180px;
+	max-width: 180px;
+	padding-top: 6px;
+}
+
+.nxt-gf-metabox .nxt-gf-field-row.nxt-gf-labels-left > .nxt-gf-label-col .nxt-gf-instruction {
+	margin: 0;
+}
+
+/* min-width:0 stops a long input or a select2 control from forcing the row wider than its column. */
+.nxt-gf-metabox .nxt-gf-field-row.nxt-gf-labels-left > .nxt-gf-input-wrap {
+	flex: 1 1 auto;
+	min-width: 0;
+}
+
+/* Below the WP admin breakpoint two columns stop being readable — fall back to stacked. */
+@media screen and (max-width: 782px) {
+	.nxt-gf-metabox .nxt-gf-field-row.nxt-gf-labels-left {
+		flex-direction: column;
+		gap: 5px;
+	}
+	.nxt-gf-metabox .nxt-gf-field-row.nxt-gf-labels-left > .nxt-gf-label-col {
+		flex-basis: auto;
+		max-width: none;
+		padding-top: 0;
+	}
+}
+
+/**
+ * Select2 multi-select tags — the "×" remove control.
+ *
+ * The vendored select2 theme sets `font-family:'dashicons'` on this button, but its text content is
+ * the literal × character (U+00D7), which Dashicons has no glyph for. The browser falls back for
+ * that one character while keeping the Dashicons metrics, so it renders tiny. The same rule
+ * positions the button absolutely with horizontal padding and no height, so its border-right draws
+ * a box shorter than the tag and the glyph never centres in it.
+ *
+ * Overridden here rather than in assets/css/extra/select2.css so a select2 upgrade doesn't drop the
+ * fix and other consumers of that vendored file are unaffected. Four classes beats select2's three,
+ * so this wins on specificity regardless of enqueue order.
+ *
+ * Covers every field that renders a multi-select: Post Object, Page Link, User, and Taxonomy.
+ */
+.nxt-gf-input-wrap .select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 20px;
+	height: 100%;
+	padding: 0;
+	font-family: inherit;
+	font-size: 15px;
+	font-weight: 400;
+	line-height: 1;
+	color: #757575;
+}
+
+.nxt-gf-input-wrap .select2-container--default .select2-selection--multiple .select2-selection__choice__remove:hover,
+.nxt-gf-input-wrap .select2-container--default .select2-selection--multiple .select2-selection__choice__remove:focus {
+	background-color: #f1f1f1;
+	color: #1d2327;
+	outline: none;
+}
+
+/* The tag reserves exactly the button's width, so the label can't slide under it. */
+.nxt-gf-input-wrap .select2-container--default .select2-selection--multiple .select2-selection__choice {
+	display: inline-flex;
+	align-items: center;
+	padding-left: 21px;
+	line-height: 22px;
+}
+
+/*
+ * Required fields.
+ *
+ * The Required toggle used to be invisible in the rendered form — the first a user heard of it was
+ * a refused save. The asterisk marks the field up front; the inline message replaces a banner at
+ * the top of the page that named the fields but left the user to go find them.
+ */
+.nxt-gf-label .nxt-gf-required {
+	color: #d63638;
+	font-weight: 400;
+	margin-left: 2px;
+}
+.nxt-gf-field-error {
+	margin: 6px 0 0;
+	color: #d63638;
+	font-size: 12px;
+	line-height: 1.5;
+}
+/*
+ * The red border goes on the control, not the row — the row is the label + input together, and
+ * outlining the whole thing reads as "this section is broken" rather than "fill this in".
+ */
+.nxt-gf-field-has-error .nxt-gf-input,
+.nxt-gf-field-has-error .select2-container--default .select2-selection--single,
+.nxt-gf-field-has-error .select2-container--default .select2-selection--multiple {
+	border-color: #d63638;
+}
+.nxt-gf-field-has-error .nxt-gf-input:focus {
+	border-color: #d63638;
+	box-shadow: 0 0 0 1px #d63638;
+}
+
+/* Conditional logic: a field whose "Show this field if" rule is unmet. Hidden rather than
+   disabled, because a disabled input is omitted from $_POST and would wipe the stored value. */
+.nxt-gf-field-row.nxt-gf-cond-hidden {
+	display: none !important;
+}

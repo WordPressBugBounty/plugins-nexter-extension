@@ -637,6 +637,125 @@ class Nxt_Dashboard_Data {
 			wp_localize_script( $tb_handle, 'nexter_theme_builder_config', $nexter_theme_builder_config );
 
 		}
+
+		/*
+		 * Content Fields runs both as its own admin page and inside this dashboard (#/content_fields),
+		 * so the config goes onto whichever handle is carrying the app on this request. Gated on the
+		 * switch as well as the screen: the page is unreachable when the module is off, but not
+		 * unrequestable, and a direct ?page=nxt_content_types hit would still enqueue the whole app.
+		 */
+		$is_fields_page = ( 'nxt_content_types' === $current_page );
+		if ( ( $is_fields_page || $is_dashboard ) && Nxt_Options::fields_enabled() ) {
+			$cf_handle = $is_fields_page ? 'nexter-content-fields' : 'nexter-ext-dashscript';
+			if ( $is_fields_page ) {
+				wp_enqueue_style( 'nexter-content-fields', NEXTER_EXT_URL . 'content-fields/build/index.css', array( 'nexter-welcome-style' ), NEXTER_EXT_VER, 'all' );
+				wp_enqueue_script( 'nexter-content-fields', NEXTER_EXT_URL . 'content-fields/build/index.js', array( 'jquery', 'nexter-select-js', 'react', 'react-dom', 'wp-i18n', 'wp-dom-ready', 'wp-element', 'wp-components' ), NEXTER_EXT_VER, true );
+				wp_set_script_translations(
+					'nexter-content-fields',
+					'nexter-extension',
+					NEXTER_EXT_DIR . 'languages'
+				);
+			}
+
+			wp_localize_script( $cf_handle, 'nxtContentTypesConfig', self::nxt_content_fields_config() );
+		}
+	}
+
+	/**
+	 * Config the Content Fields app reads, built once and localized onto whichever handle carries it.
+	 *
+	 * @return array
+	 */
+	public static function nxt_content_fields_config() {
+		$post_types      = get_post_types( array( 'show_ui' => true ), 'objects' );
+		$taxonomies      = get_taxonomies( array( 'show_ui' => true ), 'objects' );
+		$post_types_list = array();
+		foreach ( $post_types as $pt_key => $pt_obj ) {
+			/*
+			 * Only offer post types a field group can actually appear on: publicly viewable, or
+			 * carrying an admin menu entry of their own. show_ui alone is not enough — it is also
+			 * true for the post types plugins register purely to back their own editor UI (ACF's
+			 * acf-field-group, Pods' _pods_template, core's wp_block), which have no reachable
+			 * screen. Filtering on `public` alone is the opposite trap: a Nexter CPT with "Public"
+			 * off is public => false but show_in_menu => true and must keep its fields.
+			 */
+			if ( empty( $pt_obj->public ) && empty( $pt_obj->show_in_menu ) ) {
+				continue;
+			}
+			$edit_cap = isset( $pt_obj->cap->edit_posts ) ? $pt_obj->cap->edit_posts : 'edit_posts';
+			if ( ! current_user_can( $edit_cap ) ) {
+				continue;
+			}
+			$post_types_list[] = array(
+				'value' => $pt_key,
+				'label' => $pt_obj->labels->name ? $pt_obj->labels->name : $pt_key,
+			);
+		}
+
+		$taxonomies_list = array();
+		foreach ( $taxonomies as $tax_key => $tax_obj ) {
+			/*
+			 * Mirror the capability check core makes before rendering a taxonomy submenu. Without
+			 * it the picker disagrees with the menu: link_category is show_ui => true but its
+			 * manage_terms cap is manage_links, hard-denied while the Link Manager is off — the
+			 * selection saved and then did nothing, silently.
+			 */
+			$manage_cap = isset( $tax_obj->cap->manage_terms ) ? $tax_obj->cap->manage_terms : 'manage_categories';
+			if ( ! current_user_can( $manage_cap ) ) {
+				continue;
+			}
+			$taxonomies_list[] = array(
+				'value' => $tax_key,
+				'label' => $tax_obj->labels->name ? $tax_obj->labels->name : $tax_key,
+			);
+		}
+
+		$image_sizes = array();
+		foreach ( get_intermediate_image_sizes() as $size ) {
+			$data   = image_get_intermediate_size( 0, $size );
+			$width  = isset( $data['width'] ) ? (int) $data['width'] : 0;
+			$height = isset( $data['height'] ) ? (int) $data['height'] : 0;
+			$label  = $size;
+			if ( $width && $height ) {
+				$label .= sprintf( ' (%d × %d)', $width, $height );
+			}
+			$image_sizes[] = array(
+				'value' => $size,
+				'label' => $label,
+			);
+		}
+
+		return array(
+			'adminUrl'         => admin_url(),
+			'ajaxurl'          => admin_url( 'admin-ajax.php' ),
+			'ajax_nonce'       => wp_create_nonce( 'nexter_admin_nonce' ),
+			'restUrl'          => rest_url( 'content-types/v1' ),
+			'restNonce'        => wp_create_nonce( 'wp_rest' ),
+			'assets'           => NEXTER_EXT_URL . 'content-fields/',
+			'pluginVer'        => NEXTER_EXT_VER,
+			// Used by the URL Slug fields to show a live permalink preview, so the admin can see
+			// the URL a post type / taxonomy will actually produce before saving.
+			'homeUrl'          => untrailingslashit( home_url() ),
+			'permalinkFront'   => isset( $GLOBALS['wp_rewrite'] ) ? (string) $GLOBALS['wp_rewrite']->front : '/',
+			'prettyPermalinks' => '' !== (string) get_option( 'permalink_structure' ),
+			'postTypesList'    => $post_types_list,
+			'taxonomiesList'   => $taxonomies_list,
+			'userRolesList'    => array_values(
+				array_map(
+					static function ( $slug, $label ) {
+						return array(
+							'value' => (string) $slug,
+							'label' => (string) $label,
+						);
+					},
+					array_keys( wp_roles()->get_names() ),
+					array_values( wp_roles()->get_names() )
+				)
+			),
+			'imageSizes'       => $image_sizes,
+			'isPro'            => defined( 'NXT_PRO_EXT' ),
+			'whiteLabel'       => function_exists( 'nxt_ct_white_label' ) ? nxt_ct_white_label() : array( 'brand' => '', 'hide_ads' => false ),
+		);
 	}
 
 	public function nexter_replace_url_tables_and_size(){

@@ -105,6 +105,38 @@ unset( $nxt_ext_seo_source );
 delete_transient( 'nxt_content_seo_redirect_compiled' );
 
 /*
+ * Content Fields and abilities housekeeping, per site. Definitions, their files and field values
+ * are user content and stay; only the ability journal and derived caches, locks and flags go.
+ */
+if ( ! function_exists( 'nxt_ct_uninstall_site' ) ) {
+	function nxt_ct_uninstall_site() {
+		global $wpdb;
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}nxt_ability_journal" );
+		foreach ( array( 'nxt_ability_journal', 'nxt_ability_journal_db', 'nxt_ability_journal_dropped', 'nxt_ability_journal_pruned_at', 'nexter_ability_cache_version', 'nexter_ability_usage', 'nxt_ct_flush_rewrite', 'nxt_model_cache', 'nxt_model_sync_error' ) as $option ) {
+			delete_option( $option );
+		}
+		foreach ( array( 'nxt_ct_definitions_v1', 'nxt_ct_registered_args_v1', 'nxt_model_migration_backoff' ) as $transient ) {
+			delete_transient( $transient );
+		}
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery
+		$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->options} WHERE option_name LIKE %s OR option_name LIKE %s", $wpdb->esc_like( 'nxt_import_lock_' ) . '%', $wpdb->esc_like( 'nxt_import_job_' ) . '%' ) );
+		wp_clear_scheduled_hook( 'nxt_ability_journal_prune' );
+	}
+}
+
+if ( is_multisite() && function_exists( 'get_sites' ) ) {
+	foreach ( get_sites( array( 'fields' => 'ids', 'number' => 0 ) ) as $nxt_ct_site_id ) {
+		switch_to_blog( (int) $nxt_ct_site_id );
+		nxt_ct_uninstall_site();
+		restore_current_blog();
+	}
+	unset( $nxt_ct_site_id );
+} else {
+	nxt_ct_uninstall_site();
+}
+
+/*
  * Cookie Consent, run once per site (a network uninstall executes this file a single time).
  *
  * Consent records are proof of consent, so the table and the settings go only when the owner

@@ -70,6 +70,10 @@ class Nxt_Cookie_Consent {
 		// doesn't bloat every read of the shared options tree.
 		add_action( 'wp_ajax_nexter_cookie_consent_save', array( $this, 'ajax_save_settings' ) );
 
+		// Mirror the master switch onto the Nexter Blocks cookie blocks, whichever path saved it.
+		add_action( 'update_option_nexter_extra_ext_options', array( __CLASS__, 'sync_blocks_on_update' ), 10, 2 );
+		add_action( 'add_option_nexter_extra_ext_options', array( __CLASS__, 'sync_blocks_on_add' ), 10, 2 );
+
 		// Plain admin-ajax mirror of the nexter/get-cookie-consent-compliance-check ability
 		// (CLAUDE.md "enter at the seam" — it calls the exact same static method, never a
 		// reimplementation) so the dashboard screen doesn't need the Abilities REST layer,
@@ -302,6 +306,58 @@ class Nxt_Cookie_Consent {
 		$merged['switch']       = ! empty( $extra_ext['cookie-consent']['switch'] );
 
 		return $merged;
+	}
+
+	/**
+	 * Option-update hook: syncs the Blocks cookie blocks when the master switch changed.
+	 *
+	 * @param mixed $old Previous option value.
+	 * @param mixed $new New option value.
+	 * @return void
+	 */
+	public static function sync_blocks_on_update( $old, $new ) {
+		$was = is_array( $old ) && ! empty( $old['cookie-consent']['switch'] );
+		$is  = is_array( $new ) && ! empty( $new['cookie-consent']['switch'] );
+		if ( $was !== $is ) {
+			self::sync_blocks( $is );
+		}
+	}
+
+	/**
+	 * Option-add hook: first save of the shared tree.
+	 *
+	 * @param string $option Option name.
+	 * @param mixed  $value  New option value.
+	 * @return void
+	 */
+	public static function sync_blocks_on_add( $option, $value ) {
+		if ( is_array( $value ) && isset( $value['cookie-consent']['switch'] ) ) {
+			self::sync_blocks( ! empty( $value['cookie-consent']['switch'] ) );
+		}
+	}
+
+	/**
+	 * Turns the Nexter Blocks cookie blocks on or off; a no-op when Blocks has no block list.
+	 *
+	 * @param bool $enable Whether the blocks should be enabled.
+	 * @return void
+	 */
+	public static function sync_blocks( $enable ) {
+		$opts = get_option( 'tpgb_normal_blocks_opts' );
+		if ( ! is_array( $opts ) || ! isset( $opts['enable_normal_blocks'] ) || ! is_array( $opts['enable_normal_blocks'] ) ) {
+			return;
+		}
+
+		$cookie_blocks = array( 'tp-cookie-consent', 'tp-cookie-declaration', 'tp-cookie-reopen' );
+		$list          = $opts['enable_normal_blocks'];
+		$new_list      = $enable
+			? array_values( array_unique( array_merge( $list, $cookie_blocks ) ) )
+			: array_values( array_diff( $list, $cookie_blocks ) );
+
+		if ( $new_list !== $list ) {
+			$opts['enable_normal_blocks'] = $new_list;
+			update_option( 'tpgb_normal_blocks_opts', $opts );
+		}
 	}
 
 	/**
@@ -607,19 +663,27 @@ class Nxt_Cookie_Consent {
 		// Rewritten to an inert type so the browser parses but never requests/executes it.
 		// nexter-consent.js re-creates the real <script src> (in original DOM order) the
 		// moment the matching category is granted — see activateGatedScripts() there.
-		$tag = str_replace( '<script ', '<script type="text/plain" data-nexter-consent-category="' . esc_attr( $rule['category'] ) . '" data-nexter-consent-src="' . esc_url( $src ) . '" ', $tag );
-		// Strip the live src so the browser cannot fetch it from the inert tag.
-		// WordPress prints & as &#038; in the tag, so the raw $src alone never matched a URL with a
-		// query string and the live src was left behind. Try each form it can appear in.
-		foreach ( array_unique( array( $src, esc_attr( $src ), esc_url( $src ), str_replace( '&', '&#038;', $src ), str_replace( '&', '&amp;', $src ) ) ) as $form ) {
-			$stripped = preg_replace( '/\ssrc=([\'"])' . preg_quote( $form, '/' ) . '\1/', '', $tag, 1, $stripped_count );
-			if ( $stripped_count ) {
-				$tag = $stripped;
-				break;
-			}
-		}
-
-		return $tag;
+		// Only the external tag gets consent-src; inline before/after scripts keep their body.
+		$category = esc_attr( $rule['category'] );
+		return preg_replace_callback(
+			'/<script\b[^>]*>/i',
+			function ( $m ) use ( $src, $category ) {
+				$open = $m[0];
+				if ( ! preg_match( '/\ssrc=/i', $open ) ) {
+					return preg_replace( '/^<script\b/i', '<script type="text/plain" data-nexter-consent-category="' . $category . '"', $open );
+				}
+				$open = preg_replace( '/^<script\b/i', '<script type="text/plain" data-nexter-consent-category="' . $category . '" data-nexter-consent-src="' . esc_url( $src ) . '"', $open );
+				// Strip the live src; WordPress prints & as &#038;, so try each form it can appear in.
+				foreach ( array_unique( array( $src, esc_attr( $src ), esc_url( $src ), str_replace( '&', '&#038;', $src ), str_replace( '&', '&amp;', $src ) ) ) as $form ) {
+					$stripped = preg_replace( '/\ssrc=([\'"])' . preg_quote( $form, '/' ) . '\1/', '', $open, 1, $stripped_count );
+					if ( $stripped_count ) {
+						return $stripped;
+					}
+				}
+				return $open;
+			},
+			$tag
+		);
 	}
 
 	/**
@@ -1082,9 +1146,18 @@ class Nxt_Cookie_Consent {
 	 *                         not just document.cookie names.
 	 * @return void
 	 */
-	private static function record_scan_results( $names, $source, $type = 'cookie' ) {
+	private static function record_scan_results( $names, $source, $type = 'cookie', $prune = false ) {
 		$stored = self::get_declared_cookies();
 		$now    = current_time( 'mysql', true );
+
+		// Full rescan: drop unedited scanned entries of this type that were not found again.
+		if ( $prune ) {
+			foreach ( $stored as $key => $row ) {
+				if ( ( $row['type'] ?? 'cookie' ) === $type && in_array( $row['source'] ?? '', array( 'passive', 'active' ), true ) && empty( $row['edited'] ) && ! in_array( (string) $key, $names, true ) ) {
+					unset( $stored[ $key ] );
+				}
+			}
+		}
 
 		foreach ( $names as $name ) {
 			if ( '' === $name ) {
@@ -1150,13 +1223,14 @@ class Nxt_Cookie_Consent {
 		$source = ( isset( $_POST['source'] ) && 'active' === $_POST['source'] ) ? 'active' : 'passive';
 
 		$cookies = self::sanitize_scan_names( isset( $_POST['cookies'] ) ? wp_unslash( $_POST['cookies'] ) : array() );
-		self::record_scan_results( $cookies, $source, 'cookie' );
-
-		$local = self::sanitize_scan_names( isset( $_POST['localStorage'] ) ? wp_unslash( $_POST['localStorage'] ) : array() );
-		self::record_scan_results( $local, $source, 'localStorage' );
-
+		$local   = self::sanitize_scan_names( isset( $_POST['localStorage'] ) ? wp_unslash( $_POST['localStorage'] ) : array() );
 		$session = self::sanitize_scan_names( isset( $_POST['sessionStorage'] ) ? wp_unslash( $_POST['sessionStorage'] ) : array() );
-		self::record_scan_results( $session, $source, 'sessionStorage' );
+
+		// Only an active Scan Now that returned data prunes; passive/empty reports stay additive.
+		$prune = 'active' === $source && ( $cookies || $local || $session );
+		self::record_scan_results( $cookies, $source, 'cookie', $prune );
+		self::record_scan_results( $local, $source, 'localStorage', $prune );
+		self::record_scan_results( $session, $source, 'sessionStorage', $prune );
 
 		$raw_domains = isset( $_POST['domains'] ) ? (array) wp_unslash( $_POST['domains'] ) : array();
 		$domains     = array();

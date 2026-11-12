@@ -2052,7 +2052,7 @@ class Nexter_Content_SEO_Schema {
 			$options[ $key ] = array(
 				'label' => $pt->labels->name,
 				'value' => array(
-					/* translators: %s: Post Label */
+					/* translators: %s: plural name */
 					$pt->name . '|all'         => sprintf( __( 'All %s', 'nexter-extension' ), $pt->labels->name ),
 					/* translators: %s: Post type or taxonomy archive label */
 					$pt->name . '|all|archive' => sprintf( __( 'All %s Archive', 'nexter-extension' ), $pt->labels->name ),
